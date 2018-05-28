@@ -1,0 +1,27 @@
+.totalBannerContainer {
+  padding: 40px;
+  background-color: #417DEF;
+}
+
+.total {
+  color: white;
+  font-size: 50px;
+  display: flex;
+}
+
+.totalContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.address {
+  color: white;
+  font-size: 24px;
+}
+
+.tezosLogo {
+  height: 50px;
+  width: 50px;
+  filter: brightness(0%) invert(100%);
+}

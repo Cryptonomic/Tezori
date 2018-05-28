@@ -46,9 +46,14 @@
   min-height: 30px;
 }
 
-
 .tezosSymbol {
   height: 17px;
   width: 17px;
   filter: brightness(0%);
+}
+
+.tezosSymbolWhite {
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%) invert(100%);
 }

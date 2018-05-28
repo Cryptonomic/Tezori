@@ -74,7 +74,7 @@ export default class AddressBlock extends Component<Props> {
               10.00
               <img
                 src={tezosLogo}
-                className={styles.tezosSymbol}
+                className={styles.tezosSymbolWhite}
               />
             </div>
           }

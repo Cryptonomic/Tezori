@@ -26,8 +26,8 @@ export default function Addresses() {
       {
         [accountBlocks1, accountBlocks2].map((accountBlocks, index) => {
           return (
-            <div className={styles.addressBlockContainer}>
-              <AddressBlock accountBlocks={accountBlocks} key={index} />
+            <div className={styles.addressBlockContainer}  key={index}>
+              <AddressBlock accountBlocks={accountBlocks}/>
             </div>
           );
         })
