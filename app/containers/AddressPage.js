@@ -1,7 +1,13 @@
 // @flow
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import styles from './Counter.css';
+
+import * as CounterActions from '../actions/counter';
+import styles from './AddressPage.css';
+
+import Addresses from '../components/Addresses';
 
 type Props = {
   increment: () => void,
@@ -11,7 +17,7 @@ type Props = {
   counter: number
 };
 
-export default class Counter extends Component<Props> {
+class AddressPage extends Component<Props> {
   props: Props;
 
   render() {
@@ -24,6 +30,7 @@ export default class Counter extends Component<Props> {
     } = this.props;
     return (
       <div>
+        <Addresses />
         <div className={styles.backButton} data-tid="backButton">
           <Link to="/">
             <i className="fa fa-arrow-left fa-3x" />
@@ -58,3 +65,15 @@ export default class Counter extends Component<Props> {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    counter: state.counter
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(CounterActions, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddressPage);

@@ -14,6 +14,7 @@ body {
 
 div#root {
   height: 100%;
+  padding: 40px 150px;
 }
 
 h2 {
@@ -32,14 +33,3 @@ li {
   list-style: none;
 }
 
-a {
-  color: white;
-  opacity: 0.75;
-  text-decoration: none;
-}
-
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-  cursor: pointer;
-}

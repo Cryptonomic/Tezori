@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Counter component should match exact snapshot 1`] = `
+exports[`Addresses component should match exact snapshot 1`] = `
 <div>
   <div>
     <div

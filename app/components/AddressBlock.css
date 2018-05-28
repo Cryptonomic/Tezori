@@ -1,0 +1,41 @@
+.addressBlockContainer {
+  background-color: white;
+}
+
+.accounts {
+  background-color: #FAFBFC;
+}
+
+.addressBlockTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addressBlockTitleContainer {
+  padding: 10px;
+}
+
+.arrowContainer {
+  cursor: pointer;
+}
+
+.tzAmount {
+  font-weight: 600;
+}
+
+.accountBlock {
+  border-bottom: 1px solid lightgray;
+  padding: 10px;
+}
+
+.addAccountBlock {
+  border-bottom: 1px solid lightgray;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: #7B91C0;
+}
+

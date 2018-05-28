@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import { TextField } from 'material-ui';
 
 import CreateButton from './CreateButton';
@@ -16,6 +17,26 @@ export default class Home extends Component<Props> {
     currentDisplay: '',
   };
 
+  changeDisplayAndRoute = (history) => {
+    this.setState({ currentDisplay: DEFAULT });
+    history.push('/addresses');
+  }
+
+  renderRouteButton = () => {
+    return (
+      <Route render={({ history }) => (
+        <CreateButton
+          label="Create Wallet"
+          style={{
+            backgroundColor: '#417DEF',
+            color: 'white',
+            marginTop: '20px',
+          }}
+          onClick={() => this.changeDisplayAndRoute(history)}
+        />
+      )} />
+    );
+  }
   renderSelectionState = () => {
     return (
       <div className={styles.defaultContainer}>
@@ -60,15 +81,7 @@ export default class Home extends Component<Props> {
             floatingLabelText="Password"
             style={{ width: '500px' }}
           />
-          <CreateButton
-            label="Create Wallet"
-            style={{
-              backgroundColor: '#417DEF',
-              color: 'white',
-              marginTop: '20px',
-            }}
-            onClick={() => this.setState({ currentDisplay: DEFAULT })}
-          />
+          {this.renderRouteButton()}
         </div>
       </div>
     );
@@ -83,15 +96,7 @@ export default class Home extends Component<Props> {
             floatingLabelText="Password"
             style={{ width: '500px' }}
           />
-          <CreateButton
-            label="Import"
-            style={{
-              backgroundColor: '#417DEF',
-              color: 'white',
-              marginTop: '20px',
-            }}
-            onClick={() => this.setState({ currentDisplay: DEFAULT })}
-          />
+          {this.renderRouteButton()}
         </div>
       </div>
     );

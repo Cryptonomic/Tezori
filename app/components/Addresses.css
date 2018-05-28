@@ -1,0 +1,12 @@
+.addressesTitleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #7B91C0;
+  margin: 10px 0px;
+  font-size: 21px;
+}
+
+.addressesContainer {
+  width: 300px;
+}
