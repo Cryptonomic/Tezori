@@ -12,6 +12,11 @@
   align-items: center;
 }
 
+.addressBlockTitleContainerExpanded {
+  background-color: #417DEF;
+  color: white;
+}
+
 .addressBlockTitleContainer {
   padding: 10px;
 }
@@ -22,6 +27,7 @@
 
 .tzAmount {
   font-weight: 600;
+  display: flex;
 }
 
 .accountBlock {
@@ -37,5 +43,12 @@
   align-items: center;
   cursor: pointer;
   color: #7B91C0;
+  min-height: 30px;
 }
 
+
+.tezosSymbol {
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%);
+}

@@ -10,3 +10,7 @@
 .addressesContainer {
   width: 300px;
 }
+
+.addressBlockContainer {
+  margin-bottom: 20px;
+}

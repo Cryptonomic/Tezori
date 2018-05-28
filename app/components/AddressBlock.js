@@ -1,12 +1,16 @@
 // @flow
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import DropdownArrow from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import DropupArrow from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 
+import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
-type Props = {}
+type Props = {
+  accountBlocks: Array<Object>
+};
 
 export default class AddressBlock extends Component<Props> {
  props: Props;
@@ -16,9 +20,13 @@ export default class AddressBlock extends Component<Props> {
 
   renderAccountBlock = ({ tzAmount, address }) => {
     return (
-      <div className={styles.accountBlock}>
+      <div className={styles.accountBlock} key={`${address}-${tzAmount}`}>
         <div className={styles.tzAmount}>
-          {tzAmount}tz
+          {tzAmount}
+          <img
+            src={tezosLogo}
+            className={styles.tezosSymbol}
+          />
         </div>
         <div>{address}</div>
       </div>
@@ -48,21 +56,27 @@ export default class AddressBlock extends Component<Props> {
   };
 
   render() {
-    const accountBlocks = [
-      {tzAmount: 4, address: '1023rka0d9f234'},
-      {tzAmount: 2, address: '1230rkasdofi123'},
-      {tzAmount: 3, address: 'zs203rtkasodifg'},
-    ];
+    const { isExpanded } = this.state;
+    const addressBlockTitleContainer = classNames({
+      [styles.addressBlockTitleContainer]: true,
+      [styles.addressBlockTitleContainerExpanded]: isExpanded,
+    });
 
     return (
       <div className={styles.addressBlockContainer}>
-        <div className={styles.addressBlockTitleContainer}>
+        <div className={addressBlockTitleContainer}>
           <div className={styles.addressBlockTitle}>
             tz1bn91adfi23409fs
             {this.renderArrowIcon()}
           </div>
           {this.state.isExpanded &&
-            <div className={styles.tzAmount}>10.00t</div>
+            <div className={styles.tzAmount}>
+              10.00
+              <img
+                src={tezosLogo}
+                className={styles.tezosSymbol}
+              />
+            </div>
           }
         </div>
         {this.state.isExpanded &&
@@ -77,7 +91,7 @@ export default class AddressBlock extends Component<Props> {
                 }}
               />
             </div>
-            {accountBlocks.map(this.renderAccountBlock)}
+            {this.props.accountBlocks.map(this.renderAccountBlock)}
           </div>
         }
       </div>
