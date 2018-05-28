@@ -4,9 +4,11 @@ import { Switch, Route } from 'react-router';
 import App from './containers/App';
 import HomePage from './containers/HomePage';
 import CounterPage from './containers/CounterPage';
+import TezosLogo from './components/TezosLogo';
 
 export default () => (
   <App>
+    <TezosLogo />
     <Switch>
       <Route path="/counter" component={CounterPage} />
       <Route path="/" component={HomePage} />
