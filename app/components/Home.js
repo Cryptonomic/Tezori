@@ -1,22 +1,113 @@
 // @flow
 import React, { Component } from 'react';
+import { TextField } from 'material-ui';
+
+import CreateButton from './CreateButton';
+import CREATION_CONSTANTS from './creationConstants';
+const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
+
 import styles from './Home.css';
 
 type Props = {};
 
 export default class Home extends Component<Props> {
   props: Props;
+  state = {
+    currentDisplay: '',
+  };
 
-  render() {
+  renderSelectionState = () => {
     return (
-      <div className={styles.container}>
+      <div className={styles.defaultContainer}>
         <div className={styles.walletContainers}>
-          Create a new wallet
+          <div className={styles.walletTitle}>Create a new wallet</div>
+          <CreateButton
+            label="Create Wallet"
+            style={{
+              backgroundColor: '#417DEF',
+              color: 'white',
+              marginTop: '20px',
+            }}
+            onClick={() => this.setState({ currentDisplay: CREATE })}
+          />
         </div>
         <div className={styles.walletContainers}>
-          Import an existing wallet
+          <div className={styles.walletTitle}>Import an existing wallet</div>
+          <CreateButton
+            label="Import Wallet"
+            style={{
+              border: '2px solid black',
+              backgroundColor: 'transparent',
+              marginTop: '20px',
+            }}
+            onClick={() => this.setState({ currentDisplay: IMPORT })}
+          />
+        </div>
+      </div>
+    )
+  };
+
+  renderCreateWallet = () => {
+    return (
+      <div className={styles.createContainer}>
+        <div className={styles.walletContainers}>
+          <div className={styles.walletTitle}>Create a new wallet</div>
+          <TextField
+            floatingLabelText="Name Your Wallet"
+            style={{ width: '500px' }}
+          />
+          <TextField
+            floatingLabelText="Password"
+            style={{ width: '500px' }}
+          />
+          <CreateButton
+            label="Create Wallet"
+            style={{
+              backgroundColor: '#417DEF',
+              color: 'white',
+              marginTop: '20px',
+            }}
+            onClick={() => this.setState({ currentDisplay: DEFAULT })}
+          />
         </div>
       </div>
     );
+  };
+
+  renderImportWallet = () => {
+    return (
+      <div className={styles.createContainer}>
+        <div className={styles.walletContainers}>
+          <div className={styles.walletTitle}>Import your wallet from a backup</div>
+          <TextField
+            floatingLabelText="Password"
+            style={{ width: '500px' }}
+          />
+          <CreateButton
+            label="Import"
+            style={{
+              backgroundColor: '#417DEF',
+              color: 'white',
+              marginTop: '20px',
+            }}
+            onClick={() => this.setState({ currentDisplay: DEFAULT })}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  render() {
+    const { currentDisplay } = this.state;
+
+    switch (currentDisplay) {
+      case CREATE:
+        return this.renderCreateWallet();
+      case IMPORT:
+        return this.renderImportWallet();
+      case DEFAULT:
+      default:
+        return this.renderSelectionState();
+    }
   }
 }

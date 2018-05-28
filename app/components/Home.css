@@ -1,12 +1,27 @@
-.container {
+.createContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  margin-left: 20%;
+  width: 100%;
+}
+
+.defaultContainer {
   display: flex;
   justify-content: space-around;
   align-items: center;
   height: 100%;
+  padding: 0px 50px;
 }
 
 .walletContainers {
+  display: flex;
+  flex-direction: column;
+}
+
+.walletTitle {
   color: #1A325F;
   font-size: 34px;
-  width: 25%;
 }
+
