@@ -14,7 +14,7 @@
 
 .addressBlockTitleContainerExpanded {
   background-color: #417DEF;
-  color: white;
+  color: #E3E7F1;
 }
 
 .addressBlockTitleContainer {
@@ -28,11 +28,16 @@
 .tzAmount {
   font-weight: 600;
   display: flex;
+  color: white;
 }
 
 .accountBlock {
   border-bottom: 1px solid lightgray;
   padding: 10px;
+}
+
+.accountBlock .tzAmount {
+  color: black;
 }
 
 .addAccountBlock {

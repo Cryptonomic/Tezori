@@ -1,3 +1,30 @@
 .actionPanelContainer {
   margin-left: 50px;
 }
+
+.tabContainer {
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  font-size: 17px;
+}
+
+.activeTab {
+  background-color: white;
+  color: #1A325F;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inactiveTab {
+  background-color: #417DEF;
+  color: #E3E7F1;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
