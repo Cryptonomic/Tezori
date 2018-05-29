@@ -17,6 +17,10 @@ div#root {
   padding: 40px 150px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 h2 {
   margin: 0;
   font-size: 2.25rem;

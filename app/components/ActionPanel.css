@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-between;
   height: 60px;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .activeTab {
@@ -28,3 +28,12 @@
   justify-content: center;
   align-items: center;
 }
+
+.transactionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding-bottom: 20px;
+}
+
