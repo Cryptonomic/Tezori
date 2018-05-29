@@ -5,10 +5,16 @@ import App from './containers/App';
 import HomePage from './containers/HomePage';
 import AddressPage from './containers/AddressPage';
 import TezosLogo from './components/TezosLogo';
+import Settings from './components/Settings';
+
+import styles from './routes.css';
 
 export default () => (
   <App>
-    <TezosLogo />
+    <div className={styles.logoContainer}>
+      <TezosLogo />
+      <Settings />
+    </div>
     <Switch>
       <Route path="/addresses" component={AddressPage} />
       <Route path="/" component={HomePage} />
