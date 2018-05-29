@@ -7,6 +7,7 @@ import tabConstants from './tabConstants';
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
+import Send from './Send';
 
 import styles from './ActionPanel.css';
 
@@ -59,6 +60,12 @@ export default class ActionPanel extends Component<Props> {
     ];
 
     switch (this.state.activeTab) {
+      case SEND:
+        return (
+          <div className={styles.sendContainer}>
+            <Send />
+          </div>
+        );
       case TRANSACTIONS:
       default:
         return (

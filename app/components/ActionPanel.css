@@ -37,3 +37,10 @@
   padding-bottom: 20px;
 }
 
+.sendContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding-bottom: 20px;
+}
