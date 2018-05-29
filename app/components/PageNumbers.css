@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   height: 45px;
+  user-select: none;
 }
 
 .leftButton {

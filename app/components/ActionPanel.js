@@ -9,6 +9,7 @@ import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
 import Send from './Send';
 import Receive from './Receive';
+import Delegate from './Delegate';
 
 import styles from './ActionPanel.css';
 
@@ -20,6 +21,7 @@ export default class ActionPanel extends Component<Props> {
   state = {
     activeTab: TRANSACTIONS,
     currentPage: 1,
+    address: '1230rjsadoigj2093rfds',
   };
 
   renderTab = (tab) => {
@@ -59,9 +61,20 @@ export default class ActionPanel extends Component<Props> {
         address: '12094rjasifgj203fj',
       },
     ];
-    const address = 'boai10394wefkaf';
+    const { address } = this.state;
+    const delegateFee = 1.25;
 
     switch (this.state.activeTab) {
+      case DELEGATE:
+        return (
+          <div className={styles.delegateContainer}>
+            <Delegate
+              address={address}
+              onAddressChange={(newAddress) => this.setState({ address: newAddress })}
+              delegateFee={delegateFee}
+            />
+          </div>
+        );
       case RECEIVE:
         return (
           <div className={styles.receiveContainer}>
