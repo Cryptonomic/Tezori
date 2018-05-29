@@ -1,0 +1,20 @@
+.receiveContainer {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 20px 0px;
+}
+
+.addressContainer {
+  display: flex;
+  flex-direction: column;
+  color: #1A325F;
+  font-size: 26px;
+}
+
+.qrCode {
+  height: 240px;
+  width: 240px;
+  border: 1px solid #EDF0F6;
+  margin-right: 50px;
+}

@@ -44,7 +44,7 @@ export default class Send extends Component<Props> {
         <CreateButton
           label="Send"
           style={{
-            border: '1px solid #7B91C0',
+            border: '2px solid #7B91C0',
             color: '#7B91C0',
             height: '28px',
             fontSize: '15px',

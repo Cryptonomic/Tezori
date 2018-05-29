@@ -24,18 +24,18 @@ export default function Transactions({ transactions }) {
     );
   }
 
-  function renderTableRow(row) {
+  function renderTableRow(row, index) {
     const rowArray = Object.values(row);
 
     return (
-      <TableRow>
+      <TableRow key={index}>
         {
-          rowArray.map((elem, index) => {
+          rowArray.map((elem, rowArrIndex) => {
             return (
-              <TableRowColumn>
+              <TableRowColumn key={`${elem}-${rowArrIndex}`}>
                 <div className={styles.tableRowElement}>
                   {elem}
-                  { index === 0 &&
+                  { rowArrIndex === 0 &&
                     <img
                       src={tezosLogo}
                       className={styles.tezosSymbol}

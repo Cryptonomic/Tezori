@@ -8,6 +8,7 @@ const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
 import Send from './Send';
+import Receive from './Receive';
 
 import styles from './ActionPanel.css';
 
@@ -58,8 +59,15 @@ export default class ActionPanel extends Component<Props> {
         address: '12094rjasifgj203fj',
       },
     ];
+    const address = 'boai10394wefkaf';
 
     switch (this.state.activeTab) {
+      case RECEIVE:
+        return (
+          <div className={styles.receiveContainer}>
+            <Receive address={address} />
+          </div>
+        );
       case SEND:
         return (
           <div className={styles.sendContainer}>
