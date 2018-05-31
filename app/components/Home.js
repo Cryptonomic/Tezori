@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
 
 import CreateButton from './CreateButton';
+import Loader from './Loader';
 import CREATION_CONSTANTS from './creationConstants';
 import {
   setAddress,
@@ -21,10 +22,6 @@ type Props = {};
 
 class Home extends Component<Props> {
   props: Props;
-
-  changeDisplayAndRoute = (history) => {
-    history.push('/addresses');
-  };
 
   setDisplay = (display) => () => this.props.setDisplay(display)
 
@@ -74,10 +71,17 @@ class Home extends Component<Props> {
   };
 
   renderCreateWallet = () => {
-    const { address, password, setAddress, setPassword } = this.props;
+    const {
+      address,
+      isLoading,
+      password,
+      setAddress,
+      setPassword,
+    } = this.props;
 
     return (
       <div className={styles.createContainer}>
+        {isLoading && <Loader />}
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Create a new wallet</div>
           <TextField
@@ -100,10 +104,11 @@ class Home extends Component<Props> {
   };
 
   renderImportWallet = () => {
-    const { password, setPassword } = this.props;
+    const { isLoading, password, setPassword } = this.props;
 
     return (
       <div className={styles.createContainer}>
+        {isLoading && <Loader />}
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Import your wallet from a backup</div>
           <TextField
@@ -140,6 +145,7 @@ function mapStateToProps(state) {
   return {
     address: walletInitialization.get('address'),
     currentDisplay: walletInitialization.get('currentDisplay'),
+    isLoading: walletInitialization.get('isLoading'),
     password: walletInitialization.get('password'),
   }
 }
