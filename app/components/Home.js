@@ -1,17 +1,20 @@
 // @flow
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { TextField } from 'material-ui';
 
 import CreateButton from './CreateButton';
 import CREATION_CONSTANTS from './creationConstants';
+import { setPassword } from '../reducers/walletInitialization';
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 import styles from './Home.css';
 
 type Props = {};
 
-export default class Home extends Component<Props> {
+class Home extends Component<Props> {
   props: Props;
   state = {
     currentDisplay: '',
@@ -97,6 +100,8 @@ export default class Home extends Component<Props> {
             floatingLabelText="Password"
             style={{ width: '500px' }}
             type="password"
+            value={this.props.walletInitialization.get('password')}
+            onChange={(_, password) => this.props.setPassword(password)}
           />
           {this.renderRouteButton()}
         </div>
@@ -118,3 +123,17 @@ export default class Home extends Component<Props> {
     }
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    walletInitialization: state.walletInitialization,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    setPassword,
+  }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
