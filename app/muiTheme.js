@@ -8,4 +8,7 @@ export default getMuiTheme({
     hintColor: '#7B91C0',
     floatingLabelColor: '#7B91C0',
   },
+  menuItem: {
+    selectedTextColor: '#1A325F',
+  },
 })

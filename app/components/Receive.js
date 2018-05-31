@@ -1,4 +1,5 @@
 import React from 'react';
+import { clipboard } from 'electron';
 
 import qrCode from '../../resources/qrCode.png';
 import CreateButton from './CreateButton';
@@ -6,6 +7,10 @@ import CreateButton from './CreateButton';
 import styles from './Receive.css';
 
 export default function Receive({ address }) {
+  function copyToClipboard() {
+    clipboard.writeText(address);
+  }
+
   return (
     <div className={styles.receiveContainer}>
       <img
@@ -23,6 +28,7 @@ export default function Receive({ address }) {
             fontSize: '15px',
             marginTop: '15px',
           }}
+          onClick={copyToClipboard}
         />
       </div>
     </div>

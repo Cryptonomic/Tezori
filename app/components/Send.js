@@ -35,10 +35,10 @@ export default class Send extends Component<Props> {
             onChange={this.onSelectChange}
             style={{ width: '50%' }}
           >
-            <MenuItem value="0000" primaryText="Low Fee: 0000"/>
-            <MenuItem value="1000" primaryText="Medium Fee: 0000"/>
-            <MenuItem value="2000" primaryText="High Fee: 0000"/>
-            <MenuItem value="3000" primaryText="Custom"/>
+            <MenuItem value="0000" primaryText="Low Fee: 0000" />
+            <MenuItem value="1000" primaryText="Medium Fee: 0000" />
+            <MenuItem value="2000" primaryText="High Fee: 0000" />
+            <MenuItem value="3000" primaryText="Custom" />
           </SelectField>
         </div>
         <CreateButton
