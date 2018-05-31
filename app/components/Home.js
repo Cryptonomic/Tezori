@@ -80,6 +80,7 @@ export default class Home extends Component<Props> {
           <TextField
             floatingLabelText="Password"
             style={{ width: '500px' }}
+            type="password"
           />
           {this.renderRouteButton()}
         </div>
@@ -95,6 +96,7 @@ export default class Home extends Component<Props> {
           <TextField
             floatingLabelText="Password"
             style={{ width: '500px' }}
+            type="password"
           />
           {this.renderRouteButton()}
         </div>

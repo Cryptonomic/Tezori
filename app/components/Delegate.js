@@ -43,6 +43,7 @@ export default class Delegate extends Component<Props> {
             <TextField
               floatingLabelText="Enter Password"
               style={{ width: '50%' }}
+              type="password"
             />
             <CreateButton
               label="Confirm"
