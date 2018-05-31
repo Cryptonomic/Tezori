@@ -1,21 +1,11 @@
 import { Map } from 'immutable';
+import actionCreator from '../utils/reduxHelpers';
 
 const SET_PASSWORD = 'SET_PASSWORD';
 const SET_ADDRESS = 'SET_ADDRESS';
 
-export const setPassword = (password) => {
-  return {
-    password,
-    type: SET_PASSWORD,
-  };
-};
-
-export const setAddress = (address) => {
-  return {
-    address,
-    type: SET_ADDRESS,
-  };
-};
+export const setPassword = actionCreator(SET_PASSWORD, 'password');
+export const setAddress = actionCreator(SET_ADDRESS, 'address');
 
 const initState = Map({
   address: '',
