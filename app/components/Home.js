@@ -7,7 +7,8 @@ import { TextField } from 'material-ui';
 
 import CreateButton from './CreateButton';
 import CREATION_CONSTANTS from './creationConstants';
-import { setPassword } from '../reducers/walletInitialization';
+import { setAddress, setPassword } from '../reducers/walletInitialization';
+
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 import styles from './Home.css';
@@ -72,6 +73,8 @@ class Home extends Component<Props> {
   };
 
   renderCreateWallet = () => {
+    const { address, password, setAddress, setPassword } = this.props;
+
     return (
       <div className={styles.createContainer}>
         <div className={styles.walletContainers}>
@@ -79,11 +82,15 @@ class Home extends Component<Props> {
           <TextField
             floatingLabelText="Name Your Wallet"
             style={{ width: '500px' }}
+            value={address}
+            onChange={(_, newAddress) => setAddress(newAddress)}
           />
           <TextField
             floatingLabelText="Password"
             style={{ width: '500px' }}
             type="password"
+            value={password}
+            onChange={(_, newPass) => setPassword(newPass)}
           />
           {this.renderRouteButton()}
         </div>
@@ -92,6 +99,8 @@ class Home extends Component<Props> {
   };
 
   renderImportWallet = () => {
+    const { password, setPassword } = this.props;
+
     return (
       <div className={styles.createContainer}>
         <div className={styles.walletContainers}>
@@ -100,8 +109,8 @@ class Home extends Component<Props> {
             floatingLabelText="Password"
             style={{ width: '500px' }}
             type="password"
-            value={this.props.walletInitialization.get('password')}
-            onChange={(_, password) => this.props.setPassword(password)}
+            value={password}
+            onChange={(_, newPass) => setPassword(newPass)}
           />
           {this.renderRouteButton()}
         </div>
@@ -126,12 +135,14 @@ class Home extends Component<Props> {
 
 function mapStateToProps(state) {
   return {
-    walletInitialization: state.walletInitialization,
+    address: state.walletInitialization.get('address'),
+    password: state.walletInitialization.get('password'),
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    setAddress,
     setPassword,
   }, dispatch);
 }
