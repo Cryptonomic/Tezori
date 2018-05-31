@@ -2,12 +2,16 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
 import { TextField } from 'material-ui';
 
 import CreateButton from './CreateButton';
 import CREATION_CONSTANTS from './creationConstants';
-import { setAddress, setPassword } from '../reducers/walletInitialization';
+import {
+  setAddress,
+  setDisplay,
+  setPassword,
+  submitAddress,
+} from '../reducers/walletInitialization';
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
@@ -17,30 +21,27 @@ type Props = {};
 
 class Home extends Component<Props> {
   props: Props;
-  state = {
-    currentDisplay: '',
-  };
 
   changeDisplayAndRoute = (history) => {
-    this.setState({ currentDisplay: DEFAULT });
     history.push('/addresses');
-  }
+  };
 
-  renderRouteButton = () => {
+  setDisplay = (display) => () => this.props.setDisplay(display)
+
+  renderRouteButton = (label) => {
     return (
-      <Route render={({ history }) => (
-        <CreateButton
-          label="Create Wallet"
-          style={{
-            backgroundColor: '#417DEF',
-            color: 'white',
-            marginTop: '20px',
-          }}
-          onClick={() => this.changeDisplayAndRoute(history)}
-        />
-      )} />
+      <CreateButton
+        label={label}
+        style={{
+          backgroundColor: '#417DEF',
+          color: 'white',
+          marginTop: '20px',
+        }}
+        onClick={this.props.submitAddress}
+      />
     );
-  }
+  };
+
   renderSelectionState = () => {
     return (
       <div className={styles.defaultContainer}>
@@ -53,7 +54,7 @@ class Home extends Component<Props> {
               color: 'white',
               marginTop: '20px',
             }}
-            onClick={() => this.setState({ currentDisplay: CREATE })}
+            onClick={this.setDisplay(CREATE)}
           />
         </div>
         <div className={styles.walletContainers}>
@@ -65,7 +66,7 @@ class Home extends Component<Props> {
               backgroundColor: 'transparent',
               marginTop: '20px',
             }}
-            onClick={() => this.setState({ currentDisplay: IMPORT })}
+            onClick={this.setDisplay(IMPORT)}
           />
         </div>
       </div>
@@ -92,7 +93,7 @@ class Home extends Component<Props> {
             value={password}
             onChange={(_, newPass) => setPassword(newPass)}
           />
-          {this.renderRouteButton()}
+          {this.renderRouteButton('Create Wallet')}
         </div>
       </div>
     );
@@ -112,14 +113,14 @@ class Home extends Component<Props> {
             value={password}
             onChange={(_, newPass) => setPassword(newPass)}
           />
-          {this.renderRouteButton()}
+          {this.renderRouteButton('Import')}
         </div>
       </div>
     );
   };
 
   render() {
-    const { currentDisplay } = this.state;
+    const { currentDisplay } = this.props;
 
     switch (currentDisplay) {
       case CREATE:
@@ -134,16 +135,21 @@ class Home extends Component<Props> {
 }
 
 function mapStateToProps(state) {
+  const { walletInitialization } = state;
+
   return {
-    address: state.walletInitialization.get('address'),
-    password: state.walletInitialization.get('password'),
+    address: walletInitialization.get('address'),
+    currentDisplay: walletInitialization.get('currentDisplay'),
+    password: walletInitialization.get('password'),
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     setAddress,
+    setDisplay,
     setPassword,
+    submitAddress,
   }, dispatch);
 }
 
