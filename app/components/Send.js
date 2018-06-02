@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { TextField, SelectField, MenuItem } from 'material-ui';
 
 import CreateButton from './CreateButton';
+import SendConfirmationModal from './SendConfirmationModal';
 
 import styles from './Send.css';
 
@@ -50,6 +51,10 @@ export default class Send extends Component<Props> {
             fontSize: '15px',
             marginTop: '15px',
           }}
+        />
+        <SendConfirmationModal
+          amount={5}
+          address="tz123askd1234asda"
         />
       </div>
     );
