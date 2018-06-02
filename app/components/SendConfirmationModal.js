@@ -4,14 +4,29 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
 import CreateButton from './CreateButton';
 import tezosLogo from '../../resources/tezosLogo.png';
+import Loader from './Loader'
 
 import styles from './SendConfirmationModal.css';
 
-export default function SendConfirmationModal({ amount, address }) {
+export default function SendConfirmationModal({
+  amount,
+  address,
+  open,
+  isLoading,
+  updatePassword,
+  password,
+  onCloseClick,
+  sendConfirmation,
+}) {
+  function onClose() {
+    updatePassword('');
+    onCloseClick();
+  }
+
   return (
     <Dialog
-      open
       modal
+      open={open}
       title="Send Confirmation"
       bodyStyle={{ padding: '50px' }}
       titleStyle={{ padding: '50px 50px 0px' }}
@@ -19,7 +34,7 @@ export default function SendConfirmationModal({ amount, address }) {
       <CloseIcon
         className={styles.closeIcon}
         style={{ fill: '#7190C6' }}
-        onClick={() => {}}
+        onClick={onClose}
       />
       <div className={styles.confirmationText}>Do you confirm that you want to send</div>
       <div className={styles.amountSendContainer}>
@@ -37,6 +52,9 @@ export default function SendConfirmationModal({ amount, address }) {
         <TextField
           floatingLabelText="Enter Password"
           style={{ width: '60%' }}
+          type="password"
+          value={password}
+          onChange={(_, newPassword) => updatePassword(newPassword)}
         />
         <CreateButton
           label="Confirm"
@@ -47,8 +65,11 @@ export default function SendConfirmationModal({ amount, address }) {
             fontSize: '15px',
             marginTop: '15px',
           }}
+          onClick={sendConfirmation}
+          disabled={isLoading}
         />
       </div>
+      {isLoading && <Loader />}
     </Dialog>
   );
 }
