@@ -26,6 +26,8 @@ class Home extends Component<Props> {
   setDisplay = (display) => () => this.props.setDisplay(display)
 
   renderRouteButton = (label) => {
+    const { submitAddress, isLoading } = this.props;
+
     return (
       <CreateButton
         label={label}
@@ -34,7 +36,8 @@ class Home extends Component<Props> {
           color: 'white',
           marginTop: '20px',
         }}
-        onClick={this.props.submitAddress}
+        onClick={submitAddress}
+        disabled={isLoading}
       />
     );
   };

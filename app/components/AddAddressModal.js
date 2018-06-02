@@ -153,6 +153,7 @@ export default function AddAddress({
               marginTop: '20px',
             }}
             onClick={importAddress}
+            disabled={isLoading}
           />
           { isLoading &&
             <Loader />
