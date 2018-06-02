@@ -14,3 +14,7 @@
 .addressBlockContainer {
   margin-bottom: 20px;
 }
+
+.addAddressIcon {
+  cursor: pointer;
+}

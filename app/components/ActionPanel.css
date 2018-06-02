@@ -7,6 +7,7 @@
   justify-content: space-between;
   height: 60px;
   font-size: 16px;
+  overflow: hidden;
 }
 
 .activeTab {

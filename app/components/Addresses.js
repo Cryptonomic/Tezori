@@ -5,7 +5,7 @@ import AddressBlock from './AddressBlock';
 
 import styles from './Addresses.css';
 
-export default function Addresses() {
+export default function Addresses({ openAddAddressModal }) {
   const accountBlocks1 = [
     {tzAmount: 4.21, address: '1023rka0d9f234'},
     {tzAmount: 2.1, address: '1230rkasdofi123'},
@@ -21,7 +21,11 @@ export default function Addresses() {
     <div className={styles.addressesContainer}>
       <div className={styles.addressesTitleContainer}>
         Addresses
-        <AddCircle style={{ fill: '#7B91C0' }} />
+        <AddCircle
+          style={{ fill: '#7B91C0' }}
+          className={styles.addAddressIcon}
+          onClick={openAddAddressModal}
+        />
       </div>
       {
         [accountBlocks1, accountBlocks2].map((accountBlocks, index) => {

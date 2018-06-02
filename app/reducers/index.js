@@ -1,11 +1,11 @@
 // @flow
 import { combineReducers } from 'redux';
 import { routerReducer as router } from 'react-router-redux';
-import counter from './counter';
-import walletInitialization from './walletInitialization';
+import addAddress from './addAddress.duck';
+import walletInitialization from './walletInitialization.duck';
 
 const rootReducer = combineReducers({
-  counter,
+  addAddress,
   walletInitialization,
   router,
 });

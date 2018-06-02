@@ -1,9 +1,9 @@
-import { Map } from 'immutable';
+import { fromJS } from 'immutable';
 import { push } from 'react-router-redux';
 
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
-import CREATION_CONSTANTS from '../components/creationConstants';
+import CREATION_CONSTANTS from '../constants/CreationTypes';
 
 const { DEFAULT } = CREATION_CONSTANTS;
 
@@ -40,7 +40,7 @@ export function submitAddress() {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const initState = Map({
+const initState = fromJS({
   address: '',
   currentDisplay: DEFAULT,
   isLoading: false,
@@ -63,7 +63,6 @@ export default function walletInitialization(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-
 function postAddress(password, address) {
   return request(POST_PASSWORD_URL, 'POST', { password, address });
 }

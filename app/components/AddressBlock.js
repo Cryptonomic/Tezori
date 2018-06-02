@@ -18,6 +18,11 @@ export default class AddressBlock extends Component<Props> {
    isExpanded: false,
  };
 
+  onAddressBlockClick = () => {
+    if (this.state.isExpanded) this.setState({ isExpanded: false});
+    else this.setState({ isExpanded: true });
+  };
+
   renderAccountBlock = ({ tzAmount, address }) => {
     return (
       <div className={styles.accountBlock} key={`${address}-${tzAmount}`}>
@@ -36,20 +41,14 @@ export default class AddressBlock extends Component<Props> {
   renderArrowIcon = () => {
     if (!this.state.isExpanded) {
       return (
-        <div
-          className={styles.arrowContainer}
-          onClick={() => this.setState({ isExpanded: true })}
-        >
+        <div className={styles.arrowContainer}>
           <DropdownArrow />
         </div>
       );
     }
 
     return (
-      <div
-        className={styles.arrowContainer}
-        onClick={() => this.setState({ isExpanded: false })}
-      >
+      <div className={styles.arrowContainer}>
         <DropupArrow />
       </div>
     );
@@ -64,7 +63,10 @@ export default class AddressBlock extends Component<Props> {
 
     return (
       <div className={styles.addressBlockContainer}>
-        <div className={addressBlockTitleContainer}>
+        <div
+          className={addressBlockTitleContainer}
+          onClick={this.onAddressBlockClick}
+        >
           <div className={styles.addressBlockTitle}>
             tz1bn91adfi23409fs
             {this.renderArrowIcon()}

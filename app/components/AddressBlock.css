@@ -1,5 +1,6 @@
 .addressBlockContainer {
   background-color: white;
+  overflow: hidden;
 }
 
 .accounts {
@@ -19,6 +20,7 @@
 
 .addressBlockTitleContainer {
   padding: 10px;
+  cursor: pointer;
 }
 
 .arrowContainer {

@@ -6,13 +6,13 @@ import { TextField } from 'material-ui';
 
 import CreateButton from './CreateButton';
 import Loader from './Loader';
-import CREATION_CONSTANTS from './creationConstants';
+import CREATION_CONSTANTS from '../constants/CreationTypes';
 import {
   setAddress,
   setDisplay,
   setPassword,
   submitAddress,
-} from '../reducers/walletInitialization';
+} from '../reducers/walletInitialization.duck';
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
