@@ -2,13 +2,18 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../resources/fonts/Roboto/Roboto-Regular.ttf');
+}
+
 @import "~font-awesome/css/font-awesome.css";
 
 body {
   position: relative;
   height: 100vh;
   background-color: #EDF0F6;
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  font-family: 'Roboto', Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
 }
 
