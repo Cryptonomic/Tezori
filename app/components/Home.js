@@ -11,21 +11,30 @@ import {
   setAddress,
   setDisplay,
   setPassword,
-  submitAddress,
+  submitAddress
 } from '../reducers/walletInitialization.duck';
-
-const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 import styles from './Home.css';
 
-type Props = {};
+const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
+
+type Props = {
+  setAddress: Function,
+  setDisplay: Function,
+  setPassword: Function,
+  submitAddress: Function,
+  address: string,
+  currentDisplay: 'default' | 'create' | 'import',
+  isLoading: boolean,
+  password: string
+};
 
 class Home extends Component<Props> {
   props: Props;
 
-  setDisplay = (display) => () => this.props.setDisplay(display)
+  setDisplay = display => () => this.props.setDisplay(display);
 
-  renderRouteButton = (label) => {
+  renderRouteButton = label => {
     const { submitAddress, isLoading } = this.props;
 
     return (
@@ -34,7 +43,7 @@ class Home extends Component<Props> {
         style={{
           backgroundColor: '#417DEF',
           color: 'white',
-          marginTop: '20px',
+          marginTop: '20px'
         }}
         onClick={submitAddress}
         disabled={isLoading}
@@ -52,7 +61,7 @@ class Home extends Component<Props> {
             style={{
               backgroundColor: '#417DEF',
               color: 'white',
-              marginTop: '20px',
+              marginTop: '20px'
             }}
             onClick={this.setDisplay(CREATE)}
           />
@@ -64,13 +73,13 @@ class Home extends Component<Props> {
             style={{
               border: '2px solid black',
               backgroundColor: 'transparent',
-              marginTop: '20px',
+              marginTop: '20px'
             }}
             onClick={this.setDisplay(IMPORT)}
           />
         </div>
       </div>
-    )
+    );
   };
 
   renderCreateWallet = () => {
@@ -79,7 +88,7 @@ class Home extends Component<Props> {
       isLoading,
       password,
       setAddress,
-      setPassword,
+      setPassword
     } = this.props;
 
     return (
@@ -113,7 +122,9 @@ class Home extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>Import your wallet from a backup</div>
+          <div className={styles.walletTitle}>
+            Import your wallet from a backup
+          </div>
           <TextField
             floatingLabelText="Password"
             style={{ width: '500px' }}
@@ -149,17 +160,20 @@ function mapStateToProps(state) {
     address: walletInitialization.get('address'),
     currentDisplay: walletInitialization.get('currentDisplay'),
     isLoading: walletInitialization.get('isLoading'),
-    password: walletInitialization.get('password'),
-  }
+    password: walletInitialization.get('password')
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    setAddress,
-    setDisplay,
-    setPassword,
-    submitAddress,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      setAddress,
+      setDisplay,
+      setPassword,
+      submitAddress
+    },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
