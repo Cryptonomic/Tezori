@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
+import { createWallet } from '../conseil';
 
 const { DEFAULT } = CREATION_CONSTANTS;
 
@@ -28,6 +29,9 @@ export function submitAddress() {
 
     try {
       dispatch(setIsLoading(true));
+      console.log('indexing?!?!?!?!');
+      const newWallet = await createWallet('./newWallet.json', '123123');
+      console.log('newWallet', newWallet);
       await postAddress(password, address);
       dispatch(setDisplay(DEFAULT));
       dispatch(setIsLoading(false));
@@ -36,7 +40,7 @@ export function submitAddress() {
       console.error(e);
       dispatch(setIsLoading(false));
     }
-  }
+  };
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -44,7 +48,7 @@ const initState = fromJS({
   address: '',
   currentDisplay: DEFAULT,
   isLoading: false,
-  password: '',
+  password: ''
 });
 
 export default function walletInitialization(state = initState, action) {
