@@ -18,16 +18,20 @@ export default class Receive extends Component<Props> {
   };
 
   copyToClipboard = () => {
-    clipboard.writeText(this.props.address);
-    this.setState({
-      showCopyConfirmation: true,
-    }, () => {
-      setTimeout(() => {
-        this.setState({
-          showCopyConfirmation: false,
-        });
-      }, 2500);
-    });
+    try {
+      clipboard.writeText(this.props.address);
+      this.setState({
+        showCopyConfirmation: true,
+      }, () => {
+        setTimeout(() => {
+          this.setState({
+            showCopyConfirmation: false,
+          });
+        }, 2500);
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   renderCopyConfirmation = () => {
