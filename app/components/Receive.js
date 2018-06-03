@@ -49,7 +49,6 @@ export default class Receive extends Component<Props> {
 
   render() {
     const { address } = this.props;
-    const { showCopyConfirmation } = this.state;
 
     return (
       <div className={styles.receiveContainer}>
@@ -59,7 +58,7 @@ export default class Receive extends Component<Props> {
         />
         <div className={styles.addressContainer}>
           {address}
-          { this.renderCopyConfirmation()}
+          {this.renderCopyConfirmation()}
           <CreateButton
             label="Copy Address"
             style={{
