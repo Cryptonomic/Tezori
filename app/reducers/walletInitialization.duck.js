@@ -1,43 +1,43 @@
 import { fromJS } from 'immutable';
 import { push } from 'react-router-redux';
+import path from 'path';
 
 import actionCreator from '../utils/reduxHelpers';
-import request from '../utils/request';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import { createWallet } from '../conseil';
+import { createWallet, loadWallet } from '../conseil';
 
-const { DEFAULT } = CREATION_CONSTANTS;
+const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const POST_PASSWORD_URL = '/testing123';
 const SET_PASSWORD = 'SET_PASSWORD';
 const SET_ADDRESS = 'SET_ADDRESS';
 const SET_DISPLAY = 'SET_DISPLAY';
 const SET_IS_LOADING = 'SET_IS_LOADING';
 const SET_WALLET_FILENAME = 'SET_WALLET_FILENAME';
+const SET_WALLET_LOCATION = 'SET_WALLET_LOCATION';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setAddress = actionCreator(SET_ADDRESS, 'address');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
-export const setWalletFileName = actionCreator(
-  SET_WALLET_FILENAME,
-  'walletFileName'
-);
+export const setWalletFileName = actionCreator( SET_WALLET_FILENAME, 'walletFileName');
+const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function submitAddress() {
+export function submitAddress(submissionType: 'create' | 'import' ) {
   return async (dispatch, state) => {
-    const address = state().walletInitialization.get('address');
+    const walletLocation = state().walletInitialization.get('walletLocation');
+    const walletFileName = state().walletInitialization.get('walletFileName');
     const password = state().walletInitialization.get('password');
 
     try {
       dispatch(setIsLoading(true));
-      console.log('indexing?!?!?!?!');
-      const newWallet = await createWallet('./newWallet.json', '123123');
-      console.log('newWallet', newWallet);
-      await postAddress(password, address);
+      if (submissionType === CREATE) {
+        await createWallet(`./${walletFileName}.json`, password);
+      } else if (submissionType === IMPORT) {
+        await loadWallet(walletLocation, password);
+      }
       dispatch(setDisplay(DEFAULT));
       dispatch(setIsLoading(false));
       dispatch(push('/addresses'));
@@ -48,13 +48,21 @@ export function submitAddress() {
   };
 }
 
+export function setWalletLocation(walletLocation) {
+  return async (dispatch) => {
+    dispatch(updateWalletLocation(walletLocation));
+    dispatch(setWalletFileName(path.basename(walletLocation)));
+  };
+}
+
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const initState = fromJS({
   address: '',
   currentDisplay: DEFAULT,
   isLoading: false,
   password: '',
-  walletFileName: ''
+  walletFileName: '',
+  walletLocation: '',
 });
 
 export default function walletInitialization(state = initState, action) {
@@ -67,6 +75,8 @@ export default function walletInitialization(state = initState, action) {
       return state.set('address', action.address);
     case SET_WALLET_FILENAME:
       return state.set('walletFileName', action.walletFileName);
+    case SET_WALLET_LOCATION:
+      return state.set('walletLocation', action.walletLocation);
     case SET_PASSWORD:
       return state.set('password', action.password);
     default:
@@ -75,6 +85,3 @@ export default function walletInitialization(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-function postAddress(password, address) {
-  return request(POST_PASSWORD_URL, 'POST', { password, address });
-}

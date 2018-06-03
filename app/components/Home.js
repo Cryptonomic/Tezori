@@ -4,17 +4,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
 import { remote } from 'electron';
-import path from 'path';
 
 import CreateButton from './CreateButton';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import {
-  setAddress,
+  setWalletFileName,
   setDisplay,
   setPassword,
   submitAddress,
-  setWalletFileName,
+  setWalletLocation,
 } from '../reducers/walletInitialization.duck';
 
 import styles from './Home.css';
@@ -22,15 +21,14 @@ import styles from './Home.css';
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 type Props = {
-  setAddress: Function,
+  setWalletFileName: Function,
   setDisplay: Function,
   setPassword: Function,
   submitAddress: Function,
-  address: string,
   currentDisplay: 'default' | 'create' | 'import',
   isLoading: boolean,
   password: string,
-  setWalletFileName: Function,
+  setWalletLocation: Function,
   walletFileName: string
 };
 
@@ -41,11 +39,11 @@ class Home extends Component<Props> {
 
   openFile = () => {
     remote.dialog.showOpenDialog({ properties: ['openFile'] }, filePaths => {
-      this.props.setWalletFileName(path.basename(filePaths[0]));
+      this.props.setWalletLocation(filePaths[0]);
     });
   };
 
-  renderRouteButton = label => {
+  walletSubmissionButton = (label: string, submissionType: 'create' | 'import') => {
     const { submitAddress, isLoading } = this.props;
 
     return (
@@ -56,7 +54,7 @@ class Home extends Component<Props> {
           color: 'white',
           marginTop: '20px'
         }}
-        onClick={submitAddress}
+        onClick={() => submitAddress(submissionType)}
         disabled={isLoading}
       />
     );
@@ -95,10 +93,10 @@ class Home extends Component<Props> {
 
   renderCreateWallet = () => {
     const {
-      address,
+      walletFileName,
       isLoading,
       password,
-      setAddress,
+      setWalletFileName,
       setPassword
     } = this.props;
 
@@ -110,8 +108,8 @@ class Home extends Component<Props> {
           <TextField
             floatingLabelText="Name Your Wallet"
             style={{ width: '500px' }}
-            value={address}
-            onChange={(_, newAddress) => setAddress(newAddress)}
+            value={walletFileName}
+            onChange={(_, newFileName) => setWalletFileName(newFileName)}
           />
           <TextField
             floatingLabelText="Password"
@@ -120,7 +118,7 @@ class Home extends Component<Props> {
             value={password}
             onChange={(_, newPass) => setPassword(newPass)}
           />
-          {this.renderRouteButton('Create Wallet')}
+          {this.walletSubmissionButton('Create Wallet', CREATE)}
         </div>
       </div>
     );
@@ -157,7 +155,7 @@ class Home extends Component<Props> {
             value={password}
             onChange={(_, newPass) => setPassword(newPass)}
           />
-          {this.renderRouteButton('Import')}
+          {this.walletSubmissionButton('Import', IMPORT)}
         </div>
       </div>
     );
@@ -182,7 +180,6 @@ function mapStateToProps(state) {
   const { walletInitialization } = state;
 
   return {
-    address: walletInitialization.get('address'),
     currentDisplay: walletInitialization.get('currentDisplay'),
     isLoading: walletInitialization.get('isLoading'),
     password: walletInitialization.get('password'),
@@ -193,11 +190,11 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      setAddress,
+      setWalletFileName,
       setDisplay,
       setPassword,
       submitAddress,
-      setWalletFileName
+      setWalletLocation,
     },
     dispatch
   );
