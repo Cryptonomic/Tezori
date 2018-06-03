@@ -17,10 +17,28 @@ import {
   updatePublicKey,
   updateUsername,
   updatePassPhrase,
-  updateSeed,
+  updateSeed
 } from '../reducers/addAddress.duck';
 
-type Props = {};
+type Props = {
+  activeTabAddAddressTab: string,
+  addAddressModalIsOpen: boolean,
+  setActiveAddAddressTab: Function,
+  openAddAddressModal: Function,
+  closeAddAddressModal: Function,
+  importAddress: Function,
+  seed: string,
+  username: string,
+  passPhrase: string,
+  privateKey: string,
+  publicKey: string,
+  isAddAddressLoading: boolean,
+  updatePrivateKey: Function,
+  updatePublicKey: Function,
+  updateUsername: Function,
+  updatePassPhrase: Function,
+  updateSeed: Function
+};
 
 class AddressPage extends Component<Props> {
   props: Props;
@@ -43,14 +61,12 @@ class AddressPage extends Component<Props> {
       updatePublicKey,
       updateUsername,
       updatePassPhrase,
-      updateSeed,
+      updateSeed
     } = this.props;
 
     return (
       <div className={styles.addressPageContainer}>
-        <Addresses
-          openAddAddressModal={openAddAddressModal}
-        />
+        <Addresses openAddAddressModal={openAddAddressModal} />
         <ActionPanel />
         <AddAddressModal
           open={addAddressModalIsOpen}
@@ -86,22 +102,25 @@ function mapStateToProps(state) {
     passPhrase: addAddress.get('passPhrase'),
     privateKey: addAddress.get('privateKey'),
     publicKey: addAddress.get('publicKey'),
-    isAddAddressLoading: addAddress.get('isLoading'),
+    isAddAddressLoading: addAddress.get('isLoading')
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    setActiveAddAddressTab,
-    openAddAddressModal,
-    closeAddAddressModal,
-    importAddress,
-    updatePrivateKey,
-    updatePublicKey,
-    updateUsername,
-    updatePassPhrase,
-    updateSeed,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      setActiveAddAddressTab,
+      openAddAddressModal,
+      closeAddAddressModal,
+      importAddress,
+      updatePrivateKey,
+      updatePublicKey,
+      updateUsername,
+      updatePassPhrase,
+      updateSeed
+    },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddressPage);

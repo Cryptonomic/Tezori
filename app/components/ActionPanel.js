@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import TotalBanner from './TotalBanner';
-import tabConstants from './tabConstants';
-const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
+import tabConstants from '../constants/tabConstants';
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
 import Send from './Send';
@@ -14,21 +13,25 @@ import Delegate from './Delegate';
 
 import styles from './ActionPanel.css';
 
-type Props = {}
+const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
+
+type Props = {
+  address: string
+};
 
 class ActionPanel extends Component<Props> {
   props: Props;
 
   state = {
     activeTab: TRANSACTIONS,
-    currentPage: 1,
+    currentPage: 1
   };
 
-  renderTab = (tab) => {
+  renderTab = tab => {
     const { activeTab } = this.state;
     const tabClass = classNames({
       [styles.activeTab]: activeTab === tab,
-      [styles.inactiveTab]: activeTab !== tab,
+      [styles.inactiveTab]: activeTab !== tab
     });
 
     return (
@@ -46,20 +49,20 @@ class ActionPanel extends Component<Props> {
     const transactions = [
       {
         amount: 20.52,
-        address: 'aovk012-34rasfga',
+        address: 'aovk012-34rasfga'
       },
       {
         amount: 14.23,
-        address: '2094tajfgijw9egj23r',
+        address: '2094tajfgijw9egj23r'
       },
       {
-        amount: 61.20,
-        address: 'vnzckijgwoie412039as',
+        amount: 61.2,
+        address: 'vnzckijgwoie412039as'
       },
       {
         amount: 89.12,
-        address: '12094rjasifgj203fj',
-      },
+        address: '12094rjasifgj203fj'
+      }
     ];
     const { address } = this.props;
 
@@ -90,10 +93,10 @@ class ActionPanel extends Component<Props> {
             <PageNumbers
               currentPage={this.state.currentPage}
               numberOfPages={4}
-              onClick={(currentPage) => this.setState({ currentPage })}
+              onClick={currentPage => this.setState({ currentPage })}
             />
           </div>
-        )
+        );
     }
   };
 
@@ -102,15 +105,13 @@ class ActionPanel extends Component<Props> {
     const address = '12049rjksdoigj2309';
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
 
-     return (
-       <div className={styles.actionPanelContainer}>
-         <TotalBanner total={total} address={address} />
-         <div className={styles.tabContainer}>
-           {tabs.map(this.renderTab)}
-         </div>
-         {this.renderSection()}
-       </div>
-     );
+    return (
+      <div className={styles.actionPanelContainer}>
+        <TotalBanner total={total} address={address} />
+        <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
+        {this.renderSection()}
+      </div>
+    );
   }
 }
 
@@ -118,7 +119,7 @@ function mapStateToProps(state) {
   const { walletInitialization } = state;
 
   return {
-    address: walletInitialization.get('address'),
+    address: walletInitialization.get('address')
   };
 }
 
