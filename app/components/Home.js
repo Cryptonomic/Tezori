@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
 import { remote } from 'electron';
+import path from 'path';
 
 import CreateButton from './CreateButton';
 import Loader from './Loader';
@@ -13,7 +14,7 @@ import {
   setDisplay,
   setPassword,
   submitAddress,
-  setWalletFileLocation
+  setWalletFileName,
 } from '../reducers/walletInitialization.duck';
 
 import styles from './Home.css';
@@ -29,8 +30,8 @@ type Props = {
   currentDisplay: 'default' | 'create' | 'import',
   isLoading: boolean,
   password: string,
-  setWalletFileLocation: Function,
-  walletFileLocation: string
+  setWalletFileName: Function,
+  walletFileName: string
 };
 
 class Home extends Component<Props> {
@@ -40,7 +41,7 @@ class Home extends Component<Props> {
 
   openFile = () => {
     remote.dialog.showOpenDialog({ properties: ['openFile'] }, filePaths => {
-      this.props.setWalletFileLocation(filePaths[0]);
+      this.props.setWalletFileName(path.basename(filePaths[0]));
     });
   };
 
@@ -126,7 +127,7 @@ class Home extends Component<Props> {
   };
 
   renderImportWallet = () => {
-    const { isLoading, password, setPassword, walletFileLocation } = this.props;
+    const { isLoading, password, setPassword, walletFileName } = this.props;
 
     return (
       <div className={styles.createContainer}>
@@ -147,9 +148,7 @@ class Home extends Component<Props> {
               }}
               onClick={this.openFile}
             />
-            <span className={styles.walletFileLocation}>
-              {walletFileLocation}
-            </span>
+            <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <TextField
             floatingLabelText="Password"
@@ -187,7 +186,7 @@ function mapStateToProps(state) {
     currentDisplay: walletInitialization.get('currentDisplay'),
     isLoading: walletInitialization.get('isLoading'),
     password: walletInitialization.get('password'),
-    walletFileLocation: walletInitialization.get('walletFileLocation')
+    walletFileName: walletInitialization.get('walletFileName')
   };
 }
 
@@ -198,7 +197,7 @@ function mapDispatchToProps(dispatch) {
       setDisplay,
       setPassword,
       submitAddress,
-      setWalletFileLocation
+      setWalletFileName
     },
     dispatch
   );

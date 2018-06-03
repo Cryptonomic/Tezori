@@ -14,16 +14,16 @@ const SET_PASSWORD = 'SET_PASSWORD';
 const SET_ADDRESS = 'SET_ADDRESS';
 const SET_DISPLAY = 'SET_DISPLAY';
 const SET_IS_LOADING = 'SET_IS_LOADING';
-const SET_WALLET_FILE_LOCATION = 'SET_WALLET_FILE_LOCATION';
+const SET_WALLET_FILENAME = 'SET_WALLET_FILENAME';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setAddress = actionCreator(SET_ADDRESS, 'address');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
-export const setWalletFileLocation = actionCreator(
-  SET_WALLET_FILE_LOCATION,
-  'walletFileLocation'
+export const setWalletFileName = actionCreator(
+  SET_WALLET_FILENAME,
+  'walletFileName'
 );
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -54,7 +54,7 @@ const initState = fromJS({
   currentDisplay: DEFAULT,
   isLoading: false,
   password: '',
-  walletFileLocation: ''
+  walletFileName: ''
 });
 
 export default function walletInitialization(state = initState, action) {
@@ -65,8 +65,8 @@ export default function walletInitialization(state = initState, action) {
       return state.set('isLoading', action.isLoading);
     case SET_ADDRESS:
       return state.set('address', action.address);
-    case SET_WALLET_FILE_LOCATION:
-      return state.set('walletFileLocation', action.walletFileLocation);
+    case SET_WALLET_FILENAME:
+      return state.set('walletFileName', action.walletFileName);
     case SET_PASSWORD:
       return state.set('password', action.password);
     default:

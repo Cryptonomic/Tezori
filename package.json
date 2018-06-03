@@ -36,7 +36,6 @@
   "lint-staged": {
     "*.js": [
       "cross-env NODE_ENV=development eslint --cache --format=node_modules/eslint-formatter-pretty",
-      "prettier --ignore-path .eslintignore --single-quote --write",
       "git add"
     ]
   },
