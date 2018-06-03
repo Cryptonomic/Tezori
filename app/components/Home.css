@@ -25,3 +25,14 @@
   font-size: 34px;
 }
 
+.importButtonContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.walletFileLocation {
+  font-size: 15px;
+  margin-left: 15px;
+  opacity: 0.5;
+}
