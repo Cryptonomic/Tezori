@@ -62,17 +62,12 @@ export default class ActionPanel extends Component<Props> {
       },
     ];
     const { address } = this.state;
-    const delegateFee = 1.25;
 
     switch (this.state.activeTab) {
       case DELEGATE:
         return (
           <div className={styles.delegateContainer}>
-            <Delegate
-              address={address}
-              onAddressChange={(newAddress) => this.setState({ address: newAddress })}
-              delegateFee={delegateFee}
-            />
+            <Delegate />
           </div>
         );
       case RECEIVE:

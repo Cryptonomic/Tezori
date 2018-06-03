@@ -21,15 +21,23 @@ export const updateAmount = actionCreator(UPDATE_AMOUNT, 'amount');
 export const updateFee = actionCreator(UPDATE_FEE, 'fee');
 export const openSendTezosModal = actionCreator(OPEN_SEND_TEZOS_MODAL);
 export const closeSendTezosModal = actionCreator(CLOSE_SEND_TEZOS_MODAL);
-export const updateSendTezosLoading = actionCreator(UPDATE_SEND_TEZOS_LOADING, 'isLoading');
-export const clearState = actionCreator(CLEAR_STATE);
+const updateSendTezosLoading = actionCreator(UPDATE_SEND_TEZOS_LOADING, 'isLoading');
+const clearState = actionCreator(CLEAR_STATE);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function sendConfirmation() {
   return async (dispatch, state) => {
+    const sendTezosState = state().sendTezos;
+    const body = {
+      password: sendTezosState.get('password'),
+      toAddress: sendTezosState.get('toAddress'),
+      amount: sendTezosState.get('amount'),
+      fee: sendTezosState.get('fee'),
+    };
+
     try {
       dispatch(updateSendTezosLoading(true));
-      await postSendTezos();
+      await postSendTezos(body);
       dispatch(clearState());
       dispatch(updateSendTezosLoading(false));
     } catch (e) {
