@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import TotalBanner from './TotalBanner';
@@ -15,13 +16,12 @@ import styles from './ActionPanel.css';
 
 type Props = {}
 
-export default class ActionPanel extends Component<Props> {
+class ActionPanel extends Component<Props> {
   props: Props;
 
   state = {
     activeTab: TRANSACTIONS,
     currentPage: 1,
-    address: '1230rjsadoigj2093rfds',
   };
 
   renderTab = (tab) => {
@@ -61,7 +61,7 @@ export default class ActionPanel extends Component<Props> {
         address: '12094rjasifgj203fj',
       },
     ];
-    const { address } = this.state;
+    const { address } = this.props;
 
     switch (this.state.activeTab) {
       case DELEGATE:
@@ -113,3 +113,13 @@ export default class ActionPanel extends Component<Props> {
      );
   }
 }
+
+function mapStateToProps(state) {
+  const { walletInitialization } = state;
+
+  return {
+    address: walletInitialization.get('address'),
+  };
+}
+
+export default connect(mapStateToProps, null)(ActionPanel);

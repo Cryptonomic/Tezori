@@ -10,6 +10,7 @@
   flex-direction: column;
   color: #1A325F;
   font-size: 26px;
+  position: relative;
 }
 
 .qrCode {
@@ -17,4 +18,25 @@
   width: 240px;
   border: 1px solid #EDF0F6;
   margin-right: 50px;
+}
+
+.copyConfirmation {
+  background-color: #417DEF;
+  color: white;
+  position: absolute;
+  font-size: 14px;
+  border-radius: 10px;
+  width: 65px;
+  display: flex;
+  justify-content: center;
+  height: 25px;
+  align-items: center;
+  top: 34px;
+  left: 160px;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.showCopyConfirmation {
+  opacity: 1.0;
 }
