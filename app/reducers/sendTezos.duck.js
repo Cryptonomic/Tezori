@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
-import request from '../utils/request';
+import { sendTransaction } from '../conseil';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -11,7 +11,6 @@ const UPDATE_FEE = 'UPDATE_FEE';
 const OPEN_SEND_TEZOS_MODAL = 'OPEN_SEND_TEZOS_MODAL';
 const CLOSE_SEND_TEZOS_MODAL = 'CLOSE_SEND_TEZOS_MODAL';
 const UPDATE_SEND_TEZOS_LOADING = 'UPDATE_SEND_TEZOS_LOADING';
-const SEND_CONFIRMATION_URL = '/123123123123';
 const CLEAR_STATE = 'CLEAR_STATE';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -28,21 +27,25 @@ const clearState = actionCreator(CLEAR_STATE);
 export function sendConfirmation() {
   return async (dispatch, state) => {
     const sendTezosState = state().sendTezos;
-    const body = {
-      password: sendTezosState.get('password'),
-      toAddress: sendTezosState.get('toAddress'),
-      amount: sendTezosState.get('amount'),
-      fee: sendTezosState.get('fee'),
-    };
+    const walletState = state().walletInitialization;
+    const password = sendTezosState.get('password');
+    const walletPassword = walletState.get('password');
+    const toAddress = sendTezosState.get('toAddress');
+    const amount = sendTezosState.get('amount');
+    const fee = sendTezosState.get('fee');
+    const fromAddress = walletState.get('address');
+    const network = sendTezosState.get('network');
 
-    try {
-      dispatch(updateSendTezosLoading(true));
-      await postSendTezos(body);
-      dispatch(clearState());
-      dispatch(updateSendTezosLoading(false));
-    } catch (e) {
-      console.error(e);
-      dispatch(updateSendTezosLoading(false));
+    if (password === walletPassword) {
+      try {
+        dispatch(updateSendTezosLoading(true));
+        await sendTransaction(network, fromAddress, toAddress, amount, fee);
+        dispatch(clearState());
+        dispatch(updateSendTezosLoading(false));
+      } catch (e) {
+        console.error(e);
+        dispatch(updateSendTezosLoading(false));
+      }
     }
   }
 }
@@ -54,7 +57,8 @@ const initState = fromJS({
   password: '',
   toAddress: '',
   amount: 0,
-  fee: '0000',
+  fee: 0,
+  network: '',
 });
 
 export default function sendTezos(state = initState, action) {
@@ -81,6 +85,3 @@ export default function sendTezos(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-function postSendTezos(body) {
-  return request(SEND_CONFIRMATION_URL, 'POST', body);
-}

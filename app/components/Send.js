@@ -18,17 +18,24 @@ import {
 
 import styles from './Send.css';
 
-type Props = {}
+type Props = {
+  updatePassword: Function,
+  updateToAddress: Function,
+  updateAmount: Function,
+  updateFee: Function,
+  openSendTezosModal: Function,
+  closeSendTezosModal: Function,
+  sendConfirmation: Function,
+  isConfirmationModalOpen: boolean,
+  isLoading: boolean,
+  password: string,
+  toAddress: string,
+  amount: number,
+  fee: number
+};
 
 class Send extends Component<Props> {
   props: Props;
-  state = {
-    value: '0000',
-  };
-
-  onSelectChange = (event, index, value) => {
-    this.setState({ value });
-  };
 
   render() {
     const {
@@ -67,10 +74,10 @@ class Send extends Component<Props> {
             onChange={(_, index, newFee) => updateFee(newFee)}
             style={{ width: '50%' }}
           >
-            <MenuItem value="0000" primaryText="Low Fee: 0000" />
-            <MenuItem value="1000" primaryText="Medium Fee: 0000" />
-            <MenuItem value="2000" primaryText="High Fee: 0000" />
-            <MenuItem value="3000" primaryText="Custom" />
+            <MenuItem value={0} primaryText="Low Fee: 0000" />
+            <MenuItem value={1} primaryText="Medium Fee: 0000" />
+            <MenuItem value={2} primaryText="High Fee: 0000" />
+            <MenuItem value={3} primaryText="Custom" />
           </SelectField>
         </div>
         <CreateButton
