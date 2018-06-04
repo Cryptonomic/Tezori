@@ -9,24 +9,45 @@ import Loader from './Loader';
 
 import styles from './AddAddressModal.css';
 
-export default function AddAddress({
-  open,
-  activeTab,
-  closeModal,
-  setActiveTab,
-  importAddress,
-  seed,
-  username,
-  passPhrase,
-  privateKey,
-  publicKey,
-  isLoading,
-  updatePrivateKey,
-  updatePublicKey,
-  updateUsername,
-  updatePassPhrase,
-  updateSeed,
-}) {
+type Props = {
+ open: boolean,
+ activeTab: string,
+ closeModal: Function,
+ setActiveTab: Function,
+ importAddress: Function,
+ seed: string,
+ username: string,
+ passPhrase: string,
+ privateKey: string,
+ publicKey: string,
+ isLoading: boolean,
+ updatePrivateKey: Function,
+ updatePublicKey: Function,
+ updateUsername: Function,
+ updatePassPhrase: Function,
+ updateSeed: Function
+};
+
+export default function AddAddress(props: Props) {
+  const {
+    open,
+    activeTab,
+    closeModal,
+    setActiveTab,
+    importAddress,
+    seed,
+    username,
+    passPhrase,
+    privateKey,
+    publicKey,
+    isLoading,
+    updatePrivateKey,
+    updatePublicKey,
+    updateUsername,
+    updatePassPhrase,
+    updateSeed,
+  } = props;
+
   function renderAppBar() {
     return (
       <div className={styles.titleContainer}>
@@ -97,10 +118,10 @@ export default function AddAddress({
               onChange={(_, newSeed) => updateSeed(newSeed)}
             />
             <TextField
-              floatingLabelText="Username"
+              floatingLabelText="Pass Phrase"
               style={{ width: '45%' }}
               value={username}
-              onChange={(_, newUsername) => updateUsername(newUsername)}
+              onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
             />
           </div>
         );

@@ -1,8 +1,12 @@
 import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
-import request from '../utils/request';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
+import {
+  unlockFundraiserIdentity,
+  generateMnemonic,
+  unlockIdentityWithMnemonic,
+} from '../conseil';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
@@ -10,7 +14,6 @@ const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
 const SET_IS_LOADING = 'SET_IS_LOADING';
 const CLEAR_STATE = 'CLEAR_STATE';
-const IMPORT_ADDRESS_URL = '/123testasd';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
 const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
@@ -20,7 +23,7 @@ const UPDATE_SEED = 'UPDATE_SEED';
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
 export const closeAddAddressModal = actionCreator(CLOSE_ADD_ADDRESS_MODAL);
-export const setActiveTab = actionCreator(SET_ACTIVE_ADD_ADDRESS_TAB, 'activeTab');
+const updateActiveTab = actionCreator(SET_ACTIVE_ADD_ADDRESS_TAB, 'activeTab');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const clearState = actionCreator(CLEAR_STATE);
 export const updatePrivateKey = actionCreator(UPDATE_PRIVATE_KEY, 'privateKey');
@@ -30,6 +33,27 @@ export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function setActiveTab(activeTab) {
+  return async (dispatch) => {
+    const { SEED_PHRASE } = ADD_ADDRESS_TYPES;
+
+    if (activeTab === SEED_PHRASE) {
+      try {
+        dispatch(setIsLoading(true));
+        const seed = await generateMnemonic();
+
+        dispatch(setIsLoading(false));
+        dispatch(updateSeed(seed));
+      } catch (e) {
+        console.error(e);
+        dispatch(setIsLoading(false));
+      }
+    }
+
+    dispatch(updateActiveTab(activeTab));
+  }
+}
+
 export function importAddress() {
   return async (dispatch, state) => {
     const { FUNDRAISER, SEED_PHRASE, PRIVATE_KEY } = ADD_ADDRESS_TYPES;
@@ -37,26 +61,20 @@ export function importAddress() {
     const seed = state().addAddress.get('seed');
     const username = state().addAddress.get('username');
     const passPhrase = state().addAddress.get('passPhrase');
-    const privateKey = state().addAddress.get('privateKey');
-    const publicKey = state().addAddress.get('publicKey');
-    let body = {};
-
-    switch(activeTab) {
-      case PRIVATE_KEY:
-        body = { privateKey, publicKey };
-        break;
-      case SEED_PHRASE:
-        body = { seed, passPhrase };
-        break;
-      case FUNDRAISER:
-      default:
-        body = { seed, username, passPhrase};
-        break;
-    }
 
     try {
       dispatch(setIsLoading(true));
-      await postImportAddress(body);
+      switch(activeTab) {
+        case PRIVATE_KEY:
+          break;
+        case SEED_PHRASE:
+          await unlockIdentityWithMnemonic(seed, passPhrase);
+          break;
+        case FUNDRAISER:
+        default:
+          await unlockFundraiserIdentity(seed, username, passPhrase);
+          break;
+      }
       dispatch(clearState());
       dispatch(setIsLoading(false));
     } catch (e) {
@@ -106,6 +124,3 @@ export default function addAddress(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-function postImportAddress(body) {
-  return request(IMPORT_ADDRESS_URL, 'POST', body);
-}
