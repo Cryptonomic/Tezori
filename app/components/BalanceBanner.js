@@ -1,17 +1,29 @@
+// @flow
 import React from 'react';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 
 import tezosLogo from '../../resources/tezosLogo.png';
 
-import styles from './TotalBanner.css';
+import styles from './BalanceBanner.css';
 
-export default function TotalBanner({ total, address }) {
+type Props = {
+  total: number,
+  address: string
+};
+
+export default function BalanceBanner(props: Props) {
+  const { total, address } = props;
+
   return (
     <div className={styles.totalBannerContainer}>
       <div className={styles.totalContainer}>
         <div className={styles.total}>
           {total}
-          <img src={tezosLogo} className={styles.tezosLogo} />
+          <img
+            alt="tez"
+            src={tezosLogo}
+            className={styles.tezosLogo}
+          />
         </div>
         <RefreshIcon
           style={{

@@ -13,7 +13,7 @@
   align-items: center;
 }
 
-.addressBlockTitleContainerExpanded {
+.addressBlockTitleContainerSelected {
   background-color: #417DEF;
   color: #E3E7F1;
 }
@@ -30,12 +30,13 @@
 .tzAmount {
   font-weight: 600;
   display: flex;
-  color: white;
+  color: black;
 }
 
 .accountBlock {
   border-bottom: 1px solid lightgray;
   padding: 10px;
+  cursor: pointer;
 }
 
 .accountBlock .tzAmount {

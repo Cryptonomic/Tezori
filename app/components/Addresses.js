@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 
 import AddressBlock from './AddressBlock';
-import { openAddAddressModal } from '../reducers/address.duck';
+import { openAddAddressModal, selectAccount } from '../reducers/address.duck';
 
 import styles from './Addresses.css';
 
@@ -51,7 +51,9 @@ type Identity = {
 
 type Props = {
   openAddAddressModal: Function,
-  identities: List<Identity>
+  identities: List<Identity>,
+  selectAccount: Function,
+  selectedAccountHash: string
 };
 
 class Addresses extends Component<Props> {
@@ -95,7 +97,11 @@ class Addresses extends Component<Props> {
                 className={styles.addressBlockContainer}
                 key={accountBlock.publicKeyHash}
               >
-                <AddressBlock accountBlock={accountBlock} />
+                <AddressBlock
+                  accountBlock={accountBlock}
+                  selectAccount={this.props.selectAccount}
+                  selectedAccountHash={this.props.selectedAccountHash}
+                />
               </div>
             );
           })
@@ -109,15 +115,8 @@ function mapStateToProps(state) {
   const { address } = state;
 
   return {
-    activeTabAddAddressTab: address.get('activeTab'),
-    addAddressModalIsOpen: address.get('open'),
-    seed: address.get('seed'),
-    username: address.get('username'),
-    passPhrase: address.get('passPhrase'),
-    privateKey: address.get('privateKey'),
-    publicKey: address.get('publicKey'),
-    isAddAddressLoading: address.get('isLoading'),
     identities: address.get('identities'),
+    selectedAccountHash: address.get('selectedAccountHash'),
   };
 }
 
@@ -125,6 +124,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       openAddAddressModal,
+      selectAccount,
     },
     dispatch
   );

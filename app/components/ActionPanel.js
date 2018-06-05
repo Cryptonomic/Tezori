@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import TotalBanner from './TotalBanner';
+import BalanceBanner from './BalanceBanner';
 import tabConstants from '../constants/tabConstants';
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
@@ -107,7 +107,7 @@ class ActionPanel extends Component<Props> {
 
     return (
       <div className={styles.actionPanelContainer}>
-        <TotalBanner total={total} address={address} />
+        <BalanceBanner total={total} address={address} />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
       </div>

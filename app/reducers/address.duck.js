@@ -24,6 +24,7 @@ const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
+const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
@@ -37,6 +38,7 @@ export const updateUsername = actionCreator(UPDATE_USERNAME, 'username');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
+export const selectAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function setActiveTab(activeTab) {
@@ -133,6 +135,7 @@ const initState = fromJS({
   publicKey: '',
   isLoading: false,
   identities: [],
+  selectedAccountHash: '',
 });
 
 export default function address(state = initState, action) {
@@ -164,6 +167,8 @@ export default function address(state = initState, action) {
       return state.set('passPhrase', action.passPhrase);
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
+    case SELECT_ACCOUNT:
+      return state.set('selectedAccountHash', action.selectedAccountHash);
     default:
       return state;
   }

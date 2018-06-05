@@ -9,7 +9,9 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
 type Props = {
-  accountBlock: Object
+  accountBlock: Object,
+  selectAccount: Function,
+  selectedAccountHash: string
 };
 
 export default class AddressBlock extends Component<Props> {
@@ -25,8 +27,18 @@ export default class AddressBlock extends Component<Props> {
 
   renderAccountBlock = (account) => {
     const { balance, accountId } = account;
+    const { selectAccount, selectedAccountHash } = this.props;
+    const accountBlockClasses = classNames({
+      [styles.accountBlock]: true,
+      [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
+    });
+
     return (
-      <div className={styles.accountBlock} key={accountId}>
+      <div
+        className={accountBlockClasses}
+        key={accountId}
+        onClick={() => selectAccount(accountId)}
+      >
         <div className={styles.tzAmount}>
           {balance}
           <img
@@ -57,12 +69,12 @@ export default class AddressBlock extends Component<Props> {
   };
 
   render() {
+    const { accountBlock, selectedAccountHash } = this.props;
     const { isExpanded } = this.state;
     const addressBlockTitleContainer = classNames({
       [styles.addressBlockTitleContainer]: true,
-      [styles.addressBlockTitleContainerExpanded]: isExpanded,
+      [styles.addressBlockTitleContainerSelected]: accountBlock.publicKeyHash === selectedAccountHash,
     });
-    const { accountBlock } = this.props;
 
     return (
       <div className={styles.addressBlockContainer}>
@@ -70,17 +82,20 @@ export default class AddressBlock extends Component<Props> {
           className={addressBlockTitleContainer}
           onClick={this.onAddressBlockClick}
         >
-          <div className={styles.addressBlockTitle}>
+          <div
+            className={styles.addressBlockTitle}
+            onClick={() => this.props.selectAccount(accountBlock.publicKeyHash)}
+          >
             {accountBlock.publicKeyHash}
             {this.renderArrowIcon()}
           </div>
-          {this.state.isExpanded &&
+          {isExpanded &&
             <div className={styles.tzAmount}>
               {accountBlock.balance}
               <img
                 alt="tez"
                 src={tezosLogo}
-                className={styles.tezosSymbolWhite}
+                className={styles.tezosSymbol}
               />
             </div>
           }
