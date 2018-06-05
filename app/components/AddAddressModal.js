@@ -109,18 +109,20 @@ export default function AddAddress(props: Props) {
           </div>
         );
       case ADD_ADDRESS_TYPES.SEED_PHRASE:
+      case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return (
           <div className={styles.addAddressTypeBody}>
             <TextField
               floatingLabelText="Seed Words"
               style={{ width: '100%' }}
               value={seed}
+              disabled={activeTab === ADD_ADDRESS_TYPES.GENERATE_MNEMONIC}
               onChange={(_, newSeed) => updateSeed(newSeed)}
             />
             <TextField
               floatingLabelText="Pass Phrase"
               style={{ width: '45%' }}
-              value={username}
+              value={passPhrase}
               onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
             />
           </div>

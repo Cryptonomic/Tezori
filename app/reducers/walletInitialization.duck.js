@@ -4,7 +4,9 @@ import path from 'path';
 
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import { createWallet, loadWallet } from '../conseil';
+import { tezos } from '../conseil';
+
+const { createWallet, loadWallet } = tezos;
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
@@ -34,7 +36,7 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
     try {
       dispatch(setIsLoading(true));
       if (submissionType === CREATE) {
-        await createWallet(`./${walletFileName}.json`, password);
+        await createWallet(`./wallets/${walletFileName}.json`, password);
       } else if (submissionType === IMPORT) {
         await loadWallet(walletLocation, password);
       }
@@ -63,6 +65,7 @@ const initState = fromJS({
   password: '',
   walletFileName: '',
   walletLocation: '',
+  network: 'zeronet',
 });
 
 export default function walletInitialization(state = initState, action) {

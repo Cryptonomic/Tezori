@@ -1,5 +1,6 @@
 export default {
-  FUNDRAISER: 'Fundraiser',
-  SEED_PHRASE: 'Seed Phrase',
-  PRIVATE_KEY: 'Private Key',
+  FUNDRAISER: 'Import from fundraiser',
+  SEED_PHRASE: 'Unlock with mnemonic',
+  PRIVATE_KEY: 'Import key pair',
+  GENERATE_MNEMONIC: 'Create',
 }

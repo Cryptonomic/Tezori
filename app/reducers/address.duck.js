@@ -2,11 +2,15 @@ import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import {
+import { tezos } from '../conseil';
+import { getOperationGroups, getAccounts } from '../tezos/TezosQuery';
+
+const {
   unlockFundraiserIdentity,
   generateMnemonic,
   unlockIdentityWithMnemonic,
-} from '../conseil';
+  getBalance,
+} = tezos;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
@@ -19,6 +23,7 @@ const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
+const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
@@ -31,13 +36,16 @@ export const updatePublicKey = actionCreator(UPDATE_PUBLIC_KEY, 'publicKey');
 export const updateUsername = actionCreator(UPDATE_USERNAME, 'username');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
+export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function setActiveTab(activeTab) {
   return async (dispatch) => {
-    const { SEED_PHRASE } = ADD_ADDRESS_TYPES;
+    const { GENERATE_MNEMONIC } = ADD_ADDRESS_TYPES;
 
-    if (activeTab === SEED_PHRASE) {
+    dispatch(updateActiveTab(activeTab));
+
+    if (activeTab === GENERATE_MNEMONIC) {
       try {
         dispatch(setIsLoading(true));
         const seed = await generateMnemonic();
@@ -49,31 +57,61 @@ export function setActiveTab(activeTab) {
         dispatch(setIsLoading(false));
       }
     }
-
-    dispatch(updateActiveTab(activeTab));
   }
 }
 
 export function importAddress() {
   return async (dispatch, state) => {
-    const { FUNDRAISER, SEED_PHRASE, PRIVATE_KEY } = ADD_ADDRESS_TYPES;
-    const activeTab = state().addAddress.get('activeTab');
-    const seed = state().addAddress.get('seed');
-    const username = state().addAddress.get('username');
-    const passPhrase = state().addAddress.get('passPhrase');
+    const {
+      FUNDRAISER,
+      SEED_PHRASE,
+      PRIVATE_KEY,
+      GENERATE_MNEMONIC,
+    } = ADD_ADDRESS_TYPES;
+    const activeTab = state().address.get('activeTab');
+    const seed = state().address.get('seed');
+    const username = state().address.get('username');
+    const passPhrase = state().address.get('passPhrase');
+    const network = state().walletInitialization.get('network');
 
     try {
       dispatch(setIsLoading(true));
       switch(activeTab) {
         case PRIVATE_KEY:
           break;
+        case GENERATE_MNEMONIC: {
+          const identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+
+          dispatch(addNewIdentity({
+            ...identity,
+            balance: 0,
+            operationGroups: [],
+            accounts: [],
+          }));
+          break;
+        }
         case SEED_PHRASE:
-          await unlockIdentityWithMnemonic(seed, passPhrase);
-          break;
         case FUNDRAISER:
-        default:
-          await unlockFundraiserIdentity(seed, username, passPhrase);
+        default: {
+          let identity = {};
+          if (activeTab === SEED_PHRASE) {
+            identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          } else {
+            identity = await unlockFundraiserIdentity(seed, username, passPhrase);
+          }
+          const { publicKeyHash } = identity;
+          const balance = await getBalance(publicKeyHash, network);
+          const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
+          const accounts = await getAccountsForIdentity(network, publicKeyHash);
+
+          dispatch(addNewIdentity({
+            ...identity,
+            balance,
+            operationGroups,
+            accounts,
+          }));
           break;
+        }
       }
       dispatch(clearState());
       dispatch(setIsLoading(false));
@@ -94,18 +132,26 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
+  identities: [],
 });
 
-export default function addAddress(state = initState, action) {
+export default function address(state = initState, action) {
   switch (action.type) {
     case CLEAR_STATE:
       return initState;
+    case ADD_NEW_IDENTITY: {
+      const newIdentity = fromJS({...action.identity, addresses: []});
+
+      return state.update('identities', identities => identities.push(newIdentity));
+    }
     case CLOSE_ADD_ADDRESS_MODAL:
       return state.set('open', false);
     case OPEN_ADD_ADDRESS_MODAL:
       return state.set('open', true);
     case SET_ACTIVE_ADD_ADDRESS_TAB:
-      return state.set('activeTab', action.activeTab);
+      return state
+        .set('activeTab', action.activeTab)
+        .set('seed', '');
     case UPDATE_PRIVATE_KEY:
       return state.set('privateKey', action.privateKey);
     case UPDATE_PUBLIC_KEY:
@@ -124,3 +170,40 @@ export default function addAddress(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+function getOperationGroupsForAccount(network, id) {
+  const filter = {
+    limit: 100,
+    block_id: [],
+    block_level: [],
+    block_netid: [],
+    block_protocol: [],
+    operation_id: [],
+    operation_source: [id],
+    operation_group_kind: [],
+    operation_kind: [],
+    account_id: [],
+    account_manager: [],
+    account_delegate: [],
+  };
+
+  return getOperationGroups(network, filter);
+}
+
+function getAccountsForIdentity(network, id) {
+  const filter = {
+      limit: 100,
+      block_id: [],
+      block_level: [],
+      block_netid: [],
+      block_protocol: [],
+      operation_id: [],
+      operation_source: [],
+      operation_group_kind: [],
+      operation_kind: [],
+      account_id: [],
+      account_manager: [id],
+      account_delegate: [],
+  };
+
+  return getAccounts(network, filter);
+}

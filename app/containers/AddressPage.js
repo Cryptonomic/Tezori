@@ -18,7 +18,7 @@ import {
   updateUsername,
   updatePassPhrase,
   updateSeed
-} from '../reducers/addAddress.duck';
+} from '../reducers/address.duck';
 
 type Props = {
   activeTabAddAddressTab: string,
@@ -92,17 +92,17 @@ class AddressPage extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { addAddress } = state;
+  const { address } = state;
 
   return {
-    activeTabAddAddressTab: addAddress.get('activeTab'),
-    addAddressModalIsOpen: addAddress.get('open'),
-    seed: addAddress.get('seed'),
-    username: addAddress.get('username'),
-    passPhrase: addAddress.get('passPhrase'),
-    privateKey: addAddress.get('privateKey'),
-    publicKey: addAddress.get('publicKey'),
-    isAddAddressLoading: addAddress.get('isLoading')
+    activeTabAddAddressTab: address.get('activeTab'),
+    addAddressModalIsOpen: address.get('open'),
+    seed: address.get('seed'),
+    username: address.get('username'),
+    passPhrase: address.get('passPhrase'),
+    privateKey: address.get('privateKey'),
+    publicKey: address.get('publicKey'),
+    isAddAddressLoading: address.get('isLoading')
   };
 }
 

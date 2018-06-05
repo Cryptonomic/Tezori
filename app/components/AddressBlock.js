@@ -9,7 +9,7 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
 type Props = {
-  accountBlocks: Array<Object>
+  accountBlock: Object
 };
 
 export default class AddressBlock extends Component<Props> {
@@ -23,17 +23,19 @@ export default class AddressBlock extends Component<Props> {
     else this.setState({ isExpanded: true });
   };
 
-  renderAccountBlock = ({ tzAmount, address }) => {
+  renderAccountBlock = (account) => {
+    const { balance, accountId } = account;
     return (
-      <div className={styles.accountBlock} key={`${address}-${tzAmount}`}>
+      <div className={styles.accountBlock} key={accountId}>
         <div className={styles.tzAmount}>
-          {tzAmount}
+          {balance}
           <img
+            alt="tez"
             src={tezosLogo}
             className={styles.tezosSymbol}
           />
         </div>
-        <div>{address}</div>
+        <div>{accountId}</div>
       </div>
     );
   };
@@ -60,6 +62,7 @@ export default class AddressBlock extends Component<Props> {
       [styles.addressBlockTitleContainer]: true,
       [styles.addressBlockTitleContainerExpanded]: isExpanded,
     });
+    const { accountBlock } = this.props;
 
     return (
       <div className={styles.addressBlockContainer}>
@@ -68,13 +71,14 @@ export default class AddressBlock extends Component<Props> {
           onClick={this.onAddressBlockClick}
         >
           <div className={styles.addressBlockTitle}>
-            tz1bn91adfi23409fs
+            {accountBlock.publicKeyHash}
             {this.renderArrowIcon()}
           </div>
           {this.state.isExpanded &&
             <div className={styles.tzAmount}>
-              10.00
+              {accountBlock.balance}
               <img
+                alt="tez"
                 src={tezosLogo}
                 className={styles.tezosSymbolWhite}
               />
@@ -93,7 +97,7 @@ export default class AddressBlock extends Component<Props> {
                 }}
               />
             </div>
-            {this.props.accountBlocks.map(this.renderAccountBlock)}
+            {accountBlock.accounts.map(this.renderAccountBlock)}
           </div>
         }
       </div>
