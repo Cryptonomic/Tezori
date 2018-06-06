@@ -10,7 +10,6 @@ import ActionPanel from '../components/ActionPanel';
 import AddAddressModal from '../components/AddAddressModal';
 import {
   setActiveTab as setActiveAddAddressTab,
-  openAddAddressModal,
   closeAddAddressModal,
   importAddress,
   updatePrivateKey,
@@ -24,7 +23,6 @@ type Props = {
   activeTabAddAddressTab: string,
   addAddressModalIsOpen: boolean,
   setActiveAddAddressTab: Function,
-  openAddAddressModal: Function,
   closeAddAddressModal: Function,
   importAddress: Function,
   seed: string,
@@ -48,7 +46,6 @@ class AddressPage extends Component<Props> {
       activeTabAddAddressTab,
       addAddressModalIsOpen,
       setActiveAddAddressTab,
-      openAddAddressModal,
       closeAddAddressModal,
       importAddress,
       seed,
@@ -66,7 +63,7 @@ class AddressPage extends Component<Props> {
 
     return (
       <div className={styles.addressPageContainer}>
-        <Addresses openAddAddressModal={openAddAddressModal} />
+        <Addresses />
         <ActionPanel />
         <AddAddressModal
           open={addAddressModalIsOpen}
@@ -110,7 +107,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       setActiveAddAddressTab,
-      openAddAddressModal,
       closeAddAddressModal,
       importAddress,
       updatePrivateKey,

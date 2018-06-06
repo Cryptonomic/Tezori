@@ -16,7 +16,8 @@ import styles from './ActionPanel.css';
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
 type Props = {
-  address: string
+  address: string,
+  selectedAccount: Object // TODO: add type for this
 };
 
 class ActionPanel extends Component<Props> {
@@ -101,13 +102,16 @@ class ActionPanel extends Component<Props> {
   };
 
   render() {
-    const total = 20.42;
-    const address = '12049rjksdoigj2309';
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+    const { selectedAccount } = this.props;
+    const publicKeyHash = selectedAccount.has('accountId') ? selectedAccount.get('accountId') : selectedAccount.get('publicKeyHash');
 
     return (
       <div className={styles.actionPanelContainer}>
-        <BalanceBanner total={total} address={address} />
+        <BalanceBanner
+          balance={selectedAccount.get('balance')}
+          publicKeyHash={publicKeyHash}
+        />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
       </div>
@@ -116,10 +120,11 @@ class ActionPanel extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { walletInitialization } = state;
+  const { walletInitialization, address } = state;
 
   return {
-    address: walletInitialization.get('address')
+    address: walletInitialization.get('address'),
+    selectedAccount: address.get('selectedAccount'),
   };
 }
 

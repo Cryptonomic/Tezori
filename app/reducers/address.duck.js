@@ -123,6 +123,30 @@ export function importAddress() {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+const accountBlocks1 = {
+  publicKey: 'e09fa0ti3j40tgsdjfgj',
+  privateKey: 'faoe9520qejfoifgmsdjfg',
+  publicKeyHash: 'tz1293asdjo2109sd',
+  balance: 502.123,
+  accounts: [
+    {balance: 4.21, accountId: 'TZ1023rka0d9f234'},
+    {balance: 2.1, accountId: 'TZ1230rkasdofi123'},
+    {balance: 3.0, accountId: 'TZ1zs203rtkasodifg'},
+  ],
+  operationGroups: [],
+};
+const accountBlocks2 = {
+  publicKey: '1203sdoijfo2i3j4osdjfal',
+  privateKey: '1209asdifok12034ksodfk',
+  publicKeyHash: 'tz19w0aijsdoijewoqiwe',
+  balance: 104.98,
+  accounts: [
+    {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf'},
+    {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo'},
+    {balance: 4.25, accountId: 'TZ101293rjaogfij1324g'},
+  ],
+  operationGroups: [],
+};
 const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
   open: false,
@@ -132,16 +156,23 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
-  identities: [],
+  identities: [accountBlocks1, accountBlocks2],
   selectedAccountHash: '',
+  selectedAccount: accountBlocks1,
 });
 
 export default function address(state = initState, action) {
   switch (action.type) {
-    case CLEAR_STATE:
-      return initState;
+    case CLEAR_STATE: {
+      const identities = state.get('identities');
+      const selectedAccountHash = state.get('selectedAccountHash');
+
+      return initState
+      .set('identities', identities)
+      .set('selectedAccountHash', selectedAccountHash);
+    }
     case ADD_NEW_IDENTITY: {
-      const newIdentity = fromJS({...action.identity, addresses: []});
+      const newIdentity = fromJS(action.identity);
 
       return state.update('identities', identities => identities.push(newIdentity));
     }
@@ -166,13 +197,38 @@ export default function address(state = initState, action) {
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:
-      return state.set('selectedAccountHash', action.selectedAccountHash);
+      return state
+        .set('selectedAccountHash', action.selectedAccountHash)
+        .set('selectedAccount', findSelectedAccount(action.selectedAccountHash, state.get('identities')));
     default:
       return state;
   }
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+function findSelectedAccount(hash, identities) {
+  const identityTest = RegExp('^tz*');
+
+  console.log('hash', hash, identityTest.test(hash));
+  if (identityTest.test(hash)) {
+    return identities.find((identity) => {
+      return identity.get('publicKeyHash') === hash;
+    });
+  }
+
+  let foundAccount;
+
+  identities.find((identity) => {
+    foundAccount = identity.get('accounts').find((account) => {
+      return account.get('accountId') === hash;
+    });
+
+    return !!foundAccount;
+  });
+
+  return foundAccount;
+}
+
 function getOperationGroupsForAccount(network, id) {
   const filter = {
     limit: 100,

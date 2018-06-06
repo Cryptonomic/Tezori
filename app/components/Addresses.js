@@ -61,6 +61,8 @@ class Addresses extends Component<Props> {
 
   render() {
     const accountBlocks1 = {
+      publicKey: 'e09fa0ti3j40tgsdjfgj',
+      privateKey: 'faoe9520qejfoifgmsdjfg',
       publicKeyHash: 'tz1293asdjo2109sd',
       balance: 502.123,
       accounts: [
@@ -68,8 +70,11 @@ class Addresses extends Component<Props> {
         {balance: 2.1, accountId: 'TZ1230rkasdofi123'},
         {balance: 3.0, accountId: 'TZ1zs203rtkasodifg'},
       ],
+      operationGroups: [],
     };
     const accountBlocks2 = {
+      publicKey: '1203sdoijfo2i3j4osdjfal',
+      privateKey: '1209asdifok12034ksodfk',
       publicKeyHash: 'tz19w0aijsdoijewoqiwe',
       balance: 104.98,
       accounts: [
@@ -77,6 +82,7 @@ class Addresses extends Component<Props> {
         {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo'},
         {balance: 4.25, accountId: 'TZ101293rjaogfij1324g'},
       ],
+      operationGroups: [],
     };
 
     console.log('identities', this.props.identities);

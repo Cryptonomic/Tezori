@@ -7,18 +7,18 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './BalanceBanner.css';
 
 type Props = {
-  total: number,
-  address: string
+  balance: number,
+  publicKeyHash: string
 };
 
 export default function BalanceBanner(props: Props) {
-  const { total, address } = props;
+  const { balance, publicKeyHash } = props;
 
   return (
     <div className={styles.totalBannerContainer}>
       <div className={styles.totalContainer}>
         <div className={styles.total}>
-          {total}
+          {balance}
           <img
             alt="tez"
             src={tezosLogo}
@@ -34,7 +34,7 @@ export default function BalanceBanner(props: Props) {
           }}
         />
       </div>
-      <div className={styles.address}>{address}</div>
+      <div className={styles.address}>{publicKeyHash}</div>
     </div>
   );
 }
