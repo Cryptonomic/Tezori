@@ -158,7 +158,7 @@ const initState = fromJS({
   isLoading: false,
   identities: [accountBlocks1, accountBlocks2],
   selectedAccountHash: '',
-  selectedAccount: accountBlocks1,
+  selectedAccount: {},
 });
 
 export default function address(state = initState, action) {
@@ -209,14 +209,13 @@ export default function address(state = initState, action) {
 function findSelectedAccount(hash, identities) {
   const identityTest = RegExp('^tz*');
 
-  console.log('hash', hash, identityTest.test(hash));
   if (identityTest.test(hash)) {
     return identities.find((identity) => {
       return identity.get('publicKeyHash') === hash;
     });
   }
 
-  let foundAccount;
+  let foundAccount = {};
 
   identities.find((identity) => {
     foundAccount = identity.get('accounts').find((account) => {

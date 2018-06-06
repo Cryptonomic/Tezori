@@ -9,7 +9,7 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
 type Props = {
-  accountBlock: Object,
+  accountBlock: Object, // TODO: type this
   selectAccount: Function,
   selectedAccountHash: string
 };
@@ -26,7 +26,8 @@ export default class AddressBlock extends Component<Props> {
   };
 
   renderAccountBlock = (account) => {
-    const { balance, accountId } = account;
+    const balance = account.get('balance');
+    const accountId = account.get('accountId');
     const { selectAccount, selectedAccountHash } = this.props;
     const accountBlockClasses = classNames({
       [styles.accountBlock]: true,
@@ -73,7 +74,7 @@ export default class AddressBlock extends Component<Props> {
     const { isExpanded } = this.state;
     const addressBlockTitleContainer = classNames({
       [styles.addressBlockTitleContainer]: true,
-      [styles.addressBlockTitleContainerSelected]: accountBlock.publicKeyHash === selectedAccountHash,
+      [styles.addressBlockTitleContainerSelected]: accountBlock.get('publicKeyHash') === selectedAccountHash,
     });
 
     return (
@@ -84,14 +85,14 @@ export default class AddressBlock extends Component<Props> {
         >
           <div
             className={styles.addressBlockTitle}
-            onClick={() => this.props.selectAccount(accountBlock.publicKeyHash)}
+            onClick={() => this.props.selectAccount(accountBlock.get('publicKeyHash'))}
           >
-            {accountBlock.publicKeyHash}
+            {accountBlock.get('publicKeyHash')}
             {this.renderArrowIcon()}
           </div>
           {isExpanded &&
             <div className={styles.tzAmount}>
-              {accountBlock.balance}
+              {accountBlock.get('balance')}
               <img
                 alt="tez"
                 src={tezosLogo}
@@ -112,7 +113,7 @@ export default class AddressBlock extends Component<Props> {
                 }}
               />
             </div>
-            {accountBlock.accounts.map(this.renderAccountBlock)}
+            {accountBlock.get('accounts').map(this.renderAccountBlock)}
           </div>
         }
       </div>

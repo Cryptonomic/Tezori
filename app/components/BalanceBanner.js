@@ -18,12 +18,17 @@ export default function BalanceBanner(props: Props) {
     <div className={styles.totalBannerContainer}>
       <div className={styles.totalContainer}>
         <div className={styles.total}>
-          {balance}
-          <img
-            alt="tez"
-            src={tezosLogo}
-            className={styles.tezosLogo}
-          />
+          {
+            publicKeyHash &&
+              <span>
+                {balance}
+                <img
+                  alt="tez"
+                  src={tezosLogo}
+                  className={styles.tezosLogo}
+                />
+              </span>
+          }
         </div>
         <RefreshIcon
           style={{

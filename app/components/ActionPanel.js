@@ -109,8 +109,8 @@ class ActionPanel extends Component<Props> {
     return (
       <div className={styles.actionPanelContainer}>
         <BalanceBanner
-          balance={selectedAccount.get('balance')}
-          publicKeyHash={publicKeyHash}
+          balance={selectedAccount.get('balance') || 0}
+          publicKeyHash={publicKeyHash || ''}
         />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
