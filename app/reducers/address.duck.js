@@ -2,15 +2,13 @@ import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import { tezos } from '../conseil';
 import { getOperationGroups, getAccounts } from '../tezos/TezosQuery';
-
-const {
+import {
   unlockFundraiserIdentity,
   generateMnemonic,
   unlockIdentityWithMnemonic,
   getBalance,
-} = tezos;
+} from '../tezos/TezosWallet';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';

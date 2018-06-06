@@ -4,9 +4,7 @@ import path from 'path';
 
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import { tezos } from '../conseil';
-
-const { createWallet, loadWallet } = tezos;
+import { createWallet, loadWallet } from '../tezos/TezosWallet';
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
