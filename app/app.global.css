@@ -14,12 +14,13 @@ body {
   height: 100vh;
   background-color: #EDF0F6;
   font-family: 'Roboto', Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+  overflow-y: auto;
+  margin: 0;
 }
 
 div#root {
   height: 100%;
-  padding: 40px 150px;
+  padding: 40px 40px;
 }
 
 * {
