@@ -23,6 +23,7 @@ const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
+const ADD_OPERATION_GROUPS = 'ADD_OPERATION_GROUPS';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
@@ -36,9 +37,34 @@ export const updateUsername = actionCreator(UPDATE_USERNAME, 'username');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
-export const selectAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
+const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
+const addOperationGroupsToAccount = actionCreator(ADD_OPERATION_GROUPS, 'operationGroups');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function selectAccount(selectedAccountHash) {
+  return async (dispatch, state) => {
+    const network = state().walletInitialization.get('network');
+
+    console.log('selectedAccountHash', selectedAccountHash);
+    dispatch(setSelectedAccount(selectedAccountHash));
+    console.log('selectedAccount', state().address.getIn(['selectedAccount', 'operationGroups']));
+    if (state().address.getIn(['selectedAccount', 'operationGroups']).size === 0) {
+      try {
+        dispatch(setIsLoading(true));
+        const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
+
+        console.log('operationGroups', operationGroups);
+        dispatch(addOperationGroupsToAccount(operationGroups));
+        dispatch(setIsLoading(false));
+      } catch (e) {
+        console.error(e);
+        dispatch(setIsLoading(false));
+      }
+    }
+
+  }
+}
+
 export function setActiveTab(activeTab) {
   return async (dispatch) => {
     const { GENERATE_MNEMONIC } = ADD_ADDRESS_TYPES;
@@ -108,7 +134,7 @@ export function importAddress() {
             ...identity,
             balance,
             operationGroups,
-            accounts,
+            accounts: formatAccounts(accounts),
           }));
           break;
         }
@@ -129,9 +155,9 @@ const accountBlocks1 = {
   publicKeyHash: 'tz1293asdjo2109sd',
   balance: 502.123,
   accounts: [
-    {balance: 4.21, accountId: 'TZ1023rka0d9f234'},
-    {balance: 2.1, accountId: 'TZ1230rkasdofi123'},
-    {balance: 3.0, accountId: 'TZ1zs203rtkasodifg'},
+    {balance: 4.21, accountId: 'TZ1023rka0d9f234', operationGroups: []},
+    {balance: 2.1, accountId: 'TZ1230rkasdofi123', operationGroups: []},
+    {balance: 3.0, accountId: 'TZ1zs203rtkasodifg', operationGroups: []},
   ],
   operationGroups: [],
 };
@@ -141,9 +167,9 @@ const accountBlocks2 = {
   publicKeyHash: 'tz19w0aijsdoijewoqiwe',
   balance: 104.98,
   accounts: [
-    {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf'},
-    {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo'},
-    {balance: 4.25, accountId: 'TZ101293rjaogfij1324g'},
+    {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf', operationGroups: []},
+    {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo', operationGroups: []},
+    {balance: 4.25, accountId: 'TZ101293rjaogfij1324g', operationGroups: []},
   ],
   operationGroups: [],
 };
@@ -170,6 +196,12 @@ export default function address(state = initState, action) {
       return initState
       .set('identities', identities)
       .set('selectedAccountHash', selectedAccountHash);
+    }
+    case ADD_OPERATION_GROUPS: {
+      const updatedAccount = state.get('selectedAccount').set('operationGroups', action.operationGroups);
+
+      return state.set('selectedAccount', updatedAccount)
+        .set('identities', findAndUpdateIdentities(updatedAccount, state.get('identities')));
     }
     case ADD_NEW_IDENTITY: {
       const newIdentity = fromJS(action.identity);
@@ -206,6 +238,28 @@ export default function address(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+function findAndUpdateIdentities(updatedAccount, identities) {
+  if (updatedAccount.has('publicKeyHash')) {
+    return identities.map((identity) => {
+      if (identity.get('publicKeyHash') === updatedAccount.get('publicKeyHash')) {
+        return updatedAccount;
+      }
+      return identity;
+    });
+  }
+
+  return identities.map((identity) => {
+    const accounts = identity.get('accounts').map((account) => {
+      if (account.get('accountId') === updatedAccount.get('accountId')) {
+        return updatedAccount;
+      }
+      return account;
+    });
+
+    return identity.set('accounts', accounts);
+  });
+}
+
 function findSelectedAccount(hash, identities) {
   const identityTest = RegExp('^tz*');
 
@@ -264,4 +318,8 @@ function getAccountsForIdentity(network, id) {
   };
 
   return getAccounts(network, filter);
+}
+
+function formatAccounts(accounts) {
+  return accounts.map((account) => ({ ...account, operationGroups: [] }));
 }

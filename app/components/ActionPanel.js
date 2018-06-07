@@ -10,6 +10,7 @@ import Transactions from './Transactions';
 import Send from './Send';
 import Receive from './Receive';
 import Delegate from './Delegate';
+import Loader from './Loader';
 
 import styles from './ActionPanel.css';
 
@@ -17,7 +18,8 @@ const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
 type Props = {
   address: string,
-  selectedAccount: Object // TODO: add type for this
+  selectedAccount: Object, // TODO: add type for this
+  isLoadingTransactions: boolean
 };
 
 class ActionPanel extends Component<Props> {
@@ -96,6 +98,7 @@ class ActionPanel extends Component<Props> {
               numberOfPages={4}
               onClick={currentPage => this.setState({ currentPage })}
             />
+            {this.props.isLoadingTransactions && <Loader />}
           </div>
         );
     }
@@ -125,6 +128,7 @@ function mapStateToProps(state) {
   return {
     address: walletInitialization.get('address'),
     selectedAccount: address.get('selectedAccount'),
+    isLoadingTransactions: address.get('isLoading'),
   };
 }
 
