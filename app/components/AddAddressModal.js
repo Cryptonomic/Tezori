@@ -10,22 +10,23 @@ import Loader from './Loader';
 import styles from './AddAddressModal.css';
 
 type Props = {
- open: boolean,
- activeTab: string,
- closeModal: Function,
- setActiveTab: Function,
- importAddress: Function,
- seed: string,
- username: string,
- passPhrase: string,
- privateKey: string,
- publicKey: string,
- isLoading: boolean,
- updatePrivateKey: Function,
- updatePublicKey: Function,
- updateUsername: Function,
- updatePassPhrase: Function,
- updateSeed: Function
+  open: boolean,
+  activeTab: string,
+  closeModal: Function,
+  setActiveTab: Function,
+  importAddress: Function,
+  seed: string,
+  username: string,
+  passPhrase: string,
+  privateKey: string,
+  publicKey: string,
+  isLoading: boolean,
+  updatePrivateKey: Function,
+  updatePublicKey: Function,
+  updateUsername: Function,
+  updatePassPhrase: Function,
+  updateSeed: Function,
+  selectedAccountHash: string
 };
 
 export default function AddAddress(props: Props) {
@@ -46,17 +47,21 @@ export default function AddAddress(props: Props) {
     updateUsername,
     updatePassPhrase,
     updateSeed,
+    selectedAccountHash,
   } = props;
 
   function renderAppBar() {
     return (
       <div className={styles.titleContainer}>
         <div>Add an Address</div>
-        <CloseIcon
-          className={styles.closeIcon}
-          style={{ fill: 'white' }}
-          onClick={closeModal}
-        />
+        {
+          selectedAccountHash &&
+            <CloseIcon
+              className={styles.closeIcon}
+              style={{ fill: 'white' }}
+              onClick={closeModal}
+            />
+        }
       </div>
     );
   }

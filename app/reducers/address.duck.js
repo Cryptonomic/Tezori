@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
@@ -149,7 +149,9 @@ export function importAddress() {
               publicKeyHash: identity.get('publicKeyHash'),
             };
           });
+
           dispatch(saveUpdatedWallet(identities));
+          dispatch(setSelectedAccount(identity.publicKeyHash));
           break;
         }
         case SEED_PHRASE:
@@ -172,6 +174,7 @@ export function importAddress() {
             operationGroups,
             accounts: formatAccounts(accounts),
           }));
+          dispatch(setSelectedAccount(publicKeyHash));
           break;
         }
       }
@@ -272,7 +275,7 @@ export default function address(state = initState, action) {
         .set('selectedAccountHash', action.selectedAccountHash)
         .set('selectedAccount', findSelectedAccount(action.selectedAccountHash, state.get('identities')));
     case SELECT_DEFAULT_ACCOUNT: {
-      const identity = state.getIn(['identities', 0], {});
+      const identity = state.getIn(['identities', 0], Map({}));
 
       return state
         .set('selectedAccountHash', identity.get('publicKeyHash', ''))

@@ -18,6 +18,7 @@ import {
   updatePassPhrase,
   updateSeed,
   selectDefaultAccount,
+  openAddAddressModal,
 } from '../reducers/address.duck';
 
 type Props = {
@@ -37,7 +38,9 @@ type Props = {
   updateUsername: Function,
   updatePassPhrase: Function,
   updateSeed: Function,
-  selectDefaultAccount: Function
+  selectDefaultAccount: Function,
+  openAddAddressModal: Function,
+  selectedAccountHash: string
 };
 
 class AddressPage extends Component<Props> {
@@ -45,6 +48,7 @@ class AddressPage extends Component<Props> {
 
   componentDidMount() {
     this.props.selectDefaultAccount();
+    if (!this.props.selectedAccountHash) this.props.openAddAddressModal();
   }
 
   render() {
@@ -64,7 +68,8 @@ class AddressPage extends Component<Props> {
       updatePublicKey,
       updateUsername,
       updatePassPhrase,
-      updateSeed
+      updateSeed,
+      selectedAccountHash,
     } = this.props;
 
     return (
@@ -88,6 +93,7 @@ class AddressPage extends Component<Props> {
           updateUsername={updateUsername}
           updatePassPhrase={updatePassPhrase}
           updateSeed={updateSeed}
+          selectedAccountHash={selectedAccountHash}
         />
       </div>
     );
@@ -105,7 +111,8 @@ function mapStateToProps(state) {
     passPhrase: address.get('passPhrase'),
     privateKey: address.get('privateKey'),
     publicKey: address.get('publicKey'),
-    isAddAddressLoading: address.get('isLoading')
+    isAddAddressLoading: address.get('isLoading'),
+    selectedAccountHash: address.get('selectedAccountHash'),
   };
 }
 
@@ -121,6 +128,7 @@ function mapDispatchToProps(dispatch) {
       updatePassPhrase,
       updateSeed,
       selectDefaultAccount,
+      openAddAddressModal,
     },
     dispatch
   );

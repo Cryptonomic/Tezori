@@ -106,14 +106,13 @@ class ActionPanel extends Component<Props> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { selectedAccount } = this.props;
-    const publicKeyHash = selectedAccount.has('accountId') ? selectedAccount.get('accountId') : selectedAccount.get('publicKeyHash');
+    const { selectedAccount, selectedAccountHash } = this.props;
 
     return (
       <div className={styles.actionPanelContainer}>
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
-          publicKeyHash={publicKeyHash || ''}
+          publicKeyHash={selectedAccountHash}
         />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
