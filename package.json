@@ -209,6 +209,7 @@
     "immutable": "^3.8.2",
     "libsodium-wrappers": "^0.7.3",
     "material-ui": "^0.20.1",
+    "qrcode": "^1.2.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.2.0",

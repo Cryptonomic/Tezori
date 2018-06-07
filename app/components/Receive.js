@@ -2,13 +2,15 @@
 import React, { Component } from 'react';
 import { clipboard } from 'electron';
 import classNames from 'classnames';
+import QRCode from 'qrcode';
 
-import qrCode from '../../resources/qrCode.png';
 import CreateButton from './CreateButton';
 
 import styles from './Receive.css';
 
-type Props = {};
+type Props = {
+  address: string
+};
 
 export default class Receive extends Component<Props> {
   props: Props;
@@ -17,6 +19,17 @@ export default class Receive extends Component<Props> {
     showCopyConfirmation: false,
   };
 
+  componentDidMount() {
+    try {
+      QRCode.toCanvas(this.canvasRef.current, this.props.address, {width: 300}, (err) => {
+        if (err) console.error(err);
+      })
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  canvasRef = React.createRef();
   copyToClipboard = () => {
     try {
       clipboard.writeText(this.props.address);
@@ -52,8 +65,8 @@ export default class Receive extends Component<Props> {
 
     return (
       <div className={styles.receiveContainer}>
-        <img
-          src={qrCode}
+        <canvas
+          ref={this.canvasRef}
           className={styles.qrCode}
         />
         <div className={styles.addressContainer}>
