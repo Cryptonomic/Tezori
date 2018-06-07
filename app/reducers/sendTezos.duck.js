@@ -28,18 +28,24 @@ export function sendConfirmation() {
   return async (dispatch, state) => {
     const sendTezosState = state().sendTezos;
     const walletState = state().walletInitialization;
+
     const password = sendTezosState.get('password');
     const walletPassword = walletState.get('password');
     const toAddress = sendTezosState.get('toAddress');
     const amount = sendTezosState.get('amount');
     const fee = sendTezosState.get('fee');
-    const fromAddress = walletState.get('address');
-    const network = sendTezosState.get('network');
+    const network = walletState.get('network');
+    const selectedAccount = state().address.get('selectedAccount');
+    const keyStore = {
+      publicKey: selectedAccount.get('publicKey'),
+      privateKey: selectedAccount.get('privateKey'),
+      publicKeyHash: selectedAccount.get('publicKeyHash'),
+    };
 
     if (password === walletPassword) {
       try {
         dispatch(updateSendTezosLoading(true));
-        await sendTransactionOperation(network, fromAddress, toAddress, amount, fee);
+        await sendTransactionOperation(network, keyStore, toAddress, amount, fee);
         dispatch(clearState());
         dispatch(updateSendTezosLoading(false));
       } catch (e) {
