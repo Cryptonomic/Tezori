@@ -27,6 +27,7 @@ const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 const ADD_OPERATION_GROUPS = 'ADD_OPERATION_GROUPS';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
+const SELECT_DEFAULT_ACCOUNT = 'SELECT_DEFAULT_ACCOUNT ';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
@@ -43,6 +44,7 @@ export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
 const addOperationGroupsToAccount = actionCreator(ADD_OPERATION_GROUPS, 'operationGroups');
 const addNewAccount = actionCreator(ADD_NEW_ACCOUNT, 'publicKeyHash', 'account');
+export const selectDefaultAccount = actionCreator(SELECT_DEFAULT_ACCOUNT);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount(publicKeyHash) {
@@ -269,6 +271,13 @@ export default function address(state = initState, action) {
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
         .set('selectedAccount', findSelectedAccount(action.selectedAccountHash, state.get('identities')));
+    case SELECT_DEFAULT_ACCOUNT: {
+      const identity = state.getIn(['identities', 0], {});
+
+      return state
+        .set('selectedAccountHash', identity.get('publicKeyHash', ''))
+        .set('selectedAccount', identity)
+    }
     default:
       return state;
   }

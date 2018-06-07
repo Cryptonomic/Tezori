@@ -16,7 +16,8 @@ import {
   updatePublicKey,
   updateUsername,
   updatePassPhrase,
-  updateSeed
+  updateSeed,
+  selectDefaultAccount,
 } from '../reducers/address.duck';
 
 type Props = {
@@ -35,11 +36,16 @@ type Props = {
   updatePublicKey: Function,
   updateUsername: Function,
   updatePassPhrase: Function,
-  updateSeed: Function
+  updateSeed: Function,
+  selectDefaultAccount: Function
 };
 
 class AddressPage extends Component<Props> {
   props: Props;
+
+  componentDidMount() {
+    this.props.selectDefaultAccount();
+  }
 
   render() {
     const {
@@ -113,7 +119,8 @@ function mapDispatchToProps(dispatch) {
       updatePublicKey,
       updateUsername,
       updatePassPhrase,
-      updateSeed
+      updateSeed,
+      selectDefaultAccount,
     },
     dispatch
   );

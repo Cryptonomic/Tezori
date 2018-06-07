@@ -17,9 +17,9 @@ import styles from './ActionPanel.css';
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
 type Props = {
-  address: string,
   selectedAccount: Object, // TODO: add type for this
-  isLoadingTransactions: boolean
+  isLoadingTransactions: boolean,
+  selectedAccountHash: string
 };
 
 class ActionPanel extends Component<Props> {
@@ -67,7 +67,7 @@ class ActionPanel extends Component<Props> {
         address: '12094rjasifgj203fj'
       }
     ];
-    const { address } = this.props;
+    const { selectedAccountHash } = this.props;
 
     switch (this.state.activeTab) {
       case DELEGATE:
@@ -79,7 +79,7 @@ class ActionPanel extends Component<Props> {
       case RECEIVE:
         return (
           <div className={styles.receiveContainer}>
-            <Receive address={address} />
+            <Receive address={selectedAccountHash} />
           </div>
         );
       case SEND:
@@ -123,10 +123,10 @@ class ActionPanel extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { walletInitialization, address } = state;
+  const { address } = state;
 
   return {
-    address: walletInitialization.get('address'),
+    selectedAccountHash: address.get('selectedAccountHash'),
     selectedAccount: address.get('selectedAccount'),
     isLoadingTransactions: address.get('isLoading'),
   };

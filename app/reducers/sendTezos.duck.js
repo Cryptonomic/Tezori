@@ -46,6 +46,7 @@ export function sendConfirmation() {
       try {
         dispatch(updateSendTezosLoading(true));
         await sendTransactionOperation(network, keyStore, toAddress, amount, fee);
+
         dispatch(clearState());
         dispatch(updateSendTezosLoading(false));
       } catch (e) {
