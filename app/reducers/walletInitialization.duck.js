@@ -4,7 +4,7 @@ import path from 'path';
 
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import { createWallet, loadWallet } from '../tezos/TezosWallet';
+import { createWallet, loadWallet, saveWallet } from '../tezos/TezosWallet';
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
@@ -25,6 +25,21 @@ export const setWalletFileName = actionCreator( SET_WALLET_FILENAME, 'walletFile
 const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function saveUpdatedWallet(identities) {
+  return async (dispatch, state) => {
+    try {
+      dispatch(setIsLoading(true));
+      const walletLocation = state().walletInitialization.get('walletLocation');
+      await saveWallet(walletLocation, { identities });
+
+      dispatch(setIsLoading(false));
+    } catch (e) {
+      console.error(e);
+      dispatch(setIsLoading(false));
+    }
+  }
+}
+
 export function submitAddress(submissionType: 'create' | 'import' ) {
   return async (dispatch, state) => {
     const walletLocation = state().walletInitialization.get('walletLocation');

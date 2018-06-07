@@ -10,6 +10,7 @@ import {
   unlockIdentityWithMnemonic,
   getBalance,
 } from '../tezos/TezosWallet';
+import { saveUpdatedWallet } from './walletInitialization.duck';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
@@ -138,6 +139,15 @@ export function importAddress() {
             operationGroups: [],
             accounts: [],
           }));
+
+          const identities = state().address.get('identities').map((identity) => {
+            return {
+              publicKey: identity.get('publicKey'),
+              privateKey: identity.get('privateKey'),
+              publicKeyHash: identity.get('publicKeyHash'),
+            };
+          });
+          dispatch(saveUpdatedWallet(identities));
           break;
         }
         case SEED_PHRASE:
