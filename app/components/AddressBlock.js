@@ -15,10 +15,32 @@ type Props = {
 };
 
 export default class AddressBlock extends Component<Props> {
- props: Props;
- state = {
-   isExpanded: false,
- };
+  props: Props;
+  state = {
+    isExpanded: false,
+  };
+
+  renderTezosAmount = (accountId: string, selectedAccountHash: string, balance: number) => {
+    const tzAmountClasses = classNames({
+      [styles.tzAmount]: true,
+      [styles.tzAmountSelected]: accountId === selectedAccountHash,
+    });
+    const tezosSymbolClasses = classNames({
+      [styles.tezosSymbol]: accountId !== selectedAccountHash,
+      [styles.tezosSymbolGray]: accountId === selectedAccountHash,
+    });
+
+    return (
+      <div className={tzAmountClasses}>
+        {balance}
+        <img
+          alt="tez"
+          src={tezosLogo}
+          className={tezosSymbolClasses}
+        />
+      </div>
+    );
+  };
 
   onAddressBlockClick = () => {
     if (this.state.isExpanded) this.setState({ isExpanded: false});
@@ -40,41 +62,30 @@ export default class AddressBlock extends Component<Props> {
         key={accountId}
         onClick={() => selectAccount(accountId)}
       >
-        <div className={styles.tzAmount}>
-          {balance}
-          <img
-            alt="tez"
-            src={tezosLogo}
-            className={styles.tezosSymbol}
-          />
-        </div>
+        {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
         <div>{accountId}</div>
       </div>
     );
   };
 
   renderArrowIcon = () => {
-    if (!this.state.isExpanded) {
-      return (
-        <div className={styles.arrowContainer}>
-          <DropdownArrow />
-        </div>
-      );
-    }
+    const { isExpanded } = this.state;
 
     return (
       <div className={styles.arrowContainer}>
-        <DropupArrow />
+        { !isExpanded && <DropdownArrow /> }
+        { isExpanded && <DropupArrow /> }
       </div>
     );
   };
 
   render() {
     const { accountBlock, selectedAccountHash } = this.props;
+    const publicKeyHash = accountBlock.get('publicKeyHash');
     const { isExpanded } = this.state;
     const addressBlockTitleContainer = classNames({
       [styles.addressBlockTitleContainer]: true,
-      [styles.addressBlockTitleContainerSelected]: accountBlock.get('publicKeyHash') === selectedAccountHash,
+      [styles.addressBlockTitleContainerSelected]: publicKeyHash === selectedAccountHash,
     });
 
     return (
@@ -85,20 +96,14 @@ export default class AddressBlock extends Component<Props> {
         >
           <div
             className={styles.addressBlockTitle}
-            onClick={() => this.props.selectAccount(accountBlock.get('publicKeyHash'))}
+            onClick={() => this.props.selectAccount(publicKeyHash)}
           >
-            {accountBlock.get('publicKeyHash')}
+            {publicKeyHash}
             {this.renderArrowIcon()}
           </div>
-          {isExpanded &&
-            <div className={styles.tzAmount}>
-              {accountBlock.get('balance')}
-              <img
-                alt="tez"
-                src={tezosLogo}
-                className={styles.tezosSymbol}
-              />
-            </div>
+          {
+            isExpanded &&
+              this.renderTezosAmount(publicKeyHash, selectedAccountHash, accountBlock.get('balance'))
           }
         </div>
         {this.state.isExpanded &&

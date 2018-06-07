@@ -39,8 +39,8 @@
   cursor: pointer;
 }
 
-.accountBlock .tzAmount {
-  color: black;
+.tzAmountSelected {
+  color: #E3E7F1;
 }
 
 .addAccountBlock {
@@ -60,8 +60,8 @@
   filter: brightness(0%);
 }
 
-.tezosSymbolWhite {
+.tezosSymbolGray {
   height: 17px;
   width: 17px;
-  filter: brightness(0%) invert(100%);
+  filter: brightness(0.5%) invert(100%);
 }
