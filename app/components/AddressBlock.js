@@ -11,7 +11,8 @@ import styles from './AddressBlock.css';
 type Props = {
   accountBlock: Object, // TODO: type this
   selectAccount: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  createNewAccount: Function
 };
 
 export default class AddressBlock extends Component<Props> {
@@ -116,6 +117,7 @@ export default class AddressBlock extends Component<Props> {
                   height: '18px',
                   width: '18px'
                 }}
+                onClick={() => this.props.createNewAccount(publicKeyHash)}
               />
             </div>
             {accountBlock.get('accounts').map(this.renderAccountBlock)}

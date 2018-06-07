@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import { getOperationGroups, getAccounts } from '../tezos/TezosQuery';
+import { sendOriginationOperation } from '../tezos/TezosOperations';
 import {
   unlockFundraiserIdentity,
   generateMnemonic,
@@ -24,6 +25,7 @@ const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 const ADD_OPERATION_GROUPS = 'ADD_OPERATION_GROUPS';
+const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
@@ -39,21 +41,43 @@ export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
 const addOperationGroupsToAccount = actionCreator(ADD_OPERATION_GROUPS, 'operationGroups');
+const addNewAccount = actionCreator(ADD_NEW_ACCOUNT, 'publicKeyHash', 'account');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function createNewAccount(publicKeyHash) {
+  return async (dispatch, state) => {
+    try {
+      dispatch(setIsLoading(true));
+      const network = state().walletInitialization.get('network');
+      const identity = findSelectedAccount(publicKeyHash, state().address.get('identities'));
+      const keyStore = {
+        publicKey: identity.get('publicKey'),
+        privateKey: identity.get('privateKey'),
+        publicKeyHash,
+      };
+      // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
+      const newAccount = await sendOriginationOperation(network, keyStore, 0, 'delegate', true, false, 3);
+      console.log('newAccount?!?!?!?', newAccount);
+      dispatch(addNewAccount(publicKeyHash, newAccount));
+      dispatch(setIsLoading(false));
+    } catch (e) {
+      console.error(e);
+      dispatch(setIsLoading(false));
+    }
+  };
+}
+
 export function selectAccount(selectedAccountHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
 
-    console.log('selectedAccountHash', selectedAccountHash);
     dispatch(setSelectedAccount(selectedAccountHash));
-    console.log('selectedAccount', state().address.getIn(['selectedAccount', 'operationGroups']));
+
     if (state().address.getIn(['selectedAccount', 'operationGroups']).size === 0) {
       try {
         dispatch(setIsLoading(true));
         const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
 
-        console.log('operationGroups', operationGroups);
         dispatch(addOperationGroupsToAccount(operationGroups));
         dispatch(setIsLoading(false));
       } catch (e) {
@@ -197,6 +221,9 @@ export default function address(state = initState, action) {
       .set('identities', identities)
       .set('selectedAccountHash', selectedAccountHash);
     }
+    case ADD_NEW_ACCOUNT:
+      return state
+        .set('identities', addNewAccountToIdentity(action.publicKeyHash, action.account, state.get('identities')));
     case ADD_OPERATION_GROUPS: {
       const updatedAccount = state.get('selectedAccount').set('operationGroups', action.operationGroups);
 
@@ -238,6 +265,17 @@ export default function address(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+function addNewAccountToIdentity(publicKeyHash, account, identities) {
+  return identities.map((identity) => {
+    if (identity.get('publicKeyHash') === publicKeyHash) {
+      const accounts = identity.get('accounts');
+
+      return identity.set('accounts', formatAccounts(accounts.push(account)));
+    }
+    return identity;
+  });
+}
+
 function findAndUpdateIdentities(updatedAccount, identities) {
   if (updatedAccount.has('publicKeyHash')) {
     return identities.map((identity) => {
@@ -321,5 +359,5 @@ function getAccountsForIdentity(network, id) {
 }
 
 function formatAccounts(accounts) {
-  return accounts.map((account) => ({ ...account, operationGroups: [] }));
+  return accounts.map((account) => ({ operationGroups: [], ...account }));
 }

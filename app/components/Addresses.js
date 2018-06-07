@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 
 import AddressBlock from './AddressBlock';
-import { openAddAddressModal, selectAccount } from '../reducers/address.duck';
+import {
+  openAddAddressModal,
+  selectAccount,
+  createNewAccount,
+} from '../reducers/address.duck';
 
 import styles from './Addresses.css';
 
@@ -53,7 +57,8 @@ type Props = {
   openAddAddressModal: Function,
   identities: List<Identity>,
   selectAccount: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  createNewAccount: Function
 };
 
 class Addresses extends Component<Props> {
@@ -81,6 +86,7 @@ class Addresses extends Component<Props> {
                   accountBlock={accountBlock}
                   selectAccount={this.props.selectAccount}
                   selectedAccountHash={this.props.selectedAccountHash}
+                  createNewAccount={this.props.createNewAccount}
                 />
               </div>
             );
@@ -105,6 +111,7 @@ function mapDispatchToProps(dispatch) {
     {
       openAddAddressModal,
       selectAccount,
+      createNewAccount,
     },
     dispatch
   );
