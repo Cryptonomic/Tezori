@@ -17,8 +17,7 @@ import {
   updateUsername,
   updatePassPhrase,
   updateSeed,
-  selectDefaultAccount,
-  openAddAddressModal,
+  selectDefaultAccountOrOpenModal,
 } from '../reducers/address.duck';
 
 type Props = {
@@ -38,17 +37,15 @@ type Props = {
   updateUsername: Function,
   updatePassPhrase: Function,
   updateSeed: Function,
-  selectDefaultAccount: Function,
-  openAddAddressModal: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  selectDefaultAccountOrOpenModal: Function
 };
 
 class AddressPage extends Component<Props> {
   props: Props;
 
   componentDidMount() {
-    this.props.selectDefaultAccount();
-    if (!this.props.selectedAccountHash) this.props.openAddAddressModal();
+    this.props.selectDefaultAccountOrOpenModal();
   }
 
   render() {
@@ -127,8 +124,7 @@ function mapDispatchToProps(dispatch) {
       updateUsername,
       updatePassPhrase,
       updateSeed,
-      selectDefaultAccount,
-      openAddAddressModal,
+      selectDefaultAccountOrOpenModal,
     },
     dispatch
   );

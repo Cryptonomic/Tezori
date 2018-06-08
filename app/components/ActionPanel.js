@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import BalanceBanner from './BalanceBanner';
-import tabConstants from '../constants/tabConstants';
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
 import Send from './Send';
 import Receive from './Receive';
 import Delegate from './Delegate';
 import Loader from './Loader';
+import tabConstants from '../constants/tabConstants';
 
 import styles from './ActionPanel.css';
 
@@ -49,25 +49,7 @@ class ActionPanel extends Component<Props> {
   };
 
   renderSection = () => {
-    const transactions = [
-      {
-        amount: 20.52,
-        address: 'aovk012-34rasfga'
-      },
-      {
-        amount: 14.23,
-        address: '2094tajfgijw9egj23r'
-      },
-      {
-        amount: 61.2,
-        address: 'vnzckijgwoie412039as'
-      },
-      {
-        amount: 89.12,
-        address: '12094rjasifgj203fj'
-      }
-    ];
-    const { selectedAccountHash } = this.props;
+    const { selectedAccountHash, selectedAccount } = this.props;
 
     switch (this.state.activeTab) {
       case DELEGATE:
@@ -89,7 +71,9 @@ class ActionPanel extends Component<Props> {
           </div>
         );
       case TRANSACTIONS:
-      default:
+      default: {
+        const transactions = selectedAccount.get('transactions');
+
         return (
           <div className={styles.transactionsContainer}>
             <Transactions transactions={transactions} />
@@ -101,6 +85,7 @@ class ActionPanel extends Component<Props> {
             {this.props.isLoadingTransactions && <Loader />}
           </div>
         );
+      }
     }
   };
 

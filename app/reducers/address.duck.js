@@ -1,8 +1,14 @@
 import { fromJS, Map } from 'immutable';
+import { flatten } from 'lodash';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import { getOperationGroups, getAccounts } from '../tezos/TezosQuery';
+import OPERATION_TYPES from '../constants/OperationTypes';
+import {
+  getOperationGroups,
+  getAccounts,
+  getOperationGroup,
+} from '../tezos/TezosQuery';
 import { sendOriginationOperation } from '../tezos/TezosOperations';
 import {
   unlockFundraiserIdentity,
@@ -25,7 +31,7 @@ const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
-const ADD_OPERATION_GROUPS = 'ADD_OPERATION_GROUPS';
+const ADD_OPERATION_GROUPS_AND_TRANSACTIONS = 'ADD_OPERATION_GROUPS_AND_TRANSACTIONS';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_DEFAULT_ACCOUNT = 'SELECT_DEFAULT_ACCOUNT ';
 
@@ -42,11 +48,20 @@ export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
-const addOperationGroupsToAccount = actionCreator(ADD_OPERATION_GROUPS, 'operationGroups');
+const addOperationGroupsAndTransactionsToAccount = actionCreator(ADD_OPERATION_GROUPS_AND_TRANSACTIONS, 'operationGroups', 'transactions');
 const addNewAccount = actionCreator(ADD_NEW_ACCOUNT, 'publicKeyHash', 'account');
 export const selectDefaultAccount = actionCreator(SELECT_DEFAULT_ACCOUNT);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function selectDefaultAccountOrOpenModal() {
+  return (dispatch, state) => {
+    dispatch(selectDefaultAccount());
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+
+    if (!selectedAccountHash) dispatch(openAddAddressModal());
+  };
+}
+
 export function createNewAccount(publicKeyHash) {
   return async (dispatch, state) => {
     try {
@@ -80,8 +95,18 @@ export function selectAccount(selectedAccountHash) {
       try {
         dispatch(setIsLoading(true));
         const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
+        const transactions = operationGroups.filter(({ kind }) => {
+          return kind === OPERATION_TYPES.TRANSACTION;
+        });
 
-        dispatch(addOperationGroupsToAccount(operationGroups));
+        const transactionGroups = await Promise.all(transactions.map(({ hash }) => {
+          return getOperationGroup(network, hash)
+          .then(({ operations }) => operations);
+        }));
+
+        const flattenedTransactions = flatten(transactionGroups);
+
+        dispatch(addOperationGroupsAndTransactionsToAccount(operationGroups, flattenedTransactions));
         dispatch(setIsLoading(false));
       } catch (e) {
         console.error(e);
@@ -194,11 +219,16 @@ const accountBlocks1 = {
   publicKeyHash: 'tz1293asdjo2109sd',
   balance: 502.123,
   accounts: [
-    {balance: 4.21, accountId: 'TZ1023rka0d9f234', operationGroups: []},
-    {balance: 2.1, accountId: 'TZ1230rkasdofi123', operationGroups: []},
-    {balance: 3.0, accountId: 'TZ1zs203rtkasodifg', operationGroups: []},
+    {balance: 4.21, accountId: 'TZ1023rka0d9f234', operationGroups: [], transactions: []},
+    {balance: 2.1, accountId: 'TZ1230rkasdofi123', operationGroups: [], transactions: []},
+    {balance: 3.0, accountId: 'TZ1zs203rtkasodifg', operationGroups: [], transactions: []},
   ],
   operationGroups: [],
+  transactions: [{
+    operationGroupHash: 'ooARbAAqqvJieYMTef56eZkM2cBRG38mcCRg4WvK4adNMPYfubr',
+    amount: 3.15,
+    publicKey: 'tz12ajdlkasjljkd',
+  }],
 };
 const accountBlocks2 = {
   publicKey: '1203sdoijfo2i3j4osdjfal',
@@ -206,11 +236,12 @@ const accountBlocks2 = {
   publicKeyHash: 'tz19w0aijsdoijewoqiwe',
   balance: 104.98,
   accounts: [
-    {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf', operationGroups: []},
-    {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo', operationGroups: []},
-    {balance: 4.25, accountId: 'TZ101293rjaogfij1324g', operationGroups: []},
+    {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf', operationGroups: [], transactions: []},
+    {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo', operationGroups: [], transactions: []},
+    {balance: 4.25, accountId: 'TZ101293rjaogfij1324g', operationGroups: [], transactions: []},
   ],
   operationGroups: [],
+  transactions: [],
 };
 const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
@@ -223,7 +254,15 @@ const initState = fromJS({
   isLoading: false,
   identities: [accountBlocks1, accountBlocks2],
   selectedAccountHash: '',
-  selectedAccount: {},
+  selectedAccount: {
+    publicKey: '',
+    privateKey: '',
+    publicKeyHash: '',
+    balance: 0,
+    accounts: [],
+    operationGroups: [],
+    transactions: [],
+  },
 });
 
 export default function address(state = initState, action) {
@@ -239,8 +278,11 @@ export default function address(state = initState, action) {
     case ADD_NEW_ACCOUNT:
       return state
         .set('identities', addNewAccountToIdentity(action.publicKeyHash, action.account, state.get('identities')));
-    case ADD_OPERATION_GROUPS: {
-      const updatedAccount = state.get('selectedAccount').set('operationGroups', action.operationGroups);
+    case ADD_OPERATION_GROUPS_AND_TRANSACTIONS: {
+      const updatedAccount = state
+        .get('selectedAccount')
+        .set('operationGroups', action.operationGroups)
+        .set('transactions', action.transactions);
 
       return state.set('selectedAccount', updatedAccount)
         .set('identities', findAndUpdateIdentities(updatedAccount, state.get('identities')));
@@ -381,5 +423,9 @@ function getAccountsForIdentity(network, id) {
 }
 
 function formatAccounts(accounts) {
-  return accounts.map((account) => ({ operationGroups: [], ...account }));
+  return accounts.map((account) => ({
+    operationGroups: [],
+    transactions: [],
+    ...account,
+  }));
 }

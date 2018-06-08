@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import {
   Table,
@@ -11,21 +12,32 @@ import {
 import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './Transactions.css';
 
-export default function Transactions({ transactions }) {
+type Props = {
+  transactions: Object
+};
+
+export default function Transactions(props: Props) {
+  const { transactions } = props;
+
   function renderTableHeader() {
     return (
       <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
         <TableRow>
           <TableHeaderColumn>Amount</TableHeaderColumn>
           <TableHeaderColumn>Address</TableHeaderColumn>
-          <TableHeaderColumn></TableHeaderColumn>
+          <TableHeaderColumn />
         </TableRow>
       </TableHeader>
     );
   }
 
   function renderTableRow(row, index) {
-    const rowArray = Object.values(row);
+    const operationGroupHash = row.get('operationGroupHash');
+    const rowArray = [
+      row.get('amount'),
+      operationGroupHash,
+      operationGroupHash,
+    ];
 
     return (
       <TableRow key={index}>
@@ -33,22 +45,34 @@ export default function Transactions({ transactions }) {
           rowArray.map((elem, rowArrIndex) => {
             return (
               <TableRowColumn key={`${elem}-${rowArrIndex}`}>
-                <div className={styles.tableRowElement}>
-                  {elem}
-                  { rowArrIndex === 0 &&
+                { rowArrIndex + 1 < rowArray.length &&
+                  <div className={styles.tableRowElement}>
+                    {elem}
+                    { rowArrIndex === 0 &&
                     <img
+                      alt="tez"
                       src={tezosLogo}
                       className={styles.tezosSymbol}
                     />
-                  }
-                </div>
+                    }
+                  </div>
+                }
+                {
+                  rowArrIndex + 1 === rowArray.length &&
+                    <div className={styles.details}>
+                      <a
+                        href={`https://tzscan.io/${operationGroupHash}`}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Details
+                      </a>
+                    </div>
+                }
               </TableRowColumn>
             );
           })
         }
-        <TableRowColumn>
-          <div className={styles.details}>Details</div>
-        </TableRowColumn>
       </TableRow>
     );
   }
