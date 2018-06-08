@@ -64,6 +64,7 @@ export default function Transactions(props: Props) {
                         href={`https://tzscan.io/${operationGroupHash}`}
                         target="_blank"
                         rel="noopener"
+                        className={styles.detailsLink}
                       >
                         Details
                       </a>
