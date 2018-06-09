@@ -1,10 +1,12 @@
 import { fromJS } from 'immutable';
 import { push } from 'react-router-redux';
 import path from 'path';
+import { tezosWallet } from '../conseil';
 
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import { createWallet, loadWallet, saveWallet } from '../tezos/TezosWallet';
+
+const { createWallet, loadWallet, saveWallet } = tezosWallet;
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 

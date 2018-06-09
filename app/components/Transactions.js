@@ -13,7 +13,7 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './Transactions.css';
 
 type Props = {
-  transactions: Object
+  transactions: List
 };
 
 export default function Transactions(props: Props) {

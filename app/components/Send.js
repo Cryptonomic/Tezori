@@ -30,7 +30,7 @@ type Props = {
   isLoading: boolean,
   password: string,
   toAddress: string,
-  amount: number,
+  amount: string,
   fee: number
 };
 
@@ -74,10 +74,10 @@ class Send extends Component<Props> {
             onChange={(_, index, newFee) => updateFee(newFee)}
             style={{ width: '50%' }}
           >
-            <MenuItem value={0} primaryText="Low Fee: 0000" />
-            <MenuItem value={1} primaryText="Medium Fee: 0000" />
-            <MenuItem value={2} primaryText="High Fee: 0000" />
-            <MenuItem value={3} primaryText="Custom" />
+            <MenuItem value={100} primaryText="Low Fee: 100" />
+            <MenuItem value={200} primaryText="Medium Fee: 200" />
+            <MenuItem value={400} primaryText="High Fee: 400" />
+            <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </div>
         <CreateButton

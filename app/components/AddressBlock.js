@@ -5,6 +5,7 @@ import DropdownArrow from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import DropupArrow from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 
+import CreateAccountModal from './CreateAccountModal';
 import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
@@ -19,6 +20,12 @@ export default class AddressBlock extends Component<Props> {
   props: Props;
   state = {
     isExpanded: false,
+    open: true,
+  };
+
+  onCreateNewAccountClick = () => {
+
+    //this.props.createNewAccount(publicKeyHash)
   };
 
   renderTezosAmount = (accountId: string, selectedAccountHash: string, balance: number) => {
@@ -117,11 +124,20 @@ export default class AddressBlock extends Component<Props> {
                   height: '18px',
                   width: '18px'
                 }}
-                onClick={() => this.props.createNewAccount(publicKeyHash)}
+                onClick={() => this.onCreateNewAccountClick}
               />
             </div>
             {accountBlock.get('accounts').map(this.renderAccountBlock)}
           </div>
+        }
+        {
+          /*
+          <CreateAccountModal
+            delegate={'123123'}
+            isLoading={false}
+            open={open}
+          />
+         */
         }
       </div>
     );

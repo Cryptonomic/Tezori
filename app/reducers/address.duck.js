@@ -1,22 +1,24 @@
-import { fromJS, Map } from 'immutable';
+import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import OPERATION_TYPES from '../constants/OperationTypes';
-import {
+import { tezosWallet, tezosOperations, tezosQuery } from '../conseil';
+import { saveUpdatedWallet } from './walletInitialization.duck';
+
+const {
   getOperationGroups,
   getAccounts,
   getOperationGroup,
-} from '../tezos/TezosQuery';
-import { sendOriginationOperation } from '../tezos/TezosOperations';
-import {
+  getAccount,
+} = tezosQuery;
+const { sendOriginationOperation } = tezosOperations;
+const {
   unlockFundraiserIdentity,
   generateMnemonic,
   unlockIdentityWithMnemonic,
-  getBalance,
-} from '../tezos/TezosWallet';
-import { saveUpdatedWallet } from './walletInitialization.duck';
+} = tezosWallet;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
@@ -91,28 +93,29 @@ export function selectAccount(selectedAccountHash) {
 
     dispatch(setSelectedAccount(selectedAccountHash));
 
-    if (state().address.getIn(['selectedAccount', 'operationGroups']).size === 0) {
       try {
         dispatch(setIsLoading(true));
         const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
-        const transactions = operationGroups.filter(({ kind }) => {
-          return kind === OPERATION_TYPES.TRANSACTION;
+        const managerOperationGroups = operationGroups.filter(({ kind }) => {
+          return kind === OPERATION_TYPES.MANAGER;
         });
 
-        const transactionGroups = await Promise.all(transactions.map(({ hash }) => {
+        const transactions = await Promise.all(managerOperationGroups.map(({ hash }) => {
           return getOperationGroup(network, hash)
-          .then(({ operations }) => operations);
+          .then(({ operations }) => {
+            return operations.filter(({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION);
+          });
         }));
 
-        const flattenedTransactions = flatten(transactionGroups);
 
-        dispatch(addOperationGroupsAndTransactionsToAccount(operationGroups, flattenedTransactions));
+        const flattenedTransactions = flatten(transactions);
+
+        dispatch(addOperationGroupsAndTransactionsToAccount(fromJS(operationGroups), fromJS(flattenedTransactions)));
         dispatch(setIsLoading(false));
       } catch (e) {
         console.error(e);
         dispatch(setIsLoading(false));
       }
-    }
 
   }
 }
@@ -189,11 +192,13 @@ export function importAddress() {
             identity = await unlockFundraiserIdentity(seed, username, passPhrase);
           }
           const { publicKeyHash } = identity;
-          const balance = await getBalance(publicKeyHash, network);
+          const account = await getAccount(network, publicKeyHash);
+          const { balance } = account.account;
           const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
           dispatch(addNewIdentity({
+            transactions: [],
             ...identity,
             balance,
             operationGroups,
@@ -213,36 +218,45 @@ export function importAddress() {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const accountBlocks1 = {
-  publicKey: 'e09fa0ti3j40tgsdjfgj',
-  privateKey: 'faoe9520qejfoifgmsdjfg',
-  publicKeyHash: 'tz1293asdjo2109sd',
-  balance: 502.123,
-  accounts: [
-    {balance: 4.21, accountId: 'TZ1023rka0d9f234', operationGroups: [], transactions: []},
-    {balance: 2.1, accountId: 'TZ1230rkasdofi123', operationGroups: [], transactions: []},
-    {balance: 3.0, accountId: 'TZ1zs203rtkasodifg', operationGroups: [], transactions: []},
-  ],
-  operationGroups: [],
-  transactions: [{
-    operationGroupHash: 'ooARbAAqqvJieYMTef56eZkM2cBRG38mcCRg4WvK4adNMPYfubr',
-    amount: 3.15,
-    publicKey: 'tz12ajdlkasjljkd',
-  }],
-};
-const accountBlocks2 = {
-  publicKey: '1203sdoijfo2i3j4osdjfal',
-  privateKey: '1209asdifok12034ksodfk',
-  publicKeyHash: 'tz19w0aijsdoijewoqiwe',
-  balance: 104.98,
-  accounts: [
-    {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf', operationGroups: [], transactions: []},
-    {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo', operationGroups: [], transactions: []},
-    {balance: 4.25, accountId: 'TZ101293rjaogfij1324g', operationGroups: [], transactions: []},
-  ],
+// const accountBlocks1 = {
+//   publicKey: 'e09fa0ti3j40tgsdjfgj',
+//   privateKey: 'faoe9520qejfoifgmsdjfg',
+//   publicKeyHash: 'tz1293asdjo2109sd',
+//   balance: 502.123,
+//   accounts: [
+//     {balance: 4.21, accountId: 'TZ1023rka0d9f234', operationGroups: [], transactions: []},
+//     {balance: 2.1, accountId: 'TZ1230rkasdofi123', operationGroups: [], transactions: []},
+//     {balance: 3.0, accountId: 'TZ1zs203rtkasodifg', operationGroups: [], transactions: []},
+//   ],
+//   operationGroups: [],
+//   transactions: [{
+//     operationGroupHash: 'ooARbAAqqvJieYMTef56eZkM2cBRG38mcCRg4WvK4adNMPYfubr',
+//     amount: 3.15,
+//     publicKey: 'tz12ajdlkasjljkd',
+//   }],
+// };
+// const accountBlocks2 = {
+//   publicKey: '1203sdoijfo2i3j4osdjfal',
+//   privateKey: '1209asdifok12034ksodfk',
+//   publicKeyHash: 'tz19w0aijsdoijewoqiwe',
+//   balance: 104.98,
+//   accounts: [
+//     {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf', operationGroups: [], transactions: []},
+//     {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo', operationGroups: [], transactions: []},
+//     {balance: 4.25, accountId: 'TZ101293rjaogfij1324g', operationGroups: [], transactions: []},
+//   ],
+//   operationGroups: [],
+//   transactions: [],
+// };
+const emptyAccount = fromJS({
+  publicKey: '',
+  privateKey: '',
+  publicKeyHash: '',
+  balance: 0,
+  accounts: [],
   operationGroups: [],
   transactions: [],
-};
+});
 const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
   open: false,
@@ -252,17 +266,10 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
-  identities: [accountBlocks1, accountBlocks2],
+  // identities: [accountBlocks1, accountBlocks2],
+  identities: [],
   selectedAccountHash: '',
-  selectedAccount: {
-    publicKey: '',
-    privateKey: '',
-    publicKeyHash: '',
-    balance: 0,
-    accounts: [],
-    operationGroups: [],
-    transactions: [],
-  },
+  selectedAccount: emptyAccount,
 });
 
 export default function address(state = initState, action) {
@@ -317,7 +324,7 @@ export default function address(state = initState, action) {
         .set('selectedAccountHash', action.selectedAccountHash)
         .set('selectedAccount', findSelectedAccount(action.selectedAccountHash, state.get('identities')));
     case SELECT_DEFAULT_ACCOUNT: {
-      const identity = state.getIn(['identities', 0], Map({}));
+      const identity = state.getIn(['identities', 0], emptyAccount);
 
       return state
         .set('selectedAccountHash', identity.get('publicKeyHash', ''))
@@ -419,7 +426,10 @@ function getAccountsForIdentity(network, id) {
       account_delegate: [],
   };
 
-  return getAccounts(network, filter);
+  return getAccounts(network, filter)
+    .then((accounts) => {
+      return accounts.filter((account) => account.accountId !== id);
+    });
 }
 
 function formatAccounts(accounts) {

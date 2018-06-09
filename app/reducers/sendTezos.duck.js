@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
-import { sendTransactionOperation } from '../tezos/TezosQuery';
+import { sendTransactionOperation } from '../tezos/TezosOperations';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -45,7 +45,7 @@ export function sendConfirmation() {
     if (password === walletPassword) {
       try {
         dispatch(updateSendTezosLoading(true));
-        await sendTransactionOperation(network, keyStore, toAddress, amount, fee);
+        await sendTransactionOperation(network, keyStore, toAddress, Number(amount), fee);
 
         dispatch(clearState());
         dispatch(updateSendTezosLoading(false));
@@ -63,7 +63,7 @@ const initState = fromJS({
   isLoading: false,
   password: '',
   toAddress: '',
-  amount: 0,
+  amount: '0',
   fee: 0,
   network: '',
 });
