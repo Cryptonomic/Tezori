@@ -2,7 +2,6 @@ import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
-import { setAddress } from './walletInitialization.duck';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -42,7 +41,6 @@ export function sendConfirmation() {
     try {
       dispatch(updateIsLoading(true));
       await postUpdateDelegate(body);
-      dispatch(setAddress(address));
       dispatch(clearState());
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));

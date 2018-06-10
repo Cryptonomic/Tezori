@@ -56,11 +56,35 @@ export const selectDefaultAccount = actionCreator(SELECT_DEFAULT_ACCOUNT);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function selectDefaultAccountOrOpenModal() {
-  return (dispatch, state) => {
-    dispatch(selectDefaultAccount());
-    const selectedAccountHash = state().address.get('selectedAccountHash');
+  return async (dispatch, state) => {
+    const initWalletState = state().walletInitialization;
+    const identities = initWalletState.getIn(['wallet', 'identities']);
+    console.log('identites', identities);
+    const network = initWalletState.get('network');
 
-    if (!selectedAccountHash) dispatch(openAddAddressModal());
+    if (identities.size === 0) {
+      dispatch(selectDefaultAccount());
+      const selectedAccountHash = state().address.get('selectedAccountHash');
+
+      if (!selectedAccountHash) dispatch(openAddAddressModal());
+    } else {
+      Promise.all(identities.toJS().map(async (identity) => {
+        const { publicKeyHash } = identity;
+        const account = await getAccount(network, publicKeyHash);
+        const { balance } = account.account;
+        const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
+        const accounts = await getAccountsForIdentity(network, publicKeyHash);
+
+        dispatch(addNewIdentity({
+          transactions: [],
+          ...identity,
+          balance,
+          operationGroups,
+          accounts: formatAccounts(accounts),
+        }));
+        dispatch(setSelectedAccount(publicKeyHash));
+      }));
+    }
   };
 }
 
@@ -212,7 +236,7 @@ export function importAddress() {
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
           // TODO: push identity onto existing wallet
-          dispatch(saveUpdatedWallet(identity));
+          dispatch(saveUpdatedWallet(fromJS([identity])));
           dispatch(addNewIdentity({
             transactions: [],
             ...identity,
@@ -235,36 +259,6 @@ export function importAddress() {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-// const accountBlocks1 = {
-//   publicKey: 'e09fa0ti3j40tgsdjfgj',
-//   privateKey: 'faoe9520qejfoifgmsdjfg',
-//   publicKeyHash: 'tz1293asdjo2109sd',
-//   balance: 502.123,
-//   accounts: [
-//     {balance: 4.21, accountId: 'TZ1023rka0d9f234', operationGroups: [], transactions: []},
-//     {balance: 2.1, accountId: 'TZ1230rkasdofi123', operationGroups: [], transactions: []},
-//     {balance: 3.0, accountId: 'TZ1zs203rtkasodifg', operationGroups: [], transactions: []},
-//   ],
-//   operationGroups: [],
-//   transactions: [{
-//     operationGroupHash: 'ooARbAAqqvJieYMTef56eZkM2cBRG38mcCRg4WvK4adNMPYfubr',
-//     amount: 3.15,
-//     publicKey: 'tz12ajdlkasjljkd',
-//   }],
-// };
-// const accountBlocks2 = {
-//   publicKey: '1203sdoijfo2i3j4osdjfal',
-//   privateKey: '1209asdifok12034ksodfk',
-//   publicKeyHash: 'tz19w0aijsdoijewoqiwe',
-//   balance: 104.98,
-//   accounts: [
-//     {balance: 5.95, accountId: 'TZ109eqrjgeqrgadf', operationGroups: [], transactions: []},
-//     {balance: 1.1, accountId: 'TZ1029eskadf1i23j4jlo', operationGroups: [], transactions: []},
-//     {balance: 4.25, accountId: 'TZ101293rjaogfij1324g', operationGroups: [], transactions: []},
-//   ],
-//   operationGroups: [],
-//   transactions: [],
-// };
 const emptyAccount = fromJS({
   publicKey: '',
   privateKey: '',
@@ -283,7 +277,6 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
-  // identities: [accountBlocks1, accountBlocks2],
   identities: [],
   selectedAccountHash: '',
   selectedAccount: emptyAccount,
