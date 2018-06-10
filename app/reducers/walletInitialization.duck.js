@@ -23,7 +23,7 @@ export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setAddress = actionCreator(SET_ADDRESS, 'address');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
-export const setWalletFileName = actionCreator( SET_WALLET_FILENAME, 'walletFileName');
+export const setWalletFileName = actionCreator(SET_WALLET_FILENAME, 'walletFileName');
 const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -51,7 +51,7 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
     try {
       dispatch(setIsLoading(true));
       if (submissionType === CREATE) {
-        await createWallet(`./wallets/${walletFileName}.json`, password);
+        await createWallet(`/tmp/${walletFileName}.json`, password);
       } else if (submissionType === IMPORT) {
         await loadWallet(walletLocation, password);
       }

@@ -11,4 +11,7 @@ export default getMuiTheme({
   menuItem: {
     selectedTextColor: '#1A325F',
   },
+  radioButton: {
+    checkedColor: '#1A325F',
+  },
 })

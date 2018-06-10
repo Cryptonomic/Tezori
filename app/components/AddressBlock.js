@@ -13,19 +13,21 @@ type Props = {
   accountBlock: Object, // TODO: type this
   selectAccount: Function,
   selectedAccountHash: string,
-  createNewAccount: Function
+  createNewAccount: Function,
+  isLoading: boolean
 };
 
 export default class AddressBlock extends Component<Props> {
   props: Props;
   state = {
     isExpanded: false,
-    open: true,
+    isCreateAccountModalOpen: false,
   };
 
-  onCreateNewAccountClick = () => {
-
-    //this.props.createNewAccount(publicKeyHash)
+  onOpenCreateAccountModal = () => {
+    this.setState({
+      isCreateAccountModalOpen: true,
+    });
   };
 
   renderTezosAmount = (accountId: string, selectedAccountHash: string, balance: number) => {
@@ -53,6 +55,24 @@ export default class AddressBlock extends Component<Props> {
   onAddressBlockClick = () => {
     if (this.state.isExpanded) this.setState({ isExpanded: false});
     else this.setState({ isExpanded: true });
+  };
+
+  closeCreateModal = () => {
+    this.setState({
+      isCreateAccountModalOpen: false,
+    });
+  };
+
+  onCreateAccount = (amount, delegate, spendable, delegatable, fee) => {
+    this.props.createNewAccount(
+      this.props.selectedAccountHash,
+      amount,
+      delegate,
+      spendable,
+      delegatable,
+      fee
+    );
+    this.setState({ isCreateAccountModalOpen: false });
   };
 
   renderAccountBlock = (account) => {
@@ -88,9 +108,9 @@ export default class AddressBlock extends Component<Props> {
   };
 
   render() {
-    const { accountBlock, selectedAccountHash } = this.props;
+    const { accountBlock, selectedAccountHash, isLoading } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
-    const { isExpanded } = this.state;
+    const { isExpanded, isCreateAccountModalOpen } = this.state;
     const addressBlockTitleContainer = classNames({
       [styles.addressBlockTitleContainer]: true,
       [styles.addressBlockTitleContainerSelected]: publicKeyHash === selectedAccountHash,
@@ -114,7 +134,7 @@ export default class AddressBlock extends Component<Props> {
               this.renderTezosAmount(publicKeyHash, selectedAccountHash, accountBlock.get('balance'))
           }
         </div>
-        {this.state.isExpanded &&
+        {isExpanded &&
           <div className={styles.accounts}>
             <div className={styles.addAccountBlock}>
               Accounts
@@ -124,21 +144,19 @@ export default class AddressBlock extends Component<Props> {
                   height: '18px',
                   width: '18px'
                 }}
-                onClick={() => this.onCreateNewAccountClick}
+                onClick={this.onOpenCreateAccountModal}
               />
             </div>
             {accountBlock.get('accounts').map(this.renderAccountBlock)}
           </div>
         }
-        {
-          /*
-          <CreateAccountModal
-            delegate={'123123'}
-            isLoading={false}
-            open={open}
-          />
-         */
-        }
+        <CreateAccountModal
+          delegate={selectedAccountHash}
+          isLoading={isLoading}
+          open={isCreateAccountModalOpen}
+          onCreate={this.onCreateAccount}
+          closeModal={this.closeCreateModal}
+        />
       </div>
     );
   }

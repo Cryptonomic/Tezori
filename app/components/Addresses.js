@@ -58,7 +58,8 @@ type Props = {
   identities: List<Identity>,
   selectAccount: Function,
   selectedAccountHash: string,
-  createNewAccount: Function
+  createNewAccount: Function,
+  isLoading: boolean
 };
 
 class Addresses extends Component<Props> {
@@ -87,6 +88,7 @@ class Addresses extends Component<Props> {
                   selectAccount={this.props.selectAccount}
                   selectedAccountHash={this.props.selectedAccountHash}
                   createNewAccount={this.props.createNewAccount}
+                  isLoading={this.props.isLoading}
                 />
               </div>
             );
@@ -103,6 +105,7 @@ function mapStateToProps(state) {
   return {
     identities: address.get('identities'),
     selectedAccountHash: address.get('selectedAccountHash'),
+    isLoading: address.get('isLoading'),
   };
 }
 

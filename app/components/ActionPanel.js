@@ -26,7 +26,7 @@ class ActionPanel extends Component<Props> {
   props: Props;
 
   state = {
-    activeTab: TRANSACTIONS,
+    activeTab: SEND,
     currentPage: 1
   };
 

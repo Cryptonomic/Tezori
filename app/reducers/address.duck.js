@@ -64,7 +64,7 @@ export function selectDefaultAccountOrOpenModal() {
   };
 }
 
-export function createNewAccount(publicKeyHash) {
+export function createNewAccount(publicKeyHash, amount, delegate, spendable, delegatable, fee) {
   return async (dispatch, state) => {
     try {
       dispatch(setIsLoading(true));
@@ -76,9 +76,22 @@ export function createNewAccount(publicKeyHash) {
         publicKeyHash,
       };
       // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
-      const newAccount = await sendOriginationOperation(network, keyStore, 0, 'delegate', true, false, 3);
+      console.log('delegate', delegate);
+      const newAccount = await sendOriginationOperation(
+        network,
+        keyStore,
+        Number(amount),
+        delegate,
+        spendable === 'spendable_true',
+        delegatable === 'delegatable_true',
+        Number(fee)
+      );
       console.log('newAccount?!?!?!?', newAccount);
-      dispatch(addNewAccount(publicKeyHash, newAccount));
+      const newAccountHash = newAccount.results.operation_results[0].originated_contracts[0];
+      const account = await getAccount(network, newAccountHash);
+
+      console.log('account', account);
+      dispatch(addNewAccount(publicKeyHash, account.account));
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
@@ -178,6 +191,7 @@ export function importAddress() {
             };
           });
 
+          // TODO: push identity onto existing wallet
           dispatch(saveUpdatedWallet(identities));
           dispatch(setSelectedAccount(identity.publicKeyHash));
           break;
@@ -197,6 +211,8 @@ export function importAddress() {
           const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
+          // TODO: push identity onto existing wallet
+          dispatch(saveUpdatedWallet(identity));
           dispatch(addNewIdentity({
             transactions: [],
             ...identity,
@@ -208,6 +224,7 @@ export function importAddress() {
           break;
         }
       }
+
       dispatch(clearState());
       dispatch(setIsLoading(false));
     } catch (e) {
