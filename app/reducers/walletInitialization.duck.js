@@ -23,7 +23,7 @@ export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const setWalletFileName = actionCreator(SET_WALLET_FILENAME, 'walletFileName');
-const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
+export const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
 const setCurrentWallet = actionCreator(SET_CURRENT_WALLET, 'wallet');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -34,11 +34,14 @@ export function saveUpdatedWallet(identities) {
     try {
       dispatch(setIsLoading(true));
       const walletLocation = state().walletInitialization.get('walletLocation');
+      const walletFileName = state().walletInitialization.get('walletFileName');
       const walletIdentities = state().walletInitialization.getIn(['wallet', 'identities']);
+      const password = state().walletInitialization.get('password');
+      const completeWalletPath = path.join(walletLocation, walletFileName);
 
-      await saveWallet(walletLocation, {
+      await saveWallet(completeWalletPath, {
         identities: walletIdentities.concat(newIdentities)
-      }, 'password');
+      }, password);
 
       dispatch(setIsLoading(false));
     } catch (e) {
@@ -53,15 +56,15 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
     const walletLocation = state().walletInitialization.get('walletLocation');
     const walletFileName = state().walletInitialization.get('walletFileName');
     const password = state().walletInitialization.get('password');
+    const completeWalletPath = path.join(walletLocation, walletFileName);
     let wallet = [];
 
     try {
       dispatch(setIsLoading(true));
       if (submissionType === CREATE) {
-        wallet = await createWallet(`/tmp/${walletFileName}.json`, password);
-        dispatch(updateWalletLocation(`/tmp/${walletFileName}.json`));
+        wallet = await createWallet(completeWalletPath, password);
       } else if (submissionType === IMPORT) {
-        wallet = await loadWallet(walletLocation, password);
+        wallet = await loadWallet(completeWalletPath, password);
       }
 
       dispatch(setCurrentWallet(fromJS(wallet)));
@@ -72,13 +75,6 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
       console.error(e);
       dispatch(setIsLoading(false));
     }
-  };
-}
-
-export function setWalletLocation(walletLocation) {
-  return async (dispatch) => {
-    dispatch(updateWalletLocation(walletLocation));
-    dispatch(setWalletFileName(path.basename(walletLocation)));
   };
 }
 

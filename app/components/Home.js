@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
 import { remote } from 'electron';
+import path from 'path';
 
 import CreateButton from './CreateButton';
 import Loader from './Loader';
@@ -13,7 +14,7 @@ import {
   setDisplay,
   setPassword,
   submitAddress,
-  setWalletLocation,
+  updateWalletLocation,
 } from '../reducers/walletInitialization.duck';
 
 import styles from './Home.css';
@@ -28,8 +29,9 @@ type Props = {
   currentDisplay: 'default' | 'create' | 'import',
   isLoading: boolean,
   password: string,
-  setWalletLocation: Function,
-  walletFileName: string
+  walletFileName: string,
+  updateWalletLocation: Function,
+  walletLocation: string
 };
 
 class Home extends Component<Props> {
@@ -37,9 +39,20 @@ class Home extends Component<Props> {
 
   setDisplay = display => () => this.props.setDisplay(display);
 
+  selectDirectory = () => {
+    remote.dialog.showOpenDialog({ properties: ['openDirectory'] } , filePaths => {
+      if (filePaths && filePaths.length) {
+        this.props.updateWalletLocation(filePaths[0]);
+      }
+    });
+  };
+
   openFile = () => {
     remote.dialog.showOpenDialog({ properties: ['openFile'] }, filePaths => {
-      this.props.setWalletLocation(filePaths[0]);
+      if (filePaths && filePaths.length) {
+        this.props.updateWalletLocation(path.dirname(filePaths[0]));
+        this.props.setWalletFileName(path.basename(filePaths[0]));
+      }
     });
   };
 
@@ -97,14 +110,30 @@ class Home extends Component<Props> {
       isLoading,
       password,
       setWalletFileName,
-      setPassword
+      setPassword,
+      walletLocation,
     } = this.props;
+    const completeWalletPath = path.join(walletLocation, walletFileName);
 
     return (
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Create a new wallet</div>
+          <div className={styles.importButtonContainer}>
+            <CreateButton
+              label="Select a location"
+              style={{
+                border: '2px solid #7B91C0',
+                color: '#7B91C0',
+                height: '28px',
+                fontSize: '15px',
+                backgroundColor: 'transparent'
+              }}
+              onClick={this.selectDirectory}
+            />
+            <span className={styles.walletFileName}>{completeWalletPath.length > 1 && completeWalletPath}</span>
+          </div>
           <TextField
             floatingLabelText="Name Your Wallet"
             style={{ width: '500px' }}
@@ -183,7 +212,8 @@ function mapStateToProps(state) {
     currentDisplay: walletInitialization.get('currentDisplay'),
     isLoading: walletInitialization.get('isLoading'),
     password: walletInitialization.get('password'),
-    walletFileName: walletInitialization.get('walletFileName')
+    walletFileName: walletInitialization.get('walletFileName'),
+    walletLocation: walletInitialization.get('walletLocation'),
   };
 }
 
@@ -194,7 +224,7 @@ function mapDispatchToProps(dispatch) {
       setDisplay,
       setPassword,
       submitAddress,
-      setWalletLocation,
+      updateWalletLocation,
     },
     dispatch
   );
