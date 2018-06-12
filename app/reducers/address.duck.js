@@ -21,6 +21,7 @@ const {
 } = tezosWallet;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
 const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
@@ -38,6 +39,7 @@ const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_DEFAULT_ACCOUNT = 'SELECT_DEFAULT_ACCOUNT ';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export const clearEntireAddressState = actionCreator(CLEAR_ENTIRE_ADDRESS_STATE);
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
 export const closeAddAddressModal = actionCreator(CLOSE_ADD_ADDRESS_MODAL);
 const updateActiveTab = actionCreator(SET_ACTIVE_ADD_ADDRESS_TAB, 'activeTab');
@@ -284,6 +286,8 @@ const initState = fromJS({
 
 export default function address(state = initState, action) {
   switch (action.type) {
+    case CLEAR_ENTIRE_ADDRESS_STATE:
+      return initState;
     case CLEAR_STATE: {
       const identities = state.get('identities');
       const selectedAccountHash = state.get('selectedAccountHash');

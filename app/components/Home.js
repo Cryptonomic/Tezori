@@ -154,7 +154,14 @@ class Home extends Component<Props> {
   };
 
   renderImportWallet = () => {
-    const { isLoading, password, setPassword, walletFileName } = this.props;
+    const {
+      isLoading,
+      password,
+      setPassword,
+      walletFileName,
+      walletLocation,
+    } = this.props;
+    const completeWalletPath = path.join(walletLocation, walletFileName);
 
     return (
       <div className={styles.createContainer}>
@@ -175,7 +182,7 @@ class Home extends Component<Props> {
               }}
               onClick={this.openFile}
             />
-            <span className={styles.walletFileName}>{walletFileName}</span>
+            <span className={styles.walletFileName}>{completeWalletPath}</span>
           </div>
           <TextField
             floatingLabelText="Password"

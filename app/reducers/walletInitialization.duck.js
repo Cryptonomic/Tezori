@@ -3,6 +3,7 @@ import { push } from 'react-router-redux';
 import path from 'path';
 import { tezosWallet } from '../conseil';
 
+import { clearEntireAddressState } from './address.duck';
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 
@@ -11,6 +12,7 @@ const { createWallet, loadWallet, saveWallet } = tezosWallet;
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+const CLEAR_WALLET_STATE = 'CLEAR_WALLET_STATE';
 const SET_PASSWORD = 'SET_PASSWORD';
 const SET_DISPLAY = 'SET_DISPLAY';
 const SET_IS_LOADING = 'SET_IS_LOADING';
@@ -19,6 +21,7 @@ const SET_WALLET_LOCATION = 'SET_WALLET_LOCATION';
 const SET_CURRENT_WALLET = 'SET_CURRENT_WALLET';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
@@ -27,6 +30,14 @@ export const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLo
 const setCurrentWallet = actionCreator(SET_CURRENT_WALLET, 'wallet');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function goHomeAndClearState() {
+  return (dispatch) => {
+    dispatch(clearWalletState());
+    dispatch(clearEntireAddressState());
+    dispatch(push('/'));
+  }
+}
+
 export function saveUpdatedWallet(identities) {
   return async (dispatch, state) => {
     const newIdentities = identities.toJS();
@@ -69,8 +80,8 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
 
       dispatch(setCurrentWallet(fromJS(wallet)));
       dispatch(setDisplay(DEFAULT));
-      dispatch(setIsLoading(false));
       dispatch(push('/addresses'));
+      dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
       dispatch(setIsLoading(false));
@@ -91,6 +102,8 @@ const initState = fromJS({
 
 export default function walletInitialization(state = initState, action) {
   switch (action.type) {
+    case CLEAR_WALLET_STATE:
+      return initState;
     case SET_CURRENT_WALLET:
       return state.set('wallet', action.wallet);
     case SET_DISPLAY:
