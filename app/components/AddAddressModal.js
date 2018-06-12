@@ -142,6 +142,10 @@ export default function AddAddress(props: Props) {
               value={seed}
               onChange={(_, newSeed) => updateSeed(newSeed)}
             />
+            <TextField
+              floatingLabelText="Activation Code"
+              style={{ width: '100%' }}
+            />
             <div className={styles.fundraiserPasswordContainer}>
               <TextField
                 floatingLabelText="Username"

@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -12,6 +13,8 @@ import Delegate from './Delegate';
 import Loader from './Loader';
 import tabConstants from '../constants/tabConstants';
 
+import { selectAccount } from '../reducers/address.duck';
+
 import styles from './ActionPanel.css';
 
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
@@ -19,7 +22,8 @@ const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 type Props = {
   selectedAccount: Object, // TODO: add type for this
   isLoadingTransactions: boolean,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  selectAccount: Function
 };
 
 class ActionPanel extends Component<Props> {
@@ -91,13 +95,14 @@ class ActionPanel extends Component<Props> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { selectedAccount, selectedAccountHash } = this.props;
+    const { selectedAccount, selectedAccountHash, selectAccount } = this.props;
 
     return (
       <div className={styles.actionPanelContainer}>
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash}
+          onRefreshClick={() => selectAccount(selectedAccountHash)}
         />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
@@ -116,4 +121,13 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null)(ActionPanel);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      selectAccount,
+    },
+    dispatch
+  );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActionPanel);

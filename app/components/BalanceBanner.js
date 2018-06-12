@@ -8,11 +8,12 @@ import styles from './BalanceBanner.css';
 
 type Props = {
   balance: number,
-  publicKeyHash: string
+  publicKeyHash: string,
+  onRefreshClick: Function
 };
 
 export default function BalanceBanner(props: Props) {
-  const { balance, publicKeyHash } = props;
+  const { balance, publicKeyHash, onRefreshClick } = props;
 
   return (
     <div className={styles.totalBannerContainer}>
@@ -36,7 +37,9 @@ export default function BalanceBanner(props: Props) {
             height: '40px',
             width: '40px',
             transform: 'scaleX(-1)',
+            cursor: 'pointer',
           }}
+          onClick={onRefreshClick}
         />
       </div>
       <div className={styles.address}>{publicKeyHash}</div>
