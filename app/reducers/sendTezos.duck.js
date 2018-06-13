@@ -66,7 +66,7 @@ const initState = fromJS({
   password: '',
   toAddress: '',
   amount: '0',
-  fee: 0,
+  fee: 100,
   network: '',
 });
 
