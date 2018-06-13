@@ -7,11 +7,11 @@ const ADD_MESSAGE = 'ADD_MESSAGE';
 const CLEAR_MESSAGE_STATE = 'CLEAR_MESSAGE_STATE';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const clearMessageState = actionCreator(CLEAR_MESSAGE_STATE);
+export const clearMessageState = actionCreator(CLEAR_MESSAGE_STATE);
 const createMessage = actionCreator(ADD_MESSAGE, 'message', 'isError');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function addMessage(message, isError, autoHideDuration = 5000) {
+export function addMessage(message, isError, autoHideDuration = 0) {
   return (dispatch) => {
     dispatch(createMessage(message, isError));
 
