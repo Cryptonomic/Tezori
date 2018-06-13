@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
@@ -57,19 +57,22 @@ class Home extends Component<Props> {
   };
 
   walletSubmissionButton = (label: string, submissionType: 'create' | 'import') => {
-    const { submitAddress, isLoading } = this.props;
+    const { submitAddress, walletInitError, isLoading } = this.props;
 
     return (
-      <CreateButton
-        label={label}
-        style={{
-          backgroundColor: '#417DEF',
-          color: 'white',
-          marginTop: '20px'
-        }}
-        onClick={() => submitAddress(submissionType)}
-        disabled={isLoading}
-      />
+      <Fragment>
+        <CreateButton
+          label={label}
+          style={{
+            backgroundColor: '#417DEF',
+            color: 'white',
+            marginTop: '20px'
+          }}
+          onClick={() => submitAddress(submissionType)}
+          disabled={isLoading}
+        />
+        <div className={styles.errorContainer}>{walletInitError}</div>
+      </Fragment>
     );
   };
 
@@ -221,6 +224,7 @@ function mapStateToProps(state) {
     password: walletInitialization.get('password'),
     walletFileName: walletInitialization.get('walletFileName'),
     walletLocation: walletInitialization.get('walletLocation'),
+    walletInitError: walletInitialization.get('error'),
   };
 }
 

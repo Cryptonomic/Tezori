@@ -36,3 +36,9 @@
   margin-left: 15px;
   opacity: 0.5;
 }
+
+.errorContainer {
+  color: #d62d20;
+  font-size:14px;
+  padding: 14px 0;
+}
