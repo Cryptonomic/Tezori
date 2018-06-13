@@ -1,11 +1,10 @@
 // @flow
-
 import React, { Component } from 'react';
 import {
   Dialog,
   TextField,
-  RadioButtonGroup,
-  RadioButton,
+  SelectField,
+  MenuItem,
 } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
@@ -15,23 +14,27 @@ import Loader from './Loader'
 
 import styles from './CreateAccountModal.css';
 
-type Props = {};
+type Props = {
+  closeModal: Function,
+  delegate: string,
+  isLoading: boolean,
+  onCreate: Function,
+  open: boolean
+};
 
 export default class CreateAccountModal extends Component<Props> {
   props: Props;
 
   state = {
     delegate: this.props.delegate,
-    fee: "10",
+    fee: 100,
     amount: "0",
-    delegatable: "delegatable_true",
-    spendable: "spendable_true",
   };
 
   onCreateButtonPress = () => {
-    const { delegate, fee, amount, delegatable, spendable } = this.state;
+    const { delegate, fee, amount } = this.state;
 
-    this.props.onCreate(amount, delegate || this.props.delegate, spendable, delegatable, fee);
+    this.props.onCreate(amount, delegate || this.props.delegate, fee);
   };
 
   render() {
@@ -48,67 +51,38 @@ export default class CreateAccountModal extends Component<Props> {
           style={{ fill: '#7190C6' }}
           onClick={this.props.closeModal}
         />
-        <div>
+        <div className={styles.delegateContainer}>
           <TextField
             floatingLabelText="Delegate"
             defaultValue={this.props.delegate}
+            style={{ width: '100%' }}
             onChange={(_, delegate) => this.setState({ delegate })}
           />
         </div>
-        <div>
-          <TextField
-            floatingLabelText="Fee"
-            defaultValue="10"
-            onChange={(_, fee) => this.setState({ fee })}
-          />
-        </div>
-        <div className={styles.delegatableAndSpendableContainer}>
-          <div>
-            Delegatable:
-            <RadioButtonGroup
-              defaultSelected="delegatable_true"
-              name="delegatable"
-              onChange={(_, delegatable) => this.setState({ delegatable })}
-            >
-              <RadioButton
-                value="delegatable_true"
-                label="true"
-              />
-              <RadioButton
-                value="delegatable_false"
-                label="false"
-              />
-            </RadioButtonGroup>
+        <div className={styles.amountAndFeeContainer}>
+          <div className={styles.amountSendContainer}>
+            <TextField
+              floatingLabelText="Amount"
+              default="0"
+              onChange={(_, amount) => this.setState({ amount })}
+            />
+            <img
+              alt="tez"
+              src={tezosLogo}
+              className={styles.tezosSymbol}
+            />
           </div>
-          <div>
-            Spendable:
-            <RadioButtonGroup
-              defaultSelected="spendable_true"
-              name="spendable"
-              onChange={(_, spendable) => this.setState({ spendable })}
+          <div className={styles.feeContainer}>
+            <SelectField
+              value={this.state.fee}
+              onChange={(_, index, fee) => this.setState({ fee })}
             >
-              <RadioButton
-                value="spendable_true"
-                label="true"
-              />
-              <RadioButton
-                value="spendable_false"
-                label="false"
-              />
-            </RadioButtonGroup>
+              <MenuItem value={100} primaryText="Low Fee: 100" />
+              <MenuItem value={200} primaryText="Medium Fee: 200" />
+              <MenuItem value={400} primaryText="High Fee: 400" />
+              <MenuItem value={500} primaryText="Custom" />
+            </SelectField>
           </div>
-        </div>
-        <div className={styles.amountSendContainer}>
-          <TextField
-            floatingLabelText="Amount"
-            default="0"
-            onChange={(_, amount) => this.setState({ amount })}
-          />
-          <img
-            alt="tez"
-            src={tezosLogo}
-            className={styles.tezosSymbol}
-          />
         </div>
         <div className={styles.passwordButtonContainer}>
           <CreateButton

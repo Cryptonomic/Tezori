@@ -99,7 +99,7 @@ export function selectDefaultAccountOrOpenModal() {
   };
 }
 
-export function createNewAccount(publicKeyHash, amount, delegate, spendable, delegatable, fee) {
+export function createNewAccount(publicKeyHash, amount, delegate, fee) {
   return async (dispatch, state) => {
     try {
       dispatch(setIsLoading(true));
@@ -117,8 +117,8 @@ export function createNewAccount(publicKeyHash, amount, delegate, spendable, del
         keyStore,
         Number(amount),
         delegate,
-        spendable === 'spendable_true',
-        delegatable === 'delegatable_true',
+        true,
+        true,
         Number(fee)
       );
       console.log('newAccount?!?!?!?', newAccount);

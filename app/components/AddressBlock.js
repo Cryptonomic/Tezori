@@ -63,13 +63,11 @@ export default class AddressBlock extends Component<Props> {
     });
   };
 
-  onCreateAccount = (amount, delegate, spendable, delegatable, fee) => {
+  onCreateAccount = (amount: number, delegate: string, fee: number) => {
     this.props.createNewAccount(
       this.props.selectedAccountHash,
       amount,
       delegate,
-      spendable,
-      delegatable,
       fee
     );
     this.setState({ isCreateAccountModalOpen: false });
