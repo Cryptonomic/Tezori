@@ -11,6 +11,7 @@ import styles from './AddressBlock.css';
 
 type Props = {
   accountBlock: Object, // TODO: type this
+  automaticAccountRefresh: Function,
   selectAccount: Function,
   selectedAccountHash: string,
   createNewAccount: Function,
@@ -75,10 +76,15 @@ export default class AddressBlock extends Component<Props> {
     this.setState({ isCreateAccountModalOpen: false });
   };
 
-  renderAccountBlock = (account) => {
+  onAccountSelect = (publicKeyHash: string) => {
+    this.props.selectAccount(publicKeyHash);
+    this.props.automaticAccountRefresh();
+  };
+
+  renderAccountBlock = (account: Object) => {
     const balance = account.get('balance');
     const accountId = account.get('accountId');
-    const { selectAccount, selectedAccountHash } = this.props;
+    const { selectedAccountHash } = this.props;
     const accountBlockClasses = classNames({
       [styles.accountBlock]: true,
       [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
@@ -88,7 +94,7 @@ export default class AddressBlock extends Component<Props> {
       <div
         className={accountBlockClasses}
         key={accountId}
-        onClick={() => selectAccount(accountId)}
+        onClick={() => this.onAccountSelect(accountId)}
       >
         {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
         <div>{accountId}</div>
@@ -124,7 +130,7 @@ export default class AddressBlock extends Component<Props> {
         >
           <div
             className={styles.addressBlockTitle}
-            onClick={() => this.props.selectAccount(publicKeyHash)}
+            onClick={() => this.onAccountSelect(publicKeyHash)}
           >
             {publicKeyHash}
             {this.renderArrowIcon()}

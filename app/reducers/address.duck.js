@@ -70,7 +70,7 @@ export function selectDefaultAccountOrOpenModal() {
 
       if (!selectedAccountHash) dispatch(openAddAddressModal());
     } else {
-      Promise.all(identities.toJS().map(async (identity) => {
+      await Promise.all(identities.toJS().map(async (identity) => {
         const { publicKeyHash } = identity;
         const account = await getAccount(network, publicKeyHash);
         const { balance } = account.account;
@@ -86,6 +86,8 @@ export function selectDefaultAccountOrOpenModal() {
         }));
         dispatch(setSelectedAccount(publicKeyHash));
       }));
+
+      dispatch(automaticAccountRefresh());
     }
   };
 }
@@ -132,30 +134,44 @@ export function selectAccount(selectedAccountHash) {
 
     dispatch(setSelectedAccount(selectedAccountHash));
 
-      try {
-        dispatch(setIsLoading(true));
-        const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
-        const managerOperationGroups = operationGroups.filter(({ kind }) => {
-          return kind === OPERATION_TYPES.MANAGER;
+    try {
+      dispatch(setIsLoading(true));
+      const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
+      const managerOperationGroups = operationGroups.filter(({ kind }) => {
+        return kind === OPERATION_TYPES.MANAGER;
+      });
+
+      const transactions = await Promise.all(managerOperationGroups.map(({ hash }) => {
+        return getOperationGroup(network, hash)
+        .then(({ operations }) => {
+          return operations.filter(({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION);
         });
-
-        const transactions = await Promise.all(managerOperationGroups.map(({ hash }) => {
-          return getOperationGroup(network, hash)
-          .then(({ operations }) => {
-            return operations.filter(({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION);
-          });
-        }));
+      }));
 
 
-        const flattenedTransactions = flatten(transactions);
+      const flattenedTransactions = flatten(transactions);
 
-        dispatch(addOperationGroupsAndTransactionsToAccount(fromJS(operationGroups), fromJS(flattenedTransactions)));
-        dispatch(setIsLoading(false));
-      } catch (e) {
-        console.error(e);
-        dispatch(setIsLoading(false));
-      }
+      dispatch(addOperationGroupsAndTransactionsToAccount(fromJS(operationGroups), fromJS(flattenedTransactions)));
+      dispatch(setIsLoading(false));
+    } catch (e) {
+      console.error(e);
+      dispatch(setIsLoading(false));
+    }
+  }
+}
 
+let currentAccountRefreshInterval = null;
+
+export function automaticAccountRefresh() {
+  return (dispatch, state) => {
+    const REFRESH_INTERVAL = 5 * 60 * 1000;
+    if (currentAccountRefreshInterval) {
+      clearAccountRefreshInterval();
+    }
+
+    currentAccountRefreshInterval = setInterval(() => {
+      dispatch(selectAccount(state().address.get('selectedAccountHash')));
+    }, REFRESH_INTERVAL);
   }
 }
 
@@ -452,4 +468,8 @@ function formatAccounts(accounts) {
     transactions: [],
     ...account,
   }));
+}
+
+export function clearAccountRefreshInterval() {
+  clearInterval(currentAccountRefreshInterval);
 }
