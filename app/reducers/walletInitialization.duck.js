@@ -19,6 +19,7 @@ const SET_IS_LOADING = 'SET_IS_LOADING';
 const SET_WALLET_FILENAME = 'SET_WALLET_FILENAME';
 const SET_WALLET_LOCATION = 'SET_WALLET_LOCATION';
 const SET_CURRENT_WALLET = 'SET_CURRENT_WALLET';
+const SET_ERROR = 'SET_ERROR';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
@@ -28,6 +29,7 @@ export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const setWalletFileName = actionCreator(SET_WALLET_FILENAME, 'walletFileName');
 export const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
 const setCurrentWallet = actionCreator(SET_CURRENT_WALLET, 'wallet');
+const setError = actionCreator(SET_ERROR, 'error');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function goHomeAndClearState() {
@@ -80,10 +82,12 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
 
       dispatch(setCurrentWallet(fromJS(wallet)));
       dispatch(setDisplay(DEFAULT));
+      dispatch(setError(null));
       dispatch(push('/addresses'));
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
+      dispatch(setError(e));
       dispatch(setIsLoading(false));
     }
   };
@@ -98,6 +102,7 @@ const initState = fromJS({
   walletLocation: '',
   network: 'zeronet',
   wallet: {},
+  error: null
 });
 
 export default function walletInitialization(state = initState, action) {
@@ -116,6 +121,9 @@ export default function walletInitialization(state = initState, action) {
       return state.set('walletLocation', action.walletLocation);
     case SET_PASSWORD:
       return state.set('password', action.password);
+    case SET_ERROR:
+      return state.set('error', action.error.message)
+
     default:
       return state;
   }
