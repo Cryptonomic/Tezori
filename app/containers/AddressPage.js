@@ -10,6 +10,7 @@ import ActionPanel from '../components/ActionPanel';
 import AddAddressModal from '../components/AddAddressModal';
 import {
   setActiveTab as setActiveAddAddressTab,
+  clearAccountRefreshInterval,
   closeAddAddressModal,
   importAddress,
   updatePrivateKey,
@@ -46,6 +47,10 @@ class AddressPage extends Component<Props> {
 
   componentDidMount() {
     this.props.selectDefaultAccountOrOpenModal();
+  }
+
+  componentWillUnmount() {
+    clearAccountRefreshInterval();
   }
 
   render() {
