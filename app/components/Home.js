@@ -34,20 +34,30 @@ type Props = {
   walletLocation: string
 };
 
+const dialogFilters = [ {name: 'Tezos Wallet', extensions: ['tezwallet']} ];
+
 class Home extends Component<Props> {
   props: Props;
 
   setDisplay = display => () => this.props.setDisplay(display);
 
   openFile = () => {
-    remote.dialog.showOpenDialog({ properties: ['openFile'], filters: [
-        {name: 'Tezos Wallet', extensions: ['tezwallet']},
-      ] }, filePaths => {
+    remote.dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: dialogFilters,
+    }, filePaths => {
       if (filePaths && filePaths.length) {
         this.props.updateWalletLocation(path.dirname(filePaths[0]));
         this.props.setWalletFileName(path.basename(filePaths[0]));
       }
     });
+  };
+
+  saveFile = () => {
+    remote.dialog.showSaveDialog({ filters: dialogFilters }, (filename) => {
+      this.props.updateWalletLocation(path.dirname(filename));
+      this.props.setWalletFileName(path.basename(filename));
+    })
   };
 
   walletSubmissionButton = (label: string, submissionType: 'create' | 'import') => {
@@ -121,7 +131,7 @@ class Home extends Component<Props> {
                 fontSize: '15px',
                 backgroundColor: 'transparent'
               }}
-              onClick={this.openFile}
+              onClick={this.saveFile}
             />
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
