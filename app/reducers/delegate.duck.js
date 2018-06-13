@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
+import { addMessage } from './message.duck';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -46,6 +47,7 @@ export function sendConfirmation() {
       dispatch(updateIsLoading(false));
     } catch (e) {
       console.error(e);
+      dispatch(addMessage(e.name, true));
       dispatch(updateIsLoading(false));
     }
   }
