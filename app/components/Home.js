@@ -39,16 +39,10 @@ class Home extends Component<Props> {
 
   setDisplay = display => () => this.props.setDisplay(display);
 
-  selectDirectory = () => {
-    remote.dialog.showOpenDialog({ properties: ['openDirectory'] } , filePaths => {
-      if (filePaths && filePaths.length) {
-        this.props.updateWalletLocation(filePaths[0]);
-      }
-    });
-  };
-
   openFile = () => {
-    remote.dialog.showOpenDialog({ properties: ['openFile'] }, filePaths => {
+    remote.dialog.showOpenDialog({ properties: ['openFile'], filters: [
+        {name: 'Tezos Wallet', extensions: ['tezwallet']},
+      ] }, filePaths => {
       if (filePaths && filePaths.length) {
         this.props.updateWalletLocation(path.dirname(filePaths[0]));
         this.props.setWalletFileName(path.basename(filePaths[0]));
@@ -109,11 +103,8 @@ class Home extends Component<Props> {
       walletFileName,
       isLoading,
       password,
-      setWalletFileName,
       setPassword,
-      walletLocation,
     } = this.props;
-    const completeWalletPath = path.join(walletLocation, walletFileName);
 
     return (
       <div className={styles.createContainer}>
@@ -122,7 +113,7 @@ class Home extends Component<Props> {
           <div className={styles.walletTitle}>Create a new wallet</div>
           <div className={styles.importButtonContainer}>
             <CreateButton
-              label="Select a location"
+              label="Select file"
               style={{
                 border: '2px solid #7B91C0',
                 color: '#7B91C0',
@@ -130,16 +121,10 @@ class Home extends Component<Props> {
                 fontSize: '15px',
                 backgroundColor: 'transparent'
               }}
-              onClick={this.selectDirectory}
+              onClick={this.openFile}
             />
-            <span className={styles.walletFileName}>{completeWalletPath.length > 1 && completeWalletPath}</span>
+            <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
-          <TextField
-            floatingLabelText="Name Your Wallet"
-            style={{ width: '500px' }}
-            value={walletFileName}
-            onChange={(_, newFileName) => setWalletFileName(newFileName)}
-          />
           <TextField
             floatingLabelText="Password"
             style={{ width: '500px' }}
