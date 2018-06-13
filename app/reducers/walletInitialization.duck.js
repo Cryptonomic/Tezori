@@ -4,6 +4,7 @@ import path from 'path';
 import { tezosWallet } from '../conseil';
 
 import { clearEntireAddressState } from './address.duck';
+import { addMessage } from './message.duck';
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 
@@ -57,6 +58,7 @@ export function saveUpdatedWallet(identities) {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
+      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
   }
@@ -84,6 +86,7 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
+      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
   };

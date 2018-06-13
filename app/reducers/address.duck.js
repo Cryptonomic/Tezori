@@ -6,6 +6,7 @@ import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import OPERATION_TYPES from '../constants/OperationTypes';
 import { tezosWallet, tezosOperations, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
+import { addMessage } from './message.duck';
 
 const {
   getOperationGroups,
@@ -70,22 +71,30 @@ export function selectDefaultAccountOrOpenModal() {
 
       if (!selectedAccountHash) dispatch(openAddAddressModal());
     } else {
-      Promise.all(identities.toJS().map(async (identity) => {
-        const { publicKeyHash } = identity;
-        const account = await getAccount(network, publicKeyHash);
-        const { balance } = account.account;
-        const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
-        const accounts = await getAccountsForIdentity(network, publicKeyHash);
+      try {
+        dispatch(setIsLoading(true));
+        await Promise.all(identities.toJS().map(async (identity) => {
+          const { publicKeyHash } = identity;
+          const account = await getAccount(network, publicKeyHash);
+          const { balance } = account.account;
+          const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
+          const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
-        dispatch(addNewIdentity({
-          transactions: [],
-          ...identity,
-          balance,
-          operationGroups,
-          accounts: formatAccounts(accounts),
+          dispatch(addNewIdentity({
+            transactions: [],
+            ...identity,
+            balance,
+            operationGroups,
+            accounts: formatAccounts(accounts),
+          }));
+          dispatch(setSelectedAccount(publicKeyHash));
         }));
-        dispatch(setSelectedAccount(publicKeyHash));
-      }));
+        dispatch(setIsLoading(false));
+      } catch (e) {
+        console.error(e);
+        dispatch(addMessage(e.name, true));
+        dispatch(setIsLoading(false));
+      }
     }
   };
 }
@@ -121,6 +130,7 @@ export function createNewAccount(publicKeyHash, amount, delegate, spendable, del
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
+      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
   };
@@ -153,6 +163,7 @@ export function selectAccount(selectedAccountHash) {
         dispatch(setIsLoading(false));
       } catch (e) {
         console.error(e);
+        dispatch(addMessage(e.name, true));
         dispatch(setIsLoading(false));
       }
 
@@ -174,6 +185,7 @@ export function setActiveTab(activeTab) {
         dispatch(updateSeed(seed));
       } catch (e) {
         console.error(e);
+        dispatch(addMessage(e.name, true));
         dispatch(setIsLoading(false));
       }
     }
@@ -255,6 +267,7 @@ export function importAddress() {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
+      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
   }
