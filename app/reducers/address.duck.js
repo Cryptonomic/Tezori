@@ -99,43 +99,6 @@ export function selectDefaultAccountOrOpenModal() {
   };
 }
 
-export function createNewAccount(publicKeyHash, amount, delegate, fee) {
-  return async (dispatch, state) => {
-    try {
-      dispatch(setIsLoading(true));
-      const network = state().walletInitialization.get('network');
-      const identity = findSelectedAccount(publicKeyHash, state().address.get('identities'));
-      const keyStore = {
-        publicKey: identity.get('publicKey'),
-        privateKey: identity.get('privateKey'),
-        publicKeyHash,
-      };
-      // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
-      console.log('delegate', delegate);
-      const newAccount = await sendOriginationOperation(
-        network,
-        keyStore,
-        Number(amount),
-        delegate,
-        true,
-        true,
-        Number(fee)
-      );
-      console.log('newAccount?!?!?!?', newAccount);
-      const newAccountHash = newAccount.results.operation_results[0].originated_contracts[0];
-      const account = await getAccount(network, newAccountHash);
-
-      console.log('account', account);
-      dispatch(addNewAccount(publicKeyHash, account.account));
-      dispatch(setIsLoading(false));
-    } catch (e) {
-      console.error(e);
-      dispatch(addMessage(e.name, true));
-      dispatch(setIsLoading(false));
-    }
-  };
-}
-
 export function selectAccount(selectedAccountHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
@@ -396,7 +359,7 @@ function findAndUpdateIdentities(updatedAccount, identities) {
   });
 }
 
-function findSelectedAccount(hash, identities) {
+export function findSelectedAccount(hash, identities) {
   const identityTest = RegExp('^tz*');
 
   if (identityTest.test(hash)) {
