@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { flatten } from 'lodash';
+import { flatten, find } from 'lodash';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
@@ -75,6 +75,7 @@ export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     const initWalletState = state().walletInitialization;
     const identities = initWalletState.getIn(['wallet', 'identities']);
+    const network = initWalletState.get('network');
 
     if (identities.size === 0) {
       dispatch(openAddAddressModal());
@@ -228,6 +229,10 @@ export function setActiveTab(activeTab) {
   };
 }
 
+function setImportDuplicationError() {
+  dispatch(addMessage('Identity already exist', true));
+}
+
 export function importAddress() {
   return async (dispatch, state) => {
     const {
@@ -243,6 +248,7 @@ export function importAddress() {
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
 
     const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities')
 
     //TODO: clear out message bar
     dispatch(addMessage('', true))
@@ -270,41 +276,46 @@ export function importAddress() {
         case PRIVATE_KEY:
           break;
         case GENERATE_MNEMONIC: {
-          const identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          const {publicKeyHash, publicKey, privateKey} = await unlockIdentityWithMnemonic(seed, passPhrase);
 
-          dispatch(
-            addNewIdentity({
-              ...identity,
+          if(!find(identities.toJS(), {publicKeyHash, publicKey, privateKey})) {
+            dispatch(
+              addNewIdentity({
+                ...identity,
+                balance: 0,
+                operationGroups: [],
+                accounts: []
+              })
+            );
+
+            const updatedIdentities = state()
+              .address.get('identities')
+              .map(identity => {
+                return {
+                  publicKey: identity.get('publicKey'),
+                  privateKey: identity.get('privateKey'),
+                  publicKeyHash: identity.get('publicKeyHash')
+                };
+              });
+
+            const selectedAccount = createSelectedAccount({
               balance: 0,
               operationGroups: [],
-              accounts: []
-            })
-          );
-
-          const identities = state()
-            .address.get('identities')
-            .map(identity => {
-              return {
-                publicKey: identity.get('publicKey'),
-                privateKey: identity.get('privateKey'),
-                publicKeyHash: identity.get('publicKeyHash')
-              };
+              transactions: []
             });
 
-          const selectedAccount = createSelectedAccount({
-            balance: 0,
-            operationGroups: [],
-            transactions: []
-          });
+            dispatch(saveUpdatedWallet(updatedIdentities));
+            dispatch(
+              setSelectedAccount(
+                identity.publicKeyHash,
+                identity.publicKeyHash,
+                selectedAccount
+              )
+            );
 
-          dispatch(saveUpdatedWallet(identities));
-          dispatch(
-            setSelectedAccount(
-              identity.publicKeyHash,
-              identity.publicKeyHash,
-              selectedAccount
-            )
-          );
+          } else {
+              setImportDuplicationError()
+            }
           break;
         }
         case SEED_PHRASE:
@@ -320,7 +331,7 @@ export function importAddress() {
               passPhrase
             );
           }
-          const { publicKeyHash } = identity;
+          const { publicKeyHash, publicKey, privateKey} = identity;
           const account = await getAccount(network, publicKeyHash);
           const { balance } = account.account;
           const operationGroups = await getOperationGroupsForAccount(
@@ -329,6 +340,7 @@ export function importAddress() {
           );
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
+          if(!find(identities.toJS(), {publicKeyHash, publicKey, privateKey})) {
           dispatch(saveUpdatedWallet(fromJS([identity])));
           dispatch(
             addNewIdentity({
@@ -350,6 +362,10 @@ export function importAddress() {
           dispatch(
             setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
           );
+          } else {
+            setImportDuplicationError()
+          }
+
           break;
         }
       }
