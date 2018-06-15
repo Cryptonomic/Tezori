@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
 import { sendTransactionOperation } from '../tezos/TezosOperations';
+import { addMessage } from './message.duck';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -51,6 +52,7 @@ export function sendConfirmation() {
         dispatch(updateSendTezosLoading(false));
       } catch (e) {
         console.error(e);
+        dispatch(addMessage(e.name, true));
         dispatch(updateSendTezosLoading(false));
       }
     }
@@ -64,7 +66,7 @@ const initState = fromJS({
   password: '',
   toAddress: '',
   amount: '0',
-  fee: 0,
+  fee: 100,
   network: '',
 });
 

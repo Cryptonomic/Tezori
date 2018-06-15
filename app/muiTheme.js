@@ -14,4 +14,7 @@ export default getMuiTheme({
   radioButton: {
     checkedColor: '#1A325F',
   },
+  snackbar: {
+    actionColor: 'white',
+  },
 })

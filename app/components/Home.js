@@ -7,6 +7,7 @@ import { remote } from 'electron';
 import path from 'path';
 
 import CreateButton from './CreateButton';
+import MessageBar from './MessageBar';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import {
@@ -22,15 +23,16 @@ import styles from './Home.css';
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
 type Props = {
-  setWalletFileName: Function,
-  setDisplay: Function,
-  setPassword: Function,
-  submitAddress: Function,
   currentDisplay: 'default' | 'create' | 'import',
   isLoading: boolean,
+  message: Object,
   password: string,
-  walletFileName: string,
+  setDisplay: Function,
+  setPassword: Function,
+  setWalletFileName: Function,
+  submitAddress: Function,
   updateWalletLocation: Function,
+  walletFileName: string,
   walletLocation: string
 };
 
@@ -112,6 +114,7 @@ class Home extends Component<Props> {
     const {
       walletFileName,
       isLoading,
+      message,
       password,
       setPassword,
     } = this.props;
@@ -144,6 +147,7 @@ class Home extends Component<Props> {
           />
           {this.walletSubmissionButton('Create Wallet', CREATE)}
         </div>
+        <MessageBar message={message} />
       </div>
     );
   };
@@ -151,6 +155,7 @@ class Home extends Component<Props> {
   renderImportWallet = () => {
     const {
       isLoading,
+      message,
       password,
       setPassword,
       walletFileName,
@@ -158,6 +163,7 @@ class Home extends Component<Props> {
     } = this.props;
     const completeWalletPath = path.join(walletLocation, walletFileName);
 
+    console.log('message', message);
     return (
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
@@ -188,6 +194,7 @@ class Home extends Component<Props> {
           />
           {this.walletSubmissionButton('Import', IMPORT)}
         </div>
+        <MessageBar message={message} />
       </div>
     );
   };
@@ -208,11 +215,12 @@ class Home extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { walletInitialization } = state;
+  const { walletInitialization, message } = state;
 
   return {
     currentDisplay: walletInitialization.get('currentDisplay'),
     isLoading: walletInitialization.get('isLoading'),
+    message: message.get('message'),
     password: walletInitialization.get('password'),
     walletFileName: walletInitialization.get('walletFileName'),
     walletLocation: walletInitialization.get('walletLocation'),

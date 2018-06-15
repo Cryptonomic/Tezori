@@ -15,11 +15,16 @@
 }
 
 .amountSendContainer {
-  margin-bottom: 40px;
+  width: 50%;
 }
 
 .confirmationText {
   margin-bottom: 20px;
+}
+
+.feeContainer {
+  width: 50%;
+  display: flex;
 }
 
 .amount {
@@ -42,6 +47,11 @@
   align-items: flex-end;
 }
 
-.delegatableAndSpendableContainer {
+.delegateContainer {
+  width: 100%;
+}
+
+.amountAndFeeContainer {
   display: flex;
+  align-items: flex-end;
 }

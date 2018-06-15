@@ -8,8 +8,8 @@ import AddressBlock from './AddressBlock';
 import {
   openAddAddressModal,
   selectAccount,
-  createNewAccount,
 } from '../reducers/address.duck';
+import { openCreateAccountModal } from '../reducers/createAccount.duck';
 
 import styles from './Addresses.css';
 
@@ -54,12 +54,11 @@ type Identity = {
 };
 
 type Props = {
+  openCreateAccountModal: Function,
   openAddAddressModal: Function,
   identities: List<Identity>,
   selectAccount: Function,
-  selectedAccountHash: string,
-  createNewAccount: Function,
-  isLoading: boolean
+  selectedAccountHash: string
 };
 
 class Addresses extends Component<Props> {
@@ -85,10 +84,9 @@ class Addresses extends Component<Props> {
               >
                 <AddressBlock
                   accountBlock={accountBlock}
+                  openCreateAccountModal={this.props.openCreateAccountModal}
                   selectAccount={this.props.selectAccount}
                   selectedAccountHash={this.props.selectedAccountHash}
-                  createNewAccount={this.props.createNewAccount}
-                  isLoading={this.props.isLoading}
                 />
               </div>
             );
@@ -105,16 +103,15 @@ function mapStateToProps(state) {
   return {
     identities: address.get('identities'),
     selectedAccountHash: address.get('selectedAccountHash'),
-    isLoading: address.get('isLoading'),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      openCreateAccountModal,
       openAddAddressModal,
       selectAccount,
-      createNewAccount,
     },
     dispatch
   );

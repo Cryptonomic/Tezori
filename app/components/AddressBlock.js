@@ -11,23 +11,15 @@ import styles from './AddressBlock.css';
 
 type Props = {
   accountBlock: Object, // TODO: type this
+  openCreateAccountModal: Function,
   selectAccount: Function,
-  selectedAccountHash: string,
-  createNewAccount: Function,
-  isLoading: boolean
+  selectedAccountHash: string
 };
 
 export default class AddressBlock extends Component<Props> {
   props: Props;
   state = {
     isExpanded: false,
-    isCreateAccountModalOpen: false,
-  };
-
-  onOpenCreateAccountModal = () => {
-    this.setState({
-      isCreateAccountModalOpen: true,
-    });
   };
 
   renderTezosAmount = (accountId: string, selectedAccountHash: string, balance: number) => {
@@ -55,24 +47,6 @@ export default class AddressBlock extends Component<Props> {
   onAddressBlockClick = () => {
     if (this.state.isExpanded) this.setState({ isExpanded: false});
     else this.setState({ isExpanded: true });
-  };
-
-  closeCreateModal = () => {
-    this.setState({
-      isCreateAccountModalOpen: false,
-    });
-  };
-
-  onCreateAccount = (amount, delegate, spendable, delegatable, fee) => {
-    this.props.createNewAccount(
-      this.props.selectedAccountHash,
-      amount,
-      delegate,
-      spendable,
-      delegatable,
-      fee
-    );
-    this.setState({ isCreateAccountModalOpen: false });
   };
 
   renderAccountBlock = (account) => {
@@ -108,9 +82,9 @@ export default class AddressBlock extends Component<Props> {
   };
 
   render() {
-    const { accountBlock, selectedAccountHash, isLoading } = this.props;
+    const { accountBlock, selectedAccountHash } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
-    const { isExpanded, isCreateAccountModalOpen } = this.state;
+    const { isExpanded } = this.state;
     const addressBlockTitleContainer = classNames({
       [styles.addressBlockTitleContainer]: true,
       [styles.addressBlockTitleContainerSelected]: publicKeyHash === selectedAccountHash,
@@ -144,19 +118,13 @@ export default class AddressBlock extends Component<Props> {
                   height: '18px',
                   width: '18px'
                 }}
-                onClick={this.onOpenCreateAccountModal}
+                onClick={this.props.openCreateAccountModal}
               />
             </div>
             {accountBlock.get('accounts').map(this.renderAccountBlock)}
           </div>
         }
-        <CreateAccountModal
-          delegate={selectedAccountHash}
-          isLoading={isLoading}
-          open={isCreateAccountModalOpen}
-          onCreate={this.onCreateAccount}
-          closeModal={this.closeCreateModal}
-        />
+        <CreateAccountModal />
       </div>
     );
   }

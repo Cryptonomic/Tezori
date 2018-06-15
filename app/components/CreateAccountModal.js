@@ -1,11 +1,12 @@
 // @flow
-
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   Dialog,
   TextField,
-  RadioButtonGroup,
-  RadioButton,
+  SelectField,
+  MenuItem,
 } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
@@ -14,101 +15,83 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import Loader from './Loader'
 
 import styles from './CreateAccountModal.css';
+import {
+  changeAmount,
+  changeDelegate,
+  changeFee,
+  createNewAccount,
+  closeCreateAccountModal,
+} from '../reducers/createAccount.duck';
 
-type Props = {};
+type Props = {
+  amount: string,
+  changeAmount: Function,
+  changeDelegate: Function,
+  changeFee: Function,
+  closeCreateAccountModal: Function,
+  createNewAccount: Function,
+  delegate: string,
+  fee: number,
+  isLoading: boolean,
+  isModalOpen: boolean,
+  operation: string
+};
 
-export default class CreateAccountModal extends Component<Props> {
+class CreateAccountModal extends Component<Props> {
   props: Props;
-
-  state = {
-    delegate: this.props.delegate,
-    fee: "10",
-    amount: "0",
-    delegatable: "delegatable_true",
-    spendable: "spendable_true",
+  changeAmount = (_, amount) => {
+    this.props.changeAmount(amount);
   };
 
-  onCreateButtonPress = () => {
-    const { delegate, fee, amount, delegatable, spendable } = this.state;
-
-    this.props.onCreate(amount, delegate || this.props.delegate, spendable, delegatable, fee);
+  changeDelegate = (_, delegate) => {
+    this.props.changeDelegate(delegate);
   };
 
-  render() {
+  changeFee = (_, index, fee) => {
+    this.props.changeFee(fee);
+  };
+
+  renderCreationBody = () => {
     return (
-      <Dialog
-        modal
-        open={this.props.open}
-        title="Add account"
-        bodyStyle={{ padding: '50px' }}
-        titleStyle={{ padding: '50px 50px 0px' }}
-      >
+      <Fragment>
         <CloseIcon
           className={styles.closeIcon}
           style={{ fill: '#7190C6' }}
-          onClick={this.props.closeModal}
+          onClick={this.props.closeCreateAccountModal}
         />
-        <div>
+        <div className={styles.delegateContainer}>
           <TextField
             floatingLabelText="Delegate"
-            defaultValue={this.props.delegate}
-            onChange={(_, delegate) => this.setState({ delegate })}
+            style={{ width: '100%' }}
+            value={this.props.delegate}
+            onChange={this.changeDelegate}
           />
         </div>
-        <div>
-          <TextField
-            floatingLabelText="Fee"
-            defaultValue="10"
-            onChange={(_, fee) => this.setState({ fee })}
-          />
-        </div>
-        <div className={styles.delegatableAndSpendableContainer}>
-          <div>
-            Delegatable:
-            <RadioButtonGroup
-              defaultSelected="delegatable_true"
-              name="delegatable"
-              onChange={(_, delegatable) => this.setState({ delegatable })}
-            >
-              <RadioButton
-                value="delegatable_true"
-                label="true"
-              />
-              <RadioButton
-                value="delegatable_false"
-                label="false"
-              />
-            </RadioButtonGroup>
+        <div className={styles.amountAndFeeContainer}>
+          <div className={styles.amountSendContainer}>
+            <TextField
+              floatingLabelText="Amount"
+              default="0"
+              value={this.props.amount}
+              onChange={this.changeAmount}
+            />
+            <img
+              alt="tez"
+              src={tezosLogo}
+              className={styles.tezosSymbol}
+            />
           </div>
-          <div>
-            Spendable:
-            <RadioButtonGroup
-              defaultSelected="spendable_true"
-              name="spendable"
-              onChange={(_, spendable) => this.setState({ spendable })}
+          <div className={styles.feeContainer}>
+            <SelectField
+              value={this.props.fee}
+              onChange={this.changeFee}
             >
-              <RadioButton
-                value="spendable_true"
-                label="true"
-              />
-              <RadioButton
-                value="spendable_false"
-                label="false"
-              />
-            </RadioButtonGroup>
+              <MenuItem value={100} primaryText="Low Fee: 100" />
+              <MenuItem value={200} primaryText="Medium Fee: 200" />
+              <MenuItem value={400} primaryText="High Fee: 400" />
+              <MenuItem value={500} primaryText="Custom" />
+            </SelectField>
           </div>
-        </div>
-        <div className={styles.amountSendContainer}>
-          <TextField
-            floatingLabelText="Amount"
-            default="0"
-            onChange={(_, amount) => this.setState({ amount })}
-          />
-          <img
-            alt="tez"
-            src={tezosLogo}
-            className={styles.tezosSymbol}
-          />
         </div>
         <div className={styles.passwordButtonContainer}>
           <CreateButton
@@ -120,12 +103,82 @@ export default class CreateAccountModal extends Component<Props> {
               fontSize: '15px',
               marginTop: '15px',
             }}
-            onClick={this.onCreateButtonPress}
+            onClick={this.props.createNewAccount}
             disabled={this.props.isLoading}
           />
         </div>
         {this.props.isLoading && <Loader />}
+      </Fragment>
+    );
+  };
+
+  renderOperationBody = () => {
+    return (
+      <div>
+        <div>
+          Operation successful: {this.props.operation}
+        </div>
+        <div>
+          <CreateButton
+            label="Close"
+            style={{
+              border: '2px solid #7B91C0',
+              color: '#7B91C0',
+              height: '28px',
+              fontSize: '15px',
+              marginTop: '15px',
+            }}
+            onClick={this.props.closeCreateAccountModal}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  render() {
+    return (
+      <Dialog
+        modal
+        open={this.props.isModalOpen}
+        title="Add account"
+        bodyStyle={{ padding: '50px' }}
+        titleStyle={{ padding: '50px 50px 0px' }}
+      >
+        {
+          !this.props.operation &&
+            this.renderCreationBody()
+        }
+        {
+          this.props.operation &&
+            this.renderOperationBody()
+        }
       </Dialog>
     );
   }
 }
+
+function mapStateToProps({ createAccount }) {
+  return {
+    delegate: createAccount.get('delegate'),
+    fee: createAccount.get('fee'),
+    isLoading: createAccount.get('isLoading'),
+    operation: createAccount.get('operation'),
+    isModalOpen: createAccount.get('isModalOpen'),
+    amount: createAccount.get('amount'),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      changeAmount,
+      changeDelegate,
+      changeFee,
+      closeCreateAccountModal,
+      createNewAccount,
+    },
+    dispatch
+  );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountModal);

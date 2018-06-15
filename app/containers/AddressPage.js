@@ -8,6 +8,7 @@ import styles from './AddressPage.css';
 import Addresses from '../components/Addresses';
 import ActionPanel from '../components/ActionPanel';
 import AddAddressModal from '../components/AddAddressModal';
+import MessageBar from '../components/MessageBar';
 import {
   setActiveTab as setActiveAddAddressTab,
   closeAddAddressModal,
@@ -38,7 +39,8 @@ type Props = {
   updatePassPhrase: Function,
   updateSeed: Function,
   selectedAccountHash: string,
-  selectDefaultAccountOrOpenModal: Function
+  selectDefaultAccountOrOpenModal: Function,
+  message: Object
 };
 
 class AddressPage extends Component<Props> {
@@ -67,6 +69,7 @@ class AddressPage extends Component<Props> {
       updatePassPhrase,
       updateSeed,
       selectedAccountHash,
+      message,
     } = this.props;
 
     return (
@@ -92,17 +95,17 @@ class AddressPage extends Component<Props> {
           updateSeed={updateSeed}
           selectedAccountHash={selectedAccountHash}
         />
+        <MessageBar message={message} />
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
-  const { address } = state;
-
+function mapStateToProps({ address, message }) {
   return {
     activeTabAddAddressTab: address.get('activeTab'),
     addAddressModalIsOpen: address.get('open'),
+    message: message.get('message'),
     seed: address.get('seed'),
     username: address.get('username'),
     passPhrase: address.get('passPhrase'),
