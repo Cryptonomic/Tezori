@@ -18,9 +18,8 @@ class MessageBar extends React.Component<Props> {
     const { message, clearMessageState } = this.props;
     const isOpen = message.has('message');
 
-    const bodyStyle = message.get('isError') ?
-      { backgroundColor: 'rgba(255, 0, 0, 0.75)' } :
-      {};
+    const bodyStyle = message.get('isError') &&
+      { backgroundColor: 'rgba(255, 0, 0, 0.75)' };
 
     return (
       <Snackbar
@@ -35,9 +34,7 @@ class MessageBar extends React.Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
-  const { message } = state;
-
+function mapStateToProps({ message }) {
   return {
     message: message.get('message'),
   };

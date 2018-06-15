@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -21,7 +21,6 @@ import {
   changeFee,
   createNewAccount,
   closeCreateAccountModal,
-  setOperation,
 } from '../reducers/createAccount.duck';
 
 type Props = {
@@ -35,21 +34,26 @@ type Props = {
   fee: number,
   isLoading: boolean,
   isModalOpen: boolean,
-  operation: string,
-  selectedAccountHash: string,
-  setOperation: Function
+  operation: string
 };
 
 class CreateAccountModal extends Component<Props> {
   props: Props;
+  changeAmount = (_, amount) => {
+    this.props.changeAmount(amount);
+  };
 
-  componentDidMount() {
-    this.props.setOperation(this.props.selectedAccountHash);
-  }
+  changeDelegate = (_, delegate) => {
+    this.props.changeDelegate(delegate);
+  };
+
+  changeFee = (_, index, fee) => {
+    this.props.changeFee(fee);
+  };
 
   renderCreationBody = () => {
     return (
-      <div>
+      <Fragment>
         <CloseIcon
           className={styles.closeIcon}
           style={{ fill: '#7190C6' }}
@@ -60,7 +64,7 @@ class CreateAccountModal extends Component<Props> {
             floatingLabelText="Delegate"
             style={{ width: '100%' }}
             value={this.props.delegate}
-            onChange={(_, delegate) => this.props.changeDelegate(delegate)}
+            onChange={this.changeDelegate}
           />
         </div>
         <div className={styles.amountAndFeeContainer}>
@@ -69,7 +73,7 @@ class CreateAccountModal extends Component<Props> {
               floatingLabelText="Amount"
               default="0"
               value={this.props.amount}
-              onChange={(_, amount) => this.props.changeAmount(amount)}
+              onChange={this.changeAmount}
             />
             <img
               alt="tez"
@@ -80,7 +84,7 @@ class CreateAccountModal extends Component<Props> {
           <div className={styles.feeContainer}>
             <SelectField
               value={this.props.fee}
-              onChange={(_, index, fee) => this.props.changeFee(fee)}
+              onChange={this.changeFee}
             >
               <MenuItem value={100} primaryText="Low Fee: 100" />
               <MenuItem value={200} primaryText="Medium Fee: 200" />
@@ -104,7 +108,7 @@ class CreateAccountModal extends Component<Props> {
           />
         </div>
         {this.props.isLoading && <Loader />}
-      </div>
+      </Fragment>
     );
   };
 
@@ -153,15 +157,14 @@ class CreateAccountModal extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
-  const { address, createAccount } = state;
-
+function mapStateToProps({ createAccount }) {
   return {
     delegate: createAccount.get('delegate'),
     fee: createAccount.get('fee'),
     isLoading: createAccount.get('isLoading'),
     operation: createAccount.get('operation'),
-    selectedAccountHash: address.get('selectedAccountHash'),
+    isModalOpen: createAccount.get('isModalOpen'),
+    amount: createAccount.get('amount'),
   };
 }
 
@@ -173,7 +176,6 @@ function mapDispatchToProps(dispatch) {
       changeFee,
       closeCreateAccountModal,
       createNewAccount,
-      setOperation,
     },
     dispatch
   );

@@ -45,7 +45,6 @@ export function createNewAccount() {
         publicKeyHash,
       };
       // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
-      console.log('delegate', delegate);
       const newAccount = await sendOriginationOperation(
         network,
         keyStore,
@@ -55,12 +54,11 @@ export function createNewAccount() {
         true,
         fee
       );
-      console.log('newAccount?!?!?!?', newAccount);
+
       dispatch(setOperation(newAccount.operation));
       const newAccountHash = newAccount.results.operation_results[0].originated_contracts[0];
       const account = await getAccount(network, newAccountHash);
 
-      console.log('account', account);
       dispatch(addNewAccount(publicKeyHash, account.account));
       dispatch(setIsLoading(false));
     } catch (e) {
@@ -73,7 +71,7 @@ export function createNewAccount() {
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const initState = fromJS({
-  amount: '0',
+  amount: '',
   delegate: '', // TODO: set this to the selectedAccountHash to start
   fee: 100,
   isLoading: false,

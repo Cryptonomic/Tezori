@@ -11,15 +11,9 @@ export const clearMessageState = actionCreator(CLEAR_MESSAGE_STATE);
 const createMessage = actionCreator(ADD_MESSAGE, 'message', 'isError');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function addMessage(message, isError, autoHideDuration = 0) {
+export function addMessage(message, isError) {
   return (dispatch) => {
     dispatch(createMessage(message, isError));
-
-    if (autoHideDuration > 0) {
-      setTimeout(() => {
-        dispatch(clearMessageState());
-      }, autoHideDuration);
-    }
   };
 }
 

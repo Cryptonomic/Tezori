@@ -4,9 +4,10 @@ import { flatten } from 'lodash';
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import OPERATION_TYPES from '../constants/OperationTypes';
-import { tezosWallet, tezosOperations, tezosQuery } from '../conseil';
+import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
+import { changeDelegate } from './createAccount.duck';
 
 const {
   getOperationGroups,
@@ -14,7 +15,6 @@ const {
   getOperationGroup,
   getAccount,
 } = tezosQuery;
-const { sendOriginationOperation } = tezosOperations;
 const {
   unlockFundraiserIdentity,
   generateMnemonic,
@@ -36,7 +36,6 @@ const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 const ADD_OPERATION_GROUPS_AND_TRANSACTIONS = 'ADD_OPERATION_GROUPS_AND_TRANSACTIONS';
-const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_DEFAULT_ACCOUNT = 'SELECT_DEFAULT_ACCOUNT ';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -54,7 +53,6 @@ export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
 const addOperationGroupsAndTransactionsToAccount = actionCreator(ADD_OPERATION_GROUPS_AND_TRANSACTIONS, 'operationGroups', 'transactions');
-const addNewAccount = actionCreator(ADD_NEW_ACCOUNT, 'publicKeyHash', 'account');
 export const selectDefaultAccount = actionCreator(SELECT_DEFAULT_ACCOUNT);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -88,6 +86,7 @@ export function selectDefaultAccountOrOpenModal() {
             accounts: formatAccounts(accounts),
           }));
           dispatch(setSelectedAccount(publicKeyHash));
+          dispatch(changeDelegate(publicKeyHash));
         }));
         dispatch(setIsLoading(false));
       } catch (e) {
@@ -122,6 +121,7 @@ export function selectAccount(selectedAccountHash) {
 
         const flattenedTransactions = flatten(transactions);
 
+        dispatch(changeDelegate(selectedAccountHash));
         dispatch(addOperationGroupsAndTransactionsToAccount(fromJS(operationGroups), fromJS(flattenedTransactions)));
         dispatch(setIsLoading(false));
       } catch (e) {
@@ -272,9 +272,6 @@ export default function address(state = initState, action) {
       .set('identities', identities)
       .set('selectedAccountHash', selectedAccountHash);
     }
-    case ADD_NEW_ACCOUNT:
-      return state
-        .set('identities', addNewAccountToIdentity(action.publicKeyHash, action.account, state.get('identities')));
     case ADD_OPERATION_GROUPS_AND_TRANSACTIONS: {
       const updatedAccount = state
         .get('selectedAccount')

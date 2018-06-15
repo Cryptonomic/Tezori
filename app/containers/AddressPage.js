@@ -101,9 +101,7 @@ class AddressPage extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
-  const { address, message } = state;
-
+function mapStateToProps({ address, message }) {
   return {
     activeTabAddAddressTab: address.get('activeTab'),
     addAddressModalIsOpen: address.get('open'),
