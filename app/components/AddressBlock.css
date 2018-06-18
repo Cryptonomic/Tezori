@@ -4,13 +4,22 @@
 }
 
 .accounts {
-  background-color: #FAFBFC;
+  background-color: #f9fafc;
 }
 
 .addressBlockTitle {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 1rem;
+  font-weight: 300;
+  font-size: 1rem;
   align-items: center;
+}
+
+.addressBlockTitle span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .addressBlockTitleContainerSelected {
@@ -19,8 +28,8 @@
 }
 
 .addressBlockTitleContainer {
-  padding: 10px;
   cursor: pointer;
+  padding: 15px 20px;
 }
 
 .arrowContainer {
@@ -28,15 +37,23 @@
 }
 
 .tzAmount {
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 14px;
   display: flex;
   color: black;
 }
 
 .accountBlock {
-  border-bottom: 1px solid lightgray;
-  padding: 10px;
+  border-bottom: 1px solid #edf0f7;
+  padding: 15px 20px;
   cursor: pointer;
+}
+
+.accountBlockAddress {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 300;
 }
 
 .tzAmountSelected {
@@ -44,13 +61,15 @@
 }
 
 .addAccountBlock {
-  border-bottom: 1px solid lightgray;
-  padding: 10px;
+  border-bottom: 1px solid #edf0f7;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   color: #7B91C0;
+  font-size: 16px;
+  font-weight: 500;
   min-height: 30px;
 }
 

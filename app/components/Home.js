@@ -69,7 +69,7 @@ class Home extends Component<Props> {
       <CreateButton
         label={label}
         style={{
-          backgroundColor: '#417DEF',
+          backgroundColor: '#2c7df7',
           color: 'white',
           marginTop: '20px'
         }}
@@ -123,7 +123,7 @@ class Home extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>Create a new wallet</div>
+          <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.importButtonContainer}>
             <CreateButton
               label="Select file"
@@ -168,9 +168,9 @@ class Home extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>
+          <h3 className={styles.walletTitle}>
             Import your wallet from a backup
-          </div>
+          </h3>
           <div className={styles.importButtonContainer}>
             <CreateButton
               label="Select Wallet File"

@@ -98,7 +98,7 @@ class ActionPanel extends Component<Props> {
     const { selectedAccount, selectedAccountHash, selectAccount } = this.props;
 
     return (
-      <div className={styles.actionPanelContainer}>
+      <section className={styles.actionPanelContainer}>
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
@@ -106,7 +106,7 @@ class ActionPanel extends Component<Props> {
         />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
-      </div>
+      </section>
     );
   }
 }

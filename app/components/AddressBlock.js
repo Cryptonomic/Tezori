@@ -65,7 +65,7 @@ export default class AddressBlock extends Component<Props> {
         onClick={() => selectAccount(accountId)}
       >
         {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-        <div>{accountId}</div>
+        <div className={styles.accountBlockAddress}>{accountId}</div>
       </div>
     );
   };
@@ -76,7 +76,7 @@ export default class AddressBlock extends Component<Props> {
     return (
       <div className={styles.arrowContainer}>
         { !isExpanded && <DropdownArrow /> }
-        { isExpanded && <DropupArrow /> }
+        { isExpanded && <DropupArrow style={{fill: '#FFFFFF'}} /> }
       </div>
     );
   };
@@ -100,7 +100,7 @@ export default class AddressBlock extends Component<Props> {
             className={styles.addressBlockTitle}
             onClick={() => this.props.selectAccount(publicKeyHash)}
           >
-            {publicKeyHash}
+            <span>{publicKeyHash}</span>
             {this.renderArrowIcon()}
           </div>
           {
@@ -115,8 +115,8 @@ export default class AddressBlock extends Component<Props> {
               <AddCircle
                 style={{
                   fill: '#7B91C0',
-                  height: '18px',
-                  width: '18px'
+                  height: '16px',
+                  width: '20px'
                 }}
                 onClick={this.props.openCreateAccountModal}
               />
