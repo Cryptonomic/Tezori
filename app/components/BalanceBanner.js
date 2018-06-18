@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -16,19 +16,21 @@ export default function BalanceBanner(props: Props) {
   const { balance, publicKeyHash, onRefreshClick } = props;
 
   return (
-    <div className={styles.totalBannerContainer}>
+    <header className={styles.totalBannerContainer}>
       <div className={styles.totalContainer}>
         <div className={styles.total}>
           {
             publicKeyHash &&
-              <span>
-                {balance}
+              <Fragment>
+                <h3>
+                  {balance}
+                </h3>
                 <img
                   alt="tez"
                   src={tezosLogo}
                   className={styles.tezosLogo}
                 />
-              </span>
+              </Fragment>
           }
         </div>
         <RefreshIcon
@@ -42,7 +44,7 @@ export default function BalanceBanner(props: Props) {
           onClick={onRefreshClick}
         />
       </div>
-      <div className={styles.address}>{publicKeyHash}</div>
-    </div>
+      <span className={styles.address}>{publicKeyHash}</span>
+    </header>
   );
 }

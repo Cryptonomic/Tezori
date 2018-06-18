@@ -5,8 +5,14 @@
 
 .total {
   color: white;
-  font-size: 50px;
+  font-size: 64px;
   display: flex;
+  align-items: center;
+}
+
+.total h3 {
+  margin: 0;
+  font-weight: 300;
 }
 
 .totalContainer {
@@ -16,8 +22,9 @@
 }
 
 .address {
-  color: #E3E7F1;
-  font-size: 24px;
+  color: #d0e2fd;
+  font-size: 22px;
+  font-weight: 300;
 }
 
 .tezosLogo {

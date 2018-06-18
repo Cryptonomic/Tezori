@@ -2,6 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 30px 40px;
+  flex-shrink: 0;
 }
 
 .toolsContainer {
