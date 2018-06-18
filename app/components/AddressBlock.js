@@ -10,6 +10,7 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
 type Props = {
+  automaticAccountRefresh: Function,
   accountBlock: Object, // TODO: type this
   openCreateAccountModal: Function,
   selectAccount: Function,
@@ -49,11 +50,16 @@ export default class AddressBlock extends Component<Props> {
     else this.setState({ isExpanded: true });
   };
 
+  onAccountSelection = (selectedAccountHash, selectedParentHash) => {
+    this.props.selectAccount(selectedAccountHash, selectedParentHash)
+    this.props.automaticAccountRefresh();
+  };
+
   renderAccountBlock = (publicKeyHash) => {
     return (account) => {
       const balance = account.get('balance');
       const accountId = account.get('accountId');
-      const { selectAccount, selectedAccountHash } = this.props;
+      const { selectedAccountHash } = this.props;
       const accountBlockClasses = classNames({
         [styles.accountBlock]: true,
         [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
@@ -63,7 +69,7 @@ export default class AddressBlock extends Component<Props> {
         <div
           className={accountBlockClasses}
           key={accountId}
-          onClick={() => selectAccount(accountId, publicKeyHash)}
+          onClick={() => this.onAccountSelection(accountId, publicKeyHash)}
         >
           {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
           <div>{accountId}</div>
@@ -100,7 +106,7 @@ export default class AddressBlock extends Component<Props> {
         >
           <div
             className={styles.addressBlockTitle}
-            onClick={() => this.props.selectAccount(publicKeyHash, publicKeyHash)}
+            onClick={() => this.onAccountSelection(publicKeyHash, publicKeyHash)}
           >
             {publicKeyHash}
             {this.renderArrowIcon()}
