@@ -27,11 +27,13 @@ const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
 const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
 const SET_IS_LOADING = 'SET_IS_LOADING';
+const SET_IS_FORM_VALID = 'SET_IS_FORM_VALID';
 const CLEAR_STATE = 'CLEAR_STATE';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
 const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
+const CONFIRM_PASS_PHRASE = 'CONFIRM_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
@@ -49,6 +51,7 @@ export const updatePrivateKey = actionCreator(UPDATE_PRIVATE_KEY, 'privateKey');
 export const updatePublicKey = actionCreator(UPDATE_PUBLIC_KEY, 'publicKey');
 export const updateUsername = actionCreator(UPDATE_USERNAME, 'username');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
+export const confirmPassPhrase = actionCreator(CONFIRM_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
@@ -163,6 +166,7 @@ export function importAddress() {
       PRIVATE_KEY,
       GENERATE_MNEMONIC,
     } = ADD_ADDRESS_TYPES;
+    alert('in here');
     const activeTab = state().address.get('activeTab');
     const seed = state().address.get('seed');
     const username = state().address.get('username');
@@ -255,6 +259,8 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
+  isValid: false,
+  isFormValid: false,
   identities: [],
   selectedAccountHash: '',
   selectedAccount: emptyAccount,
@@ -304,8 +310,16 @@ export default function address(state = initState, action) {
       return state.set('username', action.username);
     case UPDATE_PASS_PHRASE:
       return state.set('passPhrase', action.passPhrase);
+    case CONFIRM_PASS_PHRASE:
+      return state
+        .set('confirmedPassPhrase', action.passPhrase)
+        .set('isFormValid', state.get('passPhrase') == action.passPhrase)
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
+    case SET_IS_FORM_VALID:
+      console.log('in is form valid');
+      console.log(action);
+      return state.set('isFormValid', action.isFormValid);
     case SELECT_ACCOUNT:
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
