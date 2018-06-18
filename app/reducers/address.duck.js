@@ -35,8 +35,6 @@ const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
-const ADD_OPERATION_GROUPS_AND_TRANSACTIONS = 'ADD_OPERATION_GROUPS_AND_TRANSACTIONS';
-const SELECT_DEFAULT_ACCOUNT = 'SELECT_DEFAULT_ACCOUNT ';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const clearEntireAddressState = actionCreator(CLEAR_ENTIRE_ADDRESS_STATE);
@@ -51,24 +49,19 @@ export const updateUsername = actionCreator(UPDATE_USERNAME, 'username');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
-const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash');
-const addOperationGroupsAndTransactionsToAccount = actionCreator(ADD_OPERATION_GROUPS_AND_TRANSACTIONS, 'operationGroups', 'transactions');
-export const selectDefaultAccount = actionCreator(SELECT_DEFAULT_ACCOUNT);
+const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash', 'selectedParentHash', 'selectedAccount');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     const initWalletState = state().walletInitialization;
     const identities = initWalletState.getIn(['wallet', 'identities']);
-    console.log('identites', identities);
-    const network = initWalletState.get('network');
 
     if (identities.size === 0) {
-      dispatch(selectDefaultAccount());
-      const selectedAccountHash = state().address.get('selectedAccountHash');
-
-      if (!selectedAccountHash) dispatch(openAddAddressModal());
+      dispatch(openAddAddressModal());
     } else {
+      const network = initWalletState.get('network');
+
       try {
         dispatch(setIsLoading(true));
         await Promise.all(identities.toJS().map(async (identity) => {
@@ -85,9 +78,19 @@ export function selectDefaultAccountOrOpenModal() {
             operationGroups,
             accounts: formatAccounts(accounts),
           }));
-          dispatch(setSelectedAccount(publicKeyHash));
+
+          const selectedAccount = createSelectedAccount({
+            operationGroups,
+            balance,
+            transactions: [],
+          });
+
+          dispatch(setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount));
           dispatch(changeDelegate(publicKeyHash));
         }));
+        const firstIdentityHash = identities.getIn([0, 'publicKeyHash']);
+
+        await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
         dispatch(setIsLoading(false));
       } catch (e) {
         console.error(e);
@@ -98,37 +101,41 @@ export function selectDefaultAccountOrOpenModal() {
   };
 }
 
-export function selectAccount(selectedAccountHash) {
+export function selectAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
 
-    dispatch(setSelectedAccount(selectedAccountHash));
+    try {
+      dispatch(setIsLoading(true));
+      const account = await getAccount(network, selectedAccountHash);
+      const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
+      const managerOperationGroups = operationGroups.filter(({ kind }) => {
+        return kind === OPERATION_TYPES.MANAGER;
+      });
 
-      try {
-        dispatch(setIsLoading(true));
-        const operationGroups = await getOperationGroupsForAccount(network, selectedAccountHash);
-        const managerOperationGroups = operationGroups.filter(({ kind }) => {
-          return kind === OPERATION_TYPES.MANAGER;
+      const transactions = await Promise.all(managerOperationGroups.map(({ hash }) => {
+        return getOperationGroup(network, hash)
+        .then(({ operations }) => {
+          return operations.filter(({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION);
         });
-
-        const transactions = await Promise.all(managerOperationGroups.map(({ hash }) => {
-          return getOperationGroup(network, hash)
-          .then(({ operations }) => {
-            return operations.filter(({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION);
-          });
-        }));
+      }));
 
 
-        const flattenedTransactions = flatten(transactions);
+      const flattenedTransactions = flatten(transactions);
+      const selectedAccount = createSelectedAccount({
+        transactions: flattenedTransactions,
+        operationGroups,
+        balance: account.account.balance,
+      });
 
-        dispatch(changeDelegate(selectedAccountHash));
-        dispatch(addOperationGroupsAndTransactionsToAccount(fromJS(operationGroups), fromJS(flattenedTransactions)));
-        dispatch(setIsLoading(false));
-      } catch (e) {
-        console.error(e);
-        dispatch(addMessage(e.name, true));
-        dispatch(setIsLoading(false));
-      }
+      dispatch(setSelectedAccount(selectedAccountHash, selectedParentHash, selectedAccount));
+      dispatch(changeDelegate(selectedAccountHash));
+      dispatch(setIsLoading(false));
+    } catch (e) {
+      console.error(e);
+      dispatch(addMessage(e.name, true));
+      dispatch(setIsLoading(false));
+    }
 
   }
 }
@@ -192,9 +199,14 @@ export function importAddress() {
             };
           });
 
-          // TODO: push identity onto existing wallet
+          const selectedAccount = createSelectedAccount({
+            balance: 0,
+            operationGroups: [],
+            transactions: [],
+          });
+
           dispatch(saveUpdatedWallet(identities));
-          dispatch(setSelectedAccount(identity.publicKeyHash));
+          dispatch(setSelectedAccount(identity.publicKeyHash, identity.publicKeyHash, selectedAccount));
           break;
         }
         case SEED_PHRASE:
@@ -212,7 +224,6 @@ export function importAddress() {
           const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
-          // TODO: push identity onto existing wallet
           dispatch(saveUpdatedWallet(fromJS([identity])));
           dispatch(addNewIdentity({
             transactions: [],
@@ -221,7 +232,13 @@ export function importAddress() {
             operationGroups,
             accounts: formatAccounts(accounts),
           }));
-          dispatch(setSelectedAccount(publicKeyHash));
+          const selectedAccount = createSelectedAccount({
+            balance,
+            operationGroups,
+            transactions: [],
+          });
+
+          dispatch(setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount));
           break;
         }
       }
@@ -237,15 +254,6 @@ export function importAddress() {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const emptyAccount = fromJS({
-  publicKey: '',
-  privateKey: '',
-  publicKeyHash: '',
-  balance: 0,
-  accounts: [],
-  operationGroups: [],
-  transactions: [],
-});
 const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
   open: false,
@@ -257,7 +265,8 @@ const initState = fromJS({
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
-  selectedAccount: emptyAccount,
+  selectedAccount: createSelectedAccount({}),
+  selectedParentHash: '',
 });
 
 export default function address(state = initState, action) {
@@ -271,15 +280,6 @@ export default function address(state = initState, action) {
       return initState
       .set('identities', identities)
       .set('selectedAccountHash', selectedAccountHash);
-    }
-    case ADD_OPERATION_GROUPS_AND_TRANSACTIONS: {
-      const updatedAccount = state
-        .get('selectedAccount')
-        .set('operationGroups', action.operationGroups)
-        .set('transactions', action.transactions);
-
-      return state.set('selectedAccount', updatedAccount)
-        .set('identities', findAndUpdateIdentities(updatedAccount, state.get('identities')));
     }
     case ADD_NEW_IDENTITY: {
       const newIdentity = fromJS(action.identity);
@@ -309,73 +309,20 @@ export default function address(state = initState, action) {
     case SELECT_ACCOUNT:
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
-        .set('selectedAccount', findSelectedAccount(action.selectedAccountHash, state.get('identities')));
-    case SELECT_DEFAULT_ACCOUNT: {
-      const identity = state.getIn(['identities', 0], emptyAccount);
-
-      return state
-        .set('selectedAccountHash', identity.get('publicKeyHash', ''))
-        .set('selectedAccount', identity)
-    }
+        .set('selectedParentHash', action.selectedParentHash)
+        .set('selectedAccount', action.selectedAccount);
     default:
       return state;
   }
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-function addNewAccountToIdentity(publicKeyHash, account, identities) {
-  return identities.map((identity) => {
-    if (identity.get('publicKeyHash') === publicKeyHash) {
-      const accounts = identity.get('accounts');
-
-      return identity.set('accounts', formatAccounts(accounts.push(account)));
-    }
-    return identity;
-  });
-}
-
-function findAndUpdateIdentities(updatedAccount, identities) {
-  if (updatedAccount.has('publicKeyHash')) {
-    return identities.map((identity) => {
-      if (identity.get('publicKeyHash') === updatedAccount.get('publicKeyHash')) {
-        return updatedAccount;
-      }
-      return identity;
-    });
-  }
-
-  return identities.map((identity) => {
-    const accounts = identity.get('accounts').map((account) => {
-      if (account.get('accountId') === updatedAccount.get('accountId')) {
-        return updatedAccount;
-      }
-      return account;
-    });
-
-    return identity.set('accounts', accounts);
-  });
-}
-
-export function findSelectedAccount(hash, identities) {
-  const identityTest = RegExp('^tz*');
-
-  if (identityTest.test(hash)) {
-    return identities.find((identity) => {
-      return identity.get('publicKeyHash') === hash;
-    });
-  }
-
-  let foundAccount = {};
-
-  identities.find((identity) => {
-    foundAccount = identity.get('accounts').find((account) => {
-      return account.get('accountId') === hash;
-    });
-
-    return !!foundAccount;
-  });
-
-  return foundAccount;
+function createSelectedAccount({
+  balance = 0,
+  operationGroups = [],
+  transactions = [],
+}) {
+  return fromJS({ balance, operationGroups, transactions });
 }
 
 function getOperationGroupsForAccount(network, id) {

@@ -2,7 +2,7 @@ import { fromJS } from 'immutable';
 import { tezosOperations, tezosQuery } from '../conseil';
 
 import actionCreator from '../utils/reduxHelpers';
-import { findSelectedAccount, addNewAccount } from './address.duck';
+import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
 
 const { getAccount } = tezosQuery;
@@ -32,13 +32,13 @@ export function createNewAccount() {
   return async (dispatch, state) => {
     try {
       dispatch(setIsLoading(true));
-      const publicKeyHash = state().address.get('selectedAccountHash');
+      const publicKeyHash = state().address.get('selectedParentHash');
       const delegate = state().createAccount.get('delegate');
       const amount = state().createAccount.get('amount');
       const fee = state().createAccount.get('fee');
       const network = state().walletInitialization.get('network');
 
-      const identity = findSelectedAccount(publicKeyHash, state().address.get('identities'));
+      const identity = findKeyStore(publicKeyHash, state().address.get('identities'));
       const keyStore = {
         publicKey: identity.get('publicKey'),
         privateKey: identity.get('privateKey'),
@@ -103,3 +103,9 @@ export default function createAccount(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+// publicKeyHash -> [identity] -> keyStore
+export function findKeyStore(publicKeyHash, identities) {
+  return identities.find(identity => {
+    return identity.get('publicKeyHash') === publicKeyHash;
+  });
+}

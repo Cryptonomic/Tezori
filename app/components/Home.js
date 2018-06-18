@@ -163,7 +163,6 @@ class Home extends Component<Props> {
     } = this.props;
     const completeWalletPath = path.join(walletLocation, walletFileName);
 
-    console.log('message', message);
     return (
       <div className={styles.createContainer}>
         {isLoading && <Loader />}

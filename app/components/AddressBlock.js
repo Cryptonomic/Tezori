@@ -49,25 +49,27 @@ export default class AddressBlock extends Component<Props> {
     else this.setState({ isExpanded: true });
   };
 
-  renderAccountBlock = (account) => {
-    const balance = account.get('balance');
-    const accountId = account.get('accountId');
-    const { selectAccount, selectedAccountHash } = this.props;
-    const accountBlockClasses = classNames({
-      [styles.accountBlock]: true,
-      [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
-    });
+  renderAccountBlock = (publicKeyHash) => {
+    return (account) => {
+      const balance = account.get('balance');
+      const accountId = account.get('accountId');
+      const { selectAccount, selectedAccountHash } = this.props;
+      const accountBlockClasses = classNames({
+        [styles.accountBlock]: true,
+        [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
+      });
 
-    return (
-      <div
-        className={accountBlockClasses}
-        key={accountId}
-        onClick={() => selectAccount(accountId)}
-      >
-        {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-        <div>{accountId}</div>
-      </div>
-    );
+      return (
+        <div
+          className={accountBlockClasses}
+          key={accountId}
+          onClick={() => selectAccount(accountId, publicKeyHash)}
+        >
+          {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
+          <div>{accountId}</div>
+        </div>
+      );
+    }
   };
 
   renderArrowIcon = () => {
@@ -98,7 +100,7 @@ export default class AddressBlock extends Component<Props> {
         >
           <div
             className={styles.addressBlockTitle}
-            onClick={() => this.props.selectAccount(publicKeyHash)}
+            onClick={() => this.props.selectAccount(publicKeyHash, publicKeyHash)}
           >
             {publicKeyHash}
             {this.renderArrowIcon()}
@@ -121,7 +123,7 @@ export default class AddressBlock extends Component<Props> {
                 onClick={this.props.openCreateAccountModal}
               />
             </div>
-            {accountBlock.get('accounts').map(this.renderAccountBlock)}
+            {accountBlock.get('accounts').map(this.renderAccountBlock(publicKeyHash))}
           </div>
         }
         <CreateAccountModal />
