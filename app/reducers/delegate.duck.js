@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
+import { sendDelegationOperation } from '../tezos/TezosOperations';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -33,15 +34,22 @@ export function setOriginalAddress() {
 export function sendConfirmation() {
   return async (dispatch, state) => {
     const delegateState = state().delegate;
+    const walletState = state().walletInitialization;
     const address = delegateState.get('address');
-    const body = {
-      address,
-      password: delegateState.get('password'),
+    const fee = delegateState.get('delegateFee');
+    const network = walletState.get('network');
+    const selectedAccount = state().address.get('selectedAccount');
+    const keyStore = {
+      publicKey: selectedAccount.get('publicKey'),
+      privateKey: selectedAccount.get('privateKey'),
+      publicKeyHash: selectedAccount.get('publicKeyHash'),
     };
+
+    console.log(network, keyStore, address, fee)
 
     try {
       dispatch(updateIsLoading(true));
-      await postUpdateDelegate(body);
+      await sendDelegationOperation(network, keyStore, address, fee);
       dispatch(clearState());
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));
