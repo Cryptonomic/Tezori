@@ -1,0 +1,25 @@
+.transactionsContainer {
+  height: 100%;
+  background-color: white;
+}
+
+.details {
+  text-decoration: underline;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.detailsLink {
+  color: black;
+}
+
+.tezosSymbol {
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%);
+}
+
+.tableRowElement {
+  display: flex;
+}

@@ -1,0 +1,67 @@
+.addressBlockContainer {
+  background-color: white;
+  overflow: hidden;
+}
+
+.accounts {
+  background-color: #FAFBFC;
+}
+
+.addressBlockTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addressBlockTitleContainerSelected {
+  background-color: #417DEF;
+  color: #E3E7F1;
+}
+
+.addressBlockTitleContainer {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.arrowContainer {
+  cursor: pointer;
+}
+
+.tzAmount {
+  font-weight: 600;
+  display: flex;
+  color: black;
+}
+
+.accountBlock {
+  border-bottom: 1px solid lightgray;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tzAmountSelected {
+  color: #E3E7F1;
+}
+
+.addAccountBlock {
+  border-bottom: 1px solid lightgray;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: #7B91C0;
+  min-height: 30px;
+}
+
+.tezosSymbol {
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%);
+}
+
+.tezosSymbolGray {
+  height: 17px;
+  width: 17px;
+  filter: brightness(0.5%) invert(100%);
+}
