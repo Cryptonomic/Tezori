@@ -27,7 +27,6 @@ const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
 const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
 const SET_IS_LOADING = 'SET_IS_LOADING';
-const SET_IS_FORM_VALID = 'SET_IS_FORM_VALID';
 const CLEAR_STATE = 'CLEAR_STATE';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
 const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
@@ -166,7 +165,6 @@ export function importAddress() {
       PRIVATE_KEY,
       GENERATE_MNEMONIC,
     } = ADD_ADDRESS_TYPES;
-    alert('in here');
     const activeTab = state().address.get('activeTab');
     const seed = state().address.get('seed');
     const username = state().address.get('username');
@@ -259,7 +257,6 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
-  isValid: false,
   isFormValid: false,
   identities: [],
   selectedAccountHash: '',
@@ -316,10 +313,6 @@ export default function address(state = initState, action) {
         .set('isFormValid', state.get('passPhrase') == action.passPhrase)
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
-    case SET_IS_FORM_VALID:
-      console.log('in is form valid');
-      console.log(action);
-      return state.set('isFormValid', action.isFormValid);
     case SELECT_ACCOUNT:
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
