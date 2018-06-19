@@ -210,6 +210,7 @@
     "libsodium-wrappers-sumo": "^0.7.3",
     "lodash": "^4.17.10",
     "material-ui": "^0.20.1",
+    "polished": "^1.9.2",
     "qrcode": "^1.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -220,7 +221,8 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
-    "source-map-support": "^0.5.6"
+    "source-map-support": "^0.5.6",
+    "styled-components": "^3.3.2"
   },
   "devEngines": {
     "node": ">=7.x",
