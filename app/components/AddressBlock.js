@@ -49,27 +49,28 @@ export default class AddressBlock extends Component<Props> {
     else this.setState({ isExpanded: true });
   };
 
-  renderAccountBlock = (publicKeyHash) => {
-    return (account) => {
-      const balance = account.get('balance');
-      const accountId = account.get('accountId');
-      const {selectAccount, selectedAccountHash} = this.props;
-      const accountBlockClasses = classNames({
-        [styles.accountBlock]: true,
-        [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
-      });
+  selectAccount = (accountHash, parentHash) => {
+    this.props.selectAccount(accountHash, parentHash);
+  };
 
-      return (
-        <div
-          className={accountBlockClasses}
-          key={accountId}
-          onClick={() => selectAccount(accountId, publicKeyHash)}
-        >
-          {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-          <div className={styles.accountBlockAddress}>{accountId}</div>
-        </div>
-      );
-    };
+  renderAccountBlock = publicKeyHash => account => {
+    const balance = account.get('balance');
+    const accountId = account.get('accountId');
+    const { selectedAccountHash } = this.props;
+    const accountBlockClasses = classNames(styles.accountBlock, {
+      [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
+    });
+
+    return (
+      <div
+        className={accountBlockClasses}
+        key={accountId}
+        onClick={() => this.selectAccount(accountId, publicKeyHash)}
+      >
+        {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
+        <div className={styles.accountBlockAddress}>{accountId}</div>
+      </div>
+    );
   };
 
   renderArrowIcon = () => {

@@ -35,7 +35,7 @@ class ActionPanel extends Component<Props> {
     currentPage: 1
   };
 
-  onDataRefresh = () => {
+  handleDataRefresh = () => {
     const {
       selectAccount,
       selectedAccountHash,
@@ -116,7 +116,7 @@ class ActionPanel extends Component<Props> {
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
-          onRefreshClick={this.onDataRefresh}
+          onRefreshClick={this.handleDataRefresh }
         />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
