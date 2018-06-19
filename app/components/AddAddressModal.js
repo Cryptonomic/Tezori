@@ -21,7 +21,6 @@ type Props = {
   privateKey: string,
   publicKey: string,
   isLoading: boolean,
-  isFormValid: boolean,
   updatePrivateKey: Function,
   updatePublicKey: Function,
   updateUsername: Function,
@@ -44,7 +43,6 @@ export default function AddAddress(props: Props) {
     privateKey,
     publicKey,
     isLoading,
-    isFormValid,
     updatePrivateKey,
     updatePublicKey,
     updateUsername,
@@ -120,7 +118,7 @@ export default function AddAddress(props: Props) {
       case ADD_ADDRESS_TYPES.SEED_PHRASE:
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return (
-          <div className={styles.addAddressTypeBody}>
+          <div>
             <TextField
               floatingLabelText="Seed Words"
               style={{ width: '100%' }}
@@ -128,19 +126,21 @@ export default function AddAddress(props: Props) {
               disabled={activeTab === ADD_ADDRESS_TYPES.GENERATE_MNEMONIC}
               onChange={(_, newSeed) => updateSeed(newSeed)}
             />
-            <TextField
-              floatingLabelText="Pass Phrase"
-              type="password"
-              style={{ width: '45%' }}
-              value={passPhrase}
-              onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
-            />
-            <TextField
-              floatingLabelText="Confirm Pass Phrase"
-              type="password"
-              style={{ width: '45%' }}
-              onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
-            />
+            <div className={styles.fundraiserPasswordContainer}>
+              <TextField
+                floatingLabelText="Pass Phrase"
+                type="password"
+                style={{ width: '45%' }}
+                value={passPhrase}
+                onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
+              />
+              <TextField
+                floatingLabelText="Confirm Pass Phrase"
+                type="password"
+                style={{ width: '45%' }}
+                onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
+              />
+            </div>
           </div>
         );
       case ADD_ADDRESS_TYPES.FUNDRAISER:
@@ -157,19 +157,26 @@ export default function AddAddress(props: Props) {
               floatingLabelText="Activation Code"
               style={{ width: '100%' }}
             />
+            <TextField
+              floatingLabelText="Username"
+              style={{ width: '100%' }}
+              value={username}
+              onChange={(_, newUsername) => updateUsername(newUsername)}
+            />
             <div className={styles.fundraiserPasswordContainer}>
-              <TextField
-                floatingLabelText="Username"
-                style={{ width: '45%' }}
-                value={username}
-                onChange={(_, newUsername) => updateUsername(newUsername)}
-              />
               <TextField
                 floatingLabelText="Pass Phrase"
                 type="password"
                 style={{ width: '45%' }}
                 value={passPhrase}
                 onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
+              />
+              <TextField
+                floatingLabelText="Confirm Pass Phrase"
+                type="password"
+                style={{ width: '45%' }}
+                value={passPhrase}
+                onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
               />
             </div>
           </div>
@@ -196,7 +203,7 @@ export default function AddAddress(props: Props) {
               marginTop: '20px',
             }}
             onClick={importAddress}
-            disabled={isLoading || !isFormValid}
+            disabled={isLoading}
           />
           { isLoading &&
             <Loader />

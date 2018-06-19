@@ -8,6 +8,7 @@ import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
+import validate from '../utils/validators'
 
 const {
   getOperationGroups,
@@ -171,6 +172,9 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
+    //TODO: clear out message bar if there are errors from other tabs
+    dispatch(addMessage('', true))
+
     if (activeTab === GENERATE_MNEMONIC) {
       try {
         dispatch(setIsLoading(true));
@@ -199,7 +203,29 @@ export function importAddress() {
     const seed = state().address.get('seed');
     const username = state().address.get('username');
     const passPhrase = state().address.get('passPhrase');
+    const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
+
     const network = state().walletInitialization.get('network');
+
+    //TODO: clear out message bar
+    dispatch(addMessage('', true))
+
+    switch(activeTab) {
+      case FUNDRAISER:
+      case GENERATE_MNEMONIC:
+      case SEED_PHRASE:
+
+        var error = validate(passPhrase, 'minLength8');
+        if (error != false) {
+          return dispatch(addMessage(error, true));
+        };
+
+        var error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase')
+        if (error != false) {
+          return dispatch(addMessage(error, true));
+        };
+        break;
+    }
 
     try {
       dispatch(setIsLoading(true));
@@ -288,7 +314,6 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
-  isFormValid: false,
   identities: [],
   selectedAccountHash: '',
   selectedAccount: createSelectedAccount({}),
@@ -334,9 +359,7 @@ export default function address(state = initState, action) {
     case UPDATE_PASS_PHRASE:
       return state.set('passPhrase', action.passPhrase);
     case CONFIRM_PASS_PHRASE:
-      return state
-        .set('confirmedPassPhrase', action.passPhrase)
-        .set('isFormValid', state.get('passPhrase') == action.passPhrase);
+      return state.set('confirmedPassPhrase', action.passPhrase)
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:

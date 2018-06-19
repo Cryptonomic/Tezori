@@ -67,7 +67,6 @@ class AddressPage extends Component<Props> {
       seed,
       username,
       passPhrase,
-      isFormValid,
       privateKey,
       publicKey,
       isAddAddressLoading,
@@ -97,7 +96,6 @@ class AddressPage extends Component<Props> {
           privateKey={privateKey}
           publicKey={publicKey}
           isLoading={isAddAddressLoading}
-          isFormValid={isFormValid}
           updatePrivateKey={updatePrivateKey}
           updatePublicKey={updatePublicKey}
           updateUsername={updateUsername}
@@ -119,7 +117,6 @@ function mapStateToProps({ address, message }) {
     message: message.get('message'),
     seed: address.get('seed'),
     username: address.get('username'),
-    isFormValid: address.get('isFormValid'),
     passPhrase: address.get('passPhrase'),
     privateKey: address.get('privateKey'),
     publicKey: address.get('publicKey'),
