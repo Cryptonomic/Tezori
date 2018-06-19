@@ -6,6 +6,7 @@ import AddCircle from 'material-ui/svg-icons/content/add-circle';
 
 import AddressBlock from './AddressBlock';
 import {
+  automaticAccountRefresh,
   openAddAddressModal,
   selectAccount,
 } from '../reducers/address.duck';
@@ -54,6 +55,7 @@ type Identity = {
 };
 
 type Props = {
+  automaticAccountRefresh: Function,
   openCreateAccountModal: Function,
   openAddAddressModal: Function,
   identities: List<Identity>,
@@ -84,6 +86,7 @@ class Addresses extends Component<Props> {
               >
                 <AddressBlock
                   accountBlock={accountBlock}
+                  automaticAccountRefresh={this.props.automaticAccountRefresh}
                   openCreateAccountModal={this.props.openCreateAccountModal}
                   selectAccount={this.props.selectAccount}
                   selectedAccountHash={this.props.selectedAccountHash}
@@ -109,6 +112,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      automaticAccountRefresh,
       openCreateAccountModal,
       openAddAddressModal,
       selectAccount,

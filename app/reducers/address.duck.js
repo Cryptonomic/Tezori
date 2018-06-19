@@ -80,13 +80,13 @@ export function selectDefaultAccountOrOpenModal() {
             ...identity,
             balance,
             operationGroups,
-            accounts: formatAccounts(addParentKeysToAccounts(accounts, identity)),
+            accounts: formatAccounts(addParentKeysToAccounts(accounts, identity))
           }));
 
           const selectedAccount = createSelectedAccount({
             operationGroups,
             balance,
-            transactions: [],
+            transactions: []
           });
 
           dispatch(setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount));
@@ -96,6 +96,7 @@ export function selectDefaultAccountOrOpenModal() {
 
         await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
         dispatch(setIsLoading(false));
+        dispatch(automaticAccountRefresh());
       } catch (e) {
         console.error(e);
         dispatch(addMessage(e.name, true));
@@ -140,6 +141,26 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
       dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
+
+  }
+}
+
+let currentAccountRefreshInterval = null;
+
+export function automaticAccountRefresh() {
+  return (dispatch, state) => {
+    const REFRESH_INTERVAL = 5 * 60 * 1000;
+
+    if (currentAccountRefreshInterval) {
+      clearAccountRefreshInterval();
+    }
+
+    currentAccountRefreshInterval = setInterval(() => {
+      const selectedAccountHash = state().address.get('selectedAccountHash');
+      const selectedParentHash = state().address.get('selectedParentHash');
+
+      dispatch(selectAccount(selectedAccountHash, selectedParentHash));
+    }, REFRESH_INTERVAL)
 
   }
 }
@@ -396,4 +417,8 @@ function formatAccounts(accounts) {
     transactions: [],
     ...account,
   }));
+}
+
+export function clearAccountRefreshInterval() {
+  clearInterval(currentAccountRefreshInterval);
 }
