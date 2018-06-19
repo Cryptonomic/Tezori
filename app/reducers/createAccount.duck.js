@@ -126,7 +126,5 @@ export function addParentKeysToAccount(account, identity) {
 }
 
 export function addParentKeysToAccounts(accounts, identity) {
-  return accounts.map((account) => {
-    return addParentKeysToAccount(account, identity);
-  });
+  return accounts.map( account =>  addParentKeysToAccount(account, identity) );
 }
