@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import actionCreator from '../utils/reduxHelpers';
 import { sendTransactionOperation } from '../tezos/TezosOperations';
 import { addMessage } from './message.duck';
+import { findKeyStore } from './createAccount.duck';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -36,25 +37,22 @@ export function sendConfirmation() {
     const amount = sendTezosState.get('amount');
     const fee = sendTezosState.get('fee');
     const network = walletState.get('network');
-    const selectedAccount = state().address.get('selectedAccount');
-    const keyStore = {
-      publicKey: selectedAccount.get('publicKey'),
-      privateKey: selectedAccount.get('privateKey'),
-      publicKeyHash: selectedAccount.get('publicKeyHash'),
-    };
+    const publicKeyHash = state().address.get('selectedParentHash');
+    const identities = state().walletInitialization.getIn(['wallet', 'identities']);
+    const keyStore = findKeyStore(publicKeyHash, identities);
 
-    if (password === walletPassword) {
-      try {
-        dispatch(updateSendTezosLoading(true));
-        await sendTransactionOperation(network, keyStore, toAddress, Number(amount), fee);
+    try {
+      if (password !== walletPassword) throw({name: 'Incorrected password'});
 
-        dispatch(clearState());
-        dispatch(updateSendTezosLoading(false));
-      } catch (e) {
-        console.error(e);
-        dispatch(addMessage(e.name, true));
-        dispatch(updateSendTezosLoading(false));
-      }
+      dispatch(updateSendTezosLoading(true));
+      await sendTransactionOperation(network, keyStore.toJS(), toAddress, Number(amount), fee);
+
+      dispatch(clearState());
+      dispatch(updateSendTezosLoading(false));
+    } catch (e) {
+      console.error(e);
+      dispatch(addMessage(e.name, true));
+      dispatch(updateSendTezosLoading(false));
     }
   }
 }

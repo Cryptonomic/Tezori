@@ -23,6 +23,7 @@ type Props = {
   selectedAccount: Object, // TODO: add type for this
   isLoadingTransactions: boolean,
   selectedAccountHash: string,
+  selectedParentHash: string,
   selectAccount: Function
 };
 
@@ -30,8 +31,18 @@ class ActionPanel extends Component<Props> {
   props: Props;
 
   state = {
-    activeTab: SEND,
+    activeTab: TRANSACTIONS,
     currentPage: 1
+  };
+
+  handleDataRefresh = () => {
+    const {
+      selectAccount,
+      selectedAccountHash,
+      selectedParentHash,
+    } = this.props;
+
+    selectAccount(selectedAccountHash, selectedParentHash);
   };
 
   renderTab = tab => {
@@ -95,14 +106,17 @@ class ActionPanel extends Component<Props> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { selectedAccount, selectedAccountHash, selectAccount } = this.props;
+    const {
+      selectedAccount,
+      selectedAccountHash,
+    } = this.props;
 
     return (
       <section className={styles.actionPanelContainer}>
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
-          onRefreshClick={() => selectAccount(selectedAccountHash)}
+          onRefreshClick={this.handleDataRefresh }
         />
         <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
         {this.renderSection()}
@@ -115,9 +129,10 @@ function mapStateToProps(state) {
   const { address } = state;
 
   return {
-    selectedAccountHash: address.get('selectedAccountHash'),
-    selectedAccount: address.get('selectedAccount'),
     isLoadingTransactions: address.get('isLoading'),
+    selectedAccountHash: address.get('selectedAccountHash'),
+    selectedParentHash: address.get('selectedParentHash'),
+    selectedAccount: address.get('selectedAccount'),
   };
 }
 
