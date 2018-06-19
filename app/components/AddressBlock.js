@@ -53,22 +53,23 @@ export default class AddressBlock extends Component<Props> {
     return (account) => {
       const balance = account.get('balance');
       const accountId = account.get('accountId');
-      const { selectAccount, selectedAccountHash } = this.props;
+      const {selectAccount, selectedAccountHash} = this.props;
       const accountBlockClasses = classNames({
         [styles.accountBlock]: true,
         [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
       });
 
-    return (
-      <div
-        className={accountBlockClasses}
-        key={accountId}
-        onClick={() => selectAccount(accountId, publicKeyHash)}
-      >
-        {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-        <div className={styles.accountBlockAddress}>{accountId}</div>
-      </div>
-    );
+      return (
+        <div
+          className={accountBlockClasses}
+          key={accountId}
+          onClick={() => selectAccount(accountId, publicKeyHash)}
+        >
+          {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
+          <div className={styles.accountBlockAddress}>{accountId}</div>
+        </div>
+      );
+    };
   };
 
   renderArrowIcon = () => {
