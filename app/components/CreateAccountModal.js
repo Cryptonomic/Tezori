@@ -103,7 +103,10 @@ class CreateAccountModal extends Component<Props> {
               fontSize: '15px',
               marginTop: '15px',
             }}
-            onClick={this.props.createNewAccount}
+            onClick={() => {
+              this.props.createNewAccount();
+               this.props.closeCreateAccountModal();
+            }}
             disabled={this.props.isLoading}
           />
         </div>

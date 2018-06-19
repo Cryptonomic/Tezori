@@ -39,11 +39,9 @@ export function createNewAccount() {
       const network = state().walletInitialization.get('network');
 
       const identity = findKeyStore(publicKeyHash, state().address.get('identities'));
-      const keyStore = {
-        publicKey: identity.get('publicKey'),
-        privateKey: identity.get('privateKey'),
-        publicKeyHash,
-      };
+      const publicKey = identity.get('publicKey');
+      const privateKey = identity.get('privateKey');
+      const keyStore = { publicKey, privateKey, publicKeyHash };
       // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
       const newAccount = await sendOriginationOperation(
         network,
@@ -57,9 +55,18 @@ export function createNewAccount() {
 
       dispatch(setOperation(newAccount.operation));
       const newAccountHash = newAccount.results.operation_results[0].originated_contracts[0];
-      const account = await getAccount(network, newAccountHash);
+      const tmpAccount = {
+        accountId: newAccountHash,
+        balance: Number(amount),
+        delegateValue: delegate,
+        manager: delegate,
+        isReady: false,
+        delegateSetable: true,
+        script: null
+      };
+      //  const account = await getAccount(network, newAccountHash);
 
-      dispatch(addNewAccount(publicKeyHash, account.account));
+      dispatch(addNewAccount(publicKeyHash, addParentKeysToAccount(tmpAccount, identity.toJS())));
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
@@ -108,4 +115,16 @@ export function findKeyStore(publicKeyHash, identities) {
   return identities.find(identity => {
     return identity.get('publicKeyHash') === publicKeyHash;
   });
+}
+
+export function addParentKeysToAccount(account, identity) {
+  return {
+    ...account,
+    publicKey: identity.publicKey,
+    privateKey: identity.privateKey
+  };
+}
+
+export function addParentKeysToAccounts(accounts, identity) {
+  return accounts.map( account =>  addParentKeysToAccount(account, identity) );
 }

@@ -10,7 +10,6 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import styles from './AddressBlock.css';
 
 type Props = {
-  automaticAccountRefresh: Function,
   accountBlock: Object, // TODO: type this
   openCreateAccountModal: Function,
   selectAccount: Function,
@@ -50,17 +49,15 @@ export default class AddressBlock extends Component<Props> {
     else this.setState({ isExpanded: true });
   };
 
-  onAccountSelection = (selectedAccountHash, selectedParentHash) => {
-    this.props.selectAccount(selectedAccountHash, selectedParentHash)
-    this.props.automaticAccountRefresh();
+  selectAccount = (accountHash, parentHash) => {
+    this.props.selectAccount(accountHash, parentHash);
   };
 
   renderAccountBlock = publicKeyHash => account => {
     const balance = account.get('balance');
     const accountId = account.get('accountId');
     const { selectedAccountHash } = this.props;
-    const accountBlockClasses = classNames({
-      [styles.accountBlock]: true,
+    const accountBlockClasses = classNames(styles.accountBlock, {
       [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
     });
 
@@ -68,10 +65,10 @@ export default class AddressBlock extends Component<Props> {
       <div
         className={accountBlockClasses}
         key={accountId}
-        onClick={() => this.onAccountSelection(accountId, publicKeyHash)}
+        onClick={() => this.selectAccount(accountId, publicKeyHash)}
       >
         {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-        <div>{accountId}</div>
+        <div className={styles.accountBlockAddress}>{accountId}</div>
       </div>
     );
   };
@@ -104,7 +101,7 @@ export default class AddressBlock extends Component<Props> {
         >
           <div
             className={styles.addressBlockTitle}
-            onClick={() => this.onAccountSelection(publicKeyHash, publicKeyHash)}
+            onClick={() => this.props.selectAccount(publicKeyHash, publicKeyHash)}
           >
             <span>{publicKeyHash}</span>
             {this.renderArrowIcon()}

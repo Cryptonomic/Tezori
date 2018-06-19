@@ -7,7 +7,7 @@ import OPERATION_TYPES from '../constants/OperationTypes';
 import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
-import { changeDelegate } from './createAccount.duck';
+import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
 
 const {
   getOperationGroups,
@@ -35,6 +35,7 @@ const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
 const CONFIRM_PASS_PHRASE = 'CONFIRM_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
+const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -51,6 +52,7 @@ export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
 export const confirmPassPhrase = actionCreator(CONFIRM_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
+export const addNewAccount = actionCreator(ADD_NEW_ACCOUNT, 'publicKeyHash', 'account');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash', 'selectedParentHash', 'selectedAccount');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -78,13 +80,13 @@ export function selectDefaultAccountOrOpenModal() {
             ...identity,
             balance,
             operationGroups,
-            accounts: formatAccounts(accounts),
+            accounts: formatAccounts(addParentKeysToAccounts(accounts, identity))
           }));
 
           const selectedAccount = createSelectedAccount({
             operationGroups,
             balance,
-            transactions: [],
+            transactions: []
           });
 
           dispatch(setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount));
@@ -253,7 +255,7 @@ export function importAddress() {
             ...identity,
             balance,
             operationGroups,
-            accounts: formatAccounts(accounts),
+            accounts: formatAccounts(addParentKeysToAccounts(accounts, identity)),
           }));
           const selectedAccount = createSelectedAccount({
             balance,
@@ -305,6 +307,9 @@ export default function address(state = initState, action) {
       .set('identities', identities)
       .set('selectedAccountHash', selectedAccountHash);
     }
+    case ADD_NEW_ACCOUNT:
+      return state
+        .set('identities', addNewAccountToIdentity(action.publicKeyHash, action.account, state.get('identities')));
     case ADD_NEW_IDENTITY: {
       const newIdentity = fromJS(action.identity);
 
@@ -331,7 +336,7 @@ export default function address(state = initState, action) {
     case CONFIRM_PASS_PHRASE:
       return state
         .set('confirmedPassPhrase', action.passPhrase)
-        .set('isFormValid', state.get('passPhrase') == action.passPhrase)
+        .set('isFormValid', state.get('passPhrase') == action.passPhrase);
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:
@@ -345,6 +350,18 @@ export default function address(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+
+function addNewAccountToIdentity(publicKeyHash, account, identities) {
+  return identities.map((identity) => {
+    if (identity.get('publicKeyHash') === publicKeyHash) {
+      const accounts = identity.get('accounts').toJS();
+      accounts.push(account);
+      return identity.set('accounts', fromJS(formatAccounts(accounts)));
+    }
+    return identity;
+  });
+}
+
 function createSelectedAccount({
   balance = 0,
   operationGroups = [],
