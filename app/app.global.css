@@ -4,7 +4,14 @@
  */
 @font-face {
   font-family: 'Roboto';
+  src: url('../resources/fonts/Roboto/Roboto-Light.ttf');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Roboto';
   src: url('../resources/fonts/Roboto/Roboto-Regular.ttf');
+  font-weight: 500;
 }
 
 @import "~font-awesome/css/font-awesome.css";
@@ -19,8 +26,7 @@ body {
 }
 
 div#root {
-  height: 100%;
-  padding: 40px 40px;
+  height: 100vh;
 }
 
 * {

@@ -68,11 +68,11 @@ class Addresses extends Component<Props> {
 
   render() {
     return (
-      <div className={styles.addressesContainer}>
+      <aside className={styles.addressesContainer}>
         <div className={styles.addressesTitleContainer}>
-          Addresses
+          <h4>Addresses</h4>
           <AddCircle
-            style={{ fill: '#7B91C0' }}
+            style={{ fill: '#7B91C0', width: '30px', height: '30px' }}
             className={styles.addAddressIcon}
             onClick={this.props.openAddAddressModal}
           />
@@ -95,7 +95,7 @@ class Addresses extends Component<Props> {
             );
           })
         }
-      </div>
+      </aside>
     );
   }
 }

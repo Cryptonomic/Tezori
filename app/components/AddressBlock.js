@@ -55,27 +55,25 @@ export default class AddressBlock extends Component<Props> {
     this.props.automaticAccountRefresh();
   };
 
-  renderAccountBlock = (publicKeyHash) => {
-    return (account) => {
-      const balance = account.get('balance');
-      const accountId = account.get('accountId');
-      const { selectedAccountHash } = this.props;
-      const accountBlockClasses = classNames({
-        [styles.accountBlock]: true,
-        [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
-      });
+  renderAccountBlock = publicKeyHash => account => {
+    const balance = account.get('balance');
+    const accountId = account.get('accountId');
+    const { selectedAccountHash } = this.props;
+    const accountBlockClasses = classNames({
+      [styles.accountBlock]: true,
+      [styles.addressBlockTitleContainerSelected]: accountId === selectedAccountHash,
+    });
 
-      return (
-        <div
-          className={accountBlockClasses}
-          key={accountId}
-          onClick={() => this.onAccountSelection(accountId, publicKeyHash)}
-        >
-          {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-          <div>{accountId}</div>
-        </div>
-      );
-    }
+    return (
+      <div
+        className={accountBlockClasses}
+        key={accountId}
+        onClick={() => this.onAccountSelection(accountId, publicKeyHash)}
+      >
+        {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
+        <div>{accountId}</div>
+      </div>
+    );
   };
 
   renderArrowIcon = () => {
@@ -84,7 +82,7 @@ export default class AddressBlock extends Component<Props> {
     return (
       <div className={styles.arrowContainer}>
         { !isExpanded && <DropdownArrow /> }
-        { isExpanded && <DropupArrow /> }
+        { isExpanded && <DropupArrow style={{fill: '#FFFFFF'}} /> }
       </div>
     );
   };
@@ -108,7 +106,7 @@ export default class AddressBlock extends Component<Props> {
             className={styles.addressBlockTitle}
             onClick={() => this.onAccountSelection(publicKeyHash, publicKeyHash)}
           >
-            {publicKeyHash}
+            <span>{publicKeyHash}</span>
             {this.renderArrowIcon()}
           </div>
           {
@@ -123,8 +121,8 @@ export default class AddressBlock extends Component<Props> {
               <AddCircle
                 style={{
                   fill: '#7B91C0',
-                  height: '18px',
-                  width: '18px'
+                  height: '16px',
+                  width: '20px'
                 }}
                 onClick={this.props.openCreateAccountModal}
               />

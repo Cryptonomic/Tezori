@@ -18,6 +18,7 @@ import {
   updatePublicKey,
   updateUsername,
   updatePassPhrase,
+  confirmPassPhrase,
   updateSeed,
   selectDefaultAccountOrOpenModal,
 } from '../reducers/address.duck';
@@ -39,6 +40,7 @@ type Props = {
   updateUsername: Function,
   updatePassPhrase: Function,
   updateSeed: Function,
+  confirmPassPhrase: Function,
   selectedAccountHash: string,
   selectDefaultAccountOrOpenModal: Function,
   message: Object
@@ -65,6 +67,7 @@ class AddressPage extends Component<Props> {
       seed,
       username,
       passPhrase,
+      isFormValid,
       privateKey,
       publicKey,
       isAddAddressLoading,
@@ -72,6 +75,7 @@ class AddressPage extends Component<Props> {
       updatePublicKey,
       updateUsername,
       updatePassPhrase,
+      confirmPassPhrase,
       updateSeed,
       selectedAccountHash,
       message,
@@ -93,10 +97,12 @@ class AddressPage extends Component<Props> {
           privateKey={privateKey}
           publicKey={publicKey}
           isLoading={isAddAddressLoading}
+          isFormValid={isFormValid}
           updatePrivateKey={updatePrivateKey}
           updatePublicKey={updatePublicKey}
           updateUsername={updateUsername}
           updatePassPhrase={updatePassPhrase}
+          confirmPassPhrase={confirmPassPhrase}
           updateSeed={updateSeed}
           selectedAccountHash={selectedAccountHash}
         />
@@ -113,6 +119,7 @@ function mapStateToProps({ address, message }) {
     message: message.get('message'),
     seed: address.get('seed'),
     username: address.get('username'),
+    isFormValid: address.get('isFormValid'),
     passPhrase: address.get('passPhrase'),
     privateKey: address.get('privateKey'),
     publicKey: address.get('publicKey'),
@@ -131,6 +138,7 @@ function mapDispatchToProps(dispatch) {
       updatePublicKey,
       updateUsername,
       updatePassPhrase,
+      confirmPassPhrase,
       updateSeed,
       selectDefaultAccountOrOpenModal,
     },
