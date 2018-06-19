@@ -21,10 +21,12 @@ type Props = {
   privateKey: string,
   publicKey: string,
   isLoading: boolean,
+  isFormValid: boolean,
   updatePrivateKey: Function,
   updatePublicKey: Function,
   updateUsername: Function,
   updatePassPhrase: Function,
+  confirmPassPhrase: Function,
   updateSeed: Function,
   selectedAccountHash: string
 };
@@ -42,10 +44,12 @@ export default function AddAddress(props: Props) {
     privateKey,
     publicKey,
     isLoading,
+    isFormValid,
     updatePrivateKey,
     updatePublicKey,
     updateUsername,
     updatePassPhrase,
+    confirmPassPhrase,
     updateSeed,
     selectedAccountHash,
   } = props;
@@ -126,9 +130,16 @@ export default function AddAddress(props: Props) {
             />
             <TextField
               floatingLabelText="Pass Phrase"
+              type="password"
               style={{ width: '45%' }}
               value={passPhrase}
               onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
+            />
+            <TextField
+              floatingLabelText="Confirm Pass Phrase"
+              type="password"
+              style={{ width: '45%' }}
+              onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
             />
           </div>
         );
@@ -185,7 +196,7 @@ export default function AddAddress(props: Props) {
               marginTop: '20px',
             }}
             onClick={importAddress}
-            disabled={isLoading}
+            disabled={isLoading || !isFormValid}
           />
           { isLoading &&
             <Loader />

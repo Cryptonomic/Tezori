@@ -32,6 +32,7 @@ const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
 const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
+const CONFIRM_PASS_PHRASE = 'CONFIRM_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
@@ -47,6 +48,7 @@ export const updatePrivateKey = actionCreator(UPDATE_PRIVATE_KEY, 'privateKey');
 export const updatePublicKey = actionCreator(UPDATE_PUBLIC_KEY, 'publicKey');
 export const updateUsername = actionCreator(UPDATE_USERNAME, 'username');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passPhrase');
+export const confirmPassPhrase = actionCreator(CONFIRM_PASS_PHRASE, 'passPhrase');
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 const setSelectedAccount = actionCreator(SELECT_ACCOUNT, 'selectedAccountHash', 'selectedParentHash', 'selectedAccount');
@@ -263,6 +265,7 @@ const initState = fromJS({
   privateKey: '',
   publicKey: '',
   isLoading: false,
+  isFormValid: false,
   identities: [],
   selectedAccountHash: '',
   selectedAccount: createSelectedAccount({}),
@@ -304,6 +307,10 @@ export default function address(state = initState, action) {
       return state.set('username', action.username);
     case UPDATE_PASS_PHRASE:
       return state.set('passPhrase', action.passPhrase);
+    case CONFIRM_PASS_PHRASE:
+      return state
+        .set('confirmedPassPhrase', action.passPhrase)
+        .set('isFormValid', state.get('passPhrase') == action.passPhrase)
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:

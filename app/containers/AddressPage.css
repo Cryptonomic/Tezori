@@ -1,4 +1,4 @@
 .addressPageContainer {
-  display: grid;
-  grid-template-columns: 25% 75%;
+  display: flex;
+  padding: 0 40px 30px 40px;
 }
