@@ -56,8 +56,6 @@ export function createNewAccount() {
       dispatch(setOperation(newAccount.operation));
       const newAccountHash = newAccount.results.operation_results[0].originated_contracts[0];
       const tmpAccount = {
-        publicKey,
-        privateKey,
         accountId: newAccountHash,
         balance: Number(amount),
         delegateValue: delegate,
@@ -68,7 +66,7 @@ export function createNewAccount() {
       };
       //  const account = await getAccount(network, newAccountHash);
 
-      dispatch(addNewAccount(publicKeyHash, tmpAccount));
+      dispatch(addNewAccount(publicKeyHash, addParentKeysToAccount(tmpAccount, identity.toJS())));
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
@@ -116,5 +114,19 @@ export default function createAccount(state = initState, action) {
 export function findKeyStore(publicKeyHash, identities) {
   return identities.find(identity => {
     return identity.get('publicKeyHash') === publicKeyHash;
+  });
+}
+
+export function addParentKeysToAccount(account, identity) {
+  return {
+    ...account,
+    publicKey: identity.publicKey,
+    privateKey: identity.privateKey
+  };
+}
+
+export function addParentKeysToAccounts(accounts, identity) {
+  return accounts.map((account) => {
+    return addParentKeysToAccount(account, identity);
   });
 }
