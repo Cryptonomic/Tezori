@@ -76,11 +76,12 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
     //TODO: clear out message bar
     dispatch(addMessage('', true))
 
-    var error = validate(walletLocation, 'locationFilled');
+    let error = validate(walletLocation, 'locationFilled');
     if (error != false) {
       return dispatch(addMessage(error, true));
     };
-    var error = validate(password, 'minLength8');
+    
+    error = validate(password, 'minLength8');
     if (error != false) {
       return dispatch(addMessage(error, true));
     };

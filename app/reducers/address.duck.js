@@ -215,12 +215,12 @@ export function importAddress() {
       case GENERATE_MNEMONIC:
       case SEED_PHRASE:
 
-        var error = validate(passPhrase, 'minLength8');
+        let error = validate(passPhrase, 'minLength8');
         if (error != false) {
           return dispatch(addMessage(error, true));
         };
 
-        var error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase')
+        error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase')
         if (error != false) {
           return dispatch(addMessage(error, true));
         };

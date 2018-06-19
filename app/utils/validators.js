@@ -20,7 +20,7 @@ export default function validate(value, validateType) {
         return '[ERR] Not valid parameters.'
       }
 
-      if (value[0] != value[1]) {
+      if (value[0] !== value[1]) {
         return 'Passphrases must be equal.'
       }
   }
