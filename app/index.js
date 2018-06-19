@@ -5,15 +5,16 @@ import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from './muiTheme';
+import 'styles/global-styles'
 import './app.global.css';
 
 const store = configureStore();
 
 render(
   <MuiThemeProvider muiTheme={muiTheme}>
-    <AppContainer>
-      <Root store={store} history={history} />
-    </AppContainer>
+      <AppContainer>
+          <Root store={store} history={history} />
+      </AppContainer>
   </MuiThemeProvider>,
   document.getElementById('root')
 );

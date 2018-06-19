@@ -7,6 +7,7 @@ import { remote } from 'electron';
 import path from 'path';
 
 import CreateButton from './CreateButton';
+import Button from './Button'
 import MessageBar from './MessageBar';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
@@ -84,15 +85,7 @@ class Home extends Component<Props> {
       <div className={styles.defaultContainer}>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Create a new wallet</div>
-          <CreateButton
-            label="Create Wallet"
-            style={{
-              backgroundColor: '#417DEF',
-              color: 'white',
-              marginTop: '20px'
-            }}
-            onClick={this.setDisplay(CREATE)}
-          />
+          <Button theme="primary" onClick={this.setDisplay(CREATE)}>Create Wallet</Button>
         </div>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Import an existing wallet</div>
@@ -103,7 +96,6 @@ class Home extends Component<Props> {
               backgroundColor: 'transparent',
               marginTop: '20px'
             }}
-            onClick={this.setDisplay(IMPORT)}
           />
         </div>
       </div>
@@ -135,6 +127,8 @@ class Home extends Component<Props> {
                 backgroundColor: 'transparent'
               }}
               onClick={this.saveFile}
+
+              B
             />
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
