@@ -74,14 +74,6 @@ export function selectDefaultAccountOrOpenModal() {
           const { balance } = account.account;
           const operationGroups = await getOperationGroupsForAccount(network, publicKeyHash);
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
-          console.log('identity', identity, accounts);
-          console.log('aaaaaaaaa', {
-            transactions: [],
-            ...identity,
-            balance,
-            operationGroups,
-            accounts: formatAccounts(addParentKeysToAccounts(accounts, identity)),
-          });
 
           dispatch(addNewIdentity({
             transactions: [],
