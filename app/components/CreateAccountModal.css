@@ -15,7 +15,7 @@
 }
 
 .amountSendContainer {
-  width: 50%;
+  width: 45%;
 }
 
 .confirmationText {
@@ -23,7 +23,7 @@
 }
 
 .feeContainer {
-  width: 50%;
+  width: 45%;
   display: flex;
 }
 
@@ -54,4 +54,5 @@
 .amountAndFeeContainer {
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
 }
