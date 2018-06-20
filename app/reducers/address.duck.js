@@ -210,21 +210,16 @@ export function importAddress() {
     //TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    switch(activeTab) {
-      case FUNDRAISER:
-      case GENERATE_MNEMONIC:
-      case SEED_PHRASE:
+    if ( activeTab === GENERATE_MNEMONIC ) {
+      let error = hasError(passPhrase, 'minLength8');
+      if ( error ) {
+        return dispatch(addMessage(error, true));
+      }
 
-        let error = hasError(passPhrase, 'minLength8');
-        if ( error ) {
-          return dispatch(addMessage(error, true));
-        }
-
-        error = hasError([passPhrase, confirmedPassPhrase], 'samePassPhrase');
-        if ( error ) {
-          return dispatch(addMessage(error, true));
-        }
-        break;
+      error = hasError([passPhrase, confirmedPassPhrase], 'samePassPhrase');
+      if ( error ) {
+        return dispatch(addMessage(error, true));
+      }
     }
 
     try {
@@ -239,21 +234,21 @@ export function importAddress() {
             ...identity,
             balance: 0,
             operationGroups: [],
-            accounts: [],
+            accounts: []
           }));
 
           const identities = state().address.get('identities').map((identity) => {
             return {
               publicKey: identity.get('publicKey'),
               privateKey: identity.get('privateKey'),
-              publicKeyHash: identity.get('publicKeyHash'),
+              publicKeyHash: identity.get('publicKeyHash')
             };
           });
 
           const selectedAccount = createSelectedAccount({
             balance: 0,
             operationGroups: [],
-            transactions: [],
+            transactions: []
           });
 
           dispatch(saveUpdatedWallet(identities));
@@ -286,7 +281,7 @@ export function importAddress() {
           const selectedAccount = createSelectedAccount({
             balance,
             operationGroups,
-            transactions: [],
+            transactions: []
           });
 
           dispatch(setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount));

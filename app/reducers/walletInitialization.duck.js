@@ -76,14 +76,16 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
     //TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    let error = hasError(walletLocation, 'locationFilled');
-    if ( error ) {
-      return dispatch(addMessage(error, true));
-    }
-    
-    error = hasError(password, 'minLength8');
-    if ( error ) {
-      return dispatch(addMessage(error, true));
+    if ( submissionType === 'create' ) {
+      let error = hasError(walletLocation, 'locationFilled');
+      if ( error ) {
+        return dispatch(addMessage(error, true));
+      }
+
+      error = hasError(password, 'minLength8');
+      if ( error ) {
+        return dispatch(addMessage(error, true));
+      }
     }
 
     try {
