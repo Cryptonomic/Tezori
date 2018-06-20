@@ -7,7 +7,7 @@ import { clearEntireAddressState } from './address.duck';
 import { addMessage } from './message.duck';
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import hasError from '../utils/validators'
+import hasError from '../utils/formValidation'
 
 const { createWallet, loadWallet, saveWallet } = tezosWallet;
 

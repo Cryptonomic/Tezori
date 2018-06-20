@@ -8,7 +8,7 @@ import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
-import hasError from '../utils/validators'
+import hasError from '../utils/formValidation'
 
 const {
   getOperationGroups,
