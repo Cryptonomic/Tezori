@@ -27,17 +27,23 @@ const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
-export const setWalletFileName = actionCreator(SET_WALLET_FILENAME, 'walletFileName');
-export const updateWalletLocation = actionCreator(SET_WALLET_LOCATION, 'walletLocation');
+export const setWalletFileName = actionCreator(
+  SET_WALLET_FILENAME,
+  'walletFileName'
+);
+export const updateWalletLocation = actionCreator(
+  SET_WALLET_LOCATION,
+  'walletLocation'
+);
 const setCurrentWallet = actionCreator(SET_CURRENT_WALLET, 'wallet');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function goHomeAndClearState() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(clearWalletState());
     dispatch(clearEntireAddressState());
     dispatch(push('/'));
-  }
+  };
 }
 
 export function saveUpdatedWallet(identities) {
@@ -48,13 +54,20 @@ export function saveUpdatedWallet(identities) {
       dispatch(setIsLoading(true));
       const walletLocation = state().walletInitialization.get('walletLocation');
       const walletFileName = state().walletInitialization.get('walletFileName');
-      const walletIdentities = state().walletInitialization.getIn(['wallet', 'identities']);
+      const walletIdentities = state().walletInitialization.getIn([
+        'wallet',
+        'identities'
+      ]);
       const password = state().walletInitialization.get('password');
       const completeWalletPath = path.join(walletLocation, walletFileName);
 
-      await saveWallet(completeWalletPath, {
-        identities: walletIdentities.concat(newIdentities)
-      }, password);
+      await saveWallet(
+        completeWalletPath,
+        {
+          identities: walletIdentities.concat(newIdentities)
+        },
+        password
+      );
 
       dispatch(setIsLoading(false));
     } catch (e) {
@@ -62,10 +75,10 @@ export function saveUpdatedWallet(identities) {
       dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
-  }
+  };
 }
 
-export function submitAddress(submissionType: 'create' | 'import' ) {
+export function submitAddress(submissionType: 'create' | 'import') {
   return async (dispatch, state) => {
     const walletLocation = state().walletInitialization.get('walletLocation');
     const walletFileName = state().walletInitialization.get('walletFileName');
@@ -116,7 +129,7 @@ const initState = fromJS({
   walletFileName: '',
   walletLocation: '',
   network: 'zeronet',
-  wallet: {},
+  wallet: {}
 });
 
 export default function walletInitialization(state = initState, action) {

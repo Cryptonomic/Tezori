@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   sendTezos,
   delegate,
   walletInitialization,
-  router,
+  router
 });
 
 export default rootReducer;

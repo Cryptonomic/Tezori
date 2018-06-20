@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import styles from './AddressPage.css';
+import styled from 'styled-components';
+import { ms } from '../styles/helpers';
 
 import Addresses from '../components/Addresses';
 import ActionPanel from '../components/ActionPanel';
@@ -20,7 +20,7 @@ import {
   updatePassPhrase,
   confirmPassPhrase,
   updateSeed,
-  selectDefaultAccountOrOpenModal,
+  selectDefaultAccountOrOpenModal
 } from '../reducers/address.duck';
 
 type Props = {
@@ -45,6 +45,11 @@ type Props = {
   selectDefaultAccountOrOpenModal: Function,
   message: Object
 };
+
+const Container = styled.div`
+  display: flex;
+  padding: 0 ${ms(4)} ${ms(3)} ${ms(4)};
+`;
 
 class AddressPage extends Component<Props> {
   props: Props;
@@ -77,11 +82,11 @@ class AddressPage extends Component<Props> {
       confirmPassPhrase,
       updateSeed,
       selectedAccountHash,
-      message,
+      message
     } = this.props;
 
     return (
-      <div className={styles.addressPageContainer}>
+      <Container>
         <Addresses />
         <ActionPanel />
         <AddAddressModal
@@ -105,7 +110,7 @@ class AddressPage extends Component<Props> {
           selectedAccountHash={selectedAccountHash}
         />
         <MessageBar message={message} />
-      </div>
+      </Container>
     );
   }
 }
@@ -121,7 +126,7 @@ function mapStateToProps({ address, message }) {
     privateKey: address.get('privateKey'),
     publicKey: address.get('publicKey'),
     isAddAddressLoading: address.get('isLoading'),
-    selectedAccountHash: address.get('selectedAccountHash'),
+    selectedAccountHash: address.get('selectedAccountHash')
   };
 }
 
@@ -137,7 +142,7 @@ function mapDispatchToProps(dispatch) {
       updatePassPhrase,
       confirmPassPhrase,
       updateSeed,
-      selectDefaultAccountOrOpenModal,
+      selectDefaultAccountOrOpenModal
     },
     dispatch
   );

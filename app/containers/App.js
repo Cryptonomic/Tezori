@@ -1,15 +1,25 @@
 // @flow
-import * as React from 'react';
-import styles from './App.css'
+import React, { Component } from 'react';
+import type { Node } from 'react';
+import styled from 'styled-components';
+import { ms } from '../styles/helpers';
 
 type Props = {
-  children: React.Node
+  children: Node
 };
 
-export default class App extends React.Component<Props> {
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 0 ${ms(3)} 0;
+  background: ${({ theme: { colors } }) => colors.gray2};
+`;
+
+export default class App extends Component<Props> {
   props: Props;
 
   render() {
-    return <div className={styles.appContainer}>{this.props.children}</div>;
+    return <Container>{this.props.children}</Container>;
   }
 }
