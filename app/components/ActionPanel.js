@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import styled from 'styled-components'
-import { lighten } from 'polished'
+import styled from 'styled-components';
+import { lighten } from 'polished';
 
 import BalanceBanner from './BalanceBanner';
 import PageNumbers from './PageNumbers';
@@ -13,34 +13,36 @@ import Receive from './Receive';
 import Delegate from './Delegate';
 import Loader from './Loader';
 import tabConstants from '../constants/tabConstants';
-import {ms}  from '../styles/helpers'
+import { ms } from '../styles/helpers';
 
 import { selectAccount } from '../reducers/address.duck';
 
 const Container = styled.section`
   flex-grow: 1;
-`
+`;
 
 const Tab = styled.div`
-  background: ${({isActive, theme: {colors}}) => isActive ? colors.white : colors.accent };
-  color: ${({isActive, theme: {colors}}) => isActive ? colors.primary : lighten(0.4, colors.accent) };
+  background: ${({ isActive, theme: { colors } }) =>
+    isActive ? colors.white : colors.accent};
+  color: ${({ isActive, theme: { colors } }) =>
+    isActive ? colors.primary : lighten(0.4, colors.accent)};
   cursor: pointer;
   text-align: center;
   font-weight: 500;
-  padding: ${ms(-1)} ${ms(1)}
-`
+  padding: ${ms(-1)} ${ms(1)};
+`;
 
 const TabList = styled.div`
-   display: grid;
-   grid-template-columns: repeat(4, 1fr);
-`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+`;
 
 const SectionContainer = styled.div`
-   display: flex;
-   flex-direction: column;
-   background-color: white;
-   padding: ${ms(4)};
-`
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: ${ms(4)};
+`;
 
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
@@ -54,8 +56,8 @@ type Props = {
 
 type State = {
   activeTab: string,
-  currentPage: number,
-}
+  currentPage: number
+};
 
 class ActionPanel extends Component<Props, State> {
   props: Props;
@@ -69,7 +71,7 @@ class ActionPanel extends Component<Props, State> {
     const {
       selectAccount,
       selectedAccountHash,
-      selectedParentHash,
+      selectedParentHash
     } = this.props;
 
     selectAccount(selectedAccountHash, selectedParentHash);
@@ -118,10 +120,7 @@ class ActionPanel extends Component<Props, State> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const {
-      selectedAccount,
-      selectedAccountHash,
-    } = this.props;
+    const { selectedAccount, selectedAccountHash } = this.props;
 
     const { activeTab } = this.state;
 
@@ -130,7 +129,7 @@ class ActionPanel extends Component<Props, State> {
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
-          onRefreshClick={this.handleDataRefresh }
+          onRefreshClick={this.handleDataRefresh}
         />
 
         <TabList>
@@ -158,14 +157,14 @@ function mapStateToProps(state) {
     isLoadingTransactions: address.get('isLoading'),
     selectedAccountHash: address.get('selectedAccountHash'),
     selectedParentHash: address.get('selectedParentHash'),
-    selectedAccount: address.get('selectedAccount'),
+    selectedAccount: address.get('selectedAccount')
   };
 }
 
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      selectAccount,
+      selectAccount
     },
     dispatch
   );

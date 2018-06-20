@@ -35,14 +35,14 @@ class MessageBar extends React.Component<Props> {
 
 function mapStateToProps({ message }) {
   return {
-    message: message.get('message'),
+    message: message.get('message')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      clearMessageState,
+      clearMessageState
     },
     dispatch
   );

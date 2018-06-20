@@ -1,5 +1,5 @@
-import { injectGlobal } from 'styled-components'
-import { normalize } from 'polished'
+import { injectGlobal } from 'styled-components';
+import { normalize } from 'polished';
 
 injectGlobal`  
   ${normalize()}
@@ -41,4 +41,4 @@ injectGlobal`
   div#root {
     height: 100vh;
   }
-`
+`;

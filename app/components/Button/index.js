@@ -1,43 +1,45 @@
 // @flow
 
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { lighten, darken } from 'polished'
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { lighten, darken } from 'polished';
 
-import { ms } from '../../styles/helpers'
+import { ms } from '../../styles/helpers';
 
 const primaryTheme = css`
-  background: ${ ({ theme: { colors } }) => colors.accent };
-  color: ${ ({ theme: { colors }}) => colors.white };
-  transition: all ${ ({ theme: { animations } }) => animations.defaultTime };
+  background: ${({ theme: { colors } }) => colors.accent};
+  color: ${({ theme: { colors } }) => colors.white};
+  transition: all ${({ theme: { animations } }) => animations.defaultTime};
   border: 2px solid ${({ theme: { colors } }) => colors.accent};
-  
+
   &:hover {
-    background: ${ ({ theme: { colors } }) => lighten(0.08, colors.accent) };
+    background: ${({ theme: { colors } }) => lighten(0.08, colors.accent)};
     border: 2px solid ${({ theme: { colors } }) => lighten(0.08, colors.accent)};
   }
-`
+`;
 
 const secondaryTheme = css`
   background: transparent;
-  color: ${({ theme: { colors } }) => colors.secondary };
-  transition: border ${({ theme: { animations } }) => animations.defaultTime };
-  border: 2px solid ${({ theme: { colors } }) => colors.secondary };
+  color: ${({ theme: { colors } }) => colors.secondary};
+  transition: border ${({ theme: { animations } }) => animations.defaultTime};
+  border: 2px solid ${({ theme: { colors } }) => colors.secondary};
 
   &:hover {
-    border: 2px solid ${({ theme: { colors } }) => lighten(0.2, colors.secondary) };
+    border: 2px solid ${({ theme: { colors } }) =>
+      lighten(0.2, colors.secondary)};
   },
-`
+`;
 
 const plainTheme = css`
-  background:  transparent;
-  transition: background ${({ theme: { animations } }) => animations.defaultTime };
+  background: transparent;
+  transition: background
+    ${({ theme: { animations } }) => animations.defaultTime};
   padding: 0;
-  outline: none
-`
+  outline: none;
+`;
 
 const chooseTheme = (buttonTheme: 'primary' | 'secondary' | 'plain') => {
-  switch(buttonTheme) {
+  switch (buttonTheme) {
     case 'primary':
       return primaryTheme;
     case 'secondary':
@@ -47,35 +49,37 @@ const chooseTheme = (buttonTheme: 'primary' | 'secondary' | 'plain') => {
     default:
       return primaryTheme;
   }
-}
+};
 
 const StyledButton = styled.button`
   padding: ${ms(0)} ${ms(6)};
   border: 0;
   border-radius: ${ms(3)};
-  font-family: ${({theme}) => theme.typo.fontFamily.primary};
+  font-family: ${({ theme }) => theme.typo.fontFamily.primary};
   font-size: ${ms(0)};
   font-weight: 300;
   display: inline-block;
   cursor: pointer;
   -webkit-app-region: no-drag;
-  ${({small}) => small 
-    && css`
+  ${({ small }) =>
+    small &&
+    css`
       padding: ${ms(-5)} ${ms(6)};
       font-size: ${ms(-1)};
-    `
-  }
+    `}
   
-  ${({disabled}) => disabled && css`
-    opacity: 0.5;
-    pointer-events: none;
-    &:hover {
-      opacity: 0.5
-    }
-  `}
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.5;
+      pointer-events: none;
+      &:hover {
+        opacity: 0.5;
+      }
+    `}
   
-  ${({buttonTheme}) => chooseTheme(buttonTheme)};
-`
+  ${({ buttonTheme }) => chooseTheme(buttonTheme)};
+`;
 
 type Props = {
   className?: string,
@@ -88,7 +92,7 @@ type Props = {
 };
 
 function Button(props: Props) {
-  const { className, children, disabled, theme, type, small, onClick } = props
+  const { className, children, disabled, theme, type, small, onClick } = props;
   return (
     <StyledButton
       onClick={onClick}
@@ -100,7 +104,7 @@ function Button(props: Props) {
     >
       {children}
     </StyledButton>
-  )
+  );
 }
 
 export default Button;

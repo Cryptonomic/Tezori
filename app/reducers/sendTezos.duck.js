@@ -22,7 +22,10 @@ export const updateAmount = actionCreator(UPDATE_AMOUNT, 'amount');
 export const updateFee = actionCreator(UPDATE_FEE, 'fee');
 export const openSendTezosModal = actionCreator(OPEN_SEND_TEZOS_MODAL);
 export const closeSendTezosModal = actionCreator(CLOSE_SEND_TEZOS_MODAL);
-const updateSendTezosLoading = actionCreator(UPDATE_SEND_TEZOS_LOADING, 'isLoading');
+const updateSendTezosLoading = actionCreator(
+  UPDATE_SEND_TEZOS_LOADING,
+  'isLoading'
+);
 const clearState = actionCreator(CLEAR_STATE);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -38,14 +41,23 @@ export function sendConfirmation() {
     const fee = sendTezosState.get('fee');
     const network = walletState.get('network');
     const publicKeyHash = state().address.get('selectedParentHash');
-    const identities = state().walletInitialization.getIn(['wallet', 'identities']);
+    const identities = state().walletInitialization.getIn([
+      'wallet',
+      'identities'
+    ]);
     const keyStore = findKeyStore(publicKeyHash, identities);
 
     try {
-      if (password !== walletPassword) throw({name: 'Incorrected password'});
+      if (password !== walletPassword) throw { name: 'Incorrected password' };
 
       dispatch(updateSendTezosLoading(true));
-      await sendTransactionOperation(network, keyStore.toJS(), toAddress, Number(amount), fee);
+      await sendTransactionOperation(
+        network,
+        keyStore.toJS(),
+        toAddress,
+        Number(amount),
+        fee
+      );
 
       dispatch(clearState());
       dispatch(updateSendTezosLoading(false));
@@ -54,7 +66,7 @@ export function sendConfirmation() {
       dispatch(addMessage(e.name, true));
       dispatch(updateSendTezosLoading(false));
     }
-  }
+  };
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -65,7 +77,7 @@ const initState = fromJS({
   toAddress: '',
   amount: '0',
   fee: 100,
-  network: '',
+  network: ''
 });
 
 export default function sendTezos(state = initState, action) {

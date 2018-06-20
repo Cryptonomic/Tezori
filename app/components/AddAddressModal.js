@@ -3,7 +3,7 @@ import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import classNames from 'classnames';
 
-import Button from './Button'
+import Button from './Button';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import Loader from './Loader';
 
@@ -49,21 +49,20 @@ export default function AddAddress(props: Props) {
     updatePassPhrase,
     confirmPassPhrase,
     updateSeed,
-    selectedAccountHash,
+    selectedAccountHash
   } = props;
 
   function renderAppBar() {
     return (
       <div className={styles.titleContainer}>
         <div>Add an Address</div>
-        {
-          selectedAccountHash &&
-            <CloseIcon
-              className={styles.closeIcon}
-              style={{ fill: 'white' }}
-              onClick={closeModal}
-            />
-        }
+        {selectedAccountHash && (
+          <CloseIcon
+            className={styles.closeIcon}
+            style={{ fill: 'white' }}
+            onClick={closeModal}
+          />
+        )}
       </div>
     );
   }
@@ -72,7 +71,7 @@ export default function AddAddress(props: Props) {
     const tabClasses = classNames({
       [styles.tab]: true,
       [styles.inactiveTab]: tabName !== activeTab,
-      [styles.activeTab]: tabName === activeTab,
+      [styles.activeTab]: tabName === activeTab
     });
 
     return (
@@ -89,9 +88,7 @@ export default function AddAddress(props: Props) {
   function renderTabController() {
     return (
       <div className={styles.tabContainer}>
-        {
-          Object.values(ADD_ADDRESS_TYPES).map(renderTab)
-        }
+        {Object.values(ADD_ADDRESS_TYPES).map(renderTab)}
       </div>
     );
   }
@@ -185,22 +182,21 @@ export default function AddAddress(props: Props) {
   }
 
   return (
-    <Dialog
-      modal
-      open={open}
-      bodyStyle={{ padding: '0px' }}
-    >
+    <Dialog modal open={open} bodyStyle={{ padding: '0px' }}>
       {renderAppBar()}
       {renderTabController()}
       <div className={styles.addAddressBodyContainer}>
         {renderAddBody()}
         <div>
-          <Button theme="primary" onClick={importAddress} disabled={isLoading} small>
+          <Button
+            theme="primary"
+            onClick={importAddress}
+            disabled={isLoading}
+            small
+          >
             Import
           </Button>
-          { isLoading &&
-            <Loader />
-          }
+          {isLoading && <Loader />}
         </div>
       </div>
     </Dialog>

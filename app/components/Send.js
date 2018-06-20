@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Button from './Button'
+import Button from './Button';
 import SendConfirmationModal from './SendConfirmationModal';
 import {
   updatePassword,
@@ -14,7 +14,7 @@ import {
   updateFee,
   openSendTezosModal,
   closeSendTezosModal,
-  sendConfirmation,
+  sendConfirmation
 } from '../reducers/sendTezos.duck';
 
 const SendContainer = styled.div`
@@ -23,14 +23,14 @@ const SendContainer = styled.div`
   align-items: flex-start;
   width: 100%;
   padding: 20px;
-`
+`;
 
 const AmountContainer = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   width: 100%;
-`
+`;
 
 type Props = {
   updatePassword: Function,
@@ -63,7 +63,7 @@ class Send extends Component<Props> {
       updateFee,
       openSendTezosModal,
       closeSendTezosModal,
-      sendConfirmation,
+      sendConfirmation
     } = this.props;
 
     return (
@@ -92,7 +92,9 @@ class Send extends Component<Props> {
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>
-        <Button  onClick={openSendTezosModal} theme="secondary" small>Send</Button>
+        <Button onClick={openSendTezosModal} theme="secondary" small>
+          Send
+        </Button>
         <SendConfirmationModal
           amount={amount}
           address={toAddress}
@@ -108,7 +110,7 @@ class Send extends Component<Props> {
   }
 }
 
-const  mapStateToProps = state => {
+const mapStateToProps = state => {
   const { sendTezos } = state;
 
   return {
@@ -117,19 +119,22 @@ const  mapStateToProps = state => {
     password: sendTezos.get('password'),
     toAddress: sendTezos.get('toAddress'),
     amount: sendTezos.get('amount'),
-    fee: sendTezos.get('fee'),
+    fee: sendTezos.get('fee')
   };
-}
+};
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({
+  bindActionCreators(
+    {
       updatePassword,
       updateToAddress,
       updateAmount,
       updateFee,
       openSendTezosModal,
       closeSendTezosModal,
-      sendConfirmation,
-    }, dispatch);
+      sendConfirmation
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Send);

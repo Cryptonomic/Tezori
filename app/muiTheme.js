@@ -6,15 +6,15 @@ export default getMuiTheme({
     borderColor: '#7B91C0',
     textColor: '#7B91C0',
     hintColor: '#7B91C0',
-    floatingLabelColor: '#7B91C0',
+    floatingLabelColor: '#7B91C0'
   },
   menuItem: {
-    selectedTextColor: '#1A325F',
+    selectedTextColor: '#1A325F'
   },
   radioButton: {
-    checkedColor: '#1A325F',
+    checkedColor: '#1A325F'
   },
   snackbar: {
-    actionColor: 'white',
-  },
-})
+    actionColor: 'white'
+  }
+});

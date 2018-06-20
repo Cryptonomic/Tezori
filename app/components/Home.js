@@ -15,7 +15,7 @@ import {
   setDisplay,
   setPassword,
   submitAddress,
-  updateWalletLocation,
+  updateWalletLocation
 } from '../reducers/walletInitialization.duck';
 
 import styles from './Home.css';
@@ -36,7 +36,7 @@ type Props = {
   walletLocation: string
 };
 
-const dialogFilters = [ {name: 'Tezos Wallet', extensions: ['tezwallet']} ];
+const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
 class Home extends Component<Props> {
   props: Props;
@@ -44,29 +44,41 @@ class Home extends Component<Props> {
   setDisplay = display => () => this.props.setDisplay(display);
 
   openFile = () => {
-    remote.dialog.showOpenDialog({
-      properties: ['openFile'],
-      filters: dialogFilters,
-    }, filePaths => {
-      if (filePaths && filePaths.length) {
-        this.props.updateWalletLocation(path.dirname(filePaths[0]));
-        this.props.setWalletFileName(path.basename(filePaths[0]));
+    remote.dialog.showOpenDialog(
+      {
+        properties: ['openFile'],
+        filters: dialogFilters
+      },
+      filePaths => {
+        if (filePaths && filePaths.length) {
+          this.props.updateWalletLocation(path.dirname(filePaths[0]));
+          this.props.setWalletFileName(path.basename(filePaths[0]));
+        }
       }
-    });
+    );
   };
 
   saveFile = () => {
-    remote.dialog.showSaveDialog({ filters: dialogFilters }, (filename) => {
+    remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
       this.props.updateWalletLocation(path.dirname(filename));
       this.props.setWalletFileName(path.basename(filename));
-    })
+    });
   };
 
-  walletSubmissionButton = (label: string, submissionType: 'create' | 'import') => {
+  walletSubmissionButton = (
+    label: string,
+    submissionType: 'create' | 'import'
+  ) => {
     const { submitAddress, isLoading } = this.props;
 
     return (
-      <Button onClick={() => submitAddress(submissionType)} theme="primary" disabled={isLoading}>{label}</Button>
+      <Button
+        onClick={() => submitAddress(submissionType)}
+        theme="primary"
+        disabled={isLoading}
+      >
+        {label}
+      </Button>
     );
   };
 
@@ -75,11 +87,15 @@ class Home extends Component<Props> {
       <div className={styles.defaultContainer}>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Create a new wallet</div>
-          <Button theme="primary" onClick={this.setDisplay(CREATE)}>Create Wallet</Button>
+          <Button theme="primary" onClick={this.setDisplay(CREATE)}>
+            Create Wallet
+          </Button>
         </div>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Import an existing wallet</div>
-          <Button theme="secondary" onClick={this.setDisplay(IMPORT)}>Import Wallet</Button>
+          <Button theme="secondary" onClick={this.setDisplay(IMPORT)}>
+            Import Wallet
+          </Button>
         </div>
       </div>
     );
@@ -91,7 +107,7 @@ class Home extends Component<Props> {
       isLoading,
       message,
       password,
-      setPassword,
+      setPassword
     } = this.props;
 
     return (
@@ -100,7 +116,9 @@ class Home extends Component<Props> {
         <div className={styles.walletContainers}>
           <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.importButtonContainer}>
-            <Button theme="secondary" onClick={this.saveFile} small>Select File</Button>
+            <Button theme="secondary" onClick={this.saveFile} small>
+              Select File
+            </Button>
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <TextField
@@ -124,7 +142,7 @@ class Home extends Component<Props> {
       password,
       setPassword,
       walletFileName,
-      walletLocation,
+      walletLocation
     } = this.props;
     const completeWalletPath = path.join(walletLocation, walletFileName);
 
@@ -136,7 +154,9 @@ class Home extends Component<Props> {
             Import your wallet from a backup
           </h3>
           <div className={styles.importButtonContainer}>
-            <Button theme="secondary" onClick={this.openFile} small>Select Wallet File</Button>
+            <Button theme="secondary" onClick={this.openFile} small>
+              Select Wallet File
+            </Button>
             <span className={styles.walletFileName}>{completeWalletPath}</span>
           </div>
           <TextField
@@ -177,7 +197,7 @@ function mapStateToProps(state) {
     message: message.get('message'),
     password: walletInitialization.get('password'),
     walletFileName: walletInitialization.get('walletFileName'),
-    walletLocation: walletInitialization.get('walletLocation'),
+    walletLocation: walletInitialization.get('walletLocation')
   };
 }
 
@@ -188,7 +208,7 @@ function mapDispatchToProps(dispatch) {
       setDisplay,
       setPassword,
       submitAddress,
-      updateWalletLocation,
+      updateWalletLocation
     },
     dispatch
   );

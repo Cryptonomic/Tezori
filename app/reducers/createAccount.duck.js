@@ -22,9 +22,14 @@ const SET_OPERATION = 'SET_OPERATION';
 export const changeAmount = actionCreator(CHANGE_AMOUNT, 'amount');
 export const changeDelegate = actionCreator(CHANGE_DELEGATE, 'delegate');
 export const changeFee = actionCreator(CHANGE_FEE, 'fee');
-const setIsLoading = actionCreator(TOGGLE_IS_CREATE_ACCOUNT_LOADING, 'isLoading');
+const setIsLoading = actionCreator(
+  TOGGLE_IS_CREATE_ACCOUNT_LOADING,
+  'isLoading'
+);
 export const openCreateAccountModal = actionCreator(OPEN_CREATE_ACCOUNT_MODAL);
-export const closeCreateAccountModal = actionCreator(CLOSE_CREATE_ACCOUNT_MODAL);
+export const closeCreateAccountModal = actionCreator(
+  CLOSE_CREATE_ACCOUNT_MODAL
+);
 export const setOperation = actionCreator(SET_OPERATION, 'operation');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -38,7 +43,10 @@ export function createNewAccount() {
       const fee = state().createAccount.get('fee');
       const network = state().walletInitialization.get('network');
 
-      const identity = findKeyStore(publicKeyHash, state().address.get('identities'));
+      const identity = findKeyStore(
+        publicKeyHash,
+        state().address.get('identities')
+      );
       const publicKey = identity.get('publicKey');
       const privateKey = identity.get('privateKey');
       const keyStore = { publicKey, privateKey, publicKeyHash };
@@ -54,7 +62,8 @@ export function createNewAccount() {
       );
 
       dispatch(setOperation(newAccount.operation));
-      const newAccountHash = newAccount.results.operation_results[0].originated_contracts[0];
+      const newAccountHash =
+        newAccount.results.operation_results[0].originated_contracts[0];
       const tmpAccount = {
         accountId: newAccountHash,
         balance: Number(amount),
@@ -66,7 +75,12 @@ export function createNewAccount() {
       };
       //  const account = await getAccount(network, newAccountHash);
 
-      dispatch(addNewAccount(publicKeyHash, addParentKeysToAccount(tmpAccount, identity.toJS())));
+      dispatch(
+        addNewAccount(
+          publicKeyHash,
+          addParentKeysToAccount(tmpAccount, identity.toJS())
+        )
+      );
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
@@ -83,7 +97,7 @@ const initState = fromJS({
   fee: 100,
   isLoading: false,
   isModalOpen: false,
-  operation: '',
+  operation: ''
 });
 
 export default function createAccount(state = initState, action) {
@@ -126,5 +140,5 @@ export function addParentKeysToAccount(account, identity) {
 }
 
 export function addParentKeysToAccounts(accounts, identity) {
-  return accounts.map( account =>  addParentKeysToAccount(account, identity) );
+  return accounts.map(account => addParentKeysToAccount(account, identity));
 }

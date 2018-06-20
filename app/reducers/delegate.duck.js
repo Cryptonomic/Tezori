@@ -28,7 +28,7 @@ export function setOriginalAddress() {
     const walletState = state().walletInitialization;
     const originalAddress = walletState.get('address');
     dispatch(updateAddress(originalAddress));
-  }
+  };
 }
 
 export function sendConfirmation() {
@@ -42,10 +42,10 @@ export function sendConfirmation() {
     const keyStore = {
       publicKey: selectedAccount.get('publicKey'),
       privateKey: selectedAccount.get('privateKey'),
-      publicKeyHash: selectedAccount.get('publicKeyHash'),
+      publicKeyHash: selectedAccount.get('publicKeyHash')
     };
 
-    console.log(network, keyStore, address, fee)
+    console.log(network, keyStore, address, fee);
 
     try {
       dispatch(updateIsLoading(true));
@@ -58,7 +58,7 @@ export function sendConfirmation() {
       dispatch(addMessage(e.name, true));
       dispatch(updateIsLoading(false));
     }
-  }
+  };
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -67,7 +67,7 @@ const initState = fromJS({
   isLoading: false,
   password: '',
   address: '',
-  delegateFee: 4.25,
+  delegateFee: 4.25
 });
 
 export default function delegate(state = initState, action) {

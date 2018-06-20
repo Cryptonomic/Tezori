@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import styled from 'styled-components'
-import {ms} from '../styles/helpers'
+import styled from 'styled-components';
+import { ms } from '../styles/helpers';
 
-import {H4} from './Heading'
+import { H4 } from './Heading';
 import AddressBlock from './AddressBlock';
 import {
   automaticAccountRefresh,
   openAddAddressModal,
-  selectAccount,
+  selectAccount
 } from '../reducers/address.duck';
 import { openCreateAccountModal } from '../reducers/createAccount.duck';
 
@@ -68,23 +68,23 @@ const Container = styled.aside`
   width: 30%;
   flex-shrink: 0;
   padding: 0 ${ms(3)} 0 0;
-`
+`;
 
 const AccountTitle = styled.header`
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   color: ${({theme: {colors}}) => colors.secondary};
-   margin: 0 0 ${ms(2)} 0;
-`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${({ theme: { colors } }) => colors.secondary};
+  margin: 0 0 ${ms(2)} 0;
+`;
 
 const AccountItem = styled.div`
   margin: 0 0 ${ms(1)} 0;
-`
+`;
 
 const StyledAddCircle = styled(AddCircle)`
   cursor: pointer;
-`
+`;
 
 class Addresses extends Component<Props> {
   props: Props;
@@ -101,21 +101,17 @@ class Addresses extends Component<Props> {
             onClick={openAddAddressModal}
           />
         </AccountTitle>
-        {
-          identities.map((accountBlock) => (
-            <AccountItem
-              key={accountBlock.get('publicKeyHash')}
-            >
-              <AddressBlock
-                accountBlock={accountBlock}
-                automaticAccountRefresh={this.props.automaticAccountRefresh}
-                openCreateAccountModal={this.props.openCreateAccountModal}
-                selectAccount={this.props.selectAccount}
-                selectedAccountHash={this.props.selectedAccountHash}
-              />
-            </AccountItem>
-          ))
-        }
+        {identities.map(accountBlock => (
+          <AccountItem key={accountBlock.get('publicKeyHash')}>
+            <AddressBlock
+              accountBlock={accountBlock}
+              automaticAccountRefresh={this.props.automaticAccountRefresh}
+              openCreateAccountModal={this.props.openCreateAccountModal}
+              selectAccount={this.props.selectAccount}
+              selectedAccountHash={this.props.selectedAccountHash}
+            />
+          </AccountItem>
+        ))}
       </Container>
     );
   }
@@ -126,7 +122,7 @@ function mapStateToProps(state) {
 
   return {
     identities: address.get('identities'),
-    selectedAccountHash: address.get('selectedAccountHash'),
+    selectedAccountHash: address.get('selectedAccountHash')
   };
 }
 
@@ -136,7 +132,7 @@ function mapDispatchToProps(dispatch: Function) {
       automaticAccountRefresh,
       openCreateAccountModal,
       openAddAddressModal,
-      selectAccount,
+      selectAccount
     },
     dispatch
   );

@@ -12,7 +12,7 @@ const createMessage = actionCreator(ADD_MESSAGE, 'message', 'isError');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function addMessage(message, isError) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(createMessage(message, isError));
   };
 }
@@ -20,10 +20,10 @@ export function addMessage(message, isError) {
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const emptyMessage = fromJS({
   message: '',
-  isError: false,
+  isError: false
 });
 const initState = fromJS({
-  message: {},
+  message: {}
 });
 
 export default function messages(state = initState, action) {
@@ -35,7 +35,7 @@ export default function messages(state = initState, action) {
         .set('message', action.message)
         .set('isError', action.isError);
 
-      return state.set('message', message)
+      return state.set('message', message);
     }
     default:
       return state;

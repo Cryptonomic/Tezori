@@ -4,9 +4,9 @@ import { TextField, Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import styled from 'styled-components'
-import {ms} from '../styles/helpers'
-import Button from './Button'
+import styled from 'styled-components';
+import { ms } from '../styles/helpers';
+import Button from './Button';
 
 import Loader from './Loader';
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -16,23 +16,22 @@ import {
   openConfirmationModal,
   closeConfirmationModal,
   sendConfirmation,
-  setOriginalAddress,
+  setOriginalAddress
 } from '../reducers/delegate.duck';
 
 import styles from './Delegate.css';
 
-type Props = {}
+type Props = {};
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-`
+`;
 
 const UpdateButton = styled(Button)`
   margin: ${ms(2)} 0 0 0;
-`
-
+`;
 
 class Delegate extends Component<Props> {
   props: Props;
@@ -55,7 +54,7 @@ class Delegate extends Component<Props> {
       updatePassword,
       sendConfirmation,
       isConfirmationModalOpen,
-      isLoading,
+      isLoading
     } = this.props;
 
     return (
@@ -74,11 +73,9 @@ class Delegate extends Component<Props> {
           <div>Are you sure you want to change your delegate to:</div>
           <div className={styles.modalAddress}>{address}</div>
           <div className={styles.feeContainer}>
-            <div className={styles.feeText}>Fee: </div>{delegateFee}
-            <img
-              src={tezosLogo}
-              className={styles.tezosSymbol}
-            />
+            <div className={styles.feeText}>Fee: </div>
+            {delegateFee}
+            <img src={tezosLogo} className={styles.tezosSymbol} />
           </div>
           <div className={styles.confirmationContainer}>
             <TextField
@@ -89,7 +86,14 @@ class Delegate extends Component<Props> {
               onChange={(_, newPassword) => updatePassword(newPassword)}
             />
 
-            <Button theme="primary" disabled={isLoading} small onClick={sendConfirmation}>Confirm</Button>
+            <Button
+              theme="primary"
+              disabled={isLoading}
+              small
+              onClick={sendConfirmation}
+            >
+              Confirm
+            </Button>
           </div>
           {isLoading && <Loader />}
         </div>
@@ -108,7 +112,9 @@ class Delegate extends Component<Props> {
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
 
-        <UpdateButton onClick={openConfirmationModal} theme="secondary" small>Update</UpdateButton>
+        <UpdateButton onClick={openConfirmationModal} theme="secondary" small>
+          Update
+        </UpdateButton>
 
         {this.renderWarningModal()}
       </Container>
@@ -124,19 +130,22 @@ function mapStateToProps(state) {
     isLoading: delegate.get('isLoading'),
     password: delegate.get('password'),
     address: delegate.get('address'),
-    delegateFee: delegate.get('delegateFee'),
+    delegateFee: delegate.get('delegateFee')
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    updatePassword,
-    updateAddress,
-    openConfirmationModal,
-    closeConfirmationModal,
-    sendConfirmation,
-    setOriginalAddress,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      updatePassword,
+      updateAddress,
+      openConfirmationModal,
+      closeConfirmationModal,
+      sendConfirmation,
+      setOriginalAddress
+    },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Delegate);

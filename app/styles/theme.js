@@ -18,30 +18,30 @@ export const Theme = {
     // Gray colors
     darkGray: '#191414',
     gray1: '#f7f9fb',
-    gray2: '#edf0f7',
+    gray2: '#edf0f7'
   },
   animations: {
     defaultTime: '300ms',
-    secondaryTime: '450ms',
+    secondaryTime: '450ms'
   },
   animationCurves: {
-    defaultCurve: 'cubic-bezier(0.23, 1, 0.32, 1) ',
+    defaultCurve: 'cubic-bezier(0.23, 1, 0.32, 1) '
   },
   typo: {
     fontFamily: {
-      primary: "'Roboto', sans-serif",
+      primary: "'Roboto', sans-serif"
     },
     weights: {
       light: 300,
       normal: 500,
-      bold: 700,
-    },
+      bold: 700
+    }
   },
   layers: {
     top: 1000,
     middle: 900,
-    bottom: 800,
-  },
-}
+    bottom: 800
+  }
+};
 
-export default Theme
+export default Theme;
