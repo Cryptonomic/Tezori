@@ -1,14 +1,13 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { TextField, Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components'
-import {ms} from 'styles/helpers'
+import {ms} from '../styles/helpers'
 import Button from './Button'
 
-import CreateButton from './CreateButton';
 import Loader from './Loader';
 import tezosLogo from '../../resources/tezosLogo.png';
 import {
@@ -89,18 +88,8 @@ class Delegate extends Component<Props> {
               value={password}
               onChange={(_, newPassword) => updatePassword(newPassword)}
             />
-            <CreateButton
-              label="Confirm"
-              style={{
-                border: '2px solid #7B91C0',
-                color: '#7B91C0',
-                height: '28px',
-                fontSize: '15px',
-                marginTop: '15px',
-              }}
-              disabled={isLoading}
-              onClick={sendConfirmation}
-            />
+
+            <Button theme="primary" disabled={isLoading} small onClick={sendConfirmation}>Confirm</Button>
           </div>
           {isLoading && <Loader />}
         </div>

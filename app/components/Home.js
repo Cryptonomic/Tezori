@@ -6,8 +6,7 @@ import { TextField } from 'material-ui';
 import { remote } from 'electron';
 import path from 'path';
 
-import CreateButton from './CreateButton';
-import Button from './Button'
+import Button from './Button';
 import MessageBar from './MessageBar';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
@@ -67,16 +66,7 @@ class Home extends Component<Props> {
     const { submitAddress, isLoading } = this.props;
 
     return (
-      <CreateButton
-        label={label}
-        style={{
-          backgroundColor: '#2c7df7',
-          color: 'white',
-          marginTop: '20px'
-        }}
-        onClick={() => submitAddress(submissionType)}
-        disabled={isLoading}
-      />
+      <Button onClick={() => submitAddress(submissionType)} theme="primary" disabled={isLoading}>{label}</Button>
     );
   };
 
@@ -110,19 +100,7 @@ class Home extends Component<Props> {
         <div className={styles.walletContainers}>
           <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.importButtonContainer}>
-            <CreateButton
-              label="Select file"
-              style={{
-                border: '2px solid #7B91C0',
-                color: '#7B91C0',
-                height: '28px',
-                fontSize: '15px',
-                backgroundColor: 'transparent'
-              }}
-              onClick={this.saveFile}
-
-              B
-            />
+            <Button theme="secondary" onClick={this.saveFile} small>Select File</Button>
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <TextField
@@ -158,17 +136,7 @@ class Home extends Component<Props> {
             Import your wallet from a backup
           </h3>
           <div className={styles.importButtonContainer}>
-            <CreateButton
-              label="Select Wallet File"
-              style={{
-                border: '2px solid #7B91C0',
-                color: '#7B91C0',
-                height: '28px',
-                fontSize: '15px',
-                backgroundColor: 'transparent'
-              }}
-              onClick={this.openFile}
-            />
+            <Button theme="secondary" onClick={this.openFile} small>Select Wallet File</Button>
             <span className={styles.walletFileName}>{completeWalletPath}</span>
           </div>
           <TextField

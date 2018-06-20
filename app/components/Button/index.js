@@ -66,6 +66,14 @@ const StyledButton = styled.button`
     `
   }
   
+  ${({disabled}) => disabled && css`
+    opacity: 0.5;
+    pointer-events: none;
+    &:hover {
+      opacity: 0.5
+    }
+  `}
+  
   ${({buttonTheme}) => chooseTheme(buttonTheme)};
 `
 

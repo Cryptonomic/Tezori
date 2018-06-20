@@ -3,8 +3,8 @@ import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import classNames from 'classnames';
 
+import Button from './Button'
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import CreateButton from './CreateButton';
 import Loader from './Loader';
 
 import styles from './AddAddressModal.css';
@@ -195,16 +195,9 @@ export default function AddAddress(props: Props) {
       <div className={styles.addAddressBodyContainer}>
         {renderAddBody()}
         <div>
-          <CreateButton
-            label="Import"
-            style={{
-              backgroundColor: '#417DEF',
-              color: 'white',
-              marginTop: '20px',
-            }}
-            onClick={importAddress}
-            disabled={isLoading}
-          />
+          <Button theme="primary" onClick={importAddress} disabled={isLoading} small>
+            Import
+          </Button>
           { isLoading &&
             <Loader />
           }

@@ -10,7 +10,7 @@ import {
 } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
-import CreateButton from './CreateButton';
+import Button from './Button'
 import tezosLogo from '../../resources/tezosLogo.png';
 import Loader from './Loader'
 
@@ -94,21 +94,13 @@ class CreateAccountModal extends Component<Props> {
           </div>
         </div>
         <div className={styles.passwordButtonContainer}>
-          <CreateButton
-            label="Confirm"
-            style={{
-              border: '2px solid #7B91C0',
-              color: '#7B91C0',
-              height: '28px',
-              fontSize: '15px',
-              marginTop: '15px',
-            }}
-            onClick={() => {
-              this.props.createNewAccount();
-               this.props.closeCreateAccountModal();
-            }}
-            disabled={this.props.isLoading}
-          />
+          <Button theme="primary" onClick={() => {
+                  this.props.createNewAccount();
+                  this.props.closeCreateAccountModal();
+              }}
+              disabled={this.props.isLoading}>
+            Confirm
+          </Button>
         </div>
         {this.props.isLoading && <Loader />}
       </Fragment>
@@ -122,17 +114,7 @@ class CreateAccountModal extends Component<Props> {
           Operation successful: {this.props.operation}
         </div>
         <div>
-          <CreateButton
-            label="Close"
-            style={{
-              border: '2px solid #7B91C0',
-              color: '#7B91C0',
-              height: '28px',
-              fontSize: '15px',
-              marginTop: '15px',
-            }}
-            onClick={this.props.closeCreateAccountModal}
-          />
+          <Button theme="primary" onClick={this.props.closeCreateAccountModal} small>Close</Button>
         </div>
       </div>
     );
