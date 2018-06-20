@@ -85,19 +85,19 @@ type Props = {
   className?: string,
   children?: mixed,
   disabled?: boolean,
-  theme: 'primary' | 'secondary' | 'plain',
+  buttonTheme: 'primary' | 'secondary' | 'plain',
   small?: boolean,
   type?: string,
   onClick?: Function
 };
 
 function Button(props: Props) {
-  const { className, children, disabled, theme, type, small, onClick } = props;
+  const { className, children, disabled, buttonTheme, type, small, onClick } = props;
   return (
     <StyledButton
       onClick={onClick}
       type={type || 'button'}
-      buttonTheme={theme}
+      buttonTheme={buttonTheme}
       small={small}
       disabled={disabled}
       className={className}

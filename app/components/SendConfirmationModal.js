@@ -105,7 +105,7 @@ const SendConfirmationModal = props => {
           onChange={(_, newPassword) => updatePassword(newPassword)}
         />
         <Button
-          theme="secondary"
+          buttonTheme="secondary"
           onClick={sendConfirmation}
           disabled={isLoading}
         >

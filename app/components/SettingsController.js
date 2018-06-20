@@ -43,7 +43,7 @@ class SettingsController extends Component<Props> {
       <Container>
         <SettingsIcon alt="Settings" src={settingsIcon} />
         <Separator />
-        <Button onClick={goHomeAndClearState} theme="plain">
+        <Button onClick={goHomeAndClearState} buttonTheme="plain">
           <LogoutIcon alt="Logout" src={logoutIcon} />
         </Button>
       </Container>

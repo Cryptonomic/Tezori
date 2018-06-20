@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 
 import Button from './Button'
-
 import BalanceBanner from './BalanceBanner';
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
@@ -32,6 +31,7 @@ const Tab = styled(Button)`
   text-align: center;
   font-weight: 500;
   padding: ${ms(-1)} ${ms(1)};
+  border-radius: 0;
 `;
 
 const TabList = styled.div`

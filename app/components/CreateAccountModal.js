@@ -83,7 +83,7 @@ class CreateAccountModal extends Component<Props> {
         </div>
         <div className={styles.passwordButtonContainer}>
           <Button
-            theme="primary"
+            buttonTheme="primary"
             onClick={() => {
               this.props.createNewAccount();
               this.props.closeCreateAccountModal();

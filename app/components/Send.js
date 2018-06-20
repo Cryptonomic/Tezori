@@ -92,7 +92,7 @@ class Send extends Component<Props> {
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>
-        <Button onClick={openSendTezosModal} theme="secondary" small>
+        <Button onClick={openSendTezosModal} buttonTheme="secondary" small>
           Send
         </Button>
         <SendConfirmationModal

@@ -25,7 +25,7 @@ class TezosLogo extends Component<Props> {
     return (
       <Button
         onClick={goHomeAndClearState}
-        theme="plain"
+        buttonTheme="plain"
         children={<Logo src={tezosLogo} />}
       />
     );

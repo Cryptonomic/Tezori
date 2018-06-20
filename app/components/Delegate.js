@@ -87,7 +87,7 @@ class Delegate extends Component<Props> {
             />
 
             <Button
-              theme="primary"
+              buttonTheme="primary"
               disabled={isLoading}
               small
               onClick={sendConfirmation}
@@ -112,7 +112,7 @@ class Delegate extends Component<Props> {
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
 
-        <UpdateButton onClick={openConfirmationModal} theme="secondary" small>
+        <UpdateButton onClick={openConfirmationModal} buttonTheme="secondary" small>
           Update
         </UpdateButton>
 

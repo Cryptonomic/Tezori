@@ -189,7 +189,7 @@ export default function AddAddress(props: Props) {
         {renderAddBody()}
         <div>
           <Button
-            theme="primary"
+            buttonTheme="primary"
             onClick={importAddress}
             disabled={isLoading}
             small

@@ -87,13 +87,13 @@ class Home extends Component<Props> {
       <div className={styles.defaultContainer}>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Create a new wallet</div>
-          <Button theme="primary" onClick={this.setDisplay(CREATE)}>
+          <Button buttonTheme="primary" onClick={this.setDisplay(CREATE)}>
             Create Wallet
           </Button>
         </div>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Import an existing wallet</div>
-          <Button theme="secondary" onClick={this.setDisplay(IMPORT)}>
+          <Button buttonTheme="secondary" onClick={this.setDisplay(IMPORT)}>
             Import Wallet
           </Button>
         </div>
@@ -116,7 +116,7 @@ class Home extends Component<Props> {
         <div className={styles.walletContainers}>
           <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.importButtonContainer}>
-            <Button theme="secondary" onClick={this.saveFile} small>
+            <Button buttonTheme="secondary" onClick={this.saveFile} small>
               Select File
             </Button>
             <span className={styles.walletFileName}>{walletFileName}</span>
@@ -154,7 +154,7 @@ class Home extends Component<Props> {
             Import your wallet from a backup
           </h3>
           <div className={styles.importButtonContainer}>
-            <Button theme="secondary" onClick={this.openFile} small>
+            <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
             </Button>
             <span className={styles.walletFileName}>{completeWalletPath}</span>
