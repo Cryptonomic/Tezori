@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
+import Button from './Button'
+
 import BalanceBanner from './BalanceBanner';
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
@@ -21,7 +23,7 @@ const Container = styled.section`
   flex-grow: 1;
 `;
 
-const Tab = styled.div`
+const Tab = styled(Button)`
   background: ${({ isActive, theme: { colors } }) =>
     isActive ? colors.white : colors.accent};
   color: ${({ isActive, theme: { colors } }) =>
@@ -137,6 +139,7 @@ class ActionPanel extends Component<Props, State> {
             <Tab
               isActive={activeTab === tab}
               key={tab}
+              buttonTheme="plain"
               onClick={() => this.setState({ activeTab: tab })}
             >
               {tab}
