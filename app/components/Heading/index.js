@@ -5,72 +5,39 @@ import styled, { css } from 'styled-components'
 
 import { ms } from '../../styles/helpers'
 
-const H1 = css`
-  font-size: ${ms(5)};
-  color: ${({ theme: { colors } }) => colors.white };
-`
-
-const H2 = css`
-  font-size: ${ms(4)};
-`
-
-const H3 = css`
-  font-size: ${ms(3)};
-`
-
-const H4 = css`
-  color: ${({ theme: { colors } }) => colors.white };
-  font-size: ${ms(2)};
-`
-const H5 = css`
-  font-size: ${ms(1)};
-`
-
-const chooseTheme = (headingTheme: 'h1' | 'h2' | 'h3' | 'h4' | 'h5') => {
-  switch(headingTheme) {
-    case 'h1':
-      return H1;
-    case 'h2':
-      return H2;
-    case 'h3':
-      return H3;
-    case 'h4':
-      return H4
-    case 'h5':
-      return H5
-    case 'h6':
-      return H6
-    default:
-      return H3;
-  }
-}
-
-const StyledHeading = styled.p`
+const base = css`
   color: ${ ({ theme: { colors } }) => colors.primary };
   font-family: ${ ({ theme }) => theme.typo.fontFamily.primary };
   font-size: ${ms(3)};
   font-weight: 300;
-  ${({headingTheme}) => chooseTheme(headingTheme)};
+  margin: 0;
 `
 
-type Props = {
-  className?: string,
-  theme?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6',
-  type?: string,
-  children?: string
-};
+export const H1 = styled.h1`
+  ${base}
+  font-size: ${ms(5)};
+`
 
-const Heading = (props: Props) => {
-  const { className, children, type, theme } = props
-  return (
-    <StyledHeading
-      type={'string'}
-      headingTheme={theme}
-      className={className}
-    >
-      {children}
-    </StyledHeading>
-  )
-}
+export const H2 = styled.h2`
+  ${base}
+  font-size: ${ms(4)};
+`
 
-export default Heading;
+export const H3 = styled.h3`
+  ${base}
+  font-size: ${ms(3)};
+`
+
+export const H4 = styled.h4`
+  ${base}
+  font-size: ${ms(2)};
+`
+export const H5 = styled.h5`
+  ${base}
+  font-size: ${ms(1)};
+`
+
+export const H6 = styled.h6`
+  ${base}
+  font-size: ${ms(0)};
+`
