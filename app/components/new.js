@@ -3,12 +3,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components'
-
-import Button from './Button'
-import tezosLogo from '../../resources/tezosLogo.png';
 import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
-
-import styles from './TezosLogo.css';
+import tezosLogo from '../../resources/tezosLogo.png';
+import Button from './Button';
 
 const Logo = styled.img`
   height: 50px;
@@ -23,13 +20,11 @@ type Props = {
 
 class TezosLogo extends Component<Props> {
   render() {
-    const { goHomeAndClearState } = this.props
     return (
-      <Button
-        onClick={goHomeAndClearState}
-        theme={'plain'}
-        children={ <Logo src={tezosLogo} className={styles.logo} /> }
-      />
+    <Button
+      onClick={ goHomeAndClearState }
+      children={ <Logo src={tezosLogo} className={styles.logo} /> }
+    />
     );
   }
 }

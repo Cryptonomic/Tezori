@@ -30,14 +30,11 @@ const secondaryTheme = css`
 `
 
 const plainTheme = css`
-  background: ${({ theme: { colors } }) => colors.white };
+  background: ${({ theme: { colors } }) => colors.transparent };
   transition: background ${({ theme: { animations } }) => animations.defaultTime };
-  padding: ${ms(0)};
+  padding: 0;
   border-radius: ${ms(0)};
-
-  &:hover {
-    background: ${({ theme: { colors } }) => darken(0.02, colors.white) };
-  }
+  outline: none
 `
 
 const chooseTheme = (buttonTheme: 'primary' | 'secondary' | 'plain') => {
@@ -70,7 +67,7 @@ type Props = {
   className?: string,
   children?: mixed,
   disabled?: boolean,
-  theme?: 'primary' | 'secondary' | 'plain',
+  theme: 'primary' | 'secondary' | 'plain',
   type?: string,
   onClick?: Function
 };

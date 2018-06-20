@@ -6,6 +6,7 @@ export const Theme = {
     accent: '#2c7df7',
     light: '#FAFBFB',
     disabled: '#C8D0D3',
+    transparent: 'transparent',
 
     // State colors
     error: '#F22121',
