@@ -1,28 +1,33 @@
-const minLength = function(length) {
+function minLength(length) {
   return `Pass Phrase must be at least ${length} characters.`
 }
-
-export default function validate(value, validateType) {
+/**
+ * 
+ * @param value { string | string[] }
+ * @param validateType { string }
+ * @returns { false | string }
+ */
+export default function hasError(value, validateType) {
   switch(validateType) {
     case 'locationFilled':
-      if (!value.length) {
-        console.log('value length', value.length)
-        return 'Must upload a wallet.'
+      if ( !value.length ) {
+        return 'Must upload a wallet.';
       }
+      break;
     case 'minLength8': 
-      if (value.length < 8) {
+      if ( value.length < 8 ) {
         return minLength(8);
       }
       break;
     case 'samePassPhrase':
-      //value = [typeof passPhrase, typeof confirmedPassPhrase]
-      if (!(Array.isArray(value ) && value.length == 2)) {
-        return '[ERR] Not valid parameters.'
+      if ( !(Array.isArray(value ) && value.length == 2) ) {
+        return '[ERR] Not valid parameters.';
       }
 
-      if (value[0] !== value[1]) {
-        return 'Passphrases must be equal.'
+      if ( value[0] !== value[1] ) {
+        return 'Passphrases must be equal.';
       }
+      break;
   }
   return false;
 }

@@ -8,7 +8,7 @@ import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
-import validate from '../utils/validators'
+import hasError from '../utils/validators'
 
 const {
   getOperationGroups,
@@ -208,22 +208,22 @@ export function importAddress() {
     const network = state().walletInitialization.get('network');
 
     //TODO: clear out message bar
-    dispatch(addMessage('', true))
+    dispatch(addMessage('', true));
 
     switch(activeTab) {
       case FUNDRAISER:
       case GENERATE_MNEMONIC:
       case SEED_PHRASE:
 
-        let error = validate(passPhrase, 'minLength8');
-        if (error != false) {
+        let error = hasError(passPhrase, 'minLength8');
+        if ( error ) {
           return dispatch(addMessage(error, true));
-        };
+        }
 
-        error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase')
-        if (error != false) {
+        error = hasError([passPhrase, confirmedPassPhrase], 'samePassPhrase');
+        if ( error ) {
           return dispatch(addMessage(error, true));
-        };
+        }
         break;
     }
 
