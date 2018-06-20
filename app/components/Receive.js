@@ -3,9 +3,7 @@ import React, { Component } from 'react';
 import { clipboard } from 'electron';
 import classNames from 'classnames';
 import QRCode from 'qrcode';
-
-import CreateButton from './CreateButton';
-
+import Button from './Button'
 import styles from './Receive.css';
 
 type Props = {
@@ -72,17 +70,7 @@ export default class Receive extends Component<Props> {
         <div className={styles.addressContainer}>
           {address}
           {this.renderCopyConfirmation()}
-          <CreateButton
-            label="Copy Address"
-            style={{
-              border: '2px solid #7B91C0',
-              color: '#7B91C0',
-              height: '28px',
-              fontSize: '15px',
-              marginTop: '15px',
-            }}
-            onClick={this.copyToClipboard}
-          />
+          <Button onClick={this.copyToClipboard} theme="secondary" small>Copy Address</Button>
         </div>
       </div>
     );

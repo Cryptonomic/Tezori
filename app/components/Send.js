@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import CreateButton from './CreateButton';
+import Button from './Button'
 import SendConfirmationModal from './SendConfirmationModal';
 import {
   updatePassword,
@@ -92,17 +92,7 @@ class Send extends Component<Props> {
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>
-        <CreateButton
-          label="Send"
-          style={{
-            border: '2px solid #7B91C0',
-            color: '#7B91C0',
-            height: '28px',
-            fontSize: '15px',
-            marginTop: '15px',
-          }}
-          onClick={openSendTezosModal}
-        />
+        <Button  onClick={openSendTezosModal} theme="secondary" small>Send</Button>
         <SendConfirmationModal
           amount={amount}
           address={toAddress}
