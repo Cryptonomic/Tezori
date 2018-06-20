@@ -1,6 +1,0 @@
-.appContainer {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 0 0 30px 0;
-}

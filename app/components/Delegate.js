@@ -4,8 +4,10 @@ import { TextField, Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { ms } from '../styles/helpers';
+import Button from './Button';
 
-import CreateButton from './CreateButton';
 import Loader from './Loader';
 import tezosLogo from '../../resources/tezosLogo.png';
 import {
@@ -14,12 +16,22 @@ import {
   openConfirmationModal,
   closeConfirmationModal,
   sendConfirmation,
-  setOriginalAddress,
+  setOriginalAddress
 } from '../reducers/delegate.duck';
 
 import styles from './Delegate.css';
 
-type Props = {}
+type Props = {};
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+`;
+
+const UpdateButton = styled(Button)`
+  margin: ${ms(2)} 0 0 0;
+`;
 
 class Delegate extends Component<Props> {
   props: Props;
@@ -42,7 +54,7 @@ class Delegate extends Component<Props> {
       updatePassword,
       sendConfirmation,
       isConfirmationModalOpen,
-      isLoading,
+      isLoading
     } = this.props;
 
     return (
@@ -61,11 +73,9 @@ class Delegate extends Component<Props> {
           <div>Are you sure you want to change your delegate to:</div>
           <div className={styles.modalAddress}>{address}</div>
           <div className={styles.feeContainer}>
-            <div className={styles.feeText}>Fee: </div>{delegateFee}
-            <img
-              src={tezosLogo}
-              className={styles.tezosSymbol}
-            />
+            <div className={styles.feeText}>Fee: </div>
+            {delegateFee}
+            <img src={tezosLogo} className={styles.tezosSymbol} />
           </div>
           <div className={styles.confirmationContainer}>
             <TextField
@@ -75,18 +85,15 @@ class Delegate extends Component<Props> {
               value={password}
               onChange={(_, newPassword) => updatePassword(newPassword)}
             />
-            <CreateButton
-              label="Confirm"
-              style={{
-                border: '2px solid #7B91C0',
-                color: '#7B91C0',
-                height: '28px',
-                fontSize: '15px',
-                marginTop: '15px',
-              }}
+
+            <Button
+              buttonTheme="primary"
               disabled={isLoading}
+              small
               onClick={sendConfirmation}
-            />
+            >
+              Confirm
+            </Button>
           </div>
           {isLoading && <Loader />}
         </div>
@@ -98,25 +105,19 @@ class Delegate extends Component<Props> {
     const { address, openConfirmationModal, updateAddress } = this.props;
 
     return (
-      <div className={styles.delegateContainer}>
+      <Container>
         <TextField
           floatingLabelText="New Address"
           value={address}
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
-        <CreateButton
-          label="Update"
-          style={{
-            border: '2px solid #7B91C0',
-            color: '#7B91C0',
-            height: '28px',
-            fontSize: '15px',
-            marginTop: '15px',
-          }}
-          onClick={openConfirmationModal}
-        />
+
+        <UpdateButton onClick={openConfirmationModal} buttonTheme="secondary" small>
+          Update
+        </UpdateButton>
+
         {this.renderWarningModal()}
-      </div>
+      </Container>
     );
   }
 }
@@ -129,19 +130,22 @@ function mapStateToProps(state) {
     isLoading: delegate.get('isLoading'),
     password: delegate.get('password'),
     address: delegate.get('address'),
-    delegateFee: delegate.get('delegateFee'),
+    delegateFee: delegate.get('delegateFee')
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    updatePassword,
-    updateAddress,
-    openConfirmationModal,
-    closeConfirmationModal,
-    sendConfirmation,
-    setOriginalAddress,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      updatePassword,
+      updateAddress,
+      openConfirmationModal,
+      closeConfirmationModal,
+      sendConfirmation,
+      setOriginalAddress
+    },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Delegate);

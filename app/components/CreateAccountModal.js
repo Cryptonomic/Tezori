@@ -2,17 +2,12 @@
 import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  Dialog,
-  TextField,
-  SelectField,
-  MenuItem,
-} from 'material-ui';
+import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
-import CreateButton from './CreateButton';
+import Button from './Button';
 import tezosLogo from '../../resources/tezosLogo.png';
-import Loader from './Loader'
+import Loader from './Loader';
 
 import styles from './CreateAccountModal.css';
 import {
@@ -20,7 +15,7 @@ import {
   changeDelegate,
   changeFee,
   createNewAccount,
-  closeCreateAccountModal,
+  closeCreateAccountModal
 } from '../reducers/createAccount.duck';
 
 type Props = {
@@ -75,17 +70,10 @@ class CreateAccountModal extends Component<Props> {
               value={this.props.amount}
               onChange={this.changeAmount}
             />
-            <img
-              alt="tez"
-              src={tezosLogo}
-              className={styles.tezosSymbol}
-            />
+            <img alt="tez" src={tezosLogo} className={styles.tezosSymbol} />
           </div>
           <div className={styles.feeContainer}>
-            <SelectField
-              value={this.props.fee}
-              onChange={this.changeFee}
-            >
+            <SelectField value={this.props.fee} onChange={this.changeFee}>
               <MenuItem value={100} primaryText="Low Fee: 100" />
               <MenuItem value={200} primaryText="Medium Fee: 200" />
               <MenuItem value={400} primaryText="High Fee: 400" />
@@ -94,21 +82,16 @@ class CreateAccountModal extends Component<Props> {
           </div>
         </div>
         <div className={styles.passwordButtonContainer}>
-          <CreateButton
-            label="Confirm"
-            style={{
-              border: '2px solid #7B91C0',
-              color: '#7B91C0',
-              height: '28px',
-              fontSize: '15px',
-              marginTop: '15px',
-            }}
+          <Button
+            buttonTheme="primary"
             onClick={() => {
               this.props.createNewAccount();
-               this.props.closeCreateAccountModal();
+              this.props.closeCreateAccountModal();
             }}
             disabled={this.props.isLoading}
-          />
+          >
+            Confirm
+          </Button>
         </div>
         {this.props.isLoading && <Loader />}
       </Fragment>
@@ -118,21 +101,15 @@ class CreateAccountModal extends Component<Props> {
   renderOperationBody = () => {
     return (
       <div>
+        <div>Operation successful: {this.props.operation}</div>
         <div>
-          Operation successful: {this.props.operation}
-        </div>
-        <div>
-          <CreateButton
-            label="Close"
-            style={{
-              border: '2px solid #7B91C0',
-              color: '#7B91C0',
-              height: '28px',
-              fontSize: '15px',
-              marginTop: '15px',
-            }}
+          <Button
+            buttonTheme="primary"
             onClick={this.props.closeCreateAccountModal}
-          />
+            small
+          >
+            Close
+          </Button>
         </div>
       </div>
     );
@@ -147,14 +124,8 @@ class CreateAccountModal extends Component<Props> {
         bodyStyle={{ padding: '50px' }}
         titleStyle={{ padding: '50px 50px 0px' }}
       >
-        {
-          !this.props.operation &&
-            this.renderCreationBody()
-        }
-        {
-          this.props.operation &&
-            this.renderOperationBody()
-        }
+        {!this.props.operation && this.renderCreationBody()}
+        {this.props.operation && this.renderOperationBody()}
       </Dialog>
     );
   }
@@ -167,7 +138,7 @@ function mapStateToProps({ createAccount }) {
     isLoading: createAccount.get('isLoading'),
     operation: createAccount.get('operation'),
     isModalOpen: createAccount.get('isModalOpen'),
-    amount: createAccount.get('amount'),
+    amount: createAccount.get('amount')
   };
 }
 
@@ -178,7 +149,7 @@ function mapDispatchToProps(dispatch) {
       changeDelegate,
       changeFee,
       closeCreateAccountModal,
-      createNewAccount,
+      createNewAccount
     },
     dispatch
   );

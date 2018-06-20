@@ -6,38 +6,3 @@
   top: 10px;
   right: 15px;
 }
-
-.tezosSymbol {
-  height: 17px;
-  width: 17px;
-  filter: brightness(0%);
-  opacity: 0.5;
-}
-
-.amountSendContainer {
-  margin-bottom: 40px;
-}
-
-.confirmationText {
-  margin-bottom: 20px;
-}
-
-.amount {
-  border-bottom: 1px solid #7B91C0;
-  color: #7B91C0;
-  margin-right: 15px;
-  font-size: 20px;
-}
-
-.address {
-  border-bottom: 1px solid #7B91C0;
-  color: #7B91C0;
-  margin-left: 15px;
-  font-size: 20px;
-}
-
-.passwordButtonContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}

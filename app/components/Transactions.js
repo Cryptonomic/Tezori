@@ -6,11 +6,39 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn,
+  TableRowColumn
 } from 'material-ui';
 
 import tezosLogo from '../../resources/tezosLogo.png';
-import styles from './Transactions.css';
+import styled from 'styled-components';
+import { lighten } from 'polished';
+import { ms } from '../styles/helpers';
+
+const Container = styled.section`
+  height: 100%;
+  background-color: ${({ theme: { colors } }) => colors.white};
+`;
+
+const Details = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  text-decoration: underline;
+`;
+
+const Link = styled.a`
+  color: ${({ theme: { colors } }) => colors.darkGray};
+`;
+
+const TezosSymbol = styled.img`
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%);
+`;
+
+const RowElement = styled.div`
+  display: flex;
+`;
 
 type Props = {
   transactions: List
@@ -36,56 +64,48 @@ export default function Transactions(props: Props) {
     const rowArray = [
       row.get('amount'),
       operationGroupHash,
-      operationGroupHash,
+      operationGroupHash
     ];
 
     return (
       <TableRow key={index}>
-        {
-          rowArray.map((elem, rowArrIndex) => {
-            return (
-              <TableRowColumn key={`${elem}-${rowArrIndex}`}>
-                { rowArrIndex + 1 < rowArray.length &&
-                  <div className={styles.tableRowElement}>
-                    {elem}
-                    { rowArrIndex === 0 &&
-                    <img
-                      alt="tez"
-                      src={tezosLogo}
-                      className={styles.tezosSymbol}
-                    />
-                    }
-                  </div>
-                }
-                {
-                  rowArrIndex + 1 === rowArray.length &&
-                    <div className={styles.details}>
-                      <a
-                        href={`https://tzscan.io/${operationGroupHash}`}
-                        target="_blank"
-                        rel="noopener"
-                        className={styles.detailsLink}
-                      >
-                        Details
-                      </a>
-                    </div>
-                }
-              </TableRowColumn>
-            );
-          })
-        }
+        {rowArray.map((elem, rowArrIndex) => {
+          return (
+            <TableRowColumn key={`${elem}-${rowArrIndex}`}>
+              {rowArrIndex + 1 < rowArray.length && (
+                <RowElement>
+                  {elem}
+                  {rowArrIndex === 0 && (
+                    <TezosSymbol alt="tez" src={tezosLogo} />
+                  )}
+                </RowElement>
+              )}
+              {rowArrIndex + 1 === rowArray.length && (
+                <Details>
+                  <Link
+                    href={`https://tzscan.io/${operationGroupHash}`}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Details
+                  </Link>
+                </Details>
+              )}
+            </TableRowColumn>
+          );
+        })}
       </TableRow>
     );
   }
 
   return (
-    <div className={styles.transactionsContainer}>
+    <Container>
       <Table>
         {renderTableHeader()}
         <TableBody displayRowCheckbox={false}>
           {transactions.map(renderTableRow)}
         </TableBody>
       </Table>
-    </div>
+    </Container>
   );
 }
