@@ -16,8 +16,7 @@ class MessageBar extends React.Component<Props> {
 
   render() {
     const { message, clearMessageState } = this.props;
-    const isOpen = message.has('message');
-
+    const isOpen = message.has('message') && message.get('message');
     const bodyStyle = message.get('isError') &&
       { backgroundColor: 'rgba(255, 0, 0, 0.75)' };
 

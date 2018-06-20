@@ -7,6 +7,7 @@ import { clearEntireAddressState } from './address.duck';
 import { addMessage } from './message.duck';
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
+import validate from '../utils/validators'
 
 const { createWallet, loadWallet, saveWallet } = tezosWallet;
 
@@ -71,6 +72,19 @@ export function submitAddress(submissionType: 'create' | 'import' ) {
     const password = state().walletInitialization.get('password');
     const completeWalletPath = path.join(walletLocation, walletFileName);
     let wallet = [];
+
+    //TODO: clear out message bar
+    dispatch(addMessage('', true))
+
+    let error = validate(walletLocation, 'locationFilled');
+    if (error != false) {
+      return dispatch(addMessage(error, true));
+    };
+    
+    error = validate(password, 'minLength8');
+    if (error != false) {
+      return dispatch(addMessage(error, true));
+    };
 
     try {
       dispatch(setIsLoading(true));
