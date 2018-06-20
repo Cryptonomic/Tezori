@@ -104,7 +104,7 @@ class CreateAccountModal extends Component<Props> {
         <div>Operation successful: {this.props.operation}</div>
         <div>
           <Button
-            theme="primary"
+            buttonTheme="primary"
             onClick={this.props.closeCreateAccountModal}
             small
           >

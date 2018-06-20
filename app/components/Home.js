@@ -74,7 +74,7 @@ class Home extends Component<Props> {
     return (
       <Button
         onClick={() => submitAddress(submissionType)}
-        theme="primary"
+        buttonTheme="primary"
         disabled={isLoading}
       >
         {label}
