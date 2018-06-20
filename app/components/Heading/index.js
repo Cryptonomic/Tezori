@@ -27,7 +27,7 @@ const H5 = css`
 `
 
 const chooseTheme = (headingTheme: 'h1' | 'h2' | 'h3' | 'h4' | 'h5') => {
-  switch(buttonTheme) {
+  switch(headingTheme) {
     case 'h1':
       return H1;
     case 'h2':
@@ -61,7 +61,7 @@ type Props = {
 };
 
 const Heading = (props: Props) => {
-  const { className, children, type } = props
+  const { className, children, type, theme } = props
   return (
     <StyledHeading
       type={'string'}
