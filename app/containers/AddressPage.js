@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import styles from './AddressPage.css';
+import styled from 'styled-components'
+import {ms} from '../styles/helpers'
 
 import Addresses from '../components/Addresses';
 import ActionPanel from '../components/ActionPanel';
@@ -46,6 +46,11 @@ type Props = {
   message: Object
 };
 
+const Container = styled.div`
+  display: flex;
+  padding: 0 ${ms(4)} ${ms(3)} ${ms(4)};
+`
+
 class AddressPage extends Component<Props> {
   props: Props;
 
@@ -81,7 +86,7 @@ class AddressPage extends Component<Props> {
     } = this.props;
 
     return (
-      <div className={styles.addressPageContainer}>
+      <Container>
         <Addresses />
         <ActionPanel />
         <AddAddressModal
@@ -105,7 +110,7 @@ class AddressPage extends Component<Props> {
           selectedAccountHash={selectedAccountHash}
         />
         <MessageBar message={message} />
-      </div>
+      </Container>
     );
   }
 }

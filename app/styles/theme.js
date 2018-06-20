@@ -17,7 +17,8 @@ export const Theme = {
 
     // Gray colors
     darkGray: '#191414',
-    gray1: '#f7f9fb'
+    gray1: '#f7f9fb',
+    gray2: '#edf0f7',
   },
   animations: {
     defaultTime: '300ms',

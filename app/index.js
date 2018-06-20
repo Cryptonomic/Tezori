@@ -6,7 +6,6 @@ import { configureStore, history } from './store/configureStore';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from './muiTheme';
 import 'styles/global-styles'
-import './app.global.css';
 
 const store = configureStore();
 
