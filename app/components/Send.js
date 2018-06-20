@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { TextField, SelectField, MenuItem } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
 import CreateButton from './CreateButton';
 import SendConfirmationModal from './SendConfirmationModal';
@@ -16,7 +17,20 @@ import {
   sendConfirmation,
 } from '../reducers/sendTezos.duck';
 
-import styles from './Send.css';
+const SendContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 20px;
+`
+
+const AmountContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+`
 
 type Props = {
   updatePassword: Function,
@@ -35,8 +49,6 @@ type Props = {
 };
 
 class Send extends Component<Props> {
-  props: Props;
-
   render() {
     const {
       isConfirmationModalOpen,
@@ -55,14 +67,14 @@ class Send extends Component<Props> {
     } = this.props;
 
     return (
-      <div className={styles.sendContainer}>
+      <SendContainer>
         <TextField
           floatingLabelText="Address"
           style={{ width: '100%' }}
           value={toAddress}
           onChange={(_, newAddress) => updateToAddress(newAddress)}
         />
-        <div className={styles.amountContainer}>
+        <AmountContainer>
           <TextField
             floatingLabelText="Amount"
             style={{ width: '50%', marginRight: '50px' }}
@@ -79,7 +91,7 @@ class Send extends Component<Props> {
             <MenuItem value={400} primaryText="High Fee: 400" />
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
-        </div>
+        </AmountContainer>
         <CreateButton
           label="Send"
           style={{
@@ -101,12 +113,12 @@ class Send extends Component<Props> {
           password={password}
           sendConfirmation={sendConfirmation}
         />
-      </div>
+      </SendContainer>
     );
   }
 }
 
-function mapStateToProps(state) {
+const  mapStateToProps = state => {
   const { sendTezos } = state;
 
   return {
@@ -119,16 +131,15 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    updatePassword,
-    updateToAddress,
-    updateAmount,
-    updateFee,
-    openSendTezosModal,
-    closeSendTezosModal,
-    sendConfirmation,
-  }, dispatch);
-}
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({
+      updatePassword,
+      updateToAddress,
+      updateAmount,
+      updateFee,
+      openSendTezosModal,
+      closeSendTezosModal,
+      sendConfirmation,
+    }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Send);
