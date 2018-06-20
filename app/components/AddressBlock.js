@@ -1,85 +1,13 @@
 // @flow
-import React, { Component } from 'react';
-import classNames from 'classnames';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components'
 import {darken} from 'polished';
 import {ms} from '../styles/helpers'
 
-import DropdownArrow from 'material-ui/svg-icons/navigation/arrow-drop-down';
-import DropupArrow from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 
 import CreateAccountModal from './CreateAccountModal';
 import tezosLogo from '../../resources/tezosLogo.png';
-import styles from './AddressBlock.css';
-
-//
-// .accounts {
-//   background-color: #f9fafc;
-// }
-//
-// .addressBlockTitle {
-//   display: grid;
-//   grid-template-columns: auto auto;
-//   grid-column-gap: 1rem;
-//   font-weight: 300;
-//   font-size: 1rem;
-//   align-items: center;
-// }
-//
-// .addressBlockTitle span {
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-// }
-//
-// .addressBlockTitleContainerSelected {
-//   background-color: #417DEF;
-//   color: #E3E7F1;
-// }
-//
-// .addressBlockTitleContainer {
-//   cursor: pointer;
-//   padding: 15px 20px;
-// }
-//
-// .arrowContainer {
-//   cursor: pointer;
-// }
-//
-// .tzAmount {
-//   font-weight: 500;
-//   font-size: 14px;
-//   display: flex;
-//   color: black;
-// }
-//
-
-//
-// .accountBlockAddress {
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   font-weight: 300;
-// }
-//
-// .tzAmountSelected {
-//   color: #E3E7F1;
-// }
-//
-// .addAccountBlock {
-//   border-bottom: 1px solid #edf0f7;
-//   padding: 15px;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   cursor: pointer;
-//   color: #7B91C0;
-//   font-size: 16px;
-//   font-weight: 500;
-//   min-height: 30px;
-// }
-//
 
 const Container = styled.div`
   overflow: hidden;
@@ -98,17 +26,31 @@ const TezosSymbol = styled.img`
   filter: ${({isActive}) => isActive ? 'brightness(0.5%) invert(100%)' : 'brightness(0%)'}
 `
 
-const AccountBlock = styled.div`
+const Address = styled.div`
   border-bottom: 1px solid ${({theme: {colors}}) => darken(0.1, colors.white)};
-  padding: ${ms(0)} ${ms(1)};
+  padding: ${ms(-2)} ${ms(2)};
   cursor: pointer;
   background: ${({isActive, theme: {colors}}) => isActive ? colors.accent : colors.white};
-  color: ${({isActive, theme: {colors}}) => isActive ? colors.white : colors.secondary};
 `
 
-const ArrowContainer = styled.div`
-  cursor: pointer;
+const AddressFirstLine = styled.span`
+  font-weight: 500;
+  color: ${({isActive, theme: {colors}}) => isActive ? colors.white : colors.secondary};  
 `
+
+const AddressSecondLine = styled.span`
+  color: ${({isActive, theme: {colors}}) => isActive ? colors.white : colors.primary};  
+  font-weight: 300;
+`
+
+const AddressLabel = styled.div`
+  padding: ${ms(-2)} ${ms(2)};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: ${({theme: {colors}}) => colors.gray1}; ;
+`
+
 
 type Props = {
   accountBlock: Object, // TODO: type this
@@ -137,76 +79,49 @@ export default class AddressBlock extends Component<Props, State> {
       </Tezos>
     );
   };
+  
+  handleManagerAddressClick = () => {
+    const { accountBlock } = this.props;
+    const publicKeyHash = accountBlock.get('publicKeyHash');
+    this.setState(prevState => ({
+      isExpanded: !prevState.isExpanded
+    }))
 
-  onAddressBlockClick = () => {
-    if (this.state.isExpanded) this.setState({ isExpanded: false});
-    else this.setState({ isExpanded: true });
-  };
+    this.selectAccount(publicKeyHash, publicKeyHash);
+  }
 
   selectAccount = (accountHash: string, parentHash: string) => {
     this.props.selectAccount(accountHash, parentHash);
-  };
-
-  renderAccountBlock = (publicKeyHash: string) => account => {
-    const balance = account.get('balance');
-    const accountId = account.get('accountId');
-    const { selectedAccountHash } = this.props;
-
-    return (
-      <AccountBlock
-        isActive={accountId === selectedAccountHash}
-        key={accountId}
-        onClick={() => this.selectAccount(accountId, publicKeyHash)}
-      >
-        {this.renderTezosAmount(accountId, selectedAccountHash, balance)}
-        {accountId}
-      </AccountBlock>
-    );
-  };
-
-  renderArrowIcon = () => {
-    const { isExpanded } = this.state;
-
-    return (
-      <ArrowContainer>
-        { !isExpanded && <DropdownArrow /> }
-        { isExpanded && <DropupArrow style={{fill: '#FFFFFF'}} /> }
-      </ArrowContainer>
-    );
   };
 
   render() {
     const { accountBlock, selectedAccountHash } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const { isExpanded } = this.state;
-    const addressBlockTitleContainer = classNames({
-      [styles.addressBlockTitleContainer]: true,
-      [styles.addressBlockTitleContainerSelected]: publicKeyHash === selectedAccountHash,
-    });
+    const isManagerActive = publicKeyHash === selectedAccountHash
 
     return (
       <Container>
-        <div
-          className={addressBlockTitleContainer}
-          onClick={this.onAddressBlockClick}
+        <AddressLabel>
+          Account 1
+        </AddressLabel>
+        <Address
+          isActive={isManagerActive}
+          onClick={this.handleManagerAddressClick}
         >
-          <div
-            className={styles.addressBlockTitle}
-            onClick={() => this.props.selectAccount(publicKeyHash, publicKeyHash)}
-          >
-            <span>{publicKeyHash}</span>
-            {this.renderArrowIcon()}
-          </div>
-          {
-            isExpanded &&
-              this.renderTezosAmount(publicKeyHash, selectedAccountHash, accountBlock.get('balance'))
-          }
-        </div>
+          <AddressFirstLine isActive={isManagerActive}>
+            Manager Address
+          </AddressFirstLine>
+          <AddressSecondLine isActive={isManagerActive}>
+            {this.renderTezosAmount(publicKeyHash, selectedAccountHash, accountBlock.get('balance'))}
+          </AddressSecondLine>
+        </Address>
 
-        {isExpanded &&
-          <div className={styles.accounts}>
-            <div className={styles.addAccountBlock}>
-              Accounts
+        {isExpanded && (
+          <Fragment>
+            <AddressLabel>
+              Smart Addresses
+
               <AddCircle
                 style={{
                   fill: '#7B91C0',
@@ -215,10 +130,29 @@ export default class AddressBlock extends Component<Props, State> {
                 }}
                 onClick={this.props.openCreateAccountModal}
               />
-            </div>
-            {accountBlock.get('accounts').map(this.renderAccountBlock(publicKeyHash))}
-          </div>
-        }
+            </AddressLabel>
+
+            {accountBlock.get('accounts').map((smartAddress, index) => {
+              const smartAddressId = smartAddress.get('accountId');
+              const isSmartActive = smartAddressId === selectedAccountHash
+              const smartAddressBalance = smartAddress.get('balance');
+              return (
+                <Address
+                  key
+                  isActive={isSmartActive}
+                  onClick={() => this.selectAccount(smartAddressId, publicKeyHash)}
+                >
+                  <AddressFirstLine isActive={isSmartActive}>
+                    {`Smart Address ${index + 1}`}
+                  </AddressFirstLine>
+                  <AddressSecondLine isActive={isSmartActive}>
+                    {this.renderTezosAmount(smartAddressId, selectedAccountHash, smartAddressBalance)}
+                  </AddressSecondLine>
+                </Address>
+              )
+            })}
+          </Fragment>
+        )}
         <CreateAccountModal />
       </Container>
     );
