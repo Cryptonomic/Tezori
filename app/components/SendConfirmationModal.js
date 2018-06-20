@@ -16,11 +16,34 @@ const AmountContainer = styled.div`
   marginBottom: ${ms(4)}
 `
 
-const Amount = styled.div`
+const DataToSend = styled.span`
   border-bottom: 1px solid #7B91C0;
   color: ${ ({ theme: { colors } }) => colors.secondary };
-  margin-left: 15px;
+  margin: 0;
   font-size: 20px;
+  display: inline-block;
+`
+
+const Connector = styled.span`
+  margin: 0 ${ms(0)};
+`
+
+const PaswordContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`
+
+const TezosSymbol = styled.img`
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%);
+  opacity: 0.5;
+`
+
+const Heading = styled(H5)`
+  margin-bottom: 20px;
+  color: ${ ({ theme: { colors } }) => colors.primary };
 `
 
 type Props = {
@@ -64,19 +87,18 @@ const SendConfirmationModal = (props) => {
         style={{ fill: '#7190C6' }}
         onClick={onClose}
       />
-      <H5 className={styles.confirmationText}>Do you confirm that you want to send</H5>
+      <Heading>Do you confirm that you want to send</Heading>
       <AmountContainer>
-        <span className={styles.amount}>
+        <DataToSend>
           {amount}
-          <img
+          <TezosSymbol
             src={tezosLogo}
-            className={styles.tezosSymbol}
           />
-        </span>
-        <span> to </span>
-        <span className={styles.address}>{address}</span>
+        </DataToSend>
+        <Connector>to</Connector>
+        <DataToSend>{address}</DataToSend>
       </AmountContainer>
-      <div className={styles.passwordButtonContainer}>
+      <PaswordContainer>
         <TextField
           floatingLabelText="Enter Password"
           style={{ width: '60%' }}
@@ -88,7 +110,7 @@ const SendConfirmationModal = (props) => {
           theme='secondary'
           onClick={sendConfirmation}
           disabled={isLoading}>Confirm</Button>
-      </div>
+      </PaswordContainer>
       {isLoading && <Loader />}
     </Dialog>
   );
