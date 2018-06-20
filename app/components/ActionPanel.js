@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
+import styled from 'styled-components'
+import { lighten } from 'polished'
 
 import BalanceBanner from './BalanceBanner';
 import PageNumbers from './PageNumbers';
@@ -12,10 +13,35 @@ import Receive from './Receive';
 import Delegate from './Delegate';
 import Loader from './Loader';
 import tabConstants from '../constants/tabConstants';
+import {ms}  from '../styles/helpers'
 
 import { selectAccount } from '../reducers/address.duck';
 
-import styles from './ActionPanel.css';
+const Container = styled.section`
+  flex-grow: 1;
+`
+
+const Tab = styled.div`
+  background: ${({isActive, theme: {colors}}) => isActive ? colors.white : colors.accent };
+  color: ${({isActive, theme: {colors}}) => isActive ? colors.primary : lighten(0.4, colors.accent) };
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  padding: ${ms(-1)} ${ms(1)}
+`
+
+const TabList = styled.div`
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+`
+
+const SectionContainer = styled.div`
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   background-color: white;
+   padding: ${ms(2)} ${ms(4)};
+`
 
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
@@ -27,7 +53,12 @@ type Props = {
   selectAccount: Function
 };
 
-class ActionPanel extends Component<Props> {
+type State = {
+  activeTab: string,
+  currentPage: number,
+}
+
+class ActionPanel extends Component<Props, State> {
   props: Props;
 
   state = {
@@ -45,52 +76,34 @@ class ActionPanel extends Component<Props> {
     selectAccount(selectedAccountHash, selectedParentHash);
   };
 
-  renderTab = tab => {
-    const { activeTab } = this.state;
-    const tabClass = classNames({
-      [styles.activeTab]: activeTab === tab,
-      [styles.inactiveTab]: activeTab !== tab
-    });
-
-    return (
-      <div
-        className={tabClass}
-        key={tab}
-        onClick={() => this.setState({ activeTab: tab })}
-      >
-        {tab}
-      </div>
-    );
-  };
-
   renderSection = () => {
     const { selectedAccountHash, selectedAccount } = this.props;
 
     switch (this.state.activeTab) {
       case DELEGATE:
         return (
-          <div className={styles.delegateContainer}>
+          <SectionContainer>
             <Delegate />
-          </div>
+          </SectionContainer>
         );
       case RECEIVE:
         return (
-          <div className={styles.receiveContainer}>
+          <SectionContainer>
             <Receive address={selectedAccountHash} />
-          </div>
+          </SectionContainer>
         );
       case SEND:
         return (
-          <div className={styles.sendContainer}>
+          <SectionContainer>
             <Send />
-          </div>
+          </SectionContainer>
         );
       case TRANSACTIONS:
       default: {
         const transactions = selectedAccount.get('transactions');
 
         return (
-          <div className={styles.transactionsContainer}>
+          <SectionContainer>
             <Transactions transactions={transactions} />
             <PageNumbers
               currentPage={this.state.currentPage}
@@ -98,7 +111,7 @@ class ActionPanel extends Component<Props> {
               onClick={currentPage => this.setState({ currentPage })}
             />
             {this.props.isLoadingTransactions && <Loader />}
-          </div>
+          </SectionContainer>
         );
       }
     }
@@ -111,16 +124,30 @@ class ActionPanel extends Component<Props> {
       selectedAccountHash,
     } = this.props;
 
+    const { activeTab } = this.state;
+
     return (
-      <section className={styles.actionPanelContainer}>
+      <Container>
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           onRefreshClick={this.handleDataRefresh }
         />
-        <div className={styles.tabContainer}>{tabs.map(this.renderTab)}</div>
+
+        <TabList>
+          {tabs.map(tab => (
+            <Tab
+              isActive={activeTab === tab}
+              key={tab}
+              onClick={() => this.setState({ activeTab: tab })}
+            >
+              {tab}
+            </Tab>
+          ))}
+        </TabList>
+
         {this.renderSection()}
-      </section>
+      </Container>
     );
   }
 }
@@ -136,7 +163,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
       selectAccount,

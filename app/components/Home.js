@@ -89,14 +89,7 @@ class Home extends Component<Props> {
         </div>
         <div className={styles.walletContainers}>
           <div className={styles.walletTitle}>Import an existing wallet</div>
-          <CreateButton
-            label="Import Wallet"
-            style={{
-              border: '2px solid black',
-              backgroundColor: 'transparent',
-              marginTop: '20px'
-            }}
-          />
+          <Button theme="secondary" onClick={this.setDisplay(IMPORT)}>Import Wallet</Button>
         </div>
       </div>
     );

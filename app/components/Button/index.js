@@ -9,21 +9,23 @@ import { ms } from '../../styles/helpers'
 const primaryTheme = css`
   background: ${ ({ theme: { colors } }) => colors.accent };
   color: ${ ({ theme: { colors }}) => colors.white };
-  transition: background ${ ({ theme: { animations } }) => animations.defaultTime };
+  transition: all ${ ({ theme: { animations } }) => animations.defaultTime };
+  border: 2px solid ${({ theme: { colors } }) => colors.accent};
   
   &:hover {
     background: ${ ({ theme: { colors } }) => lighten(0.08, colors.accent) };
+    border: 2px solid ${({ theme: { colors } }) => lighten(0.08, colors.accent)};
   }
 `
 
 const secondaryTheme = css`
-  background: ${({ theme: { colors } }) => colors.white };
+  background: transparent;
   color: ${({ theme: { colors } }) => colors.secondary };
-  transition: background ${({ theme: { animations } }) => animations.defaultTime };
+  transition: border ${({ theme: { animations } }) => animations.defaultTime };
   border: 2px solid ${({ theme: { colors } }) => colors.secondary };
 
   &:hover {
-    background: ${({ theme: { colors } }) => darken(0.02, colors.white) };
+    border: 2px solid ${({ theme: { colors } }) => lighten(0.2, colors.secondary) };
   },
 `
 
