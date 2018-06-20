@@ -30,10 +30,9 @@ const secondaryTheme = css`
 `
 
 const plainTheme = css`
-  background: ${({ theme: { colors } }) => colors.transparent };
+  background:  transparent;
   transition: background ${({ theme: { animations } }) => animations.defaultTime };
   padding: 0;
-  border-radius: ${ms(0)};
   outline: none
 `
 
@@ -60,6 +59,13 @@ const StyledButton = styled.button`
   display: inline-block;
   cursor: pointer;
   -webkit-app-region: no-drag;
+  ${({small}) => small 
+    && css`
+      padding: ${ms(-5)} ${ms(6)};
+      font-size: ${ms(-1)};
+    `
+  }
+  
   ${({buttonTheme}) => chooseTheme(buttonTheme)};
 `
 
@@ -68,17 +74,19 @@ type Props = {
   children?: mixed,
   disabled?: boolean,
   theme: 'primary' | 'secondary' | 'plain',
+  small?: boolean,
   type?: string,
   onClick?: Function
 };
 
 function Button(props: Props) {
-  const { className, children, disabled, theme, type, onClick } = props
+  const { className, children, disabled, theme, type, small, onClick } = props
   return (
     <StyledButton
       onClick={onClick}
       type={type || 'button'}
       buttonTheme={theme}
+      small={small}
       disabled={disabled}
       className={className}
     >

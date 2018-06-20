@@ -1,9 +1,12 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { TextField, Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import styled from 'styled-components'
+import {ms} from 'styles/helpers'
+import Button from './Button'
 
 import CreateButton from './CreateButton';
 import Loader from './Loader';
@@ -20,6 +23,17 @@ import {
 import styles from './Delegate.css';
 
 type Props = {}
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+`
+
+const UpdateButton = styled(Button)`
+  margin: ${ms(2)} 0 0 0;
+`
+
 
 class Delegate extends Component<Props> {
   props: Props;
@@ -98,25 +112,17 @@ class Delegate extends Component<Props> {
     const { address, openConfirmationModal, updateAddress } = this.props;
 
     return (
-      <div className={styles.delegateContainer}>
+      <Container>
         <TextField
           floatingLabelText="New Address"
           value={address}
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
-        <CreateButton
-          label="Update"
-          style={{
-            border: '2px solid #7B91C0',
-            color: '#7B91C0',
-            height: '28px',
-            fontSize: '15px',
-            marginTop: '15px',
-          }}
-          onClick={openConfirmationModal}
-        />
+
+        <UpdateButton onClick={openConfirmationModal} theme="secondary" small>Update</UpdateButton>
+
         {this.renderWarningModal()}
-      </div>
+      </Container>
     );
   }
 }

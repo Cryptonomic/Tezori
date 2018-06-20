@@ -38,9 +38,8 @@ const TabList = styled.div`
 const SectionContainer = styled.div`
    display: flex;
    flex-direction: column;
-   align-items: center;
    background-color: white;
-   padding: ${ms(2)} ${ms(4)};
+   padding: ${ms(4)};
 `
 
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
