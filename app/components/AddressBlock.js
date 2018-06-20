@@ -220,7 +220,7 @@ export default class AddressBlock extends Component<Props, State> {
           </div>
         }
         <CreateAccountModal />
-      </div>
+      </Container>
     );
   }
 }
