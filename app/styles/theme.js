@@ -2,7 +2,7 @@ export const Theme = {
   colors: {
     // Basic colors
     primary: '#123262',
-    secondary: '#FFFFFF',
+    secondary: '#7691c4',
     accent: '#2c7df7',
     light: '#FAFBFB',
     disabled: '#C8D0D3',
@@ -10,6 +10,9 @@ export const Theme = {
     // State colors
     error: '#F22121',
     success: '#18CE7E',
+
+    // Regular colors
+    white: '#FFFFFF',
 
     // Gray colors
   },

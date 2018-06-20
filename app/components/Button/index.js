@@ -1,27 +1,41 @@
 // @flow
 
 import React from 'react'
-import styled, {css} from 'styled-components'
-import { lighten } from 'polished'
+import styled, { css } from 'styled-components'
+import { lighten, darken } from 'polished'
 
 import { ms } from '../../styles/helpers'
 
 const primaryTheme = css`
-  background: ${({theme: {colors}}) => colors.accent};
-  color: ${({theme: {colors}}) => colors.secondary};
-  transition: background ${({theme: {animations}}) => animations.defaultTime};
+  background: ${ ({ theme: { colors } }) => colors.accent };
+  color: ${ ({ theme: { colors }}) => colors.white };
+  transition: background ${ ({ theme: { animations } }) => animations.defaultTime };
   
   &:hover {
-    background: ${({theme: {colors}}) => lighten(0.08, colors.accent)};
+    background: ${ ({ theme: { colors } }) => lighten(0.08, colors.accent) };
   }
 `
 
 const secondaryTheme = css`
-  
+  background: ${({ theme: { colors } }) => colors.white };
+  color: ${({ theme: { colors } }) => colors.secondary };
+  transition: background ${({ theme: { animations } }) => animations.defaultTime };
+  border: 2px solid ${({ theme: { colors } }) => colors.secondary };
+
+  &:hover {
+    background: ${({ theme: { colors } }) => darken(0.02, colors.white) };
+  },
 `
 
 const plainTheme = css`
-  
+  background: ${({ theme: { colors } }) => colors.white };
+  transition: background ${({ theme: { animations } }) => animations.defaultTime };
+  padding: ${ms(0)};
+  border-radius: ${ms(0)};
+
+  &:hover {
+    background: ${({ theme: { colors } }) => darken(0.02, colors.white) };
+  }
 `
 
 const chooseTheme = (buttonTheme: 'primary' | 'secondary' | 'plain') => {
