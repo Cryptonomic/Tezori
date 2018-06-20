@@ -8,8 +8,6 @@ import Button from './Button'
 import tezosLogo from '../../resources/tezosLogo.png';
 import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
 
-import styles from './TezosLogo.css';
-
 const Logo = styled.img`
   height: 50px;
   width: 50px;
@@ -28,7 +26,7 @@ class TezosLogo extends Component<Props> {
       <Button
         onClick={goHomeAndClearState}
         theme={'plain'}
-        children={ <Logo src={tezosLogo} className={styles.logo} /> }
+        children={ <Logo src={tezosLogo} /> }
       />
     );
   }
