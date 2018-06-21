@@ -12,7 +12,7 @@ import {
   updateToAddress,
   updateAmount,
   updateFee,
-  openSendTezosModal,
+  showConfirmation,
   closeSendTezosModal,
   sendConfirmation
 } from '../reducers/sendTezos.duck';
@@ -37,7 +37,7 @@ type Props = {
   updateToAddress: Function,
   updateAmount: Function,
   updateFee: Function,
-  openSendTezosModal: Function,
+  showConfirmation: Function,
   closeSendTezosModal: Function,
   sendConfirmation: Function,
   isConfirmationModalOpen: boolean,
@@ -61,7 +61,7 @@ class Send extends Component<Props> {
       updateAmount,
       updatePassword,
       updateFee,
-      openSendTezosModal,
+      showConfirmation,
       closeSendTezosModal,
       sendConfirmation
     } = this.props;
@@ -92,7 +92,7 @@ class Send extends Component<Props> {
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>
-        <Button onClick={openSendTezosModal} buttonTheme="secondary" small>
+        <Button onClick={showConfirmation} buttonTheme="secondary" small>
           Send
         </Button>
         <SendConfirmationModal
@@ -130,8 +130,8 @@ const mapDispatchToProps = dispatch =>
       updateToAddress,
       updateAmount,
       updateFee,
-      openSendTezosModal,
       closeSendTezosModal,
+      showConfirmation,
       sendConfirmation
     },
     dispatch

@@ -19,6 +19,7 @@ import {
   updateUsername,
   updatePassPhrase,
   confirmPassPhrase,
+  passPhrase,
   updateSeed,
   selectDefaultAccountOrOpenModal
 } from '../reducers/address.duck';
