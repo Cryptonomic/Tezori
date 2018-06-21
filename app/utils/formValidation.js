@@ -11,7 +11,7 @@ export default function hasError(value, validateType) {
   switch(validateType) {
     case 'notEmpty':
       if (!value) {
-        return 'Must not be empty';
+        return 'Past Phrase must not be empty';
       }
       break;
     case 'locationFilled':
@@ -30,7 +30,7 @@ export default function hasError(value, validateType) {
       }
 
       if ( value[0] !== value[1] ) {
-        return 'Passphrases must be equal.';
+        return 'Pass Phrases must be equal.';
       }
       break;
   }

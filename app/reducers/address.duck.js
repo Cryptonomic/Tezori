@@ -210,7 +210,7 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
-    // TODO: clear out message bar if there are errors from other tabs	+    //TODO: clear out message bar if there are errors from other tabs
+    //TODO: clear out message bar if there are errors from other tabs
     dispatch(addMessage('', true));
 
     if (activeTab === GENERATE_MNEMONIC) {
