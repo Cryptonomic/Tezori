@@ -1,10 +1,14 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import styled from 'styled-components';
-import { darken } from 'polished';
+import styled, { withTheme } from 'styled-components';
+import { darken, lighten } from 'polished';
 import { ms } from '../styles/helpers';
 
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
+import HelpIcon from 'material-ui/svg-icons/action/help'
+import ManagerIcon from 'material-ui/svg-icons/hardware/device-hub'
+import Tooltip from './Tooltip'
+import { H3 } from './Heading'
 
 import CreateAccountModal from './CreateAccountModal';
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -50,25 +54,42 @@ const AddressSecondLine = styled.span`
 `;
 
 const AddressLabel = styled.div`
-  padding: ${ms(-2)} ${ms(2)};
+  padding: ${ms(-1)} ${ms(2)};
   display: flex;
+  font-weight: 500;
+  color: ${({ theme: { colors } }) => colors.primary};
   align-items: center;
   justify-content: space-between;
   background: ${({ theme: { colors } }) => colors.gray1};
 `;
 
+const AddressesTitle = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const AccountTitle = styled(H3)`
+  font-size: ${ms(1)};
+  font-weight: 500;
+  padding: 0 ${ms(-1)} 0 0;
+  display: inline-block;
+  border-right: 2px solid ${({ theme: { colors } }) => darken(0.05, colors.gray1)};
+`
+
 type Props = {
   accountBlock: Object, // TODO: type this
   openCreateAccountModal: Function,
   selectAccount: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  accountIndex: number,
+  theme: Object,
 };
 
 type State = {
   isExpanded: boolean
 };
 
-export default class AddressBlock extends Component<Props, State> {
+class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
     isExpanded: false
@@ -104,20 +125,39 @@ export default class AddressBlock extends Component<Props, State> {
   };
 
   render() {
-    const { accountBlock, selectedAccountHash } = this.props;
+    const { accountBlock, selectedAccountHash, accountIndex, theme } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const { isExpanded } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
 
     return (
       <Container>
-        <AddressLabel>Account 1</AddressLabel>
+        <AddressLabel>
+          <AccountTitle>{`Account ${accountIndex}`}</AccountTitle>
+        </AddressLabel>
         <Address
           isActive={isManagerActive}
           onClick={this.handleManagerAddressClick}
         >
           <AddressFirstLine isActive={isManagerActive}>
-            Manager Address
+            <AddressesTitle>
+              <ManagerIcon style={{
+                width: ms(0),
+                height: ms(0),
+                marginRight: ms(-10),
+                fill: isManagerActive ? theme.colors.white : lighten(0.1, theme.colors.secondary)
+              }}/>
+              Manager Address
+              <Tooltip position="right" title="lorem ispum dolor">
+                <HelpIcon style={{
+                  width: ms(0),
+                  height: ms(0),
+                  marginLeft: ms(-6),
+                  fill: isManagerActive ? theme.colors.white : lighten(0.1, theme.colors.secondary)
+                }} />
+              </Tooltip>
+            </AddressesTitle>
+
           </AddressFirstLine>
           <AddressSecondLine isActive={isManagerActive}>
             {this.renderTezosAmount(
@@ -131,12 +171,23 @@ export default class AddressBlock extends Component<Props, State> {
         {isExpanded && (
           <Fragment>
             <AddressLabel>
-              Smart Addresses
+              <AddressesTitle>
+                Smart Addresses
+                <Tooltip position="right" title="lorem ispum dolor">
+                  <HelpIcon style={{
+                    width: ms(0),
+                    height: ms(0),
+                    marginLeft: ms(-6),
+                    fill: lighten(0.1, theme.colors.secondary)
+                  }} />
+                </Tooltip>
+              </AddressesTitle>
+
               <AddCircle
                 style={{
                   fill: '#7B91C0',
-                  height: '16px',
-                  width: '20px'
+                  height: ms(1),
+                  width: ms(1)
                 }}
                 onClick={this.props.openCreateAccountModal}
               />
@@ -174,3 +225,5 @@ export default class AddressBlock extends Component<Props, State> {
     );
   }
 }
+
+export default withTheme(AddressBlock)
