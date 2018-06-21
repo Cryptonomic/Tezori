@@ -1,10 +1,11 @@
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
+import { TezosWallet, TezosConseilQuery } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import OPERATION_TYPES from '../constants/OperationTypes';
-import { tezosWallet, tezosQuery } from '../conseil';
+
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
@@ -15,12 +16,12 @@ const {
   getAccounts,
   getOperationGroup,
   getAccount
-} = tezosQuery;
+} = TezosConseilQuery;
 const {
   unlockFundraiserIdentity,
   generateMnemonic,
   unlockIdentityWithMnemonic
-} = tezosWallet;
+} = TezosWallet;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
@@ -209,7 +210,7 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
-    //TODO: clear out message bar if there are errors from other tabs
+    // TODO: clear out message bar if there are errors from other tabs
     dispatch(addMessage('', true))
 
     if (activeTab === GENERATE_MNEMONIC) {
@@ -244,23 +245,26 @@ export function importAddress() {
 
     const network = state().walletInitialization.get('network');
 
-    //TODO: clear out message bar
+    // TODO: clear out message bar
     dispatch(addMessage('', true))
 
-    switch(activeTab) {
+    switch ( activeTab ) {
       case FUNDRAISER:
       case GENERATE_MNEMONIC:
       case SEED_PHRASE:
-
+      {
         let error = validate(passPhrase, 'minLength8');
-        if (error != false) {
+        if (error !== false) {
           return dispatch(addMessage(error, true));
         };
 
         error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase')
-        if (error != false) {
+        if (error !== false) {
           return dispatch(addMessage(error, true));
         };
+        break;
+      }
+      default:
         break;
     }
 

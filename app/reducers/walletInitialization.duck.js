@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { push } from 'react-router-redux';
 import path from 'path';
-import { tezosWallet } from '../conseil';
+import { TezosWallet } from 'conseiljs';
 
 import { clearEntireAddressState } from './address.duck';
 import { addMessage } from './message.duck';
@@ -9,7 +9,7 @@ import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import validate from '../utils/validators'
 
-const { createWallet, loadWallet, saveWallet } = tezosWallet;
+const { createWallet, loadWallet, saveWallet } = TezosWallet;
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
@@ -86,16 +86,16 @@ export function submitAddress(submissionType: 'create' | 'import') {
     const completeWalletPath = path.join(walletLocation, walletFileName);
     let wallet = [];
 
-    //TODO: clear out message bar
+    // TODO: clear out message bar
     dispatch(addMessage('', true))
 
     let error = validate(walletLocation, 'locationFilled');
-    if (error != false) {
+    if (error !== false) {
       return dispatch(addMessage(error, true));
     };
     
     error = validate(password, 'minLength8');
-    if (error != false) {
+    if (error !== false) {
       return dispatch(addMessage(error, true));
     };
 

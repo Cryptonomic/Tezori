@@ -1,9 +1,10 @@
 import { fromJS } from 'immutable';
+import { TezosOperations } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
-import { sendDelegationOperation } from '../tezos/TezosOperations';
+
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -49,7 +50,7 @@ export function sendConfirmation() {
 
     try {
       dispatch(updateIsLoading(true));
-      await sendDelegationOperation(network, keyStore, address, fee);
+      await TezosOperations.sendDelegationOperation(network, keyStore, address, fee);
       dispatch(clearState());
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));

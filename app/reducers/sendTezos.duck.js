@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
+import { TezosOperations } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
-import { sendTransactionOperation } from '../tezos/TezosOperations';
 import { addMessage } from './message.duck';
 import { findKeyStore } from './createAccount.duck';
 
@@ -48,10 +48,12 @@ export function sendConfirmation() {
     const keyStore = findKeyStore(publicKeyHash, identities);
 
     try {
-      if (password !== walletPassword) throw { name: 'Incorrected password' };
+      if (password !== walletPassword) {
+        throw new Error({ name: 'Incorrected password' });
+      }
 
       dispatch(updateSendTezosLoading(true));
-      await sendTransactionOperation(
+      await TezosOperations.sendTransactionOperation(
         network,
         keyStore.toJS(),
         toAddress,
