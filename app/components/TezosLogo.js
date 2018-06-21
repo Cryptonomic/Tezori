@@ -12,7 +12,7 @@ import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
 const Container = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const Logo = styled.img`
   height: 50px;
@@ -26,8 +26,8 @@ const Text = styled.span`
   font-family: ${({ theme }) => theme.typo.fontFamily.primary};
   color: ${({ theme: { colors } }) => colors.primary};
   padding-left: ${ms(2)};
-  letter-spacing: 0.9px
-  `
+  letter-spacing: 0.9px;
+`;
 
 type Props = {
   goHomeAndClearState: Function
@@ -42,12 +42,9 @@ class TezosLogo extends Component<Props> {
           onClick={goHomeAndClearState}
           buttonTheme="plain"
           children={<Logo src={tezosLogo} />}
-          key={'logo'}
+          key="logo"
         />
-        {
-          window.location === '#/' &&
-          <Text key={'title'}>My Tezos Wallet</Text>
-        }
+        {window.location === '#/' && <Text key="title">My Tezos Wallet</Text>}
       </Container>
     );
   }

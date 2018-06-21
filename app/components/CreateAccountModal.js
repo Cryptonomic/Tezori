@@ -55,11 +55,11 @@ class CreateAccountModal extends Component<Props> {
   };
 
   updatePassPhrase = (_, newPassPhrase) => {
-    this.props.updatePassPhrase(newPassPhrase)
+    this.props.updatePassPhrase(newPassPhrase);
   };
 
   confirmPassPhrase = (_, newPassPhrase) => {
-    this.props.confirmPassPhrase(newPassPhrase)
+    this.props.confirmPassPhrase(newPassPhrase);
   };
 
   renderCreationBody = () => {
@@ -82,7 +82,7 @@ class CreateAccountModal extends Component<Props> {
           <div className={styles.amountSendContainer}>
             <TextField
               floatingLabelText="Amount"
-              style={{ width: '80%'}}
+              style={{ width: '80%' }}
               default="0"
               value={this.props.amount}
               onChange={this.changeAmount}
@@ -102,7 +102,7 @@ class CreateAccountModal extends Component<Props> {
           <TextField
             floatingLabelText="Pass Phrase"
             type="password"
-            style={{ width: '45%'}}
+            style={{ width: '45%' }}
             default="0"
             value={this.props.passPhrase}
             onChange={this.updatePassPhrase}
@@ -110,7 +110,7 @@ class CreateAccountModal extends Component<Props> {
           <TextField
             floatingLabelText="Confirm Pass Phrase"
             type="password"
-            style={{ width: '45%'}}
+            style={{ width: '45%' }}
             default="0"
             value={this.props.confirmedPassPhrase}
             onChange={this.confirmPassPhrase}

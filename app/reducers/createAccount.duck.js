@@ -4,7 +4,7 @@ import { tezosOperations, tezosQuery } from '../conseil';
 import actionCreator from '../utils/reduxHelpers';
 import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
-import validate from '../utils/validators'
+import validate from '../utils/validators';
 
 const { getAccount } = tezosQuery;
 const { sendOriginationOperation } = tezosOperations;
@@ -35,7 +35,10 @@ export const closeCreateAccountModal = actionCreator(
 );
 export const setOperation = actionCreator(SET_OPERATION, 'operation');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passphrase');
-export const confirmPassPhrase = actionCreator(CONFIRM_PASS_PHRASE, 'confirmedpassphrase');
+export const confirmPassPhrase = actionCreator(
+  CONFIRM_PASS_PHRASE,
+  'confirmedpassphrase'
+);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount() {
@@ -45,17 +48,19 @@ export function createNewAccount() {
     const amount = state().createAccount.get('amount');
     const fee = state().createAccount.get('fee');
     const passPhrase = state().createAccount.get('passPhrase');
-    const confirmedPassPhrase = state().createAccount.get('confirmedPassPhrase');
+    const confirmedPassPhrase = state().createAccount.get(
+      'confirmedPassPhrase'
+    );
     const network = state().walletInitialization.get('network');
 
-    var validations = [
+    const validations = [
       { value: passPhrase, type: 'notEmpty' },
       { value: passPhrase, type: 'minLength8' },
       { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase' }
-    ]
+    ];
 
     for (let i = 0; i < validations.length; i++) {
-      let error = validate(validations[i].value, validations[i].type)
+      const error = validate(validations[i].value, validations[i].type);
       if (error != false) {
         return dispatch(addMessage(error, true));
       }

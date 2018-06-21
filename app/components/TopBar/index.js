@@ -11,26 +11,26 @@ const Contaier = styled.div`
   align-items: center;
   padding: 30px 40px;
   flex-shrink: 0;
-`
+`;
 
 const InfoContainer = styled.div`
   display: flex;
-`
+`;
 
 const TopBar = () => (
   <Contaier>
-    {
-      window.location.hash === '#/' ?
-      <TezosLogo /> :
+    {window.location.hash === '#/' ? (
+      <TezosLogo />
+    ) : (
       [
-        <InfoContainer key={'info'}>
+        <InfoContainer key="info">
           <TezosLogo />
-            <TotalBalance />
+          <TotalBalance />
         </InfoContainer>,
-        <SettingsController key={'settings'}/>
+        <SettingsController key="settings" />
       ]
-    }
+    )}
   </Contaier>
 );
 
-export default TopBar
+export default TopBar;
