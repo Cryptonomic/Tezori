@@ -4,7 +4,7 @@ import { tezosOperations, tezosQuery } from '../conseil';
 import actionCreator from '../utils/reduxHelpers';
 import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
-import validate from '../utils/validators';
+import hasError from '../utils/formValidation';
 
 const { getAccount } = tezosQuery;
 const { sendOriginationOperation } = tezosOperations;
@@ -60,8 +60,8 @@ export function createNewAccount() {
     ];
 
     for (let i = 0; i < validations.length; i++) {
-      const error = validate(validations[i].value, validations[i].type);
-      if (error != false) {
+      const error = hasError(validations[i].value, validations[i].type);
+      if (error) {
         return dispatch(addMessage(error, true));
       }
     }

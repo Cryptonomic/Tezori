@@ -8,7 +8,7 @@ import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
-import validate from '../utils/validators';
+import hasError from '../utils/formValidation';
 
 const {
   getOperationGroups,
@@ -210,7 +210,7 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
-    // TODO: clear out message bar if there are errors from other tabs
+    // TODO: clear out message bar if there are errors from other tabs	+    //TODO: clear out message bar if there are errors from other tabs
     dispatch(addMessage('', true));
 
     if (activeTab === GENERATE_MNEMONIC) {
@@ -250,23 +250,19 @@ export function importAddress() {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
-    // TODO: clear out message bar
+    //TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    switch (activeTab) {
-      case FUNDRAISER:
-      case GENERATE_MNEMONIC:
-      case SEED_PHRASE:
-        let error = validate(passPhrase, 'minLength8');
-        if (error != false) {
-          return dispatch(addMessage(error, true));
-        }
+    if ( activeTab === GENERATE_MNEMONIC ) {
+      let error = hasError(passPhrase, 'minLength8');
+      if ( error ) {
+        return dispatch(addMessage(error, true));
+      }
 
-        error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase');
-        if (error != false) {
-          return dispatch(addMessage(error, true));
-        }
-        break;
+      error = hasError([passPhrase, confirmedPassPhrase], 'samePassPhrase');
+      if ( error ) {
+        return dispatch(addMessage(error, true));
+      }
     }
 
     try {
