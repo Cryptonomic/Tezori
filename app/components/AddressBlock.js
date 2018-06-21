@@ -61,7 +61,8 @@ type Props = {
   accountBlock: Object, // TODO: type this
   openCreateAccountModal: Function,
   selectAccount: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  accountIndex: number
 };
 
 type State = {
@@ -104,14 +105,14 @@ export default class AddressBlock extends Component<Props, State> {
   };
 
   render() {
-    const { accountBlock, selectedAccountHash } = this.props;
+    const { accountBlock, selectedAccountHash, accountIndex } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const { isExpanded } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
 
     return (
       <Container>
-        <AddressLabel>Account 1</AddressLabel>
+        <AddressLabel>{`Account ${accountIndex}`}</AddressLabel>
         <Address
           isActive={isManagerActive}
           onClick={this.handleManagerAddressClick}

@@ -101,10 +101,11 @@ class Addresses extends Component<Props> {
             onClick={openAddAddressModal}
           />
         </AccountTitle>
-        {identities.map(accountBlock => (
+        {identities.map((accountBlock, index) => (
           <AccountItem key={accountBlock.get('publicKeyHash')}>
             <AddressBlock
               accountBlock={accountBlock}
+              accountIndex={index + 1}
               automaticAccountRefresh={this.props.automaticAccountRefresh}
               openCreateAccountModal={this.props.openCreateAccountModal}
               selectAccount={this.props.selectAccount}
