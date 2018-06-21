@@ -7,7 +7,7 @@ import { clearEntireAddressState } from './address.duck';
 import { addMessage } from './message.duck';
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
-import hasError from '../utils/formValidation';
+import { displayError } from '../utils/formValidation';
 
 const { createWallet, loadWallet, saveWallet } = tezosWallet;
 
@@ -90,13 +90,13 @@ export function submitAddress(submissionType: 'create' | 'import') {
     dispatch(addMessage('', true));
 
     if ( submissionType === 'create' ) {
-      let error = hasError(walletLocation, 'locationFilled');
-      if ( error ) {
-        return dispatch(addMessage(error, true));
-      }
+      const validations = [
+        { value: walletLocation, type: 'locationFilled'},
+        { value: password, type: 'minLength8', name: 'Password'},
+      ];
 
-      error = hasError(password, 'minLength8');
-      if ( error ) {
+      const error = displayError(validations);
+      if (error) {
         return dispatch(addMessage(error, true));
       }
     }
