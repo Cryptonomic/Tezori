@@ -510,3 +510,10 @@ function formatAccounts(accounts) {
 export function clearAccountRefreshInterval() {
   clearInterval(currentAccountRefreshInterval);
 }
+
+export const getTotalBalance = state => {
+  const { address = {} } = state
+  const { identities = [] } = address
+  const balances = identities.map(identity => identity.balance)
+  return balances.reduce(acc, curr => (acc + curr), 0)
+}
