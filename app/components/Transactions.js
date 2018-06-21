@@ -27,7 +27,7 @@ const Details = styled.div`
 `;
 
 const Link = styled.a`
-  color: ${({ theme: { colors } }) => colors.darkGray};
+  color: ${({ theme: { colors } }) => colors.gray0};
 `;
 
 const TezosSymbol = styled.img`

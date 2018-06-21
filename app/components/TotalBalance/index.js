@@ -31,14 +31,18 @@ const TezosLogo = styled.img`
   filter: brightness(40%);
 `
 
+type Props = {
+  totalBalance: number
+}
+
 class TotalBalance extends Component {
 
   render() {
-    const { totalBalance = '' } = this.props
+    const { totalBalance = 0 } = this.props
     return (
       <Container>
         <Text>Total Balance</Text>
-        <Total>100</Total>
+        <Total>{totalBalance}</Total>
         <TezosLogo alt="tez" src={tezosLogo} />
       </Container>
     )
@@ -51,5 +55,5 @@ const mapStateToProps = state => {
   } 
 }
 
-export default connect(null, null)(TotalBalance)
+export default connect(mapStateToProps, null)(TotalBalance)
 
