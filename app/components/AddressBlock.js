@@ -56,6 +56,7 @@ const AddressSecondLine = styled.span`
 const AddressLabel = styled.div`
   padding: ${ms(-1)} ${ms(2)};
   display: flex;
+  font-weight: 500;
   color: ${({ theme: { colors } }) => colors.primary};
   align-items: center;
   justify-content: space-between;
