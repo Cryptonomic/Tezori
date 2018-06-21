@@ -248,12 +248,12 @@ export function importAddress() {
     dispatch(addMessage('', true));
 
     if ( activeTab === GENERATE_MNEMONIC ) {
-      let error = hasError(walletLocation, 'locationFilled');
+      let error = hasError(passPhrase, 'minLength8');
       if ( error ) {
         return dispatch(addMessage(error, true));
       }
 
-      error = hasError(password, 'minLength8');
+      error = hasError([passPhrase, confirmedPassPhrase], 'samePassPhrase');
       if ( error ) {
         return dispatch(addMessage(error, true));
       }
@@ -505,3 +505,13 @@ function formatAccounts(accounts) {
 export function clearAccountRefreshInterval() {
   clearInterval(currentAccountRefreshInterval);
 }
+
+export const getTotalBalance = state => {
+  const { address = {} } = state;
+  const identities = address.get('identities');
+
+  const balances = identities.toJS().map(identity => identity.balance);
+  const total = balances.reduce((acc, curr) => acc + curr, 0);
+
+  return total.toFixed(2);
+};

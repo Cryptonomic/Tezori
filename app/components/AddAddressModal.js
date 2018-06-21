@@ -135,7 +135,9 @@ export default function AddAddress(props: Props) {
                 floatingLabelText="Confirm Pass Phrase"
                 type="password"
                 style={{ width: '45%' }}
-                onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
+                onChange={(_, newPassPhrase) =>
+                  confirmPassPhrase(newPassPhrase)
+                }
               />
             </div>
           </div>
@@ -172,7 +174,9 @@ export default function AddAddress(props: Props) {
                 floatingLabelText="Confirm Pass Phrase"
                 type="password"
                 style={{ width: '45%' }}
-                onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
+                onChange={(_, newPassPhrase) =>
+                  confirmPassPhrase(newPassPhrase)
+                }
               />
             </div>
           </div>

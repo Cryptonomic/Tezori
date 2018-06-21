@@ -9,6 +9,11 @@ function minLength(length) {
  */
 export default function hasError(value, validateType) {
   switch(validateType) {
+    case 'notEmpty':
+      if (!value) {
+        return 'Must not be empty';
+      }
+      break;
     case 'locationFilled':
       if ( !value.length ) {
         return 'Must upload a wallet.';
