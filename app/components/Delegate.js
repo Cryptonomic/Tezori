@@ -112,7 +112,11 @@ class Delegate extends Component<Props> {
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
 
-        <UpdateButton onClick={openConfirmationModal} buttonTheme="secondary" small>
+        <UpdateButton
+          onClick={openConfirmationModal}
+          buttonTheme="secondary"
+          small
+        >
           Update
         </UpdateButton>
 
