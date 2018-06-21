@@ -4,17 +4,11 @@ import { Switch, Route } from 'react-router';
 import App from './containers/App';
 import HomePage from './containers/HomePage';
 import AddressPage from './containers/AddressPage';
-import TezosLogo from './components/TezosLogo';
-import SettingsController from './components/SettingsController';
-
-import styles from './routes.css';
+import TopBar from './components/TopBar';
 
 export default () => (
   <App>
-    <div className={styles.logoContainer}>
-      <TezosLogo />
-      <SettingsController />
-    </div>
+    <TopBar />
     <Switch>
       <Route path="/addresses" component={AddressPage} />
       <Route path="/" component={HomePage} />
