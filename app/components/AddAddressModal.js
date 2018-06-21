@@ -172,7 +172,6 @@ export default function AddAddress(props: Props) {
                 floatingLabelText="Confirm Pass Phrase"
                 type="password"
                 style={{ width: '45%' }}
-                value={passPhrase}
                 onChange={(_, newPassPhrase) => confirmPassPhrase(newPassPhrase)}
               />
             </div>
