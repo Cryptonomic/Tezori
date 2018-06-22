@@ -4,6 +4,7 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { sendDelegationOperation } from '../tezos/TezosOperations';
+import { displayError } from '../utils/formValidation';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -23,6 +24,24 @@ const updateIsLoading = actionCreator(UPDATE_DELEGATE_IS_LOADING, 'isLoading');
 const clearState = actionCreator(CLEAR_STATE);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export function showConfirmationModal() {
+  return async (dispatch, state) => {
+    const address = state().delegate.get('address');
+
+    const validations = [
+      { value: address, type: 'notEmpty', name: 'Address'},
+      { value: address, type: 'validAddress'},
+    ];
+
+    const error = displayError(validations);
+    if (error) {
+      return dispatch(addMessage(error, true));
+    }
+
+    dispatch(openConfirmationModal());
+  }
+
+}
 export function setOriginalAddress() {
   return async (dispatch, state) => {
     const walletState = state().walletInitialization;

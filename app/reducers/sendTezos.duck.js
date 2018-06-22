@@ -4,6 +4,7 @@ import actionCreator from '../utils/reduxHelpers';
 import { sendTransactionOperation } from '../tezos/TezosOperations';
 import { addMessage } from './message.duck';
 import { findKeyStore } from './createAccount.duck';
+import { displayError } from '../utils/formValidation';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -29,6 +30,27 @@ const updateSendTezosLoading = actionCreator(
 const clearState = actionCreator(CLEAR_STATE);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+
+export function showConfirmation() {
+  return async (dispatch, state) => {
+    const toAddress = state().sendTezos.get('toAddress');
+    const amount = state().sendTezos.get('amount');
+
+    const validations = [
+      { value: amount, type: 'notEmpty', name: 'Amount'},
+      { value: amount, type: 'validAmount'},
+      { value: amount, type: 'notZero', name: 'Amount'},
+      { value: toAddress, type: 'validAddress'}
+    ];
+
+    const error = displayError(validations);
+    if (error) {
+      return dispatch(addMessage(error, true));
+    }
+
+    dispatch(openSendTezosModal(true));
+  }
+}
 export function sendConfirmation() {
   return async (dispatch, state) => {
     const sendTezosState = state().sendTezos;

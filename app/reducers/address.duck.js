@@ -8,7 +8,7 @@ import { tezosWallet, tezosQuery } from '../conseil';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
-import hasError from '../utils/formValidation';
+import { displayError } from '../utils/formValidation';
 
 const {
   getOperationGroups,
@@ -32,8 +32,8 @@ const CLEAR_STATE = 'CLEAR_STATE';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
 const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
-const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
-const CONFIRM_PASS_PHRASE = 'CONFIRM_PASS_PHRASE';
+const UPDATE_PASS_PHRASE = 'UPDATE_ADDRESS_PASS_PHRASE';
+const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
@@ -254,13 +254,13 @@ export function importAddress() {
     dispatch(addMessage('', true));
 
     if ( activeTab === GENERATE_MNEMONIC ) {
-      let error = hasError(passPhrase, 'minLength8');
-      if ( error ) {
-        return dispatch(addMessage(error, true));
-      }
+      const validations = [
+        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
+        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase'},
+      ];
 
-      error = hasError([passPhrase, confirmedPassPhrase], 'samePassPhrase');
-      if ( error ) {
+      const error = displayError(validations);
+      if (error) {
         return dispatch(addMessage(error, true));
       }
     }

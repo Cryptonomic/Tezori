@@ -4,7 +4,7 @@ import { tezosOperations, tezosQuery } from '../conseil';
 import actionCreator from '../utils/reduxHelpers';
 import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
-import hasError from '../utils/formValidation';
+import { displayError } from '../utils/formValidation';
 
 const { getAccount } = tezosQuery;
 const { sendOriginationOperation } = tezosOperations;
@@ -54,16 +54,17 @@ export function createNewAccount() {
     const network = state().walletInitialization.get('network');
 
     const validations = [
-      { value: passPhrase, type: 'notEmpty' },
-      { value: passPhrase, type: 'minLength8' },
+      { value: amount, type: 'notEmpty', name: 'Amount'},
+      { value: amount, type: 'validAmount'},
+      { value: amount, type: 'notZero', name: 'Amount'},
+      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
+      { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
       { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase' }
     ];
 
-    for (let i = 0; i < validations.length; i++) {
-      const error = hasError(validations[i].value, validations[i].type);
-      if (error) {
-        return dispatch(addMessage(error, true));
-      }
+    const error = displayError(validations);
+    if (error) {
+      return dispatch(addMessage(error, true));
     }
 
     try {
@@ -124,7 +125,9 @@ const initState = fromJS({
   fee: 100,
   isLoading: false,
   isModalOpen: false,
-  operation: ''
+  operation: '',
+  passPhrase: '',
+  confirmedPassPhrase: ''
 });
 
 export default function createAccount(state = initState, action) {

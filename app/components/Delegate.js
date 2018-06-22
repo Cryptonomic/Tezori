@@ -13,7 +13,7 @@ import tezosLogo from '../../resources/tezosLogo.png';
 import {
   updatePassword,
   updateAddress,
-  openConfirmationModal,
+  showConfirmationModal,
   closeConfirmationModal,
   sendConfirmation,
   setOriginalAddress
@@ -102,7 +102,7 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address, openConfirmationModal, updateAddress } = this.props;
+    const { address, showConfirmationModal, updateAddress } = this.props;
 
     return (
       <Container>
@@ -113,7 +113,7 @@ class Delegate extends Component<Props> {
         />
 
         <UpdateButton
-          onClick={openConfirmationModal}
+          onClick={showConfirmationModal}
           buttonTheme="secondary"
           small
         >
@@ -143,7 +143,7 @@ function mapDispatchToProps(dispatch) {
     {
       updatePassword,
       updateAddress,
-      openConfirmationModal,
+      showConfirmationModal,
       closeConfirmationModal,
       sendConfirmation,
       setOriginalAddress
