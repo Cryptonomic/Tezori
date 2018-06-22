@@ -59,7 +59,7 @@ export function createNewAccount() {
       { value: amount, type: 'notZero', name: 'Amount'},
       { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
-      { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase' }
+      { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases' }
     ];
 
     const error = displayError(validations);

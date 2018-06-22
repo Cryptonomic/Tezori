@@ -210,7 +210,7 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
-    // TODO: clear out message bar if there are errors from other tabs	+    //TODO: clear out message bar if there are errors from other tabs
+    //TODO: clear out message bar if there are errors from other tabs
     dispatch(addMessage('', true));
 
     if (activeTab === GENERATE_MNEMONIC) {
@@ -256,7 +256,7 @@ export function importAddress() {
     if ( activeTab === GENERATE_MNEMONIC ) {
       const validations = [
         { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase'},
+        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'},
       ];
 
       const error = displayError(validations);

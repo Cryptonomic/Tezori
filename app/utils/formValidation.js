@@ -63,7 +63,7 @@ export default function hasError(value, validateType, name) {
       }
 
       if ( value[0] !== value[1] ) {
-        return 'Pass phrases must be equal.';
+        return `${name} must be equal.`;
       }
       break;
   }

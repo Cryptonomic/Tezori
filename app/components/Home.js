@@ -14,6 +14,7 @@ import {
   setWalletFileName,
   setDisplay,
   setPassword,
+  setConfirmedPassword,
   submitAddress,
   updateWalletLocation
 } from '../reducers/walletInitialization.duck';
@@ -27,8 +28,10 @@ type Props = {
   isLoading: boolean,
   message: Object,
   password: string,
+  confirmedPassword: string,
   setDisplay: Function,
   setPassword: Function,
+  setConfirmedPassword: Function,
   setWalletFileName: Function,
   submitAddress: Function,
   updateWalletLocation: Function,
@@ -107,7 +110,9 @@ class Home extends Component<Props> {
       isLoading,
       message,
       password,
-      setPassword
+      confirmedPassword,
+      setPassword,
+      setConfirmedPassword
     } = this.props;
 
     return (
@@ -127,6 +132,13 @@ class Home extends Component<Props> {
             type="password"
             value={password}
             onChange={(_, newPass) => setPassword(newPass)}
+          />
+          <TextField
+            floatingLabelText="Confirm Password"
+            style={{ width: '500px' }}
+            type="password"
+            value={confirmedPassword}
+            onChange={(_, newPass) => setConfirmedPassword(newPass)}
           />
           {this.walletSubmissionButton('Create Wallet', CREATE)}
         </div>
@@ -196,6 +208,7 @@ function mapStateToProps(state) {
     isLoading: walletInitialization.get('isLoading'),
     message: message.get('message'),
     password: walletInitialization.get('password'),
+    confirmedPassword: walletInitialization.get('confirmedPassword'),
     walletFileName: walletInitialization.get('walletFileName'),
     walletLocation: walletInitialization.get('walletLocation')
   };
@@ -207,6 +220,7 @@ function mapDispatchToProps(dispatch) {
       setWalletFileName,
       setDisplay,
       setPassword,
+      setConfirmedPassword,
       submitAddress,
       updateWalletLocation
     },
