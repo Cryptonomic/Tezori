@@ -12,15 +12,15 @@ type Props = {
 }
 
 const Amount = styled.span`
-  color: ${ ({ color, theme: { colors } }) => colors[color] }
-  font-size: ${ ({ size }) => size }
+  color: ${ ({ color, theme: { colors } }) => colors[color] };
+  font-size: ${ ({ size }) => size };
   font-weight: ${ ({ weight = 'normal', theme: { typo: { weights } } }) => weights[weight] }
 `
 
 const TezosAmount = (props:Props) => {
-  const { size, color, amount, iconName } = props
+  const { size, color, amount, iconName, weight } = props
   return (
-    <Amount>
+    <Amount color={color} size={size} weight={weight}>
       {amount}
       <TezosIcon size={size} color={color} iconName={iconName}/>
     </Amount>
