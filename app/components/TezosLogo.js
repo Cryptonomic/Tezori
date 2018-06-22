@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
 
 import Button from './Button';
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -14,6 +13,7 @@ import { ms } from '../styles/helpers'
 const Container = styled.div`
   display: flex;
   align-items: center;
+  margin: ${ms(0)} 0;
 `;
 
 const Logo = styled.img`
@@ -46,7 +46,7 @@ class TezosLogo extends Component<Props> {
           children={<Logo src={tezosLogo} />}
           key="logo"
         />
-        {window.location === '#/' && <Text key="title">My Tezos Wallet</Text>}
+        {window.location.hash !== '#/' && <Text key="title">My Tezos Wallet</Text>}
       </Container>
     );
   }
