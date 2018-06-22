@@ -14,10 +14,14 @@
   height: 100%;
   padding: 0px 50px;
 }
+.textFieldContainer {
+  margin-bottom: 30px
+}
 
 .walletContainers {
   display: flex;
   flex-direction: column;
+  margin-bottom: 30px;
 }
 
 .walletTitle {
