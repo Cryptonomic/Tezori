@@ -16,6 +16,7 @@ const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const CLEAR_WALLET_STATE = 'CLEAR_WALLET_STATE';
 const SET_PASSWORD = 'SET_PASSWORD';
+const SET_CONFIRMED_PASSWORD = 'SET_CONFIRMED_PASSWORD';
 const SET_DISPLAY = 'SET_DISPLAY';
 const SET_IS_LOADING = 'SET_IS_LOADING';
 const SET_WALLET_FILENAME = 'SET_WALLET_FILENAME';
@@ -25,6 +26,7 @@ const SET_CURRENT_WALLET = 'SET_CURRENT_WALLET';
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
+export const setConfirmedPassword = actionCreator(SET_CONFIRMED_PASSWORD, 'password');
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const setWalletFileName = actionCreator(
@@ -83,6 +85,7 @@ export function submitAddress(submissionType: 'create' | 'import') {
     const walletLocation = state().walletInitialization.get('walletLocation');
     const walletFileName = state().walletInitialization.get('walletFileName');
     const password = state().walletInitialization.get('password');
+    const confirmedPassword = state().walletInitialization.get('confirmedPassword');
     const completeWalletPath = path.join(walletLocation, walletFileName);
     let wallet = [];
 
@@ -92,8 +95,10 @@ export function submitAddress(submissionType: 'create' | 'import') {
     if ( submissionType === 'create' ) {
       const validations = [
         { value: walletLocation, type: 'locationFilled'},
-        { value: password, type: 'minLength8', name: 'Password'},
-      ];
+        { value: password, type: 'notEmpty', name: 'Password' },
+        { value: password, type: 'minLength8', name: 'Password' },
+        { value: [password, confirmedPassword], type: 'samePassPhrase', name: 'Passwords' }
+      ]
 
       const error = displayError(validations);
       if (error) {
@@ -126,6 +131,7 @@ const initState = fromJS({
   currentDisplay: DEFAULT,
   isLoading: false,
   password: '',
+  confirmedPassword: '',
   walletFileName: '',
   walletLocation: '',
   network: 'zeronet',
@@ -148,6 +154,8 @@ export default function walletInitialization(state = initState, action) {
       return state.set('walletLocation', action.walletLocation);
     case SET_PASSWORD:
       return state.set('password', action.password);
+    case SET_CONFIRMED_PASSWORD:
+      return state.set('confirmedPassword', action.password);
     default:
       return state;
   }
