@@ -1,35 +1,19 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import styled, { withTheme } from 'styled-components';
-import { darken, lighten } from 'polished';
+import { darken } from 'polished';
 import { ms } from '../styles/helpers';
 
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import HelpIcon from 'material-ui/svg-icons/action/help'
-import ManagerIcon from 'material-ui/svg-icons/hardware/device-hub'
+import TezosIcon from './TezosIcon'
+import TezosAmount from './TezosAmount'
 import Tooltip from './Tooltip'
 import { H3 } from './Heading'
 
 import CreateAccountModal from './CreateAccountModal';
-import tezosLogo from '../../resources/tezosLogo.png';
 
 const Container = styled.div`
   overflow: hidden;
-`;
-
-const Tezos = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: ${ms(-1)};
-  font-weight: 500;
-  color: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.white : colors.primary};
-`;
-
-const TezosSymbol = styled.img`
-  height: ${ms(0)};
-  filter: ${({ isActive }) =>
-    isActive ? 'brightness(0.5%) invert(100%)' : 'brightness(0%)'};
 `;
 
 const Address = styled.div`
@@ -39,6 +23,8 @@ const Address = styled.div`
   cursor: pointer;
   background: ${({ isActive, theme: { colors } }) =>
     isActive ? colors.accent : colors.white};
+  display: flex;
+  flex-direction: column;
 `;
 
 const AddressFirstLine = styled.span`
@@ -62,6 +48,14 @@ const AddressLabel = styled.div`
   justify-content: space-between;
   background: ${({ theme: { colors } }) => colors.gray1};
 `;
+
+const AddressLabelIcon = styled(TezosIcon)`
+  padding: 0 ${ms(-6)} 0 0;
+`
+
+const HelpIcon = styled(TezosIcon)`
+  padding: 0 0 0 ${ms(-4)};
+`
 
 const AddressesTitle = styled.div`
   display: flex;
@@ -95,21 +89,6 @@ class AddressBlock extends Component<Props, State> {
     isExpanded: false
   };
 
-  renderTezosAmount = (
-    accountId: string,
-    selectedAccountHash: string,
-    balance: number
-  ) => {
-    const isActive = accountId === selectedAccountHash;
-
-    return (
-      <Tezos isActive={isActive}>
-        {balance}
-        <TezosSymbol alt="tez" src={tezosLogo} isActive={isActive} />
-      </Tezos>
-    );
-  };
-
   handleManagerAddressClick = () => {
     const { accountBlock } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
@@ -125,7 +104,7 @@ class AddressBlock extends Component<Props, State> {
   };
 
   render() {
-    const { accountBlock, selectedAccountHash, accountIndex, theme } = this.props;
+    const { accountBlock, selectedAccountHash, accountIndex } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const { isExpanded } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
@@ -141,30 +120,17 @@ class AddressBlock extends Component<Props, State> {
         >
           <AddressFirstLine isActive={isManagerActive}>
             <AddressesTitle>
-              <ManagerIcon style={{
-                width: ms(0),
-                height: ms(0),
-                marginRight: ms(-10),
-                fill: isManagerActive ? theme.colors.white : lighten(0.1, theme.colors.secondary)
-              }}/>
+              <AddressLabelIcon iconName="manager" size={ms(0)} color={isManagerActive ? 'white' : 'secondary'} />
               Manager Address
               <Tooltip position="right" title="lorem ispum dolor">
-                <HelpIcon style={{
-                  width: ms(0),
-                  height: ms(0),
-                  marginLeft: ms(-6),
-                  fill: isManagerActive ? theme.colors.white : lighten(0.1, theme.colors.secondary)
-                }} />
+                <HelpIcon iconName="help" size={ms(0)} color={isManagerActive ? 'white' : 'secondary'} />
               </Tooltip>
             </AddressesTitle>
 
           </AddressFirstLine>
           <AddressSecondLine isActive={isManagerActive}>
-            {this.renderTezosAmount(
-              publicKeyHash,
-              selectedAccountHash,
-              accountBlock.get('balance')
-            )}
+            <TezosAmount color={publicKeyHash === selectedAccountHash ? 'white' : 'primary'}
+                         amount={accountBlock.get('balance')} />
           </AddressSecondLine>
         </Address>
 
@@ -174,12 +140,7 @@ class AddressBlock extends Component<Props, State> {
               <AddressesTitle>
                 Smart Addresses
                 <Tooltip position="right" title="lorem ispum dolor">
-                  <HelpIcon style={{
-                    width: ms(0),
-                    height: ms(0),
-                    marginLeft: ms(-6),
-                    fill: lighten(0.1, theme.colors.secondary)
-                  }} />
+                  <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                 </Tooltip>
               </AddressesTitle>
 
@@ -206,14 +167,14 @@ class AddressBlock extends Component<Props, State> {
                   }
                 >
                   <AddressFirstLine isActive={isSmartActive}>
-                    {`Smart Address ${index + 1}`}
+                    <AddressesTitle>
+                      <AddressLabelIcon iconName="smart-address" size={ms(0)} color={isSmartActive ? 'white' : 'secondary'} />
+                      {`Smart Address ${index + 1}`}
+                    </AddressesTitle>
                   </AddressFirstLine>
                   <AddressSecondLine isActive={isSmartActive}>
-                    {this.renderTezosAmount(
-                      smartAddressId,
-                      selectedAccountHash,
-                      smartAddressBalance
-                    )}
+                    <TezosAmount color={smartAddressId === selectedAccountHash ? 'white' : 'primary'}
+                                 amount={smartAddressBalance} />
                   </AddressSecondLine>
                 </Address>
               );

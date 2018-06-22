@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosAmount from '../TezosAmount';
-import tezosLogo from '../../../resources/tezosLogo.png';
 import { getTotalBalance } from '../../reducers/address.duck';
 
 const Container = styled.div`
@@ -30,7 +29,7 @@ type Props = {
 
 class TotalBalance extends Component {
   render() {
-    const { totalBalance = 0 } = this.props;
+    const { totalBalance } = this.props;
     return (
       <Container>
         <Text>Total Balance</Text>

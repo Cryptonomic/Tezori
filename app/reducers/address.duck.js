@@ -536,5 +536,5 @@ export const getTotalBalance = state => {
   const balances = identities.toJS().map(identity => identity.balance);
   const total = balances.reduce((acc, curr) => acc + curr, 0);
 
-  return total.toFixed(2);
+  return total;
 };
