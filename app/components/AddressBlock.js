@@ -5,10 +5,10 @@ import { darken } from 'polished';
 import { ms } from '../styles/helpers';
 
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import TezosIcon from './TezosIcon'
-import TezosAmount from './TezosAmount'
-import Tooltip from './Tooltip'
-import { H3 } from './Heading'
+import TezosIcon from './TezosIcon';
+import TezosAmount from './TezosAmount';
+import Tooltip from './Tooltip';
+import { H3 } from './Heading';
 
 import CreateAccountModal from './CreateAccountModal';
 
@@ -51,24 +51,25 @@ const AddressLabel = styled.div`
 
 const AddressLabelIcon = styled(TezosIcon)`
   padding: 0 ${ms(-6)} 0 0;
-`
+`;
 
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
-`
+`;
 
 const AddressesTitle = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const AccountTitle = styled(H3)`
   font-size: ${ms(1)};
   font-weight: 500;
   padding: 0 ${ms(-1)} 0 0;
   display: inline-block;
-  border-right: 2px solid ${({ theme: { colors } }) => darken(0.05, colors.gray1)};
-`
+  border-right: 2px solid
+    ${({ theme: { colors } }) => darken(0.05, colors.gray1)};
+`;
 
 type Props = {
   accountBlock: Object, // TODO: type this
@@ -76,7 +77,7 @@ type Props = {
   selectAccount: Function,
   selectedAccountHash: string,
   accountIndex: number,
-  theme: Object,
+  theme: Object
 };
 
 type State = {
@@ -120,17 +121,28 @@ class AddressBlock extends Component<Props, State> {
         >
           <AddressFirstLine isActive={isManagerActive}>
             <AddressesTitle>
-              <AddressLabelIcon iconName="manager" size={ms(0)} color={isManagerActive ? 'white' : 'secondary'} />
+              <AddressLabelIcon
+                iconName="manager"
+                size={ms(0)}
+                color={isManagerActive ? 'white' : 'secondary'}
+              />
               Manager Address
               <Tooltip position="right" title="lorem ispum dolor">
-                <HelpIcon iconName="help" size={ms(0)} color={isManagerActive ? 'white' : 'secondary'} />
+                <HelpIcon
+                  iconName="help"
+                  size={ms(0)}
+                  color={isManagerActive ? 'white' : 'secondary'}
+                />
               </Tooltip>
             </AddressesTitle>
-
           </AddressFirstLine>
           <AddressSecondLine isActive={isManagerActive}>
-            <TezosAmount color={publicKeyHash === selectedAccountHash ? 'white' : 'primary'}
-                         amount={accountBlock.get('balance')} />
+            <TezosAmount
+              color={
+                publicKeyHash === selectedAccountHash ? 'white' : 'primary'
+              }
+              amount={accountBlock.get('balance')}
+            />
           </AddressSecondLine>
         </Address>
 
@@ -168,13 +180,23 @@ class AddressBlock extends Component<Props, State> {
                 >
                   <AddressFirstLine isActive={isSmartActive}>
                     <AddressesTitle>
-                      <AddressLabelIcon iconName="smart-address" size={ms(0)} color={isSmartActive ? 'white' : 'secondary'} />
+                      <AddressLabelIcon
+                        iconName="smart-address"
+                        size={ms(0)}
+                        color={isSmartActive ? 'white' : 'secondary'}
+                      />
                       {`Smart Address ${index + 1}`}
                     </AddressesTitle>
                   </AddressFirstLine>
                   <AddressSecondLine isActive={isSmartActive}>
-                    <TezosAmount color={smartAddressId === selectedAccountHash ? 'white' : 'primary'}
-                                 amount={smartAddressBalance} />
+                    <TezosAmount
+                      color={
+                        smartAddressId === selectedAccountHash
+                          ? 'white'
+                          : 'primary'
+                      }
+                      amount={smartAddressBalance}
+                    />
                   </AddressSecondLine>
                 </Address>
               );
@@ -187,4 +209,4 @@ class AddressBlock extends Component<Props, State> {
   }
 }
 
-export default withTheme(AddressBlock)
+export default withTheme(AddressBlock);

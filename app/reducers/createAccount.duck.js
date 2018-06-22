@@ -54,12 +54,16 @@ export function createNewAccount() {
     const network = state().walletInitialization.get('network');
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount'},
-      { value: amount, type: 'validAmount'},
-      { value: amount, type: 'notZero', name: 'Amount'},
-      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
+      { value: amount, type: 'notEmpty', name: 'Amount' },
+      { value: amount, type: 'validAmount' },
+      { value: amount, type: 'notZero', name: 'Amount' },
+      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase' },
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
-      { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases' }
+      {
+        value: [passPhrase, confirmedPassPhrase],
+        type: 'samePassPhrase',
+        name: 'Pass Phrases'
+      }
     ];
 
     const error = displayError(validations);

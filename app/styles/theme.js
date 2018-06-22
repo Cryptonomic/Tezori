@@ -19,7 +19,7 @@ export const Theme = {
     gray0: '#191414',
     gray1: '#f7f9fb',
     gray2: '#edf0f7',
-    gray3: '#5571a7',
+    gray3: '#5571a7'
   },
   animations: {
     defaultTime: '300ms',

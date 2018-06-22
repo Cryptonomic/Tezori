@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Button from './Button';
 import TezosIcon from './TezosIcon';
 import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
-import { ms } from '../styles/helpers'
+import { ms } from '../styles/helpers';
 
 const Container = styled.div`
   display: flex;
@@ -22,10 +22,7 @@ class TezosLogo extends Component<Props> {
     const { goHomeAndClearState } = this.props;
     return (
       <Container>
-        <Button
-          onClick={goHomeAndClearState}
-          buttonTheme="plain"
-        >
+        <Button onClick={goHomeAndClearState} buttonTheme="plain">
           <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
         </Button>
       </Container>

@@ -210,7 +210,7 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
-    //TODO: clear out message bar if there are errors from other tabs
+    // TODO: clear out message bar if there are errors from other tabs
     dispatch(addMessage('', true));
 
     if (activeTab === GENERATE_MNEMONIC) {
@@ -250,13 +250,17 @@ export function importAddress() {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
-    //TODO: clear out message bar
+    // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if ( activeTab === GENERATE_MNEMONIC ) {
+    if (activeTab === GENERATE_MNEMONIC) {
       const validations = [
-        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'},
+        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
+        {
+          value: [passPhrase, confirmedPassPhrase],
+          type: 'samePassPhrase',
+          name: 'Pass Phrases'
+        }
       ];
 
       const error = displayError(validations);

@@ -33,7 +33,12 @@ class TotalBalance extends Component {
     return (
       <Container>
         <Text>Total Balance</Text>
-        <Amount size={ms(3)} amount={totalBalance} color={'primary'} weight='normal'/>
+        <Amount
+          size={ms(3)}
+          amount={totalBalance}
+          color="primary"
+          weight="normal"
+        />
       </Container>
     );
   }

@@ -1,9 +1,9 @@
 import { injectGlobal } from 'styled-components';
-import { Theme } from './theme'
-import {ms} from './helpers'
+import { Theme } from './theme';
+import { ms } from './helpers';
 import { normalize, darken } from 'polished';
-import RobotoFont from '../../resources/fonts/Roboto/Roboto-Light.ttf'
-import TezosIconsFontTTF from '../../resources/fonts/TezosIcons/Tezos-icons.ttf'
+import RobotoFont from '../../resources/fonts/Roboto/Roboto-Light.ttf';
+import TezosIconsFontTTF from '../../resources/fonts/TezosIcons/Tezos-icons.ttf';
 
 injectGlobal`  
   ${normalize()}

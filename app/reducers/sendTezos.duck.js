@@ -37,10 +37,10 @@ export function showConfirmation() {
     const amount = state().sendTezos.get('amount');
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount'},
-      { value: amount, type: 'validAmount'},
-      { value: amount, type: 'notZero', name: 'Amount'},
-      { value: toAddress, type: 'validAddress'}
+      { value: amount, type: 'notEmpty', name: 'Amount' },
+      { value: amount, type: 'validAmount' },
+      { value: amount, type: 'notZero', name: 'Amount' },
+      { value: toAddress, type: 'validAddress' }
     ];
 
     const error = displayError(validations);
@@ -49,7 +49,7 @@ export function showConfirmation() {
     }
 
     dispatch(openSendTezosModal(true));
-  }
+  };
 }
 export function sendConfirmation() {
   return async (dispatch, state) => {

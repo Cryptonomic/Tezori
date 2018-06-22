@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
 import { remote } from 'electron';
 import path from 'path';
-import { ms } from '../styles/helpers'
+import { ms } from '../styles/helpers';
 
 import Button from './Button';
 import MessageBar from './MessageBar';
