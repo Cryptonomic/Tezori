@@ -31,7 +31,7 @@ export const Theme = {
   typo: {
     fontFamily: {
       primary: "'Roboto', sans-serif",
-      tezosIcons: 'Tezos-icons'
+      tezosIcons: "'Tezos-icons'"
     },
     weights: {
       light: 300,

@@ -2,29 +2,26 @@ import { injectGlobal } from 'styled-components';
 import { Theme } from './Theme'
 import {ms} from './helpers'
 import { normalize, darken } from 'polished';
+import RobotoFont from '../../resources/fonts/Roboto/Roboto-Light.ttf'
+import TezosIconsFontTTF from '../../resources/fonts/TezosIcons/Tezos-icons.ttf'
 
 injectGlobal`  
   ${normalize()}
-  
-    @font-face {
+  @font-face {
   font-family: 'Roboto';
-  src: url('../../resources/fonts/Roboto/Roboto-Light.ttf');
+  src: url(${RobotoFont});
   font-weight: 300;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('../../resources/fonts/Roboto/Roboto-Medium.ttf');
+  src: url(${RobotoFont});
   font-weight: 500;
 }
 
 @font-face {
   font-family: 'Tezos-icons';
-  src:  url('../../resources/fonts/TezosIcons/Tezos-icons.eot?r912cu');
-  src:  url('../../resources/fonts/TezosIcons/Tezos-icons.eot?r912cu#iefix') format('embedded-opentype'),
-    url('../../resources/fonts/TezosIcons/Tezos-icons.ttf?r912cu') format('truetype'),
-    url('../../resources/fonts/TezosIcons/Tezos-icons.woff?r912cu') format('woff'),
-    url('../../resources/fonts/TezosIcons/Tezos-icons.svg?r912cu#Tezos-icons') format('svg');
+  src: url(${TezosIconsFontTTF}) format('truetype');
   font-weight: normal;
   font-style: normal;
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import TezosIcon from '../TezosIcon'
-import tezosLogo from '../../../resources/tezosLogo.svg'
 import { ms } from '../../styles/helpers'
 
 type Props = {
@@ -25,7 +24,7 @@ const TezosAmount = (props:Props) => {
       {amount}
       <TezosIcon size={size} color={color} iconName={iconName}/>
     </Amount>
-  ) 
+  )
 }
 
 TezosAmount.defaultProps = {
