@@ -4,6 +4,7 @@ import { TezosOperations, TezosConseilQuery } from 'conseiljs';
 import actionCreator from '../utils/reduxHelpers';
 import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
+import { displayError } from '../utils/formValidation';
 
 const { getAccount } = TezosConseilQuery;
 const { sendOriginationOperation } = TezosOperations;
@@ -17,6 +18,8 @@ const OPEN_CREATE_ACCOUNT_MODAL = 'OPEN_CREATE_ACCOUNT_MODAL';
 const CLOSE_CREATE_ACCOUNT_MODAL = 'CLOSE_CREATE_ACCOUNT_MODAL';
 const CLEAR_CREATE_ACCOUNT_STATE = 'CLEAR_CREATE_ACCOUNT_STATE';
 const SET_OPERATION = 'SET_OPERATION';
+const UPDATE_PASS_PHRASE = 'UPDATE_ACCOUNT_PASS_PHRASE';
+const CONFIRM_PASS_PHRASE = 'CONFIRM_ACCOUNT_PASS_PHRASE';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const changeAmount = actionCreator(CHANGE_AMOUNT, 'amount');
@@ -31,17 +34,41 @@ export const closeCreateAccountModal = actionCreator(
   CLOSE_CREATE_ACCOUNT_MODAL
 );
 export const setOperation = actionCreator(SET_OPERATION, 'operation');
+export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passphrase');
+export const confirmPassPhrase = actionCreator(
+  CONFIRM_PASS_PHRASE,
+  'confirmedpassphrase'
+);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount() {
   return async (dispatch, state) => {
+    const publicKeyHash = state().address.get('selectedParentHash');
+    const delegate = state().createAccount.get('delegate');
+    const amount = state().createAccount.get('amount');
+    const fee = state().createAccount.get('fee');
+    const passPhrase = state().createAccount.get('passPhrase');
+    const confirmedPassPhrase = state().createAccount.get(
+      'confirmedPassPhrase'
+    );
+    const network = state().walletInitialization.get('network');
+
+    const validations = [
+      { value: amount, type: 'notEmpty', name: 'Amount'},
+      { value: amount, type: 'validAmount'},
+      { value: amount, type: 'notZero', name: 'Amount'},
+      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
+      { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
+      { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases' }
+    ];
+
+    const error = displayError(validations);
+    if (error) {
+      return dispatch(addMessage(error, true));
+    }
+
     try {
       dispatch(setIsLoading(true));
-      const publicKeyHash = state().address.get('selectedParentHash');
-      const delegate = state().createAccount.get('delegate');
-      const amount = state().createAccount.get('amount');
-      const fee = state().createAccount.get('fee');
-      const network = state().walletInitialization.get('network');
 
       const identity = findKeyStore(
         publicKeyHash,
@@ -81,6 +108,7 @@ export function createNewAccount() {
           addParentKeysToAccount(tmpAccount, identity.toJS())
         )
       );
+      dispatch(closeCreateAccountModal());
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
@@ -97,7 +125,9 @@ const initState = fromJS({
   fee: 100,
   isLoading: false,
   isModalOpen: false,
-  operation: ''
+  operation: '',
+  passPhrase: '',
+  confirmedPassPhrase: ''
 });
 
 export default function createAccount(state = initState, action) {
@@ -118,6 +148,10 @@ export default function createAccount(state = initState, action) {
       return state.set('amount', action.amount);
     case SET_OPERATION:
       return state.set('operation', action.operation);
+    case UPDATE_PASS_PHRASE:
+      return state.set('passPhrase', action.passphrase);
+    case CONFIRM_PASS_PHRASE:
+      return state.set('confirmedPassPhrase', action.confirmedpassphrase);
     default:
       return state;
   }

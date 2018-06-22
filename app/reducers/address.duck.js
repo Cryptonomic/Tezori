@@ -9,7 +9,7 @@ import OPERATION_TYPES from '../constants/OperationTypes';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
-import validate from '../utils/validators'
+import { displayError } from '../utils/formValidation';
 
 const {
   getOperationGroups,
@@ -33,8 +33,8 @@ const CLEAR_STATE = 'CLEAR_STATE';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
 const UPDATE_PUBLIC_KEY = 'UPDATE_PUBLIC_KEY';
 const UPDATE_USERNAME = 'UPDATE_USERNAME';
-const UPDATE_PASS_PHRASE = 'UPDATE_PASS_PHRASE';
-const CONFIRM_PASS_PHRASE = 'CONFIRM_PASS_PHRASE';
+const UPDATE_PASS_PHRASE = 'UPDATE_ADDRESS_PASS_PHRASE';
+const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
@@ -76,6 +76,7 @@ export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     const initWalletState = state().walletInitialization;
     const identities = initWalletState.getIn(['wallet', 'identities']);
+    const network = initWalletState.get('network');
 
     if (identities.size === 0) {
       dispatch(openAddAddressModal());
@@ -229,6 +230,10 @@ export function setActiveTab(activeTab) {
   };
 }
 
+function setImportDuplicationError() {
+  dispatch(addMessage('Identity already exist', true));
+}
+
 export function importAddress() {
   return async (dispatch, state) => {
     const {
@@ -244,28 +249,21 @@ export function importAddress() {
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
 
     const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities');
 
     // TODO: clear out message bar
-    dispatch(addMessage('', true))
+    dispatch(addMessage('', true));
 
-    switch ( activeTab ) {
-      case FUNDRAISER:
-      case GENERATE_MNEMONIC:
-      case SEED_PHRASE:
-      {
-        let error = validate(passPhrase, 'minLength8');
-        if (error !== false) {
-          return dispatch(addMessage(error, true));
-        };
+    if ( activeTab === GENERATE_MNEMONIC ) {
+      const validations = [
+        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
+        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'},
+      ];
 
-        error = validate([passPhrase, confirmedPassPhrase], 'samePassPhrase')
-        if (error !== false) {
-          return dispatch(addMessage(error, true));
-        };
-        break;
+      const error = displayError(validations);
+      if (error) {
+        return dispatch(addMessage(error, true));
       }
-      default:
-        break;
     }
 
     try {
@@ -274,41 +272,51 @@ export function importAddress() {
         case PRIVATE_KEY:
           break;
         case GENERATE_MNEMONIC: {
-          const identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          const {
+            publicKeyHash,
+            publicKey,
+            privateKey
+          } = await unlockIdentityWithMnemonic(seed, passPhrase);
 
-          dispatch(
-            addNewIdentity({
-              ...identity,
+          if (
+            !find(identities.toJS(), { publicKeyHash, publicKey, privateKey })
+          ) {
+            dispatch(
+              addNewIdentity({
+                ...identity,
+                balance: 0,
+                operationGroups: [],
+                accounts: []
+              })
+            );
+
+            const updatedIdentities = state()
+              .address.get('identities')
+              .map(identity => {
+                return {
+                  publicKey: identity.get('publicKey'),
+                  privateKey: identity.get('privateKey'),
+                  publicKeyHash: identity.get('publicKeyHash')
+                };
+              });
+
+            const selectedAccount = createSelectedAccount({
               balance: 0,
               operationGroups: [],
-              accounts: []
-            })
-          );
-
-          const identities = state()
-            .address.get('identities')
-            .map(identity => {
-              return {
-                publicKey: identity.get('publicKey'),
-                privateKey: identity.get('privateKey'),
-                publicKeyHash: identity.get('publicKeyHash')
-              };
+              transactions: []
             });
 
-          const selectedAccount = createSelectedAccount({
-            balance: 0,
-            operationGroups: [],
-            transactions: []
-          });
-
-          dispatch(saveUpdatedWallet(identities));
-          dispatch(
-            setSelectedAccount(
-              identity.publicKeyHash,
-              identity.publicKeyHash,
-              selectedAccount
-            )
-          );
+            dispatch(saveUpdatedWallet(updatedIdentities));
+            dispatch(
+              setSelectedAccount(
+                identity.publicKeyHash,
+                identity.publicKeyHash,
+                selectedAccount
+              )
+            );
+          } else {
+            setImportDuplicationError();
+          }
           break;
         }
         case SEED_PHRASE:
@@ -324,7 +332,7 @@ export function importAddress() {
               passPhrase
             );
           }
-          const { publicKeyHash } = identity;
+          const { publicKeyHash, publicKey, privateKey } = identity;
           const account = await getAccount(network, publicKeyHash);
           const { balance } = account.account;
           const operationGroups = await getOperationGroupsForAccount(
@@ -333,27 +341,34 @@ export function importAddress() {
           );
           const accounts = await getAccountsForIdentity(network, publicKeyHash);
 
-          dispatch(saveUpdatedWallet(fromJS([identity])));
-          dispatch(
-            addNewIdentity({
-              transactions: [],
-              ...identity,
+          if (
+            !find(identities.toJS(), { publicKeyHash, publicKey, privateKey })
+          ) {
+            dispatch(saveUpdatedWallet(fromJS([identity])));
+            dispatch(
+              addNewIdentity({
+                transactions: [],
+                ...identity,
+                balance,
+                operationGroups,
+                accounts: formatAccounts(
+                  addParentKeysToAccounts(accounts, identity)
+                )
+              })
+            );
+            const selectedAccount = createSelectedAccount({
               balance,
               operationGroups,
-              accounts: formatAccounts(
-                addParentKeysToAccounts(accounts, identity)
-              )
-            })
-          );
-          const selectedAccount = createSelectedAccount({
-            balance,
-            operationGroups,
-            transactions: []
-          });
+              transactions: []
+            });
 
-          dispatch(
-            setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-          );
+            dispatch(
+              setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
+            );
+          } else {
+            setImportDuplicationError();
+          }
+
           break;
         }
       }
@@ -429,7 +444,7 @@ export default function address(state = initState, action) {
     case UPDATE_PASS_PHRASE:
       return state.set('passPhrase', action.passPhrase);
     case CONFIRM_PASS_PHRASE:
-      return state.set('confirmedPassPhrase', action.passPhrase)
+      return state.set('confirmedPassPhrase', action.passPhrase);
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:
@@ -514,3 +529,13 @@ function formatAccounts(accounts) {
 export function clearAccountRefreshInterval() {
   clearInterval(currentAccountRefreshInterval);
 }
+
+export const getTotalBalance = state => {
+  const { address = {} } = state;
+  const identities = address.get('identities');
+
+  const balances = identities.toJS().map(identity => identity.balance);
+  const total = balances.reduce((acc, curr) => acc + curr, 0);
+
+  return total.toFixed(2);
+};

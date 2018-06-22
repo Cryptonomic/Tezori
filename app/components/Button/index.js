@@ -92,7 +92,15 @@ type Props = {
 };
 
 function Button(props: Props) {
-  const { className, children, disabled, buttonTheme, type, small, onClick } = props;
+  const {
+    className,
+    children,
+    disabled,
+    buttonTheme,
+    type,
+    small,
+    onClick
+  } = props;
   return (
     <StyledButton
       onClick={onClick}

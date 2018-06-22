@@ -15,16 +15,24 @@ import {
   changeDelegate,
   changeFee,
   createNewAccount,
-  closeCreateAccountModal
+  closeCreateAccountModal,
+  updatePassPhrase,
+  confirmPassPhrase,
+  passPhrase,
+  confirmedPassPhrase
 } from '../reducers/createAccount.duck';
 
 type Props = {
   amount: string,
+  passPhrase: string,
+  confirmedPassPhrase: string,
   changeAmount: Function,
   changeDelegate: Function,
   changeFee: Function,
   closeCreateAccountModal: Function,
   createNewAccount: Function,
+  updatePassPhrase: Function,
+  confirmPassPhrase: Function,
   delegate: string,
   fee: number,
   isLoading: boolean,
@@ -44,6 +52,14 @@ class CreateAccountModal extends Component<Props> {
 
   changeFee = (_, index, fee) => {
     this.props.changeFee(fee);
+  };
+
+  updatePassPhrase = (_, newPassPhrase) => {
+    this.props.updatePassPhrase(newPassPhrase);
+  };
+
+  confirmPassPhrase = (_, newPassPhrase) => {
+    this.props.confirmPassPhrase(newPassPhrase);
   };
 
   renderCreationBody = () => {
@@ -66,6 +82,7 @@ class CreateAccountModal extends Component<Props> {
           <div className={styles.amountSendContainer}>
             <TextField
               floatingLabelText="Amount"
+              style={{ width: '80%' }}
               default="0"
               value={this.props.amount}
               onChange={this.changeAmount}
@@ -81,13 +98,28 @@ class CreateAccountModal extends Component<Props> {
             </SelectField>
           </div>
         </div>
+        <div className={styles.amountAndFeeContainer}>
+          <TextField
+            floatingLabelText="Pass Phrase"
+            type="password"
+            style={{ width: '45%' }}
+            default="0"
+            value={this.props.passPhrase}
+            onChange={this.updatePassPhrase}
+          />
+          <TextField
+            floatingLabelText="Confirm Pass Phrase"
+            type="password"
+            style={{ width: '45%' }}
+            default="0"
+            value={this.props.confirmedPassPhrase}
+            onChange={this.confirmPassPhrase}
+          />
+        </div>
         <div className={styles.passwordButtonContainer}>
           <Button
             buttonTheme="primary"
-            onClick={() => {
-              this.props.createNewAccount();
-              this.props.closeCreateAccountModal();
-            }}
+            onClick={this.props.createNewAccount}
             disabled={this.props.isLoading}
           >
             Confirm
@@ -138,7 +170,9 @@ function mapStateToProps({ createAccount }) {
     isLoading: createAccount.get('isLoading'),
     operation: createAccount.get('operation'),
     isModalOpen: createAccount.get('isModalOpen'),
-    amount: createAccount.get('amount')
+    amount: createAccount.get('amount'),
+    passPhrase: createAccount.get('passPhrase'),
+    confirmedPassPhrase: createAccount.get('confirmedPassPhrase')
   };
 }
 
@@ -149,7 +183,9 @@ function mapDispatchToProps(dispatch) {
       changeDelegate,
       changeFee,
       closeCreateAccountModal,
-      createNewAccount
+      createNewAccount,
+      updatePassPhrase,
+      confirmPassPhrase
     },
     dispatch
   );

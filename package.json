@@ -222,6 +222,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-tippy": "^1.2.2",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "source-map-support": "^0.5.6",
