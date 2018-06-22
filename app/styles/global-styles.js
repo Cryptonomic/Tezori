@@ -2,20 +2,28 @@ import { injectGlobal } from 'styled-components';
 import { Theme } from './Theme'
 import {ms} from './helpers'
 import { normalize, darken } from 'polished';
+import RobotoFont from '../../resources/fonts/Roboto/Roboto-Light.ttf'
+import TezosIconsFontTTF from '../../resources/fonts/TezosIcons/Tezos-icons.ttf'
 
 injectGlobal`  
   ${normalize()}
-  
-    @font-face {
+  @font-face {
   font-family: 'Roboto';
-  src: url('../../resources/fonts/Roboto/Roboto-Light.ttf');
+  src: url(${RobotoFont});
   font-weight: 300;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('../../resources/fonts/Roboto/Roboto-Medium.ttf');
+  src: url(${RobotoFont});
   font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Tezos-icons';
+  src: url(${TezosIconsFontTTF}) format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @import "~font-awesome/css/font-awesome.css";

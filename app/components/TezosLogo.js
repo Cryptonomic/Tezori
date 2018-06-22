@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
-
 import Button from './Button';
 import tezosLogo from '../../resources/tezosLogo.png';
 import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
+import { ms } from '../styles/helpers'
 
 const Container = styled.div`
   display: flex;
   align-items: center;
+  margin: ${ms(0)} 0;
 `;
 
 const Logo = styled.img`
@@ -36,7 +36,7 @@ type Props = {
 class TezosLogo extends Component<Props> {
   render() {
     const { goHomeAndClearState } = this.props;
-    return ([
+    return (
       <Container>
         <Button
           onClick={goHomeAndClearState}
@@ -44,9 +44,8 @@ class TezosLogo extends Component<Props> {
           children={<Logo src={tezosLogo} />}
           key="logo"
         />
-        
       </Container>
-    ]);
+    );
   }
 }
 

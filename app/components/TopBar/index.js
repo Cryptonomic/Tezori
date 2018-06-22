@@ -1,5 +1,5 @@
 /* eslint flowtype-errors/show-errors: 0 */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux'
 import { withRouter } from 'react-router-dom'
@@ -16,6 +16,7 @@ const Contaier = styled.div`
   align-items: center;
   padding: 30px 40px;
   flex-shrink: 0;
+  background-color: ${ ({ theme: { colors } }) => colors.gray4 };
 `;
 
 const InfoContainer = styled.div`
@@ -32,7 +33,7 @@ const Text = styled.span`
 `;
 
 type Props = {
-  amount: string
+  walletName: string
 }
 
 class TopBar extends Component {
@@ -42,28 +43,28 @@ class TopBar extends Component {
       {this.props.location.pathname === '/' ? (
       <TezosLogo />
       ) : (
-        [
-          <InfoContainer key="info">
+        <Fragment>
+          <InfoContainer>
             <TezosLogo />
-            <Text>{this.props.amount}</Text>
+            <Text>{this.props.walletName}</Text>
             <TotalBalance />
           </InfoContainer>,
-          <SettingsController key="settings" />
-        ]
+          <SettingsController />
+        </Fragment>
       )}
     </Contaier>
     )
-    
+
   }
   };
 
 TopBar.defaultProps = {
-  amount: 'Wallet'
+  walletName: 'Wallet'
 }
 
 const mapStateToProps = state => {
   return {
-    amount: getWalletName(state)
+    walletName: getWalletName(state)
   };
 };
 

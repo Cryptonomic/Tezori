@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
+import TezosAmount from '../TezosAmount';
 import tezosLogo from '../../../resources/tezosLogo.png';
 import { getTotalBalance } from '../../reducers/address.duck';
 
@@ -19,20 +20,13 @@ const Text = styled.span`
   padding-left: ${ms(2)};
 `;
 
-const Total = styled.span`
-  font-size: ${ms(2)};
-  font-family: ${({ theme }) => theme.typo.fontFamily.primary};
-  color: ${({ theme: { colors } }) => colors.primary};
-  padding-left: ${ms(4)};
-`;
-
-const TezosLogo = styled.img`
-  height: ${ms(2)};
-  filter: brightness(40%);
+const Amount = styled(TezosAmount)`
+  display: inline-block;
+  margin-left: ${ms(4)};
 `;
 
 type Props = {
-  totalBalance: number
+  totalBalance: string
 };
 
 class TotalBalance extends Component {
@@ -41,8 +35,7 @@ class TotalBalance extends Component {
     return (
       <Container>
         <Text>Total Balance</Text>
-        <Total>{totalBalance}</Total>
-        <TezosLogo alt="tez" src={tezosLogo} />
+        <Amount size={ms(2)} amount={totalBalance} color={'primary'} weight='normal'/>
       </Container>
     );
   }
