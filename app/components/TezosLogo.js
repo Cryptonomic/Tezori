@@ -3,10 +3,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-
 import Button from './Button';
 import tezosLogo from '../../resources/tezosLogo.png';
-import TezosAmount from './TezosAmount'
 import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
 import { ms } from '../styles/helpers'
 

@@ -18,6 +18,17 @@ injectGlobal`
   font-weight: 500;
 }
 
+@font-face {
+  font-family: 'Tezos-icons';
+  src:  url('../../resources/fonts/TezosIcons/Tezos-icons.eot?r912cu');
+  src:  url('../../resources/fonts/TezosIcons/Tezos-icons.eot?r912cu#iefix') format('embedded-opentype'),
+    url('../../resources/fonts/TezosIcons/Tezos-icons.ttf?r912cu') format('truetype'),
+    url('../../resources/fonts/TezosIcons/Tezos-icons.woff?r912cu') format('woff'),
+    url('../../resources/fonts/TezosIcons/Tezos-icons.svg?r912cu#Tezos-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @import "~font-awesome/css/font-awesome.css";
   
   html {

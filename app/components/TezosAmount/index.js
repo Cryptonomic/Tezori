@@ -1,35 +1,39 @@
 import React from 'react'
 import styled from 'styled-components'
+import TezosIcon from '../TezosIcon'
 import tezosLogo from '../../../resources/tezosLogo.svg'
 import { ms } from '../../styles/helpers'
 
 type Props = {
-  size: any,
+  amount: number,
   color: string,
+  iconName: string,
+  size: any,
   weight: string,
-  amount: number
 }
 
-const Image = styled.img`
-  height: 20px;
-  width: 20px;
-`
-
 const Amount = styled.span`
+  color: ${ ({ color, theme: { colors } }) => colors[color] }
   font-size: ${ ({ size }) => size }
   font-weight: ${ ({ weight = 'normal', theme: { typo: { weights } } }) => weights[weight] }
-  color: ${ ({ color, theme: { colors } }) => colors[color] }
 `
 
 const TezosAmount = (props:Props) => {
+  const { size, color, amount, iconName } = props
   return (
     <Amount>
-      {props.amount}
-      <Image scr={props.tezosLogo} alt={'tzo'} />
+      {amount}
+      <TezosIcon size={size} color={color} iconName={iconName}/>
     </Amount>
   ) 
 }
 
+TezosAmount.defaultProps = {
+  amount: 0,
+  color: 'primary',
+  iconName: 'tezos',
+  size: ms(0),
+  weight: 'normal',
+}
+
 export default TezosAmount
-
-
