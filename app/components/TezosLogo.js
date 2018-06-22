@@ -44,7 +44,6 @@ class TezosLogo extends Component<Props> {
           children={<Logo src={tezosLogo} />}
           key="logo"
         />
-        {window.location.hash !== '#/' && <Text key="title">My Tezos Wallet</Text>}
       </Container>
     );
   }
