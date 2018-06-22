@@ -256,7 +256,7 @@ export function importAddress() {
     if ( activeTab === GENERATE_MNEMONIC ) {
       const validations = [
         { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase'},
+        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'},
       ];
 
       const error = displayError(validations);

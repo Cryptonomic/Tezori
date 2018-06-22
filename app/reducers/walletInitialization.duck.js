@@ -95,16 +95,14 @@ export function submitAddress(submissionType: 'create' | 'import') {
     if ( submissionType === 'create' ) {
       const validations = [
         { value: walletLocation, type: 'locationFilled'},
-        { value: password, type: 'notEmpty' },
+        { value: password, type: 'notEmpty', name: 'Password' },
         { value: password, type: 'minLength8', name: 'Password' },
-        { value: [password, confirmedPassword], type: 'samePassPhrase' }
+        { value: [password, confirmedPassword], type: 'samePassPhrase', name: 'Passwords' }
       ]
 
-      for (let i = 0; i < validations.length; i++) {
-        let error = hasError(validations[i].value, validations[i].type)
-        if (error != false) {
-          return dispatch(addMessage(error, true));
-        }
+      const error = displayError(validations);
+      if (error) {
+        return dispatch(addMessage(error, true));
       }
     }
 
