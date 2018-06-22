@@ -4,7 +4,7 @@ import TezosIcon from '../TezosIcon'
 import { ms } from '../../styles/helpers'
 
 type Props = {
-  amount: number,
+  amount: string,
   color: string,
   iconName: string,
   size: any,
@@ -18,9 +18,9 @@ const Amount = styled.span`
 `
 
 const TezosAmount = (props:Props) => {
-  const { size, color, amount, iconName, weight } = props
+  const { size, color, amount, iconName, weight, className } = props
   return (
-    <Amount color={color} size={size} weight={weight}>
+    <Amount className={className} color={color} size={size} weight={weight}>
       {amount}
       <TezosIcon size={size} color={color} iconName={iconName}/>
     </Amount>
@@ -28,7 +28,7 @@ const TezosAmount = (props:Props) => {
 }
 
 TezosAmount.defaultProps = {
-  amount: 0,
+  amount: '0',
   color: 'primary',
   iconName: 'tezos',
   size: ms(0),

@@ -14,7 +14,7 @@ const Contaier = styled.div`
   align-items: center;
   padding: 30px 40px;
   flex-shrink: 0;
-  background-color: ${ ({ theme: { colors } }) => colors.gray4 }
+  background-color: ${ ({ theme: { colors } }) => colors.gray4 };
 `;
 
 const InfoContainer = styled.div`
@@ -31,7 +31,6 @@ const TopBar = () => (
           <TezosLogo />
           <TotalBalance />
         </InfoContainer>
-        <TezosAmount size={ms(0)} amount={10} color={'gray1'} weight='bold'/>
         <SettingsController key="settings" />
       </Fragment> 
     )}
