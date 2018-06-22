@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosAmount from '../TezosAmount';
-import tezosLogo from '../../../resources/tezosLogo.png';
+import { formatAmount } from '../../utils/currancy'
+import Tooltip from '../Tooltip'
 import { getTotalBalance } from '../../reducers/address.duck';
 
 const Container = styled.div`
@@ -26,7 +27,7 @@ const Amount = styled(TezosAmount)`
 `;
 
 type Props = {
-  totalBalance: string
+  totalBalance: number
 };
 
 class TotalBalance extends Component {
@@ -35,7 +36,9 @@ class TotalBalance extends Component {
     return (
       <Container>
         <Text>Total Balance</Text>
-        <Amount size={ms(2)} amount={totalBalance} color={'primary'} weight='normal'/>
+        <Tooltip position="right" title={ formatAmount(totalBalance) }>
+          <Amount size={ms(2)} amount={ formatAmount(totalBalance, 2) } color={'primary'} weight='normal'/>
+        </Tooltip>
       </Container>
     );
   }

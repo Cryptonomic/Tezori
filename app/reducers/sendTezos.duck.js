@@ -5,6 +5,7 @@ import { sendTransactionOperation } from '../tezos/TezosOperations';
 import { addMessage } from './message.duck';
 import { findKeyStore } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
+import { tezToUtez } from '../utils/currancy';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -35,11 +36,13 @@ export function showConfirmation() {
   return async (dispatch, state) => {
     const toAddress = state().sendTezos.get('toAddress');
     const amount = state().sendTezos.get('amount');
+    const parsedAmount = Number(amount.replace(/\,/g,''));
+    const amountInUtez = tezToUtez(parsedAmount);
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount'},
-      { value: amount, type: 'validAmount'},
-      { value: amount, type: 'notZero', name: 'Amount'},
+      { value: parsedAmount, type: 'validAmount'},
+      { value: amountInUtez, type: 'posNum', name: 'Amount'},
       { value: toAddress, type: 'validAddress'}
     ];
 
@@ -77,7 +80,7 @@ export function sendConfirmation() {
         network,
         keyStore.toJS(),
         toAddress,
-        Number(amount),
+        tezToUtez(Number(amount.replace(/\,/g,''))),
         fee
       );
 

@@ -9,6 +9,8 @@ import HelpIcon from 'material-ui/svg-icons/action/help'
 import ManagerIcon from 'material-ui/svg-icons/hardware/device-hub'
 import Tooltip from './Tooltip'
 import { H3 } from './Heading'
+import TezosAmount from './TezosAmount';
+import { formatAmount } from '../utils/currancy'
 
 import CreateAccountModal from './CreateAccountModal';
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -21,6 +23,12 @@ const Tezos = styled.span`
   display: flex;
   align-items: center;
   font-size: ${ms(-1)};
+  font-weight: 500;
+  color: ${({ isActive, theme: { colors } }) =>
+    isActive ? colors.white : colors.primary};
+`;
+
+const Amount = styled(TezosAmount)`
   font-weight: 500;
   color: ${({ isActive, theme: { colors } }) =>
     isActive ? colors.white : colors.primary};
@@ -98,13 +106,24 @@ class AddressBlock extends Component<Props, State> {
   renderTezosAmount = (
     accountId: string,
     selectedAccountHash: string,
-    balance: number
+    balance: number,
+    parent
   ) => {
     const isActive = accountId === selectedAccountHash;
 
     return (
       <Tezos isActive={isActive}>
-        {balance}
+        {
+          parent
+            ?
+            (
+              <Tooltip position="right" title={ formatAmount(balance) }>
+                <Amount isActive={isActive} size={ ms(-1) } amount={ formatAmount(balance, 2) } iconName="" />
+              </Tooltip>
+            )
+            : <Amount isActive={isActive} size={ ms(-1) } amount={ formatAmount(balance) } iconName="" />
+
+        }
         <TezosSymbol alt="tez" src={tezosLogo} isActive={isActive} />
       </Tezos>
     );
@@ -163,7 +182,8 @@ class AddressBlock extends Component<Props, State> {
             {this.renderTezosAmount(
               publicKeyHash,
               selectedAccountHash,
-              accountBlock.get('balance')
+              accountBlock.get('balance'),
+              true
             )}
           </AddressSecondLine>
         </Address>
