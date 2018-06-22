@@ -14,15 +14,25 @@ type Props = {
 const Amount = styled.span`
   color: ${ ({ color, theme: { colors } }) => colors[color] };
   font-size: ${ ({ size }) => size };
-  font-weight: ${ ({ weight = 'normal', theme: { typo: { weights } } }) => weights[weight] }
+  font-weight: ${ ({ weight = 'normal', theme: { typo: { weights } } }) => weights[weight] };
+  display: inline-flex;
+  align-items: center;
+  
+  span {
+    line-height: 0;
+  }
+`
+
+const Icon = styled(TezosIcon)`
+  line-height: 1;
 `
 
 const TezosAmount = (props:Props) => {
   const { size, color, amount, iconName, weight, className } = props
   return (
     <Amount className={className} color={color} size={size} weight={weight}>
-      {amount}
-      <TezosIcon size={size} color={color} iconName={iconName}/>
+      <span>{amount}</span>
+      <Icon size={size} color={color} iconName={iconName}/>
     </Amount>
   )
 }

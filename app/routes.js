@@ -9,9 +9,9 @@ import TopBar from './components/TopBar';
 export default () => (
   <App>
     <TopBar />
-    <Switch>
-      <Route path="/addresses" component={AddressPage} />
-      <Route path="/" component={HomePage} />
-    </Switch>
+      <Switch>
+        <Route path="/addresses" component={AddressPage} />
+        <Route path="/" component={HomePage} />
+      </Switch>
   </App>
 );

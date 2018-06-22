@@ -69,8 +69,8 @@ const getIconByName = iconName => {
 }
 
 const TezosIcon = (props:Prosp) => {
-  const { iconName } = props
-  return <Icon>{getIconByName(iconName)}</Icon>
+  const { iconName, size, color } = props
+  return <Icon size={size} color={color}>{getIconByName(iconName)}</Icon>
 }
 
 TezosIcon.defaultProps = {

@@ -13,7 +13,7 @@ const Container = styled.div`
 `;
 
 const Text = styled.span`
-  font-size: ${ms(0)};
+  font-size: ${ms(1)};
   font-family: ${({ theme }) => theme.typo.fontFamily.primary};
   font-weight: 500;
   color: ${({ theme: { colors } }) => colors.gray3};
@@ -21,8 +21,7 @@ const Text = styled.span`
 `;
 
 const Amount = styled(TezosAmount)`
-  display: inline-block;
-  margin-left: ${ms(4)};
+  margin-left: ${ms(2)};
 `;
 
 type Props = {
@@ -35,7 +34,7 @@ class TotalBalance extends Component {
     return (
       <Container>
         <Text>Total Balance</Text>
-        <Amount size={ms(2)} amount={totalBalance} color={'primary'} weight='normal'/>
+        <Amount size={ms(3)} amount={totalBalance} color={'primary'} weight='normal'/>
       </Container>
     );
   }
