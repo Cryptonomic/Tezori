@@ -190,11 +190,7 @@ class AddressBlock extends Component<Props, State> {
                   </AddressFirstLine>
                   <AddressSecondLine isActive={isSmartActive}>
                     <TezosAmount
-                      color={
-                        smartAddressId === selectedAccountHash
-                          ? 'white'
-                          : 'primary'
-                      }
+                      color={isSmartActive ? 'white' : 'primary'}
                       amount={smartAddressBalance}
                     />
                   </AddressSecondLine>
