@@ -1,7 +1,10 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux'
+import { withRouter } from 'react-router-dom'
 import styled from 'styled-components';
+import { getWalletName } from '../../reducers/walletInitialization.duck'
 import SettingsController from '../SettingsController';
 import TotalBalance from '../TotalBalance';
 import TezosLogo from '../TezosLogo';
@@ -36,7 +39,7 @@ class TopBar extends Component {
   render () {
     return (
       <Contaier>
-      {window.location.hash === '#/' ? (
+      {this.props.location.pathname === '/' ? (
       <TezosLogo />
       ) : (
         [
@@ -60,9 +63,12 @@ TopBar.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    amount: state.walletInitialization.walletFileName
+    amount: getWalletName(state)
   };
 };
 
-export default connect(mapStateToProps, null)(TopBar);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, null)
+)(TopBar);
 
