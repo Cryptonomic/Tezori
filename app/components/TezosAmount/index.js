@@ -10,6 +10,11 @@ type Props = {
   amount: number
 }
 
+const Image = styled.img`
+  height: 20px;
+  width: 20px;
+`
+
 const Amount = styled.span`
   font-size: ${ ({ size }) => size }
   font-weight: ${ ({ weight = 'normal', theme: { typo: { weights } } }) => weights[weight] }
@@ -18,11 +23,11 @@ const Amount = styled.span`
 
 const TezosAmount = (props:Props) => {
   return (
-    <Amount key={'amount'}>
+    <Amount>
       {props.amount}
-      <img scr={props.tezosLogo} alt={'tzo'} />
+      <Image scr={props.tezosLogo} alt={'tzo'} />
     </Amount>
-  )
+  ) 
 }
 
 export default TezosAmount
