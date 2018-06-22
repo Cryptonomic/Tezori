@@ -36,7 +36,7 @@ type Props = {
 class TezosLogo extends Component<Props> {
   render() {
     const { goHomeAndClearState } = this.props;
-    return (
+    return ([
       <Container>
         <Button
           onClick={goHomeAndClearState}
@@ -44,9 +44,9 @@ class TezosLogo extends Component<Props> {
           children={<Logo src={tezosLogo} />}
           key="logo"
         />
-        {window.location === '#/' && <Text key="title">My Tezos Wallet</Text>}
+        
       </Container>
-    );
+    ]);
   }
 }
 

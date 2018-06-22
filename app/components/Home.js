@@ -135,7 +135,7 @@ class Home extends Component<Props> {
           />
           <TextField
             floatingLabelText="Confirm Password"
-            style={{ width: '500px' }}
+            style={{ width: '500px', marginBottom: '60px' }}
             type="password"
             value={confirmedPassword}
             onChange={(_, newPass) => setConfirmedPassword(newPass)}
@@ -173,7 +173,7 @@ class Home extends Component<Props> {
           </div>
           <TextField
             floatingLabelText="Password"
-            style={{ width: '500px' }}
+            style={{ width: '500px', marginBottom: '60px' }}
             type="password"
             value={password}
             onChange={(_, newPass) => setPassword(newPass)}
