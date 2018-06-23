@@ -1,10 +1,11 @@
 import { fromJS } from 'immutable';
-import { flatten, find } from 'lodash';
+import { flatten } from 'lodash';
+import { TezosWallet, TezosConseilQuery } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import OPERATION_TYPES from '../constants/OperationTypes';
-import { tezosWallet, tezosQuery } from '../conseil';
+
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
@@ -15,12 +16,12 @@ const {
   getAccounts,
   getOperationGroup,
   getAccount
-} = tezosQuery;
+} = TezosConseilQuery;
 const {
   unlockFundraiserIdentity,
   generateMnemonic,
   unlockIdentityWithMnemonic
-} = tezosWallet;
+} = TezosWallet;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
@@ -210,8 +211,8 @@ export function setActiveTab(activeTab) {
 
     dispatch(updateActiveTab(activeTab));
 
-    //TODO: clear out message bar if there are errors from other tabs
-    dispatch(addMessage('', true));
+    // TODO: clear out message bar if there are errors from other tabs
+    dispatch(addMessage('', true))
 
     if (activeTab === GENERATE_MNEMONIC) {
       try {
@@ -250,7 +251,7 @@ export function importAddress() {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
-    //TODO: clear out message bar
+    // TODO: clear out message bar
     dispatch(addMessage('', true));
 
     if ( activeTab === GENERATE_MNEMONIC ) {

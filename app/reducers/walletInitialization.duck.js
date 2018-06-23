@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { get } from 'lodash';
 
 import path from 'path';
-import { tezosWallet } from '../conseil';
+import { TezosWallet } from 'conseiljs';
 
 import { clearEntireAddressState } from './address.duck';
 import { addMessage } from './message.duck';
@@ -11,7 +11,7 @@ import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import { displayError } from '../utils/formValidation';
 
-const { createWallet, loadWallet, saveWallet } = tezosWallet;
+const { createWallet, loadWallet, saveWallet } = TezosWallet;
 
 const { DEFAULT, CREATE, IMPORT } = CREATION_CONSTANTS;
 
@@ -91,7 +91,7 @@ export function submitAddress(submissionType: 'create' | 'import') {
     const completeWalletPath = path.join(walletLocation, walletFileName);
     let wallet = [];
 
-    //TODO: clear out message bar
+    // TODO: clear out message bar
     dispatch(addMessage('', true));
 
     if ( submissionType === 'create' ) {

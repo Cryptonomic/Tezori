@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { tezosOperations, tezosQuery } from '../conseil';
+import { TezosOperations, TezosConseilQuery } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import { addNewAccount } from './address.duck';
@@ -7,8 +7,8 @@ import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 
-const { getAccount } = tezosQuery;
-const { sendOriginationOperation } = tezosOperations;
+const { getAccount } = TezosConseilQuery;
+const { sendOriginationOperation } = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const CHANGE_AMOUNT = 'CHANGE_AMOUNT';
