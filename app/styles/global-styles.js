@@ -1,5 +1,5 @@
 import { injectGlobal } from 'styled-components';
-import { Theme } from './Theme'
+import { Theme } from './theme'
 import {ms} from './helpers'
 import { normalize, darken } from 'polished';
 import RobotoFont from '../../resources/fonts/Roboto/Roboto-Light.ttf'
