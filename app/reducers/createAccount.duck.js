@@ -5,6 +5,7 @@ import actionCreator from '../utils/reduxHelpers';
 import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
+import { tezToUtez } from '../utils/currancy';
 
 const { getAccount } = tezosQuery;
 const { sendOriginationOperation } = tezosOperations;
@@ -46,7 +47,10 @@ export function createNewAccount() {
     const publicKeyHash = state().address.get('selectedParentHash');
     const delegate = state().createAccount.get('delegate');
     const amount = state().createAccount.get('amount');
+    const parsedAmount = Number(amount.replace(/\,/g,''));
+    const amountInUtez = tezToUtez(parsedAmount);
     const fee = state().createAccount.get('fee');
+
     const passPhrase = state().createAccount.get('passPhrase');
     const confirmedPassPhrase = state().createAccount.get(
       'confirmedPassPhrase'
@@ -55,8 +59,8 @@ export function createNewAccount() {
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount'},
-      { value: amount, type: 'validAmount'},
-      { value: amount, type: 'notZero', name: 'Amount'},
+      { value: parsedAmount, type: 'validAmount'},
+      { value: amountInUtez, type: 'posNum', name: 'Amount'},
       { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
       { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases' }
@@ -78,10 +82,11 @@ export function createNewAccount() {
       const privateKey = identity.get('privateKey');
       const keyStore = { publicKey, privateKey, publicKeyHash };
       // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
+
       const newAccount = await sendOriginationOperation(
         network,
         keyStore,
-        Number(amount),
+        amountInUtez,
         delegate,
         true,
         true,
@@ -93,7 +98,7 @@ export function createNewAccount() {
         newAccount.results.operation_results[0].originated_contracts[0];
       const tmpAccount = {
         accountId: newAccountHash,
-        balance: Number(amount),
+        balance: amountInUtez,
         delegateValue: delegate,
         manager: delegate,
         isReady: false,

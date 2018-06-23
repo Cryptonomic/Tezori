@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 function minLength(length, name) {
   return `${name} must be at least ${length} characters.`
 }
@@ -25,8 +27,13 @@ export function displayError(validations) {
 export default function hasError(value, validateType, name) {
   switch(validateType) {
     case 'validAmount':
-      if ( !/^(\d+|\d{1,3}(,\d{3})*)(\.\d+)?$/.test(value)) {
+      if ( !_.isFinite(value) ) {
         return `Amount is not valid.`;
+      }
+      break;
+    case 'posNum':
+      if ( value < 1 ) {
+        return `${name} is too small.`;
       }
       break;
     case 'validAddress':
@@ -35,11 +42,6 @@ export default function hasError(value, validateType, name) {
       }
       if ( !RegExp('^tz1|^TZ1').test(value)) {
         return `Address must begin with tz1 or TZ1.`;
-      }
-      break;
-    case 'notZero':
-      if ( parseInt(value) == 0 ) {
-        return `${name} cannot equal 0.`;
       }
       break;
     case 'notEmpty':

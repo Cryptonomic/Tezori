@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import { utezToTez } from '../utils/currancy';
 
 import Button from './Button';
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -23,7 +24,7 @@ import {
 } from '../reducers/createAccount.duck';
 
 type Props = {
-  amount: string,
+  amount: any,
   passPhrase: string,
   confirmedPassPhrase: string,
   changeAmount: Function,
@@ -91,9 +92,9 @@ class CreateAccountModal extends Component<Props> {
           </div>
           <div className={styles.feeContainer}>
             <SelectField value={this.props.fee} onChange={this.changeFee}>
-              <MenuItem value={100} primaryText="Low Fee: 100" />
-              <MenuItem value={200} primaryText="Medium Fee: 200" />
-              <MenuItem value={400} primaryText="High Fee: 400" />
+              <MenuItem value={100} primaryText={ `Low Fee: ${ utezToTez(100)} ` } />
+              <MenuItem value={200} primaryText={ `Medium Fee: ${ utezToTez(200)}` } />
+              <MenuItem value={400} primaryText={ `High Fee: ${ utezToTez(400)}` } />
               <MenuItem value={500} primaryText="Custom" />
             </SelectField>
           </div>
