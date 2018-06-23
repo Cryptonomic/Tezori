@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Button from './Button';
+import { utezToTez } from '../utils/currancy';
 import SendConfirmationModal from './SendConfirmationModal';
 import {
   updatePassword,
@@ -65,7 +66,6 @@ class Send extends Component<Props> {
       closeSendTezosModal,
       sendConfirmation
     } = this.props;
-
     return (
       <SendContainer>
         <TextField
@@ -86,9 +86,9 @@ class Send extends Component<Props> {
             onChange={(_, index, newFee) => updateFee(newFee)}
             style={{ width: '50%' }}
           >
-            <MenuItem value={100} primaryText="Low Fee: 100" />
-            <MenuItem value={200} primaryText="Medium Fee: 200" />
-            <MenuItem value={400} primaryText="High Fee: 400" />
+            <MenuItem value={100} primaryText={ `Low Fee: ${ utezToTez(100)} ` } />
+            <MenuItem value={200} primaryText={ `Medium Fee: ${ utezToTez(200)}` } />
+            <MenuItem value={400} primaryText={ `High Fee: ${ utezToTez(400)}` } />
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>

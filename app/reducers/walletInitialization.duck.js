@@ -1,5 +1,7 @@
 import { fromJS } from 'immutable';
 import { push } from 'react-router-redux';
+import { get } from 'lodash';
+
 import path from 'path';
 import { TezosWallet } from 'conseiljs';
 
@@ -162,3 +164,9 @@ export default function walletInitialization(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+export const getWalletName = state => {
+  const walletInitialization = get(state, 'walletInitialization');
+  const fileName = walletInitialization.get('walletFileName')
+  const walletName = fileName.split('.')
+  return walletName[0] ? `${walletName[0]} Wallet` : 'Wallet'
+}
