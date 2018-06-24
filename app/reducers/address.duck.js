@@ -286,7 +286,7 @@ export function importAddress() {
           identity = await unlockFundraiserIdentity(seed, username, passPhrase);
           const activating = await sendIdentityActivationOperation(network, identity, activationCode);
           dispatch(addMessage(
-            `Successfully sent activation operation.
+            `Successfully sent activation operation ${activating.operationGroupID}.`,
             false
           ));
           break;
