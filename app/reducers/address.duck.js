@@ -310,9 +310,13 @@ export function importAddress() {
 
           const updatedIdentities = state()
             .address.get('identities')
-            .map(identity => pick(identity, [
-              'publicKey', 'privateKey', 'publicKeyHash'
-            ]));
+            .map(identity => {
+              return {
+                publicKey: identity.get('publicKey'),
+                privateKey: identity.get('privateKey'),
+                publicKeyHash: identity.get('publicKeyHash')
+              }
+            });
           dispatch(saveUpdatedWallet(updatedIdentities));
 
           const selectedAccount = createSelectedAccount({
@@ -332,7 +336,7 @@ export function importAddress() {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.name, true));
+      dispatch(addMessage(e.message, true));
       dispatch(setIsLoading(false));
     }
   };
