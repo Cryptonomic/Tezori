@@ -16,6 +16,7 @@ type Props = {
   setActiveTab: Function,
   importAddress: Function,
   seed: string,
+  activationCode: string,
   username: string,
   passPhrase: string,
   privateKey: string,
@@ -27,6 +28,7 @@ type Props = {
   updatePassPhrase: Function,
   confirmPassPhrase: Function,
   updateSeed: Function,
+  updateActivationCode: Function,
   selectedAccountHash: string
 };
 
@@ -38,6 +40,8 @@ export default function AddAddress(props: Props) {
     setActiveTab,
     importAddress,
     seed,
+    activationCode,
+    updateActivationCode,
     username,
     passPhrase,
     privateKey,
@@ -155,6 +159,8 @@ export default function AddAddress(props: Props) {
             <TextField
               floatingLabelText="Activation Code"
               style={{ width: '100%' }}
+              value={activationCode}
+              onChange={(_, newActivationCode) => updateActivationCode(newActivationCode)}
             />
             <TextField
               floatingLabelText="Username"

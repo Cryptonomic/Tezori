@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
-import { flatten } from 'lodash';
-import { TezosWallet, TezosConseilQuery } from 'conseiljs';
+import { flatten, find, pick } from 'lodash';
+import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
@@ -10,6 +10,7 @@ import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
+import { awaitFor } from '../utils/general';
 
 const {
   getOperationGroups,
@@ -22,6 +23,9 @@ const {
   generateMnemonic,
   unlockIdentityWithMnemonic
 } = TezosWallet;
+const {
+  sendIdentityActivationOperation
+} = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
@@ -36,6 +40,7 @@ const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_ADDRESS_PASS_PHRASE';
 const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
+const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
@@ -58,6 +63,7 @@ export const confirmPassPhrase = actionCreator(
   'passPhrase'
 );
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
+export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activationCode');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
@@ -212,7 +218,7 @@ export function setActiveTab(activeTab) {
     dispatch(updateActiveTab(activeTab));
 
     // TODO: clear out message bar if there are errors from other tabs
-    dispatch(addMessage('', true))
+    dispatch(addMessage('', true));
 
     if (activeTab === GENERATE_MNEMONIC) {
       try {
@@ -230,7 +236,7 @@ export function setActiveTab(activeTab) {
   };
 }
 
-function setImportDuplicationError() {
+function setImportDuplicationError(dispatch) {
   dispatch(addMessage('Identity already exist', true));
 }
 
@@ -244,6 +250,7 @@ export function importAddress() {
     } = ADD_ADDRESS_TYPES;
     const activeTab = state().address.get('activeTab');
     const seed = state().address.get('seed');
+    const activationCode = state().address.get('activationCode');
     const username = state().address.get('username');
     const passPhrase = state().address.get('passPhrase');
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
@@ -254,122 +261,74 @@ export function importAddress() {
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if ( activeTab === GENERATE_MNEMONIC ) {
+    if( activeTab === GENERATE_MNEMONIC ) {
       const validations = [
         { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'},
+        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'}
       ];
 
       const error = displayError(validations);
-      if (error) {
+      if ( error ) {
         return dispatch(addMessage(error, true));
       }
     }
-
     try {
+      let identity = null;
       dispatch(setIsLoading(true));
       switch (activeTab) {
         case PRIVATE_KEY:
           break;
-        case GENERATE_MNEMONIC: {
-          const {
-            publicKeyHash,
-            publicKey,
-            privateKey
-          } = await unlockIdentityWithMnemonic(seed, passPhrase);
-
-          if (
-            !find(identities.toJS(), { publicKeyHash, publicKey, privateKey })
-          ) {
-            dispatch(
-              addNewIdentity({
-                ...identity,
-                balance: 0,
-                operationGroups: [],
-                accounts: []
-              })
-            );
-
-            const updatedIdentities = state()
-              .address.get('identities')
-              .map(identity => {
-                return {
-                  publicKey: identity.get('publicKey'),
-                  privateKey: identity.get('privateKey'),
-                  publicKeyHash: identity.get('publicKeyHash')
-                };
-              });
-
-            const selectedAccount = createSelectedAccount({
-              balance: 0,
-              operationGroups: [],
-              transactions: []
-            });
-
-            dispatch(saveUpdatedWallet(updatedIdentities));
-            dispatch(
-              setSelectedAccount(
-                identity.publicKeyHash,
-                identity.publicKeyHash,
-                selectedAccount
-              )
-            );
-          } else {
-            setImportDuplicationError();
-          }
-          break;
-        }
+        case GENERATE_MNEMONIC:
         case SEED_PHRASE:
+          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          break;
         case FUNDRAISER:
-        default: {
-          let identity = {};
-          if (activeTab === SEED_PHRASE) {
-            identity = await unlockIdentityWithMnemonic(seed, passPhrase);
-          } else {
-            identity = await unlockFundraiserIdentity(
-              seed,
-              username,
-              passPhrase
-            );
-          }
-          const { publicKeyHash, publicKey, privateKey } = identity;
-          const account = await getAccount(network, publicKeyHash);
-          const { balance } = account.account;
-          const operationGroups = await getOperationGroupsForAccount(
-            network,
-            publicKeyHash
-          );
-          const accounts = await getAccountsForIdentity(network, publicKeyHash);
+          identity = await unlockFundraiserIdentity(seed, username, passPhrase);
+          const activating = await sendIdentityActivationOperation(network, identity, activationCode);
+          dispatch(addMessage(
+            `Successfully sent activation operation ${activating.operationGroupID}.`,
+            false
+          ));
+          break;
+      }
 
-          if (
-            !find(identities.toJS(), { publicKeyHash, publicKey, privateKey })
-          ) {
-            dispatch(saveUpdatedWallet(fromJS([identity])));
-            dispatch(
-              addNewIdentity({
-                transactions: [],
-                ...identity,
-                balance,
-                operationGroups,
-                accounts: formatAccounts(
-                  addParentKeysToAccounts(accounts, identity)
-                )
-              })
-            );
-            const selectedAccount = createSelectedAccount({
+      if ( identity ) {
+        const { publicKeyHash, publicKey, privateKey } = identity;
+        let balance = 0;
+        let operationGroups = {};
+        let accounts = [];
+
+        if ( !find(identities.toJS(), identity) ) {
+          dispatch(
+            addNewIdentity({
+              ...identity,
               balance,
               operationGroups,
-              transactions: []
+              accounts
+            })
+          );
+
+          const updatedIdentities = state()
+            .address.get('identities')
+            .map(identity => {
+              return {
+                publicKey: identity.get('publicKey'),
+                privateKey: identity.get('privateKey'),
+                publicKeyHash: identity.get('publicKeyHash')
+              }
             });
+          dispatch(saveUpdatedWallet(updatedIdentities));
 
-            dispatch(
-              setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-            );
-          } else {
-            setImportDuplicationError();
-          }
-
-          break;
+          const selectedAccount = createSelectedAccount({
+            balance,
+            operationGroups,
+            transactions: []
+          });
+          dispatch(
+            setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
+          );
+        } else {
+          setImportDuplicationError(dispatch);
         }
       }
 
@@ -377,7 +336,7 @@ export function importAddress() {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.name, true));
+      dispatch(addMessage(e.message, true));
       dispatch(setIsLoading(false));
     }
   };
@@ -388,6 +347,7 @@ const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
   open: false,
   seed: '',
+  activationCode: '',
   username: '',
   passPhrase: '',
   privateKey: '',
@@ -439,6 +399,8 @@ export default function address(state = initState, action) {
       return state.set('publicKey', action.publicKey);
     case UPDATE_SEED:
       return state.set('seed', action.seed);
+    case UPDATE_ACTIVATION_CODE:
+      return state.set('activationCode', action.activationCode);
     case UPDATE_USERNAME:
       return state.set('username', action.username);
     case UPDATE_PASS_PHRASE:

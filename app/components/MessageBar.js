@@ -17,9 +17,11 @@ class MessageBar extends React.Component<Props> {
   render() {
     const { message, clearMessageState } = this.props;
     const messageText = message.get('message') || '';
-    const bodyStyle = message.get('isError') &&
-      { backgroundColor: 'rgba(255, 0, 0, 0.75)' };
-
+    const bodyStyle = message.get('isError')
+      ? { backgroundColor: 'rgba(255, 0, 0, 0.9)' }
+      : { backgroundColor: 'rgba(65, 181, 89, 0.9)' };
+    bodyStyle.height = 'auto';
+    
     return (
       <Snackbar
         open={!!messageText}
