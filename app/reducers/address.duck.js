@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { flatten, find } from 'lodash';
+import { flatten, find, pick } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
@@ -261,137 +261,71 @@ export function importAddress() {
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if ( activeTab === GENERATE_MNEMONIC ) {
+    if( activeTab === GENERATE_MNEMONIC ) {
       const validations = [
         { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'},
+        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'}
       ];
 
       const error = displayError(validations);
-      if (error) {
+      if ( error ) {
         return dispatch(addMessage(error, true));
       }
     }
-
     try {
+      let identity = null;
       dispatch(setIsLoading(true));
       switch (activeTab) {
         case PRIVATE_KEY:
           break;
-        case GENERATE_MNEMONIC: {
-          const {
-            publicKeyHash,
-            publicKey,
-            privateKey
-          } = await unlockIdentityWithMnemonic(seed, passPhrase);
-
-          if (
-            !find(identities.toJS(), { publicKeyHash, publicKey, privateKey })
-          ) {
-            dispatch(
-              addNewIdentity({
-                ...identity,
-                balance: 0,
-                operationGroups: [],
-                accounts: []
-              })
-            );
-
-            const updatedIdentities = state()
-              .address.get('identities')
-              .map(identity => {
-                return {
-                  publicKey: identity.get('publicKey'),
-                  privateKey: identity.get('privateKey'),
-                  publicKeyHash: identity.get('publicKeyHash')
-                };
-              });
-
-            const selectedAccount = createSelectedAccount({
-              balance: 0,
-              operationGroups: [],
-              transactions: []
-            });
-
-            dispatch(saveUpdatedWallet(updatedIdentities));
-            dispatch(
-              setSelectedAccount(
-                identity.publicKeyHash,
-                identity.publicKeyHash,
-                selectedAccount
-              )
-            );
-          } else {
-            setImportDuplicationError(dispatch);
-          }
-          break;
-        }
+        case GENERATE_MNEMONIC:
         case SEED_PHRASE:
+          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          break;
         case FUNDRAISER:
-        default: {
-          let identity = {};
-          if (activeTab === SEED_PHRASE) {
-            identity = await unlockIdentityWithMnemonic(seed, passPhrase);
-          } else {
-            identity = await unlockFundraiserIdentity(
-              seed,
-              username,
-              passPhrase
-            );
-          }
-          const { publicKeyHash, publicKey, privateKey } = identity;
-          let account = await getAccount(network, publicKeyHash).catch( () => false );
+          identity = await unlockFundraiserIdentity(seed, username, passPhrase);
+          const activating = await sendIdentityActivationOperation(network, identity, activationCode);
+          dispatch(addMessage(
+            `Successfully sent activation operation ${activating.operationGroupID}. 
+            Please allow a few minutes for the correct balance to show.`,
+            false
+          ));
+          break;
+      }
 
-          if ( !account && activeTab === FUNDRAISER ) {
-            const activating = await sendIdentityActivationOperation(network, identity, activationCode );
-            if ( activating.operationGroupID ) {
-              dispatch(addMessage('Account is being activated please hold', false));
-              await awaitFor(60);
-              account = await getAccount(network, publicKeyHash);
-            }
-          }
+      if ( identity ) {
+        const { publicKeyHash, publicKey, privateKey } = identity;
+        let balance = 0;
+        let operationGroups = {};
+        let accounts = [];
 
-          let balance = 0;
-          let operationGroups = {};
-          let accounts = [];
-          if (account) {
-            balance = account.account.balance;
-            operationGroups = await getOperationGroupsForAccount(
-              network,
-              publicKeyHash
-            );
-            accounts = await getAccountsForIdentity(network, publicKeyHash);
-          }
-
-          if (
-            !find(identities.toJS(), { publicKeyHash, publicKey, privateKey })
-          ) {
-            dispatch(saveUpdatedWallet(fromJS([identity])));
-            dispatch(
-              addNewIdentity({
-                transactions: [],
-                ...identity,
-                balance,
-                operationGroups,
-                accounts: formatAccounts(
-                  addParentKeysToAccounts(accounts, identity)
-                )
-              })
-            );
-            const selectedAccount = createSelectedAccount({
+        if ( !find(identities.toJS(), identity) ) {
+          dispatch(
+            addNewIdentity({
+              ...identity,
               balance,
               operationGroups,
-              transactions: []
-            });
+              accounts
+            })
+          );
 
-            dispatch(
-              setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-            );
-          } else {
-            setImportDuplicationError(dispatch);
-          }
+          const updatedIdentities = state()
+            .address.get('identities')
+            .map(identity => pick(identity, [
+              'publicKey', 'privateKey', 'publicKeyHash'
+            ]));
+          dispatch(saveUpdatedWallet(updatedIdentities));
 
-          break;
+          const selectedAccount = createSelectedAccount({
+            balance,
+            operationGroups,
+            transactions: []
+          });
+          dispatch(
+            setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
+          );
+        } else {
+          setImportDuplicationError(dispatch);
         }
       }
 
