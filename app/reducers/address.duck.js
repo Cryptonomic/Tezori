@@ -11,7 +11,6 @@ import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
 
 const {
-  getOperationGroups,
   getAccounts,
   getAccount,
   getEmptyTezosFilter,
@@ -43,10 +42,8 @@ const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
-const AUTOMATIC_REFRESH_CLEAR = 'AUTOMATIC_REFRESH_CLEAR';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const automaticRefreshStateClear = actionCreator(AUTOMATIC_REFRESH_CLEAR);
 export const clearEntireAddressState = actionCreator(
   CLEAR_ENTIRE_ADDRESS_STATE
 );
@@ -79,7 +76,7 @@ const setSelectedAccount = actionCreator(
 );
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function selectDefaultAccountOrOpenModal(selectedHash, parentHash) {
+export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     const initWalletState = state().walletInitialization;
     const identities = initWalletState.getIn(['wallet', 'identities']);
@@ -96,10 +93,6 @@ export function selectDefaultAccountOrOpenModal(selectedHash, parentHash) {
             const { publicKeyHash } = identity;
             const account = await getAccount(network, publicKeyHash);
             const { balance } = account.account;
-            const operationGroups = await getOperationGroupsForAccount(
-              network,
-              publicKeyHash
-            );
             const accounts = await getAccountsForIdentity(
               network,
               publicKeyHash
@@ -110,7 +103,6 @@ export function selectDefaultAccountOrOpenModal(selectedHash, parentHash) {
                 transactions: [],
                 ...identity,
                 balance,
-                operationGroups,
                 accounts: formatAccounts(
                   addParentKeysToAccounts(accounts, identity)
                 )
@@ -118,7 +110,6 @@ export function selectDefaultAccountOrOpenModal(selectedHash, parentHash) {
             );
 
             const selectedAccount = createSelectedAccount({
-              operationGroups,
               balance,
               transactions: []
             });
@@ -131,12 +122,7 @@ export function selectDefaultAccountOrOpenModal(selectedHash, parentHash) {
         );
         const firstIdentityHash = identities.getIn([0, 'publicKeyHash']);
 
-        if (!selectedHash || !parentHash) {
-          await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
-          dispatch(automaticAccountRefresh());
-        } else {
-          await dispatch(selectAccount(selectedHash, parentHash));
-        }
+        await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
         dispatch(setIsLoading(false));
       } catch (e) {
         console.error(e);
@@ -154,10 +140,6 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
     try {
       dispatch(setIsLoading(true));
       const account = await getAccount(network, selectedAccountHash);
-      const operationGroups = await getOperationGroupsForAccount(
-        network,
-        selectedAccountHash
-      );
       const emptyFilter = getEmptyTezosFilter();
       const transFilter = {
         ...emptyFilter,
@@ -168,7 +150,6 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
       const transactions = await getOperations(network, transFilter);
       const selectedAccount = createSelectedAccount({
         transactions,
-        operationGroups,
         balance: account.account.balance
       });
 
@@ -203,8 +184,7 @@ export function automaticAccountRefresh() {
       const selectedAccountHash = state().address.get('selectedAccountHash');
       const selectedParentHash = state().address.get('selectedParentHash');
 
-      dispatch(automaticRefreshStateClear());
-      dispatch(selectDefaultAccountOrOpenModal(selectedAccountHash, selectedParentHash));
+      dispatch(selectAccount(selectedAccountHash, selectedParentHash));
     }, REFRESH_INTERVAL);
   };
 }
@@ -295,7 +275,6 @@ export function importAddress() {
       if ( identity ) {
         const { publicKeyHash } = identity;
         const balance = 0;
-        const operationGroups = {};
         const accounts = [];
 
         if ( !find(identities.toJS(), identity) ) {
@@ -303,7 +282,6 @@ export function importAddress() {
             addNewIdentity({
               ...identity,
               balance,
-              operationGroups,
               accounts
             })
           );
@@ -321,7 +299,6 @@ export function importAddress() {
 
           const selectedAccount = createSelectedAccount({
             balance,
-            operationGroups,
             transactions: []
           });
           dispatch(
@@ -361,11 +338,6 @@ const initState = fromJS({
 
 export default function address(state = initState, action) {
   switch (action.type) {
-    case AUTOMATIC_REFRESH_CLEAR: {
-      return state
-        .set('identities', fromJS([]))
-        .set('selectedAccount', createSelectedAccount({}));
-    }
     case CLEAR_ENTIRE_ADDRESS_STATE:
       return initState;
     case CLEAR_STATE: {
@@ -439,17 +411,9 @@ function addNewAccountToIdentity(publicKeyHash, account, identities) {
 
 function createSelectedAccount({
   balance = 0,
-  operationGroups = [],
   transactions = []
 }) {
-  return fromJS({ balance, operationGroups, transactions });
-}
-
-function getOperationGroupsForAccount(network, id) {
-  const emptyFilter = getEmptyTezosFilter();
-  const filter = { ...emptyFilter, operation_source: [id] };
-
-  return getOperationGroups(network, filter);
+  return fromJS({ balance, transactions });
 }
 
 function getAccountsForIdentity(network, id) {
@@ -463,7 +427,6 @@ function getAccountsForIdentity(network, id) {
 
 function formatAccounts(accounts) {
   return accounts.map(account => ({
-    operationGroups: [],
     transactions: [],
     ...account
   }));

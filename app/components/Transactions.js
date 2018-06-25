@@ -73,8 +73,8 @@ export default function Transactions(props: Props) {
       row.get('blockLevel'),
       row.get('kind'),
       row.get('source'),
-      row.get('destination') || 'destination',
-      row.get('amount') || 4,
+      row.get('destination') || 'N/A',
+      row.get('amount') || 'N/A',
       row.get('operationGroupHash'),
     ];
 

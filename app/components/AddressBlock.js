@@ -86,7 +86,6 @@ const AccountTitle = styled(H3)`
 
 type Props = {
   accountBlock: Object, // TODO: type this
-  automaticAccountRefresh: Function,
   openCreateAccountModal: Function,
   selectAccount: Function,
   selectedAccountHash: string,
@@ -142,7 +141,6 @@ class AddressBlock extends Component<Props, State> {
 
   selectAccount = (accountHash: string, parentHash: string) => {
     this.props.selectAccount(accountHash, parentHash);
-    this.props.automaticAccountRefresh();
   };
 
   render() {
