@@ -2,21 +2,29 @@ import { injectGlobal } from 'styled-components';
 import { Theme } from './theme'
 import {ms} from './helpers'
 import { normalize, darken } from 'polished';
-import RobotoFont from '../../resources/fonts/Roboto/Roboto-Light.ttf'
+import RobotoFontLight from '../../resources/fonts/Roboto/Roboto-Light.ttf'
+import RobotoFontMedium from '../../resources/fonts/Roboto/Roboto-Medium.ttf'
+import RobotoFontRegular from '../../resources/fonts/Roboto/Roboto-Regular.ttf'
 import TezosIconsFontTTF from '../../resources/fonts/TezosIcons/Tezos-icons.ttf'
 
 injectGlobal`  
   ${normalize()}
   @font-face {
   font-family: 'Roboto';
-  src: url(${RobotoFont}) format("truetype");
+  src: url(${RobotoFontLight}) format("truetype");
   font-weight: 300;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url(${RobotoFont}) format("truetype");
+  src: url(${RobotoFontMedium}) format("truetype");
   font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(${RobotoFontRegular}) format("truetype");
+  font-weight: normal;
 }
 
 @font-face {
