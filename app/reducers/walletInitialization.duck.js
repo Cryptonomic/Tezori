@@ -54,6 +54,8 @@ export function saveUpdatedWallet(identities) {
   return async (dispatch, state) => {
     const newIdentities = identities.toJS();
 
+    console.log( ' update and saveing ' );
+
     try {
       dispatch(setIsLoading(true));
       const walletLocation = state().walletInitialization.get('walletLocation');
@@ -100,7 +102,7 @@ export function submitAddress(submissionType: 'create' | 'import') {
         { value: password, type: 'notEmpty', name: 'Password' },
         { value: password, type: 'minLength8', name: 'Password' },
         { value: [password, confirmedPassword], type: 'samePassPhrase', name: 'Passwords' }
-      ]
+      ];
 
       const error = displayError(validations);
       if (error) {
@@ -115,6 +117,8 @@ export function submitAddress(submissionType: 'create' | 'import') {
       } else if (submissionType === IMPORT) {
         wallet = await loadWallet(completeWalletPath, password);
       }
+
+      console.log('wallet', wallet);
 
       dispatch(setCurrentWallet(fromJS(wallet)));
       dispatch(setDisplay(DEFAULT));

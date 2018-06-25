@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
+import { getSelectedAccount } from '../utils/general';
 import Button from './Button';
 import BalanceBanner from './BalanceBanner';
 import PageNumbers from './PageNumbers';
@@ -49,7 +50,7 @@ const SectionContainer = styled.div`
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
 type Props = {
-  selectedAccount: Object, // TODO: add type for this
+  identities: array,
   isLoadingTransactions: boolean,
   selectedAccountHash: string,
   selectedParentHash: string,
@@ -79,9 +80,8 @@ class ActionPanel extends Component<Props, State> {
     selectAccount(selectedAccountHash, selectedParentHash);
   };
 
-  renderSection = () => {
-    const { selectedAccountHash, selectedAccount } = this.props;
-
+  renderSection = ( transactions ) => {
+    const { selectedAccountHash } = this.props;
     switch (this.state.activeTab) {
       case DELEGATE:
         return (
@@ -103,11 +103,9 @@ class ActionPanel extends Component<Props, State> {
         );
       case TRANSACTIONS:
       default: {
-        const transactions = selectedAccount.get('transactions');
-
         return (
           <SectionContainer>
-            <Transactions transactions={transactions} />
+            <Transactions transactions={transactions || []} />
             <PageNumbers
               currentPage={this.state.currentPage}
               numberOfPages={4}
@@ -122,14 +120,15 @@ class ActionPanel extends Component<Props, State> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { selectedAccount, selectedAccountHash } = this.props;
-
+    const { identities, selectedAccountHash, selectedParentHash } = this.props;
+    const { transactions, balance } = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
+    console.log('transactions, balance', transactions, balance);
     const { activeTab } = this.state;
 
     return (
       <Container>
         <BalanceBanner
-          balance={selectedAccount.get('balance') || 0}
+          balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           onRefreshClick={this.handleDataRefresh}
         />
@@ -147,7 +146,7 @@ class ActionPanel extends Component<Props, State> {
           ))}
         </TabList>
 
-        {this.renderSection()}
+        { this.renderSection(transactions) }
       </Container>
     );
   }
@@ -157,10 +156,10 @@ function mapStateToProps(state) {
   const { address } = state;
 
   return {
+    identities: address.get('identities'),
     isLoadingTransactions: address.get('isLoading'),
     selectedAccountHash: address.get('selectedAccountHash'),
     selectedParentHash: address.get('selectedParentHash'),
-    selectedAccount: address.get('selectedAccount')
   };
 }
 

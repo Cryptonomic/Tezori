@@ -5,6 +5,7 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
+import { getSelectedAccount } from '../utils/general';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -30,7 +31,7 @@ export function showConfirmationModal() {
 
     const validations = [
       { value: address, type: 'notEmpty', name: 'Address'},
-      { value: address, type: 'validAddress'},
+      { value: address, type: 'validAddress'}
     ];
 
     const error = displayError(validations);
@@ -55,13 +56,18 @@ export function sendConfirmation() {
     const delegateState = state().delegate;
     const walletState = state().walletInitialization;
     const address = delegateState.get('address');
+    const identities = address.get('identities').toJS();
     const fee = delegateState.get('delegateFee');
     const network = walletState.get('network');
-    const selectedAccount = state().address.get('selectedAccount');
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+    const selectedParentHash = state().address.get('selectedParentHash');
+    const selectedAccount = getSelectedAccount( identities, selectedAccountHash, selectedParentHash);
+
+    
     const keyStore = {
-      publicKey: selectedAccount.get('publicKey'),
-      privateKey: selectedAccount.get('privateKey'),
-      publicKeyHash: selectedAccount.get('publicKeyHash')
+      publicKey: selectedAccount.publicKey,
+      privateKey: selectedAccount.privateKey,
+      publicKeyHash: selectedAccount.publicKeyHash
     };
 
     console.log(network, keyStore, address, fee);

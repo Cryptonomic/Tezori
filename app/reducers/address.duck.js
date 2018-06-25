@@ -8,9 +8,11 @@ import OPERATION_TYPES from '../constants/OperationTypes';
 
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
-import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
+import { changeDelegate } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
-import { awaitFor } from '../utils/general';
+import { getTransactions } from '../utils/general';
+import { findAccount, createAccount } from '../utils/account';
+import { findIdentity, createIdentity } from '../utils/identity';
 
 const {
   getOperationGroups,
@@ -42,6 +44,8 @@ const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
+const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
+const SET_IDENTITIES = 'SET_IDENTITIES';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 
@@ -65,6 +69,10 @@ export const confirmPassPhrase = actionCreator(
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activationCode');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
+export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
+export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
+
+
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
   'publicKeyHash',
@@ -73,122 +81,168 @@ export const addNewAccount = actionCreator(
 const setSelectedAccount = actionCreator(
   SELECT_ACCOUNT,
   'selectedAccountHash',
-  'selectedParentHash',
-  'selectedAccount'
+  'selectedParentHash'
 );
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function selectDefaultAccountOrOpenModal() {
+
+export function syncAccountTransactions(accountHash, parentHash) {
   return async (dispatch, state) => {
-    const initWalletState = state().walletInitialization;
-    const identities = initWalletState.getIn(['wallet', 'identities']);
-    const network = initWalletState.get('network');
+    dispatch(setIsLoading(true));
+    const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, parentHash);
+    const account = findAccount( identity, accountHash );
+    const operationGroups =  await getOperationGroupsForAccount( network, accountHash );
+    const transactions = await getTransactions(operationGroups, network);
+    dispatch(
+      updateAccount({
+        ...account,
+        transactions
+      })
+    );
 
-    if (identities.size === 0) {
-      dispatch(openAddAddressModal());
-    } else {
-      const network = initWalletState.get('network');
+    dispatch(setIsLoading(true));
+  };
+}
 
-      try {
-        dispatch(setIsLoading(true));
-        await Promise.all(
-          identities.toJS().map(async identity => {
-            const { publicKeyHash } = identity;
-            const account = await getAccount(network, publicKeyHash);
-            const { balance } = account.account;
-            const operationGroups = await getOperationGroupsForAccount(
-              network,
-              publicKeyHash
-            );
-            const accounts = await getAccountsForIdentity(
-              network,
-              publicKeyHash
-            );
+export function syncIdentityTransactions(accountHash) {
+  return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
+    const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, accountHash);
+    const operationGroups =  await getOperationGroupsForAccount( network, accountHash );
+    const transactions = await getTransactions(operationGroups, network);
+    dispatch(
+      updateIdentity({
+        ...identity,
+        transactions
+      })
+    );
 
-            dispatch(
-              addNewIdentity({
-                transactions: [],
-                ...identity,
-                balance,
-                operationGroups,
-                accounts: formatAccounts(
-                  addParentKeysToAccounts(accounts, identity)
-                )
-              })
-            );
+    dispatch(setIsLoading(true));
+  };
+}
 
-            const selectedAccount = createSelectedAccount({
-              operationGroups,
-              balance,
-              transactions: []
-            });
+export function syncAccount(accountHash, parentHash) {
+  return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
+    const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, parentHash);
+    const account = findAccount( identity, accountHash );
+    const updatedAccount = await getAccount(network, accountHash);
+    console.log('updatedAccount, account a aaa', updatedAccount, account);
 
-            dispatch(
-              setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-            );
-            dispatch(changeDelegate(publicKeyHash));
-          })
-        );
-        const firstIdentityHash = identities.getIn([0, 'publicKeyHash']);
+    const operationGroups =  await getOperationGroupsForAccount( network, accountHash );
+    const transactions = await getTransactions(operationGroups, network);
 
-        await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
-        dispatch(setIsLoading(false));
-        dispatch(automaticAccountRefresh());
-      } catch (e) {
-        console.error(e);
-        dispatch(addMessage(e.name, true));
-        dispatch(setIsLoading(false));
-      }
-    }
+    dispatch(
+      updateAccount({
+        ...account,
+        balance: updatedAccount.account.balance,
+        operationGroups,
+        transactions
+      })
+    );
+
+    dispatch(setIsLoading(true));
   };
 }
 
 export function selectAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
+    dispatch(setIsLoading(true));
+    dispatch(setSelectedAccount(
+      selectedAccountHash,
+      selectedParentHash
+    ));
+    dispatch(changeDelegate(selectedAccountHash));
 
-    try {
-      dispatch(setIsLoading(true));
-      const account = await getAccount(network, selectedAccountHash);
-      const operationGroups = await getOperationGroupsForAccount(
-        network,
-        selectedAccountHash
-      );
-      const managerOperationGroups = operationGroups.filter(({ kind }) => {
-        return kind === OPERATION_TYPES.MANAGER;
-      });
-
-      const transactions = await Promise.all(
-        managerOperationGroups.map(({ hash }) => {
-          return getOperationGroup(network, hash).then(({ operations }) => {
-            return operations.filter(
-              ({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION
-            );
-          });
-        })
-      );
-
-      const flattenedTransactions = flatten(transactions);
-      const selectedAccount = createSelectedAccount({
-        transactions: flattenedTransactions,
-        operationGroups,
-        balance: account.account.balance
-      });
-
-      dispatch(
-        setSelectedAccount(
-          selectedAccountHash,
-          selectedParentHash,
-          selectedAccount
-        )
-      );
-      dispatch(changeDelegate(selectedAccountHash));
-      dispatch(setIsLoading(false));
-    } catch (e) {
-      console.error(e);
+    await dispatch(syncAccount(selectedAccountHash, selectedParentHash)).catch( e => {
       dispatch(addMessage(e.name, true));
-      dispatch(setIsLoading(false));
+    });
+    dispatch(setIsLoading(false));
+  };
+}
+
+export function syncWallet() {
+  return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
+    const identities = state().address.get('identities').toJS();
+    const network = state().walletInitialization.get('network');
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+    const selectedParentHash = state().address.get('selectedParentHash');
+
+    await Promise.all(
+      ( identities || [])
+        .map(async identity => {
+          try {
+            const { publicKeyHash } = identity;
+            const account = await getAccount(network, publicKeyHash);
+
+            const operationGroups =  await getOperationGroupsForAccount( network, publicKeyHash)
+              .catch( () => {});
+
+            const accounts =  await getAccountsForIdentity( network, publicKeyHash )
+              .catch( () => []);
+
+            dispatch(
+              updateIdentity({
+                ...identity,
+                balance: account.account.balance,
+                operationGroups,
+                accounts: accounts.map(account => {
+                  return createAccount( account, identity );
+                })
+              })
+            );
+          } catch(e) {
+            console.error(e);
+            dispatch(addMessage(e.name, true));
+          }
+        })
+    );
+
+    if ( selectedAccountHash === selectedParentHash ) {
+      await dispatch(syncIdentityTransactions(selectedAccountHash, selectedParentHash));
+    } else {
+      await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
     }
+
+    dispatch(setIsLoading(false));
+  }
+}
+
+export function selectDefaultAccountOrOpenModal() {
+  return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
+    const initWalletState = state().walletInitialization;
+    let identities = initWalletState.getIn(['wallet', 'identities']);
+    identities = identities.toJS();
+    const network = initWalletState.get('network');
+
+    if ( identities.length === 0 ) {
+      return dispatch(openAddAddressModal());
+    }
+
+    identities = identities
+      .filter(identity =>
+        identity.publicKey && identity.privateKey && identity.publicKeyHash
+      )
+      .map( identity =>
+        createIdentity(identity)
+      );
+    dispatch( setIdentities( identities ) );
+
+    const { publicKeyHash } = identities[0];
+    dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
+    dispatch(changeDelegate(publicKeyHash));
+
+    await dispatch(syncWallet());
+    dispatch(setIsLoading(false));
   };
 }
 
@@ -294,19 +348,10 @@ export function importAddress() {
 
       if ( identity ) {
         const { publicKeyHash, publicKey, privateKey } = identity;
-        let balance = 0;
-        let operationGroups = {};
-        let accounts = [];
-
         if ( !find(identities.toJS(), identity) ) {
-          dispatch(
-            addNewIdentity({
-              ...identity,
-              balance,
-              operationGroups,
-              accounts
-            })
-          );
+          dispatch(addNewIdentity(
+            createIdentity(identity)
+          ));
 
           const updatedIdentities = state()
             .address.get('identities')
@@ -318,15 +363,7 @@ export function importAddress() {
               }
             });
           dispatch(saveUpdatedWallet(updatedIdentities));
-
-          const selectedAccount = createSelectedAccount({
-            balance,
-            operationGroups,
-            transactions: []
-          });
-          dispatch(
-            setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-          );
+          dispatch(selectAccount(publicKeyHash, publicKeyHash));
         } else {
           setImportDuplicationError(dispatch);
         }
@@ -355,7 +392,6 @@ const initState = fromJS({
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
-  selectedAccount: createSelectedAccount({}),
   selectedParentHash: ''
 });
 
@@ -380,12 +416,27 @@ export default function address(state = initState, action) {
           state.get('identities')
         )
       );
+    case SET_IDENTITIES: {
+      return state.set('identities', fromJS(action.identities));
+    }
     case ADD_NEW_IDENTITY: {
       const newIdentity = fromJS(action.identity);
 
       return state.update('identities', identities =>
         identities.push(newIdentity)
       );
+    }
+    case UPDATE_IDENTITY: {
+      const { publicKeyHash } = action.identity;
+      console.log('publicKeyHash, action.identity', action.identity.publicKeyHash, action.identity);
+      const identities = state.get('identities');
+      const indexFound = identities
+        .findIndex((identity) => publicKeyHash === identity.get('publicKeyHash') );
+
+      if ( indexFound > -1) {
+        return state.set('identities', identities.set(indexFound, fromJS(action.identity)));
+      }
+      return state;
     }
     case CLOSE_ADD_ADDRESS_MODAL:
       return state.set('open', false);
@@ -412,8 +463,7 @@ export default function address(state = initState, action) {
     case SELECT_ACCOUNT:
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
-        .set('selectedParentHash', action.selectedParentHash)
-        .set('selectedAccount', action.selectedAccount);
+        .set('selectedParentHash', action.selectedParentHash);
     default:
       return state;
   }
@@ -426,7 +476,7 @@ function addNewAccountToIdentity(publicKeyHash, account, identities) {
     if (identity.get('publicKeyHash') === publicKeyHash) {
       const accounts = identity.get('accounts').toJS();
       accounts.push(account);
-      return identity.set('accounts', fromJS(formatAccounts(accounts)));
+      return identity.set('accounts', fromJS(accounts));
     }
     return identity;
   });
@@ -478,14 +528,6 @@ function getAccountsForIdentity(network, id) {
   return getAccounts(network, filter).then(accounts => {
     return accounts.filter(account => account.accountId !== id);
   });
-}
-
-function formatAccounts(accounts) {
-  return accounts.map(account => ({
-    operationGroups: [],
-    transactions: [],
-    ...account
-  }));
 }
 
 export function clearAccountRefreshInterval() {

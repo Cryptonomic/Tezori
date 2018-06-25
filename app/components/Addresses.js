@@ -91,6 +91,7 @@ class Addresses extends Component<Props> {
 
   render() {
     const { identities, openAddAddressModal } = this.props;
+    console.log('identitiesidentities', identities.toJS());
 
     return (
       <Container>

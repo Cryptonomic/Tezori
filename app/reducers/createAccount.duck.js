@@ -6,6 +6,7 @@ import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
+import { createAccount as createAccountTmp } from '../utils/account';
 
 const { getAccount } = TezosConseilQuery;
 const { sendOriginationOperation } = TezosOperations;
@@ -96,21 +97,17 @@ export function createNewAccount() {
       dispatch(setOperation(newAccount.operation));
       const newAccountHash =
         newAccount.results.operation_results[0].originated_contracts[0];
-      const tmpAccount = {
-        accountId: newAccountHash,
-        balance: amountInUtez,
-        delegateValue: delegate,
-        manager: delegate,
-        isReady: false,
-        delegateSetable: true,
-        script: null
-      };
-      //  const account = await getAccount(network, newAccountHash);
-
+      
       dispatch(
         addNewAccount(
           publicKeyHash,
-          addParentKeysToAccount(tmpAccount, identity.toJS())
+          createAccountTmp({
+            accountId: newAccountHash,
+            balance: amountInUtez,
+            manager: delegate
+          }, 
+            identity.toJS()
+          )
         )
       );
       dispatch(closeCreateAccountModal());
@@ -168,16 +165,4 @@ export function findKeyStore(publicKeyHash, identities) {
   return identities.find(identity => {
     return identity.get('publicKeyHash') === publicKeyHash;
   });
-}
-
-export function addParentKeysToAccount(account, identity) {
-  return {
-    ...account,
-    publicKey: identity.publicKey,
-    privateKey: identity.privateKey
-  };
-}
-
-export function addParentKeysToAccounts(accounts, identity) {
-  return accounts.map(account => addParentKeysToAccount(account, identity));
 }
