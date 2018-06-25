@@ -6,6 +6,11 @@ import { addMessage } from './message.duck';
 import { findKeyStore } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
+import { revealKey } from '../utils/general'
+
+const {
+  sendTransactionOperation,
+} = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -74,17 +79,30 @@ export function sendConfirmation() {
 
     try {
       if (password !== walletPassword) {
-        throw new Error({ name: 'Incorrected password' });
+        throw new Error({ name: 'Incorrect password' });
       }
 
       dispatch(updateSendTezosLoading(true));
-      await TezosOperations.sendTransactionOperation(
+      await revealKey(network, keyStore, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
+      
+      const res = await sendTransactionOperation(
         network,
         keyStore.toJS(),
         toAddress,
         tezToUtez(Number(amount.replace(/\,/g,''))),
         fee
-      );
+      ).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
+
+      dispatch(addMessage(
+        `Successfully sent send Tez operation ${res.operationGroupID}.`,
+        false
+      ));
 
       dispatch(clearState());
       dispatch(updateSendTezosLoading(false));

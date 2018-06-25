@@ -10,9 +10,9 @@ export function createAccount(account, identity) {
     counter: 0,
     delegateSetable: false,
     delegateValue: null,
-    manager: 'tz1TRWQpmnmQzi9GTrwKWvJAUDYm8TCruiXo',
+    manager: '',
     script: null,
-    spendable: false,
+    spendable: true,
     transactions: [],
     publicKey: identity.publicKey,
     privateKey: identity.privateKey,
@@ -23,6 +23,11 @@ export function createAccount(account, identity) {
 export function findAccount( identity, accountId ) {
   return identity && ( identity.accounts || [] )
       .find( account => account.accountId === accountId );
+}
+
+export function findAccountIndex( identity, accountId ) {
+  return identity && ( identity.accounts || [] )
+      .findIndex( account => account.accountId === accountId );
 }
 
 export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {

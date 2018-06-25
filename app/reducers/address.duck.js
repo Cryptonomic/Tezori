@@ -5,12 +5,18 @@ import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 
+import * as status from '../constants/StatusTypes';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
 import { getTransactions } from '../utils/general';
-import { findAccount, createAccount, getAccountsForIdentity } from '../utils/account';
+import {
+  findAccount,
+  createAccount,
+  findAccountIndex,
+  getAccountsForIdentity
+} from '../utils/account';
 import { findIdentity, createIdentity } from '../utils/identity';
 
 const {
@@ -85,7 +91,6 @@ const setSelectedAccount = actionCreator(
 
 export function syncAccountTransactions(accountHash, parentHash) {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, parentHash);
@@ -103,13 +108,11 @@ export function syncAccountTransactions(accountHash, parentHash) {
     }
 
     dispatch(updateIdentity(identity));
-    dispatch(setIsLoading(true));
   };
 }
 
 export function syncIdentityTransactions(accountHash) {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, accountHash);
@@ -120,51 +123,60 @@ export function syncIdentityTransactions(accountHash) {
         transactions
       })
     );
+  };
+}
 
-    dispatch(setIsLoading(true));
+export function syncSelectedTransactions() {
+  return async (dispatch, state) => {
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+    const selectedParentHash = state().address.get('selectedParentHash');
+    if ( selectedAccountHash === selectedParentHash ) {
+      await dispatch(syncIdentityTransactions(selectedAccountHash));
+    } else {
+      await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
+    }
   };
 }
 
 export function syncAccount(accountHash, parentHash) {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, parentHash);
-    const account = findAccount( identity, accountHash );
+    const foundIndex = findAccountIndex( identity, accountHash );
     const updatedAccount = await getAccount(network, accountHash);
-    const transactions = await getTransactions(accountHash, network);
-
-    const foundIndex = identity && ( identity.accounts || [] )
-        .findIndex( account => account.accountId === accountHash );
+    const account  = identity.accounts[foundIndex];
 
     if ( foundIndex > -1 ) {
       identity.accounts[foundIndex] = {
         ...account,
-        balance: updatedAccount.account.balance,
-        transactions
+        balance: updatedAccount.account.balance
       };
     }
 
     dispatch(updateIdentity(identity));
-    dispatch(setIsLoading(true));
   };
 }
 
-export function selectAccount(selectedAccountHash, selectedParentHash) {
+export function syncIdentity(accountHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
-    dispatch(setIsLoading(true));
-    dispatch(setSelectedAccount(
-      selectedAccountHash,
-      selectedParentHash
-    ));
-    dispatch(changeDelegate(selectedAccountHash));
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, accountHash);
+    const updatedIdentity = await getAccount(network, accountHash);
+    const accounts =  await getAccountsForIdentity( network, accountHash )
+      .catch( () => []);
 
-    await dispatch(syncAccount(selectedAccountHash, selectedParentHash)).catch( e => {
-      dispatch(addMessage(e.name, true));
-    });
-    dispatch(setIsLoading(false));
+    dispatch(
+      updateIdentity({
+        ...identity,
+        balance: updatedIdentity.account.balance,
+        status: status.READY,
+        accounts: accounts.map(account => {
+          return createAccount( account, identity );
+        })
+      })
+    );
   };
 }
 
@@ -173,27 +185,12 @@ export function syncWallet() {
     dispatch(setIsLoading(true));
     const identities = state().address.get('identities').toJS();
     const network = state().walletInitialization.get('network');
-    const selectedAccountHash = state().address.get('selectedAccountHash');
-    const selectedParentHash = state().address.get('selectedParentHash');
 
     await Promise.all(
       ( identities || [])
         .map(async identity => {
           try {
-            const { publicKeyHash } = identity;
-            const account = await getAccount(network, publicKeyHash);
-            const accounts =  await getAccountsForIdentity( network, publicKeyHash )
-              .catch( () => []);
-
-            dispatch(
-              updateIdentity({
-                ...identity,
-                balance: account.account.balance,
-                accounts: accounts.map(account => {
-                  return createAccount( account, identity );
-                })
-              })
-            );
+            await dispatch(syncIdentity(identity.publicKeyHash));
           } catch(e) {
             console.error(e);
             dispatch(addMessage(e.name, true));
@@ -201,19 +198,35 @@ export function syncWallet() {
         })
     );
 
-    try {
-      if ( selectedAccountHash === selectedParentHash ) {
-        await dispatch(syncIdentityTransactions(selectedAccountHash, selectedParentHash));
-      } else {
-        await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
-      }
-    } catch(e) {
-      console.error(e);
-      dispatch(addMessage(e.name, true));
-    }
-
+    await dispatch(syncSelectedTransactions());
     dispatch(setIsLoading(false));
   }
+}
+
+export function selectAccount(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    try{
+      const network = state().walletInitialization.get('network');
+      dispatch(setIsLoading(true));
+      dispatch(setSelectedAccount(
+        selectedAccountHash,
+        selectedParentHash
+      ));
+      dispatch(changeDelegate(selectedAccountHash));
+      if (selectedAccountHash === selectedParentHash ) {
+        await dispatch(syncIdentity(selectedAccountHash));
+      } else {
+        await dispatch(syncAccount(selectedAccountHash, selectedParentHash));
+      }
+      await dispatch(syncSelectedTransactions());
+
+    } catch (e) {
+      console.error(e);
+      dispatch(addMessage(e.name, true));
+      dispatch(setIsLoading(false));
+    }
+    dispatch(setIsLoading(false));
+  };
 }
 
 export function selectDefaultAccountOrOpenModal() {
@@ -242,6 +255,7 @@ export function selectDefaultAccountOrOpenModal() {
     dispatch(changeDelegate(publicKeyHash));
 
     await dispatch(syncWallet());
+    await dispatch(automaticAccountRefresh());
     dispatch(setIsLoading(false));
   };
 }
@@ -250,17 +264,14 @@ let currentAccountRefreshInterval = null;
 
 export function automaticAccountRefresh() {
   return (dispatch, state) => {
-    const REFRESH_INTERVAL = 5 * 60 * 1000;
+    const REFRESH_INTERVAL = 5 * 60 * 3000;
 
     if (currentAccountRefreshInterval) {
       clearAccountRefreshInterval();
     }
 
     currentAccountRefreshInterval = setInterval(() => {
-      const selectedAccountHash = state().address.get('selectedAccountHash');
-      const selectedParentHash = state().address.get('selectedParentHash');
-
-      dispatch(selectAccount(selectedAccountHash, selectedParentHash));
+      dispatch(syncWallet());
     }, REFRESH_INTERVAL);
   };
 }
@@ -338,11 +349,22 @@ export function importAddress() {
           break;
         case FUNDRAISER:
           identity = await unlockFundraiserIdentity(seed, username, passPhrase);
-          const activating = await sendIdentityActivationOperation(network, identity, activationCode);
-          dispatch(addMessage(
-            `Successfully sent activation operation ${activating.operationGroupID}.`,
-            false
-          ));
+          const account = await getAccount(network, identity.publicKeyHash).catch( () => false );
+          if ( !account ) {
+            const activating = await sendIdentityActivationOperation(
+              network,
+              identity,
+              activationCode
+            )
+              .catch((err) => {
+                err.name = err.message;
+                throw err;
+              });
+            dispatch(addMessage(
+              `Successfully sent activation operation ${activating.operationGroupID}.`,
+              false
+            ));
+          }
           break;
       }
 
@@ -363,7 +385,7 @@ export function importAddress() {
               }
             });
           dispatch(saveUpdatedWallet(updatedIdentities));
-          dispatch(selectAccount(publicKeyHash, publicKeyHash));
+          await dispatch(selectAccount(publicKeyHash, publicKeyHash));
         } else {
           setImportDuplicationError(dispatch);
         }
@@ -373,7 +395,7 @@ export function importAddress() {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.message, true));
+      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
   };
@@ -402,10 +424,12 @@ export default function address(state = initState, action) {
     case CLEAR_STATE: {
       const identities = state.get('identities');
       const selectedAccountHash = state.get('selectedAccountHash');
+      const selectedParentHash = state.get('selectedParentHash');
 
       return initState
         .set('identities', identities)
-        .set('selectedAccountHash', selectedAccountHash);
+        .set('selectedAccountHash', selectedAccountHash)
+        .set('selectedParentHash', selectedParentHash);
     }
     case ADD_NEW_ACCOUNT:
       return state.set(
@@ -428,7 +452,6 @@ export default function address(state = initState, action) {
     }
     case UPDATE_IDENTITY: {
       const { publicKeyHash } = action.identity;
-      console.log('publicKeyHash, action.identity', action.identity.publicKeyHash, action.identity);
       const identities = state.get('identities');
       const indexFound = identities
         .findIndex((identity) => publicKeyHash === identity.get('publicKeyHash') );

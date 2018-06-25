@@ -7,8 +7,8 @@ import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { createAccount as createAccountTmp } from '../utils/account';
+import { revealKey } from '../utils/general'
 
-const { getAccount } = TezosConseilQuery;
 const { sendOriginationOperation } = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -35,6 +35,11 @@ export const openCreateAccountModal = actionCreator(OPEN_CREATE_ACCOUNT_MODAL);
 export const closeCreateAccountModal = actionCreator(
   CLOSE_CREATE_ACCOUNT_MODAL
 );
+
+export const clearCreateAccountState = actionCreator(
+  CLEAR_CREATE_ACCOUNT_STATE
+);
+
 export const setOperation = actionCreator(SET_OPERATION, 'operation');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passphrase');
 export const confirmPassPhrase = actionCreator(
@@ -82,7 +87,11 @@ export function createNewAccount() {
       const publicKey = identity.get('publicKey');
       const privateKey = identity.get('privateKey');
       const keyStore = { publicKey, privateKey, publicKeyHash };
-      // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
+
+      await revealKey(network, keyStore, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
 
       const newAccount = await sendOriginationOperation(
         network,
@@ -92,25 +101,27 @@ export function createNewAccount() {
         true,
         true,
         fee
-      );
+      ).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
 
-      dispatch(setOperation(newAccount.operation));
       const newAccountHash =
-        newAccount.results.operation_results[0].originated_contracts[0];
-      
+        newAccount.results.contents[0].metadata.operation_result.originated_contracts[0];
+
       dispatch(
         addNewAccount(
           publicKeyHash,
           createAccountTmp({
-            accountId: newAccountHash,
-            balance: amountInUtez,
-            manager: delegate
-          }, 
+              accountId: newAccountHash,
+              balance: amountInUtez,
+              manager: delegate
+            },
             identity.toJS()
           )
         )
       );
-      dispatch(closeCreateAccountModal());
+      dispatch(clearCreateAccountState());
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);

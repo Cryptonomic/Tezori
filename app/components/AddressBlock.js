@@ -219,7 +219,7 @@ class AddressBlock extends Component<Props, State> {
               const smartAddressBalance = smartAddress.get('balance');
               return (
                 <Address
-                  key
+                  key={ smartAddress.get('accountId') }
                   isActive={isSmartActive}
                   onClick={() =>
                     this.selectAccount(smartAddressId, publicKeyHash)

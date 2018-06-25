@@ -1,3 +1,5 @@
+import * as status from '../constants/StatusTypes';
+
 export function createIdentity(identity) {
 
   return {
@@ -7,6 +9,7 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
+    status: status.PENDING,
     ...identity
   };
 }

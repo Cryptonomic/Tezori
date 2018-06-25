@@ -121,8 +121,10 @@ class ActionPanel extends Component<Props, State> {
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     const { identities, selectedAccountHash, selectedParentHash } = this.props;
-    const { transactions, balance } = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
-    console.log('transactions, balance', transactions, balance);
+    const selectedAccount = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
+    const transactions = selectedAccount.get('transactions');
+    const balance = selectedAccount.get('balance');
+    
     const { activeTab } = this.state;
 
     return (

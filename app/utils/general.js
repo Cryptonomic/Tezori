@@ -1,10 +1,11 @@
-import { TezosConseilQuery  } from 'conseiljs';
+import { TezosConseilQuery, TezosOperations  } from 'conseiljs';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 
 const { getEmptyTezosFilter, getOperations } = TezosConseilQuery;
+const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 /**
  *
  * @param timeout - number of seconds to wait
@@ -28,10 +29,20 @@ export async function getTransactions(accountHash, network) {
 }
 
 export function getSelectedAccount( identities, selectedAccountHash, selectedParentHash ) {
-  let selectedAccount = findIdentity(identities, selectedAccountHash);
+  let selectedAccount = null;
   if (selectedAccountHash === selectedParentHash) {
-    selectedAccount = findAccount( selectedAccount, selectedAccountHash );
+    selectedAccount = findIdentity( identities, selectedAccountHash );
+  } else {
+    const identity = findIdentity( identities, selectedParentHash );
+    selectedAccount = findAccount( identity, selectedAccountHash );
   }
 
   return fromJS(selectedAccount || createSelectedAccount() );
+}
+
+export async function revealKey(network, keyStore, fee) {
+  const keyRevealed = await isManagerKeyRevealedForAccount(network, keyStore);
+  if ( !keyRevealed ) {
+    await sendKeyRevealOperation(network, keyStore, fee);
+  }
 }

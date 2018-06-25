@@ -118,8 +118,6 @@ export function submitAddress(submissionType: 'create' | 'import') {
         wallet = await loadWallet(completeWalletPath, password);
       }
 
-      console.log('wallet', wallet);
-
       dispatch(setCurrentWallet(fromJS(wallet)));
       dispatch(setDisplay(DEFAULT));
       dispatch(push('/addresses'));

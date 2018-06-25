@@ -5,7 +5,11 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
-import { getSelectedAccount } from '../utils/general';
+import { getSelectedAccount, revealKey } from '../utils/general';
+
+const {
+  sendDelegationOperation
+} = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -62,19 +66,22 @@ export function sendConfirmation() {
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
     const selectedAccount = getSelectedAccount( identities, selectedAccountHash, selectedParentHash);
-
-    
-    const keyStore = {
-      publicKey: selectedAccount.publicKey,
-      privateKey: selectedAccount.privateKey,
-      publicKeyHash: selectedAccount.publicKeyHash
-    };
-
-    console.log(network, keyStore, address, fee);
+    const publicKey = selectedAccount.get('publicKey');
+    const privateKey = selectedAccount.get('privateKey');
+    const publicKeyHash = selectedAccount.get('publicKeyHash');
+    const keyStore = { publicKey, privateKey, publicKeyHash };
 
     try {
       dispatch(updateIsLoading(true));
-      await TezosOperations.sendDelegationOperation(network, keyStore, address, fee);
+      await revealKey(network, keyStore, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
+      
+      await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
       dispatch(clearState());
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));
