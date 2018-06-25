@@ -35,8 +35,8 @@ export const Theme = {
     },
     weights: {
       light: 300,
-      normal: 500,
-      bold: 700
+      normal: 400,
+      bold: 500
     }
   },
   layers: {

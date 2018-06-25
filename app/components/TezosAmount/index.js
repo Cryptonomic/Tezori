@@ -11,7 +11,6 @@ type Props = {
   iconName?: string,
   size: any,
   weight: string,
-  format?: boolean
 };
 
 const Amount = styled.span`
@@ -37,11 +36,11 @@ const Icon = styled(TezosIcon)`
 `;
 
 const TezosAmount = (props: Props) => {
-  const { size, color, amount, iconName, weight, className, showTooltip, format} = props;
+  const { size, color, amount, iconName, weight, className, showTooltip} = props;
   return showTooltip ? (
     <Tooltip position="right" title={formatAmount(amount)}>
       <Amount className={className} color={color} size={size} weight={weight}>
-        { formatAmount(amount, format && 2) }
+        { formatAmount(amount, 2) }
         {
           iconName
           && <Icon size={size} color={color} iconName={iconName}/>
@@ -50,7 +49,7 @@ const TezosAmount = (props: Props) => {
     </Tooltip>
     ) : (
     <Amount className={className} color={color} size={size} weight={weight}>
-      { formatAmount(amount, format && 2) }
+      { formatAmount(amount, 2) }
       {
         iconName
           && <Icon size={size} color={color} iconName={iconName}/>
@@ -64,8 +63,7 @@ TezosAmount.defaultProps = {
   color: 'primary',
   iconName: 'tezos',
   size: ms(0),
-  weight: 'normal',
-  format: true,
+  weight: 'normal'
 };
 
 export default TezosAmount;

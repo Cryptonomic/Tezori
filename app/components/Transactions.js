@@ -86,12 +86,9 @@ export default function Transactions(props: Props) {
                 <RowElement>
                   {
                     rowArrIndex === 4
-                      ? <Amount size={ms(0)} amount={elem} formatAmount={false} />
+                      ? <Amount size={ms(0)} amount={parseInt(elem)} />
                       : elem
                   }
-                  {rowArrIndex === 4 && (
-                    <TezosSymbol alt="tez" src={tezosLogo} />
-                  )}
                 </RowElement>
               )}
               {rowArrIndex + 1 === rowArray.length && (
