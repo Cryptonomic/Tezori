@@ -101,22 +101,24 @@ export function submitAddress(submissionType: 'create' | 'import') {
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if (submissionType === 'create') {
-      const validations = [
-        { value: walletLocation, type: 'locationFilled' },
-        { value: password, type: 'notEmpty', name: 'Password' },
-        { value: password, type: 'minLength8', name: 'Password' },
-        {
-          value: [password, confirmedPassword],
-          type: 'samePassPhrase',
-          name: 'Passwords'
-        }
-      ];
+    let validations = [
+      { value: walletLocation, type: 'locationFilled'},
+      { value: `${walletLocation}/${walletFileName}`, type: 'validJS'},
+      { value: password, type: 'notEmpty', name: 'Password' },
+      { value: password, type: 'minLength8', name: 'Password' }
+    ]
 
-      const error = displayError(validations);
-      if (error) {
-        return dispatch(addMessage(error, true));
-      }
+    if (submissionType == 'create') {
+      validations.push({
+        value: [password, confirmedPassword],
+        type: 'samePassPhrase',
+        name: 'Passwords'
+      })
+    }
+
+    const error = displayError(validations);
+    if (error) {
+      return dispatch(addMessage(error, true));
     }
 
     try {
@@ -124,7 +126,8 @@ export function submitAddress(submissionType: 'create' | 'import') {
       if (submissionType === CREATE) {
         wallet = await createWallet(completeWalletPath, password);
       } else if (submissionType === IMPORT) {
-        wallet = await loadWallet(completeWalletPath, password);
+        wallet = await loadWallet(completeWalletPath, password)
+        .catch((err) => { dispatch(addMessage("Invalid wallet/password combination.", true))});
       }
 
       dispatch(setCurrentWallet(fromJS(wallet)));
