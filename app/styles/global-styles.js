@@ -9,13 +9,13 @@ injectGlobal`
   ${normalize()}
   @font-face {
   font-family: 'Roboto';
-  src: url(${RobotoFont});
+  src: url(${RobotoFont}) format("truetype");
   font-weight: 300;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url(${RobotoFont});
+  src: url(${RobotoFont}) format("truetype");
   font-weight: 500;
 }
 
