@@ -38,11 +38,15 @@
 .inactiveTab {
   background-color: #417DEF;
   color: white;
+  text-align: center;
+  padding: 0 10px;
 }
 
 .activeTab {
   color: #1A325F;
   background-color: white;
+  text-align: center;
+  padding: 0 10px;
 }
 
 .addAddressBodyContainer {

@@ -2,12 +2,18 @@ import React from 'react';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import classNames from 'classnames';
+import styled from 'styled-components'
 
 import Button from './Button';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import Loader from './Loader';
+import { ms } from '../styles/helpers'
 
 import styles from './AddAddressModal.css';
+
+const ImportButton = styled(Button)`
+  margin-top: ${ms(2)}
+`
 
 type Props = {
   open: boolean,
@@ -187,14 +193,14 @@ export default function AddAddress(props: Props) {
       <div className={styles.addAddressBodyContainer}>
         {renderAddBody()}
         <div>
-          <Button
+          <ImportButton
             buttonTheme="primary"
             onClick={importAddress}
             disabled={isLoading}
             small
           >
             Import
-          </Button>
+          </ImportButton>
           {isLoading && <Loader />}
         </div>
       </div>

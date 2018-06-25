@@ -31,6 +31,7 @@ const HashContainer = styled.div`
   color: ${({ theme: { colors } }) => colors.primary};
   font-size: ${ms(3)};
   position: relative;
+  word-break: break-all;
 `;
 
 const Hash = styled(H4)`
