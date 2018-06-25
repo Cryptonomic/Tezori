@@ -11034,8 +11034,8 @@ tsconfig-paths-webpack-plugin@^3.2.0:
     tsconfig-paths "^3.4.0"
 
 tsconfig-paths@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.4.0.tgz#d19fe80c5b245f99d17363471971eab54e65a8a7"
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.4.1.tgz#9e03c5833f09c23e2c330b785e875d6cfc92f43a"
   dependencies:
     deepmerge "^2.0.1"
     minimist "^1.2.0"
