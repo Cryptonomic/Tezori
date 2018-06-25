@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosAmount from '../TezosAmount';
-import { formatAmount } from '../../utils/currancy'
-import Tooltip from '../Tooltip'
 import { getTotalBalance } from '../../reducers/address.duck';
 
 const Container = styled.div`
@@ -14,7 +12,7 @@ const Container = styled.div`
 `;
 
 const Text = styled.span`
-  font-size: ${ms(0)};
+  font-size: ${ms(1)};
   font-family: ${({ theme }) => theme.typo.fontFamily.primary};
   font-weight: 500;
   color: ${({ theme: { colors } }) => colors.gray3};
@@ -22,8 +20,7 @@ const Text = styled.span`
 `;
 
 const Amount = styled(TezosAmount)`
-  display: inline-block;
-  margin-left: ${ms(4)};
+  margin-left: ${ms(2)};
 `;
 
 type Props = {
@@ -32,13 +29,17 @@ type Props = {
 
 class TotalBalance extends Component {
   render() {
-    const { totalBalance = 0 } = this.props;
+    const { totalBalance } = this.props;
     return (
       <Container>
         <Text>Total Balance</Text>
-        <Tooltip position="right" title={ formatAmount(totalBalance) }>
-          <Amount size={ms(2)} amount={ formatAmount(totalBalance, 2) } color={'primary'} weight='normal'/>
-        </Tooltip>
+        <Amount
+          size={ms(3)}
+          amount={totalBalance}
+          color="primary"
+          weight="normal"
+          showTooltip
+        />
       </Container>
     );
   }

@@ -168,23 +168,13 @@ export default function AddAddress(props: Props) {
               value={username}
               onChange={(_, newUsername) => updateUsername(newUsername)}
             />
-            <div className={styles.fundraiserPasswordContainer}>
-              <TextField
-                floatingLabelText="Pass Phrase"
-                type="password"
-                style={{ width: '45%' }}
-                value={passPhrase}
-                onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
-              />
-              <TextField
-                floatingLabelText="Confirm Pass Phrase"
-                type="password"
-                style={{ width: '45%' }}
-                onChange={(_, newPassPhrase) =>
-                  confirmPassPhrase(newPassPhrase)
-                }
-              />
-            </div>
+            <TextField
+              floatingLabelText="Password"
+              type="password"
+              style={{ width: '100%' }}
+              value={passPhrase}
+              onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
+            />
           </div>
         );
     }

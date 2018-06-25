@@ -11,7 +11,6 @@ import {
 
 import tezosLogo from '../../resources/tezosLogo.png';
 import styled from 'styled-components';
-import { lighten } from 'polished';
 import TezosAmount from './TezosAmount';
 import { formatAmount } from '../utils/currancy';
 import { ms } from '../styles/helpers';
@@ -19,6 +18,8 @@ import { ms } from '../styles/helpers';
 const Container = styled.section`
   height: 100%;
   background-color: ${({ theme: { colors } }) => colors.white};
+  display: flex;
+  justify-content: center;
 `;
 
 const Details = styled.div`
@@ -87,12 +88,9 @@ export default function Transactions(props: Props) {
                 <RowElement>
                   {
                     rowArrIndex === 4
-                      ? <Amount size={ms(0)} iconName="" amount={ formatAmount(elem) } />
+                      ? <Amount size={ms(0)} amount={parseInt(elem)} />
                       : elem
                   }
-                  {rowArrIndex === 4 && (
-                    <TezosSymbol alt="tez" src={tezosLogo} />
-                  )}
                 </RowElement>
               )}
               {rowArrIndex + 1 === rowArray.length && (

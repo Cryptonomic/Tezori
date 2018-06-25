@@ -1,13 +1,16 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { lighten } from 'polished';
+import { isEmpty } from 'lodash'
 
 import { getSelectedAccount } from '../utils/general';
+import { findIdentity, findIdentityIndex } from '../utils/identity';
 import Button from './Button';
 import BalanceBanner from './BalanceBanner';
+import EmptyState from './EmptyState';
 import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
 import Send from './Send';
@@ -16,6 +19,7 @@ import Delegate from './Delegate';
 import Loader from './Loader';
 import tabConstants from '../constants/tabConstants';
 import { ms } from '../styles/helpers';
+import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 
 import { selectAccount } from '../reducers/address.duck';
 
@@ -25,9 +29,9 @@ const Container = styled.section`
 
 const Tab = styled(Button)`
   background: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.white : colors.accent};
+  isActive ? colors.white : colors.accent};
   color: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.primary : lighten(0.4, colors.accent)};
+  isActive ? colors.primary : lighten(0.4, colors.accent)};
   cursor: pointer;
   text-align: center;
   font-weight: 500;
@@ -43,9 +47,36 @@ const TabList = styled.div`
 const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
+  height: calc(100% - 150px);
   background-color: white;
   padding: ${ms(4)};
 `;
+
+const Link = styled.span`
+  color: ${ ({ theme: { colors } }) => colors.blue };
+  cursor: pointer;
+`
+
+const DescriptionContainer = styled.p`
+  color: ${ ({ theme: { colors } }) => colors.gray5 };
+  text-align: center;
+`
+
+type DescriptionProps = {
+  onSendClick: Function,
+  onReceiveClick: Function
+}
+
+const Description = (props:DescriptionProps) => {
+  const { onSendClick, onReceiveClick } = props
+  return (
+    <DescriptionContainer>
+      It's pretty empty here. Get started
+      <Link onClick={onSendClick}> sending</Link> and
+      <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
+    </DescriptionContainer>
+  )
+}
 
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
@@ -80,8 +111,13 @@ class ActionPanel extends Component<Props, State> {
     selectAccount(selectedAccountHash, selectedParentHash);
   };
 
+  handleLinkPress = tab => {
+    this.setState({ activeTab: tab })
+  }
+
   renderSection = ( transactions ) => {
     const { selectedAccountHash } = this.props;
+
     switch (this.state.activeTab) {
       case DELEGATE:
         return (
@@ -105,13 +141,29 @@ class ActionPanel extends Component<Props, State> {
       default: {
         return (
           <SectionContainer>
-            <Transactions transactions={transactions || []} />
-            <PageNumbers
-              currentPage={this.state.currentPage}
-              numberOfPages={4}
-              onClick={currentPage => this.setState({ currentPage })}
-            />
-            {this.props.isLoadingTransactions && <Loader />}
+            {
+              isEmpty(transactions.toJS())
+                ?
+                <EmptyState
+                  imageSrc={transactionsEmptyState}
+                  title={'You have not made any transactions yet'}
+                  description={
+                  <Description
+                    onReceiveClick={() => this.handleLinkPress(RECEIVE)}
+                    onSendClick={() => this.handleLinkPress(SEND)}
+                  />}
+                />
+                :
+                <Fragment>
+                  <Transactions transactions={transactions} />
+                  <PageNumbers
+                    currentPage={this.state.currentPage}
+                    numberOfPages={4}
+                    onClick={currentPage => this.setState({ currentPage })}
+                  />
+                  {this.props.isLoadingTransactions && <Loader />}
+                </Fragment>
+            }
           </SectionContainer>
         );
       }
@@ -120,11 +172,11 @@ class ActionPanel extends Component<Props, State> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { identities, selectedAccountHash, selectedParentHash } = this.props;
-    const selectedAccount = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
+
+    const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex } = this.props;
     const transactions = selectedAccount.get('transactions');
     const balance = selectedAccount.get('balance');
-    
+    const  isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
 
     return (
@@ -132,6 +184,9 @@ class ActionPanel extends Component<Props, State> {
         <BalanceBanner
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
+          parentIdentity={parentIdentity}
+          parentIndex={parentIndex}
+          isManagerAddress={isManagerAddress}
           onRefreshClick={this.handleDataRefresh}
         />
 
@@ -156,15 +211,22 @@ class ActionPanel extends Component<Props, State> {
 
 function mapStateToProps(state) {
   const { address } = state;
+  const identities = address.get('identities');
+  const jsIdentities = identities.toJS();
+  const selectedAccountHash = address.get('selectedAccountHash');
+  const selectedParentHash = address.get('selectedParentHash');
 
   return {
-    identities: address.get('identities'),
+    identities,
     isLoadingTransactions: address.get('isLoading'),
-    selectedAccountHash: address.get('selectedAccountHash'),
-    selectedParentHash: address.get('selectedParentHash'),
+    selectedAccountHash,
+    selectedAccount: getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash),
+    selectedParentHash,
+    parentIdentity: findIdentity(jsIdentities, selectedParentHash),
+    parentIndex:  findIdentityIndex(jsIdentities, selectedParentHash) + 1
+
   };
 }
-
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {

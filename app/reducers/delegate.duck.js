@@ -34,8 +34,8 @@ export function showConfirmationModal() {
     const address = state().delegate.get('address');
 
     const validations = [
-      { value: address, type: 'notEmpty', name: 'Address'},
-      { value: address, type: 'validAddress'}
+      { value: address, type: 'notEmpty', name: 'Address' },
+      { value: address, type: 'validAddress' }
     ];
 
     const error = displayError(validations);
@@ -44,8 +44,7 @@ export function showConfirmationModal() {
     }
 
     dispatch(openConfirmationModal());
-  }
-
+  };
 }
 export function setOriginalAddress() {
   return async (dispatch, state) => {
@@ -77,7 +76,7 @@ export function sendConfirmation() {
         err.name = err.message;
         throw err;
       });
-      
+
       await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
         throw err;

@@ -57,7 +57,7 @@ export function showConfirmation() {
     }
 
     dispatch(openSendTezosModal(true));
-  }
+  };
 }
 export function sendConfirmation() {
   return async (dispatch, state) => {
