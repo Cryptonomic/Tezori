@@ -123,7 +123,7 @@ class ActionPanel extends Component<Props, State> {
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     const { selectedAccount, selectedAccountHash, selectedParentHash, parentIdentity, parentIndex } = this.props;
-
+    const  isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
 
     return (
@@ -131,9 +131,9 @@ class ActionPanel extends Component<Props, State> {
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
-          selectedParentHash={selectedParentHash}
           parentIdentity={parentIdentity}
           parentIndex={parentIndex}
+          isManagerAddress={isManagerAddress}
           onRefreshClick={this.handleDataRefresh}
         />
 

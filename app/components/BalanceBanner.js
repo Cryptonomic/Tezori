@@ -13,7 +13,10 @@ type Props = {
   balance: number,
   publicKeyHash: string,
   onRefreshClick: Function,
-  selectedParentHash: string,
+  isManagerAddress: boolean,
+  theme: Object,
+  parentIndex?: number,
+  parentIdentity?: Object
 };
 
 const Container = styled.header`
@@ -60,8 +63,7 @@ const Breadcrumbs = styled.div`
 `
 
 function BalanceBanner(props: Props) {
-  const { balance, publicKeyHash, onRefreshClick, theme, selectedParentHash, parentIndex, parentIdentity } = props;
-  const isManagerAddress = publicKeyHash === selectedParentHash;
+  const { balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
   const smartAddressIndex = parentIdentity && parentIdentity.accounts.findIndex(account => account.accountId === publicKeyHash) + 1
   const addressLabel = !isManagerAddress && smartAddressIndex  ? `Smart Address ${smartAddressIndex}` : 'Manager Address'
   const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`
