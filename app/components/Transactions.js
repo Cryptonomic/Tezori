@@ -18,6 +18,8 @@ import { ms } from '../styles/helpers';
 const Container = styled.section`
   height: 100%;
   background-color: ${({ theme: { colors } }) => colors.white};
+  display: flex;
+  justify-content: center;
 `;
 
 const Details = styled.div`
