@@ -1,22 +1,24 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux'
-import { withRouter } from 'react-router-dom'
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { getWalletName } from '../../reducers/walletInitialization.duck'
+import { lighten } from 'polished';
+import { getWalletName } from '../../reducers/walletInitialization.duck';
 import SettingsController from '../SettingsController';
 import TotalBalance from '../TotalBalance';
 import TezosLogo from '../TezosLogo';
 import { ms } from '../../styles/helpers';
 
-const Contaier = styled.div`
+const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 40px;
+  padding: ${ms(2)} ${ms(4)};
   flex-shrink: 0;
-  background-color: ${ ({ theme: { colors } }) => colors.gray4 };
+  background-color: ${({ isHomePath, theme: { colors } }) =>
+    isHomePath ? colors.gray2 : lighten(0.03, colors.gray2)};
 `;
 
 const InfoContainer = styled.div`
@@ -27,40 +29,43 @@ const InfoContainer = styled.div`
 const Text = styled.span`
   font-size: ${ms(2)};
   font-family: ${({ theme }) => theme.typo.fontFamily.primary};
+  font-weight: ${({ theme }) => theme.typo.weights.light};
   color: ${({ theme: { colors } }) => colors.primary};
-  padding-left: ${ms(2)};
+  padding: 0 ${ms(2)};
+  border-right: 1px solid ${({ theme: { colors } }) => colors.gray2};
   letter-spacing: 0.9px;
 `;
 
 type Props = {
   walletName: string
-}
+};
 
 class TopBar extends Component {
-  render () {
-    return (
-      <Contaier>
-      {this.props.location.pathname === '/' ? (
-      <TezosLogo />
-      ) : (
-        <Fragment>
-          <InfoContainer>
-            <TezosLogo />
-            <Text>{this.props.walletName}</Text>
-            <TotalBalance />
-          </InfoContainer>,
-          <SettingsController />
-        </Fragment>
-      )}
-    </Contaier>
-    )
+  render() {
+    const isHomePath = this.props.location.pathname === '/';
 
+    return (
+      <Container isHomePath={isHomePath}>
+        {isHomePath ? (
+          <TezosLogo />
+        ) : (
+          <Fragment>
+            <InfoContainer>
+              <TezosLogo />
+              <Text>{this.props.walletName}</Text>
+              <TotalBalance />
+            </InfoContainer>,
+            <SettingsController />
+          </Fragment>
+        )}
+      </Container>
+    );
   }
-  };
+}
 
 TopBar.defaultProps = {
   walletName: 'Wallet'
-}
+};
 
 const mapStateToProps = state => {
   return {
@@ -68,8 +73,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps, null)
-)(TopBar);
-
+export default compose(withRouter, connect(mapStateToProps, null))(TopBar);

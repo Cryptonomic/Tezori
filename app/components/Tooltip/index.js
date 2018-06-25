@@ -1,21 +1,18 @@
 // @flow
 import React from 'react';
-import {
-  Tooltip as ReactTippy,
-} from 'react-tippy';
+import { Tooltip as ReactTippy } from 'react-tippy';
 
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 
-type Props = {
-};
+type Props = {};
 
 const StyledTooltip = styled(ReactTippy)`
   cursor: pointer;
   -webkit-app-region: no-drag;
-  display: flex!important;
+  display: flex !important;
   align-items: center;
-`
+`;
 
 function Tooltip(props: Props) {
   const { children, className, content, ...restOfProps } = props;
@@ -31,7 +28,7 @@ Tooltip.defaultProps = {
   theme: 'tezos',
   arrow: true,
   arrowSize: 'regular',
-  distance: 20,
-}
+  distance: 20
+};
 
-export default Tooltip
+export default Tooltip;

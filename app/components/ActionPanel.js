@@ -122,8 +122,8 @@ class ActionPanel extends Component<Props, State> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { selectedAccount, selectedAccountHash } = this.props;
-
+    const { selectedAccount, selectedAccountHash, selectedParentHash, parentIdentity, parentIndex } = this.props;
+    const  isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
 
     return (
@@ -131,6 +131,9 @@ class ActionPanel extends Component<Props, State> {
         <BalanceBanner
           balance={selectedAccount.get('balance') || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
+          parentIdentity={parentIdentity}
+          parentIndex={parentIndex}
+          isManagerAddress={isManagerAddress}
           onRefreshClick={this.handleDataRefresh}
         />
 
@@ -155,12 +158,15 @@ class ActionPanel extends Component<Props, State> {
 
 function mapStateToProps(state) {
   const { address } = state;
+  const selectedParentHash = address.get('selectedParentHash')
 
   return {
     isLoadingTransactions: address.get('isLoading'),
     selectedAccountHash: address.get('selectedAccountHash'),
-    selectedParentHash: address.get('selectedParentHash'),
-    selectedAccount: address.get('selectedAccount')
+    selectedParentHash,
+    selectedAccount: address.get('selectedAccount'),
+    parentIdentity: address.get('identities').toJS().find(identity => identity.publicKeyHash === selectedParentHash),
+    parentIndex: address.get('identities').toJS().findIndex(identity => identity.publicKeyHash === selectedParentHash) + 1,
   };
 }
 

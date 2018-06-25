@@ -28,7 +28,10 @@ const SET_CURRENT_WALLET = 'SET_CURRENT_WALLET';
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
-export const setConfirmedPassword = actionCreator(SET_CONFIRMED_PASSWORD, 'password');
+export const setConfirmedPassword = actionCreator(
+  SET_CONFIRMED_PASSWORD,
+  'password'
+);
 export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const setWalletFileName = actionCreator(
@@ -87,20 +90,26 @@ export function submitAddress(submissionType: 'create' | 'import') {
     const walletLocation = state().walletInitialization.get('walletLocation');
     const walletFileName = state().walletInitialization.get('walletFileName');
     const password = state().walletInitialization.get('password');
-    const confirmedPassword = state().walletInitialization.get('confirmedPassword');
+    const confirmedPassword = state().walletInitialization.get(
+      'confirmedPassword'
+    );
     const completeWalletPath = path.join(walletLocation, walletFileName);
     let wallet = [];
 
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if ( submissionType === 'create' ) {
+    if (submissionType === 'create') {
       const validations = [
-        { value: walletLocation, type: 'locationFilled'},
+        { value: walletLocation, type: 'locationFilled' },
         { value: password, type: 'notEmpty', name: 'Password' },
         { value: password, type: 'minLength8', name: 'Password' },
-        { value: [password, confirmedPassword], type: 'samePassPhrase', name: 'Passwords' }
-      ]
+        {
+          value: [password, confirmedPassword],
+          type: 'samePassPhrase',
+          name: 'Passwords'
+        }
+      ];
 
       const error = displayError(validations);
       if (error) {
@@ -166,7 +175,7 @@ export default function walletInitialization(state = initState, action) {
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const getWalletName = state => {
   const walletInitialization = get(state, 'walletInitialization');
-  const fileName = walletInitialization.get('walletFileName')
-  const walletName = fileName.split('.')
-  return walletName[0] ? `${walletName[0]} Wallet` : 'Wallet'
-}
+  const fileName = walletInitialization.get('walletFileName');
+  const walletName = fileName.split('.');
+  return walletName[0] ? `${walletName[0]} Wallet` : 'Wallet';
+};

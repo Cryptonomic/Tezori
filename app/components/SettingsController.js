@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { ms } from '../styles/helpers';
 
 import Button from './Button';
 import settingsIcon from '../../resources/settings.png';
@@ -11,7 +12,7 @@ import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 const Icon = styled.img`
@@ -19,11 +20,11 @@ const Icon = styled.img`
 `;
 
 const SettingsIcon = styled(Icon)`
-  height: 80px;
+  height: ${ms(8)};
 `;
 
 const LogoutIcon = styled(Icon)`
-  height: 65px;
+  height: ${ms(7)};
 `;
 
 const Separator = styled.div`
