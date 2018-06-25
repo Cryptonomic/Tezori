@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import fs from 'fs';
 
 function minLength(length, name) {
   return `${name} must be at least ${length} characters.`
@@ -52,6 +53,13 @@ export default function hasError(value, validateType, name) {
     case 'locationFilled':
       if ( !value.length ) {
         return 'Must upload a wallet.';
+      }
+      break;
+    case 'validJS':
+      try {
+          JSON.parse(fs.readFileSync(value));
+      } catch (e) {
+          return 'Corrupt .tezwallet file';
       }
       break;
     case 'minLength8': 
