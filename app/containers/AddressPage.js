@@ -21,6 +21,7 @@ import {
   confirmPassPhrase,
   passPhrase,
   updateSeed,
+  updateActivationCode,
   selectDefaultAccountOrOpenModal
 } from '../reducers/address.duck';
 
@@ -41,6 +42,7 @@ type Props = {
   updateUsername: Function,
   updatePassPhrase: Function,
   updateSeed: Function,
+  updateActivationCode: Function,
   confirmPassPhrase: Function,
   selectedAccountHash: string,
   selectDefaultAccountOrOpenModal: Function,
@@ -71,6 +73,7 @@ class AddressPage extends Component<Props> {
       closeAddAddressModal,
       importAddress,
       seed,
+      activationCode,
       username,
       passPhrase,
       privateKey,
@@ -82,6 +85,7 @@ class AddressPage extends Component<Props> {
       updatePassPhrase,
       confirmPassPhrase,
       updateSeed,
+      updateActivationCode,
       selectedAccountHash,
       message
     } = this.props;
@@ -97,6 +101,7 @@ class AddressPage extends Component<Props> {
           activeTab={activeTabAddAddressTab}
           importAddress={importAddress}
           seed={seed}
+          activationCode={activationCode}
           username={username}
           passPhrase={passPhrase}
           privateKey={privateKey}
@@ -108,6 +113,7 @@ class AddressPage extends Component<Props> {
           updatePassPhrase={updatePassPhrase}
           confirmPassPhrase={confirmPassPhrase}
           updateSeed={updateSeed}
+          updateActivationCode={updateActivationCode}
           selectedAccountHash={selectedAccountHash}
         />
         <MessageBar message={message} />
@@ -122,6 +128,7 @@ function mapStateToProps({ address, message }) {
     addAddressModalIsOpen: address.get('open'),
     message: message.get('message'),
     seed: address.get('seed'),
+    activationCode: address.get('activationCode'),
     username: address.get('username'),
     passPhrase: address.get('passPhrase'),
     privateKey: address.get('privateKey'),
@@ -143,6 +150,7 @@ function mapDispatchToProps(dispatch) {
       updatePassPhrase,
       confirmPassPhrase,
       updateSeed,
+      updateActivationCode,
       selectDefaultAccountOrOpenModal
     },
     dispatch

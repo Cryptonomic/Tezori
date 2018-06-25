@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { ms } from '../styles/helpers';
 import { H2, H4 } from './Heading';
+import Tooltip from './Tooltip'
+import TezosAmount from './TezosAmount';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
-
-import tezosLogo from '../../resources/tezosLogo.png';
 
 type Props = {
   balance: number,
@@ -53,13 +53,8 @@ const AddressTezos = styled.div`
   align-items: center;
 `;
 
-const AddressTezosAmount = styled(H2)`
+const Amount = styled(TezosAmount)`
   color: ${({ theme: { colors } }) => colors.white};
-`;
-
-const TezosLogo = styled.img`
-  height: ${ms(4)};
-  filter: brightness(0%) invert(100%);
 `;
 
 export default function BalanceBanner(props: Props) {
@@ -84,8 +79,7 @@ export default function BalanceBanner(props: Props) {
         <AddressInfo>
           <AddressHash>{publicKeyHash}</AddressHash>
           <AddressTezos>
-            <AddressTezosAmount>{balance.toFixed(2)}</AddressTezosAmount>
-            <TezosLogo alt="tez" src={tezosLogo} />
+            <Amount size={ms(4)} amount={ balance } showTooltip />
           </AddressTezos>
         </AddressInfo>
       </BottomRow>

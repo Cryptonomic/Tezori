@@ -11,7 +11,8 @@ import {
 
 import tezosLogo from '../../resources/tezosLogo.png';
 import styled from 'styled-components';
-import { lighten } from 'polished';
+import TezosAmount from './TezosAmount';
+import { formatAmount } from '../utils/currancy';
 import { ms } from '../styles/helpers';
 
 const Container = styled.section`
@@ -28,6 +29,10 @@ const Details = styled.div`
 
 const Link = styled.a`
   color: ${({ theme: { colors } }) => colors.gray0};
+`;
+
+const Amount = styled(TezosAmount)`
+  color: inherit;
 `;
 
 const TezosSymbol = styled.img`
@@ -51,8 +56,11 @@ export default function Transactions(props: Props) {
     return (
       <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
         <TableRow>
+          <TableHeaderColumn>Block Level</TableHeaderColumn>
+          <TableHeaderColumn>Kind</TableHeaderColumn>
+          <TableHeaderColumn>Source</TableHeaderColumn>
+          <TableHeaderColumn>Destination</TableHeaderColumn>
           <TableHeaderColumn>Amount</TableHeaderColumn>
-          <TableHeaderColumn>Address</TableHeaderColumn>
           <TableHeaderColumn />
         </TableRow>
       </TableHeader>
@@ -60,11 +68,13 @@ export default function Transactions(props: Props) {
   }
 
   function renderTableRow(row, index) {
-    const operationGroupHash = row.get('operationGroupHash');
     const rowArray = [
-      row.get('amount'),
-      operationGroupHash,
-      operationGroupHash
+      row.get('blockLevel'),
+      row.get('kind'),
+      row.get('source'),
+      row.get('destination') || 'N/A',
+      row.get('amount') || 'N/A',
+      row.get('operationGroupHash'),
     ];
 
     return (
@@ -74,8 +84,12 @@ export default function Transactions(props: Props) {
             <TableRowColumn key={`${elem}-${rowArrIndex}`}>
               {rowArrIndex + 1 < rowArray.length && (
                 <RowElement>
-                  {elem}
-                  {rowArrIndex === 0 && (
+                  {
+                    rowArrIndex === 4
+                      ? <Amount size={ms(0)} amount={elem} formatAmount={false} />
+                      : elem
+                  }
+                  {rowArrIndex === 4 && (
                     <TezosSymbol alt="tez" src={tezosLogo} />
                   )}
                 </RowElement>
@@ -83,7 +97,7 @@ export default function Transactions(props: Props) {
               {rowArrIndex + 1 === rowArray.length && (
                 <Details>
                   <Link
-                    href={`https://tzscan.io/${operationGroupHash}`}
+                    href={`https://tzscan.io/${elem}`}
                     target="_blank"
                     rel="noopener"
                   >

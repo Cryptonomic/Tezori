@@ -1,10 +1,11 @@
 import { fromJS } from 'immutable';
+import { TezosOperations } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
-import { sendTransactionOperation } from '../tezos/TezosOperations';
 import { addMessage } from './message.duck';
 import { findKeyStore } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
+import { tezToUtez } from '../utils/currancy';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -35,12 +36,14 @@ export function showConfirmation() {
   return async (dispatch, state) => {
     const toAddress = state().sendTezos.get('toAddress');
     const amount = state().sendTezos.get('amount');
+    const parsedAmount = Number(amount.replace(/\,/g,''));
+    const amountInUtez = tezToUtez(parsedAmount);
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount' },
-      { value: amount, type: 'validAmount' },
-      { value: amount, type: 'notZero', name: 'Amount' },
-      { value: toAddress, type: 'validAddress' }
+      { value: amount, type: 'notEmpty', name: 'Amount'},
+      { value: parsedAmount, type: 'validAmount'},
+      { value: amountInUtez, type: 'posNum', name: 'Amount'},
+      { value: toAddress, type: 'validAddress'}
     ];
 
     const error = displayError(validations);
@@ -70,14 +73,16 @@ export function sendConfirmation() {
     const keyStore = findKeyStore(publicKeyHash, identities);
 
     try {
-      if (password !== walletPassword) throw { name: 'Incorrected password' };
+      if (password !== walletPassword) {
+        throw new Error({ name: 'Incorrected password' });
+      }
 
       dispatch(updateSendTezosLoading(true));
-      await sendTransactionOperation(
+      await TezosOperations.sendTransactionOperation(
         network,
         keyStore.toJS(),
         toAddress,
-        Number(amount),
+        tezToUtez(Number(amount.replace(/\,/g,''))),
         fee
       );
 

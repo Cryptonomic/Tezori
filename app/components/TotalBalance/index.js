@@ -24,7 +24,7 @@ const Amount = styled(TezosAmount)`
 `;
 
 type Props = {
-  totalBalance: string
+  totalBalance: number
 };
 
 class TotalBalance extends Component {
@@ -38,6 +38,7 @@ class TotalBalance extends Component {
           amount={totalBalance}
           color="primary"
           weight="normal"
+          showTooltip
         />
       </Container>
     );

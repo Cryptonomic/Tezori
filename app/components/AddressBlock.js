@@ -4,11 +4,10 @@ import styled, { withTheme } from 'styled-components';
 import { darken } from 'polished';
 import { ms } from '../styles/helpers';
 
-import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import TezosIcon from './TezosIcon';
-import TezosAmount from './TezosAmount';
 import Tooltip from './Tooltip';
 import { H3 } from './Heading';
+import TezosAmount from './TezosAmount';
 
 import CreateAccountModal from './CreateAccountModal';
 
@@ -141,6 +140,7 @@ class AddressBlock extends Component<Props, State> {
               color={
                 publicKeyHash === selectedAccountHash ? 'white' : 'primary'
               }
+              showTooltip
               amount={accountBlock.get('balance')}
             />
           </AddressSecondLine>
