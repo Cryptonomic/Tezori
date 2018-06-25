@@ -51,7 +51,6 @@ type Identity = {
   publicKey: string,
   publicKeyHash: string,
   balance: number,
-  operationGroups: List<OperationGroup>,
   accounts: List<Account>
 };
 

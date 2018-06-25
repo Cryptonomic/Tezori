@@ -1,11 +1,10 @@
 import { TezosConseilQuery  } from 'conseiljs';
 import { fromJS } from 'immutable';
-const { getOperationGroup } = TezosConseilQuery;
-import OPERATION_TYPES from '../constants/OperationTypes';
 import { flatten } from 'lodash';
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 
+const { getEmptyTezosFilter, getOperations } = TezosConseilQuery;
 /**
  *
  * @param timeout - number of seconds to wait
@@ -17,21 +16,15 @@ export function awaitFor(timeout: number) {
   });
 }
 
-export async function getTransactions(operationGroups, network) {
-  const managerOperationGroups = (operationGroups || [] ).filter(({ kind }) => {
-    return kind === OPERATION_TYPES.MANAGER;
-  });
-
-  const transactionPromises = ( managerOperationGroups || [] ).map(({ hash }) => {
-    return getOperationGroup(network, hash).then(({ operations }) => {
-      return operations.filter(
-        ({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION
-      );
-    });
-  });
-
-  const transactions = await Promise.all(transactionPromises);
-  return flatten(transactions);
+export async function getTransactions(accountHash, network) {
+  const emptyFilter = getEmptyTezosFilter();
+  const transFilter = {
+    ...emptyFilter,
+    limit: 100,
+    operation_participant: [ accountHash ],
+    operation_kind: [ 'transaction' ]
+  };
+  return await getOperations(network, transFilter);
 }
 
 export function getSelectedAccount( identities, selectedAccountHash, selectedParentHash ) {

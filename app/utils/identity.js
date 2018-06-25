@@ -3,7 +3,6 @@ export function createIdentity(identity) {
   return {
     transactions: [],
     balance: 0,
-    operationGroups: {},
     accounts: [],
     publicKeyHash: '', 
     publicKey: '',

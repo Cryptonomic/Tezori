@@ -4,22 +4,19 @@ import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import OPERATION_TYPES from '../constants/OperationTypes';
 
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
 import { getTransactions } from '../utils/general';
-import { findAccount, createAccount } from '../utils/account';
+import { findAccount, createAccount, getAccountsForIdentity } from '../utils/account';
 import { findIdentity, createIdentity } from '../utils/identity';
 
 const {
-  getOperationGroups,
-  getAccounts,
-  getOperationGroup,
-  getAccount
+  getAccount,
 } = TezosConseilQuery;
+
 const {
   unlockFundraiserIdentity,
   generateMnemonic,
@@ -93,15 +90,19 @@ export function syncAccountTransactions(accountHash, parentHash) {
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, parentHash);
     const account = findAccount( identity, accountHash );
-    const operationGroups =  await getOperationGroupsForAccount( network, accountHash );
-    const transactions = await getTransactions(operationGroups, network);
-    dispatch(
-      updateAccount({
+    const transactions = await getTransactions(accountHash, network);
+
+    const foundIndex = identity && ( identity.accounts || [] )
+        .findIndex( account => account.accountId === accountHash );
+
+    if ( foundIndex > -1 ) {
+      identity.accounts[foundIndex] = {
         ...account,
         transactions
-      })
-    );
+      };
+    }
 
+    dispatch(updateIdentity(identity));
     dispatch(setIsLoading(true));
   };
 }
@@ -112,8 +113,7 @@ export function syncIdentityTransactions(accountHash) {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, accountHash);
-    const operationGroups =  await getOperationGroupsForAccount( network, accountHash );
-    const transactions = await getTransactions(operationGroups, network);
+    const transactions = await getTransactions(accountHash, network);
     dispatch(
       updateIdentity({
         ...identity,
@@ -133,20 +133,20 @@ export function syncAccount(accountHash, parentHash) {
     const identity = findIdentity(identities, parentHash);
     const account = findAccount( identity, accountHash );
     const updatedAccount = await getAccount(network, accountHash);
-    console.log('updatedAccount, account a aaa', updatedAccount, account);
+    const transactions = await getTransactions(accountHash, network);
 
-    const operationGroups =  await getOperationGroupsForAccount( network, accountHash );
-    const transactions = await getTransactions(operationGroups, network);
+    const foundIndex = identity && ( identity.accounts || [] )
+        .findIndex( account => account.accountId === accountHash );
 
-    dispatch(
-      updateAccount({
+    if ( foundIndex > -1 ) {
+      identity.accounts[foundIndex] = {
         ...account,
         balance: updatedAccount.account.balance,
-        operationGroups,
         transactions
-      })
-    );
+      };
+    }
 
+    dispatch(updateIdentity(identity));
     dispatch(setIsLoading(true));
   };
 }
@@ -182,10 +182,6 @@ export function syncWallet() {
           try {
             const { publicKeyHash } = identity;
             const account = await getAccount(network, publicKeyHash);
-
-            const operationGroups =  await getOperationGroupsForAccount( network, publicKeyHash)
-              .catch( () => {});
-
             const accounts =  await getAccountsForIdentity( network, publicKeyHash )
               .catch( () => []);
 
@@ -193,7 +189,6 @@ export function syncWallet() {
               updateIdentity({
                 ...identity,
                 balance: account.account.balance,
-                operationGroups,
                 accounts: accounts.map(account => {
                   return createAccount( account, identity );
                 })
@@ -206,10 +201,15 @@ export function syncWallet() {
         })
     );
 
-    if ( selectedAccountHash === selectedParentHash ) {
-      await dispatch(syncIdentityTransactions(selectedAccountHash, selectedParentHash));
-    } else {
-      await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
+    try {
+      if ( selectedAccountHash === selectedParentHash ) {
+        await dispatch(syncIdentityTransactions(selectedAccountHash, selectedParentHash));
+      } else {
+        await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
+      }
+    } catch(e) {
+      console.error(e);
+      dispatch(addMessage(e.name, true));
     }
 
     dispatch(setIsLoading(false));
@@ -484,50 +484,9 @@ function addNewAccountToIdentity(publicKeyHash, account, identities) {
 
 function createSelectedAccount({
   balance = 0,
-  operationGroups = [],
   transactions = []
 }) {
-  return fromJS({ balance, operationGroups, transactions });
-}
-
-function getOperationGroupsForAccount(network, id) {
-  const filter = {
-    limit: 100,
-    block_id: [],
-    block_level: [],
-    block_netid: [],
-    block_protocol: [],
-    operation_id: [],
-    operation_source: [id],
-    operation_group_kind: [],
-    operation_kind: [],
-    account_id: [],
-    account_manager: [],
-    account_delegate: []
-  };
-
-  return getOperationGroups(network, filter);
-}
-
-function getAccountsForIdentity(network, id) {
-  const filter = {
-    limit: 100,
-    block_id: [],
-    block_level: [],
-    block_netid: [],
-    block_protocol: [],
-    operation_id: [],
-    operation_source: [],
-    operation_group_kind: [],
-    operation_kind: [],
-    account_id: [],
-    account_manager: [id],
-    account_delegate: []
-  };
-
-  return getAccounts(network, filter).then(accounts => {
-    return accounts.filter(account => account.accountId !== id);
-  });
+  return fromJS({ balance, transactions });
 }
 
 export function clearAccountRefreshInterval() {
