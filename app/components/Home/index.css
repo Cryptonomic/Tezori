@@ -13,6 +13,7 @@
   align-items: center;
   height: 100%;
   padding: 0px 50px;
+  flex-wrap: wrap;
 }
 .textFieldContainer {
   margin-bottom: 30px
@@ -41,4 +42,47 @@
   font-size: 15px;
   margin-left: 15px;
   opacity: 0.5;
+}
+.walletDescription {
+  font-size: 18px;
+  line-height: 27px;
+  letter-spacing: 0.7px;
+  color: #1e1313;
+  margin-top: 68px;
+  max-width: 659px;
+}
+
+.actionButtonContainer {
+  width: 194px;
+  margin-top: 50px;
+}
+
+.actionButton {
+  width: 194px;
+  height: 50px;
+}
+.inputContainer {
+  width: 100% !important;
+}
+.validation {
+  color: #259c90;
+  font-size: 12px;
+}
+
+.floatingLabelStyle {
+  color: rgba(0, 0, 0, 0.38);
+}
+.floatingLabelFocusStyle {
+  color: #5571a7;
+}
+.inputUnderlineStyle {
+  border-color: #d0d2d8;
+}
+
+.inputFocusUnderlineStyle {
+  border-color: #2c7df7;
+}
+.errorValidation {
+  color: #ea776c;
+  font-size: 12px;
 }

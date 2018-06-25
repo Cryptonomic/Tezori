@@ -213,6 +213,7 @@
     "libsodium-wrappers-sumo": "^0.7.3",
     "lodash": "^4.17.10",
     "material-ui": "^0.20.1",
+    "password-validator": "^4.1.1",
     "polished": "^1.9.2",
     "qrcode": "^1.2.0",
     "react": "^16.4.1",
