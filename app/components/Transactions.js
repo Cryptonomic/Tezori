@@ -57,8 +57,11 @@ export default function Transactions(props: Props) {
     return (
       <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
         <TableRow>
+          <TableHeaderColumn>Block Level</TableHeaderColumn>
+          <TableHeaderColumn>Kind</TableHeaderColumn>
+          <TableHeaderColumn>Source</TableHeaderColumn>
+          <TableHeaderColumn>Destination</TableHeaderColumn>
           <TableHeaderColumn>Amount</TableHeaderColumn>
-          <TableHeaderColumn>Address</TableHeaderColumn>
           <TableHeaderColumn />
         </TableRow>
       </TableHeader>
@@ -66,11 +69,13 @@ export default function Transactions(props: Props) {
   }
 
   function renderTableRow(row, index) {
-    const operationGroupHash = row.get('operationGroupHash');
     const rowArray = [
-      row.get('amount'),
-      operationGroupHash,
-      operationGroupHash
+      row.get('blockLevel'),
+      row.get('kind'),
+      row.get('source'),
+      row.get('destination') || 'N/A',
+      row.get('amount') || 'N/A',
+      row.get('operationGroupHash'),
     ];
 
     return (
@@ -81,11 +86,11 @@ export default function Transactions(props: Props) {
               {rowArrIndex + 1 < rowArray.length && (
                 <RowElement>
                   {
-                    rowArrIndex === 0
+                    rowArrIndex === 4
                       ? <Amount size={ms(0)} iconName="" amount={ formatAmount(elem) } />
                       : elem
                   }
-                  {rowArrIndex === 0 && (
+                  {rowArrIndex === 4 && (
                     <TezosSymbol alt="tez" src={tezosLogo} />
                   )}
                 </RowElement>
@@ -93,7 +98,7 @@ export default function Transactions(props: Props) {
               {rowArrIndex + 1 === rowArray.length && (
                 <Details>
                   <Link
-                    href={`https://tzscan.io/${operationGroupHash}`}
+                    href={`https://tzscan.io/${elem}`}
                     target="_blank"
                     rel="noopener"
                   >

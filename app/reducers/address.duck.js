@@ -1,22 +1,20 @@
 import { fromJS } from 'immutable';
-import { flatten, find, pick } from 'lodash';
+import { find } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import OPERATION_TYPES from '../constants/OperationTypes';
 
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
-import { awaitFor } from '../utils/general';
 
 const {
-  getOperationGroups,
   getAccounts,
-  getOperationGroup,
-  getAccount
+  getAccount,
+  getEmptyTezosFilter,
+  getOperations,
 } = TezosConseilQuery;
 const {
   unlockFundraiserIdentity,
@@ -82,7 +80,6 @@ export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     const initWalletState = state().walletInitialization;
     const identities = initWalletState.getIn(['wallet', 'identities']);
-    const network = initWalletState.get('network');
 
     if (identities.size === 0) {
       dispatch(openAddAddressModal());
@@ -96,10 +93,6 @@ export function selectDefaultAccountOrOpenModal() {
             const { publicKeyHash } = identity;
             const account = await getAccount(network, publicKeyHash);
             const { balance } = account.account;
-            const operationGroups = await getOperationGroupsForAccount(
-              network,
-              publicKeyHash
-            );
             const accounts = await getAccountsForIdentity(
               network,
               publicKeyHash
@@ -110,7 +103,6 @@ export function selectDefaultAccountOrOpenModal() {
                 transactions: [],
                 ...identity,
                 balance,
-                operationGroups,
                 accounts: formatAccounts(
                   addParentKeysToAccounts(accounts, identity)
                 )
@@ -118,7 +110,6 @@ export function selectDefaultAccountOrOpenModal() {
             );
 
             const selectedAccount = createSelectedAccount({
-              operationGroups,
               balance,
               transactions: []
             });
@@ -133,7 +124,6 @@ export function selectDefaultAccountOrOpenModal() {
 
         await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
         dispatch(setIsLoading(false));
-        dispatch(automaticAccountRefresh());
       } catch (e) {
         console.error(e);
         dispatch(addMessage(e.name, true));
@@ -150,28 +140,16 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
     try {
       dispatch(setIsLoading(true));
       const account = await getAccount(network, selectedAccountHash);
-      const operationGroups = await getOperationGroupsForAccount(
-        network,
-        selectedAccountHash
-      );
-      const managerOperationGroups = operationGroups.filter(({ kind }) => {
-        return kind === OPERATION_TYPES.MANAGER;
-      });
-
-      const transactions = await Promise.all(
-        managerOperationGroups.map(({ hash }) => {
-          return getOperationGroup(network, hash).then(({ operations }) => {
-            return operations.filter(
-              ({ opKind }) => opKind === OPERATION_TYPES.TRANSACTION
-            );
-          });
-        })
-      );
-
-      const flattenedTransactions = flatten(transactions);
+      const emptyFilter = getEmptyTezosFilter();
+      const transFilter = {
+        ...emptyFilter,
+        limit: 100,
+        operation_participant: [selectedAccountHash],
+        operation_kind: ['transaction']
+      };
+      const transactions = await getOperations(network, transFilter);
       const selectedAccount = createSelectedAccount({
-        transactions: flattenedTransactions,
-        operationGroups,
+        transactions,
         balance: account.account.balance
       });
 
@@ -283,6 +261,7 @@ export function importAddress() {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           break;
         case FUNDRAISER:
+        default: {
           identity = await unlockFundraiserIdentity(seed, username, passPhrase);
           const activating = await sendIdentityActivationOperation(network, identity, activationCode);
           dispatch(addMessage(
@@ -290,20 +269,19 @@ export function importAddress() {
             false
           ));
           break;
+        }
       }
 
       if ( identity ) {
-        const { publicKeyHash, publicKey, privateKey } = identity;
-        let balance = 0;
-        let operationGroups = {};
-        let accounts = [];
+        const { publicKeyHash } = identity;
+        const balance = 0;
+        const accounts = [];
 
         if ( !find(identities.toJS(), identity) ) {
           dispatch(
             addNewIdentity({
               ...identity,
               balance,
-              operationGroups,
               accounts
             })
           );
@@ -321,7 +299,6 @@ export function importAddress() {
 
           const selectedAccount = createSelectedAccount({
             balance,
-            operationGroups,
             transactions: []
           });
           dispatch(
@@ -434,46 +411,14 @@ function addNewAccountToIdentity(publicKeyHash, account, identities) {
 
 function createSelectedAccount({
   balance = 0,
-  operationGroups = [],
   transactions = []
 }) {
-  return fromJS({ balance, operationGroups, transactions });
-}
-
-function getOperationGroupsForAccount(network, id) {
-  const filter = {
-    limit: 100,
-    block_id: [],
-    block_level: [],
-    block_netid: [],
-    block_protocol: [],
-    operation_id: [],
-    operation_source: [id],
-    operation_group_kind: [],
-    operation_kind: [],
-    account_id: [],
-    account_manager: [],
-    account_delegate: []
-  };
-
-  return getOperationGroups(network, filter);
+  return fromJS({ balance, transactions });
 }
 
 function getAccountsForIdentity(network, id) {
-  const filter = {
-    limit: 100,
-    block_id: [],
-    block_level: [],
-    block_netid: [],
-    block_protocol: [],
-    operation_id: [],
-    operation_source: [],
-    operation_group_kind: [],
-    operation_kind: [],
-    account_id: [],
-    account_manager: [id],
-    account_delegate: []
-  };
+  const emptyFilter = getEmptyTezosFilter();
+  const filter = { ...emptyFilter, account_manager: [id] };
 
   return getAccounts(network, filter).then(accounts => {
     return accounts.filter(account => account.accountId !== id);
@@ -482,7 +427,6 @@ function getAccountsForIdentity(network, id) {
 
 function formatAccounts(accounts) {
   return accounts.map(account => ({
-    operationGroups: [],
     transactions: [],
     ...account
   }));
