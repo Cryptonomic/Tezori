@@ -82,11 +82,15 @@ export function sendConfirmation() {
         throw new Error({ name: 'Incorrect password' });
       }
 
+      if (toAddress === publicKeyHash) {
+        throw new Error({ name: 'You cant sent money to yourself.' });
+      }
+
       dispatch(updateSendTezosLoading(true));
-      await revealKey(network, keyStore, fee).catch((err) => {
-        err.name = err.message;
-        throw err;
-      });
+      //await revealKey(network, keyStore, fee).catch((err) => {
+      //  err.name = err.message;
+      //  throw err;
+      //});
       
       const res = await sendTransactionOperation(
         network,

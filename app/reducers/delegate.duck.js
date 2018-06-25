@@ -72,10 +72,10 @@ export function sendConfirmation() {
 
     try {
       dispatch(updateIsLoading(true));
-      await revealKey(network, keyStore, fee).catch((err) => {
-        err.name = err.message;
-        throw err;
-      });
+      //await revealKey(network, keyStore, fee).catch((err) => {
+      //  err.name = err.message;
+      //  throw err;
+      //});
 
       await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;

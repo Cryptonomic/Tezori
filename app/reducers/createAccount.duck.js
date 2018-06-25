@@ -92,10 +92,10 @@ export function createNewAccount() {
       const privateKey = identity.get('privateKey');
       const keyStore = { publicKey, privateKey, publicKeyHash };
 
-      await revealKey(network, keyStore, fee).catch((err) => {
-        err.name = err.message;
-        throw err;
-      });
+      //await revealKey(network, keyStore, fee).catch((err) => {
+      //  err.name = err.message;
+      //  throw err;
+      //});
 
       const newAccount = await sendOriginationOperation(
         network,
