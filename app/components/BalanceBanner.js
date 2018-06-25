@@ -1,17 +1,19 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+import styled, {withTheme} from 'styled-components';
 import { lighten } from 'polished';
 import { ms } from '../styles/helpers';
-import { H2, H4 } from './Heading';
-import Tooltip from './Tooltip'
+import { H4 } from './Heading';
 import TezosAmount from './TezosAmount';
+import TezosAddress from './TezosAddress';
+import TezosIcon from './TezosIcon';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 
 type Props = {
   balance: number,
   publicKeyHash: string,
-  onRefreshClick: Function
+  onRefreshClick: Function,
+  selectedParentHash: string,
 };
 
 const Container = styled.header`
@@ -34,8 +36,13 @@ const BottomRow = styled(Row)`
 `;
 
 const AddressTitle = styled(H4)`
-  font-weight: 500;
+  font-weight: ${({ theme: { typo: {weights} } }) => weights.bold};
   color: ${({ theme: { colors } }) => colors.white};
+  margin: 0;
+`;
+
+const AddressTitleIcon = styled(TezosIcon)`
+  padding: 0 ${ms(-6)} 0 0;
 `;
 
 const AddressInfo = styled.div`
@@ -43,27 +50,29 @@ const AddressInfo = styled.div`
   align-items: center;
 `;
 
-const AddressHash = styled(H4)`
-  color: ${({ theme: { colors } }) => colors.white};
-  margin: 0 ${ms(1)} 0 0;
-`;
-
-const AddressTezos = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const Amount = styled(TezosAmount)`
-  color: ${({ theme: { colors } }) => colors.white};
+  margin: 0 0 0 ${ms(2)};
+  line-height: 1;
 `;
 
-export default function BalanceBanner(props: Props) {
-  const { balance, publicKeyHash, onRefreshClick } = props;
+const Breadcrumbs = styled.div`
+  font-size: ${ms(-1)};
+`
+
+function BalanceBanner(props: Props) {
+  const { balance, publicKeyHash, onRefreshClick, theme, selectedParentHash, parentIndex, parentIdentity } = props;
+  const isManagerAddress = publicKeyHash === selectedParentHash;
+  const smartAddressIndex = parentIdentity && parentIdentity.accounts.findIndex(account => account.accountId === publicKeyHash) + 1
+  const addressLabel = !isManagerAddress && smartAddressIndex  ? `Smart Address ${smartAddressIndex}` : 'Manager Address'
+  const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`
 
   return (
     <Container>
       <TopRow>
-        Account > Address
+        <Breadcrumbs>
+          {breadcrumbs}
+        </Breadcrumbs>
+
         <RefreshIcon
           style={{
             fill: 'white',
@@ -75,14 +84,21 @@ export default function BalanceBanner(props: Props) {
         />
       </TopRow>
       <BottomRow>
-        <AddressTitle>Address</AddressTitle>
+        <AddressTitle>
+          <AddressTitleIcon
+            iconName={isManagerAddress ? 'manager' : 'smart-address'}
+            size={ms(0)}
+            color="white"
+          />
+          {addressLabel}
+        </AddressTitle>
         <AddressInfo>
-          <AddressHash>{publicKeyHash}</AddressHash>
-          <AddressTezos>
-            <Amount size={ms(4)} amount={ balance } showTooltip />
-          </AddressTezos>
+          <TezosAddress size={ms(1)} address={publicKeyHash} weight={theme.typo.weights.light} color={theme.colors.white} />
+          <Amount size={ms(4)} color="white" amount={ balance } weight="light" showTooltip />
         </AddressInfo>
       </BottomRow>
     </Container>
   );
 }
+
+export default withTheme(BalanceBanner)

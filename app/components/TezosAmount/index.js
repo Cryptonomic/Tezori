@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Amount = styled.span`
-  color: ${({ color, theme: { colors } }) => colors[color]};
+  color: ${({ color, theme: { colors } }) => color ? colors[color] : colors.primary};
   font-size: ${({ size }) => size};
   font-weight: ${({
     weight = 'normal',
@@ -60,10 +60,10 @@ const TezosAmount = (props: Props) => {
 
 TezosAmount.defaultProps = {
   amount: 0,
-  color: 'primary',
   iconName: 'tezos',
   size: ms(0),
-  weight: 'normal'
+  weight: 'normal',
+  color: 'primary'
 };
 
 export default TezosAmount;
