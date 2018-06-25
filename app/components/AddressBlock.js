@@ -201,7 +201,7 @@ class AddressBlock extends Component<Props, State> {
 
             return (
               <Address
-                key
+                key={smartAddressId}
                 isActive={isSmartActive}
                 onClick={() =>
                   this.selectAccount(smartAddressId, publicKeyHash)
