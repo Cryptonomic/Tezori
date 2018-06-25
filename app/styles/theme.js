@@ -14,12 +14,14 @@ export const Theme = {
 
     // Regular colors
     white: '#FFFFFF',
+    blue: '#2c7df7',
 
     // Gray colors
     gray0: '#191414',
     gray1: '#f7f9fb',
     gray2: '#edf0f7',
-    gray3: '#5571a7'
+    gray3: '#5571a7',
+    gray5: '#9b9b9b',
   },
   animations: {
     defaultTime: '300ms',

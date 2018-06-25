@@ -8,7 +8,6 @@ import {
   TableRow,
   TableRowColumn
 } from 'material-ui';
-import { isEmpty } from 'lodash'
 
 import tezosLogo from '../../resources/tezosLogo.png';
 import styled from 'styled-components';
@@ -20,6 +19,8 @@ import { ms } from '../styles/helpers';
 const Container = styled.section`
   height: 100%;
   background-color: ${({ theme: { colors } }) => colors.white};
+  display: flex;
+  justify-content: center;
 `;
 
 const Details = styled.div`
@@ -116,17 +117,12 @@ export default function Transactions(props: Props) {
 
   return (
     <Container>
-      {isEmpty(transactions)
-        ? <EmptyStateTransaction />
-        : (
-          <Table>
-            {renderTableHeader()}
-            <TableBody displayRowCheckbox={false}>
-              {transactions.map(renderTableRow)}
-            </TableBody>
-          </Table>
-        )
-      }
+      <Table>
+        {renderTableHeader()}
+        <TableBody displayRowCheckbox={false}>
+          {transactions.map(renderTableRow)}
+        </TableBody>
+      </Table>
     </Container>
   );
 }
