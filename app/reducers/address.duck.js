@@ -43,8 +43,10 @@ const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
+const AUTOMATIC_REFRESH_CLEAR = 'AUTOMATIC_REFRESH_CLEAR';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
+const automaticRefreshStateClear = actionCreator(AUTOMATIC_REFRESH_CLEAR);
 export const clearEntireAddressState = actionCreator(
   CLEAR_ENTIRE_ADDRESS_STATE
 );
@@ -77,7 +79,7 @@ const setSelectedAccount = actionCreator(
 );
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function selectDefaultAccountOrOpenModal() {
+export function selectDefaultAccountOrOpenModal(selectedHash, parentHash) {
   return async (dispatch, state) => {
     const initWalletState = state().walletInitialization;
     const identities = initWalletState.getIn(['wallet', 'identities']);
@@ -129,9 +131,13 @@ export function selectDefaultAccountOrOpenModal() {
         );
         const firstIdentityHash = identities.getIn([0, 'publicKeyHash']);
 
-        await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
+        if (!selectedHash || !parentHash) {
+          await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
+          dispatch(automaticAccountRefresh());
+        } else {
+          await dispatch(selectAccount(selectedHash, parentHash));
+        }
         dispatch(setIsLoading(false));
-        dispatch(automaticAccountRefresh());
       } catch (e) {
         console.error(e);
         dispatch(addMessage(e.name, true));
@@ -197,7 +203,8 @@ export function automaticAccountRefresh() {
       const selectedAccountHash = state().address.get('selectedAccountHash');
       const selectedParentHash = state().address.get('selectedParentHash');
 
-      dispatch(selectAccount(selectedAccountHash, selectedParentHash));
+      dispatch(automaticRefreshStateClear());
+      dispatch(selectDefaultAccountOrOpenModal(selectedAccountHash, selectedParentHash));
     }, REFRESH_INTERVAL);
   };
 }
@@ -354,6 +361,11 @@ const initState = fromJS({
 
 export default function address(state = initState, action) {
   switch (action.type) {
+    case AUTOMATIC_REFRESH_CLEAR: {
+      return state
+        .set('identities', fromJS([]))
+        .set('selectedAccount', createSelectedAccount({}));
+    }
     case CLEAR_ENTIRE_ADDRESS_STATE:
       return initState;
     case CLEAR_STATE: {
