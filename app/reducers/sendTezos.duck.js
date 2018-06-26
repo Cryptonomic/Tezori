@@ -83,8 +83,8 @@ export function sendConfirmation() {
       }
 
       dispatch(updateSendTezosLoading(true));
-      //const identity = findIdentity(identities, publicKeyHash);
-      //const keyStore = getKeyStore(identity);
+      const identity = findIdentity(identities, publicKeyHash);
+      const keyStore = getKeyStore(identity);
       //await revealKey(network, keyStore, fee).catch((err) => {
       //  err.name = err.message;
       //  throw err;
