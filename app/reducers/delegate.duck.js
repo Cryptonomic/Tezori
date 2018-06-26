@@ -5,6 +5,12 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
+import { tezToUtez } from '../utils/currancy';
+import { revealKey, getSelectedKeyStore } from '../utils/general';
+
+const {
+  sendDelegationOperation
+} = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_DELEGATE_URL = 'UPDATE_DELEGATE_URL';
@@ -54,21 +60,25 @@ export function sendConfirmation() {
     const delegateState = state().delegate;
     const walletState = state().walletInitialization;
     const address = delegateState.get('address');
+    const identities = state().address.get('identities').toJS();
     const fee = delegateState.get('delegateFee');
     const network = walletState.get('network');
-    const selectedAccount = state().address.get('selectedAccount');
-    const keyStore = {
-      publicKey: selectedAccount.get('publicKey'),
-      privateKey: selectedAccount.get('privateKey'),
-      publicKeyHash: selectedAccount.get('publicKeyHash')
-    };
-
-    console.log(network, keyStore, address, fee);
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+    const selectedParentHash = state().address.get('selectedParentHash');
 
     try {
       dispatch(updateIsLoading(true));
-      await TezosOperations.sendDelegationOperation(network, keyStore, address, fee);
-      dispatch(clearState());
+      const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
+      const parsedAmount = Number(fee.replace(/\,/g,''));
+      await revealKey(network, keyStore, tezToUtez(parsedAmount)).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
+
+      await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));
     } catch (e) {
@@ -76,6 +86,8 @@ export function sendConfirmation() {
       dispatch(addMessage(e.name, true));
       dispatch(updateIsLoading(false));
     }
+    
+    dispatch(clearState());
   };
 }
 
@@ -85,7 +97,7 @@ const initState = fromJS({
   isLoading: false,
   password: '',
   address: '',
-  delegateFee: 4.25
+  delegateFee: '100'
 });
 
 export default function delegate(state = initState, action) {

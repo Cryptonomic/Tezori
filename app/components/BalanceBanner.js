@@ -8,6 +8,7 @@ import TezosAmount from './TezosAmount';
 import TezosAddress from './TezosAddress';
 import TezosIcon from './TezosIcon';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
+import { findAccountIndex } from '../utils/account';
 
 type Props = {
   balance: number,
@@ -64,9 +65,12 @@ const Breadcrumbs = styled.div`
 
 function BalanceBanner(props: Props) {
   const { balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
-  const smartAddressIndex = parentIdentity && parentIdentity.accounts.findIndex(account => account.accountId === publicKeyHash) + 1
-  const addressLabel = !isManagerAddress && smartAddressIndex  ? `Smart Address ${smartAddressIndex}` : 'Manager Address'
-  const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`
+  const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
+  const addressLabel = !isManagerAddress && smartAddressIndex  
+    ? `Smart Address ${smartAddressIndex}` 
+    : 'Manager Address';
+  
+  const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;
 
   return (
     <Container>

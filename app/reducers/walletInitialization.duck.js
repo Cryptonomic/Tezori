@@ -55,19 +55,31 @@ export function goHomeAndClearState() {
 
 export function saveUpdatedWallet(identities) {
   return async (dispatch, state) => {
-    const newIdentities = identities.toJS();
-
     try {
       dispatch(setIsLoading(true));
+      const identities = state().address.get('identities').toJS();
       const walletLocation = state().walletInitialization.get('walletLocation');
       const walletFileName = state().walletInitialization.get('walletFileName');
       const walletIdentities = state().walletInitialization.getIn([
         'wallet',
         'identities'
-      ]);
+      ]).toJS();
+
+      const indices = walletIdentities.map( identity => identity.publicKeyHash );
       const password = state().walletInitialization.get('password');
       const completeWalletPath = path.join(walletLocation, walletFileName);
 
+
+      /* making sure only unique identities are added */
+      const newIdentities = identities
+        .filter(({ publicKeyHash }) =>
+          indices.indexOf(publicKeyHash) === -1
+        )
+        .map(({ publicKey, privateKey, publicKeyHash }) => {
+          return { publicKey, privateKey, publicKeyHash };
+        });
+
+      
       await saveWallet(
         completeWalletPath,
         {

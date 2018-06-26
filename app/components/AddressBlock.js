@@ -176,23 +176,23 @@ class AddressBlock extends Component<Props, State> {
           </AddressSecondLine>
         </Address>
 
-            <AddressLabel>
-              <AddressesTitle>
-                Smart Addresses
-                <Tooltip position="right" title="lorem ispum dolor">
-                  <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-                </Tooltip>
-              </AddressesTitle>
+        <AddressLabel>
+          <AddressesTitle>
+            Smart Addresses
+            <Tooltip position="right" title="lorem ispum dolor">
+              <HelpIcon iconName="help" size={ms(0)} color="secondary" />
+            </Tooltip>
+          </AddressesTitle>
 
-              <AddCircle
-                style={{
+          <AddCircle
+            style={{
                   fill: '#7B91C0',
                   height: ms(1),
                   width: ms(1)
                 }}
-                onClick={openCreateAccountModal}
-              />
-            </AddressLabel>
+            onClick={openCreateAccountModal}
+          />
+        </AddressLabel>
         {smartAddresses && smartAddresses.toArray().length ?
           smartAddresses.map((smartAddress, index) => {
             const smartAddressId = smartAddress.get('accountId');

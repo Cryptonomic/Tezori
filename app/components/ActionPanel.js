@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { isEmpty } from 'lodash'
 
+import { getSelectedAccount } from '../utils/general';
+import { findIdentity, findIdentityIndex } from '../utils/identity';
 import Button from './Button';
 import BalanceBanner from './BalanceBanner';
 import EmptyState from './EmptyState';
@@ -19,7 +21,7 @@ import tabConstants from '../constants/tabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 
-import { selectAccount } from '../reducers/address.duck';
+import { syncWallet } from '../reducers/address.duck';
 
 const Container = styled.section`
   flex-grow: 1;
@@ -27,9 +29,9 @@ const Container = styled.section`
 
 const Tab = styled(Button)`
   background: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.white : colors.accent};
+  isActive ? colors.white : colors.accent};
   color: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.primary : lighten(0.4, colors.accent)};
+  isActive ? colors.primary : lighten(0.4, colors.accent)};
   cursor: pointer;
   text-align: center;
   font-weight: 500;
@@ -70,7 +72,7 @@ const Description = (props:DescriptionProps) => {
   return (
     <DescriptionContainer>
       It's pretty empty here. Get started
-      <Link onClick={onSendClick}> sending</Link> and 
+      <Link onClick={onSendClick}> sending</Link> and
       <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
     </DescriptionContainer>
   )
@@ -79,11 +81,11 @@ const Description = (props:DescriptionProps) => {
 const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
 
 type Props = {
-  selectedAccount: Object, // TODO: add type for this
+  identities: array,
   isLoadingTransactions: boolean,
   selectedAccountHash: string,
   selectedParentHash: string,
-  selectAccount: Function
+  syncWallet: Function
 };
 
 type State = {
@@ -99,22 +101,12 @@ class ActionPanel extends Component<Props, State> {
     currentPage: 1
   };
 
-  handleDataRefresh = () => {
-    const {
-      selectAccount,
-      selectedAccountHash,
-      selectedParentHash
-    } = this.props;
-
-    selectAccount(selectedAccountHash, selectedParentHash);
-  };
-
   handleLinkPress = tab => {
     this.setState({ activeTab: tab })
   }
 
-  renderSection = () => {
-    const { selectedAccountHash, selectedAccount } = this.props;
+  renderSection = ( transactions ) => {
+    const { selectedAccountHash } = this.props;
 
     switch (this.state.activeTab) {
       case DELEGATE:
@@ -137,30 +129,30 @@ class ActionPanel extends Component<Props, State> {
         );
       case TRANSACTIONS:
       default: {
-        const transactions = selectedAccount.get('transactions');
-
         return (
           <SectionContainer>
             {
               isEmpty(transactions.toJS())
-              ? <EmptyState
-                imageSrc={transactionsEmptyState}
-                title={'You have not made any transactions yet'}
-                description={
+                ?
+                <EmptyState
+                  imageSrc={transactionsEmptyState}
+                  title={'You have not made any transactions yet'}
+                  description={
                   <Description
                     onReceiveClick={() => this.handleLinkPress(RECEIVE)}
                     onSendClick={() => this.handleLinkPress(SEND)}
                   />}
                 />
-              : <Fragment>
-                <Transactions transactions={transactions} />
-                <PageNumbers
-                  currentPage={this.state.currentPage}
-                  numberOfPages={4}
-                  onClick={currentPage => this.setState({ currentPage })}
-                />
-                {this.props.isLoadingTransactions && <Loader />}
-              </Fragment>
+                :
+                <Fragment>
+                  <Transactions transactions={transactions} />
+                  <PageNumbers
+                    currentPage={this.state.currentPage}
+                    numberOfPages={4}
+                    onClick={currentPage => this.setState({ currentPage })}
+                  />
+                  {this.props.isLoadingTransactions && <Loader />}
+                </Fragment>
             }
           </SectionContainer>
         );
@@ -170,19 +162,22 @@ class ActionPanel extends Component<Props, State> {
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-    const { selectedAccount, selectedAccountHash, selectedParentHash, parentIdentity, parentIndex } = this.props;
+
+    const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex, syncWallet } = this.props;
+    const transactions = selectedAccount.get('transactions');
+    const balance = selectedAccount.get('balance');
     const  isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
 
     return (
       <Container>
         <BalanceBanner
-          balance={selectedAccount.get('balance') || 0}
+          balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIdentity={parentIdentity}
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
-          onRefreshClick={this.handleDataRefresh}
+          onRefreshClick={syncWallet}
         />
 
         <TabList>
@@ -198,7 +193,7 @@ class ActionPanel extends Component<Props, State> {
           ))}
         </TabList>
 
-        {this.renderSection()}
+        { this.renderSection(transactions) }
       </Container>
     );
   }
@@ -206,22 +201,26 @@ class ActionPanel extends Component<Props, State> {
 
 function mapStateToProps(state) {
   const { address } = state;
-  const selectedParentHash = address.get('selectedParentHash')
+  const identities = address.get('identities');
+  const jsIdentities = identities.toJS();
+  const selectedAccountHash = address.get('selectedAccountHash');
+  const selectedParentHash = address.get('selectedParentHash');
 
   return {
+    identities,
     isLoadingTransactions: address.get('isLoading'),
-    selectedAccountHash: address.get('selectedAccountHash'),
+    selectedAccountHash,
+    selectedAccount: getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash),
     selectedParentHash,
-    selectedAccount: address.get('selectedAccount'),
-    parentIdentity: address.get('identities').toJS().find(identity => identity.publicKeyHash === selectedParentHash),
-    parentIndex: address.get('identities').toJS().findIndex(identity => identity.publicKeyHash === selectedParentHash) + 1,
+    parentIdentity: findIdentity(jsIdentities, selectedParentHash),
+    parentIndex:  findIdentityIndex(jsIdentities, selectedParentHash) + 1
+
   };
 }
-
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      selectAccount
+      syncWallet
     },
     dispatch
   );

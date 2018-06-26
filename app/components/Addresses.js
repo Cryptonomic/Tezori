@@ -9,7 +9,6 @@ import { ms } from '../styles/helpers';
 import { H4 } from './Heading';
 import AddressBlock from './AddressBlock';
 import {
-  automaticAccountRefresh,
   openAddAddressModal,
   selectAccount
 } from '../reducers/address.duck';
@@ -51,12 +50,10 @@ type Identity = {
   publicKey: string,
   publicKeyHash: string,
   balance: number,
-  operationGroups: List<OperationGroup>,
   accounts: List<Account>
 };
 
 type Props = {
-  automaticAccountRefresh: Function,
   openCreateAccountModal: Function,
   openAddAddressModal: Function,
   identities: List<Identity>,
@@ -102,11 +99,10 @@ class Addresses extends Component<Props> {
           />
         </AccountTitle>
         {identities.map((accountBlock, index) => (
-          <AccountItem key={accountBlock.get('publicKeyHash')}>
+          <AccountItem key={ accountBlock.get('publicKeyHash') }>
             <AddressBlock
               accountBlock={accountBlock}
               accountIndex={index + 1}
-              automaticAccountRefresh={this.props.automaticAccountRefresh}
               openCreateAccountModal={this.props.openCreateAccountModal}
               selectAccount={this.props.selectAccount}
               selectedAccountHash={this.props.selectedAccountHash}
@@ -130,7 +126,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      automaticAccountRefresh,
       openCreateAccountModal,
       openAddAddressModal,
       selectAccount

@@ -6,8 +6,10 @@ import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
+import { createAccount as createAccountTmp } from '../utils/account';
+import { revealKey, getSelectedKeyStore } from '../utils/general'
+import { findIdentity } from '../utils/identity';
 
-const { getAccount } = TezosConseilQuery;
 const { sendOriginationOperation } = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
@@ -34,6 +36,11 @@ export const openCreateAccountModal = actionCreator(OPEN_CREATE_ACCOUNT_MODAL);
 export const closeCreateAccountModal = actionCreator(
   CLOSE_CREATE_ACCOUNT_MODAL
 );
+
+export const clearCreateAccountState = actionCreator(
+  CLEAR_CREATE_ACCOUNT_STATE
+);
+
 export const setOperation = actionCreator(SET_OPERATION, 'operation');
 export const updatePassPhrase = actionCreator(UPDATE_PASS_PHRASE, 'passphrase');
 export const confirmPassPhrase = actionCreator(
@@ -50,6 +57,7 @@ export function createNewAccount() {
     const parsedAmount = Number(amount.replace(/\,/g,''));
     const amountInUtez = tezToUtez(parsedAmount);
     const fee = state().createAccount.get('fee');
+    const identities = state().address.get('identities').toJS();
 
     const passPhrase = state().createAccount.get('passPhrase');
     const confirmedPassPhrase = state().createAccount.get(
@@ -77,15 +85,12 @@ export function createNewAccount() {
 
     try {
       dispatch(setIsLoading(true));
-
-      const identity = findKeyStore(
-        publicKeyHash,
-        state().address.get('identities')
-      );
-      const publicKey = identity.get('publicKey');
-      const privateKey = identity.get('privateKey');
-      const keyStore = { publicKey, privateKey, publicKeyHash };
-      // sendOriginationOperation(network: string, keyStore: KeyStore, amount: number, delegate: string, spendable: bool, delegatable: bool, fee: number)
+      const identity = findIdentity(identities, publicKeyHash);
+      const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
+      await revealKey(network, keyStore, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
 
       const newAccount = await sendOriginationOperation(
         network,
@@ -95,29 +100,27 @@ export function createNewAccount() {
         true,
         true,
         fee
-      );
+      ).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
 
-      dispatch(setOperation(newAccount.operation));
       const newAccountHash =
-        newAccount.results.operation_results[0].originated_contracts[0];
-      const tmpAccount = {
-        accountId: newAccountHash,
-        balance: amountInUtez,
-        delegateValue: delegate,
-        manager: delegate,
-        isReady: false,
-        delegateSetable: true,
-        script: null
-      };
-      //  const account = await getAccount(network, newAccountHash);
+        newAccount.results.contents[0].metadata.operation_result.originated_contracts[0];
 
       dispatch(
         addNewAccount(
           publicKeyHash,
-          addParentKeysToAccount(tmpAccount, identity.toJS())
+          createAccountTmp({
+              accountId: newAccountHash,
+              balance: amountInUtez,
+              manager: delegate
+            },
+            identity
+          )
         )
       );
-      dispatch(closeCreateAccountModal());
+      dispatch(clearCreateAccountState());
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
@@ -172,16 +175,4 @@ export function findKeyStore(publicKeyHash, identities) {
   return identities.find(identity => {
     return identity.get('publicKeyHash') === publicKeyHash;
   });
-}
-
-export function addParentKeysToAccount(account, identity) {
-  return {
-    ...account,
-    publicKey: identity.publicKey,
-    privateKey: identity.privateKey
-  };
-}
-
-export function addParentKeysToAccounts(accounts, identity) {
-  return accounts.map(account => addParentKeysToAccount(account, identity));
 }

@@ -1,21 +1,32 @@
 import { fromJS } from 'immutable';
-import { find } from 'lodash';
+import { flatten, pick } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 
+import * as status from '../constants/StatusTypes';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
-import { changeDelegate, addParentKeysToAccounts } from './createAccount.duck';
+import { changeDelegate } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
+import { getTransactions } from '../utils/general';
+import {
+  findAccount,
+  createAccount,
+  findAccountIndex,
+  getAccountsForIdentity
+} from '../utils/account';
+import { 
+  findIdentity, 
+  findIdentityIndex, 
+  createIdentity 
+} from '../utils/identity';
 
 const {
-  getAccounts,
   getAccount,
-  getEmptyTezosFilter,
-  getOperations,
 } = TezosConseilQuery;
+
 const {
   unlockFundraiserIdentity,
   generateMnemonic,
@@ -40,6 +51,8 @@ const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
+const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
+const SET_IDENTITIES = 'SET_IDENTITIES';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 
@@ -63,6 +76,10 @@ export const confirmPassPhrase = actionCreator(
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activationCode');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
+export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
+export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
+
+
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
   'publicKeyHash',
@@ -71,102 +88,178 @@ export const addNewAccount = actionCreator(
 const setSelectedAccount = actionCreator(
   SELECT_ACCOUNT,
   'selectedAccountHash',
-  'selectedParentHash',
-  'selectedAccount'
+  'selectedParentHash'
 );
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export function selectDefaultAccountOrOpenModal() {
+
+export function syncAccountTransactions(accountHash, parentHash) {
   return async (dispatch, state) => {
-    const initWalletState = state().walletInitialization;
-    const identities = initWalletState.getIn(['wallet', 'identities']);
+    const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, parentHash);
+    const account = findAccount( identity, accountHash );
+    const transactions = await getTransactions(accountHash, network);
 
-    if (identities.size === 0) {
-      dispatch(openAddAddressModal());
+    const foundIndex = identity && ( identity.accounts || [] )
+        .findIndex( account => account.accountId === accountHash );
+
+    if ( foundIndex > -1 ) {
+      identity.accounts[foundIndex] = {
+        ...account,
+        transactions
+      };
+    }
+
+    dispatch(updateIdentity(identity));
+  };
+}
+
+export function syncIdentityTransactions(accountHash) {
+  return async (dispatch, state) => {
+    const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, accountHash);
+    const transactions = await getTransactions(accountHash, network);
+    dispatch(
+      updateIdentity({
+        ...identity,
+        transactions
+      })
+    );
+  };
+}
+
+export function syncSelectedTransactions() {
+  return async (dispatch, state) => {
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+    const selectedParentHash = state().address.get('selectedParentHash');
+    if ( selectedAccountHash === selectedParentHash ) {
+      await dispatch(syncIdentityTransactions(selectedAccountHash));
     } else {
-      const network = initWalletState.get('network');
-
-      try {
-        dispatch(setIsLoading(true));
-        await Promise.all(
-          identities.toJS().map(async identity => {
-            const { publicKeyHash } = identity;
-            const account = await getAccount(network, publicKeyHash);
-            const { balance } = account.account;
-            const accounts = await getAccountsForIdentity(
-              network,
-              publicKeyHash
-            );
-
-            dispatch(
-              addNewIdentity({
-                transactions: [],
-                ...identity,
-                balance,
-                accounts: formatAccounts(
-                  addParentKeysToAccounts(accounts, identity)
-                )
-              })
-            );
-
-            const selectedAccount = createSelectedAccount({
-              balance,
-              transactions: []
-            });
-
-            dispatch(
-              setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-            );
-            dispatch(changeDelegate(publicKeyHash));
-          })
-        );
-        const firstIdentityHash = identities.getIn([0, 'publicKeyHash']);
-
-        await dispatch(selectAccount(firstIdentityHash, firstIdentityHash));
-        dispatch(setIsLoading(false));
-      } catch (e) {
-        console.error(e);
-        dispatch(addMessage(e.name, true));
-        dispatch(setIsLoading(false));
-      }
+      await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
     }
   };
 }
 
-export function selectAccount(selectedAccountHash, selectedParentHash) {
+export function syncAccount(accountHash, parentHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, parentHash);
+    const foundIndex = findAccountIndex( identity, accountHash );
+    const updatedAccount = await getAccount(network, accountHash);
+    const account  = identity.accounts[foundIndex];
 
-    try {
-      dispatch(setIsLoading(true));
-      const account = await getAccount(network, selectedAccountHash);
-      const emptyFilter = getEmptyTezosFilter();
-      const transFilter = {
-        ...emptyFilter,
-        limit: 100,
-        operation_participant: [selectedAccountHash],
-        operation_kind: ['transaction']
+    if ( foundIndex > -1 ) {
+      identity.accounts[foundIndex] = {
+        ...account,
+        balance: updatedAccount.account.balance
       };
-      const transactions = await getOperations(network, transFilter);
-      const selectedAccount = createSelectedAccount({
-        transactions,
-        balance: account.account.balance
-      });
+    }
 
-      dispatch(
-        setSelectedAccount(
-          selectedAccountHash,
-          selectedParentHash,
-          selectedAccount
-        )
-      );
-      dispatch(changeDelegate(selectedAccountHash));
-      dispatch(setIsLoading(false));
+    dispatch(updateIdentity(identity));
+  };
+}
+
+export function syncIdentity(accountHash) {
+  return async (dispatch, state) => {
+    const network = state().walletInitialization.get('network');
+    const identities = state().address.get('identities').toJS();
+    const identity = findIdentity(identities, accountHash);
+    const updatedIdentity = await getAccount(network, accountHash);
+    const accounts =  await getAccountsForIdentity( network, accountHash )
+      .catch( () => []);
+
+    dispatch(
+      updateIdentity({
+        ...identity,
+        balance: updatedIdentity.account.balance,
+        status: status.READY,
+        accounts: accounts.map(account => {
+          return createAccount( account, identity );
+        })
+      })
+    );
+  };
+}
+
+export function syncWallet() {
+  return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
+    const identities = state().address.get('identities').toJS();
+    const network = state().walletInitialization.get('network');
+
+    await Promise.all(
+      ( identities || [])
+        .map(async identity => {
+          try {
+            await dispatch(syncIdentity(identity.publicKeyHash));
+          } catch(e) {
+            console.error(e);
+            dispatch(addMessage(e.name, true));
+          }
+        })
+    );
+
+    await dispatch(syncSelectedTransactions());
+    dispatch(setIsLoading(false));
+  }
+}
+
+export function selectAccount(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    try{
+      dispatch(setIsLoading(true));
+      dispatch(setSelectedAccount(
+        selectedAccountHash,
+        selectedParentHash
+      ));
+      dispatch(changeDelegate(selectedParentHash));
+      if (selectedAccountHash === selectedParentHash ) {
+        await dispatch(syncIdentity(selectedAccountHash));
+      } else {
+        await dispatch(syncAccount(selectedAccountHash, selectedParentHash));
+      }
+      await dispatch(syncSelectedTransactions());
+
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
+    dispatch(setIsLoading(false));
+  };
+}
+
+export function selectDefaultAccountOrOpenModal() {
+  return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
+    const initWalletState = state().walletInitialization;
+    let identities = initWalletState.getIn(['wallet', 'identities']);
+    identities = identities.toJS();
+    const network = initWalletState.get('network');
+
+    if ( identities.length === 0 ) {
+      return dispatch(openAddAddressModal());
+    }
+
+    identities = identities
+      .filter(identity =>
+        identity.publicKey && identity.privateKey && identity.publicKeyHash
+      )
+      .map( identity =>
+        createIdentity(identity)
+      );
+    dispatch( setIdentities( identities ) );
+
+    const { publicKeyHash } = identities[0];
+    dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
+    dispatch(changeDelegate(publicKeyHash));
+
+    await dispatch(syncWallet());
+    await dispatch(automaticAccountRefresh());
+    dispatch(setIsLoading(false));
   };
 }
 
@@ -174,17 +267,14 @@ let currentAccountRefreshInterval = null;
 
 export function automaticAccountRefresh() {
   return (dispatch, state) => {
-    const REFRESH_INTERVAL = 5 * 60 * 1000;
+    const REFRESH_INTERVAL = 1 * 60 * 3000;
 
     if (currentAccountRefreshInterval) {
       clearAccountRefreshInterval();
     }
 
     currentAccountRefreshInterval = setInterval(() => {
-      const selectedAccountHash = state().address.get('selectedAccountHash');
-      const selectedParentHash = state().address.get('selectedParentHash');
-
-      dispatch(selectAccount(selectedAccountHash, selectedParentHash));
+      dispatch(syncWallet());
     }, REFRESH_INTERVAL);
   };
 }
@@ -261,49 +351,35 @@ export function importAddress() {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           break;
         case FUNDRAISER:
-        default: {
           identity = await unlockFundraiserIdentity(seed, username, passPhrase);
-          const activating = await sendIdentityActivationOperation(network, identity, activationCode);
-          dispatch(addMessage(
-            `Successfully sent activation operation ${activating.operationGroupID}.`,
-            false
-          ));
+          const account = await getAccount(network, identity.publicKeyHash).catch( () => false );
+          if ( !account ) {
+            const activating = await sendIdentityActivationOperation(
+              network,
+              identity,
+              activationCode
+            )
+              .catch((err) => {
+                err.name = err.message;
+                throw err;
+              });
+            dispatch(addMessage(
+              `Successfully sent activation operation ${activating.operationGroupID}.`,
+              false
+            ));
+          }
           break;
-        }
       }
 
       if ( identity ) {
         const { publicKeyHash } = identity;
-        const balance = 0;
-        const accounts = [];
-
-        if ( !find(identities.toJS(), identity) ) {
-          dispatch(
-            addNewIdentity({
-              ...identity,
-              balance,
-              accounts
-            })
-          );
-
-          const updatedIdentities = state()
-            .address.get('identities')
-            .map(identity => {
-              return {
-                publicKey: identity.get('publicKey'),
-                privateKey: identity.get('privateKey'),
-                publicKeyHash: identity.get('publicKeyHash')
-              }
-            });
-          dispatch(saveUpdatedWallet(updatedIdentities));
-
-          const selectedAccount = createSelectedAccount({
-            balance,
-            transactions: []
-          });
-          dispatch(
-            setSelectedAccount(publicKeyHash, publicKeyHash, selectedAccount)
-          );
+        if ( findIdentityIndex(identities.toJS(), publicKeyHash) === -1 ) {
+          dispatch(addNewIdentity(
+            createIdentity(identity)
+          ));
+          
+          dispatch(saveUpdatedWallet());
+          await dispatch(selectAccount(publicKeyHash, publicKeyHash));
         } else {
           setImportDuplicationError(dispatch);
         }
@@ -313,7 +389,7 @@ export function importAddress() {
       dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.message, true));
+      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
     }
   };
@@ -332,7 +408,6 @@ const initState = fromJS({
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
-  selectedAccount: createSelectedAccount({}),
   selectedParentHash: ''
 });
 
@@ -343,10 +418,12 @@ export default function address(state = initState, action) {
     case CLEAR_STATE: {
       const identities = state.get('identities');
       const selectedAccountHash = state.get('selectedAccountHash');
+      const selectedParentHash = state.get('selectedParentHash');
 
       return initState
         .set('identities', identities)
-        .set('selectedAccountHash', selectedAccountHash);
+        .set('selectedAccountHash', selectedAccountHash)
+        .set('selectedParentHash', selectedParentHash);
     }
     case ADD_NEW_ACCOUNT:
       return state.set(
@@ -357,12 +434,26 @@ export default function address(state = initState, action) {
           state.get('identities')
         )
       );
+    case SET_IDENTITIES: {
+      return state.set('identities', fromJS(action.identities));
+    }
     case ADD_NEW_IDENTITY: {
       const newIdentity = fromJS(action.identity);
 
       return state.update('identities', identities =>
         identities.push(newIdentity)
       );
+    }
+    case UPDATE_IDENTITY: {
+      const { publicKeyHash } = action.identity;
+      const identities = state.get('identities');
+      const indexFound = identities
+        .findIndex((identity) => publicKeyHash === identity.get('publicKeyHash') );
+
+      if ( indexFound > -1) {
+        return state.set('identities', identities.set(indexFound, fromJS(action.identity)));
+      }
+      return state;
     }
     case CLOSE_ADD_ADDRESS_MODAL:
       return state.set('open', false);
@@ -389,8 +480,7 @@ export default function address(state = initState, action) {
     case SELECT_ACCOUNT:
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
-        .set('selectedParentHash', action.selectedParentHash)
-        .set('selectedAccount', action.selectedAccount);
+        .set('selectedParentHash', action.selectedParentHash);
     default:
       return state;
   }
@@ -403,7 +493,7 @@ function addNewAccountToIdentity(publicKeyHash, account, identities) {
     if (identity.get('publicKeyHash') === publicKeyHash) {
       const accounts = identity.get('accounts').toJS();
       accounts.push(account);
-      return identity.set('accounts', fromJS(formatAccounts(accounts)));
+      return identity.set('accounts', fromJS(accounts));
     }
     return identity;
   });
@@ -414,22 +504,6 @@ function createSelectedAccount({
   transactions = []
 }) {
   return fromJS({ balance, transactions });
-}
-
-function getAccountsForIdentity(network, id) {
-  const emptyFilter = getEmptyTezosFilter();
-  const filter = { ...emptyFilter, account_manager: [id] };
-
-  return getAccounts(network, filter).then(accounts => {
-    return accounts.filter(account => account.accountId !== id);
-  });
-}
-
-function formatAccounts(accounts) {
-  return accounts.map(account => ({
-    transactions: [],
-    ...account
-  }));
 }
 
 export function clearAccountRefreshInterval() {

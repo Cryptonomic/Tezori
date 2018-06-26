@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../styles/helpers';
 import Button from './Button';
+import { utezToTez } from '../utils/currancy';
 
 import Loader from './Loader';
 import tezosLogo from '../../resources/tezosLogo.png';
@@ -74,7 +75,7 @@ class Delegate extends Component<Props> {
           <div className={styles.modalAddress}>{address}</div>
           <div className={styles.feeContainer}>
             <div className={styles.feeText}>Fee: </div>
-            {delegateFee}
+            {utezToTez(delegateFee)}
             <img src={tezosLogo} className={styles.tezosSymbol} />
           </div>
           <div className={styles.confirmationContainer}>

@@ -3,9 +3,14 @@ import { TezosOperations } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import { addMessage } from './message.duck';
-import { findKeyStore } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
+import { revealKey, getSelectedKeyStore } from '../utils/general'
+import { findIdentity } from '../utils/identity';
+
+const {
+  sendTransactionOperation,
+} = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
@@ -58,33 +63,48 @@ export function sendConfirmation() {
   return async (dispatch, state) => {
     const sendTezosState = state().sendTezos;
     const walletState = state().walletInitialization;
-
+    const identities = state().address.get('identities').toJS();
     const password = sendTezosState.get('password');
     const walletPassword = walletState.get('password');
     const toAddress = sendTezosState.get('toAddress');
     const amount = sendTezosState.get('amount');
     const fee = sendTezosState.get('fee');
     const network = walletState.get('network');
-    const publicKeyHash = state().address.get('selectedParentHash');
-    const identities = state().walletInitialization.getIn([
-      'wallet',
-      'identities'
-    ]);
-    const keyStore = findKeyStore(publicKeyHash, identities);
+    const selectedAccountHash = state().address.get('selectedAccountHash');
+    const selectedParentHash = state().address.get('selectedParentHash');
+    const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
 
     try {
       if (password !== walletPassword) {
-        throw new Error({ name: 'Incorrected password' });
+        throw new Error({ name: 'Incorrect password' });
+      }
+
+      if (toAddress === keyStore.publicKeyHash) {
+        throw new Error({ name: 'You cant sent money to yourself.' });
       }
 
       dispatch(updateSendTezosLoading(true));
-      await TezosOperations.sendTransactionOperation(
+
+      await revealKey(network, keyStore, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
+      
+      const res = await sendTransactionOperation(
         network,
-        keyStore.toJS(),
+        keyStore,
         toAddress,
         tezToUtez(Number(amount.replace(/\,/g,''))),
         fee
-      );
+      ).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
+
+      dispatch(addMessage(
+        `Successfully sent send Tez operation ${res.operationGroupID}.`,
+        false
+      ));
 
       dispatch(clearState());
       dispatch(updateSendTezosLoading(false));

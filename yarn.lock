@@ -2687,9 +2687,9 @@ connect-history-api-fallback@^1.3.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/connect-history-api-fallback/-/connect-history-api-fallback-1.5.0.tgz#b06873934bc5e344fef611a196a6faae0aee015a"
 
-conseiljs@^0.1.19:
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.1.19.tgz#0137a3264b8b721558d2371928ce159ea28de83b"
+conseiljs@^0.1.21:
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.1.21.tgz#e65a44dbf17ca2bd704387742711ff688b6af270"
   dependencies:
     awesome-typescript-loader "^5.0.0"
     bip39 "^2.5.0"
