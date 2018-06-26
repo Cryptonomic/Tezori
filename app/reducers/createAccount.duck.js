@@ -142,10 +142,16 @@ const initState = fromJS({
   confirmedPassPhrase: ''
 });
 
+// Todo: make sure that created account dont get deleted upon identity refresh
+// Todo: handle fetching error more gracfully - add a ..syncing icon for none ready accounts/identites
+// Todo: create timer queue for operation on un-ready accounts/identites.
+// Todo: make sure that no operation is made on accounts that are just created and hasnt been activated.
 export default function createAccount(state = initState, action) {
   switch (action.type) {
-    case CLEAR_CREATE_ACCOUNT_STATE:
-      return initState;
+    case CLEAR_CREATE_ACCOUNT_STATE: {
+      const delegate = state.get('delegate');
+      return initState.set('delegate', delegate)
+    }
     case CLOSE_CREATE_ACCOUNT_MODAL:
       return state.set('isModalOpen', false);
     case OPEN_CREATE_ACCOUNT_MODAL:

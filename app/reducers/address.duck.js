@@ -256,9 +256,9 @@ export function selectDefaultAccountOrOpenModal() {
     const { publicKeyHash } = identities[0];
     dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
     dispatch(changeDelegate(publicKeyHash));
-
-    await dispatch(syncWallet());
+    
     await dispatch(automaticAccountRefresh());
+    await dispatch(syncWallet());
     dispatch(setIsLoading(false));
   };
 }
@@ -267,7 +267,10 @@ let currentAccountRefreshInterval = null;
 
 export function automaticAccountRefresh() {
   return (dispatch, state) => {
-    const REFRESH_INTERVAL = 1 * 60 * 3000;
+    const second = 1000; // milliseconds
+    const minute = 60 * second;
+    const numberOfMinutes = 1;
+    const REFRESH_INTERVAL = numberOfMinutes * minute;
 
     if (currentAccountRefreshInterval) {
       clearAccountRefreshInterval();
