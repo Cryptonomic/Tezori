@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { lighten } from 'polished';
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash';
 
 import Button from './Button';
 import BalanceBanner from './BalanceBanner';
