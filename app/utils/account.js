@@ -1,5 +1,6 @@
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
+import * as status from '../constants/StatusTypes';
 
 export function createAccount(account, identity) {
 
@@ -14,6 +15,7 @@ export function createAccount(account, identity) {
     script: null,
     spendable: true,
     transactions: [],
+    status: status.CREATED,
     publicKey: identity.publicKey,
     privateKey: identity.privateKey,
     ...account

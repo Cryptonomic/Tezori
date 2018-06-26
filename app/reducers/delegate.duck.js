@@ -5,7 +5,6 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
-import { tezToUtez } from '../utils/currancy';
 import { revealKey, getSelectedKeyStore } from '../utils/general';
 
 const {
@@ -69,12 +68,6 @@ export function sendConfirmation() {
     try {
       dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
-      const parsedAmount = Number(fee.replace(/\,/g,''));
-      await revealKey(network, keyStore, tezToUtez(parsedAmount)).catch((err) => {
-        err.name = err.message;
-        throw err;
-      });
-
       await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
         throw err;

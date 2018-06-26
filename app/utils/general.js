@@ -4,8 +4,9 @@ import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
+import * as status from '../constants/StatusTypes';
 
-const { getEmptyTezosFilter, getOperations } = TezosConseilQuery;
+const { getEmptyTezosFilter, getOperations, getAccount } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 /**
  *
@@ -51,9 +52,53 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
   };
 }
 
-export async function revealKey(network, keyStore, fee) {
-  const keyRevealed = await isManagerKeyRevealedForAccount(network, keyStore);
+export async function isRevealed(network, keyStore) {
+  return await isManagerKeyRevealedForAccount(network, keyStore);
+}
+
+export async function revealKey(network, keyStore) {
+  const keyRevealed = await isRevealed(network, keyStore);
   if ( !keyRevealed ) {
-    await sendKeyRevealOperation(network, keyStore, fee);
+    await sendKeyRevealOperation(network, keyStore, 0);
   }
+  return true;
+}
+
+export async function activateAndUpdateAccount(account, keyStore, network) {
+  if ( account.status === status.READY ) {
+    const accountHash = account.publicKeyHash || account.accountId;
+    const updatedAccount = await getAccount(network, accountHash).catch( () => false );
+    if ( updatedAccount ) {
+      account.balance = updatedAccount.account.balance;
+    }
+    return account;
+  }
+  
+  if ( account.status === status.INACTIVE ) {
+    //  delete account
+  }
+
+  if ( account.status === status.CREATED ) {
+    const accountHash = account.publicKeyHash || account.accountId;
+    const updatedAccount = await getAccount(network, accountHash).catch( () => false );
+    if ( updatedAccount ) {
+      account.balance = updatedAccount.account.balance;
+      account.status = status.FOUND;
+    }
+  }
+
+  if ( account.status === status.FOUND ) {
+    const revealed = await revealKey(network, keyStore).catch(() => false );
+    if ( revealed ) {
+      account.status = status.PENDING;
+    }
+  }
+
+  if ( account.status === status.PENDING ) {
+    const response = await isRevealed(network, keyStore).catch(() => false );
+    if ( response ) {
+      account.status = status.READY;
+    }
+  }
+  return account;
 }
