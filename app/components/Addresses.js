@@ -1,9 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { ms } from '../styles/helpers';
 
 import { H4 } from './Heading';
@@ -14,7 +14,6 @@ import {
   selectAccount
 } from '../reducers/address.duck';
 import { openCreateAccountModal } from '../reducers/createAccount.duck';
-import { Theme } from '../styles/theme'
 
 type OperationGroup = {
   hash: string,
@@ -60,7 +59,8 @@ type Props = {
   openAddAddressModal: Function,
   identities: List<Identity>,
   selectAccount: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  theme: Object
 };
 
 const Container = styled.aside`
@@ -85,7 +85,7 @@ class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { identities, openAddAddressModal } = this.props;
+    const { identities, openAddAddressModal, theme: { colors } } = this.props;
 
     return (
       <Container>
@@ -94,7 +94,7 @@ class Addresses extends Component<Props> {
           <Tooltip position="bottom" title="Support for multiple accounts is coming soon.">
             <AddCircle
               disabled={true}
-              style={{ fill: Theme.colors.secondary, width: '30px', height: '30px' }}
+              style={{ fill: colors.secondary, width: ms(3), height: ms(3) }}
             />
           </Tooltip>
         </AccountTitle>
@@ -134,4 +134,7 @@ function mapDispatchToProps(dispatch: Function) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Addresses);
+export default compose(
+  withTheme,
+  connect(mapStateToProps, mapDispatchToProps)
+)(Addresses);
