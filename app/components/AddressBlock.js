@@ -247,7 +247,6 @@ class AddressBlock extends Component<Props, State> {
               color={
                 publicKeyHash === selectedAccountHash ? 'white' : 'primary'
               }
-              showTooltip
               amount={accountBlock.get('balance')}
             />
             <Syncing isReady={ isManagerReady } >
@@ -265,10 +264,7 @@ class AddressBlock extends Component<Props, State> {
 
         <AddressLabel>
           <AddressesTitle>
-            Smart Addresses
-            <Tooltip position="bottom" content={() => 'lorem ispum dolor'}>
-              <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-            </Tooltip>
+            Add a Delegate
           </AddressesTitle>
 
           <AddCircle
@@ -308,7 +304,7 @@ class AddressBlock extends Component<Props, State> {
                       size={ms(0)}
                       color={isSmartActive ? 'white' : 'secondary'}
                     />
-                    {`Smart Address ${index + 1}`}
+                    {`Delegated Address ${index + 1}`}
                   </AddressesTitle>
                 </AddressFirstLine>
                 <AddressSecondLine isActive={isSmartActive}>
