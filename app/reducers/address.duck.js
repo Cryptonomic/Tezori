@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { flatten, find, pick } from 'lodash';
+import { flatten, pick } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
@@ -17,7 +17,11 @@ import {
   findAccountIndex,
   getAccountsForIdentity
 } from '../utils/account';
-import { findIdentity, createIdentity } from '../utils/identity';
+import { 
+  findIdentity, 
+  findIdentityIndex, 
+  createIdentity 
+} from '../utils/identity';
 
 const {
   getAccount,
@@ -206,13 +210,12 @@ export function syncWallet() {
 export function selectAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     try{
-      const network = state().walletInitialization.get('network');
       dispatch(setIsLoading(true));
       dispatch(setSelectedAccount(
         selectedAccountHash,
         selectedParentHash
       ));
-      dispatch(changeDelegate(selectedAccountHash));
+      dispatch(changeDelegate(selectedParentHash));
       if (selectedAccountHash === selectedParentHash ) {
         await dispatch(syncIdentity(selectedAccountHash));
       } else {
@@ -264,7 +267,7 @@ let currentAccountRefreshInterval = null;
 
 export function automaticAccountRefresh() {
   return (dispatch, state) => {
-    const REFRESH_INTERVAL = 5 * 60 * 3000;
+    const REFRESH_INTERVAL = 1 * 60 * 3000;
 
     if (currentAccountRefreshInterval) {
       clearAccountRefreshInterval();
@@ -369,22 +372,13 @@ export function importAddress() {
       }
 
       if ( identity ) {
-        const { publicKeyHash, publicKey, privateKey } = identity;
-        if ( !find(identities.toJS(), identity) ) {
+        const { publicKeyHash } = identity;
+        if ( findIdentityIndex(identities.toJS(), publicKeyHash) === -1 ) {
           dispatch(addNewIdentity(
             createIdentity(identity)
           ));
-
-          const updatedIdentities = state()
-            .address.get('identities')
-            .map(identity => {
-              return {
-                publicKey: identity.get('publicKey'),
-                privateKey: identity.get('privateKey'),
-                publicKeyHash: identity.get('publicKeyHash')
-              }
-            });
-          dispatch(saveUpdatedWallet(updatedIdentities));
+          
+          dispatch(saveUpdatedWallet());
           await dispatch(selectAccount(publicKeyHash, publicKeyHash));
         } else {
           setImportDuplicationError(dispatch);

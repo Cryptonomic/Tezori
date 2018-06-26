@@ -41,18 +41,19 @@ export function getSelectedAccount( identities, selectedAccountHash, selectedPar
   return fromJS(selectedAccount || createSelectedAccount() );
 }
 
-export function getKeyStore(identity) {
-  return pick(identity, [ 'publicKey', 'privateKey', 'publicKeyHash' ]);
+export function getSelectedKeyStore( identities, selectedAccountHash, selectedParentHash ) {
+  var selectedAccount = getSelectedAccount( identities, selectedAccountHash, selectedParentHash );
+  const { publicKey, privateKey, publicKeyHash, accountId } = selectedAccount.toJS();
+  return {
+    publicKey,
+    privateKey,
+    publicKeyHash: publicKeyHash || accountId
+  };
 }
 
 export async function revealKey(network, keyStore, fee) {
-  //console.log('network, keyStore, fee', network, keyStore, fee);
   const keyRevealed = await isManagerKeyRevealedForAccount(network, keyStore);
-  //console.log(`---------------------------------------------------------------------------
-  //---------------------------------${ keyRevealed }------------------------------------------------`);
   if ( !keyRevealed ) {
     await sendKeyRevealOperation(network, keyStore, fee);
   }
-  //console.log(`---------------------------------------------------------------------------
-  //--------------------------------- end ------------------------------------------------`);
 }

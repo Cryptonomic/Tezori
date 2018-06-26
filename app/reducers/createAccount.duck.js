@@ -7,7 +7,7 @@ import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { createAccount as createAccountTmp } from '../utils/account';
-import { revealKey, getKeyStore } from '../utils/general'
+import { revealKey, getSelectedKeyStore } from '../utils/general'
 import { findIdentity } from '../utils/identity';
 
 const { sendOriginationOperation } = TezosOperations;
@@ -85,13 +85,12 @@ export function createNewAccount() {
 
     try {
       dispatch(setIsLoading(true));
-
       const identity = findIdentity(identities, publicKeyHash);
-      const keyStore = getKeyStore(identity);
-      //await revealKey(network, keyStore, fee).catch((err) => {
-      //  err.name = err.message;
-      //  throw err;
-      //});
+      const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
+      await revealKey(network, keyStore, fee).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
 
       const newAccount = await sendOriginationOperation(
         network,
@@ -117,7 +116,7 @@ export function createNewAccount() {
               balance: amountInUtez,
               manager: delegate
             },
-            identity.toJS()
+            identity
           )
         )
       );

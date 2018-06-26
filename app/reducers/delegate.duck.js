@@ -5,8 +5,8 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
-import { findIdentity } from '../utils/identity';
-import { getSelectedAccount, revealKey, getKeyStore } from '../utils/general';
+import { tezToUtez } from '../utils/currancy';
+import { revealKey, getSelectedKeyStore } from '../utils/general';
 
 const {
   sendDelegationOperation
@@ -60,7 +60,7 @@ export function sendConfirmation() {
     const delegateState = state().delegate;
     const walletState = state().walletInitialization;
     const address = delegateState.get('address');
-    const identities = address.get('identities').toJS();
+    const identities = state().address.get('identities').toJS();
     const fee = delegateState.get('delegateFee');
     const network = walletState.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
@@ -68,18 +68,17 @@ export function sendConfirmation() {
 
     try {
       dispatch(updateIsLoading(true));
-      const identity = findIdentity(identities, selectedParentHash);
-      const keyStore = getKeyStore(identity);
-      //await revealKey(network, keyStore, fee).catch((err) => {
-      //  err.name = err.message;
-      //  throw err;
-      //});
+      const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
+      const parsedAmount = Number(fee.replace(/\,/g,''));
+      await revealKey(network, keyStore, tezToUtez(parsedAmount)).catch((err) => {
+        err.name = err.message;
+        throw err;
+      });
 
       await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
         throw err;
       });
-      dispatch(clearState());
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));
     } catch (e) {
@@ -87,6 +86,8 @@ export function sendConfirmation() {
       dispatch(addMessage(e.name, true));
       dispatch(updateIsLoading(false));
     }
+    
+    dispatch(clearState());
   };
 }
 
@@ -96,7 +97,7 @@ const initState = fromJS({
   isLoading: false,
   password: '',
   address: '',
-  delegateFee: 4.25
+  delegateFee: '100'
 });
 
 export default function delegate(state = initState, action) {

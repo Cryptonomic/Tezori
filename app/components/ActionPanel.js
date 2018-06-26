@@ -21,7 +21,7 @@ import tabConstants from '../constants/tabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 
-import { selectAccount } from '../reducers/address.duck';
+import { syncWallet } from '../reducers/address.duck';
 
 const Container = styled.section`
   flex-grow: 1;
@@ -85,7 +85,7 @@ type Props = {
   isLoadingTransactions: boolean,
   selectedAccountHash: string,
   selectedParentHash: string,
-  selectAccount: Function
+  syncWallet: Function
 };
 
 type State = {
@@ -99,16 +99,6 @@ class ActionPanel extends Component<Props, State> {
   state = {
     activeTab: TRANSACTIONS,
     currentPage: 1
-  };
-
-  handleDataRefresh = () => {
-    const {
-      selectAccount,
-      selectedAccountHash,
-      selectedParentHash
-    } = this.props;
-
-    selectAccount(selectedAccountHash, selectedParentHash);
   };
 
   handleLinkPress = tab => {
@@ -173,7 +163,7 @@ class ActionPanel extends Component<Props, State> {
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
 
-    const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex } = this.props;
+    const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex, syncWallet } = this.props;
     const transactions = selectedAccount.get('transactions');
     const balance = selectedAccount.get('balance');
     const  isManagerAddress = selectedAccountHash === selectedParentHash;
@@ -187,7 +177,7 @@ class ActionPanel extends Component<Props, State> {
           parentIdentity={parentIdentity}
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
-          onRefreshClick={this.handleDataRefresh}
+          onRefreshClick={syncWallet}
         />
 
         <TabList>
@@ -230,7 +220,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      selectAccount
+      syncWallet
     },
     dispatch
   );
