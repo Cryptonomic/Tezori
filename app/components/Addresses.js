@@ -8,11 +8,13 @@ import { ms } from '../styles/helpers';
 
 import { H4 } from './Heading';
 import AddressBlock from './AddressBlock';
+import Tooltip from './Tooltip';
 import {
   openAddAddressModal,
   selectAccount
 } from '../reducers/address.duck';
 import { openCreateAccountModal } from '../reducers/createAccount.duck';
+import { Theme } from '../styles/theme'
 
 type OperationGroup = {
   hash: string,
@@ -79,10 +81,6 @@ const AccountItem = styled.div`
   margin: 0 0 ${ms(1)} 0;
 `;
 
-const StyledAddCircle = styled(AddCircle)`
-  cursor: pointer;
-`;
-
 class Addresses extends Component<Props> {
   props: Props;
 
@@ -93,10 +91,12 @@ class Addresses extends Component<Props> {
       <Container>
         <AccountTitle>
           <H4>Accounts</H4>
-          <StyledAddCircle
-            style={{ fill: '#7B91C0', width: '30px', height: '30px' }}
-            onClick={openAddAddressModal}
-          />
+          <Tooltip position="bottom" title="Support for multiple accounts is coming soon.">
+            <AddCircle
+              disabled={true}
+              style={{ fill: Theme.colors.secondary, width: '30px', height: '30px' }}
+            />
+          </Tooltip>
         </AccountTitle>
         {identities.map((accountBlock, index) => (
           <AccountItem key={ accountBlock.get('publicKeyHash') }>
