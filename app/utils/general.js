@@ -1,3 +1,4 @@
+import { pick  } from 'lodash';
 import { TezosConseilQuery, TezosOperations  } from 'conseiljs';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
@@ -40,9 +41,18 @@ export function getSelectedAccount( identities, selectedAccountHash, selectedPar
   return fromJS(selectedAccount || createSelectedAccount() );
 }
 
+export function getKeyStore(identity) {
+  return pick(identity, [ 'publicKey', 'privateKey', 'publicKeyHash' ]);
+}
+
 export async function revealKey(network, keyStore, fee) {
+  //console.log('network, keyStore, fee', network, keyStore, fee);
   const keyRevealed = await isManagerKeyRevealedForAccount(network, keyStore);
+  //console.log(`---------------------------------------------------------------------------
+  //---------------------------------${ keyRevealed }------------------------------------------------`);
   if ( !keyRevealed ) {
     await sendKeyRevealOperation(network, keyStore, fee);
   }
+  //console.log(`---------------------------------------------------------------------------
+  //--------------------------------- end ------------------------------------------------`);
 }

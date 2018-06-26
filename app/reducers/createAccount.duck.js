@@ -7,7 +7,8 @@ import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { createAccount as createAccountTmp } from '../utils/account';
-import { revealKey } from '../utils/general'
+import { revealKey, getKeyStore } from '../utils/general'
+import { findIdentity } from '../utils/identity';
 
 const { sendOriginationOperation } = TezosOperations;
 
@@ -56,6 +57,7 @@ export function createNewAccount() {
     const parsedAmount = Number(amount.replace(/\,/g,''));
     const amountInUtez = tezToUtez(parsedAmount);
     const fee = state().createAccount.get('fee');
+    const identities = state().address.get('identities').toJS();
 
     const passPhrase = state().createAccount.get('passPhrase');
     const confirmedPassPhrase = state().createAccount.get(
@@ -84,14 +86,8 @@ export function createNewAccount() {
     try {
       dispatch(setIsLoading(true));
 
-      const identity = findKeyStore(
-        publicKeyHash,
-        state().address.get('identities')
-      );
-      const publicKey = identity.get('publicKey');
-      const privateKey = identity.get('privateKey');
-      const keyStore = { publicKey, privateKey, publicKeyHash };
-
+      const identity = findIdentity(identities, publicKeyHash);
+      const keyStore = getKeyStore(identity);
       //await revealKey(network, keyStore, fee).catch((err) => {
       //  err.name = err.message;
       //  throw err;

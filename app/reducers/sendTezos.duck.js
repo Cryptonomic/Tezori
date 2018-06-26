@@ -3,10 +3,10 @@ import { TezosOperations } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import { addMessage } from './message.duck';
-import { findKeyStore } from './createAccount.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
-import { revealKey } from '../utils/general'
+import { revealKey, getKeyStore } from '../utils/general'
+import { findIdentity } from '../utils/identity';
 
 const {
   sendTransactionOperation,
@@ -71,11 +71,7 @@ export function sendConfirmation() {
     const fee = sendTezosState.get('fee');
     const network = walletState.get('network');
     const publicKeyHash = state().address.get('selectedParentHash');
-    const identities = state().walletInitialization.getIn([
-      'wallet',
-      'identities'
-    ]);
-    const keyStore = findKeyStore(publicKeyHash, identities);
+    const identities =  state().address.get('identities').toJS();
 
     try {
       if (password !== walletPassword) {
@@ -87,6 +83,8 @@ export function sendConfirmation() {
       }
 
       dispatch(updateSendTezosLoading(true));
+      //const identity = findIdentity(identities, publicKeyHash);
+      //const keyStore = getKeyStore(identity);
       //await revealKey(network, keyStore, fee).catch((err) => {
       //  err.name = err.message;
       //  throw err;
@@ -94,7 +92,7 @@ export function sendConfirmation() {
       
       const res = await sendTransactionOperation(
         network,
-        keyStore.toJS(),
+        keyStore,
         toAddress,
         tezToUtez(Number(amount.replace(/\,/g,''))),
         fee

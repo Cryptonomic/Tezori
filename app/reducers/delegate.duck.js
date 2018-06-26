@@ -5,7 +5,8 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
-import { getSelectedAccount, revealKey } from '../utils/general';
+import { findIdentity } from '../utils/identity';
+import { getSelectedAccount, revealKey, getKeyStore } from '../utils/general';
 
 const {
   sendDelegationOperation
@@ -64,14 +65,11 @@ export function sendConfirmation() {
     const network = walletState.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
-    const selectedAccount = getSelectedAccount( identities, selectedAccountHash, selectedParentHash);
-    const publicKey = selectedAccount.get('publicKey');
-    const privateKey = selectedAccount.get('privateKey');
-    const publicKeyHash = selectedAccount.get('publicKeyHash');
-    const keyStore = { publicKey, privateKey, publicKeyHash };
 
     try {
       dispatch(updateIsLoading(true));
+      const identity = findIdentity(identities, selectedParentHash);
+      const keyStore = getKeyStore(identity);
       //await revealKey(network, keyStore, fee).catch((err) => {
       //  err.name = err.message;
       //  throw err;
