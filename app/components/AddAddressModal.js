@@ -129,14 +129,14 @@ export default function AddAddress(props: Props) {
             />
             <div className={styles.fundraiserPasswordContainer}>
               <TextField
-                floatingLabelText="Pass Phrase"
+                floatingLabelText="Passphrase"
                 type="password"
                 style={{ width: '45%' }}
                 value={passPhrase}
                 onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
               />
               <TextField
-                floatingLabelText="Confirm Pass Phrase"
+                floatingLabelText="Confirm Passphrase"
                 type="password"
                 style={{ width: '45%' }}
                 onChange={(_, newPassPhrase) =>
@@ -163,7 +163,7 @@ export default function AddAddress(props: Props) {
               onChange={(_, newActivationCode) => updateActivationCode(newActivationCode)}
             />
             <TextField
-              floatingLabelText="Username"
+              floatingLabelText="Email"
               style={{ width: '100%' }}
               value={username}
               onChange={(_, newUsername) => updateUsername(newUsername)}

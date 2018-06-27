@@ -123,7 +123,7 @@ class Home extends Component<Props> {
           <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.importButtonContainer}>
             <Button buttonTheme="secondary" onClick={this.saveFile} small>
-              Select File
+              Create Wallet File
             </Button>
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
