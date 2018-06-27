@@ -17,7 +17,7 @@ import Send from './Send';
 import Receive from './Receive';
 import Delegate from './Delegate';
 import Loader from './Loader';
-import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/tabConstants';
+import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 
