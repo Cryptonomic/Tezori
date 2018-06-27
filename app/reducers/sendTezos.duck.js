@@ -84,12 +84,6 @@ export function sendConfirmation() {
       }
 
       dispatch(updateSendTezosLoading(true));
-
-      await revealKey(network, keyStore, fee).catch((err) => {
-        err.name = err.message;
-        throw err;
-      });
-      
       const res = await sendTransactionOperation(
         network,
         keyStore,

@@ -55,13 +55,13 @@ export default function hasError(value, validateType, name) {
         return 'Must upload a wallet.';
       }
       break;
-    case 'validJS':
-      try {
-          JSON.parse(fs.readFileSync(value));
-      } catch (e) {
-          return 'Corrupt .tezwallet file';
-      }
-      break;
+    // case 'validJS':
+    //   try {
+    //       JSON.parse(fs.readFileSync(value));
+    //   } catch (e) {
+    //       return 'Corrupt .tezwallet file';
+    //   }
+    //   break;
     case 'minLength8': 
       if ( value.length < 8 ) {
         return minLength(8, name);

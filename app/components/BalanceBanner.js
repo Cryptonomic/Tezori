@@ -7,6 +7,9 @@ import { H4 } from './Heading';
 import TezosAmount from './TezosAmount';
 import TezosAddress from './TezosAddress';
 import TezosIcon from './TezosIcon';
+import Tooltip from './Tooltip';
+import Button from './Button';
+import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { findAccountIndex } from '../utils/account';
 
@@ -63,13 +66,17 @@ const Breadcrumbs = styled.div`
   font-size: ${ms(-1)};
 `
 
+const HelpIcon = styled(TezosIcon)`
+  padding: 0 0 0 ${ms(-4)};
+`;
+
 function BalanceBanner(props: Props) {
   const { balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel = !isManagerAddress && smartAddressIndex  
-    ? `Smart Address ${smartAddressIndex}` 
+  const addressLabel = !isManagerAddress && smartAddressIndex
+    ? `Smart Address ${smartAddressIndex}`
     : 'Manager Address';
-  
+
   const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;
 
   return (
@@ -97,6 +104,18 @@ function BalanceBanner(props: Props) {
             color="white"
           />
           {addressLabel}
+
+          {isManagerAddress && (
+            <Tooltip position="bottom" content={ManagerAddressTooltip}>
+              <Button buttonTheme="plain">
+                <HelpIcon
+                  iconName="help"
+                  size={ms(0)}
+                  color="white"
+                />
+              </Button>
+            </Tooltip>
+          )}
         </AddressTitle>
         <AddressInfo>
           <TezosAddress size={ms(1)} address={publicKeyHash} weight={theme.typo.weights.light} color={theme.colors.white} />

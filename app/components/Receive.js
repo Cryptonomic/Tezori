@@ -58,7 +58,7 @@ export default class Receive extends Component<Props> {
     showCopyConfirmation: false
   };
 
-  componentDidMount() {
+  renderQRCode() {
     try {
       QRCode.toCanvas(
         this.canvasRef.current,
@@ -70,6 +70,17 @@ export default class Receive extends Component<Props> {
       );
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  componentDidMount() {
+    this.renderQRCode();
+  }
+
+  componentDidUpdate(newProps) {
+    const { address } = this.props;
+    if ( newProps.address !== address ) {
+      this.renderQRCode();
     }
   }
 
