@@ -50,5 +50,9 @@ main.js.map
 
 .idea
 npm-debug.log.*
+__snapshots__
 
-wallets
+CryptoUtils.js
+conseil.js
+tezos
+utils
