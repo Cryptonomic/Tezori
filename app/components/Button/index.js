@@ -99,7 +99,8 @@ function Button(props: Props) {
     buttonTheme,
     type,
     small,
-    onClick
+    onClick,
+    ...restOfProps
   } = props;
   return (
     <StyledButton
@@ -109,6 +110,7 @@ function Button(props: Props) {
       small={small}
       disabled={disabled}
       className={className}
+      {...restOfProps}
     >
       {children}
     </StyledButton>
