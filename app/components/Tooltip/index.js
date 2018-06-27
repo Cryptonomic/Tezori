@@ -30,7 +30,7 @@ const StyledTooltip = styled(TooltipAdapter)`
 
   &__tooltip {
     position: absolute;
-    z-index: 1070;
+    z-index: 9999;
     display: block;
     visibility: visible;
     font-size: ${ms(1)};
@@ -47,7 +47,7 @@ const StyledTooltip = styled(TooltipAdapter)`
       padding: 0 ${arrowWidth} 0 ${tooltipDistance};
     }
     &-placement-bottom, &-placement-bottomLeft, &-placement-bottomRight {
-      padding: ${tooltipDistance} 0 ${arrowWidth} 0;
+      padding: ${tooltipDistance} 0 ${arrowWidthUnitless / 2}px 0;
     }
     &-placement-left, &-placement-leftTop, &-placement-leftBottom {
       padding: 0 ${tooltipDistance} 0 ${arrowWidth};
@@ -193,11 +193,11 @@ const StyledTooltip = styled(TooltipAdapter)`
     }
 
     &-placement-bottomLeft &-arrow {
-      left: 15%;
+      left: 2%;
     }
 
     &-placement-bottomRight &-arrow {
-      right: 15%;
+      right: 2%;
     }
   }
 `;
