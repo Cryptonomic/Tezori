@@ -81,17 +81,23 @@ const AccountItem = styled.div`
   margin: 0 0 ${ms(1)} 0;
 `;
 
+const AccountsTooltip = styled.div`
+  font-size: ${ms(-1)};
+  max-width: ${ms(12)};
+  color: ${({ theme: { colors } }) => colors.secondary};
+`
+
 class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { identities, openAddAddressModal, theme: { colors } } = this.props;
+    const { identities, theme: { colors } } = this.props;
 
     return (
       <Container>
         <AccountTitle>
           <H4>Accounts</H4>
-          <Tooltip position="bottom" title="Support for multiple accounts is coming soon.">
+          <Tooltip position="bottom" content={<AccountsTooltip>Support for multiple accounts is coming soon.</AccountsTooltip>}>
             <AddCircle
               disabled={true}
               style={{ fill: colors.secondary, width: ms(3), height: ms(3) }}
