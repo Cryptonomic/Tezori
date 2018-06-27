@@ -46,13 +46,6 @@ export function showConfirmationModal() {
     dispatch(openConfirmationModal());
   };
 }
-export function setOriginalAddress() {
-  return async (dispatch, state) => {
-    const walletState = state().walletInitialization;
-    const originalAddress = walletState.get('address');
-    dispatch(updateAddress(originalAddress));
-  };
-}
 
 export function sendConfirmation() {
   return async (dispatch, state) => {

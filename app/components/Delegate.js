@@ -37,10 +37,6 @@ const UpdateButton = styled(Button)`
 class Delegate extends Component<Props> {
   props: Props;
 
-  componentDidMount() {
-    this.props.setOriginalAddress();
-  }
-
   onModalClose = () => {
     this.props.updatePassword('');
     this.props.setOriginalAddress();

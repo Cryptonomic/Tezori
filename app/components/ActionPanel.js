@@ -45,8 +45,7 @@ const TabList = styled.div`
 `;
 
 const SectionContainer = styled.div`
-  display: ${({ isActive }) =>
-  isActive ? 'flex' : 'none'};
+  display: flex;
   flex-direction: column;
   height: calc(100% - 150px);
   background-color: white;
@@ -104,8 +103,9 @@ class ActionPanel extends Component<Props, State> {
     this.setState({ activeTab: tab })
   }
 
-  renderSection = ( transactions ) => {
-    const { selectedAccountHash } = this.props;
+  renderSection = () => {
+    const { selectedAccount, selectedAccountHash } = this.props;
+    const transactions = selectedAccount.get('transactions');
 
     switch (this.state.activeTab) {
       case DELEGATE:
@@ -150,7 +150,6 @@ class ActionPanel extends Component<Props, State> {
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex, syncWallet } = this.props;
-    const transactions = selectedAccount.get('transactions');
     const balance = selectedAccount.get('balance');
     const  isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
@@ -178,56 +177,8 @@ class ActionPanel extends Component<Props, State> {
             </Tab>
           ))}
         </TabList>
-
-        <SectionContainer isActive={activeTab === TRANSACTIONS}>
-          {
-            isEmpty(transactions.toJS())
-              ?
-              (
-                <EmptyState
-                  imageSrc={transactionsEmptyState}
-                  title={'You have not made any transactions yet'}
-                  description={
-              <Description
-                onReceiveClick={() => this.handleLinkPress(RECEIVE)}
-                onSendClick={() => this.handleLinkPress(SEND)}
-              />
-            }
-                />
-              )
-              :
-              (
-                <Fragment>
-                  <Transactions transactions={transactions} />
-                  <PageNumbers
-                    currentPage={this.state.currentPage}
-                    numberOfPages={4}
-                    onClick={currentPage => this.setState({ currentPage })}
-                  />
-                  {this.props.isLoadingTransactions && <Loader />}
-                </Fragment>
-              )
-          }
-        </SectionContainer>
-
-        <SectionContainer isActive={activeTab === SEND}>
-          <Send />
-        </SectionContainer>
-
-        {
-          activeTab === RECEIVE
-            ?
-            (
-              <SectionContainer isActive>
-                <Receive address={selectedAccountHash} />
-              </SectionContainer>
-            )
-            : null
-        }
-
-
-        <SectionContainer isActive={activeTab === DELEGATE}>
-          <Delegate />
+        <SectionContainer>
+          { this.renderSection() }
         </SectionContainer>
 
       </Container>
