@@ -17,7 +17,7 @@ import Send from './Send';
 import Receive from './Receive';
 import Delegate from './Delegate';
 import Loader from './Loader';
-import tabConstants from '../constants/tabConstants';
+import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 
@@ -45,7 +45,8 @@ const TabList = styled.div`
 `;
 
 const SectionContainer = styled.div`
-  display: flex;
+  display: ${({ isActive }) =>
+  isActive ? 'flex' : 'none'};
   flex-direction: column;
   height: calc(100% - 150px);
   background-color: white;
@@ -78,8 +79,6 @@ const Description = (props:DescriptionProps) => {
   )
 }
 
-const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
-
 type Props = {
   identities: array,
   isLoadingTransactions: boolean,
@@ -110,59 +109,46 @@ class ActionPanel extends Component<Props, State> {
 
     switch (this.state.activeTab) {
       case DELEGATE:
-        return (
-          <SectionContainer>
-            <Delegate />
-          </SectionContainer>
-        );
+        return <Delegate />;
       case RECEIVE:
-        return (
-          <SectionContainer>
-            <Receive address={selectedAccountHash} />
-          </SectionContainer>
-        );
+        return <Receive address={selectedAccountHash} />;
       case SEND:
-        return (
-          <SectionContainer>
-            <Send />
-          </SectionContainer>
-        );
+        return <Send />;
       case TRANSACTIONS:
       default: {
-        return (
-          <SectionContainer>
-            {
-              isEmpty(transactions.toJS())
-                ?
-                <EmptyState
-                  imageSrc={transactionsEmptyState}
-                  title={'You have not made any transactions yet'}
-                  description={
-                  <Description
-                    onReceiveClick={() => this.handleLinkPress(RECEIVE)}
-                    onSendClick={() => this.handleLinkPress(SEND)}
-                  />}
-                />
-                :
-                <Fragment>
-                  <Transactions transactions={transactions} />
-                  <PageNumbers
-                    currentPage={this.state.currentPage}
-                    numberOfPages={4}
-                    onClick={currentPage => this.setState({ currentPage })}
-                  />
-                  {this.props.isLoadingTransactions && <Loader />}
-                </Fragment>
+        return isEmpty(transactions.toJS())
+          ?
+          (
+            <EmptyState
+              imageSrc={transactionsEmptyState}
+              title={'You have not made any transactions yet'}
+              description={
+              <Description
+                onReceiveClick={() => this.handleLinkPress(RECEIVE)}
+                onSendClick={() => this.handleLinkPress(SEND)}
+              />
             }
-          </SectionContainer>
-        );
+            />
+          )
+          :
+          (
+            <Fragment>
+              <Transactions transactions={transactions} />
+              <PageNumbers
+                currentPage={this.state.currentPage}
+                numberOfPages={4}
+                onClick={currentPage => this.setState({ currentPage })}
+              />
+              {this.props.isLoadingTransactions && <Loader />}
+            </Fragment>
+          )
+          ;
       }
     }
   };
 
   render() {
     const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-
     const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex, syncWallet } = this.props;
     const transactions = selectedAccount.get('transactions');
     const balance = selectedAccount.get('balance');
@@ -193,7 +179,57 @@ class ActionPanel extends Component<Props, State> {
           ))}
         </TabList>
 
-        { this.renderSection(transactions) }
+        <SectionContainer isActive={activeTab === TRANSACTIONS}>
+          {
+            isEmpty(transactions.toJS())
+              ?
+              (
+                <EmptyState
+                  imageSrc={transactionsEmptyState}
+                  title={'You have not made any transactions yet'}
+                  description={
+              <Description
+                onReceiveClick={() => this.handleLinkPress(RECEIVE)}
+                onSendClick={() => this.handleLinkPress(SEND)}
+              />
+            }
+                />
+              )
+              :
+              (
+                <Fragment>
+                  <Transactions transactions={transactions} />
+                  <PageNumbers
+                    currentPage={this.state.currentPage}
+                    numberOfPages={4}
+                    onClick={currentPage => this.setState({ currentPage })}
+                  />
+                  {this.props.isLoadingTransactions && <Loader />}
+                </Fragment>
+              )
+          }
+        </SectionContainer>
+
+        <SectionContainer isActive={activeTab === SEND}>
+          <Send />
+        </SectionContainer>
+
+        {
+          activeTab === RECEIVE
+            ?
+            (
+              <SectionContainer isActive>
+                <Receive address={selectedAccountHash} />
+              </SectionContainer>
+            )
+            : null
+        }
+
+
+        <SectionContainer isActive={activeTab === DELEGATE}>
+          <Delegate />
+        </SectionContainer>
+
       </Container>
     );
   }

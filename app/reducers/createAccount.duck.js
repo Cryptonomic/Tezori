@@ -87,11 +87,7 @@ export function createNewAccount() {
       dispatch(setIsLoading(true));
       const identity = findIdentity(identities, publicKeyHash);
       const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
-      await revealKey(network, keyStore, fee).catch((err) => {
-        err.name = err.message;
-        throw err;
-      });
-
+      
       const newAccount = await sendOriginationOperation(
         network,
         keyStore,
@@ -114,7 +110,8 @@ export function createNewAccount() {
           createAccountTmp({
               accountId: newAccountHash,
               balance: amountInUtez,
-              manager: delegate
+              manager: publicKeyHash,
+              delegateValue: delegate
             },
             identity
           )
@@ -142,10 +139,14 @@ const initState = fromJS({
   confirmedPassPhrase: ''
 });
 
+// Todo: make sure that no operation is made on accounts that are just created and hasnt been activated.
+// Todo: We need to update balance of account as soon as we send money from it, - waiting for update might be a bad idea
 export default function createAccount(state = initState, action) {
   switch (action.type) {
-    case CLEAR_CREATE_ACCOUNT_STATE:
-      return initState;
+    case CLEAR_CREATE_ACCOUNT_STATE: {
+      const delegate = state.get('delegate');
+      return initState.set('delegate', delegate)
+    }
     case CLOSE_CREATE_ACCOUNT_MODAL:
       return state.set('isModalOpen', false);
     case OPEN_CREATE_ACCOUNT_MODAL:

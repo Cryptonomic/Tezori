@@ -52,12 +52,6 @@
 .addAddressBodyContainer {
   padding: 40px;
 }
-
-.addAddressTypeBody {
-  display: flex;
-  flex-direction: column;
-}
-
 .fundraiserPasswordContainer {
   display: flex;
   justify-content: space-between;

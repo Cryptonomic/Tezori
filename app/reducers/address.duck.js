@@ -9,8 +9,9 @@ import * as status from '../constants/StatusTypes';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate } from './createAccount.duck';
+import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
-import { getTransactions } from '../utils/general';
+import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from '../utils/general';
 import {
   findAccount,
   createAccount,
@@ -148,14 +149,14 @@ export function syncAccount(accountHash, parentHash) {
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, parentHash);
     const foundIndex = findAccountIndex( identity, accountHash );
-    const updatedAccount = await getAccount(network, accountHash);
-    const account  = identity.accounts[foundIndex];
 
     if ( foundIndex > -1 ) {
-      identity.accounts[foundIndex] = {
-        ...account,
-        balance: updatedAccount.account.balance
-      };
+      const keyStore = getSelectedKeyStore( identities, accountHash, parentHash );
+      identity.accounts[ foundIndex ] = await activateAndUpdateAccount(
+        identity.accounts[ foundIndex ],
+        keyStore,
+        network
+      );
     }
 
     dispatch(updateIdentity(identity));
@@ -166,20 +167,68 @@ export function syncIdentity(accountHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
-    const identity = findIdentity(identities, accountHash);
-    const updatedIdentity = await getAccount(network, accountHash);
-    const accounts =  await getAccountsForIdentity( network, accountHash )
+    let identity = findIdentity(identities, accountHash);
+    const keyStore = getSelectedKeyStore(identities, accountHash, accountHash);
+    identity = await activateAndUpdateAccount(identity, keyStore, network);
+
+    /*
+     *  we are taking state identity accounts overriding their state
+     *  with the new account we got from setAccounts.. check if any of any new accounts
+     *  were create and are state identity but dont come back from getAccount and contact
+     *  those accounts with the updated accounts we got from getAccounts.
+     * */
+
+    let accounts =  await getAccountsForIdentity( network, accountHash )
       .catch( () => []);
+
+    const stateAccountIndices = identity.accounts
+      .map( account =>
+        account.accountId
+      );
+
+    accounts = accounts.map(account => {
+      const foundIndex = stateAccountIndices.indexOf(account.accountId);
+      const overrides = {};
+      if ( foundIndex > -1 ) {
+        overrides.status = identity.accounts[foundIndex].status;
+      }
+      return createAccount({
+          ...account,
+          ...overrides
+        },
+        identity
+      );
+    });
+
+    const accountIndices = accounts
+      .map( account =>
+        account.accountId
+      );
+
+    const accountsToConcat = identity.accounts.filter((account) => {
+      return accountIndices.indexOf(account.accountId) === -1;
+    });
+
+    accounts = accounts.concat(accountsToConcat);
 
     dispatch(
       updateIdentity({
         ...identity,
-        balance: updatedIdentity.account.balance,
-        status: status.READY,
-        accounts: accounts.map(account => {
-          return createAccount( account, identity );
-        })
+        accounts
       })
+    );
+
+    await Promise.all(
+      ( accounts || [])
+        .filter(( account ) => account.status !== status.READY )
+        .map(async account => {
+          try {
+            await dispatch(syncAccount( account.accountId, account.manager ));
+          } catch(e) {
+            console.error(e);
+            dispatch(addMessage(e.name, true));
+          }
+        })
     );
   };
 }
@@ -188,7 +237,6 @@ export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
     const identities = state().address.get('identities').toJS();
-    const network = state().walletInitialization.get('network');
 
     await Promise.all(
       ( identities || [])
@@ -207,8 +255,20 @@ export function syncWallet() {
   }
 }
 
+export function setAccountDelegateAddress(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    if ( selectedAccountHash !== selectedParentHash ) {
+      const identities = state().address.get('identities').toJS();
+      const identity = findIdentity(identities, selectedParentHash);
+      const account = findAccount(identity, selectedAccountHash);
+      dispatch(updateAddress(account.delegateValue));
+    }
+  };
+}
+
 export function selectAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
+
     try{
       dispatch(setIsLoading(true));
       dispatch(setSelectedAccount(
@@ -216,6 +276,7 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
         selectedParentHash
       ));
       dispatch(changeDelegate(selectedParentHash));
+      dispatch(setAccountDelegateAddress(selectedAccountHash, selectedParentHash));
       if (selectedAccountHash === selectedParentHash ) {
         await dispatch(syncIdentity(selectedAccountHash));
       } else {
@@ -245,9 +306,6 @@ export function selectDefaultAccountOrOpenModal() {
     }
 
     identities = identities
-      .filter(identity =>
-        identity.publicKey && identity.privateKey && identity.publicKeyHash
-      )
       .map( identity =>
         createIdentity(identity)
       );
@@ -257,8 +315,8 @@ export function selectDefaultAccountOrOpenModal() {
     dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
     dispatch(changeDelegate(publicKeyHash));
 
-    await dispatch(syncWallet());
     await dispatch(automaticAccountRefresh());
+    await dispatch(syncWallet());
     dispatch(setIsLoading(false));
   };
 }
@@ -267,7 +325,10 @@ let currentAccountRefreshInterval = null;
 
 export function automaticAccountRefresh() {
   return (dispatch, state) => {
-    const REFRESH_INTERVAL = 1 * 60 * 3000;
+    const oneSecond = 1000; // milliseconds
+    const oneMinute = 60 * oneSecond;
+    const minutes = 1;
+    const REFRESH_INTERVAL = minutes * oneMinute;
 
     if (currentAccountRefreshInterval) {
       clearAccountRefreshInterval();
