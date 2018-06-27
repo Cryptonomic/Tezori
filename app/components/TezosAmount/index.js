@@ -38,7 +38,7 @@ const Icon = styled(TezosIcon)`
 const TezosAmount = (props: Props) => {
   const { size, color, amount, iconName, weight, className, showTooltip} = props;
   return showTooltip ? (
-    <Tooltip position="top" content={formatAmount(amount)}>
+    <Tooltip position="right" content={formatAmount(amount)}>
       <Amount className={className} color={color} size={size} weight={weight}>
         { formatAmount(amount, 2) }
         {

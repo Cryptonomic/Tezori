@@ -14,8 +14,7 @@ type Props = {
 const TooltipAdapter = ({className, ...props}) => {
   return <RCTooltip {...props}
                     overlayClassName={`${className}__overlay`}
-                    prefixCls={`${className}__tooltip`}
-                    arrowContent={<div className={`${className}__tooltip-arrow`} />}/>
+                    prefixCls={`${className}__tooltip`} />
 }
 
 const arrowWidth = '10px';
@@ -66,19 +65,35 @@ const StyledTooltip = styled(TooltipAdapter)`
     }
 
     &-arrow {
-      position: absolute;
       width: 0;
       height: 0;
+      position: absolute;
+      
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: -1;
+      }
     }
 
     &-placement-top &-arrow,
     &-placement-topLeft &-arrow,
     &-placement-topRight &-arrow {
-      bottom: ${arrowWidthUnitless - arrowWidthUnitless}px;
+      bottom: ${arrowWidthUnitless - 5}px;
       margin-left: -${arrowWidth};
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-top: 20px solid ${({theme: {colors}}) => colors.white};
+      border-left: ${arrowWidthUnitless + 7}px solid transparent;
+      border-right: ${arrowWidthUnitless + 7}px solid transparent;
+      border-top: ${arrowWidth} solid ${({theme: {colors}}) => colors.white};
+      
+      &::after {
+        border-left: ${arrowWidthUnitless + 7}px solid transparent;
+        border-right: ${arrowWidthUnitless + 7}px solid transparent;
+        border-top: ${arrowWidth} solid ${({theme: {colors}}) => colors.secondary};
+        bottom: -1px;
+        right: -${arrowWidthUnitless + 7}px;
+        margin-left: -${arrowWidth};
+      }
     }
 
     &-placement-top &-arrow {
@@ -96,10 +111,19 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-right &-arrow,
     &-placement-rightTop &-arrow,
     &-placement-rightBottom &-arrow {
-      left: ${tooltipDistanceUnitless - arrowWidthUnitless}px;
-      margin-top: -${arrowWidth};
-      border-width: ${arrowWidth} ${arrowWidth} ${arrowWidth} 0;
-      border-right-color: ${({theme: {colors}}) => colors.white};
+      left: ${tooltipDistanceUnitless - arrowWidthUnitless + 1}px;
+      margin-top: -${arrowWidthUnitless + 7}px;
+      border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
+      border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent; 
+      border-right: ${(arrowWidth)} solid ${({theme: {colors}}) => colors.white}; 
+      
+      &::after {
+        border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
+        border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent; 
+        border-right: ${(arrowWidth)} solid ${({theme: {colors}}) => colors.secondary}; 
+        left: -1px;
+        bottom: -${arrowWidthUnitless + 7}px;
+      }
     }
 
     &-placement-right &-arrow {
@@ -118,22 +142,18 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-left &-arrow,
     &-placement-leftTop &-arrow,
     &-placement-leftBottom &-arrow {
-      right: ${tooltipDistanceUnitless - arrowWidthUnitless}px;
-      margin-top: -${arrowWidth};
-      border-top: ${arrowWidthUnitless}px solid transparent;
-      border-bottom: ${arrowWidthUnitless}px solid transparent;
-      border-left: ${arrowWidthUnitless}px solid ${({theme: {colors}}) => colors.white};
+      right: ${tooltipDistanceUnitless - arrowWidthUnitless + 1}px;
+      margin-top: -${arrowWidthUnitless + 7}px;
+      border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
+      border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent;
+      border-left: ${(arrowWidthUnitless)}px solid ${({theme: {colors}}) => colors.white};
       
       &::after {
-        content: '';
-        border-top: ${arrowWidthUnitless}px solid transparent;
-        border-bottom: ${arrowWidthUnitless}px solid transparent;
-        border-left: ${arrowWidthUnitless}px solid ${({theme: {colors}}) => colors.secondary};
-        display: block;
-        position: absolute;
-        right: -${(arrowWidthUnitless - 8) / 2}px;
-        bottom: -${arrowWidth};
-        z-index: -1;
+        border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
+        border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent;
+        border-left: ${(arrowWidthUnitless)}px solid ${({theme: {colors}}) => colors.secondary};
+        right: -1px;
+        bottom: -${arrowWidthUnitless + 7}px;
       }
     }
 
@@ -153,22 +173,18 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-bottom &-arrow,
     &-placement-bottomLeft &-arrow,
     &-placement-bottomRight &-arrow {
-      top: ${tooltipDistanceUnitless - arrowWidthUnitless}px;
+      top: ${tooltipDistanceUnitless - arrowWidthUnitless + 1}px;
       margin-left: -${arrowWidth};
       border-left: ${arrowWidthUnitless + 7}px solid transparent;
       border-right: ${arrowWidthUnitless + 7}px solid transparent;
       border-bottom: ${arrowWidth} solid ${({theme: {colors}}) => colors.white};
       
        &::after {
-        content: '';
         border-left: ${arrowWidthUnitless + 7}px solid transparent;
         border-right: ${arrowWidthUnitless + 7}px solid transparent;
         border-bottom: ${arrowWidth} solid ${({theme: {colors}}) => colors.secondary};
-        display: block;
-        position: absolute;
         right: -${arrowWidthUnitless + 7}px;
         bottom: -${arrowWidthUnitless - 1}px;
-        z-index: -1;
       }
     }
 
