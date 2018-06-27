@@ -306,7 +306,7 @@ export function automaticAccountRefresh() {
   return (dispatch, state) => {
     const oneSecond = 1000; // milliseconds
     const oneMinute = 60 * oneSecond;
-    const minutes = 6;
+    const minutes = 1;
     const REFRESH_INTERVAL = minutes * oneMinute;
 
     if (currentAccountRefreshInterval) {

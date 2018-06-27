@@ -68,10 +68,16 @@ export function sendConfirmation() {
     try {
       dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
-      await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
+      const operation = await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
         throw err;
       });
+
+      dispatch(addMessage(
+        `Successfully sent delegation operation ${operation.operationGroupID}.`,
+        false
+      ));
+
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));
     } catch (e) {
@@ -79,8 +85,6 @@ export function sendConfirmation() {
       dispatch(addMessage(e.name, true));
       dispatch(updateIsLoading(false));
     }
-    
-    dispatch(clearState());
   };
 }
 
