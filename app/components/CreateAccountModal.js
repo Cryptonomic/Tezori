@@ -101,7 +101,7 @@ class CreateAccountModal extends Component<Props> {
         </div>
         <div className={styles.amountAndFeeContainer}>
           <TextField
-            floatingLabelText="Pass Phrase"
+            floatingLabelText="Passphrase"
             type="password"
             style={{ width: '45%' }}
             default="0"
@@ -109,7 +109,7 @@ class CreateAccountModal extends Component<Props> {
             onChange={this.updatePassPhrase}
           />
           <TextField
-            floatingLabelText="Confirm Pass Phrase"
+            floatingLabelText="Confirm Passphrase"
             type="password"
             style={{ width: '45%' }}
             default="0"
