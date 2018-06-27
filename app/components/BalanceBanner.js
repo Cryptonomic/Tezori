@@ -2,7 +2,6 @@
 import React from 'react';
 import styled, {withTheme} from 'styled-components';
 import { lighten } from 'polished';
-import { clipboard } from 'electron';
 import { ms } from '../styles/helpers';
 import { H4 } from './Heading';
 import TezosAmount from './TezosAmount';
@@ -12,7 +11,6 @@ import Tooltip from './Tooltip';
 import Button from './Button';
 import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
 import CopyIcon from './CopyIcon';
-import contentCopy from '../../resources/contentCopy.svg';
 
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { findAccountIndex } from '../utils/account';
@@ -83,21 +81,6 @@ const Delegate = styled.span`
 const Breadcrumbs = styled.div`
   font-size: ${ms(-1)};
 `
-const CopyImage = styled.img`
-  margin-left: ${ms(-4)};
-  with: ${ms(1)};
-  height: ${ms(1)};
-  cursor: pointer;
-`
-const CopyContent = styled.span`
-  display: flex;
-  alignItems: center;
-  font-size: ${ms(0)};
-`
-
-const copyToClipboard = text => {
-  clipboard.writeText(text)
-}
 
 
 const HelpIcon = styled(TezosIcon)`
@@ -190,16 +173,6 @@ function BalanceBanner(props: Props) {
             weight="light"
             format={2}
             showTooltip
-            content={
-              <CopyContent>
-                {formatedBalance}
-                <CopyImage
-                  src={contentCopy}
-                  style={{fill: theme.colors.gray2}}
-                  onClick={() => copyToClipboard(formatedBalance)}
-                />
-              </CopyContent> 
-            }
           />
         </AddressInfo>
         {!isManagerAddress && <Delegate>Delegated to the Manager Address</Delegate>}

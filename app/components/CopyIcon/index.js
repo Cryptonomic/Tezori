@@ -15,8 +15,8 @@ const CopyIcon = props => {
     <ContentCopy
       onClick={() => handleCopyClick(text)}
       style={{
-        width: ms(2),
-        height: ms(2),
+        width: ms(1),
+        height: ms(1),
         color: colors[color],
         cursor: 'pointer',
         marginLeft: ms(0),
