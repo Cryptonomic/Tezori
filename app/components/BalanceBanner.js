@@ -2,7 +2,7 @@
 import React from 'react';
 import styled, {withTheme} from 'styled-components';
 import { lighten } from 'polished';
-import { clipboard } from 'electron'
+import { clipboard } from 'electron';
 import { ms } from '../styles/helpers';
 import { H4 } from './Heading';
 import TezosAmount from './TezosAmount';
