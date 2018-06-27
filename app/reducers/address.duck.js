@@ -9,6 +9,7 @@ import * as status from '../constants/StatusTypes';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { changeDelegate } from './createAccount.duck';
+import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from '../utils/general';
 import {
@@ -170,6 +171,13 @@ export function syncIdentity(accountHash) {
     const keyStore = getSelectedKeyStore(identities, accountHash, accountHash);
     identity = await activateAndUpdateAccount(identity, keyStore, network);
 
+    /*
+     *  we are taking state identity accounts overriding their state
+     *  with the new account we got from setAccounts.. check if any of any new accounts
+     *  were create and are state identity but dont come back from getAccount and contact
+     *  those accounts with the updated accounts we got from getAccounts.
+     * */
+
     let accounts =  await getAccountsForIdentity( network, accountHash )
       .catch( () => []);
 
@@ -247,8 +255,20 @@ export function syncWallet() {
   }
 }
 
+export function setAccountDelegateAddress(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    if ( selectedAccountHash !== selectedParentHash ) {
+      const identities = state().address.get('identities').toJS();
+      const identity = findIdentity(identities, selectedParentHash);
+      const account = findAccount(identity, selectedAccountHash);
+      dispatch(updateAddress(account.delegateValue));
+    }
+  };
+}
+
 export function selectAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
+
     try{
       dispatch(setIsLoading(true));
       dispatch(setSelectedAccount(
@@ -256,6 +276,7 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
         selectedParentHash
       ));
       dispatch(changeDelegate(selectedParentHash));
+      dispatch(setAccountDelegateAddress(selectedAccountHash, selectedParentHash));
       if (selectedAccountHash === selectedParentHash ) {
         await dispatch(syncIdentity(selectedAccountHash));
       } else {

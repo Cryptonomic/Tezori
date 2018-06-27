@@ -101,5 +101,6 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
     }
   }
 
+  console.log(' account.status ', account.status);
   return account;
 }
