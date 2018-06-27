@@ -69,8 +69,6 @@ const StyledTooltip = styled(TooltipAdapter)`
       position: absolute;
       width: 0;
       height: 0;
-      border-color: transparent;
-      border-style: solid;
     }
 
     &-placement-top &-arrow,
@@ -78,8 +76,9 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-topRight &-arrow {
       bottom: ${arrowWidthUnitless - arrowWidthUnitless}px;
       margin-left: -${arrowWidth};
-      border-width: ${arrowWidth} ${arrowWidth} 0;
-      border-top-color: ${({theme: {colors}}) => colors.white};
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 20px solid ${({theme: {colors}}) => colors.white};
     }
 
     &-placement-top &-arrow {
@@ -121,8 +120,21 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-leftBottom &-arrow {
       right: ${tooltipDistanceUnitless - arrowWidthUnitless}px;
       margin-top: -${arrowWidth};
-      border-width: ${arrowWidth} 0 ${arrowWidth} ${arrowWidth};
-      border-left-color: ${({theme: {colors}}) => colors.white};
+      border-top: ${arrowWidthUnitless}px solid transparent;
+      border-bottom: ${arrowWidthUnitless}px solid transparent;
+      border-left: ${arrowWidthUnitless}px solid ${({theme: {colors}}) => colors.white};
+      
+      &::after {
+        content: '';
+        border-top: ${arrowWidthUnitless}px solid transparent;
+        border-bottom: ${arrowWidthUnitless}px solid transparent;
+        border-left: ${arrowWidthUnitless}px solid ${({theme: {colors}}) => colors.secondary};
+        display: block;
+        position: absolute;
+        right: -${(arrowWidthUnitless - 8) / 2}px;
+        bottom: -${arrowWidth};
+        z-index: -1;
+      }
     }
 
     &-placement-left &-arrow {
@@ -157,7 +169,7 @@ const StyledTooltip = styled(TooltipAdapter)`
         right: -${arrowWidthUnitless + 7}px;
         bottom: -${arrowWidthUnitless - 1}px;
         z-index: -1;
-    }
+      }
     }
 
     &-placement-bottom &-arrow {

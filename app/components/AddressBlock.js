@@ -156,7 +156,7 @@ class AddressBlock extends Component<Props, State> {
                 color={isManagerActive ? 'white' : 'secondary'}
               />
               Manager Address
-              <Tooltip position="bottom" content={() => 'lorem ispum dolor'}>
+              <Tooltip position="bottom" content={<div>lorem ipsum dolor</div>}>
                 <HelpIcon
                   iconName="help"
                   size={ms(0)}
