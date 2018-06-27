@@ -20,7 +20,8 @@ const Icon = styled.span`
 type Props = {
   iconName: string,
   color: string,
-  size: any
+  size: any,
+  onClick?: Function,
 };
 
 const getIconByName = iconName => {
@@ -69,9 +70,9 @@ const getIconByName = iconName => {
 };
 
 const TezosIcon = (props: Prosp) => {
-  const { iconName, size, color, className } = props;
+  const { iconName, size, color, className, onClick } = props;
   return (
-    <Icon className={className} size={size} color={color}>
+    <Icon className={className} size={size} color={color} onClick={onClick}>
       {getIconByName(iconName)}
     </Icon>
   );
