@@ -100,7 +100,7 @@ const EmailTooltip = () => {
 const ActivationTooltip = () => {
   return (
     <TooltipContainer>
-      <TooltipTitle>KYC/AML Activation Code</TooltipTitle>
+      <TooltipTitle>Activation Code</TooltipTitle>
       This is the activation code that you received after completing the KYC/AML process. An activation code corresponds
       to a public key hash and is required if you participated in the Fundraiser.
       You may complete the process at verification.tezos.com if you have not done so already.
@@ -253,7 +253,7 @@ export default function AddAddress(props: Props) {
 
               <InputWithTooltip>
                 <TextField
-                  floatingLabelText="KYC/AML Activation Code"
+                  floatingLabelText="Activation Code"
                   style={{ width: '100%' }}
                   value={activationCode}
                   onChange={(_, newActivationCode) => updateActivationCode(newActivationCode)}
