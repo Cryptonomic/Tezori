@@ -156,7 +156,7 @@ class AddressBlock extends Component<Props, State> {
                 color={isManagerActive ? 'white' : 'secondary'}
               />
               Manager Address
-              <Tooltip position="right" title="lorem ispum dolor">
+              <Tooltip position="bottom" content={() => 'lorem ispum dolor'}>
                 <HelpIcon
                   iconName="help"
                   size={ms(0)}
@@ -179,7 +179,7 @@ class AddressBlock extends Component<Props, State> {
         <AddressLabel>
           <AddressesTitle>
             Smart Addresses
-            <Tooltip position="right" title="lorem ispum dolor">
+            <Tooltip position="bottom" content={() => 'lorem ispum dolor'}>
               <HelpIcon iconName="help" size={ms(0)} color="secondary" />
             </Tooltip>
           </AddressesTitle>

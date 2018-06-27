@@ -215,6 +215,7 @@
     "material-ui": "^0.20.1",
     "polished": "^1.9.2",
     "qrcode": "^1.2.0",
+    "rc-tooltip": "^3.7.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-hot-loader": "^4.3.3",
