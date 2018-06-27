@@ -131,14 +131,12 @@ export default function AddAddress(props: Props) {
   function renderAppBar() {
     return (
       <div className={styles.titleContainer}>
-        <div>Add an Account</div>
-        {selectedAccountHash && (
+        <div>Add an Address</div>
           <CloseIcon
             className={styles.closeIcon}
             style={{ fill: 'white' }}
             onClick={closeModal}
           />
-        )}
       </div>
     );
   }
