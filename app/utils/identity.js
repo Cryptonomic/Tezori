@@ -9,7 +9,7 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
-    status: status.PENDING,
+    status: status.CREATED,
     ...identity
   };
 }
