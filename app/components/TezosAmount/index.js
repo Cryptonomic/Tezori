@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import TezosIcon from '../TezosIcon';
 import Tooltip from '../Tooltip';
@@ -12,6 +12,7 @@ type Props = {
   size: any,
   weight: string,
   format: number,
+  content?: any,
 };
 
 const Amount = styled.span`
@@ -37,7 +38,7 @@ const Icon = styled(TezosIcon)`
 `;
 
 const TezosAmount = (props: Props) => {
-  const { size, color, amount, iconName, weight, className, showTooltip ,format} = props;
+  const { size, color, amount, iconName, weight, className, showTooltip ,format, content} = props;
   return showTooltip ? (
     <Tooltip position="right" content={formatAmount(amount)}>
       <Amount className={className} color={color} size={size} weight={weight}>

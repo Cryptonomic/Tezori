@@ -2,6 +2,7 @@
 import React from 'react';
 import styled, {withTheme} from 'styled-components';
 import { lighten } from 'polished';
+import { clipboard } from 'electron'
 import { ms } from '../styles/helpers';
 import { H4 } from './Heading';
 import TezosAmount from './TezosAmount';
@@ -11,6 +12,8 @@ import Tooltip from './Tooltip';
 import Button from './Button';
 import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
 import CopyIcon from './CopyIcon';
+import contentCopy from '../../resources/contentCopy.svg';
+
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { findAccountIndex } from '../utils/account';
 
@@ -68,7 +71,7 @@ const AddressInfo = styled.div`
 `;
 
 const Amount = styled(TezosAmount)`
-  margin: 0 0 0 ${ms(2)};
+  margin: 0 ${ms(2)};
   line-height: 1;
 `;
 
@@ -80,6 +83,22 @@ const Delegate = styled.span`
 const Breadcrumbs = styled.div`
   font-size: ${ms(-1)};
 `
+const CopyImage = styled.img`
+  margin-left: ${ms(-4)};
+  with: ${ms(1)};
+  height: ${ms(1)};
+  cursor: pointer;
+`
+const CopyContent = styled.span`
+  display: flex;
+  alignItems: center;
+  font-size: ${ms(0)};
+`
+
+const copyToClipboard = text => {
+  clipboard.writeText(text)
+}
+
 
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
@@ -104,7 +123,7 @@ function BalanceBanner(props: Props) {
     : 'Manager Address';
 
   const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;
-
+  const formatedBalance = balance.toFixed(6)
   return (
     <Container isReady={ isReady }>
       <TopRow isReady={ isReady }>
@@ -164,7 +183,24 @@ function BalanceBanner(props: Props) {
         <AddressInfo>
           <TezosAddress size={ms(1)} address={publicKeyHash} weight={theme.typo.weights.light} color={theme.colors.white} />
           <CopyIcon text={publicKeyHash} color='white' />
-          <Amount size={ms(4)} color="white" amount={ balance } weight="light" showTooltip />
+          <Amount
+            size={ms(4)}
+            color="white"
+            amount={ balance }
+            weight="light"
+            format={2}
+            showTooltip
+            content={
+              <CopyContent>
+                {formatedBalance}
+                <CopyImage
+                  src={contentCopy}
+                  style={{fill: theme.colors.gray2}}
+                  onClick={() => copyToClipboard(formatedBalance)}
+                />
+              </CopyContent> 
+            }
+          />
         </AddressInfo>
         {!isManagerAddress && <Delegate>Delegated to the Manager Address</Delegate>}
       </BottomRow>

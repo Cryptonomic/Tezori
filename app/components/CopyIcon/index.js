@@ -10,7 +10,7 @@ const handleCopyClick = text => {
 }
 
 const CopyIcon = props => {
-  const { text, color, theme: { colors } } = props
+  const { text, color, theme: { colors }, className } = props
   return (
     <ContentCopy
       onClick={() => handleCopyClick(text)}
@@ -19,10 +19,15 @@ const CopyIcon = props => {
         height: ms(2),
         color: colors[color],
         cursor: 'pointer',
-        marginLeft: ms(0)
+        marginLeft: ms(0),
       }}
+      className={className}
     />
   )
+}
+
+CopyIcon.defaultProps = {
+  color: 'white'
 }
 
 export default withTheme(CopyIcon)
