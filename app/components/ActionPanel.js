@@ -33,9 +33,9 @@ const Tab = styled(Button)`
   const color = isActive
     ? colors.white
     : colors.accent;
-  
-  const inActiveColors = isActive 
-    ? colors.white 
+
+  const inActiveColors = isActive
+    ? colors.white
     : colors.disabled;
 
   return isReady
@@ -52,7 +52,7 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
-  background-color: ${({ theme: { colors } }) => colors.blue};
+  background-color: ${({ theme: { colors } }) => colors.disabled};
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 `;

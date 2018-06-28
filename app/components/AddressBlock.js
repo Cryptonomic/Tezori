@@ -27,12 +27,12 @@ const Address = styled.div`
   padding: ${ms(-2)} ${ms(2)};
   cursor: pointer;
   background: ${({ isActive, isReady, theme: { colors } }) => {
-    const color = isActive 
-      ? colors.accent 
+    const color = isActive
+      ? colors.accent
       : colors.white;
-  
-    return isReady 
-      ? color 
+
+    return isReady
+      ? color
       : colors.disabled
   }};
   display: flex;
@@ -90,23 +90,42 @@ const NoSmartAddressesContainer = styled.div`
   width: 100%;
   padding: ${ms(2)};
   background: ${({ theme: { colors } }) => colors.white};
-  text-align: center;
   color: ${({ theme: { colors } }) => colors.secondary};
   font-size: ${ms(-1)};
   position: relative;
+  margin-top: ${ms(1)};
+`
+const NoSmartAddressesTitle = styled.span`
+  color: ${({ theme: { colors } }) => colors.gray3};
+  font-weight: ${({theme: {typo}}) => typo.weights.bold};
+  font-size: ${ms(1)};
 `
 
-const NoSmartAddressesTitle = styled.span`
-  font-weight: ${({theme: {typo}}) => typo.weights.bold};
+const NoSmartAddressesDescriptionList = styled.ul`
+  margin: 0;
+  padding: 0;
+  margin-bottom: ${ms(1)};
+  list-style-type: none;
 `
-const NoSmartAddressesDescription = styled.p`
+
+const NoSmartAddressesDescriptionItem = styled.li`
+  display: flex;
   font-weight: ${({theme: {typo}}) => typo.weights.light};
+  color: ${({ theme: { colors } }) => colors.primary};
+  padding: ${ms(-2)} 0;
+  border-bottom: 1px solid ${({ theme: { colors } }) => colors.gray2};
+`
+
+const NoSmartAddressesIcon = styled(TezosIcon)`
+  padding-top: ${ms(-10)};
+  padding-right: ${ms(-2)};
 `
 
 const NoSmartAddressesButton = styled(Button)`
-  border: 2px solid ${({ theme: { colors } }) => colors.secondary};
+  border: 2px solid ${({ theme: { colors } }) => colors.gray3};
   padding: ${ms(-5)} ${ms(1)};
   font-weight: ${({theme: {typo}}) => typo.weights.bold};
+  width: 100%;
 `
 
 const Syncing = styled.div`
@@ -118,7 +137,7 @@ const Refresh = styled(RefreshIcon)`
   -webkit-animation:spin 0.5s linear infinite;
   -moz-animation:spin 0.5s linear infinite;
   animation:spin 0.5s linear infinite;
-  
+
   @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
   @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
   @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
@@ -161,6 +180,25 @@ class AddressBlock extends Component<Props, State> {
     })
   }
 
+  renderNoSmartAddressesDescription = (arr) => {
+    return(
+      <NoSmartAddressesDescriptionList>
+        {arr.map((item, index) => {
+          return(
+            <NoSmartAddressesDescriptionItem key={index}>
+              <NoSmartAddressesIcon
+                iconName="arrow-right"
+                size={ms(0)}
+                color="gray3"
+              />
+              <div>{item}</div>
+            </NoSmartAddressesDescriptionItem>
+          )
+        })}
+      </NoSmartAddressesDescriptionList>
+    )
+  }
+
   render() {
     const { accountBlock, selectedAccountHash, accountIndex, openCreateAccountModal, theme } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
@@ -168,6 +206,12 @@ class AddressBlock extends Component<Props, State> {
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts')
     const isManagerReady = accountBlock.get('status') === READY;
+    const noSmartAddressesDescriptionContent = [
+      'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
+      'There is a fee for setting a delegate.',
+      'Delegating is not instant. It takes 7 cycles (2-3 weeks) for your tez to start contributing to baking.',
+      'Delegation rewards will depend on your arrangement with the delegate.'
+    ]
 
     return (
       <Container>
@@ -297,13 +341,11 @@ class AddressBlock extends Component<Props, State> {
               cursor: 'pointer'
             }} onClick={this.closeNoSmartAddresses} />
             <NoSmartAddressesTitle>
-              You don’t have any yet!
+              Delegation Tips
             </NoSmartAddressesTitle>
-            <NoSmartAddressesDescription>
-              Smart Addresses are used for delegation and smart contracts.
-            </NoSmartAddressesDescription>
+              {this.renderNoSmartAddressesDescription(noSmartAddressesDescriptionContent)}
             <NoSmartAddressesButton small buttonTheme="secondary" onClick={openCreateAccountModal}>
-              Create New Smart Address
+              Add a Delegate
             </NoSmartAddressesButton>
           </NoSmartAddressesContainer>
           )
