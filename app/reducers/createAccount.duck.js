@@ -138,7 +138,6 @@ const initState = fromJS({
   confirmedPassPhrase: ''
 });
 
-// Todo: make sure that no operation is made on accounts that are just created and hasnt been activated.
 // Todo: We need to update balance of account as soon as we send money from it, - waiting for update might be a bad idea
 export default function createAccount(state = initState, action) {
   switch (action.type) {
