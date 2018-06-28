@@ -71,6 +71,7 @@ export function sendConfirmation() {
         false
       ));
 
+      dispatch(clearState());
       dispatch(updateAddress(address));
       dispatch(updateIsLoading(false));
     } catch (e) {
