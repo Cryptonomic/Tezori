@@ -100,22 +100,20 @@ class AddDelegateModal extends Component<Props> {
           <Tooltip
             position="bottom"
             content={this.renderToolTipComponent()}
-            className={styles.textfieldTooltip}
-            offset={70}
-            distance={50}
-            popperOptions={{
-              modifiers: {
-                preventOverflow: {
-                  enabled: false,
-                },
-                flip: {
-                  enabled: false,
-                },
-              },
+            align={{
+              offset: [70, 0],
             }}
-            
+            arrowPos={{
+              left: '70%'
+            }}
           >
-            <HelpIcon iconName="help" size={ms(0)} color="secondary" />
+            <Button buttonTheme="plain" className={styles.textfieldTooltip}>
+              <HelpIcon
+                iconName="help"
+                size={ms(0)}
+                color={'secondary'}
+              />
+            </Button>
           </Tooltip>
         </div>
         <div className={styles.amountAndFeeContainer}>

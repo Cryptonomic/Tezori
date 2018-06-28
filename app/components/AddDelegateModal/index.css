@@ -77,6 +77,7 @@
   padding: 10px;
   color: #000;
   font-size: 14px;
+  max-width: 312px;
 }
 
 .tooltipTitle {
@@ -92,5 +93,8 @@
 }
 .tooltipContent2 {
   padding: 12px 0;
+}
+.customArrow .rc-tooltip-arrow {
+  left: 66%;
 }
 
