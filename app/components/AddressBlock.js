@@ -211,7 +211,7 @@ class AddressBlock extends Component<Props, State> {
                       size={ms(0)}
                       color={isSmartActive ? 'white' : 'secondary'}
                     />
-                    {`Smart Address ${index + 1}`}
+                    {`Delegated Address ${index + 1}`}
                   </AddressesTitle>
                 </AddressFirstLine>
                 <AddressSecondLine isActive={isSmartActive}>
