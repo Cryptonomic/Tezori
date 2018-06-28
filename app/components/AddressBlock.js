@@ -12,7 +12,7 @@ import { H3 } from './Heading';
 import Button from './Button';
 import TezosAmount from './TezosAmount';
 
-import CreateAccountModal from './CreateAccountModal';
+import AddDelegateModal from './AddDelegateModal';
 
 const Container = styled.div`
   overflow: hidden;
@@ -178,10 +178,7 @@ class AddressBlock extends Component<Props, State> {
 
         <AddressLabel>
           <AddressesTitle>
-            Smart Addresses
-            <Tooltip position="right" title="lorem ispum dolor">
-              <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-            </Tooltip>
+            Add a Delegate
           </AddressesTitle>
 
           <AddCircle
@@ -227,15 +224,18 @@ class AddressBlock extends Component<Props, State> {
             );
           }) : !shouldHideSmartAddressesInfo && (
           <NoSmartAddressesContainer>
-            <CloseIcon style={{
-              position: 'absolute',
-              top: ms(0),
-              right: ms(0),
-              fill: theme.colors.secondary,
-              width: ms(0),
-              height: ms(0),
-              cursor: 'pointer'
-            }} onClick={this.closeNoSmartAddresses} />
+            <CloseIcon
+              style={{
+                position: 'absolute',
+                top: ms(0),
+                right: ms(0),
+                fill: theme.colors.secondary,
+                width: ms(0),
+                height: ms(0),
+                cursor: 'pointer'
+              }}
+              onClick={this.closeNoSmartAddresses}
+            />
             <NoSmartAddressesTitle>
               You don’t have any yet!
             </NoSmartAddressesTitle>
@@ -248,7 +248,7 @@ class AddressBlock extends Component<Props, State> {
           </NoSmartAddressesContainer>
           )
         }
-        <CreateAccountModal />
+        <AddDelegateModal />
       </Container>
     );
   }
