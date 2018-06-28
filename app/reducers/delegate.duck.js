@@ -57,9 +57,9 @@ export function sendConfirmation() {
     const network = walletState.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
-
+    dispatch(updateIsLoading(true));
     try {
-      dispatch(updateIsLoading(true));
+
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
       const operation = await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
@@ -71,14 +71,14 @@ export function sendConfirmation() {
         false
       ));
 
-      dispatch(clearState());
-      dispatch(updateAddress(address));
-      dispatch(updateIsLoading(false));
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(updateIsLoading(false));
     }
+
+    dispatch(clearState());
+    dispatch(updateAddress(address));
+    dispatch(updateIsLoading(false));
   };
 }
 
