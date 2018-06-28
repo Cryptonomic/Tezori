@@ -3,12 +3,15 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
-import { remote } from 'electron';
+import { remote, shell } from 'electron';
+import styled from 'styled-components';
 import path from 'path';
 import { ms } from '../styles/helpers';
 
 import Button from './Button';
+import Checkbox from './Checkbox';
 import MessageBar from './MessageBar';
+import TermsModal from './TermsModal';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import {
@@ -42,10 +45,72 @@ type Props = {
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
+const SectionContainer = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
+
+const TermsAndPolicySection = styled.div`
+  display: flex;
+  width: 80%;
+  padding: ${ms(2)} 0 ${ms(4)} 0;
+  border-top-width: 1px;
+  border-top-color: ${ ({ theme: { colors } }) => colors.gray3 };
+  border-top-style: solid;
+  justify-content: center;
+  align-items: center;
+`
+
+const Strong = styled.span`
+  color: ${ ({ theme: { colors } }) => colors.accent };
+`
+
+const Link = styled(Strong)`
+  cursor: pointer;
+`
+
+const Description = styled.span`
+  color: ${ ({ theme: { typo: { weights } } }) => weights.light };
+`
+
+const Tip = styled(Description)`
+  max-width: 300px;
+  padding: ${ms(2)} 0 0 0;
+`
+
+const Filling = styled.div`
+  height: 70px;
+`
+
+const CustomButton = styled(Button)`
+  max-width: 300px;
+`
+
 class Home extends Component<Props> {
   props: Props;
+  
+  state = {
+    isAgreement: false,
+  }
+
+  componentWillMount = () => {
+    const agreement = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
+    const isAgreement = JSON.parse(agreement) || false
+    this.setState({ isAgreement })
+  }
+
+  openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet')
 
   setDisplay = display => () => this.props.setDisplay(display);
+
+  updateStatusAgreement = () => {
+    const { isAgreement } = this.state
+    this.setState({ isAgreement: !isAgreement })
+    return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', !isAgreement)
+  }
 
   openFile = () => {
     remote.dialog.showOpenDialog(
@@ -88,20 +153,41 @@ class Home extends Component<Props> {
 
   renderSelectionState = () => {
     return (
-      <div className={styles.defaultContainer}>
-        <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>Create a new wallet</div>
-          <Button buttonTheme="primary" onClick={this.setDisplay(CREATE)}>
-            Create Wallet
-          </Button>
+      <SectionContainer>
+        <div className={styles.defaultContainer}>
+          <div className={styles.walletContainers}>
+            <div className={styles.walletTitle}>Create a new wallet</div>
+            <CustomButton buttonTheme="primary" onClick={this.setDisplay(CREATE)} disabled={!this.state.isAgreement}>
+              Create Wallet
+            </CustomButton>
+            <Tip>
+              Want to import your funraiser account?
+              <Strong> Create a wallet </Strong>
+              first.
+            </Tip>
+          </div>
+          <div className={styles.walletContainers}>
+            <div className={styles.walletTitle}>Import an existing wallet</div>
+            <CustomButton buttonTheme="secondary" onClick={this.setDisplay(IMPORT)} disabled={!this.state.isAgreement}>
+              Import Wallet
+            </CustomButton>
+            <Filling />
+          </div>
         </div>
-        <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>Import an existing wallet</div>
-          <Button buttonTheme="secondary" onClick={this.setDisplay(IMPORT)}>
-            Import Wallet
-          </Button>
-        </div>
-      </div>
+        <TermsAndPolicySection>
+          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
+          <Description>
+            I acknowledge that I have read that I agree to
+            <Link onClick={this.openLink}> Terms of Service </Link>
+            and
+            <Link onClick={this.openLink}> Privacy Policy</Link>
+          </Description>
+        </TermsAndPolicySection>
+        <TermsModal 
+          isOpen={!this.state.isAgreement}
+          agreeTermsAndPolicy={this.updateStatusAgreement}
+        />
+      </SectionContainer>
     );
   };
 
