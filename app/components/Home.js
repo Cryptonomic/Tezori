@@ -11,6 +11,7 @@ import { ms } from '../styles/helpers';
 import Button from './Button';
 import Checkbox from './Checkbox';
 import MessageBar from './MessageBar';
+import TermsModal from './TermsModal';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import {
@@ -84,18 +85,20 @@ class Home extends Component<Props> {
   props: Props;
   
   state = {
-    isAgreement: false
+    isAgreement: false,
   }
 
   componentWillMount = () => {
     const isAgreement = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
-    this.setState({ isAgreement: !!isAgreement })
+    const result = JSON.parse(isAgreement)
+    this.setState({ isAgreement: result })
   }
 
   setDisplay = display => () => this.props.setDisplay(display);
 
   updateStatusAgreement = () => {
-    if (this.state.isAgreement === false) {
+    const result = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
+    if (result === 'false') {
       this.setState({ isAgreement: true })
       return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', true)
     } else {
@@ -166,7 +169,6 @@ class Home extends Component<Props> {
             <Filling />
           </div>
         </div>
-        
         <TermsAndPolicySection>
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
@@ -176,6 +178,10 @@ class Home extends Component<Props> {
             <Link> Privacy Policy</Link>
           </Description>
         </TermsAndPolicySection>
+        <TermsModal 
+          isOpen={!this.state.isAgreement}
+          agreeTermsAndPolicy={this.updateStatusAgreement}
+        />
       </SectionContainer>
     );
   };

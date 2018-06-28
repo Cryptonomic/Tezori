@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { Dialog } from 'material-ui'
 import { H3 } from '../Heading'
 import Button from '../Button'
 import { ms } from '../../styles/helpers'
 
-const Overlay = styled.div`
-  display: flex;
-  flex: 1;
-  background-color: ${ ({ theme: { colors } }) => colors.gray5 };
-  opacity: 0.7;
-  z-index: -100;
-  align-items: flex-end;
-`
-
 const Container = styled.div`
-  height: 70%;
   background-color: ${ ({ theme: { colors } }) => colors.white };
   display: flex;
   justify-content: center;
@@ -35,19 +26,11 @@ const Link = styled.span`
   color: ${({ theme: { colors } }) => colors.accent };
 `
 
-export default class Terms Modal extends Component {
-  state = {
-    isOpen: true
-  }
-  
-  agreeTermsAndPolicy = () => {
-    this.setState({ isOpen: false })
-    localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', true)
-  }
-
+class TermsModal extends Component {
   render () {
+    const { isOpen, agreeTermsAndPolicy } = this.props
     return (
-      <Overlay>
+      <Dialog open={isOpen} bodyStyle={{ padding: '0px' }}>
         <Container>
           <Title></Title>
           <Description>
@@ -58,13 +41,15 @@ export default class Terms Modal extends Component {
           </Description>
           <Button
             buttonTheme="primary"
-            onClick={this.props.agreeTermsAndPolicy}
+            onClick={this.agreeTermsAndPolicy}
           >
             I agree
           </Button>
         </Container>
-      </Overlay>
+      </Dialog>
     )
   }
 }
+
+export default TermsModal
 
