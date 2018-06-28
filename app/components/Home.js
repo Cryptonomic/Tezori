@@ -85,6 +85,10 @@ const Filling = styled.div`
   height: 70px;
 `
 
+const CustomButton = styled(Button)`
+  max-width: 300px;
+`
+
 class Home extends Component<Props> {
   props: Props;
   
@@ -93,8 +97,8 @@ class Home extends Component<Props> {
   }
 
   componentWillMount = () => {
-    const result = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
-    const isAgreement = JSON.parse(result) || false
+    const agreement = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
+    const isAgreement = JSON.parse(agreement) || false
     this.setState({ isAgreement })
   }
 
@@ -153,9 +157,9 @@ class Home extends Component<Props> {
         <div className={styles.defaultContainer}>
           <div className={styles.walletContainers}>
             <div className={styles.walletTitle}>Create a new wallet</div>
-            <Button buttonTheme="primary" onClick={this.setDisplay(CREATE)} disabled={!this.state.isAgreement}>
+            <CustomButton buttonTheme="primary" onClick={this.setDisplay(CREATE)} disabled={!this.state.isAgreement}>
               Create Wallet
-            </Button>
+            </CustomButton>
             <Tip>
               Want to import your funraiser account?
               <Strong> Create a wallet </Strong>
@@ -164,9 +168,9 @@ class Home extends Component<Props> {
           </div>
           <div className={styles.walletContainers}>
             <div className={styles.walletTitle}>Import an existing wallet</div>
-            <Button buttonTheme="secondary" onClick={this.setDisplay(IMPORT)} disabled={!this.state.isAgreement}>
+            <CustomButton buttonTheme="secondary" onClick={this.setDisplay(IMPORT)} disabled={!this.state.isAgreement}>
               Import Wallet
-            </Button>
+            </CustomButton>
             <Filling />
           </div>
         </div>
