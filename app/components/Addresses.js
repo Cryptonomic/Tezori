@@ -106,7 +106,6 @@ class Addresses extends Component<Props> {
                 height: ms(3) ,
                 cursor: 'pointer'
               }}
-              onClick={ openAddAddressModal }
             />
           </Tooltip>
         </AccountTitle>
