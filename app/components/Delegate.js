@@ -17,7 +17,6 @@ import {
   showConfirmationModal,
   closeConfirmationModal,
   sendConfirmation,
-  setOriginalAddress
 } from '../reducers/delegate.duck';
 
 import styles from './Delegate.css';
@@ -39,7 +38,6 @@ class Delegate extends Component<Props> {
 
   onModalClose = () => {
     this.props.updatePassword('');
-    this.props.setOriginalAddress();
     this.props.closeConfirmationModal();
   };
 
@@ -144,7 +142,6 @@ function mapDispatchToProps(dispatch) {
       showConfirmationModal,
       closeConfirmationModal,
       sendConfirmation,
-      setOriginalAddress
     },
     dispatch
   );
