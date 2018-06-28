@@ -1,55 +1,73 @@
 import React, { Component } from 'react'
+import { shell } from 'electron'
 import styled from 'styled-components'
-import { Dialog } from 'material-ui'
-import { H3 } from '../Heading'
+import Modal from 'react-modal';
+import { H2 } from '../Heading'
 import Button from '../Button'
 import { ms } from '../../styles/helpers'
+import theme from '../../styles/theme'
 
 const Container = styled.div`
   background-color: ${ ({ theme: { colors } }) => colors.white };
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
 `
 
-const Title = styled(H3)`
-  margin-bottom: ${ms(1)};
+const Title = styled(H2)`
   color: ${({ theme: { colors } }) => colors.primary };
 `
 
 const Description = styled.p`
   color: ${({ theme: { colors } }) => colors.primary };
-  font-weight: ${({theme: { typo: { weights } } }) => weights.light }
+  font-weight: ${({theme: { typo: { weights } } }) => weights.light };
+  margin-bottom: ${ms(1)};
 `
 
 const Link = styled.span`
   color: ${({ theme: { colors } }) => colors.accent };
+  cursor: pointer;
 `
-
-class TermsModal extends Component {
-  render () {
-    const { isOpen, agreeTermsAndPolicy } = this.props
-    return (
-      <Dialog open={isOpen} bodyStyle={{ padding: '0px' }}>
-        <Container>
-          <Title></Title>
-          <Description>
-            Before we get started, please read our 
-            <Link onClick={() => {}}>Terms of Service</Link>
-            and
-            <Link onClick={() => {}}>Pivacy Policy</Link>
-          </Description>
-          <Button
-            buttonTheme="primary"
-            onClick={this.agreeTermsAndPolicy}
-          >
-            I agree
-          </Button>
-        </Container>
-      </Dialog>
-    )
+const customStyles = {
+  content : {
+    left: 0,
+    width: '100%',
+    bottom: 0,
+    top: '40%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
+};
+
+type Props = {
+  isOpen: boolean,
+  agreeTermsAndPolicy: Function,
+}
+
+
+const TermsModal = (props:Props) => {
+  const openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet')
+  const { isOpen, agreeTermsAndPolicy } = props
+  return (
+    <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
+      <Container>
+        <Title>Hi there!</Title>
+        <Description>
+          Before we get started, please read our 
+          <Link onClick={openLink}> Terms of Service </Link>
+          and
+          <Link onClick={openLink}> Pivacy Policy </Link>
+        </Description>
+        <Button
+          buttonTheme="primary"
+          onClick={agreeTermsAndPolicy}
+        >
+          I agree
+        </Button>
+      </Container>
+    </Modal>
+  )
 }
 
 export default TermsModal
-

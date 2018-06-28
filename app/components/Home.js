@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
-import { remote } from 'electron';
+import { remote, shell } from 'electron';
 import styled from 'styled-components';
 import path from 'path';
 import { ms } from '../styles/helpers';
@@ -63,8 +63,12 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
 `
-const Link = styled.span`
+
+const Strong = styled.span`
   color: ${ ({ theme: { colors } }) => colors.accent };
+`
+
+const Link = styled(Strong)`
   cursor: pointer;
 `
 
@@ -89,22 +93,19 @@ class Home extends Component<Props> {
   }
 
   componentWillMount = () => {
-    const isAgreement = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
-    const result = JSON.parse(isAgreement)
-    this.setState({ isAgreement: result })
+    const result = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
+    const isAgreement = JSON.parse(result) || false
+    this.setState({ isAgreement })
   }
+
+  openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet')
 
   setDisplay = display => () => this.props.setDisplay(display);
 
   updateStatusAgreement = () => {
-    const result = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
-    if (result === 'false') {
-      this.setState({ isAgreement: true })
-      return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', true)
-    } else {
-      this.setState({ isAgreement: false })
-      return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', false)
-    }
+    const { isAgreement } = this.state
+    this.setState({ isAgreement: !isAgreement })
+    return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', !isAgreement)
   }
 
   openFile = () => {
@@ -157,7 +158,7 @@ class Home extends Component<Props> {
             </Button>
             <Tip>
               Want to import your funraiser account?
-              <Link> Create a wallet </Link>
+              <Strong> Create a wallet </Strong>
               first.
             </Tip>
           </div>
@@ -173,9 +174,9 @@ class Home extends Component<Props> {
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
             I acknowledge that I have read that I agree to
-            <Link> Terms of Service </Link>
+            <Link onClick={this.openLink}> Terms of Service </Link>
             and
-            <Link> Privacy Policy</Link>
+            <Link onClick={this.openLink}> Privacy Policy</Link>
           </Description>
         </TermsAndPolicySection>
         <TermsModal 
