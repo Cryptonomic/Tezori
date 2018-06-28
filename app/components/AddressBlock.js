@@ -167,7 +167,6 @@ class AddressBlock extends Component<Props, State> {
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts')
     const isManagerReady = accountBlock.get('status') === READY;
-    //  console.log('-debug: isManagerReady: ', isManagerReady);
 
     return (
       <Container>
@@ -242,7 +241,6 @@ class AddressBlock extends Component<Props, State> {
         {smartAddresses && smartAddresses.toArray().length ?
           smartAddresses.map((smartAddress, index) => {
             const isSmartAddressReady = smartAddress.get('status') === READY;
-            //  console.log('-debug:  isSmartAddressReady: ', isSmartAddressReady);
             const smartAddressId = smartAddress.get('accountId');
             const isSmartActive = smartAddressId === selectedAccountHash;
             const smartAddressBalance = smartAddress.get('balance');
