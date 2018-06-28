@@ -24,14 +24,12 @@ const FirstPart = styled.span`
 
 const TezosAddress = (props: Props) => {
   const { className, address, weight, size, color } = props;
-  const splicedAddress = address.match(/^([tT][zZ]1)(.+)/)
-
-  return splicedAddress && splicedAddress.length === 3 && (
+  return (
     <Address className={className} weight={weight} color={color} size={size}>
-      <FirstPart>{splicedAddress[1]}</FirstPart>
-      <span>{splicedAddress[2]}</span>
+      <FirstPart>{address.slice(0, 3)}</FirstPart>
+      <span>{address.slice(3)}</span>
     </Address>
-  )
+  );
 };
 
 TezosAddress.defaultProps = {
