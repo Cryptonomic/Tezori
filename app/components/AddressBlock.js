@@ -11,6 +11,7 @@ import Tooltip from './Tooltip';
 import { H3 } from './Heading';
 import Button from './Button';
 import TezosAmount from './TezosAmount';
+import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip';
 
 import AddDelegateModal from './AddDelegateModal';
 
@@ -156,12 +157,14 @@ class AddressBlock extends Component<Props, State> {
                 color={isManagerActive ? 'white' : 'secondary'}
               />
               Manager Address
-              <Tooltip position="right" title="lorem ispum dolor">
-                <HelpIcon
-                  iconName="help"
-                  size={ms(0)}
-                  color={isManagerActive ? 'white' : 'secondary'}
-                />
+              <Tooltip position="bottom" content={ManagerAddressTooltip}>
+                <Button buttonTheme="plain">
+                  <HelpIcon
+                    iconName="help"
+                    size={ms(0)}
+                    color={isManagerActive ? 'white' : 'secondary'}
+                  />
+                </Button>
               </Tooltip>
             </AddressesTitle>
           </AddressFirstLine>
