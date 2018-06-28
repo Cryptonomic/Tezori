@@ -285,6 +285,20 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
       await dispatch(syncSelectedTransactions());
 
     } catch (e) {
+
+      // New account is a Fetch Error, show an empty template in the meanwhile.
+      const selectedAccount = createSelectedAccount({
+        transactions: [],
+        balance: 0
+      });
+      dispatch(
+        setSelectedAccount(
+          selectedAccountHash,
+          selectedParentHash,
+          selectedAccount
+        )
+      );
+
       console.error(e);
       dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
