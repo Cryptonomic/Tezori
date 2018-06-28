@@ -1,13 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { ms } from '../styles/helpers';
 
 import { H4 } from './Heading';
 import AddressBlock from './AddressBlock';
+import Tooltip from './Tooltip';
 import {
   openAddAddressModal,
   selectAccount
@@ -58,7 +59,8 @@ type Props = {
   openAddAddressModal: Function,
   identities: List<Identity>,
   selectAccount: Function,
-  selectedAccountHash: string
+  selectedAccountHash: string,
+  theme: Object
 };
 
 const Container = styled.aside`
@@ -79,24 +81,34 @@ const AccountItem = styled.div`
   margin: 0 0 ${ms(1)} 0;
 `;
 
-const StyledAddCircle = styled(AddCircle)`
-  cursor: pointer;
-`;
+const AccountsTooltip = styled.div`
+  font-size: ${ms(-1)};
+  max-width: ${ms(12)};
+  color: ${({ theme: { colors } }) => colors.secondary};
+`
 
 class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { identities, openAddAddressModal } = this.props;
+    const { openAddAddressModal, identities, theme: { colors } } = this.props;
 
     return (
       <Container>
         <AccountTitle>
           <H4>Accounts</H4>
-          <StyledAddCircle
-            style={{ fill: '#7B91C0', width: '30px', height: '30px' }}
-            onClick={openAddAddressModal}
-          />
+          <Tooltip position="bottom" content={<AccountsTooltip>Support for multiple accounts is coming soon.</AccountsTooltip>}>
+            <AddCircle
+              disabled={true}
+              style={{
+                fill: colors.secondary,
+                width: ms(3),
+                height: ms(3) ,
+                cursor: 'pointer'
+              }}
+              onClick={ openAddAddressModal }
+            />
+          </Tooltip>
         </AccountTitle>
         {identities.map((accountBlock, index) => (
           <AccountItem key={ accountBlock.get('publicKeyHash') }>
@@ -134,4 +146,7 @@ function mapDispatchToProps(dispatch: Function) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Addresses);
+export default compose(
+  withTheme,
+  connect(mapStateToProps, mapDispatchToProps)
+)(Addresses);

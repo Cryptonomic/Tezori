@@ -51,7 +51,7 @@ type Props = {
 
 const Container = styled.div`
   display: flex;
-  padding: ${ms(6)} ${ms(4)} ${ms(3)} ${ms(4)};
+  padding: ${ms(3)} ${ms(4)};
 `;
 
 class AddressPage extends Component<Props> {

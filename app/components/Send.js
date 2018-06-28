@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 import Button from './Button';
 import { utezToTez } from '../utils/currancy';
+import { ms } from '../styles/helpers'
 import SendConfirmationModal from './SendConfirmationModal';
 import {
   updatePassword,
@@ -32,6 +33,10 @@ const AmountContainer = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
+
+const SendButton = styled(Button)`
+  margin-top: ${ms(2)}
+`
 
 type Props = {
   isReady: boolean,
@@ -94,13 +99,14 @@ class Send extends Component<Props> {
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>
-        <Button 
+        <SendButton
           disabled={ !isReady }
-          onClick={showConfirmation} 
-          buttonTheme="secondary" small
+          onClick={showConfirmation}
+          buttonTheme="secondary"
+          small
         >
           Send
-        </Button>
+        </SendButton>
         <SendConfirmationModal
           amount={amount}
           address={toAddress}

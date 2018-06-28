@@ -124,7 +124,7 @@ class ActionPanel extends Component<Props, State> {
       case DELEGATE:
         return <Delegate isReady={ isReady } />;
       case RECEIVE:
-        return <Receive address={selectedAccountHash} isReady={ isReady } />;
+        return <Receive address={selectedAccountHash} />;
       case SEND:
         return <Send isReady={ isReady } />;
       case TRANSACTIONS:

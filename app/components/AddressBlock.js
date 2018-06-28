@@ -12,6 +12,7 @@ import Tooltip from './Tooltip';
 import { H3 } from './Heading';
 import Button from './Button';
 import TezosAmount from './TezosAmount';
+import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip';
 import { READY } from '../constants/StatusTypes';
 
 import CreateAccountModal from './CreateAccountModal';
@@ -186,12 +187,14 @@ class AddressBlock extends Component<Props, State> {
                 color={isManagerActive ? 'white' : 'secondary'}
               />
               Manager Address
-              <Tooltip position="right" title="lorem ispum dolor">
-                <HelpIcon
-                  iconName="help"
-                  size={ms(0)}
-                  color={isManagerActive ? 'white' : 'secondary'}
-                />
+              <Tooltip position="bottom" content={ManagerAddressTooltip}>
+                <Button buttonTheme="plain">
+                  <HelpIcon
+                    iconName="help"
+                    size={ms(0)}
+                    color={isManagerActive ? 'white' : 'secondary'}
+                  />
+                </Button>
               </Tooltip>
             </AddressesTitle>
           </AddressFirstLine>
@@ -219,7 +222,7 @@ class AddressBlock extends Component<Props, State> {
         <AddressLabel>
           <AddressesTitle>
             Smart Addresses
-            <Tooltip position="right" title="lorem ispum dolor">
+            <Tooltip position="bottom" content={() => 'lorem ispum dolor'}>
               <HelpIcon iconName="help" size={ms(0)} color="secondary" />
             </Tooltip>
           </AddressesTitle>

@@ -21,6 +21,7 @@ export const Theme = {
     gray1: '#f7f9fb',
     gray2: '#edf0f7',
     gray3: '#5571a7',
+    gray4: '#fcfcfc',
     gray5: '#9b9b9b',
   },
   animations: {
