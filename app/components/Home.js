@@ -4,10 +4,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
 import { remote } from 'electron';
+import styled from 'styled-components';
 import path from 'path';
 import { ms } from '../styles/helpers';
 
 import Button from './Button';
+import Checkbox from './Checkbox';
 import MessageBar from './MessageBar';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
@@ -42,10 +44,65 @@ type Props = {
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
+const SectionContainer = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
+
+const TermsAndPolicySection = styled.div`
+  display: flex;
+  width: 80%;
+  padding: ${ms(2)} 0 ${ms(4)} 0;
+  border-top-width: 1px;
+  border-top-color: ${ ({ theme: { colors } }) => colors.gray3 };
+  border-top-style: solid;
+  justify-content: center;
+  align-items: center;
+`
+const Link = styled.span`
+  color: ${ ({ theme: { colors } }) => colors.accent };
+  cursor: pointer;
+`
+
+const Description = styled.span`
+  color: ${ ({ theme: { typo: { weights } } }) => weights.light };
+`
+
+const Tip = styled(Description)`
+  max-width: 300px;
+  padding: ${ms(2)} 0 0 0;
+`
+
+const Filling = styled.div`
+  height: 70px;
+`
+
 class Home extends Component<Props> {
   props: Props;
+  
+  state = {
+    isAgreement: false
+  }
+
+  componentWillMount = () => {
+    const isAgreement = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
+    this.setState({ isAgreement: !!isAgreement })
+  }
 
   setDisplay = display => () => this.props.setDisplay(display);
+
+  updateStatusAgreement = () => {
+    if (this.state.isAgreement === false) {
+      this.setState({ isAgreement: true })
+      return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', true)
+    } else {
+      this.setState({ isAgreement: false })
+      return localStorage.setItem('isTezosTermsAndPolicyAgreementAccepted', false)
+    }
+  }
 
   openFile = () => {
     remote.dialog.showOpenDialog(
@@ -88,20 +145,38 @@ class Home extends Component<Props> {
 
   renderSelectionState = () => {
     return (
-      <div className={styles.defaultContainer}>
-        <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>Create a new wallet</div>
-          <Button buttonTheme="primary" onClick={this.setDisplay(CREATE)}>
-            Create Wallet
-          </Button>
+      <SectionContainer>
+        <div className={styles.defaultContainer}>
+          <div className={styles.walletContainers}>
+            <div className={styles.walletTitle}>Create a new wallet</div>
+            <Button buttonTheme="primary" onClick={this.setDisplay(CREATE)} disabled={!this.state.isAgreement}>
+              Create Wallet
+            </Button>
+            <Tip>
+              Want to import your funraiser account?
+              <Link> Create a wallet </Link>
+              first.
+            </Tip>
+          </div>
+          <div className={styles.walletContainers}>
+            <div className={styles.walletTitle}>Import an existing wallet</div>
+            <Button buttonTheme="secondary" onClick={this.setDisplay(IMPORT)} disabled={!this.state.isAgreement}>
+              Import Wallet
+            </Button>
+            <Filling />
+          </div>
         </div>
-        <div className={styles.walletContainers}>
-          <div className={styles.walletTitle}>Import an existing wallet</div>
-          <Button buttonTheme="secondary" onClick={this.setDisplay(IMPORT)}>
-            Import Wallet
-          </Button>
-        </div>
-      </div>
+        
+        <TermsAndPolicySection>
+          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
+          <Description>
+            I acknowledge that I have read that I agree to
+            <Link> Terms of Service </Link>
+            and
+            <Link> Privacy Policy</Link>
+          </Description>
+        </TermsAndPolicySection>
+      </SectionContainer>
     );
   };
 
