@@ -15,7 +15,7 @@ import {
   updateAmount,
   updateFee,
   showConfirmation,
-  closeSendTezosModal,
+  clearState,
   sendConfirmation
 } from '../reducers/sendTezos.duck';
 
@@ -39,12 +39,13 @@ const SendButton = styled(Button)`
 `
 
 type Props = {
+  isReady: boolean,
   updatePassword: Function,
   updateToAddress: Function,
   updateAmount: Function,
   updateFee: Function,
   showConfirmation: Function,
-  closeSendTezosModal: Function,
+  clearState: Function,
   sendConfirmation: Function,
   isConfirmationModalOpen: boolean,
   isLoading: boolean,
@@ -69,7 +70,7 @@ class Send extends Component<Props> {
       updatePassword,
       updateFee,
       showConfirmation,
-      closeSendTezosModal,
+      clearState,
       sendConfirmation
     } = this.props;
     return (
@@ -110,7 +111,7 @@ class Send extends Component<Props> {
           amount={amount}
           address={toAddress}
           open={isConfirmationModalOpen}
-          onCloseClick={closeSendTezosModal}
+          onCloseClick={clearState}
           isLoading={isLoading}
           updatePassword={updatePassword}
           password={password}
@@ -141,7 +142,7 @@ const mapDispatchToProps = dispatch =>
       updateToAddress,
       updateAmount,
       updateFee,
-      closeSendTezosModal,
+      clearState,
       showConfirmation,
       sendConfirmation
     },

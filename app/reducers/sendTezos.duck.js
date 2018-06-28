@@ -32,7 +32,7 @@ const updateSendTezosLoading = actionCreator(
   UPDATE_SEND_TEZOS_LOADING,
   'isLoading'
 );
-const clearState = actionCreator(CLEAR_STATE);
+export const clearState = actionCreator(CLEAR_STATE);
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 
