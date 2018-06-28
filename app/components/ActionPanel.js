@@ -20,6 +20,7 @@ import Loader from './Loader';
 import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
+import { READY } from '../constants/StatusTypes';
 
 import { syncWallet } from '../reducers/address.duck';
 
@@ -28,8 +29,19 @@ const Container = styled.section`
 `;
 
 const Tab = styled(Button)`
-  background: ${({ isActive, theme: { colors } }) =>
-  isActive ? colors.white : colors.accent};
+  background: ${({ isActive, isReady, theme: { colors } }) => {
+  const color = isActive
+    ? colors.white
+    : colors.accent;
+  
+  const inActiveColors = isActive 
+    ? colors.white 
+    : colors.disabled;
+
+  return isReady
+    ? color
+    : inActiveColors
+  }};
   color: ${({ isActive, theme: { colors } }) =>
   isActive ? colors.primary : lighten(0.4, colors.accent)};
   cursor: pointer;
@@ -106,14 +118,15 @@ class ActionPanel extends Component<Props, State> {
   renderSection = () => {
     const { selectedAccount, selectedAccountHash } = this.props;
     const transactions = selectedAccount.get('transactions');
+    const isReady = selectedAccount.get('status') === READY;
 
     switch (this.state.activeTab) {
       case DELEGATE:
-        return <Delegate />;
+        return <Delegate isReady={ isReady } />;
       case RECEIVE:
-        return <Receive address={selectedAccountHash} />;
+        return <Receive address={selectedAccountHash} isReady={ isReady } />;
       case SEND:
-        return <Send />;
+        return <Send isReady={ isReady } />;
       case TRANSACTIONS:
       default: {
         return isEmpty(transactions.toJS())
@@ -153,10 +166,12 @@ class ActionPanel extends Component<Props, State> {
     const balance = selectedAccount.get('balance');
     const  isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
+    const isReady = selectedAccount.get('status') === READY;
 
     return (
       <Container>
         <BalanceBanner
+          isReady={ isReady }
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIdentity={parentIdentity}
@@ -170,6 +185,7 @@ class ActionPanel extends Component<Props, State> {
             <Tab
               isActive={activeTab === tab}
               key={tab}
+              isReady={ isReady }
               buttonTheme="plain"
               onClick={() => this.setState({ activeTab: tab })}
             >

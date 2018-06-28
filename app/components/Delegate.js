@@ -99,7 +99,7 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address, showConfirmationModal, updateAddress } = this.props;
+    const { isReady, address, showConfirmationModal, updateAddress } = this.props;
 
     return (
       <Container>
@@ -110,6 +110,7 @@ class Delegate extends Component<Props> {
         />
 
         <UpdateButton
+          disabled={ !isReady }
           onClick={showConfirmationModal}
           buttonTheme="secondary"
           small

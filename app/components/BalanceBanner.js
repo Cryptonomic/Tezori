@@ -11,6 +11,7 @@ import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { findAccountIndex } from '../utils/account';
 
 type Props = {
+  isReady: boolean,
   balance: number,
   publicKeyHash: string,
   onRefreshClick: Function,
@@ -22,7 +23,8 @@ type Props = {
 
 const Container = styled.header`
   padding: ${ms(0)} ${ms(4)};
-  background-color: ${({ theme: { colors } }) => colors.accent};
+  background-color: ${({ isReady, theme: { colors } }) =>   
+    isReady ? colors.accent : colors.disabled};
 `;
 
 const Row = styled.div`
@@ -32,7 +34,8 @@ const Row = styled.div`
 const TopRow = styled(Row)`
   display: flex;
   justify-content: space-between;
-  color: ${({ theme: { colors } }) => lighten(0.3, colors.accent)};
+  color: ${({ isReady, theme: { colors } }) => 
+    isReady ? lighten(0.3, colors.accent) : colors.white};
 `;
 
 const BottomRow = styled(Row)`
@@ -63,8 +66,18 @@ const Breadcrumbs = styled.div`
   font-size: ${ms(-1)};
 `
 
+const Refresh = styled(RefreshIcon)`
+  -webkit-animation:spin 0.5s linear infinite;
+  -moz-animation:spin 0.5s linear infinite;
+  animation:spin 0.5s linear infinite;
+  
+  @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+  @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+`
+
 function BalanceBanner(props: Props) {
-  const { balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
+  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex  
     ? `Smart Address ${smartAddressIndex}` 
@@ -73,21 +86,40 @@ function BalanceBanner(props: Props) {
   const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;
 
   return (
-    <Container>
-      <TopRow>
+    <Container isReady={ isReady }>
+      <TopRow isReady={ isReady }>
         <Breadcrumbs>
           {breadcrumbs}
         </Breadcrumbs>
-
-        <RefreshIcon
-          style={{
-            fill: 'white',
-            height: ms(2),
-            width: ms(2),
-            cursor: 'pointer'
-          }}
-          onClick={onRefreshClick}
-        />
+        
+        {
+          isReady 
+            ? 
+            (
+              <RefreshIcon
+                style={{
+                  fill: 'white',
+                  height: ms(2),
+                  width: ms(2),
+                  cursor: 'pointer'
+                }}
+                onClick={onRefreshClick}
+              />
+            )
+            :
+            (
+              <Refresh
+                style={{
+                  fill: 'white',
+                  height: ms(2),
+                  width: ms(2),
+                  cursor: 'pointer'
+                }}
+                onClick={onRefreshClick}
+              />
+            )
+        }
+        
       </TopRow>
       <BottomRow>
         <AddressTitle>
@@ -99,7 +131,7 @@ function BalanceBanner(props: Props) {
           {addressLabel}
         </AddressTitle>
         <AddressInfo>
-          <TezosAddress size={ms(1)} address={publicKeyHash} weight={theme.typo.weights.light} color={theme.colors.white} />
+          <TezosAddress address={publicKeyHash} size={ms(1)}  weight={theme.typo.weights.light} color={theme.colors.white} />
           <Amount size={ms(4)} color="white" amount={ balance } weight="light" showTooltip />
         </AddressInfo>
       </BottomRow>

@@ -5,8 +5,7 @@ import actionCreator from '../utils/reduxHelpers';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
-import { revealKey, getSelectedKeyStore } from '../utils/general'
-import { findIdentity } from '../utils/identity';
+import { getSelectedKeyStore } from '../utils/general'
 
 const {
   sendTransactionOperation,

@@ -106,7 +106,7 @@ export default class Receive extends Component<Props> {
   };
 
   render() {
-    const { address } = this.props;
+    const { address, isReady } = this.props;
 
     return (
       <ReceiveContainer>
@@ -116,7 +116,11 @@ export default class Receive extends Component<Props> {
           <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
             Copied!
           </CopyConfirmationTooltip>
-          <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
+          <Button
+            disabled={ !isReady }
+            onClick={this.copyToClipboard}
+            buttonTheme="secondary" small
+          >
             Copy Address
           </Button>
         </HashContainer>

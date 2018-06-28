@@ -34,6 +34,7 @@ const AmountContainer = styled.div`
 `;
 
 type Props = {
+  isReady: boolean,
   updatePassword: Function,
   updateToAddress: Function,
   updateAmount: Function,
@@ -52,6 +53,7 @@ type Props = {
 class Send extends Component<Props> {
   render() {
     const {
+      isReady,
       isConfirmationModalOpen,
       isLoading,
       password,
@@ -92,7 +94,11 @@ class Send extends Component<Props> {
             <MenuItem value={500} primaryText="Custom" />
           </SelectField>
         </AmountContainer>
-        <Button onClick={showConfirmation} buttonTheme="secondary" small>
+        <Button 
+          disabled={ !isReady }
+          onClick={showConfirmation} 
+          buttonTheme="secondary" small
+        >
           Send
         </Button>
         <SendConfirmationModal

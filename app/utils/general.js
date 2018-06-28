@@ -67,8 +67,14 @@ export async function revealKey(network, keyStore) {
 export async function activateAndUpdateAccount(account, keyStore, network) {
   if ( account.status === status.READY ) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(network, accountHash).catch( () => false );
+    //console.log('-debug: ATTEMPT in: status.READY for:' + accountHash);
+    const updatedAccount = await getAccount(network, accountHash).catch( (error) => {
+      console.log('-debug: Error in: status.READY for:' + accountHash);
+      console.error(error);
+      return false;
+    });
     if ( updatedAccount ) {
+      //console.log('-debug: SUCCESS in: status.READY for:' + accountHash);
       account.balance = updatedAccount.account.balance;
     }
     return account;
@@ -80,27 +86,45 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
 
   if ( account.status === status.CREATED ) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(network, accountHash).catch( () => false );
+    //console.log('-debug: ATTEMPT in: status.CREATED for:' + accountHash);
+    const updatedAccount = await getAccount(network, accountHash).catch( (error) => {
+      console.log('-debug: Error in: status.CREATED for:' + accountHash);
+      console.error(error);
+      return false;
+    });
     if ( updatedAccount ) {
+      //console.log('-debug: SUCCESS in: status.CREATED for:' + accountHash);
       account.balance = updatedAccount.account.balance;
       account.status = status.FOUND;
     }
   }
 
   if ( account.status === status.FOUND ) {
-    const revealed = await revealKey(network, keyStore).catch(() => false );
+    //console.log('-debug: ATTEMPT in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
+    const revealed = await revealKey(network, keyStore).catch( (error) => {
+      console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
+      console.error(error);
+      return false;
+    });
     if ( revealed ) {
+      //console.log('-debug: SUCCESS in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
       account.status = status.PENDING;
     }
   }
 
   if ( account.status === status.PENDING ) {
-    const response = await isRevealed(network, keyStore).catch(() => false );
+    //console.log('-debug: ATTEMPT in: status.PENDING for:' + (account.publicKeyHash || account.accountId));
+    const response = await isRevealed(network, keyStore).catch( (error) => {
+      console.log('-debug: Error in: status.PENDING for:' + (account.publicKeyHash || account.accountId));
+      console.error(error);
+      return false;
+    });
     if ( response ) {
+      //console.log('-debug: SUCCESS in: status.PENDING for:' + (account.publicKeyHash || account.accountId));
       account.status = status.READY;
     }
   }
 
-  console.log(' account.status ', account.status);
+  //  console.log('-debug: account.status ', account.status);
   return account;
 }
