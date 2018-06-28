@@ -38,22 +38,20 @@
 .inactiveTab {
   background-color: #417DEF;
   color: white;
+  text-align: center;
+  padding: 0 10px;
 }
 
 .activeTab {
   color: #1A325F;
   background-color: white;
+  text-align: center;
+  padding: 0 10px;
 }
 
 .addAddressBodyContainer {
   padding: 40px;
 }
-
-.addAddressTypeBody {
-  display: flex;
-  flex-direction: column;
-}
-
 .fundraiserPasswordContainer {
   display: flex;
   justify-content: space-between;

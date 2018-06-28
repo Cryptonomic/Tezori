@@ -42,8 +42,6 @@ class SettingsController extends Component<Props> {
     const { goHomeAndClearState } = this.props;
     return (
       <Container>
-        <SettingsIcon alt="Settings" src={settingsIcon} />
-        <Separator />
         <Button onClick={goHomeAndClearState} buttonTheme="plain">
           <LogoutIcon alt="Logout" src={logoutIcon} />
         </Button>

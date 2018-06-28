@@ -1,5 +1,6 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React, { Component, Fragment } from 'react';
+import { isNil } from 'lodash';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
@@ -15,7 +16,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${ms(2)} ${ms(4)};
+  padding: ${ms(0)} ${ms(3)};
   flex-shrink: 0;
   background-color: ${({ isHomePath, theme: { colors } }) =>
     isHomePath ? colors.gray2 : lighten(0.03, colors.gray2)};
