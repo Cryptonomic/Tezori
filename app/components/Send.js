@@ -39,7 +39,6 @@ const SendButton = styled(Button)`
 `
 
 type Props = {
-  isReady: boolean,
   updatePassword: Function,
   updateToAddress: Function,
   updateAmount: Function,

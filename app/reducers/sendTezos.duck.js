@@ -60,6 +60,7 @@ export function showConfirmation() {
 }
 export function sendConfirmation() {
   return async (dispatch, state) => {
+    dispatch(updateSendTezosLoading(true));
     const sendTezosState = state().sendTezos;
     const walletState = state().walletInitialization;
     const identities = state().address.get('identities').toJS();
@@ -82,7 +83,6 @@ export function sendConfirmation() {
         throw new Error({ name: 'You cant sent money to yourself.' });
       }
 
-      dispatch(updateSendTezosLoading(true));
       const res = await sendTransactionOperation(
         network,
         keyStore,
@@ -100,12 +100,11 @@ export function sendConfirmation() {
       ));
 
       dispatch(clearState());
-      dispatch(updateSendTezosLoading(false));
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(updateSendTezosLoading(false));
     }
+    dispatch(updateSendTezosLoading(false));
   };
 }
 

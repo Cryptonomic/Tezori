@@ -71,13 +71,13 @@ export function sendConfirmation() {
         false
       ));
 
+      dispatch(clearState());
+      dispatch(updateAddress(address));
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
     }
 
-    dispatch(clearState());
-    dispatch(updateAddress(address));
     dispatch(updateIsLoading(false));
   };
 }
@@ -102,7 +102,9 @@ export default function delegate(state = initState, action) {
     case OPEN_CONFIRMATION_MODAL:
       return state.set('isConfirmationModalOpen', true);
     case CLOSE_CONFIRMATION_MODAL:
-      return state.set('isConfirmationModalOpen', false);
+      const address = state.get('address');
+      return initState.set('address', address);
+      break;
     case UPDATE_DELEGATE_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     default:
