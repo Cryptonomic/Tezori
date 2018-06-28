@@ -29,12 +29,12 @@ const HashContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   color: ${({ theme: { colors } }) => colors.primary};
-  font-size: ${ms(3)};
   position: relative;
 `;
 
 const Hash = styled(H4)`
   margin: 0 0 ${ms(2)} 0;
+  font-size: 2vw;
 `;
 
 const ReceiveContainer = styled.div`

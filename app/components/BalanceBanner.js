@@ -52,6 +52,12 @@ const AddressTitleIcon = styled(TezosIcon)`
   padding: 0 ${ms(-6)} 0 0;
 `;
 
+const AddressHash = styled(H4)`
+  color: ${({ theme: { colors } }) => colors.white};
+  margin: 0 ${ms(1)} 0 0;
+  font-size: 2vw
+`;
+
 const AddressInfo = styled.div`
   display: flex;
   align-items: center;
