@@ -107,8 +107,8 @@ const Refresh = styled(RefreshIcon)`
 function BalanceBanner(props: Props) {
   const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel = !isManagerAddress && smartAddressIndex  
-    ? `Delegated Address ${smartAddressIndex}` 
+  const addressLabel = !isManagerAddress && smartAddressIndex
+    ? `Delegated Address ${smartAddressIndex}`
     : 'Manager Address';
 
   const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;

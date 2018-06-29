@@ -102,8 +102,9 @@ class Delegate extends Component<Props> {
     return (
       <Container>
         <TextField
-          floatingLabelText="New Address"
+          floatingLabelText="Delegate Address"
           value={address}
+          style={{minWidth: 340, width: 'auto'}}
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
 

@@ -189,7 +189,7 @@ const StyledTooltip = styled(TooltipAdapter)`
     }
 
     &-placement-bottom &-arrow {
-      left: 50%;
+      left: ${props => (props.arrowPos && props.arrowPos.left? props.arrowPos.left: '50%')};
     }
 
     &-placement-bottomLeft &-arrow {
@@ -203,9 +203,9 @@ const StyledTooltip = styled(TooltipAdapter)`
 `;
 
 function Tooltip(props: Props) {
-  const { children, className, content, position, ...restOfProps } = props;
+  const { children, className, content, position, arrowPos, ...restOfProps } = props;
   return (
-    <StyledTooltip placement={position} className={className} overlay={content} {...restOfProps}>
+    <StyledTooltip placement={position} className={className} overlay={content} arrowPos={arrowPos} {...restOfProps}>
       {children}
     </StyledTooltip>
   );

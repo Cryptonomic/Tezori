@@ -1,0 +1,100 @@
+.closeIcon {
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+.tezosSymbol {
+  height: 17px;
+  width: 17px;
+  filter: brightness(0%);
+  opacity: 0.5;
+}
+
+.amountSendContainer {
+  width: 45%;
+}
+
+.confirmationText {
+  margin-bottom: 20px;
+}
+
+.feeContainer {
+  width: 45%;
+  display: flex;
+}
+
+.feeSelectComponent {
+  width: 100% !important;
+}
+
+.amount {
+  border-bottom: 1px solid #7B91C0;
+  color: #7B91C0;
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+.address {
+  border-bottom: 1px solid #7B91C0;
+  color: #7B91C0;
+  margin-left: 15px;
+  font-size: 20px;
+}
+
+.passwordButtonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 42px;
+}
+
+.delegateButton {
+  width: 194px;
+  height: 50px;
+}
+
+.delegateContainer {
+  width: 100%;
+  position: relative;
+}
+.textfieldTooltip {
+  position: absolute;
+  right: 10px;
+  top: 44px;
+}
+
+.amountAndFeeContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.tooltipContainer {
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  max-width: 312px;
+}
+
+.tooltipTitle {
+  color: #123262;
+  font-weight: bold;
+  font-size: 16px;
+
+}
+.tooltipContent1 {
+  border-bottom:solid 1px #94a9d1;
+  padding: 12px 0;
+
+}
+.tooltipContent2 {
+  padding: 12px 0;
+}
+.customArrow .rc-tooltip-arrow {
+  left: 66%;
+}
+
