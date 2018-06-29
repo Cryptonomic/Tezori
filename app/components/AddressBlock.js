@@ -14,6 +14,7 @@ import Button from './Button';
 import TezosAmount from './TezosAmount';
 import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip';
 import { READY } from '../constants/StatusTypes';
+import contentCopy from '../../resources/contentCopy.svg';
 
 import AddDelegateModal from './AddDelegateModal';
 
@@ -59,9 +60,14 @@ const AddressLabel = styled.div`
   display: flex;
   font-weight: ${({theme: {typo}}) => typo.weights.bold};
   color: ${({ theme: { colors } }) => colors.primary};
+  background: ${({ theme: { colors } }) => colors.gray1};
   align-items: center;
   justify-content: space-between;
-  background: ${({ theme: { colors } }) => colors.gray1};
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const AddressLabelIcon = styled(TezosIcon)`
@@ -84,6 +90,9 @@ const AccountTitle = styled(H3)`
   display: inline-block;
   border-right: 2px solid
     ${({ theme: { colors } }) => darken(0.05, colors.gray1)};
+  @media (max-width: 1200px) {
+    border-right: none;
+  }
 `;
 
 const NoSmartAddressesContainer = styled.div`
@@ -202,6 +211,8 @@ class AddressBlock extends Component<Props, State> {
   render() {
     const { accountBlock, selectedAccountHash, accountIndex, openCreateAccountModal, theme } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
+    const balance = accountBlock.get('balance');
+    const formatedBalance = balance.toFixed(6)
     const { shouldHideSmartAddressesInfo } = this.state
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts')
@@ -217,6 +228,13 @@ class AddressBlock extends Component<Props, State> {
       <Container>
         <AddressLabel>
           <AccountTitle>{`Account ${accountIndex}`}</AccountTitle>
+          <TezosAmount
+            color={'primary'}
+            size={ms(1)}
+            amount={balance}
+            format={2}
+            showTooltip
+          />
         </AddressLabel>
         <Address
           isActive={isManagerActive}
@@ -247,7 +265,6 @@ class AddressBlock extends Component<Props, State> {
               color={
                 publicKeyHash === selectedAccountHash ? 'white' : 'primary'
               }
-              showTooltip
               amount={accountBlock.get('balance')}
             />
             <Syncing isReady={ isManagerReady } >

@@ -54,10 +54,10 @@ const TermsModal = (props:Props) => {
       <Container>
         <Title>Hi there!</Title>
         <Description>
-          Before we get started, please read our 
+          Before we get started, please read and accept our
           <Link onClick={openLink}> Terms of Service </Link>
           and
-          <Link onClick={openLink}> Pivacy Policy </Link>
+          <Link onClick={openLink}> Privacy Policy </Link>
         </Description>
         <Button
           buttonTheme="primary"
