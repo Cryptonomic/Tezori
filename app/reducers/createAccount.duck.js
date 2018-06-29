@@ -51,7 +51,6 @@ export const confirmPassPhrase = actionCreator(
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount() {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
     const publicKeyHash = state().address.get('selectedParentHash');
     const delegate = state().createAccount.get('delegate');
     const amount = state().createAccount.get('amount');
@@ -85,6 +84,7 @@ export function createNewAccount() {
     }
 
     try {
+      dispatch(setIsLoading(true));
       const identity = findIdentity(identities, publicKeyHash);
       const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
       

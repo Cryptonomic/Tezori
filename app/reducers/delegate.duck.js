@@ -57,9 +57,8 @@ export function sendConfirmation() {
     const network = walletState.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
-    dispatch(updateIsLoading(true));
     try {
-
+      dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
       const operation = await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
