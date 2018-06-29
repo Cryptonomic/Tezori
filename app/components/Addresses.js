@@ -102,6 +102,7 @@ class Addresses extends Component<Props> {
               disabled={true}
               style={{
                 fill: colors.secondary,
+                opacity: 0.5,
                 width: ms(3),
                 height: ms(3) ,
                 cursor: 'pointer'

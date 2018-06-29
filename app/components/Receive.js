@@ -30,26 +30,38 @@ const HashContainer = styled.div`
   align-items: flex-start;
   color: ${({ theme: { colors } }) => colors.primary};
   position: relative;
+
+  @media (max-width: 1200px) {
+    align-items: center;
+  }
 `;
 
 const Hash = styled(H4)`
   margin: 0 0 ${ms(2)} 0;
-  font-size: 2vw;
 `;
 
 const ReceiveContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
   width: 100%;
   padding: ${ms(2)} 0 ${ms(6)} 0;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const QRCodeContainer = styled.canvas`
   border: 1px solid ${({ theme: { colors } }) => colors.gray1};
   width: ${ms(9)};
   height: ${ms(9)};
-  margin-right: ${ms(5)};
+  margin: 0 ${ms(5)} 0 0;
+
+  @media (max-width: 1200px) {
+    margin: 0;
+  }
 `;
+
 
 export default class Receive extends Component<Props> {
   props: Props;

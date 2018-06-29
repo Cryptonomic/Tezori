@@ -20,7 +20,7 @@ const Text = styled.span`
 `;
 
 const Amount = styled(TezosAmount)`
-  margin-left: ${ms(2)};
+  margin: 0 ${ms(2)};
 `;
 
 type Props = {
@@ -39,6 +39,7 @@ class TotalBalance extends Component {
           color="primary"
           weight="normal"
           showTooltip
+          format={2}
         />
       </Container>
     );
