@@ -55,7 +55,7 @@ class TopBar extends Component {
               <TezosLogo />
               <Text>{this.props.walletName}</Text>
               <TotalBalance />
-            </InfoContainer>,
+            </InfoContainer>
             <SettingsController />
           </Fragment>
         )}
