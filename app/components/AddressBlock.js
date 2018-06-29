@@ -16,7 +16,7 @@ import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip';
 import { READY } from '../constants/StatusTypes';
 import contentCopy from '../../resources/contentCopy.svg';
 
-import CreateAccountModal from './CreateAccountModal';
+import AddDelegateModal from './AddDelegateModal';
 
 const Container = styled.div`
   overflow: hidden;
@@ -345,15 +345,18 @@ class AddressBlock extends Component<Props, State> {
             );
           }) : !shouldHideSmartAddressesInfo && (
           <NoSmartAddressesContainer>
-            <CloseIcon style={{
-              position: 'absolute',
-              top: ms(0),
-              right: ms(0),
-              fill: theme.colors.secondary,
-              width: ms(0),
-              height: ms(0),
-              cursor: 'pointer'
-            }} onClick={this.closeNoSmartAddresses} />
+            <CloseIcon
+              style={{
+                position: 'absolute',
+                top: ms(0),
+                right: ms(0),
+                fill: theme.colors.secondary,
+                width: ms(0),
+                height: ms(0),
+                cursor: 'pointer'
+              }}
+              onClick={this.closeNoSmartAddresses}
+            />
             <NoSmartAddressesTitle>
               Delegation Tips
             </NoSmartAddressesTitle>
@@ -364,7 +367,7 @@ class AddressBlock extends Component<Props, State> {
           </NoSmartAddressesContainer>
           )
         }
-        <CreateAccountModal />
+        <AddDelegateModal />
       </Container>
     );
   }

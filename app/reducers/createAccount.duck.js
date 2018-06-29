@@ -60,9 +60,6 @@ export function createNewAccount() {
     const identities = state().address.get('identities').toJS();
 
     const passPhrase = state().createAccount.get('passPhrase');
-    const confirmedPassPhrase = state().createAccount.get(
-      'confirmedPassPhrase'
-    );
     const network = state().walletInitialization.get('network');
 
     const validations = [
@@ -71,11 +68,6 @@ export function createNewAccount() {
       { value: amountInUtez, type: 'posNum', name: 'Amount'},
       { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
-      {
-        value: [passPhrase, confirmedPassPhrase],
-        type: 'samePassPhrase',
-        name: 'Pass Phrases'
-      }
     ];
 
     const error = displayError(validations);
