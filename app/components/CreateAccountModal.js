@@ -16,7 +16,7 @@ import {
   changeDelegate,
   changeFee,
   createNewAccount,
-  closeCreateAccountModal,
+  clearCreateAccountState,
   updatePassPhrase,
   confirmPassPhrase,
   passPhrase,
@@ -30,7 +30,7 @@ type Props = {
   changeAmount: Function,
   changeDelegate: Function,
   changeFee: Function,
-  closeCreateAccountModal: Function,
+  clearCreateAccountState: Function,
   createNewAccount: Function,
   updatePassPhrase: Function,
   confirmPassPhrase: Function,
@@ -69,7 +69,7 @@ class CreateAccountModal extends Component<Props> {
         <CloseIcon
           className={styles.closeIcon}
           style={{ fill: '#7190C6' }}
-          onClick={this.props.closeCreateAccountModal}
+          onClick={this.props.clearCreateAccountState}
         />
         <div className={styles.delegateContainer}>
           <TextField
@@ -138,7 +138,7 @@ class CreateAccountModal extends Component<Props> {
         <div>
           <Button
             buttonTheme="primary"
-            onClick={this.props.closeCreateAccountModal}
+            onClick={this.props.clearCreateAccountState}
             small
           >
             Close
@@ -183,7 +183,7 @@ function mapDispatchToProps(dispatch) {
       changeAmount,
       changeDelegate,
       changeFee,
-      closeCreateAccountModal,
+      clearCreateAccountState,
       createNewAccount,
       updatePassPhrase,
       confirmPassPhrase

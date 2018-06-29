@@ -116,7 +116,10 @@ export default class Receive extends Component<Props> {
           <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
             Copied!
           </CopyConfirmationTooltip>
-          <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
+          <Button
+            onClick={this.copyToClipboard}
+            buttonTheme="secondary" small
+          >
             Copy Address
           </Button>
         </HashContainer>

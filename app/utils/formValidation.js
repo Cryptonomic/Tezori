@@ -41,8 +41,9 @@ export default function hasError(value, validateType, name) {
       if ( value.length < 36 ) {
         return hasLength(36, 'Address');
       }
-      if ( !RegExp('^tz1|^TZ1').test(value)) {
-        return `Address must begin with tz1 or TZ1.`;
+      
+      if ( !RegExp('^tz1|^KT1').test(value)) {
+        return `Address must begin with tz1 or KT1.`;
       }
       break;
     case 'notEmpty':
