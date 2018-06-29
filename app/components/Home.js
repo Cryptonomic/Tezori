@@ -333,7 +333,7 @@ class Home extends Component<Props> {
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
             I acknowledge that I have read and accepted
-            <Link onClick={this.openLink}>the Terms of Service </Link>
+            <Link onClick={this.openLink}> the Terms of Service </Link>
             and
             <Link onClick={this.openLink}> Privacy Policy</Link>
           </Description>
