@@ -67,7 +67,11 @@ export async function revealKey(network, keyStore) {
 export async function activateAndUpdateAccount(account, keyStore, network) {
   if ( account.status === status.READY ) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(network, accountHash).catch( () => false );
+    const updatedAccount = await getAccount(network, accountHash).catch( (error) => {
+      console.log('-debug: Error in: status.READY for:' + accountHash);
+      console.error(error);
+      return false;
+    });
     if ( updatedAccount ) {
       account.balance = updatedAccount.account.balance;
     }
@@ -80,7 +84,11 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
 
   if ( account.status === status.CREATED ) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(network, accountHash).catch( () => false );
+    const updatedAccount = await getAccount(network, accountHash).catch( (error) => {
+      console.log('-debug: Error in: status.CREATED for:' + accountHash);
+      console.error(error);
+      return false;
+    });
     if ( updatedAccount ) {
       account.balance = updatedAccount.account.balance;
       account.status = status.FOUND;
@@ -88,19 +96,27 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
   }
 
   if ( account.status === status.FOUND ) {
-    const revealed = await revealKey(network, keyStore).catch(() => false );
+    const revealed = await revealKey(network, keyStore).catch( (error) => {
+      console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
+      console.error(error);
+      return false;
+    });
     if ( revealed ) {
       account.status = status.PENDING;
     }
   }
 
   if ( account.status === status.PENDING ) {
-    const response = await isRevealed(network, keyStore).catch(() => false );
+    const response = await isRevealed(network, keyStore).catch( (error) => {
+      console.log('-debug: Error in: status.PENDING for:' + (account.publicKeyHash || account.accountId));
+      console.error(error);
+      return false;
+    });
     if ( response ) {
       account.status = status.READY;
     }
   }
 
-  console.log(' account.status ', account.status);
+  console.log('-debug: account.status ', account.status);
   return account;
 }

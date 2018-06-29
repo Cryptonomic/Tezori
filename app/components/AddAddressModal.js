@@ -256,7 +256,6 @@ export default function AddAddress(props: Props) {
                   value={activationCode}
                   onChange={(_, newActivationCode) => updateActivationCode(newActivationCode)}
                 />
-
                 <StyledTooltip position="bottom" content={ActivationTooltip}>
                   <Button buttonTheme="plain">
                     <HelpIcon

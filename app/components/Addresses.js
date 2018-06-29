@@ -91,7 +91,7 @@ class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { identities, theme: { colors } } = this.props;
+    const { openAddAddressModal, identities, theme: { colors } } = this.props;
 
     return (
       <Container>
@@ -100,7 +100,12 @@ class Addresses extends Component<Props> {
           <Tooltip position="bottom" content={<AccountsTooltip>Support for multiple accounts is coming soon.</AccountsTooltip>}>
             <AddCircle
               disabled={true}
-              style={{ fill: colors.secondary, width: ms(3), height: ms(3) }}
+              style={{
+                fill: colors.secondary,
+                width: ms(3),
+                height: ms(3) ,
+                cursor: 'pointer'
+              }}
             />
           </Tooltip>
         </AccountTitle>

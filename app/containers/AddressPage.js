@@ -61,10 +61,6 @@ class AddressPage extends Component<Props> {
     this.props.selectDefaultAccountOrOpenModal();
   }
 
-  componentWillUnmount() {
-    clearAccountRefreshInterval();
-  }
-
   render() {
     const {
       activeTabAddAddressTab,

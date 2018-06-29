@@ -46,13 +46,6 @@ export function showConfirmationModal() {
     dispatch(openConfirmationModal());
   };
 }
-export function setOriginalAddress() {
-  return async (dispatch, state) => {
-    const walletState = state().walletInitialization;
-    const originalAddress = walletState.get('address');
-    dispatch(updateAddress(originalAddress));
-  };
-}
 
 export function sendConfirmation() {
   return async (dispatch, state) => {
@@ -64,9 +57,9 @@ export function sendConfirmation() {
     const network = walletState.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
-
+    dispatch(updateIsLoading(true));
     try {
-      dispatch(updateIsLoading(true));
+
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
       const operation = await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
         err.name = err.message;
@@ -78,13 +71,14 @@ export function sendConfirmation() {
         false
       ));
 
+      dispatch(clearState());
       dispatch(updateAddress(address));
-      dispatch(updateIsLoading(false));
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(updateIsLoading(false));
     }
+
+    dispatch(updateIsLoading(false));
   };
 }
 
@@ -108,7 +102,9 @@ export default function delegate(state = initState, action) {
     case OPEN_CONFIRMATION_MODAL:
       return state.set('isConfirmationModalOpen', true);
     case CLOSE_CONFIRMATION_MODAL:
-      return state.set('isConfirmationModalOpen', false);
+      const address = state.get('address');
+      return initState.set('address', address);
+      break;
     case UPDATE_DELEGATE_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     default:
