@@ -60,9 +60,14 @@ const AddressLabel = styled.div`
   display: flex;
   font-weight: ${({theme: {typo}}) => typo.weights.bold};
   color: ${({ theme: { colors } }) => colors.primary};
+  background: ${({ theme: { colors } }) => colors.gray1};
   align-items: center;
   justify-content: space-between;
-  background: ${({ theme: { colors } }) => colors.gray1};
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const AddressLabelIcon = styled(TezosIcon)`
@@ -85,6 +90,9 @@ const AccountTitle = styled(H3)`
   display: inline-block;
   border-right: 2px solid
     ${({ theme: { colors } }) => darken(0.05, colors.gray1)};
+  @media (max-width: 1200px) {
+    border-right: none;
+  }
 `;
 
 const NoSmartAddressesContainer = styled.div`

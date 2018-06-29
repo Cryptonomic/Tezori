@@ -93,7 +93,7 @@ const TezosAmount = (props: Props) => {
 TezosAmount.defaultProps = {
   amount: 0,
   iconName: 'tezos',
-  size: ms(0),
+  size: ms(2),
   weight: 'normal',
   color: 'primary',
   format: 6,
