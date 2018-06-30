@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
+import CopyIcon from '../CopyIcon'
 
 type Props = {
   address: string,
@@ -8,13 +9,16 @@ type Props = {
   className?: string,
   color?: string,
   size?: string,
+  text?: string,
 };
 
 const Address = styled.span`
-  display: inline-block;
-  color: ${({color, theme: {colors}}) => color ? color : colors.primary};
+  display: flex;
+  align-items: center;
+  color: ${({color, theme: { colors }}) => colors[color] };
   font-weight: ${({weight, theme: {typo: {weights}}}) => weight ? weight : weights.normal};
-  font-size: ${({size}) => size ? size : ms(0)};
+  font-size: ${({size}) => size ? size : ms(2)};
+  margin: 0 ${ms(0)} 0 0;
 `
 
 const FirstPart = styled.span`
@@ -23,19 +27,19 @@ const FirstPart = styled.span`
 
 
 const TezosAddress = (props: Props) => {
-  const { className, address, weight, size, color } = props;
-  const splicedAddress = address.match(/^([tT][zZ]1)(.+)/)
-
-  return splicedAddress && splicedAddress.length === 3 && (
-    <Address className={className} weight={weight} color={color} size={size}>
-      <FirstPart>{splicedAddress[1]}</FirstPart>
-      <span>{splicedAddress[2]}</span>
+  const { className, address, weight, size, color, text } = props;
+  return (
+    <Address className={className} weight={weight} color={color} size={size} text={text}>
+      <FirstPart>{address.slice(0, 3)}</FirstPart>
+      <span>{address.slice(3)}</span>
+      {text && <CopyIcon text={text} color={color} />}
     </Address>
-  )
+  );
 };
 
 TezosAddress.defaultProps = {
   weight: 'normal',
+  color: 'primary',
 };
 
 export default TezosAddress;

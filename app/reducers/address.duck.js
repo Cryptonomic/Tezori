@@ -5,22 +5,21 @@ import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 
-import * as status from '../constants/StatusTypes';
 import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
-import { changeDelegate } from './createAccount.duck';
+import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
-import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from '../utils/general';
+
 import {
   findAccount,
-  createAccount,
   findAccountIndex,
-  getAccountsForIdentity
+  getSyncAccount
 } from '../utils/account';
 import { 
   findIdentity, 
   findIdentityIndex, 
-  createIdentity 
+  createIdentity,
+  getSyncIdentity
 } from '../utils/identity';
 
 const {
@@ -93,134 +92,52 @@ const setSelectedAccount = actionCreator(
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 
-export function syncAccountTransactions(accountHash, parentHash) {
+export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
-    const identity = findIdentity(identities, parentHash);
-    const account = findAccount( identity, accountHash );
-    const transactions = await getTransactions(accountHash, network);
-
-    const foundIndex = identity && ( identity.accounts || [] )
-        .findIndex( account => account.accountId === accountHash );
+    const identity = findIdentity(identities, selectedParentHash);
+    const foundIndex = findAccountIndex( identity, selectedAccountHash );
+    const account = identity.accounts[ foundIndex ];
 
     if ( foundIndex > -1 ) {
-      identity.accounts[foundIndex] = {
-        ...account,
-        transactions
-      };
+      identity.accounts[ foundIndex ] = await getSyncAccount(
+        identities,
+        account,
+        network,
+        selectedAccountHash,
+        selectedParentHash
+      ).catch( e => {
+        console.log('-debug: Error in: syncAccount for:' + identity.publicKeyHash);
+        console.error(e);
+        return account;
+      });
     }
 
     dispatch(updateIdentity(identity));
   };
 }
 
-export function syncIdentityTransactions(accountHash) {
+export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities').toJS();
-    const identity = findIdentity(identities, accountHash);
-    const transactions = await getTransactions(accountHash, network);
-    dispatch(
-      updateIdentity({
-        ...identity,
-        transactions
-      })
-    );
-  };
-}
-
-export function syncSelectedTransactions() {
-  return async (dispatch, state) => {
     const selectedAccountHash = state().address.get('selectedAccountHash');
-    const selectedParentHash = state().address.get('selectedParentHash');
-    if ( selectedAccountHash === selectedParentHash ) {
-      await dispatch(syncIdentityTransactions(selectedAccountHash));
-    } else {
-      await dispatch(syncAccountTransactions(selectedAccountHash, selectedParentHash));
-    }
-  };
-}
+    let identity = findIdentity(identities, publicKeyHash);
 
-export function syncAccount(accountHash, parentHash) {
-  return async (dispatch, state) => {
-    const network = state().walletInitialization.get('network');
-    const identities = state().address.get('identities').toJS();
-    const identity = findIdentity(identities, parentHash);
-    const foundIndex = findAccountIndex( identity, accountHash );
-
-    if ( foundIndex > -1 ) {
-      const keyStore = getSelectedKeyStore( identities, accountHash, parentHash );
-      identity.accounts[ foundIndex ] = await activateAndUpdateAccount(
-        identity.accounts[ foundIndex ],
-        keyStore,
-        network
-      );
-    }
-
-    dispatch(updateIdentity(identity));
-  };
-}
-
-export function syncIdentity(accountHash) {
-  return async (dispatch, state) => {
-    const network = state().walletInitialization.get('network');
-    const identities = state().address.get('identities').toJS();
-    let identity = findIdentity(identities, accountHash);
-    const keyStore = getSelectedKeyStore(identities, accountHash, accountHash);
-    identity = await activateAndUpdateAccount(identity, keyStore, network);
-
-    let accounts =  await getAccountsForIdentity( network, accountHash )
-      .catch( () => []);
-
-    const stateAccountIndices = identity.accounts
-      .map( account =>
-        account.accountId
-      );
-
-    accounts = accounts.map(account => {
-      const foundIndex = stateAccountIndices.indexOf(account.accountId);
-      const overrides = {};
-      if ( foundIndex > -1 ) {
-        overrides.status = identity.accounts[foundIndex].status;
-      }
-      return createAccount({
-          ...account,
-          ...overrides
-        },
-        identity
-      );
+    identity = await getSyncIdentity(
+      identities,
+      identity,
+      network,
+      selectedAccountHash
+    ).catch( e => {
+      console.log('-debug: Error in: syncIdentity for:' + publicKeyHash);
+      console.error(e);
+      return identity;
     });
-
-    const accountIndices = accounts
-      .map( account =>
-        account.accountId
-      );
-
-    const accountsToConcat = identity.accounts.filter((account) => {
-      return accountIndices.indexOf(account.accountId) === -1;
-    });
-
-    accounts = accounts.concat(accountsToConcat);
 
     dispatch(
-      updateIdentity({
-        ...identity,
-        accounts
-      })
-    );
-
-    await Promise.all(
-      ( accounts || [])
-        .filter(( account ) => account.status !== status.READY )
-        .map(async account => {
-          try {
-            await dispatch(syncAccount( account.accountId, account.manager ));
-          } catch(e) {
-            console.error(e);
-            dispatch(addMessage(e.name, true));
-          }
-        })
+      updateIdentity(identity)
     );
   };
 }
@@ -228,42 +145,54 @@ export function syncIdentity(accountHash) {
 export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
-    const identities = state().address.get('identities').toJS();
+    let identities = state().address.get('identities').toJS();
+    const network = state().walletInitialization.get('network');
+    const selectedAccountHash = state().address.get('selectedAccountHash');
 
-    await Promise.all(
+    identities = await Promise.all(
       ( identities || [])
         .map(async identity => {
-          try {
-            await dispatch(syncIdentity(identity.publicKeyHash));
-          } catch(e) {
+          const { publicKeyHash } = identity;
+          return await getSyncIdentity(identities, identity, network, selectedAccountHash).catch( e => {
+            console.log('-debug: Error in: syncIdentity for: ' + publicKeyHash);
             console.error(e);
-            dispatch(addMessage(e.name, true));
-          }
-        })
+            return identity;
+          });
+      })
     );
-
-    await dispatch(syncSelectedTransactions());
+    dispatch( setIdentities( identities ) );
     dispatch(setIsLoading(false));
   }
 }
 
+export function setAccountDelegateAddress(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    if ( selectedAccountHash !== selectedParentHash ) {
+      const identities = state().address.get('identities').toJS();
+      const identity = findIdentity(identities, selectedParentHash);
+      const account = findAccount(identity, selectedAccountHash);
+      dispatch(updateAddress(account.delegateValue));
+    }
+  };
+}
+
 export function selectAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
+
     try{
       dispatch(setIsLoading(true));
       dispatch(setSelectedAccount(
         selectedAccountHash,
         selectedParentHash
       ));
-      dispatch(changeDelegate(selectedParentHash));
+      dispatch(setAccountDelegateAddress(selectedAccountHash, selectedParentHash));
       if (selectedAccountHash === selectedParentHash ) {
         await dispatch(syncIdentity(selectedAccountHash));
       } else {
         await dispatch(syncAccount(selectedAccountHash, selectedParentHash));
       }
-      await dispatch(syncSelectedTransactions());
-
     } catch (e) {
+      console.log('-debug: Error in: selectAccount for:' + selectedAccountHash, selectedParentHash);
       console.error(e);
       dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
@@ -292,7 +221,6 @@ export function selectDefaultAccountOrOpenModal() {
 
     const { publicKeyHash } = identities[0];
     dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
-    dispatch(changeDelegate(publicKeyHash));
 
     await dispatch(automaticAccountRefresh());
     await dispatch(syncWallet());
@@ -313,9 +241,11 @@ export function automaticAccountRefresh() {
       clearAccountRefreshInterval();
     }
 
-    currentAccountRefreshInterval = setInterval(() => {
-      dispatch(syncWallet());
-    }, REFRESH_INTERVAL);
+    currentAccountRefreshInterval = setInterval(() =>
+        dispatch(syncWallet())
+      ,
+      REFRESH_INTERVAL
+    );
   };
 }
 
@@ -336,6 +266,7 @@ export function setActiveTab(activeTab) {
         dispatch(setIsLoading(false));
         dispatch(updateSeed(seed));
       } catch (e) {
+        console.log('-debug: Error in: setActiveTab for:' + activeTab);
         console.error(e);
         dispatch(addMessage(e.name, true));
         dispatch(setIsLoading(false));
@@ -428,6 +359,7 @@ export function importAddress() {
       dispatch(clearState());
       dispatch(setIsLoading(false));
     } catch (e) {
+      console.log('-debug: Error in: importAddress for:' + activeTab);
       console.error(e);
       dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
@@ -537,13 +469,6 @@ function addNewAccountToIdentity(publicKeyHash, account, identities) {
     }
     return identity;
   });
-}
-
-function createSelectedAccount({
-  balance = 0,
-  transactions = []
-}) {
-  return fromJS({ balance, transactions });
 }
 
 export function clearAccountRefreshInterval() {

@@ -51,6 +51,7 @@ export const confirmPassPhrase = actionCreator(
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount() {
   return async (dispatch, state) => {
+    dispatch(setIsLoading(true));
     const publicKeyHash = state().address.get('selectedParentHash');
     const delegate = state().createAccount.get('delegate');
     const amount = state().createAccount.get('amount');
@@ -60,9 +61,6 @@ export function createNewAccount() {
     const identities = state().address.get('identities').toJS();
 
     const passPhrase = state().createAccount.get('passPhrase');
-    const confirmedPassPhrase = state().createAccount.get(
-      'confirmedPassPhrase'
-    );
     const network = state().walletInitialization.get('network');
 
     const validations = [
@@ -71,11 +69,6 @@ export function createNewAccount() {
       { value: amountInUtez, type: 'posNum', name: 'Amount'},
       { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' },
-      {
-        value: [passPhrase, confirmedPassPhrase],
-        type: 'samePassPhrase',
-        name: 'Pass Phrases'
-      }
     ];
 
     const error = displayError(validations);
@@ -84,7 +77,6 @@ export function createNewAccount() {
     }
 
     try {
-      dispatch(setIsLoading(true));
       const identity = findIdentity(identities, publicKeyHash);
       const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
       
@@ -118,12 +110,11 @@ export function createNewAccount() {
         )
       );
       dispatch(clearCreateAccountState());
-      dispatch(setIsLoading(false));
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(setIsLoading(false));
     }
+    dispatch(setIsLoading(false));
   };
 }
 
@@ -139,14 +130,11 @@ const initState = fromJS({
   confirmedPassPhrase: ''
 });
 
-// Todo: make sure that no operation is made on accounts that are just created and hasnt been activated.
 // Todo: We need to update balance of account as soon as we send money from it, - waiting for update might be a bad idea
 export default function createAccount(state = initState, action) {
   switch (action.type) {
-    case CLEAR_CREATE_ACCOUNT_STATE: {
-      const delegate = state.get('delegate');
-      return initState.set('delegate', delegate)
-    }
+    case CLEAR_CREATE_ACCOUNT_STATE:
+      return initState;
     case CLOSE_CREATE_ACCOUNT_MODAL:
       return state.set('isModalOpen', false);
     case OPEN_CREATE_ACCOUNT_MODAL:

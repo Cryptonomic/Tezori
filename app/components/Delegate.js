@@ -17,7 +17,6 @@ import {
   showConfirmationModal,
   closeConfirmationModal,
   sendConfirmation,
-  setOriginalAddress
 } from '../reducers/delegate.duck';
 
 import styles from './Delegate.css';
@@ -37,13 +36,8 @@ const UpdateButton = styled(Button)`
 class Delegate extends Component<Props> {
   props: Props;
 
-  componentDidMount() {
-    this.props.setOriginalAddress();
-  }
-
   onModalClose = () => {
     this.props.updatePassword('');
-    this.props.setOriginalAddress();
     this.props.closeConfirmationModal();
   };
 
@@ -103,17 +97,19 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address, showConfirmationModal, updateAddress } = this.props;
+    const { isReady, address, showConfirmationModal, updateAddress } = this.props;
 
     return (
       <Container>
         <TextField
-          floatingLabelText="New Address"
+          floatingLabelText="Delegate Address"
           value={address}
+          style={{minWidth: 340, width: 'auto'}}
           onChange={(_, newAddress) => updateAddress(newAddress)}
         />
 
         <UpdateButton
+          disabled={ !isReady }
           onClick={showConfirmationModal}
           buttonTheme="secondary"
           small
@@ -147,7 +143,6 @@ function mapDispatchToProps(dispatch) {
       showConfirmationModal,
       closeConfirmationModal,
       sendConfirmation,
-      setOriginalAddress
     },
     dispatch
   );

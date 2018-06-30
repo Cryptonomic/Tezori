@@ -17,9 +17,10 @@ import Send from './Send';
 import Receive from './Receive';
 import Delegate from './Delegate';
 import Loader from './Loader';
-import tabConstants from '../constants/tabConstants';
+import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
+import { READY } from '../constants/StatusTypes';
 
 import { syncWallet } from '../reducers/address.duck';
 
@@ -28,8 +29,19 @@ const Container = styled.section`
 `;
 
 const Tab = styled(Button)`
-  background: ${({ isActive, theme: { colors } }) =>
-  isActive ? colors.white : colors.accent};
+  background: ${({ isActive, isReady, theme: { colors } }) => {
+  const color = isActive
+    ? colors.white
+    : colors.accent;
+
+  const inActiveColors = isActive
+    ? colors.white
+    : colors.disabled;
+
+  return isReady
+    ? color
+    : inActiveColors
+  }};
   color: ${({ isActive, theme: { colors } }) =>
   isActive ? colors.primary : lighten(0.4, colors.accent)};
   cursor: pointer;
@@ -40,6 +52,7 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
+  background-color: ${({ theme: { colors } }) => colors.disabled};
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 `;
@@ -78,8 +91,6 @@ const Description = (props:DescriptionProps) => {
   )
 }
 
-const { TRANSACTIONS, SEND, RECEIVE, DELEGATE } = tabConstants;
-
 type Props = {
   identities: array,
   isLoadingTransactions: boolean,
@@ -105,73 +116,65 @@ class ActionPanel extends Component<Props, State> {
     this.setState({ activeTab: tab })
   }
 
-  renderSection = ( transactions ) => {
-    const { selectedAccountHash } = this.props;
+  renderSection = () => {
+    const { selectedAccount, selectedAccountHash } = this.props;
+    const transactions = selectedAccount.get('transactions');
+    const isReady = selectedAccount.get('status') === READY;
 
     switch (this.state.activeTab) {
       case DELEGATE:
-        return (
-          <SectionContainer>
-            <Delegate />
-          </SectionContainer>
-        );
+        return <Delegate isReady={ isReady } />;
       case RECEIVE:
-        return (
-          <SectionContainer>
-            <Receive address={selectedAccountHash} />
-          </SectionContainer>
-        );
+        return <Receive address={selectedAccountHash} />;
       case SEND:
-        return (
-          <SectionContainer>
-            <Send />
-          </SectionContainer>
-        );
+        return <Send isReady={ isReady } />;
       case TRANSACTIONS:
       default: {
-        return (
-          <SectionContainer>
-            {
-              isEmpty(transactions.toJS())
-                ?
-                <EmptyState
-                  imageSrc={transactionsEmptyState}
-                  title={'You have not made any transactions yet'}
-                  description={
-                  <Description
-                    onReceiveClick={() => this.handleLinkPress(RECEIVE)}
-                    onSendClick={() => this.handleLinkPress(SEND)}
-                  />}
-                />
-                :
-                <Fragment>
-                  <Transactions transactions={transactions} />
-                  <PageNumbers
-                    currentPage={this.state.currentPage}
-                    numberOfPages={4}
-                    onClick={currentPage => this.setState({ currentPage })}
-                  />
-                  {this.props.isLoadingTransactions && <Loader />}
-                </Fragment>
+        return isEmpty(transactions.toJS())
+          ?
+          (
+            <EmptyState
+              imageSrc={transactionsEmptyState}
+              title={'You have not made any transactions yet'}
+              description={
+              <Description
+                onReceiveClick={() => this.handleLinkPress(RECEIVE)}
+                onSendClick={() => this.handleLinkPress(SEND)}
+              />
             }
-          </SectionContainer>
-        );
+            />
+          )
+          :
+          (
+            <Fragment>
+              <Transactions transactions={transactions} />
+              <PageNumbers
+                currentPage={this.state.currentPage}
+                numberOfPages={4}
+                onClick={currentPage => this.setState({ currentPage })}
+              />
+              {this.props.isLoadingTransactions && <Loader />}
+            </Fragment>
+          )
+          ;
       }
     }
   };
 
   render() {
-    const tabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
 
     const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex, syncWallet } = this.props;
-    const transactions = selectedAccount.get('transactions');
     const balance = selectedAccount.get('balance');
-    const  isManagerAddress = selectedAccountHash === selectedParentHash;
+    const isManagerAddress = selectedAccountHash === selectedParentHash;
     const { activeTab } = this.state;
+    const isReady = selectedAccount.get('status') === READY;
+
+    const tabs = isManagerAddress ? [TRANSACTIONS, SEND, RECEIVE] : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
 
     return (
       <Container>
         <BalanceBanner
+          isReady={ isReady }
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIdentity={parentIdentity}
@@ -185,6 +188,7 @@ class ActionPanel extends Component<Props, State> {
             <Tab
               isActive={activeTab === tab}
               key={tab}
+              isReady={ isReady }
               buttonTheme="plain"
               onClick={() => this.setState({ activeTab: tab })}
             >
@@ -192,8 +196,10 @@ class ActionPanel extends Component<Props, State> {
             </Tab>
           ))}
         </TabList>
+        <SectionContainer>
+          { this.renderSection() }
+        </SectionContainer>
 
-        { this.renderSection(transactions) }
       </Container>
     );
   }

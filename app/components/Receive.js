@@ -29,8 +29,11 @@ const HashContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   color: ${({ theme: { colors } }) => colors.primary};
-  font-size: ${ms(3)};
   position: relative;
+
+  @media (max-width: 1200px) {
+    align-items: center;
+  }
 `;
 
 const Hash = styled(H4)`
@@ -39,17 +42,26 @@ const Hash = styled(H4)`
 
 const ReceiveContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
   width: 100%;
   padding: ${ms(2)} 0 ${ms(6)} 0;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const QRCodeContainer = styled.canvas`
   border: 1px solid ${({ theme: { colors } }) => colors.gray1};
   width: ${ms(9)};
   height: ${ms(9)};
-  margin-right: ${ms(5)};
+  margin: 0 ${ms(5)} 0 0;
+
+  @media (max-width: 1200px) {
+    margin: 0;
+  }
 `;
+
 
 export default class Receive extends Component<Props> {
   props: Props;
@@ -58,7 +70,7 @@ export default class Receive extends Component<Props> {
     showCopyConfirmation: false
   };
 
-  componentDidMount() {
+  renderQRCode() {
     try {
       QRCode.toCanvas(
         this.canvasRef.current,
@@ -70,6 +82,17 @@ export default class Receive extends Component<Props> {
       );
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  componentDidMount() {
+    this.renderQRCode();
+  }
+
+  componentDidUpdate(newProps) {
+    const { address } = this.props;
+    if ( newProps.address !== address ) {
+      this.renderQRCode();
     }
   }
 
@@ -105,7 +128,10 @@ export default class Receive extends Component<Props> {
           <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
             Copied!
           </CopyConfirmationTooltip>
-          <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
+          <Button
+            onClick={this.copyToClipboard}
+            buttonTheme="secondary" small
+          >
             Copy Address
           </Button>
         </HashContainer>

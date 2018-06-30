@@ -1,129 +1,154 @@
 // @flow
 import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import { utezToTez } from '../utils/currancy';
+import Tooltip from '../Tooltip';
+import { ms } from '../../styles/helpers';
+import TezosIcon from '../TezosIcon';
+import { utezToTez } from '../../utils/currancy';
 
-import Button from './Button';
-import tezosLogo from '../../resources/tezosLogo.png';
-import Loader from './Loader';
+import Button from '../Button';
+import Loader from '../Loader';
 
-import styles from './CreateAccountModal.css';
+import styles from './index.css';
 import {
   changeAmount,
   changeDelegate,
   changeFee,
   createNewAccount,
-  clearCreateAccountState,
-  updatePassPhrase,
-  confirmPassPhrase,
-  passPhrase,
-  confirmedPassPhrase
-} from '../reducers/createAccount.duck';
+  closeCreateAccountModal,
+  updatePassPhrase
+} from '../../reducers/createAccount.duck';
 
 type Props = {
-  amount: any,
-  passPhrase: string,
-  confirmedPassPhrase: string,
   changeAmount: Function,
   changeDelegate: Function,
   changeFee: Function,
-  clearCreateAccountState: Function,
+  closeCreateAccountModal: Function,
   createNewAccount: Function,
   updatePassPhrase: Function,
-  confirmPassPhrase: Function,
-  delegate: string,
-  fee: number,
   isLoading: boolean,
   isModalOpen: boolean,
   operation: string
 };
 
-class CreateAccountModal extends Component<Props> {
+const HelpIcon = styled(TezosIcon)`
+  padding: 0 0 0 ${ms(-4)};
+`;
+
+
+
+class AddDelegateModal extends Component<Props> {
   props: Props;
+  state = {
+    delegate: '',
+    amount: null,
+    fee: null,
+    passPhrase: ''
+  };
+
   changeAmount = (_, amount) => {
+    this.setState({amount});
     this.props.changeAmount(amount);
   };
 
   changeDelegate = (_, delegate) => {
+    this.setState({delegate});
     this.props.changeDelegate(delegate);
   };
 
   changeFee = (_, index, fee) => {
+    this.setState({fee});
     this.props.changeFee(fee);
   };
 
   updatePassPhrase = (_, newPassPhrase) => {
+    this.setState({passPhrase: newPassPhrase});
     this.props.updatePassPhrase(newPassPhrase);
   };
 
-  confirmPassPhrase = (_, newPassPhrase) => {
-    this.props.confirmPassPhrase(newPassPhrase);
+  renderToolTipComponent = () => {
+    return (
+      <div className={styles.tooltipContainer}>
+        <div className={styles.tooltipTitle}>Setting a Delegate</div>
+        <div className={styles.tooltipContent1}>You can always change the delegate at a later time.</div>
+        <div className={styles.tooltipContent1}>There is a fee for changing the delegate.</div>
+        <div className={styles.tooltipContent2}>You can only delegate to the Manager Address. The Manager Address always starts with "tz1".</div>
+      </div>
+    );
   };
 
   renderCreationBody = () => {
+    const { delegate, amount, fee, passPhrase } = this.state;
+    const isDisabled = !delegate || !amount || !fee || !passPhrase;
     return (
       <Fragment>
         <CloseIcon
           className={styles.closeIcon}
           style={{ fill: '#7190C6' }}
-          onClick={this.props.clearCreateAccountState}
+          onClick={this.props.closeCreateAccountModal}
         />
         <div className={styles.delegateContainer}>
           <TextField
-            floatingLabelText="Delegate"
+            floatingLabelText="Delegate Address"
             style={{ width: '100%' }}
-            value={this.props.delegate}
             onChange={this.changeDelegate}
           />
+          <Tooltip
+            position="bottom"
+            content={this.renderToolTipComponent()}
+            align={{
+              offset: [70, 0],
+            }}
+            arrowPos={{
+              left: '70%'
+            }}
+          >
+            <Button buttonTheme="plain" className={styles.textfieldTooltip}>
+              <HelpIcon
+                iconName="help"
+                size={ms(0)}
+                color={'secondary'}
+              />
+            </Button>
+          </Tooltip>
         </div>
         <div className={styles.amountAndFeeContainer}>
           <div className={styles.amountSendContainer}>
             <TextField
               floatingLabelText="Amount"
-              style={{ width: '80%' }}
-              default="0"
-              value={this.props.amount}
+              style={{ width: '100%' }}
               onChange={this.changeAmount}
             />
-            <img alt="tez" src={tezosLogo} className={styles.tezosSymbol} />
           </div>
           <div className={styles.feeContainer}>
-            <SelectField value={this.props.fee} onChange={this.changeFee}>
-              <MenuItem value={100} primaryText={ `Low Fee: ${ utezToTez(100)} ` } />
-              <MenuItem value={200} primaryText={ `Medium Fee: ${ utezToTez(200)}` } />
-              <MenuItem value={400} primaryText={ `High Fee: ${ utezToTez(400)}` } />
+            <SelectField floatingLabelText="Fee" value={fee}  onChange={this.changeFee} className={styles.feeSelectComponent}>
+              <MenuItem value={100} primaryText={`Low Fee: ${ utezToTez(100)} `} />
+              <MenuItem value={200} primaryText={`Medium Fee: ${ utezToTez(200)}`} />
+              <MenuItem value={400} primaryText={`High Fee: ${ utezToTez(400)}`} />
               <MenuItem value={500} primaryText="Custom" />
             </SelectField>
           </div>
         </div>
         <div className={styles.amountAndFeeContainer}>
           <TextField
-            floatingLabelText="Pass Phrase"
+            floatingLabelText="Password"
             type="password"
-            style={{ width: '45%' }}
-            default="0"
-            value={this.props.passPhrase}
+            style={{ width: '100%' }}
             onChange={this.updatePassPhrase}
-          />
-          <TextField
-            floatingLabelText="Confirm Pass Phrase"
-            type="password"
-            style={{ width: '45%' }}
-            default="0"
-            value={this.props.confirmedPassPhrase}
-            onChange={this.confirmPassPhrase}
           />
         </div>
         <div className={styles.passwordButtonContainer}>
           <Button
             buttonTheme="primary"
+            disabled={this.props.isLoading || isDisabled}
+            className={styles.delegateButton}
             onClick={this.props.createNewAccount}
-            disabled={this.props.isLoading}
           >
-            Confirm
+            Delegate
           </Button>
         </div>
         {this.props.isLoading && <Loader />}
@@ -138,7 +163,7 @@ class CreateAccountModal extends Component<Props> {
         <div>
           <Button
             buttonTheme="primary"
-            onClick={this.props.clearCreateAccountState}
+            onClick={this.props.closeCreateAccountModal}
             small
           >
             Close
@@ -153,9 +178,9 @@ class CreateAccountModal extends Component<Props> {
       <Dialog
         modal
         open={this.props.isModalOpen}
-        title="Add account"
-        bodyStyle={{ padding: '50px' }}
-        titleStyle={{ padding: '50px 50px 0px' }}
+        title="Add a Delegate"
+        bodyStyle={{ padding: '5px 80px 50px 80px' }}
+        titleStyle={{ padding: '50px 70px 0px' }}
       >
         {!this.props.operation && this.renderCreationBody()}
         {this.props.operation && this.renderOperationBody()}
@@ -166,14 +191,9 @@ class CreateAccountModal extends Component<Props> {
 
 function mapStateToProps({ createAccount }) {
   return {
-    delegate: createAccount.get('delegate'),
-    fee: createAccount.get('fee'),
     isLoading: createAccount.get('isLoading'),
     operation: createAccount.get('operation'),
-    isModalOpen: createAccount.get('isModalOpen'),
-    amount: createAccount.get('amount'),
-    passPhrase: createAccount.get('passPhrase'),
-    confirmedPassPhrase: createAccount.get('confirmedPassPhrase')
+    isModalOpen: createAccount.get('isModalOpen')
   };
 }
 
@@ -183,13 +203,12 @@ function mapDispatchToProps(dispatch) {
       changeAmount,
       changeDelegate,
       changeFee,
-      clearCreateAccountState,
+      closeCreateAccountModal,
       createNewAccount,
-      updatePassPhrase,
-      confirmPassPhrase
+      updatePassPhrase
     },
     dispatch
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);
