@@ -4,7 +4,7 @@ A wallet for the Tezos blockchain based on [Conseil](https://github.com/Cryptono
 
 [![Build Status](https://travis-ci.org/Cryptonomic/Tezos-Wallet.svg?branch=master)](https://travis-ci.org/Cryptonomic/Tezos-Wallet)
 
-### Warning
+## Warning
 
 This codebase is under active deployment and not yet ready for production use. Please do not use it in a live envrionment yet! 
 
