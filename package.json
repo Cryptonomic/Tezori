@@ -200,8 +200,6 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
-    "bip39": "^2.5.0",
-    "bs58check": "^2.1.1",
     "classnames": "^2.2.6",
     "conseiljs": "^0.1.21",
     "devtron": "^1.4.0",
@@ -209,8 +207,6 @@
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
-    "libsodium-wrappers": "^0.7.3",
-    "libsodium-wrappers-sumo": "^0.7.3",
     "lodash": "^4.17.10",
     "material-ui": "^0.20.1",
     "password-validator": "^4.1.1",
