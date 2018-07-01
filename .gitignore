@@ -45,6 +45,7 @@ app/style.css
 app/style.css.map
 app/defaultWalletNodes.json
 app/savedWalletNode.json
+app/walletNodes.js
 dist
 dll
 main.js

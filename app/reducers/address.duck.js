@@ -236,7 +236,7 @@ export function selectDefaultAccountOrOpenModal() {
     } catch( e ) {
       console.log('e', e);
     }
-
+    
     await dispatch(syncWallet());
     dispatch(setIsLoading(false));
   };

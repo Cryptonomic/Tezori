@@ -41,22 +41,20 @@ class AddNodeModal extends Component<Props> {
   props: Props;
   state = {
     name: '',
-    apiKey: '',
-    url: ''
+    address: ''
   };
 
   handleNameChange = (_, name) => this.setState({ name });
-  handleApiKeyChange = (_, apiKey) => this.setState({ apiKey });
-  handleUrlChange = (_, url) => this.setState({ url });
+  handleAddressChange = (_, address) => this.setState({ address });
   handleAddNode = () => {
-    const { name, apiKey, url } = this.state;
+    const { name, address } = this.state;
     const { type, closeAddNodeModal, addNode, setSelected } = this.props;
-    addNode({ name, apiKey, url, type });
+    addNode({ name, address, type });
     setSelected(name, type);
     closeAddNodeModal();
   };
   render() {
-    const { name, apiKey, url } = this.state;
+    const { name, address } = this.state;
     const { type, isModalOpen, closeAddNodeModal } = this.props;
     
     const title = type === CONSEIL
@@ -93,14 +91,14 @@ class AddNodeModal extends Component<Props> {
         <TextField
           floatingLabelText="URL (e.g https://127.0.0.1:19731/)"
           style={{ width: '100%' }}
-          value={ url }
-          onChange={this.handleUrlChange}
+          value={ address }
+          onChange={this.handleAddressChange}
         />
 
         <StyledSaveButton
           buttonTheme="primary"
           onClick={this.handleAddNode}
-          disabled={( !name || !url )}
+          disabled={( !name || !address )}
         >
           Save
         </StyledSaveButton>
