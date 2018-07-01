@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import { flatten, pick } from 'lodash';
+import { push } from 'react-router-redux';
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
@@ -40,6 +41,7 @@ const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
 const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
+const SET_IS_INITIATED = 'SET_IS_INITIATED';
 const SET_IS_LOADING = 'SET_IS_LOADING';
 const CLEAR_STATE = 'CLEAR_STATE';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
@@ -62,6 +64,7 @@ export const clearEntireAddressState = actionCreator(
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
 export const closeAddAddressModal = actionCreator(CLOSE_ADD_ADDRESS_MODAL);
 const updateActiveTab = actionCreator(SET_ACTIVE_ADD_ADDRESS_TAB, 'activeTab');
+export const setIsInitiated = actionCreator(SET_IS_INITIATED, 'isInitiated');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const clearState = actionCreator(CLEAR_STATE);
 export const updatePrivateKey = actionCreator(UPDATE_PRIVATE_KEY, 'privateKey');
@@ -205,24 +208,31 @@ export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
     const initWalletState = state().walletInitialization;
-    let identities = initWalletState.getIn(['wallet', 'identities']);
-    identities = identities.toJS();
-    const network = initWalletState.get('network');
+    const isInitiated = state().address.get('isInitiated');
+    if ( isInitiated ) {
+      return false;
+    }
+    try {
+      let identities = initWalletState.getIn(['wallet', 'identities']).toJS();
+      const network = initWalletState.get('network');
 
-    if ( identities.length === 0 ) {
-      return dispatch(openAddAddressModal());
+      if ( identities.length === 0 ) {
+        return dispatch(openAddAddressModal());
+      }
+      dispatch(automaticAccountRefresh());
+      identities = identities
+        .map( identity =>
+          createIdentity(identity)
+        );
+      dispatch( setIdentities( identities ) );
+
+      const { publicKeyHash } = identities[0];
+      dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
+      dispatch(setIsInitiated(true));
+    } catch( e ) {
+      console.log('e', e);
     }
 
-    identities = identities
-      .map( identity =>
-        createIdentity(identity)
-      );
-    dispatch( setIdentities( identities ) );
-
-    const { publicKeyHash } = identities[0];
-    dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
-
-    await dispatch(automaticAccountRefresh());
     await dispatch(syncWallet());
     dispatch(setIsLoading(false));
   };
@@ -377,6 +387,7 @@ const initState = fromJS({
   passPhrase: '',
   privateKey: '',
   publicKey: '',
+  isInitiated: false,
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
@@ -447,6 +458,8 @@ export default function address(state = initState, action) {
       return state.set('passPhrase', action.passPhrase);
     case CONFIRM_PASS_PHRASE:
       return state.set('confirmedPassPhrase', action.passPhrase);
+    case SET_IS_INITIATED:
+      return state.set('isInitiated', action.isInitiated);
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:
