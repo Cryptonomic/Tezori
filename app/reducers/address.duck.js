@@ -53,6 +53,7 @@ const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_ADDRESS_PASS_PHRASE';
 const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
+const UPDATE_PKH = 'UPDATE_PKH';
 const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
@@ -79,6 +80,7 @@ export const confirmPassPhrase = actionCreator(
   'passPhrase'
 );
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
+export const updatePkh = actionCreator(UPDATE_PKH, 'pkh');
 export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activationCode');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
@@ -301,6 +303,7 @@ export function importAddress() {
     } = ADD_ADDRESS_TYPES;
     const activeTab = state().address.get('activeTab');
     const seed = state().address.get('seed');
+    const pkh = state().address.get('pkh');
     const activationCode = state().address.get('activationCode');
     const username = state().address.get('username');
     const passPhrase = state().address.get('passPhrase');
@@ -323,9 +326,9 @@ export function importAddress() {
         return dispatch(addMessage(error, true));
       }
     }
+    dispatch(setIsLoading(true));
     try {
       let identity = null;
-      dispatch(setIsLoading(true));
       switch (activeTab) {
         case PRIVATE_KEY:
           break;
@@ -334,9 +337,9 @@ export function importAddress() {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           break;
         case FUNDRAISER:
-          identity = await unlockFundraiserIdentity(seed, username, passPhrase);
+          identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
           const conseilNode = getSelected(nodes, CONSEIL);
-          
+
           const account = await getAccount(
             conseilNode.url,
             identity.publicKeyHash,
@@ -377,13 +380,13 @@ export function importAddress() {
       }
 
       dispatch(clearState());
-      dispatch(setIsLoading(false));
     } catch (e) {
       console.log('-debug: Error in: importAddress for:' + activeTab);
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(setIsLoading(false));
     }
+
+    dispatch(setIsLoading(false));
   };
 }
 
@@ -392,6 +395,7 @@ const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
   open: false,
   seed: '',
+  pkh: '',
   activationCode: '',
   username: '',
   passPhrase: '',
@@ -460,6 +464,8 @@ export default function address(state = initState, action) {
       return state.set('publicKey', action.publicKey);
     case UPDATE_SEED:
       return state.set('seed', action.seed);
+    case UPDATE_PKH:
+      return state.set('pkh', action.pkh);
     case UPDATE_ACTIVATION_CODE:
       return state.set('activationCode', action.activationCode);
     case UPDATE_USERNAME:
