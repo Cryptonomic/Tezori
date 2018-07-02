@@ -22,7 +22,9 @@ import {
   passPhrase,
   updateSeed,
   updateActivationCode,
-  selectDefaultAccountOrOpenModal
+  selectDefaultAccountOrOpenModal,
+  nextAccountSlide,
+  generateNewMnemonic
 } from '../reducers/address.duck';
 
 type Props = {
@@ -46,7 +48,9 @@ type Props = {
   confirmPassPhrase: Function,
   selectedAccountHash: string,
   selectDefaultAccountOrOpenModal: Function,
-  message: Object
+  message: Object,
+  currentSlide: number,
+  nextAccountSlide: Function
 };
 
 const Container = styled.div`
@@ -83,7 +87,10 @@ class AddressPage extends Component<Props> {
       updateSeed,
       updateActivationCode,
       selectedAccountHash,
-      message
+      message,
+      currentSlide,
+      nextAccountSlide,
+      generateNewMnemonic
     } = this.props;
 
     return (
@@ -111,6 +118,9 @@ class AddressPage extends Component<Props> {
           updateSeed={updateSeed}
           updateActivationCode={updateActivationCode}
           selectedAccountHash={selectedAccountHash}
+          nextAccountSlide={nextAccountSlide}
+          currentSlide={currentSlide}
+          generateNewMnemonic={generateNewMnemonic}
         />
         <MessageBar message={message} />
       </Container>
@@ -130,7 +140,8 @@ function mapStateToProps({ address, message }) {
     privateKey: address.get('privateKey'),
     publicKey: address.get('publicKey'),
     isAddAddressLoading: address.get('isLoading'),
-    selectedAccountHash: address.get('selectedAccountHash')
+    selectedAccountHash: address.get('selectedAccountHash'),
+    currentSlide: address.get('currentSlide')
   };
 }
 
@@ -147,7 +158,9 @@ function mapDispatchToProps(dispatch) {
       confirmPassPhrase,
       updateSeed,
       updateActivationCode,
-      selectDefaultAccountOrOpenModal
+      selectDefaultAccountOrOpenModal,
+      nextAccountSlide,
+      generateNewMnemonic
     },
     dispatch
   );

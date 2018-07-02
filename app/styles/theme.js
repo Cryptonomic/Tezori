@@ -23,6 +23,12 @@ export const Theme = {
     gray3: '#5571a7',
     gray4: '#fcfcfc',
     gray5: '#9b9b9b',
+
+    // font colors
+    index0: '#94a9d1',
+
+    // black colors
+    black1: '#1e1313'
   },
   animations: {
     defaultTime: '300ms',

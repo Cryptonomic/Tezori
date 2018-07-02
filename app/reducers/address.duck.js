@@ -54,6 +54,7 @@ const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
 const SET_IDENTITIES = 'SET_IDENTITIES';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
+const NEXT_ACCOUNT_SLIDE = 'NEXT_ACCOUNT_SLIDE';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const clearEntireAddressState = actionCreator(
@@ -77,7 +78,7 @@ export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activ
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
-
+export const nextAccountSlide = actionCreator(NEXT_ACCOUNT_SLIDE, 'currentSlide');
 
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
@@ -275,9 +276,20 @@ export function setActiveTab(activeTab) {
   };
 }
 
+export function generateNewMnemonic() {
+  return async dispatch => {
+    dispatch(setIsLoading(true));
+    const seed = await generateMnemonic();
+
+    dispatch(setIsLoading(false));
+    dispatch(updateSeed(seed));
+  };
+}
+
 function setImportDuplicationError(dispatch) {
   dispatch(addMessage('Identity already exist', true));
 }
+
 
 export function importAddress() {
   return async (dispatch, state) => {
@@ -294,23 +306,15 @@ export function importAddress() {
     const passPhrase = state().address.get('passPhrase');
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
 
+    const walletpassword = state().walletInitialization.get('password');
+    console.log('seed=== ', seed);
+
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if( activeTab === GENERATE_MNEMONIC ) {
-      const validations = [
-        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'}
-      ];
-
-      const error = displayError(validations);
-      if ( error ) {
-        return dispatch(addMessage(error, true));
-      }
-    }
     try {
       let identity = null;
       dispatch(setIsLoading(true));
@@ -319,27 +323,28 @@ export function importAddress() {
           break;
         case GENERATE_MNEMONIC:
         case SEED_PHRASE:
-          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          identity = await unlockIdentityWithMnemonic(seed, walletpassword);
           break;
         case FUNDRAISER:
-          identity = await unlockFundraiserIdentity(seed, username, passPhrase);
-          const account = await getAccount(network, identity.publicKeyHash).catch( () => false );
-          if ( !account ) {
-            const activating = await sendIdentityActivationOperation(
-              network,
-              identity,
-              activationCode
-            )
-              .catch((err) => {
-                err.name = err.message;
-                throw err;
-              });
-            dispatch(addMessage(
-              `Successfully sent activation operation ${activating.operationGroupID}.`,
-              false
-            ));
-          }
+          identity = await unlockFundraiserIdentity(seed, username, passPhrase);          
           break;
+      }
+
+      const account = await getAccount(network, identity.publicKeyHash).catch( () => false );
+      if ( !account ) {
+        const activating = await sendIdentityActivationOperation(
+          network,
+          identity,
+          activationCode
+        )
+        .catch((err) => {
+          err.name = err.message;
+          throw err;
+        });
+        dispatch(addMessage(
+          `Successfully sent activation operation ${activating.operationGroupID}.`,
+          false
+        ));
       }
 
       if ( identity ) {
@@ -380,7 +385,8 @@ const initState = fromJS({
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
-  selectedParentHash: ''
+  selectedParentHash: '',
+  currentSlide: 0,
 });
 
 export default function address(state = initState, action) {
@@ -453,6 +459,8 @@ export default function address(state = initState, action) {
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
         .set('selectedParentHash', action.selectedParentHash);
+    case NEXT_ACCOUNT_SLIDE:
+      return state.set('currentSlide', action.currentSlide)
     default:
       return state;
   }
