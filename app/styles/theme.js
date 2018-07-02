@@ -14,7 +14,8 @@ export const Theme = {
 
     // Regular colors
     white: '#FFFFFF',
-    blue: '#2c7df7',
+    blue1: '#2c7df7',
+    blue2: '#0099dc',
 
     // Gray colors
     gray0: '#191414',

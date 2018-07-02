@@ -43,7 +43,7 @@ const Tab = styled(Button)`
     : inActiveColors
   }};
   color: ${({ isActive, theme: { colors } }) =>
-  isActive ? colors.primary : lighten(0.4, colors.accent)};
+  isActive ? colors.primary : lighten(0.4, colors.accent) };
   cursor: pointer;
   text-align: center;
   font-weight: 500;
@@ -52,12 +52,7 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
-  background: ${({ isReady, theme: { colors } }) => {
-  return isReady
-    ? colors.accent
-    : colors.disabled;
-  }};
-
+  background-color: ${({ isReady, theme: { colors } }) => isReady ? colors.accent: colors.disabled };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 `;
@@ -71,7 +66,7 @@ const SectionContainer = styled.div`
 `;
 
 const Link = styled.span`
-  color: ${ ({ theme: { colors } }) => colors.blue };
+  color: ${ ({ theme: { colors } }) => colors.blue1 };
   cursor: pointer;
 `
 
@@ -209,7 +204,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
         />
 
-        <TabList isReady={ isReady } >
+        <TabList isReady={ isReady }>
           {tabs.map(tab => (
             <Tab
               isActive={activeTab === tab}

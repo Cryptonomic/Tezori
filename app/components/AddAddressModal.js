@@ -2,9 +2,10 @@ import React, { Fragment } from 'react';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import classNames from 'classnames';
-import styled from 'styled-components';
-import { lighten } from 'polished';
-import { ms } from '../styles/helpers';
+import styled from 'styled-components'
+import { lighten } from 'polished'
+import { shell } from 'electron'
+import { ms } from '../styles/helpers'
 
 import Button from './Button';
 import { H4 } from './Heading';
@@ -59,19 +60,27 @@ const HelpIcon = styled(TezosIcon)`
 
 const TooltipContainer = styled.div`
   font-size: ${ms(-1)};
-  color: ${({ theme: { colors } }) => colors.secondary};
-  max-width: ${ms(16)};
+  color: ${({ theme: { colors } }) => colors.primary };
+  max-width: ${ms(15.5)};
+  font-weight: ${({theme: {typo}}) => typo.weights.light };
 `
 
 const TooltipTitle = styled.p`
-  font-weight: ${({theme: {typo}}) => typo.weights.bold};
+  font-weight: ${({theme: {typo}}) => typo.weights.bold };
   margin: 0 0 ${ms(-1)} 0;
 `
 
-const TwoColumnsInputs = styled.div`
+const Row = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
   grid-column-gap: ${ms(1)};
+`
+
+const FirstRowInputs = styled(Row)`
+  grid-template-columns: 1fr 2fr;
+`
+
+const SecondRowInputs = styled(Row)`
+  grid-template-columns: 3fr 4fr;
 `
 
 const ImportButton = styled(Button)`
@@ -82,6 +91,12 @@ const StyledTooltip = styled(Tooltip)`
   &__tooltip-inner {
     background-color: ${({theme: {colors}}) => lighten(0.2, colors.secondary)};
   }
+`
+
+const Link = styled.span`
+  cursor: pointer;
+  text-decoration: underline;
+  color: ${ ({ theme: { colors } }) => colors.blue2 };
 `
 
 const PasswordTooltip = () => {
@@ -103,12 +118,13 @@ const EmailTooltip = () => {
 }
 
 const ActivationTooltip = () => {
+  const openLink = () => shell.openExternal('https://verification.tezos.com/')
   return (
     <TooltipContainer>
-      <TooltipTitle>Activation Code</TooltipTitle>
+      <TooltipTitle>KYC/AML Activation Code</TooltipTitle>
       This is the activation code that you received after completing the KYC/AML process. An activation code corresponds
       to a public key hash and is required if you participated in the Fundraiser.
-      You may complete the process at verification.tezos.com if you have not done so already.
+      You may complete the process at <Link onClick={openLink}>verification.tezos.com</Link> if you have not done so already.
     </TooltipContainer>
   )
 }
@@ -121,6 +137,10 @@ const PkhTooltip = () => {
     </TooltipContainer>
   )
 }
+
+const ActivationTooltipStyled = styled(ActivationTooltip)`
+  max-width: ${ms(14)}
+`
 
 export default function AddAddress(props: Props) {
   const {
@@ -148,12 +168,12 @@ export default function AddAddress(props: Props) {
   function renderAppBar() {
     return (
       <div className={styles.titleContainer}>
-        <div>Add an Address</div>
-        <CloseIcon
-          className={styles.closeIcon}
-          style={{ fill: 'white' }}
-          onClick={closeModal}
-        />
+        <div>Add an Account</div>
+          <CloseIcon
+            className={styles.closeIcon}
+            style={{ fill: 'white' }}
+            onClick={closeModal}
+          />
       </div>
     );
   }
@@ -206,13 +226,13 @@ export default function AddAddress(props: Props) {
               style={{ width: '100%' }}
               value={seed}
               onChange={(_, newSeed) => updateSeed(newSeed)}
-            />
-            <TwoColumnsInputs>
+              />
+            <FirstRowInputs>
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Fundraiser Password"
                   type="password"
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={passPhrase}
                   onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
                 />
@@ -231,7 +251,7 @@ export default function AddAddress(props: Props) {
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Public key hash"
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={ pkh }
                   onChange={(_, newPkh) => updatePkh(newPkh)}
                 />
@@ -245,13 +265,13 @@ export default function AddAddress(props: Props) {
                   </Button>
                 </StyledTooltip>
               </InputWithTooltip>
-            </TwoColumnsInputs>
+            </FirstRowInputs>
 
-            <TwoColumnsInputs>
+            <SecondRowInputs>
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Fundraiser Email Address"
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={username}
                   onChange={(_, newUsername) => updateUsername(newUsername)}
                 />
@@ -269,8 +289,8 @@ export default function AddAddress(props: Props) {
 
               <InputWithTooltip>
                 <TextField
-                  floatingLabelText="Activation Code"
-                  style={{ width: '100%' }}
+                  floatingLabelText="KYC/AML Activation Code"
+                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={activationCode}
                   onChange={(_, newActivationCode) => updateActivationCode(newActivationCode)}
                 />
@@ -284,7 +304,7 @@ export default function AddAddress(props: Props) {
                   </Button>
                 </StyledTooltip>
               </InputWithTooltip>
-            </TwoColumnsInputs>
+              </SecondRowInputs>
             <ImportButton
               buttonTheme="primary"
               onClick={importAddress}
