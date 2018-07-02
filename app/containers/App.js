@@ -4,8 +4,6 @@ import type { Node } from 'react';
 import styled from 'styled-components';
 import { ms } from '../styles/helpers';
 
-import 'react-tippy/dist/tippy.css'
-
 type Props = {
   children: Node
 };

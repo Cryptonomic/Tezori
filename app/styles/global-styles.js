@@ -55,13 +55,8 @@ injectGlobal`
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    -webkit-app-region: no-drag;
   }
 
-  button {
-    -webkit-app-region: no-drag;
-  }
-  
   div#root {
     height: 100vh;
   }  
