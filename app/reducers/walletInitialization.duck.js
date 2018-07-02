@@ -58,15 +58,15 @@ export function saveUpdatedWallet(identities) {
     try {
       dispatch(setIsLoading(true));
       const identities = state().address.get('identities').toJS();
-      const walletLocation = state().walletInitialization.get('walletLocation');
-      const walletFileName = state().walletInitialization.get('walletFileName');
-      const walletIdentities = state().walletInitialization.getIn([
+      const walletLocation = state().wallet.get('walletLocation');
+      const walletFileName = state().wallet.get('walletFileName');
+      const walletIdentities = state().wallet.getIn([
         'wallet',
         'identities'
       ]).toJS();
 
       const indices = walletIdentities.map( identity => identity.publicKeyHash );
-      const password = state().walletInitialization.get('password');
+      const password = state().wallet.get('password');
       const completeWalletPath = path.join(walletLocation, walletFileName);
 
 
@@ -99,10 +99,10 @@ export function saveUpdatedWallet(identities) {
 
 export function submitAddress(submissionType: 'create' | 'import') {
   return async (dispatch, state) => {
-    const walletLocation = state().walletInitialization.get('walletLocation');
-    const walletFileName = state().walletInitialization.get('walletFileName');
-    const password = state().walletInitialization.get('password');
-    const confirmedPassword = state().walletInitialization.get(
+    const walletLocation = state().wallet.get('walletLocation');
+    const walletFileName = state().wallet.get('walletFileName');
+    const password = state().wallet.get('password');
+    const confirmedPassword = state().wallet.get(
       'confirmedPassword'
     );
     const completeWalletPath = path.join(walletLocation, walletFileName);
@@ -116,7 +116,7 @@ export function submitAddress(submissionType: 'create' | 'import') {
       { value: `${walletLocation}/${walletFileName}`, type: 'validJS'},
       { value: password, type: 'notEmpty', name: 'Password' },
       { value: password, type: 'minLength8', name: 'Password' }
-    ]
+    ];
 
     if (submissionType == 'create') {
       validations.push({
@@ -156,42 +156,22 @@ export function submitAddress(submissionType: 'create' | 'import') {
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Reducer ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const initState = fromJS({
-  currentDisplay: DEFAULT,
-  isLoading: false,
   password: '',
-  confirmedPassword: '',
   walletFileName: '',
-  walletLocation: '',
-  wallet: {}
+  walletLocation: ''
 });
 
-export default function walletInitialization(state = initState, action) {
+export default function wallet(state = initState, action) {
   switch (action.type) {
     case CLEAR_WALLET_STATE:
       return initState;
-    case SET_CURRENT_WALLET:
-      return state.set('wallet', action.wallet);
-    case SET_DISPLAY:
-      return state.set('currentDisplay', action.currentDisplay);
-    case SET_IS_LOADING:
-      return state.set('isLoading', action.isLoading);
     case SET_WALLET_FILENAME:
       return state.set('walletFileName', action.walletFileName);
     case SET_WALLET_LOCATION:
       return state.set('walletLocation', action.walletLocation);
     case SET_PASSWORD:
       return state.set('password', action.password);
-    case SET_CONFIRMED_PASSWORD:
-      return state.set('confirmedPassword', action.password);
     default:
       return state;
   }
-}
-
-/* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export const getWalletName = state => {
-  const walletInitialization = get(state, 'walletInitialization');
-  const fileName = walletInitialization.get('walletFileName')
-  const walletName = fileName.split('.')
-  return walletName[0]
 }
