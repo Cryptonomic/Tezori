@@ -6,6 +6,8 @@ import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { getSelectedKeyStore } from '../utils/general'
+import { getSelected } from '../utils/nodes';
+import { TEZOS } from '../constants/NodesTypes';
 
 const {
   sendTransactionOperation,
@@ -68,7 +70,7 @@ export function sendConfirmation() {
     const toAddress = sendTezosState.get('toAddress');
     const amount = sendTezosState.get('amount');
     const fee = sendTezosState.get('fee');
-    const network = walletState.get('network');
+    const nodes = state().nodes.toJS();
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
     const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
@@ -82,8 +84,10 @@ export function sendConfirmation() {
         throw new Error({ name: 'You cant sent money to yourself.' });
       }
       dispatch(updateSendTezosLoading(true));
+      const { url, apiKey } = getSelected(nodes, TEZOS);
+      console.log('debug - kkkkk - url, apiKey', url, apiKey);
       const res = await sendTransactionOperation(
-        network,
+        url,
         keyStore,
         toAddress,
         tezToUtez(Number(amount.replace(/\,/g,''))),

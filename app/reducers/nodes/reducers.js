@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import {
   SET_SELECTED,
   ADD_NODE,
@@ -6,12 +7,13 @@ import {
   CLEAR_STATE
 } from './types';
 import { fromJS } from 'immutable';
-import { getWalletNodes, setWalletNodes } from '../../utils/nodes';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
-import * as defaultNodes from '../../walletNodes.json';
-const savedNodes = getWalletNodes();
-const initState = fromJS(savedNodes || defaultNodes);
+import * as defaultWalletNodes from '../../defaultWalletNodes.json';
+import {
+  getWalletNodes
+} from '../../utils/nodes';
 
+const initState = fromJS(getWalletNodes() || omit(defaultWalletNodes, ['default']));
 export default function nodes(state = initState, action) {
   switch (action.type) {
     case SET_SELECTED: {

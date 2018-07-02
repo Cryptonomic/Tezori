@@ -1,0 +1,18 @@
+{
+  "tezosSelectedNode": "Cryptonomic-Nautilus",
+  "conseilSelectedNode": "Cryptonomic-Conseil",
+  "list": [
+    {
+      "name": "Cryptonomic-Nautilus",
+      "type": "TEZOS",
+      "url": "http://165.227.215.9:8732/",
+      "apiKey": "hooman"
+    },
+    {
+      "name": "Cryptonomic-Conseil",
+      "type": "CONSEIL",
+      "url": "http://206.189.230.137:1337/tezos/zeronet",
+      "apiKey": "hooman"
+    }
+  ]
+}

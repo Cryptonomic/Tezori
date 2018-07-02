@@ -136,8 +136,10 @@ export function submitAddress(submissionType: 'create' | 'import') {
       if (submissionType === CREATE) {
         wallet = await createWallet(completeWalletPath, password);
       } else if (submissionType === IMPORT) {
-        wallet = await loadWallet(completeWalletPath, password)
-        .catch((err) => { dispatch(addMessage("Invalid wallet/password combination.", true))});
+        wallet = await loadWallet(completeWalletPath, password).catch((err) => {
+          err.name = 'Invalid wallet/password combination.';
+          throw err;
+        });
       }
 
       dispatch(setCurrentWallet(fromJS(wallet)));
@@ -160,7 +162,6 @@ const initState = fromJS({
   confirmedPassword: '',
   walletFileName: '',
   walletLocation: '',
-  network: 'zeronet',
   wallet: {}
 });
 

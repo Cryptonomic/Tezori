@@ -11,11 +11,12 @@ import { H2, H4 } from '../components/Heading/';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Check from 'material-ui/svg-icons/Navigation/check';
-
 import AddNodeModal from '../components/AddNodeModal/';
 import MessageBar from '../components/MessageBar';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 
+
+import { syncWallet } from '../reducers/address.duck';
 import {
   setSelected,
   removeNode
@@ -33,6 +34,7 @@ type Props = {
   conseilNodes: array,
   tezosSelectedNode: string,
   tezosNodes: array,
+  syncWallet: Function,
   setSelected: Function,
   removeNode: Function,
   goBack: Function,
@@ -109,20 +111,20 @@ const NodeName = styled.div`
   letter-spacing: 0.7;
 `;
 
-const NodeAddress = styled.div`
+const NodeUrl = styled.div`
   font-size: 12px;
   line-height:16px;
   letter-spacing: 0.5;
 `;
 
-const NodeAddressSpan = styled(NodeAddress)`
+const NodeUrlSpan = styled(NodeUrl)`
   font-size: 12px;
   line-height:16px;
   letter-spacing: 0.5;
   display: inline;
 `;
 
-class AddressPage extends Component<Props> {
+class SettingsPage extends Component<Props> {
   props: Props;
 
   state = {
@@ -139,7 +141,7 @@ class AddressPage extends Component<Props> {
     const { theme } = this.props;
     return nodes.map( ( node, index ) => {
       const name = node.get('name');
-      const address = node.get('address');
+      const url = node.get('url');
       const selected = selectedNode === name;
       const option = (
         <SelectOption>
@@ -161,7 +163,7 @@ class AddressPage extends Component<Props> {
           </OptionStatus>
           <OptionLabel isActive={ selected }>
             <NodeName>{ name }</NodeName>
-            <NodeAddress>{ address }</NodeAddress>
+            <NodeUrl>{ url }</NodeUrl>
           </OptionLabel>
         </SelectOption>
       );
@@ -169,7 +171,7 @@ class AddressPage extends Component<Props> {
         <MenuItem
           style={{ marginTop: index === 0 ? '-16px ' : 0}}
           key={index}
-          address={ address }
+          url={ url }
           value={ name }
           primaryText={option}
         />
@@ -179,6 +181,7 @@ class AddressPage extends Component<Props> {
 
   render() {
     const {
+      syncWallet,
       goBack,
       message,
       theme,
@@ -193,7 +196,11 @@ class AddressPage extends Component<Props> {
     return (
       <Container>
 
-        <BackToWallet onClick={goBack}>
+        <BackToWallet onClick={() => {
+          goBack();
+          syncWallet();
+        }}
+        >
           <BackCaret
             style={{
               fill: '#4486f0',
@@ -226,7 +233,7 @@ class AddressPage extends Component<Props> {
                   return (
                     <div>
                      <span>{value} </span>
-                     <NodeAddressSpan>({context.props.address})</NodeAddressSpan>
+                     <NodeUrlSpan>({context.props.url})</NodeUrlSpan>
                     </div>
                   );
                 }}
@@ -270,7 +277,7 @@ class AddressPage extends Component<Props> {
                   return (
                     <div>
                      <span>{value} </span>
-                     <NodeAddressSpan>({context.props.address})</NodeAddressSpan>
+                     <NodeUrlSpan>({ context.props.url })</NodeUrlSpan>
                     </div>
                   );
                 }}
@@ -322,6 +329,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      syncWallet,
       setSelected,
       removeNode,
       goBack: () => dispatch => dispatch(goBackToWallet())
@@ -330,4 +338,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default withTheme(connect(mapStateToProps, mapDispatchToProps)(AddressPage));
+export default withTheme(connect(mapStateToProps, mapDispatchToProps)(SettingsPage));

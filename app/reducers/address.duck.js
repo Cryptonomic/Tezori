@@ -10,6 +10,7 @@ import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
+import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 
 import {
   findAccount,
@@ -22,6 +23,8 @@ import {
   createIdentity,
   getSyncIdentity
 } from '../utils/identity';
+
+import { getSelected } from '../utils/nodes';
 
 const {
   getAccount,
@@ -97,7 +100,7 @@ const setSelectedAccount = actionCreator(
 
 export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
-    const network = state().walletInitialization.get('network');
+    const nodes = state().nodes.toJS();
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, selectedParentHash);
     const foundIndex = findAccountIndex( identity, selectedAccountHash );
@@ -107,7 +110,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
       identity.accounts[ foundIndex ] = await getSyncAccount(
         identities,
         account,
-        network,
+        nodes,
         selectedAccountHash,
         selectedParentHash
       ).catch( e => {
@@ -123,7 +126,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
 
 export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
-    const network = state().walletInitialization.get('network');
+    const nodes = state().nodes.toJS();
     const identities = state().address.get('identities').toJS();
     const selectedAccountHash = state().address.get('selectedAccountHash');
     let identity = findIdentity(identities, publicKeyHash);
@@ -131,7 +134,7 @@ export function syncIdentity(publicKeyHash) {
     identity = await getSyncIdentity(
       identities,
       identity,
-      network,
+      nodes,
       selectedAccountHash
     ).catch( e => {
       console.log('-debug: Error in: syncIdentity for:' + publicKeyHash);
@@ -148,15 +151,15 @@ export function syncIdentity(publicKeyHash) {
 export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
+    const nodes = state().nodes.toJS();
     let identities = state().address.get('identities').toJS();
-    const network = state().walletInitialization.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
 
     identities = await Promise.all(
       ( identities || [])
         .map(async identity => {
           const { publicKeyHash } = identity;
-          return await getSyncIdentity(identities, identity, network, selectedAccountHash).catch( e => {
+          return await getSyncIdentity(identities, identity, nodes, selectedAccountHash).catch( e => {
             console.log('-debug: Error in: syncIdentity for: ' + publicKeyHash);
             console.error(e);
             return identity;
@@ -214,7 +217,6 @@ export function selectDefaultAccountOrOpenModal() {
     }
     try {
       let identities = initWalletState.getIn(['wallet', 'identities']).toJS();
-      const network = initWalletState.get('network');
 
       if ( identities.length === 0 ) {
         return dispatch(openAddAddressModal());
@@ -303,7 +305,7 @@ export function importAddress() {
     const username = state().address.get('username');
     const passPhrase = state().address.get('passPhrase');
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
-
+    const nodes = state().nodes.toJS();
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
@@ -333,10 +335,18 @@ export function importAddress() {
           break;
         case FUNDRAISER:
           identity = await unlockFundraiserIdentity(seed, username, passPhrase);
-          const account = await getAccount(network, identity.publicKeyHash).catch( () => false );
+          const conseilNode = getSelected(nodes, CONSEIL);
+          
+          const account = await getAccount(
+            conseilNode.url,
+            identity.publicKeyHash,
+            conseilNode.apiKey
+          ).catch( () => false );
+
           if ( !account ) {
+            const tezosNode = getSelected(nodes, TEZOS);
             const activating = await sendIdentityActivationOperation(
-              network,
+              tezosNode.url,
               identity,
               activationCode
             )
