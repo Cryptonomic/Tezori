@@ -189,7 +189,7 @@ const StyledTooltip = styled(TooltipAdapter)`
     }
 
     &-placement-bottom &-arrow {
-      left: ${props => (props.arrowPos && props.arrowPos.left? props.arrowPos.left: '50%')};
+      left: ${props => (props.arrowPos && props.arrowPos.left? props.arrowPos.left: '70%')};
     }
 
     &-placement-bottomLeft &-arrow {
