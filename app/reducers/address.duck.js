@@ -307,7 +307,6 @@ export function importAddress() {
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
 
     const walletpassword = state().walletInitialization.get('password');
-    console.log('seed=== ', seed);
 
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
@@ -438,7 +437,7 @@ export default function address(state = initState, action) {
     case OPEN_ADD_ADDRESS_MODAL:
       return state.set('open', true);
     case SET_ACTIVE_ADD_ADDRESS_TAB:
-      return state.set('activeTab', action.activeTab).set('seed', '');
+      return state.set('activeTab', action.activeTab).set('seed', '').set('currentSlide', 0);
     case UPDATE_PRIVATE_KEY:
       return state.set('privateKey', action.privateKey);
     case UPDATE_PUBLIC_KEY:
