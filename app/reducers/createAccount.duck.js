@@ -7,8 +7,10 @@ import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { createAccount as createAccountTmp } from '../utils/account';
-import { revealKey, getSelectedKeyStore } from '../utils/general'
+import { getSelectedKeyStore } from '../utils/general'
 import { findIdentity } from '../utils/identity';
+import { getSelected } from '../utils/nodes';
+import { TEZOS } from '../constants/NodesTypes';
 
 const { sendOriginationOperation } = TezosOperations;
 
@@ -51,7 +53,6 @@ export const confirmPassPhrase = actionCreator(
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount() {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
     const publicKeyHash = state().address.get('selectedParentHash');
     const delegate = state().createAccount.get('delegate');
     const amount = state().createAccount.get('amount');
@@ -61,7 +62,7 @@ export function createNewAccount() {
     const identities = state().address.get('identities').toJS();
 
     const passPhrase = state().createAccount.get('passPhrase');
-    const network = state().walletInitialization.get('network');
+    const nodes = state().nodes.toJS();
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount'},
@@ -77,11 +78,14 @@ export function createNewAccount() {
     }
 
     try {
+      dispatch(setIsLoading(true));
       const identity = findIdentity(identities, publicKeyHash);
       const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
-      
+
+      const { url, apiKey } = getSelected(nodes, TEZOS);
+      console.log('debug - iiiii - url, apiKey', url, apiKey);
       const newAccount = await sendOriginationOperation(
-        network,
+        url,
         keyStore,
         amountInUtez,
         delegate,

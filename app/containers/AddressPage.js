@@ -21,6 +21,7 @@ import {
   confirmPassPhrase,
   passPhrase,
   updateSeed,
+  updatePkh,
   updateActivationCode,
   selectDefaultAccountOrOpenModal,
   nextAccountSlide,
@@ -34,6 +35,7 @@ type Props = {
   closeAddAddressModal: Function,
   importAddress: Function,
   seed: string,
+  pkh: string,
   username: string,
   passPhrase: string,
   privateKey: string,
@@ -44,6 +46,7 @@ type Props = {
   updateUsername: Function,
   updatePassPhrase: Function,
   updateSeed: Function,
+  updatePkh: Function,
   updateActivationCode: Function,
   confirmPassPhrase: Function,
   selectedAccountHash: string,
@@ -73,6 +76,7 @@ class AddressPage extends Component<Props> {
       closeAddAddressModal,
       importAddress,
       seed,
+      pkh,
       activationCode,
       username,
       passPhrase,
@@ -85,6 +89,7 @@ class AddressPage extends Component<Props> {
       updatePassPhrase,
       confirmPassPhrase,
       updateSeed,
+      updatePkh,
       updateActivationCode,
       selectedAccountHash,
       message,
@@ -104,6 +109,7 @@ class AddressPage extends Component<Props> {
           activeTab={activeTabAddAddressTab}
           importAddress={importAddress}
           seed={seed}
+          pkh={pkh}
           activationCode={activationCode}
           username={username}
           passPhrase={passPhrase}
@@ -116,6 +122,7 @@ class AddressPage extends Component<Props> {
           updatePassPhrase={updatePassPhrase}
           confirmPassPhrase={confirmPassPhrase}
           updateSeed={updateSeed}
+          updatePkh={updatePkh}
           updateActivationCode={updateActivationCode}
           selectedAccountHash={selectedAccountHash}
           nextAccountSlide={nextAccountSlide}
@@ -134,6 +141,7 @@ function mapStateToProps({ address, message }) {
     addAddressModalIsOpen: address.get('open'),
     message: message.get('message'),
     seed: address.get('seed'),
+    pkh: address.get('pkh'),
     activationCode: address.get('activationCode'),
     username: address.get('username'),
     passPhrase: address.get('passPhrase'),
@@ -157,6 +165,7 @@ function mapDispatchToProps(dispatch) {
       updatePassPhrase,
       confirmPassPhrase,
       updateSeed,
+      updatePkh,
       updateActivationCode,
       selectDefaultAccountOrOpenModal,
       nextAccountSlide,

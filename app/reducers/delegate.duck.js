@@ -5,7 +5,9 @@ import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
-import { revealKey, getSelectedKeyStore } from '../utils/general';
+import { getSelectedKeyStore } from '../utils/general';
+import { getSelected } from '../utils/nodes';
+import { TEZOS } from '../constants/NodesTypes';
 
 const {
   sendDelegationOperation
@@ -54,14 +56,15 @@ export function sendConfirmation() {
     const address = delegateState.get('address');
     const identities = state().address.get('identities').toJS();
     const fee = delegateState.get('delegateFee');
-    const network = walletState.get('network');
+    const nodes = state().nodes.toJS();
     const selectedAccountHash = state().address.get('selectedAccountHash');
     const selectedParentHash = state().address.get('selectedParentHash');
-    dispatch(updateIsLoading(true));
     try {
-
+      dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
-      const operation = await sendDelegationOperation(network, keyStore, address, fee).catch((err) => {
+      const { url, apiKey } = getSelected(nodes, TEZOS);
+      console.log('debug - jjjjj - url, apiKey', url, apiKey);
+      const operation = await sendDelegationOperation(url, keyStore, address, fee).catch((err) => {
         err.name = err.message;
         throw err;
       });
