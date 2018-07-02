@@ -22,6 +22,7 @@ type Props = {
   setActiveTab: Function,
   importAddress: Function,
   seed: string,
+  pkh: string,
   activationCode: string,
   username: string,
   passPhrase: string,
@@ -30,6 +31,7 @@ type Props = {
   updatePassPhrase: Function,
   confirmPassPhrase: Function,
   updateSeed: Function,
+  updatePkh: Function,
   updateActivationCode: Function,
   selectedAccountHash: string
 };
@@ -108,6 +110,15 @@ const ActivationTooltip = () => {
   )
 }
 
+const PkhTooltip = () => {
+  return (
+    <TooltipContainer>
+      <TooltipTitle>Public key hash</TooltipTitle>
+      This is the public key hash as provided in the paper wallet.
+    </TooltipContainer>
+  )
+}
+
 export default function AddAddress(props: Props) {
   const {
     open,
@@ -116,7 +127,9 @@ export default function AddAddress(props: Props) {
     setActiveTab,
     importAddress,
     seed,
+    pkh,
     activationCode,
+    updatePkh,
     updateActivationCode,
     username,
     passPhrase,
@@ -209,25 +222,45 @@ export default function AddAddress(props: Props) {
               value={seed}
               onChange={(_, newSeed) => updateSeed(newSeed)}
             />
-            <InputWithTooltip>
-              <TextField
-                floatingLabelText="Fundraiser Password"
-                type="password"
-                style={{ width: '100%' }}
-                value={passPhrase}
-                onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
-              />
+            <TwoColumnsInputs>
+              <InputWithTooltip>
+                <TextField
+                  floatingLabelText="Fundraiser Password"
+                  type="password"
+                  style={{ width: '100%' }}
+                  value={passPhrase}
+                  onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
+                />
 
-              <StyledTooltip position="bottom" content={PasswordTooltip}>
-                <Button buttonTheme="plain">
-                  <HelpIcon
-                    iconName="help"
-                    size={ms(0)}
-                    color="secondary"
-                  />
-                </Button>
-              </StyledTooltip>
-            </InputWithTooltip>
+                <StyledTooltip position="bottom" content={PasswordTooltip}>
+                  <Button buttonTheme="plain">
+                    <HelpIcon
+                      iconName="help"
+                      size={ms(0)}
+                      color="secondary"
+                    />
+                  </Button>
+                </StyledTooltip>
+              </InputWithTooltip>
+
+              <InputWithTooltip>
+                <TextField
+                  floatingLabelText="Public key hash"
+                  style={{ width: '100%' }}
+                  value={ pkh }
+                  onChange={(_, newPkh) => updatePkh(newPkh)}
+                />
+                <StyledTooltip position="bottom" content={PkhTooltip}>
+                  <Button buttonTheme="plain">
+                    <HelpIcon
+                      iconName="help"
+                      size={ms(0)}
+                      color="secondary"
+                    />
+                  </Button>
+                </StyledTooltip>
+              </InputWithTooltip>
+            </TwoColumnsInputs>
 
             <TwoColumnsInputs>
               <InputWithTooltip>

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import styled from 'styled-components';
 import { ms } from '../styles/helpers';
 
@@ -12,7 +13,7 @@ import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
 
 const Container = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 `;
 
 const Icon = styled.img`
@@ -20,11 +21,11 @@ const Icon = styled.img`
 `;
 
 const SettingsIcon = styled(Icon)`
-  height: ${ms(8)};
+  height: 80px;
 `;
 
 const LogoutIcon = styled(Icon)`
-  height: ${ms(7)};
+  height: 65px;
 `;
 
 const Separator = styled.div`
@@ -39,9 +40,16 @@ type Props = {
 
 class SettingsController extends Component<Props> {
   render() {
-    const { goHomeAndClearState } = this.props;
+    const { goHomeAndClearState, goSettings } = this.props;
     return (
       <Container>
+        <Button
+          onClick={goSettings}
+          buttonTheme="plain"
+        >
+          <SettingsIcon alt="Settings" src={settingsIcon} />
+        </Button>
+        <Separator />
         <Button onClick={goHomeAndClearState} buttonTheme="plain">
           <LogoutIcon alt="Logout" src={logoutIcon} />
         </Button>
@@ -51,6 +59,9 @@ class SettingsController extends Component<Props> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ goHomeAndClearState }, dispatch);
+  bindActionCreators({
+    goHomeAndClearState,
+    goSettings: () => dispatch => dispatch(push('/settings'))
+  }, dispatch);
 
 export default connect(null, mapDispatchToProps)(SettingsController);

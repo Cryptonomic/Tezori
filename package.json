@@ -201,7 +201,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "conseiljs": "^0.1.21",
+    "conseiljs": "^0.1.23",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
     "font-awesome": "^4.7.0",
@@ -224,6 +224,7 @@
     "react-tippy": "^1.2.2",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "source-map-support": "^0.5.6",
     "styled-components": "^3.3.2"
   },

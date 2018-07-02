@@ -30,8 +30,10 @@ const TezosAddress = (props: Props) => {
   const { className, address, weight, size, color, text } = props;
   return (
     <Address className={className} weight={weight} color={color} size={size} text={text}>
-      <FirstPart>{address.slice(0, 3)}</FirstPart>
-      <span>{address.slice(3)}</span>
+      <span>
+        <FirstPart>{address.slice(0, 3)}</FirstPart>
+        <span>{address.slice(3)}</span>
+      </span>
       {text && <CopyIcon text={text} color={color} />}
     </Address>
   );

@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import { flatten, pick } from 'lodash';
+import { push } from 'react-router-redux';
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
@@ -9,6 +10,7 @@ import { saveUpdatedWallet } from './walletInitialization.duck';
 import { addMessage } from './message.duck';
 import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
+import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 
 import {
   findAccount,
@@ -21,6 +23,8 @@ import {
   createIdentity,
   getSyncIdentity
 } from '../utils/identity';
+
+import { getSelected } from '../utils/nodes';
 
 const {
   getAccount,
@@ -40,6 +44,7 @@ const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
 const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
+const SET_IS_INITIATED = 'SET_IS_INITIATED';
 const SET_IS_LOADING = 'SET_IS_LOADING';
 const CLEAR_STATE = 'CLEAR_STATE';
 const UPDATE_PRIVATE_KEY = 'UPDATE_PRIVATE_KEY';
@@ -48,6 +53,7 @@ const UPDATE_USERNAME = 'UPDATE_USERNAME';
 const UPDATE_PASS_PHRASE = 'UPDATE_ADDRESS_PASS_PHRASE';
 const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
+const UPDATE_PKH = 'UPDATE_PKH';
 const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
 const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
 const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
@@ -62,6 +68,7 @@ export const clearEntireAddressState = actionCreator(
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
 export const closeAddAddressModal = actionCreator(CLOSE_ADD_ADDRESS_MODAL);
 const updateActiveTab = actionCreator(SET_ACTIVE_ADD_ADDRESS_TAB, 'activeTab');
+export const setIsInitiated = actionCreator(SET_IS_INITIATED, 'isInitiated');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const clearState = actionCreator(CLEAR_STATE);
 export const updatePrivateKey = actionCreator(UPDATE_PRIVATE_KEY, 'privateKey');
@@ -73,6 +80,7 @@ export const confirmPassPhrase = actionCreator(
   'passPhrase'
 );
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
+export const updatePkh = actionCreator(UPDATE_PKH, 'pkh');
 export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activationCode');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
@@ -94,7 +102,7 @@ const setSelectedAccount = actionCreator(
 
 export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
-    const network = state().walletInitialization.get('network');
+    const nodes = state().nodes.toJS();
     const identities = state().address.get('identities').toJS();
     const identity = findIdentity(identities, selectedParentHash);
     const foundIndex = findAccountIndex( identity, selectedAccountHash );
@@ -104,7 +112,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
       identity.accounts[ foundIndex ] = await getSyncAccount(
         identities,
         account,
-        network,
+        nodes,
         selectedAccountHash,
         selectedParentHash
       ).catch( e => {
@@ -120,7 +128,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
 
 export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
-    const network = state().walletInitialization.get('network');
+    const nodes = state().nodes.toJS();
     const identities = state().address.get('identities').toJS();
     const selectedAccountHash = state().address.get('selectedAccountHash');
     let identity = findIdentity(identities, publicKeyHash);
@@ -128,7 +136,7 @@ export function syncIdentity(publicKeyHash) {
     identity = await getSyncIdentity(
       identities,
       identity,
-      network,
+      nodes,
       selectedAccountHash
     ).catch( e => {
       console.log('-debug: Error in: syncIdentity for:' + publicKeyHash);
@@ -145,15 +153,15 @@ export function syncIdentity(publicKeyHash) {
 export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
+    const nodes = state().nodes.toJS();
     let identities = state().address.get('identities').toJS();
-    const network = state().walletInitialization.get('network');
     const selectedAccountHash = state().address.get('selectedAccountHash');
 
     identities = await Promise.all(
       ( identities || [])
         .map(async identity => {
           const { publicKeyHash } = identity;
-          return await getSyncIdentity(identities, identity, network, selectedAccountHash).catch( e => {
+          return await getSyncIdentity(identities, identity, nodes, selectedAccountHash).catch( e => {
             console.log('-debug: Error in: syncIdentity for: ' + publicKeyHash);
             console.error(e);
             return identity;
@@ -205,24 +213,30 @@ export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
     const initWalletState = state().walletInitialization;
-    let identities = initWalletState.getIn(['wallet', 'identities']);
-    identities = identities.toJS();
-    const network = initWalletState.get('network');
+    const isInitiated = state().address.get('isInitiated');
+    if ( isInitiated ) {
+      return false;
+    }
+    try {
+      let identities = initWalletState.getIn(['wallet', 'identities']).toJS();
 
-    if ( identities.length === 0 ) {
-      return dispatch(openAddAddressModal());
+      if ( identities.length === 0 ) {
+        return dispatch(openAddAddressModal());
+      }
+      dispatch(automaticAccountRefresh());
+      identities = identities
+        .map( identity =>
+          createIdentity(identity)
+        );
+      dispatch( setIdentities( identities ) );
+
+      const { publicKeyHash } = identities[0];
+      dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
+      dispatch(setIsInitiated(true));
+    } catch( e ) {
+      console.log('e', e);
     }
 
-    identities = identities
-      .map( identity =>
-        createIdentity(identity)
-      );
-    dispatch( setIdentities( identities ) );
-
-    const { publicKeyHash } = identities[0];
-    dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
-
-    await dispatch(automaticAccountRefresh());
     await dispatch(syncWallet());
     dispatch(setIsLoading(false));
   };
@@ -289,11 +303,12 @@ export function importAddress() {
     } = ADD_ADDRESS_TYPES;
     const activeTab = state().address.get('activeTab');
     const seed = state().address.get('seed');
+    const pkh = state().address.get('pkh');
     const activationCode = state().address.get('activationCode');
     const username = state().address.get('username');
     const passPhrase = state().address.get('passPhrase');
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
-
+    const nodes = state().nodes.toJS();
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
@@ -311,9 +326,9 @@ export function importAddress() {
         return dispatch(addMessage(error, true));
       }
     }
+    dispatch(setIsLoading(true));
     try {
       let identity = null;
-      dispatch(setIsLoading(true));
       switch (activeTab) {
         case PRIVATE_KEY:
           break;
@@ -322,11 +337,19 @@ export function importAddress() {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           break;
         case FUNDRAISER:
-          identity = await unlockFundraiserIdentity(seed, username, passPhrase);
-          const account = await getAccount(network, identity.publicKeyHash).catch( () => false );
+          identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
+          const conseilNode = getSelected(nodes, CONSEIL);
+
+          const account = await getAccount(
+            conseilNode.url,
+            identity.publicKeyHash,
+            conseilNode.apiKey
+          ).catch( () => false );
+
           if ( !account ) {
+            const tezosNode = getSelected(nodes, TEZOS);
             const activating = await sendIdentityActivationOperation(
-              network,
+              tezosNode.url,
               identity,
               activationCode
             )
@@ -357,13 +380,13 @@ export function importAddress() {
       }
 
       dispatch(clearState());
-      dispatch(setIsLoading(false));
     } catch (e) {
       console.log('-debug: Error in: importAddress for:' + activeTab);
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(setIsLoading(false));
     }
+
+    dispatch(setIsLoading(false));
   };
 }
 
@@ -372,11 +395,13 @@ const initState = fromJS({
   activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
   open: false,
   seed: '',
+  pkh: '',
   activationCode: '',
   username: '',
   passPhrase: '',
   privateKey: '',
   publicKey: '',
+  isInitiated: false,
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
@@ -439,6 +464,8 @@ export default function address(state = initState, action) {
       return state.set('publicKey', action.publicKey);
     case UPDATE_SEED:
       return state.set('seed', action.seed);
+    case UPDATE_PKH:
+      return state.set('pkh', action.pkh);
     case UPDATE_ACTIVATION_CODE:
       return state.set('activationCode', action.activationCode);
     case UPDATE_USERNAME:
@@ -447,6 +474,8 @@ export default function address(state = initState, action) {
       return state.set('passPhrase', action.passPhrase);
     case CONFIRM_PASS_PHRASE:
       return state.set('confirmedPassPhrase', action.passPhrase);
+    case SET_IS_INITIATED:
+      return state.set('isInitiated', action.isInitiated);
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SELECT_ACCOUNT:
