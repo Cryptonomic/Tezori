@@ -212,6 +212,7 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
 export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
+    dispatch(automaticAccountRefresh());
     const initWalletState = state().walletInitialization;
     const isInitiated = state().address.get('isInitiated');
     if ( isInitiated ) {
@@ -219,11 +220,9 @@ export function selectDefaultAccountOrOpenModal() {
     }
     try {
       let identities = initWalletState.getIn(['wallet', 'identities']).toJS();
-
       if ( identities.length === 0 ) {
         return dispatch(openAddAddressModal());
       }
-      dispatch(automaticAccountRefresh());
       identities = identities
         .map( identity =>
           createIdentity(identity)
