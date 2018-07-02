@@ -215,12 +215,21 @@ export function selectDefaultAccountOrOpenModal() {
     dispatch(setIsLoading(true));
     dispatch(automaticAccountRefresh());
     const initWalletState = state().walletInitialization;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    let identities = initWalletState.getIn(['wallet', 'identities']);
+    identities = identities.toJS();
+    const network = initWalletState.get('network');
+=======
+>>>>>>> our request are now updated to work with the new api, there is now a setting page
     const isInitiated = state().address.get('isInitiated');
     if ( isInitiated ) {
       return false;
     }
     try {
       let identities = initWalletState.getIn(['wallet', 'identities']).toJS();
+<<<<<<< HEAD
       if ( identities.length === 0 ) {
         return dispatch(openAddAddressModal());
       }
@@ -235,6 +244,12 @@ export function selectDefaultAccountOrOpenModal() {
       dispatch(setIsInitiated(true));
     } catch( e ) {
       console.log('e', e);
+=======
+>>>>>>> our request are now updated to work with the new api, there is now a setting page
+
+    if ( identities.length === 0 ) {
+      return dispatch(openAddAddressModal());
+>>>>>>> our request are now updated to work with the new api, there is now a setting page
     }
     
     await dispatch(syncWallet());
@@ -368,8 +383,6 @@ export function importAddress() {
         default: 
           break;
       }
-
-      
 
       if ( identity ) {
         const { publicKeyHash } = identity;

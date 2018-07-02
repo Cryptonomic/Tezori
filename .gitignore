@@ -44,6 +44,7 @@ app/renderer.prod.js.map
 app/style.css
 app/style.css.map
 app/defaultWalletNodes.json
+app/walletNodes.json
 app/savedWalletNode.json
 app/walletNodes.js
 dist

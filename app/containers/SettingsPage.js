@@ -11,7 +11,6 @@ import { H2, H4 } from '../components/Heading/';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Check from 'material-ui/svg-icons/Navigation/check';
-
 import AddNodeModal from '../components/AddNodeModal/';
 import MessageBar from '../components/MessageBar';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
