@@ -55,11 +55,9 @@ const CONFIRM_PASS_PHRASE = 'CONFIRM_ADDRESS_PASS_PHRASE';
 const UPDATE_SEED = 'UPDATE_SEED';
 const UPDATE_PKH = 'UPDATE_PKH';
 const UPDATE_ACTIVATION_CODE = 'UPDATE_ACTIVATION_CODE';
-const ADD_NEW_IDENTITY = 'ADD_NEW_IDENTITY';
-const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
 const SET_IDENTITIES = 'SET_IDENTITIES';
-const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
+
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 
@@ -80,16 +78,9 @@ export const confirmPassPhrase = actionCreator(
 export const updateSeed = actionCreator(UPDATE_SEED, 'seed');
 export const updatePkh = actionCreator(UPDATE_PKH, 'pkh');
 export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activationCode');
-export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
-export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
+
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
 
-
-export const addNewAccount = actionCreator(
-  ADD_NEW_ACCOUNT,
-  'publicKeyHash',
-  'account'
-);
 const setSelectedAccount = actionCreator(
   SELECT_ACCOUNT,
   'selectedAccountHash',
@@ -209,6 +200,7 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
 
 // todo: 1 check why when importing new identity and going to settings then back - we are going to import identity screen again
 // todo: 2 why on first login-import public has key throws an error
+// todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     dispatch(automaticAccountRefresh());
@@ -219,7 +211,7 @@ export function selectDefaultAccountOrOpenModal() {
     try {
       let identities = state().wallet.get('identities').toJS();
       if ( identities.length === 0 ) {
-        dispatch(openAddAddressModal());
+        return dispatch(openAddAddressModal());
       }
       dispatch(setIsLoading(true));
       identities = identities
@@ -417,35 +409,8 @@ export default function address(state = initState, action) {
         .set('selectedAccountHash', selectedAccountHash)
         .set('selectedParentHash', selectedParentHash);
     }
-    case ADD_NEW_ACCOUNT:
-      return state.set(
-        'identities',
-        addNewAccountToIdentity(
-          action.publicKeyHash,
-          action.account,
-          state.get('identities')
-        )
-      );
     case SET_IDENTITIES: {
       return state.set('identities', fromJS(action.identities));
-    }
-    case ADD_NEW_IDENTITY: {
-      const newIdentity = fromJS(action.identity);
-
-      return state.update('identities', identities =>
-        identities.push(newIdentity)
-      );
-    }
-    case UPDATE_IDENTITY: {
-      const { publicKeyHash } = action.identity;
-      const identities = state.get('identities');
-      const indexFound = identities
-        .findIndex((identity) => publicKeyHash === identity.get('publicKeyHash') );
-
-      if ( indexFound > -1) {
-        return state.set('identities', identities.set(indexFound, fromJS(action.identity)));
-      }
-      return state;
     }
     case CLOSE_ADD_ADDRESS_MODAL:
       return state.set('open', false);
@@ -485,7 +450,6 @@ export default function address(state = initState, action) {
 }
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Helpers ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-
 function addNewAccountToIdentity(publicKeyHash, account, identities) {
   return identities.map(identity => {
     if (identity.get('publicKeyHash') === publicKeyHash) {
