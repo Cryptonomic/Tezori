@@ -64,17 +64,19 @@ const BackToWallet = styled.div`
 const Content = styled.div`
   background-color: ${({theme: { colors }}) => colors.white };
   padding: ${ms(3)} ${ms(3)};
-  margin-top: ${ ms(3)};
+  margin: ${ms(3)} auto 0 auto;
 `;
 
 const RowForParts = styled(Row)`
   margin: 0 -${ms(1)};
+  display: flex;
+  flex-direction: column;
 `;
 
 const Part = styled.div`
   flex-grow: 1;
   flex-shrink: 0;
-  max-width: 50%;
+  width: 100%;
   padding: 0 ${ms(1)};
   margin-top: ${ ms(2)};
 `;
