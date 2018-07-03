@@ -14,7 +14,8 @@ type Props = {
 const TooltipAdapter = ({className, ...props}) => {
   return <RCTooltip {...props}
                     overlayClassName={`${className}__overlay`}
-                    prefixCls={`${className}__tooltip`} />
+                    prefixCls={`${className}__tooltip`}
+                    align={{ offset: "-22%" }} />
 }
 
 const arrowWidth = '10px';
