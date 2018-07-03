@@ -50,9 +50,9 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
 
   accounts = accounts.map(account => {
     const foundIndex = stateAccountIndices.indexOf(account.accountId);
-    const overrides = {};
+    let overrides = {};
     if ( foundIndex > -1 ) {
-      overrides.status = identity.accounts[foundIndex].status;
+      overrides = {...identity.accounts[foundIndex]};
     }
     return createAccount({
         ...account,
