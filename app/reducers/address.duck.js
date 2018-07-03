@@ -327,17 +327,6 @@ export function importAddress() {
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if( activeTab === GENERATE_MNEMONIC ) {
-      const validations = [
-        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'}
-      ];
-
-      const error = displayError(validations);
-      if ( error ) {
-        return dispatch(addMessage(error, true));
-      }
-    }
     dispatch(setIsLoading(true));
     try {
       let identity = null;
