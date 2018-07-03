@@ -25,7 +25,7 @@ import {
   getSyncIdentity
 } from '../utils/identity';
 
-import { getSelected } from '../utils/nodes';
+import { getSelectedNode } from '../utils/nodes';
 
 const {
   getAccount,
@@ -327,7 +327,7 @@ export function importAddress() {
           break;
         case FUNDRAISER:
           identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
-          const conseilNode = getSelected(nodes, CONSEIL);
+          const conseilNode = getSelectedNode(nodes, CONSEIL);
 
           const account = await getAccount(
             conseilNode.url,
@@ -336,7 +336,7 @@ export function importAddress() {
           ).catch( () => false );
 
           if ( !account ) {
-            const tezosNode = getSelected(nodes, TEZOS);
+            const tezosNode = getSelectedNode(nodes, TEZOS);
             const activating = await sendIdentityActivationOperation(
               tezosNode.url,
               identity,

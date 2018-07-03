@@ -211,13 +211,8 @@ class LoginCreate extends Component<Props> {
 
   login = async (loginType) => {
     const { walletLocation, walletFileName, password } = this.state;
-    const { login, history } = this.props;
-    this.setState({ isLoading: true });
-    const loggedIn = await login(loginType, walletLocation, walletFileName, password);
-    this.setState({ isLoading: false });
-    if ( loggedIn ) {
-      history.push('/home');
-    }
+    const { login } = this.props;
+    await login(loginType, walletLocation, walletFileName, password);
   };
 
   render() {

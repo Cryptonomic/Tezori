@@ -7,7 +7,7 @@ import { LOGOUT } from '../redux/wallet/types';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { getSelectedKeyStore } from '../utils/general'
-import { getSelected } from '../utils/nodes';
+import { getSelectedNode } from '../utils/nodes';
 import { TEZOS } from '../constants/NodesTypes';
 
 const {
@@ -84,7 +84,7 @@ export function sendConfirmation() {
         throw new Error({ name: 'You cant sent money to yourself.' });
       }
       dispatch(updateSendTezosLoading(true));
-      const { url, apiKey } = getSelected(nodes, TEZOS);
+      const { url, apiKey } = getSelectedNode(nodes, TEZOS);
       console.log('debug - kkkkk - url, apiKey', url, apiKey);
       const res = await sendTransactionOperation(
         url,

@@ -10,7 +10,7 @@ import { tezToUtez } from '../utils/currancy';
 import { createAccount as createAccountTmp } from '../utils/account';
 import { getSelectedKeyStore } from '../utils/general'
 import { findIdentity } from '../utils/identity';
-import { getSelected } from '../utils/nodes';
+import { getSelectedNode } from '../utils/nodes';
 import { TEZOS } from '../constants/NodesTypes';
 
 const { sendOriginationOperation } = TezosOperations;
@@ -83,7 +83,7 @@ export function createNewAccount() {
       const identity = findIdentity(identities, publicKeyHash);
       const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
 
-      const { url, apiKey } = getSelected(nodes, TEZOS);
+      const { url, apiKey } = getSelectedNode(nodes, TEZOS);
       console.log('debug - iiiii - url, apiKey', url, apiKey);
       const newAccount = await sendOriginationOperation(
         url,

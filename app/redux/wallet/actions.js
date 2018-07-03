@@ -7,7 +7,8 @@ import {
   SET_IDENTITIES,
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
-  ADD_NEW_ACCOUNT
+  ADD_NEW_ACCOUNT,
+  SET_SELECT_ACCOUNT,
   LOGOUT,
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
@@ -16,10 +17,11 @@ import actionCreator from '../../utils/reduxHelpers';
 export const setWallet = actionCreator(SET_WALLET, 'wallet');
 export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
 export const setWalletFileName = actionCreator( SET_WALLET_FILENAME, 'walletFileName' );
-export const updateWalletLocation = actionCreator( SET_WALLET_LOCATION, 'walletLocation' );
+export const updateWalletLocation = actionCreator( SET_WALLET_LOCATION, 'walletLocation');
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
+export const setSelectedAccount = actionCreator(SET_SELECT_ACCOUNT, 'selectedAccountHash', 'selectedParentHash');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
-export const addNewAccount = actionCreator( ADD_NEW_ACCOUNT, 'publicKeyHash', 'account' );
+export const addNewAccount = actionCreator(ADD_NEW_ACCOUNT, 'publicKeyHash', 'account');
 export const logout = actionCreator(LOGOUT);

@@ -7,7 +7,7 @@ import { addMessage } from './message.duck';
 import { LOGOUT } from '../redux/wallet/types';
 import { displayError } from '../utils/formValidation';
 import { getSelectedKeyStore } from '../utils/general';
-import { getSelected } from '../utils/nodes';
+import { getSelectedNode } from '../utils/nodes';
 import { TEZOS } from '../constants/NodesTypes';
 
 const {
@@ -62,7 +62,7 @@ export function sendConfirmation() {
     try {
       dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
-      const { url, apiKey } = getSelected(nodes, TEZOS);
+      const { url, apiKey } = getSelectedNode(nodes, TEZOS);
       console.log('debug - jjjjj - url, apiKey', url, apiKey);
       const operation = await sendDelegationOperation(url, keyStore, address, fee).catch((err) => {
         err.name = err.message;

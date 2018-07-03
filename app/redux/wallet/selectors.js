@@ -9,3 +9,8 @@ export const getWalletName = createSelector(
     return walletName[0];
   }
 );
+
+export const getWalletIsLoading = createSelector(
+  getWallet,
+  wallet => wallet.get('isLoading')
+);

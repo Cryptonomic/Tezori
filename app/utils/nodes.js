@@ -20,7 +20,7 @@ export function getWalletNodes() {
   return nodes;
 }
 
-export function getSelected(nodes, type) {
+export function getSelectedNode(nodes, type) {
   const selected =  type === CONSEIL
     ? nodes.conseilSelectedNode
     : nodes.tezosSelectedNode;

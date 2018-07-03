@@ -8,7 +8,8 @@ import {
   SET_IDENTITIES,
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
-  ADD_NEW_ACCOUNT
+  ADD_NEW_ACCOUNT,
+  SET_SELECT_ACCOUNT,
   LOGOUT,
 } from './types';
 
@@ -65,6 +66,10 @@ export default function wallet(state = initState, action) {
       }
       return state;
     }
+    case SET_SELECT_ACCOUNT:
+      return state
+        .set('selectedAccountHash', action.selectedAccountHash)
+        .set('selectedParentHash', action.selectedParentHash);
     case LOGOUT:
       return initState;
     default:

@@ -6,7 +6,7 @@ import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
-import { getSelected } from './nodes';
+import { getSelectedNode } from './nodes';
 
 const { getEmptyTezosFilter, getOperations, getAccount } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
@@ -22,7 +22,7 @@ export function awaitFor(timeout: number) {
 }
 
 export async function getTransactions(accountHash, nodes) {
-  const { url, apiKey } = getSelected(nodes, CONSEIL);
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   const emptyFilter = getEmptyTezosFilter();
   const transFilter = {
     ...emptyFilter,
@@ -56,21 +56,21 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
 }
 
 export async function isRevealed(nodes, keyStore) {
-  const { url, apiKey } = getSelected(nodes, TEZOS);
+  const { url, apiKey } = getSelectedNode(nodes, TEZOS);
   return await isManagerKeyRevealedForAccount(url, keyStore);
 }
 
 export async function revealKey(nodes, keyStore) {
   const keyRevealed = await isRevealed(nodes, keyStore);
   if ( !keyRevealed ) {
-    const { url, apiKey } = getSelected(nodes, TEZOS);
+    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
     await sendKeyRevealOperation(url, keyStore, 0);
   }
   return true;
 }
 
 export async function activateAndUpdateAccount(account, keyStore, nodes) {
-  const { url, apiKey } = getSelected(nodes, CONSEIL);
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   if ( account.status === status.READY ) {
     const accountHash = account.publicKeyHash || account.accountId;
     const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {

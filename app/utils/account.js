@@ -3,7 +3,7 @@ const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
-import { getSelected } from './nodes';
+import { getSelectedNode } from './nodes';
 
 export function createAccount(account, identity) {
 
@@ -42,7 +42,7 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
 export async function getAccountsForIdentity(nodes, id) {
   const emptyFilter = getEmptyTezosFilter();
   const filter = {...emptyFilter, account_manager: [id]};
-  const { url, apiKey } = getSelected(nodes, CONSEIL);
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   const accounts = await getAccounts(url, filter, apiKey);
   return accounts.filter(account => account.accountId !== id);
 }
