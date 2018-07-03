@@ -207,9 +207,10 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
   };
 }
 
+// todo: 1 check why when importing new identity and going to settings then back - we are going to import identity screen again
+// todo: 2 why on first login-import public has key throws an error
 export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
     dispatch(automaticAccountRefresh());
     const isInitiated = state().address.get('isInitiated');
     if ( isInitiated ) {
@@ -219,8 +220,8 @@ export function selectDefaultAccountOrOpenModal() {
       let identities = state().wallet.get('identities').toJS();
       if ( identities.length === 0 ) {
         dispatch(openAddAddressModal());
-        return dispatch(setIsLoading(false));
       }
+      dispatch(setIsLoading(true));
       identities = identities
         .map( identity =>
           createIdentity(identity)
