@@ -3,10 +3,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router';
 
-import TopBar from '../components/TopBar/';
-import LoginHome from './LoginHome/';
-import LoginImport from './LoginImport/';
-import LoginCreate from './LoginCreate/';
+import TopBar from '../../components/TopBar/';
+import LoginHome from './../LoginHome/';
+import LoginImport from './../LoginImport/';
+import LoginCreate from './../LoginCreate/';
 
 class LoginPage extends Component<Props> {
   props: Props;

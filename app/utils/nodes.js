@@ -26,3 +26,10 @@ export function getSelected(nodes, type) {
     : nodes.tezosSelectedNode;
   return nodes.list.find( node => node.type === type && node.name === selected );
 }
+
+export function hasNodes(state) {
+  const selected =  type === CONSEIL
+    ? nodes.conseilSelectedNode
+    : nodes.tezosSelectedNode;
+  return nodes.list.find( node => node.type === type && node.name === selected );
+}

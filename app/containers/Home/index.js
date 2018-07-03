@@ -3,10 +3,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router';
 
-import TopBar from '../components/TopBar/';
+import TopBar from '../../components/TopBar/';
 
-import HomeAddresses from './HomeAddresses/';
-import HomeSettings from './HomeSettings/';
+import HomeAddresses from './../HomeAddresses/';
+import HomeSettings from './../HomeSettings/';
 
 class HomePage extends Component<Props> {
   props: Props;

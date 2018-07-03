@@ -1,10 +1,11 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router';
-import App from './containers/App';
-import Home from './containers/Home';
-import Login from './containers/Login';
+import App from './containers/App/';
+import Home from './containers/Home/';
+import Login from './containers/Login/';
 import WalletNodesRequired from './components/WalletNodesRequired/';
+import { isLoggedIn } from './utils/login';
 
 export default (store) => (
   <App>
@@ -14,9 +15,7 @@ export default (store) => (
         render={(context) => {
           const state = store.store.getState();
 
-          console.log('state', state);
-          //!isLoggedIn(state)
-          if ( true ) {
+          if ( !isLoggedIn(state) ) {
             return <Redirect to="/login" />
           }
 

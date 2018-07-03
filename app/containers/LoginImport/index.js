@@ -88,26 +88,6 @@ class LoginImport extends Component<Props> {
     );
   };
 
-  inputTextField = (
-    label: string,
-    type: string,
-    changFunc: Function,
-    isErrorUnderline: boolean = false
-  ) => {
-    return (
-      <TextField
-        floatingLabelText={label}
-        className={styles.inputTextField}
-        type={type}
-        floatingLabelStyle={inputStyles.floatingLabelStyle}
-        floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
-        underlineStyle={isErrorUnderline? inputStyles.errorUnderlineStyle : inputStyles.underlineStyle}
-        underlineFocusStyle={isErrorUnderline? inputStyles.errorUnderlineStyle : inputStyles.underlineFocusStyle}
-        onChange={(_, newVal) => changFunc(newVal)}
-      />
-    );
-  };
-
   login = async (loginType) => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
@@ -117,8 +97,8 @@ class LoginImport extends Component<Props> {
   };
 
   render() {
-    const { isLoading, message, password, goBack } = this.props;
-    const { walletFileName, walletLocation } = this.state;
+    const { message, goBack } = this.props;
+    const { walletFileName, walletLocation, password, isLoading } = this.state;
     const completeWalletPath = path.join(walletLocation, walletFileName);
 
     return (
@@ -153,7 +133,7 @@ class LoginImport extends Component<Props> {
             floatingLabelText="Password"
             style={{ width: '500px', marginBottom: ms(5) }}
             type="password"
-            value={password}
+            value={ password }
             onChange={(_, password) => this.setState({ password })}
           />
           <Button

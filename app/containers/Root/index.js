@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
-import Theme from '../styles/theme';
-import Routes from '../routes';
+import Theme from '../../styles/theme';
+import Routes from '../../routes';
 
 type Props = {
   store: {},

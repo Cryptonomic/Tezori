@@ -78,10 +78,12 @@ class LoginCreate extends Component<Props> {
 
   saveFile = () => {
     remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
-      this.setState({
-        walletLocation: path.dirname(filename),
-        walletFileName: path.basename(filename)
-      });
+      if ( filename ) {
+        this.setState({
+          walletLocation: path.dirname(filename),
+          walletFileName: path.basename(filename)
+        });
+      }
     });
   };
   
@@ -210,15 +212,22 @@ class LoginCreate extends Component<Props> {
   login = async (loginType) => {
     const { walletLocation, walletFileName, password, confirmPassword } = this.state;
     const { login } = this.props;
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     this.setState({ isLoading: true });
-    await login(loginType, walletLocation, walletFileName, password, confirmPassword);
+    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    const loggedIn = await login(loginType, walletLocation, walletFileName, password, confirmPassword);
     this.setState({ isLoading: false });
+    if ( loggedIn ) {
+      console.log('is logged in.');
+    }
   };
 
   render() {
     const { message, goBack } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
+
+    console.log('isLoading', isLoading);
 
     return (
       <div className={styles.createContainer}>

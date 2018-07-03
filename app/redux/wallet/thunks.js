@@ -95,6 +95,8 @@ export function login(loginType, walletLocation, walletFileName, password, confi
           throw err;
         });
       }
+
+      throw new Error('whaaaaatt');
       
       dispatch(
         setWallet({
@@ -106,7 +108,7 @@ export function login(loginType, walletLocation, walletFileName, password, confi
       );
     } catch (e) {
       dispatch(addMessage(e.name, true));
-      throw e;
+      return false;
     }
   };
 }
