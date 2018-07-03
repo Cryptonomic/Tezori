@@ -173,7 +173,12 @@ function BalanceBanner(props: Props) {
           )}
         </AddressTitle>
         <AddressInfo>
-          <TezosAddress address={publicKeyHash} weight={theme.typo.weights.light} color={'white'} text={publicKeyHash} size={ms(1.7)}/>
+          <TezosAddress
+            address={publicKeyHash}
+            weight={theme.typo.weights.light}
+            color={'white'} text={publicKeyHash} 
+            size={ms(1.7)}
+          />
           <Amount
             color="white"
             size={ms(4.5)}
