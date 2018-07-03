@@ -60,20 +60,19 @@ export function login(loginType, walletLocation, walletFileName, password) {
     const completeWalletPath = path.join(walletLocation, walletFileName);
     dispatch(addMessage('', true));
     try {
-      let identities = [];
+      let wallet = {};
       if (loginType === CREATE) {
-        identities = await createWallet(completeWalletPath, password);
+        wallet = await createWallet(completeWalletPath, password);
       } else if (loginType === IMPORT) {
-        identities = await loadWallet(completeWalletPath, password).catch((err) => {
+        wallet = await loadWallet(completeWalletPath, password).catch((err) => {
           err.name = 'Invalid wallet/password combination.';
           throw err;
         });
       }
-      console.log('identitiesidentitiesidentities', identities);
       
       dispatch(
         setWallet({
-          identities,
+          identities: wallet.identities,
           walletLocation,
           walletFileName,
           password

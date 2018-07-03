@@ -217,10 +217,9 @@ export function selectDefaultAccountOrOpenModal() {
     }
     try {
       let identities = state().wallet.get('identities').toJS();
-      console.log(' identities ', identities, identities.identities, identities.length);
       if ( identities.length === 0 ) {
-
-        return dispatch(openAddAddressModal());
+        dispatch(openAddAddressModal());
+        return dispatch(setIsLoading(false));
       }
       identities = identities
         .map( identity =>
