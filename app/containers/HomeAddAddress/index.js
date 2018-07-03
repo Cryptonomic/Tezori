@@ -13,11 +13,16 @@ import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
 import Loader from '../../components/Loader';
 
 import Tooltip from '../../components/Tooltip/';
-import styles from './styles.css';
 import TezosIcon from '../../components/TezosIcon/';
 
 import { importAddress } from '../../redux/wallet/thunks';
+import styles from './styles.css';
 
+const Container = styled.div`
+  width: 80%;
+  margin: 3rem auto 0;
+  padding: ${ms(3)} ${ms(4)};
+`;
 
 const InputWithTooltip = styled.div`
   position: relative;
@@ -104,15 +109,14 @@ const PkhTooltip = () => {
 
 type Props = {
   importAddress: Function,
-  isLoading: boolean,
-  selectedAccountHash: string
+  isLoading: boolean
 };
 
 class AddAddress extends Component<Props> {
   props: Props;
 
   state = {
-    activeTab: '',
+    activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
     seed: '',
     pkh: '',
     activationCode: '',
@@ -132,7 +136,7 @@ class AddAddress extends Component<Props> {
       <div
         key={tabName}
         className={tabClasses}
-        onClick={() => this.setState({ tabName: activeTab })}
+        onClick={() => this.setState({ activeTab: tabName })}
       >
         {tabName}
       </div>
@@ -265,7 +269,7 @@ class AddAddress extends Component<Props> {
   render() {
     const { isLoading } = this.props;
     return (
-      <div>
+      <Container>
         {this.renderTabController()}
         <div className={styles.addAddressBodyContainer}>
           {this.renderAddBody()}
@@ -278,7 +282,7 @@ class AddAddress extends Component<Props> {
           </ImportButton>
           {isLoading && <Loader />}
         </div>
-      </div>
+      </Container>
     );
   }
 }
@@ -297,4 +301,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(AddAddress);
