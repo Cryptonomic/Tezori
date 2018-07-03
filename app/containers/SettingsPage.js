@@ -195,7 +195,6 @@ class SettingsPage extends Component<Props> {
 
     return (
       <Container>
-
         <BackToWallet onClick={() => {
           goBack();
           syncWallet();
