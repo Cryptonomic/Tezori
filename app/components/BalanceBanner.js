@@ -52,6 +52,7 @@ const AddressTitle = styled(H4)`
   color: ${({ theme: { colors } }) => colors.white};
   margin: 0;
   line-height: 1.75;
+  font-size: ${ms(2.2)}
 `;
 
 const AddressTitleIcon = styled(TezosIcon)`
@@ -172,7 +173,7 @@ function BalanceBanner(props: Props) {
           )}
         </AddressTitle>
         <AddressInfo>
-          <TezosAddress address={publicKeyHash} weight={theme.typo.weights.light} color={'white'} text={publicKeyHash}/>
+          <TezosAddress address={publicKeyHash} weight={theme.typo.weights.light} color={'white'} text={publicKeyHash} size={ms(1.7)}/>
           <Amount
             color="white"
             size={ms(4.5)}

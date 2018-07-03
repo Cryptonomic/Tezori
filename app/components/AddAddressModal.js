@@ -70,16 +70,9 @@ const TooltipTitle = styled.p`
   margin: 0 0 ${ms(-1)} 0;
 `
 
-const Row = styled.div`
+const RowInputs = styled.div`
   display: grid;
   grid-column-gap: ${ms(1)};
-`
-
-const FirstRowInputs = styled(Row)`
-  grid-template-columns: 1fr 2fr;
-`
-
-const SecondRowInputs = styled(Row)`
   grid-template-columns: 3fr 4fr;
 `
 
@@ -227,7 +220,7 @@ export default function AddAddress(props: Props) {
               value={seed}
               onChange={(_, newSeed) => updateSeed(newSeed)}
               />
-            <FirstRowInputs>
+            <RowInputs>
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Fundraiser Password"
@@ -265,9 +258,9 @@ export default function AddAddress(props: Props) {
                   </Button>
                 </StyledTooltip>
               </InputWithTooltip>
-            </FirstRowInputs>
+            </RowInputs>
 
-            <SecondRowInputs>
+            <RowInputs>
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Fundraiser Email Address"
@@ -304,7 +297,7 @@ export default function AddAddress(props: Props) {
                   </Button>
                 </StyledTooltip>
               </InputWithTooltip>
-              </SecondRowInputs>
+              </RowInputs>
             <ImportButton
               buttonTheme="primary"
               onClick={importAddress}

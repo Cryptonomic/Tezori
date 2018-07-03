@@ -85,9 +85,15 @@ const AddressesTitle = styled.div`
   line-height: 1.5;
 `;
 
+const DelegateTitle = styled(AddressesTitle)`
+  font-size: ${ms(-0.7)};
+  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold }
+`
+
 const AccountTitle = styled(H3)`
-  font-size: ${ms(1)};
+  font-size: ${ms(0.7)};
   font-weight: ${({theme: {typo}}) => typo.weights.bold};
+  letter-spacing: 0.8px;
   padding: 0 ${ms(-1)} 0 0;
   display: inline-block;
   line-height: 1.5;
@@ -235,6 +241,8 @@ class AddressBlock extends Component<Props, State> {
             color={'primary'}
             size={ms(0)}
             amount={balance}
+            showTooltip
+            format={2}
           />
         </AddressLabel>
         <Address
@@ -265,6 +273,7 @@ class AddressBlock extends Component<Props, State> {
             <TezosAmount
               color={publicKeyHash === selectedAccountHash ? 'white' : 'primary'}
               amount={accountBlock.get('balance')}
+              size={ms(-0.7)}
             />
             <Syncing isReady={ isManagerReady } >
               <span>Syncing</span>
@@ -280,9 +289,9 @@ class AddressBlock extends Component<Props, State> {
         </Address>
 
         <AddDelegateLabel>
-          <AddressesTitle>
+          <DelegateTitle>
             Add a Delegate
-          </AddressesTitle>
+          </DelegateTitle>
 
           <AddCircle
             style={{
