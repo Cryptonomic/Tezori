@@ -10,9 +10,8 @@ import { H4 } from './Heading';
 import AddressBlock from './AddressBlock';
 import Tooltip from './Tooltip';
 import {
-  openAddAddressModal,
   selectAccount
-} from '../reducers/address.duck';
+} from '../redux/wallet/thunks';
 import { openCreateAccountModal } from '../reducers/createAccount.duck';
 
 type OperationGroup = {
@@ -56,7 +55,6 @@ type Identity = {
 
 type Props = {
   openCreateAccountModal: Function,
-  openAddAddressModal: Function,
   identities: List<Identity>,
   selectAccount: Function,
   selectedAccountHash: string,
@@ -91,7 +89,7 @@ class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { openAddAddressModal, identities, theme: { colors } } = this.props;
+    const { identities, theme: { colors } } = this.props;
 
     return (
       <Container>
@@ -127,11 +125,11 @@ class Addresses extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { address } = state;
+  const { wallet } = state;
 
   return {
-    identities: address.get('identities'),
-    selectedAccountHash: address.get('selectedAccountHash')
+    identities: wallet.get('identities'),
+    selectedAccountHash: wallet.get('selectedAccountHash')
   };
 }
 
@@ -139,7 +137,6 @@ function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
       openCreateAccountModal,
-      openAddAddressModal,
       selectAccount
     },
     dispatch

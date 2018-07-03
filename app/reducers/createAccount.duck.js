@@ -3,7 +3,7 @@ import { TezosOperations, TezosConseilQuery } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import { LOGOUT } from '../redux/wallet/types';
-import { addNewAccount } from './address.duck';
+import { addNewAccount } from '../redux/wallet/actions';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
@@ -54,13 +54,13 @@ export const confirmPassPhrase = actionCreator(
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function createNewAccount() {
   return async (dispatch, state) => {
-    const publicKeyHash = state().address.get('selectedParentHash');
+    const publicKeyHash = state().wallet.get('selectedParentHash');
     const delegate = state().createAccount.get('delegate');
     const amount = state().createAccount.get('amount');
     const parsedAmount = Number(amount.replace(/\,/g,''));
     const amountInUtez = tezToUtez(parsedAmount);
     const fee = state().createAccount.get('fee');
-    const identities = state().address.get('identities').toJS();
+    const identities = state().wallet.get('identities').toJS();
 
     const passPhrase = state().createAccount.get('passPhrase');
     const nodes = state().nodes.toJS();

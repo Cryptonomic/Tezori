@@ -64,15 +64,15 @@ export function showConfirmation() {
 export function sendConfirmation() {
   return async (dispatch, state) => {
     const sendTezosState = state().sendTezos;
-    const identities = state().address.get('identities').toJS();
+    const identities = state().wallet.get('identities').toJS();
     const password = sendTezosState.get('password');
     const walletPassword = state().wallet.get('password');
     const toAddress = sendTezosState.get('toAddress');
     const amount = sendTezosState.get('amount');
     const fee = sendTezosState.get('fee');
     const nodes = state().nodes.toJS();
-    const selectedAccountHash = state().address.get('selectedAccountHash');
-    const selectedParentHash = state().address.get('selectedParentHash');
+    const selectedAccountHash = state().wallet.get('selectedAccountHash');
+    const selectedParentHash = state().wallet.get('selectedParentHash');
     const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
 
     try {

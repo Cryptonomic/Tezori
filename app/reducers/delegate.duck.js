@@ -54,11 +54,11 @@ export function sendConfirmation() {
   return async (dispatch, state) => {
     const delegateState = state().delegate;
     const address = delegateState.get('address');
-    const identities = state().address.get('identities').toJS();
+    const identities = state().wallet.get('identities').toJS();
     const fee = delegateState.get('delegateFee');
     const nodes = state().nodes.toJS();
-    const selectedAccountHash = state().address.get('selectedAccountHash');
-    const selectedParentHash = state().address.get('selectedParentHash');
+    const selectedAccountHash = state().wallet.get('selectedAccountHash');
+    const selectedParentHash = state().wallet.get('selectedParentHash');
     try {
       dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);

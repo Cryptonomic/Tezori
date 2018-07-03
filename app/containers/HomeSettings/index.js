@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as goBackToWallet } from 'react-router-redux';
 import styled, { withTheme } from 'styled-components';
@@ -16,7 +16,7 @@ import MessageBar from '../../components/MessageBar';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 
 
-import { syncWallet } from '../../reducers/address.duck';
+import { syncWallet } from '../../redux/wallet/thunks';
 import {
   setSelected,
   removeNode
@@ -338,4 +338,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default withTheme(connect(mapStateToProps, mapDispatchToProps)(SettingsPage));
+export default compose(
+  withTheme,
+  connect(mapStateToProps, mapDispatchToProps)
+)(SettingsPage);

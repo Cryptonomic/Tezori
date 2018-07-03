@@ -14,3 +14,17 @@ export const getWalletIsLoading = createSelector(
   getWallet,
   wallet => wallet.get('isLoading')
 );
+
+export const getTotalBalance = createSelector(
+  getWallet,
+  wallet => {
+    const identities = wallet.get('identities').toJS();
+    const balances = identities.map(identity => identity.balance);
+    return balances.reduce((acc, curr) => acc + curr, 0);
+  }
+);
+
+export const getIdentities = createSelector(
+  getWallet,
+  wallet => wallet.get('identities')
+);

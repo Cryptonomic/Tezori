@@ -2,13 +2,11 @@ import path from 'path';
 import { push } from 'react-router-redux';
 import { flatten, pick } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
-import { push } from 'react-router-redux';
 import { updateAddress } from '../../reducers/delegate.duck';
 import { addMessage } from '../../reducers/message.duck';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
-import { addMessage } from '../../reducers/message.duck';
-import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
+import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 
 import {
   findAccount,
@@ -32,7 +30,7 @@ import {
 import {
   logout,
   setWallet,
-  setIsLoading
+  setIsLoading,
   setIdentities,
   setSelectedAccount,
   addNewIdentity,
@@ -330,6 +328,7 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(automaticAccountRefresh());
       await dispatch(syncWallet());
 
+      dispatch(push('/home'));
     } catch (e) {
       dispatch(addMessage(e.name, true));
       return false;

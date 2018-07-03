@@ -22,7 +22,7 @@ import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 import { READY } from '../constants/StatusTypes';
 
-import { syncWallet } from '../reducers/address.duck';
+import { syncWallet } from '../redux/wallet/thunks';
 
 const Container = styled.section`
   flex-grow: 1;
@@ -206,15 +206,15 @@ class ActionPanel extends Component<Props, State> {
 }
 
 function mapStateToProps(state) {
-  const { address } = state;
-  const identities = address.get('identities');
+  const { wallet } = state;
+  const identities = wallet.get('identities');
   const jsIdentities = identities.toJS();
-  const selectedAccountHash = address.get('selectedAccountHash');
-  const selectedParentHash = address.get('selectedParentHash');
+  const selectedAccountHash = wallet.get('selectedAccountHash');
+  const selectedParentHash = wallet.get('selectedParentHash');
 
   return {
     identities,
-    isLoadingTransactions: address.get('isLoading'),
+    isLoadingTransactions: wallet.get('isLoading'),
     selectedAccountHash,
     selectedAccount: getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash),
     selectedParentHash,

@@ -7,6 +7,7 @@ import Login from './containers/Login/';
 import WalletNodesRequired from './containers/WalletNodesRequired/';
 import { isLoggedIn } from './utils/login';
 import { hasNodes } from './utils/nodes';
+import { getIdentities } from './redux/wallet/selectors';
 
 export default (store) => (
   <App>
