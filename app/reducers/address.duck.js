@@ -7,6 +7,7 @@ import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 
 import { saveUpdatedWallet } from '../redux/wallet/thunks';
+import { LOGOUT } from '../redux/wallet/types';
 import { addMessage } from './message.duck';
 import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
@@ -40,7 +41,6 @@ const {
 } = TezosOperations;
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const CLEAR_ENTIRE_ADDRESS_STATE = 'CLEAR_ENTIRE_ADDRESS_STATE';
 const OPEN_ADD_ADDRESS_MODAL = 'OPEN_ADD_ADDRESS_MODAL';
 const CLOSE_ADD_ADDRESS_MODAL = 'CLOSE_ADD_ADDRESS_MODAL';
 const SET_ACTIVE_ADD_ADDRESS_TAB = 'SET_ACTIVE_ADD_ADDRESS_TAB';
@@ -62,9 +62,7 @@ const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-export const clearEntireAddressState = actionCreator(
-  CLEAR_ENTIRE_ADDRESS_STATE
-);
+
 export const openAddAddressModal = actionCreator(OPEN_ADD_ADDRESS_MODAL);
 export const closeAddAddressModal = actionCreator(CLOSE_ADD_ADDRESS_MODAL);
 const updateActiveTab = actionCreator(SET_ACTIVE_ADD_ADDRESS_TAB, 'activeTab');
@@ -219,7 +217,9 @@ export function selectDefaultAccountOrOpenModal() {
     }
     try {
       let identities = state().wallet.get('identities').toJS();
+      console.log(' identities ', identities, identities.identities, identities.length);
       if ( identities.length === 0 ) {
+
         return dispatch(openAddAddressModal());
       }
       identities = identities
@@ -407,8 +407,6 @@ const initState = fromJS({
 
 export default function address(state = initState, action) {
   switch (action.type) {
-    case CLEAR_ENTIRE_ADDRESS_STATE:
-      return initState;
     case CLEAR_STATE: {
       const identities = state.get('identities');
       const selectedAccountHash = state.get('selectedAccountHash');
@@ -479,6 +477,8 @@ export default function address(state = initState, action) {
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
         .set('selectedParentHash', action.selectedParentHash);
+    case LOGOUT:
+      return initState;
     default:
       return state;
   }

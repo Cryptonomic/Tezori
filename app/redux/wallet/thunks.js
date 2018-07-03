@@ -1,13 +1,11 @@
 import path from 'path';
 import { TezosWallet } from 'conseiljs';
 import { push } from 'react-router-redux';
-import { clearEntireAddressState } from '../../reducers/address.duck';
 import { addMessage } from '../../reducers/message.duck';
-import { displayError } from '../../utils/formValidation';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 
 import {
-  clearWalletState,
+  logout,
   setWallet
 } from './actions';
 
@@ -15,8 +13,7 @@ const { createWallet, loadWallet, saveWallet } = TezosWallet;
 
 export function goHomeAndClearState() {
   return dispatch => {
-    dispatch(clearWalletState());
-    dispatch(clearEntireAddressState());
+    dispatch(logout());
     dispatch(push('/'));
   };
 }
@@ -58,33 +55,10 @@ export function saveUpdatedWallet(identities) {
   };
 }
 
-export function login(loginType, walletLocation, walletFileName, password, confirmedPassword) {
+export function login(loginType, walletLocation, walletFileName, password) {
   return async (dispatch, state) => {
     const completeWalletPath = path.join(walletLocation, walletFileName);
-
-    // TODO: clear out message bar
     dispatch(addMessage('', true));
-
-    let validations = [
-      { value: walletLocation, type: 'locationFilled'},
-      { value: `${walletLocation}/${walletFileName}`, type: 'validJS'},
-      { value: password, type: 'notEmpty', name: 'Password' },
-      { value: password, type: 'minLength8', name: 'Password' }
-    ];
-
-    if (loginType === CREATE ) {
-      validations.push({
-        value: [password, confirmedPassword],
-        type: 'samePassPhrase',
-        name: 'Passwords'
-      })
-    }
-
-    const error = displayError(validations);
-    if (error) {
-      return dispatch(addMessage(error, true));
-    }
-
     try {
       let identities = [];
       if (loginType === CREATE) {
@@ -95,8 +69,7 @@ export function login(loginType, walletLocation, walletFileName, password, confi
           throw err;
         });
       }
-
-      throw new Error('whaaaaatt');
+      console.log('identitiesidentitiesidentities', identities);
       
       dispatch(
         setWallet({
@@ -110,5 +83,6 @@ export function login(loginType, walletLocation, walletFileName, password, confi
       dispatch(addMessage(e.name, true));
       return false;
     }
+    return true;
   };
 }

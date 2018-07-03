@@ -4,7 +4,7 @@ import {
   SET_WALLET_LOCATION,
   SET_PASSWORD,
   SET_IDENTITIES,
-  CLEAR_WALLET_STATE,
+  LOGOUT,
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 
@@ -14,5 +14,7 @@ export const setWalletFileName = actionCreator( SET_WALLET_FILENAME, 'walletFile
 export const updateWalletLocation = actionCreator( SET_WALLET_LOCATION, 'walletLocation' );
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
-export const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
+export const logout = actionCreator(LOGOUT);
+
+
 

@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 
 import actionCreator from '../utils/reduxHelpers';
+import { LOGOUT } from '../redux/wallet/types';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Constants ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 const ADD_MESSAGE = 'ADD_MESSAGE';
@@ -37,6 +38,8 @@ export default function messages(state = initState, action) {
 
       return state.set('message', message);
     }
+    case LOGOUT:
+      return initState;
     default:
       return state;
   }

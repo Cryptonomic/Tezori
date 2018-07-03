@@ -210,15 +210,13 @@ class LoginCreate extends Component<Props> {
   );
 
   login = async (loginType) => {
-    const { walletLocation, walletFileName, password, confirmPassword } = this.state;
-    const { login } = this.props;
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    const { walletLocation, walletFileName, password } = this.state;
+    const { login, history } = this.props;
     this.setState({ isLoading: true });
-    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbb');
-    const loggedIn = await login(loginType, walletLocation, walletFileName, password, confirmPassword);
+    const loggedIn = await login(loginType, walletLocation, walletFileName, password);
     this.setState({ isLoading: false });
     if ( loggedIn ) {
-      console.log('is logged in.');
+      history.push('/home');
     }
   };
 
@@ -226,8 +224,6 @@ class LoginCreate extends Component<Props> {
     const { message, goBack } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
-
-    console.log('isLoading', isLoading);
 
     return (
       <div className={styles.createContainer}>

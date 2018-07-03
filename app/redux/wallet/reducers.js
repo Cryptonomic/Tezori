@@ -5,7 +5,7 @@ import {
   SET_WALLET_LOCATION,
   SET_PASSWORD,
   SET_IDENTITIES,
-  CLEAR_WALLET_STATE,
+  LOGOUT,
 } from './types';
 
 const initState = fromJS({
@@ -27,7 +27,7 @@ export default function wallet(state = initState, action) {
       return state.set('password', action.password);
     case SET_IDENTITIES:
       return state.set('identities', fromJS(action.identities));
-    case CLEAR_WALLET_STATE:
+    case LOGOUT:
       return initState;
     default:
       return state;

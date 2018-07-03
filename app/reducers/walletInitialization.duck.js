@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import path from 'path';
 import { TezosWallet } from 'conseiljs';
 
-import { clearEntireAddressState } from './address.duck';
+import { logout } from './address.duck';
 import { addMessage } from './message.duck';
 import actionCreator from '../utils/reduxHelpers';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
@@ -30,8 +30,7 @@ const SET_CURRENT_WALLET = 'SET_CURRENT_WALLET';
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function goHomeAndClearState() {
   return dispatch => {
-    dispatch(clearWalletState());
-    dispatch(clearEntireAddressState());
+    dispatch(logout());
     dispatch(push('/'));
   };
 }

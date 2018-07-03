@@ -4,6 +4,7 @@ import { TezosOperations } from 'conseiljs';
 import actionCreator from '../utils/reduxHelpers';
 import request from '../utils/request';
 import { addMessage } from './message.duck';
+import { LOGOUT } from '../redux/wallet/types';
 import { displayError } from '../utils/formValidation';
 import { getSelectedKeyStore } from '../utils/general';
 import { getSelected } from '../utils/nodes';
@@ -109,6 +110,8 @@ export default function delegate(state = initState, action) {
       break;
     case UPDATE_DELEGATE_IS_LOADING:
       return state.set('isLoading', action.isLoading);
+    case LOGOUT:
+      return initState;
     default:
       return state;
   }

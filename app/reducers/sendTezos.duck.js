@@ -3,6 +3,7 @@ import { TezosOperations } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
 import { addMessage } from './message.duck';
+import { LOGOUT } from '../redux/wallet/types';
 import { displayError } from '../utils/formValidation';
 import { tezToUtez } from '../utils/currancy';
 import { getSelectedKeyStore } from '../utils/general'
@@ -139,6 +140,8 @@ export default function sendTezos(state = initState, action) {
       return state.set('isConfirmationModalOpen', false);
     case UPDATE_SEND_TEZOS_LOADING:
       return state.set('isLoading', action.isLoading);
+    case LOGOUT:
+      return initState;
     default:
       return state;
   }

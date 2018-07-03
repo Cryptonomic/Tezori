@@ -4,8 +4,9 @@ import { Switch, Route, Redirect } from 'react-router';
 import App from './containers/App/';
 import Home from './containers/Home/';
 import Login from './containers/Login/';
-import WalletNodesRequired from './components/WalletNodesRequired/';
+import WalletNodesRequired from './containers/WalletNodesRequired/';
 import { isLoggedIn } from './utils/login';
+import { hasNodes } from './utils/nodes';
 
 export default (store) => (
   <App>
@@ -14,16 +15,13 @@ export default (store) => (
         path="/home"
         render={(context) => {
           const state = store.store.getState();
+          if ( !hasNodes(state) ) {
+            return <Redirect to="/walletNodesRequired" />
+          }
 
           if ( !isLoggedIn(state) ) {
             return <Redirect to="/login" />
           }
-
-          /*
-          if ( !hasNodes(state) ) {
-            return <Redirect to="/walletNodesRequired" />
-          }
-          */
 
           return <Home { ...context } />
         }}
@@ -34,8 +32,3 @@ export default (store) => (
     </Switch>
   </App>
 );
-
-//<Route path="/addresses" component={AddressPage} />
-//<Route path="/settings" component={SettingsPage} />
-//  <Route path="/" component={HomePage} />
-//  <IndexRoute component={home}/>

@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 import { TezosOperations, TezosConseilQuery } from 'conseiljs';
 
 import actionCreator from '../utils/reduxHelpers';
+import { LOGOUT } from '../redux/wallet/types';
 import { addNewAccount } from './address.duck';
 import { addMessage } from './message.duck';
 import { displayError } from '../utils/formValidation';
@@ -157,6 +158,8 @@ export default function createAccount(state = initState, action) {
       return state.set('passPhrase', action.passphrase);
     case CONFIRM_PASS_PHRASE:
       return state.set('confirmedPassPhrase', action.confirmedpassphrase);
+    case LOGOUT:
+      return initState;
     default:
       return state;
   }
