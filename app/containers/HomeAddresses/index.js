@@ -3,14 +3,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
+import { ms } from '../../styles/helpers';
 
-import Addresses from '../components/Addresses';
-import ActionPanel from '../components/ActionPanel';
-import AddAddressModal from '../components/AddAddressModal';
-import MessageBar from '../components/MessageBar';
+import Addresses from '../../components/Addresses';
+import ActionPanel from '../../components/ActionPanel';
+import AddAddressModal from '../../components/AddAddressModal';
+import MessageBar from '../../components/MessageBar';
 import {
-  clearAccountRefreshInterval,
   setActiveTab as setActiveAddAddressTab,
   closeAddAddressModal,
   importAddress,
@@ -24,7 +23,7 @@ import {
   updatePkh,
   updateActivationCode,
   selectDefaultAccountOrOpenModal
-} from '../reducers/address.duck';
+} from '../../reducers/address.duck';
 
 type Props = {
   activeTabAddAddressTab: string,

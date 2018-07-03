@@ -52,7 +52,6 @@ export function showConfirmationModal() {
 export function sendConfirmation() {
   return async (dispatch, state) => {
     const delegateState = state().delegate;
-    const walletState = state().walletInitialization;
     const address = delegateState.get('address');
     const identities = state().address.get('identities').toJS();
     const fee = delegateState.get('delegateFee');

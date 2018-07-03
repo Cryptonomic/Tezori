@@ -26,23 +26,6 @@ const SET_WALLET_LOCATION = 'SET_WALLET_LOCATION';
 const SET_CURRENT_WALLET = 'SET_CURRENT_WALLET';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
-const clearWalletState = actionCreator(CLEAR_WALLET_STATE);
-export const setPassword = actionCreator(SET_PASSWORD, 'password');
-export const setConfirmedPassword = actionCreator(
-  SET_CONFIRMED_PASSWORD,
-  'password'
-);
-export const setDisplay = actionCreator(SET_DISPLAY, 'currentDisplay');
-export const setIsLoading = actionCreator(SET_IS_LOADING, 'isLoading');
-export const setWalletFileName = actionCreator(
-  SET_WALLET_FILENAME,
-  'walletFileName'
-);
-export const updateWalletLocation = actionCreator(
-  SET_WALLET_LOCATION,
-  'walletLocation'
-);
-const setCurrentWallet = actionCreator(SET_CURRENT_WALLET, 'wallet');
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Thunks ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export function goHomeAndClearState() {
@@ -174,4 +157,9 @@ export default function wallet(state = initState, action) {
     default:
       return state;
   }
+}
+export const getWalletName = state => {
+  const fileName = state.wallet.get('walletFileName');
+  const walletName = fileName.split('.');
+  return walletName[0];
 }

@@ -6,7 +6,7 @@ import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 import actionCreator from '../utils/reduxHelpers';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 
-import { saveUpdatedWallet } from './walletInitialization.duck';
+import { saveUpdatedWallet } from '../redux/wallet/thunks';
 import { addMessage } from './message.duck';
 import { updateAddress } from '../reducers/delegate.duck';
 import { displayError } from '../utils/formValidation';
@@ -213,13 +213,12 @@ export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
     dispatch(automaticAccountRefresh());
-    const initWalletState = state().walletInitialization;
     const isInitiated = state().address.get('isInitiated');
     if ( isInitiated ) {
       return false;
     }
     try {
-      let identities = initWalletState.getIn(['wallet', 'identities']).toJS();
+      let identities = state().wallet.get('identities').toJS();
       if ( identities.length === 0 ) {
         return dispatch(openAddAddressModal());
       }
@@ -308,7 +307,6 @@ export function importAddress() {
     const passPhrase = state().address.get('passPhrase');
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
     const nodes = state().nodes.toJS();
-    const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
 
     // TODO: clear out message bar

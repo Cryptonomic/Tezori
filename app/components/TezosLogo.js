@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import Button from './Button';
-import TezosIcon from './TezosIcon';
-import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
+import Button from './Button/';
+import TezosIcon from './TezosIcon/';
+import { goHomeAndClearState } from '../redux/wallet/thunks';
 import { ms } from '../styles/helpers';
 
 const Container = styled.div`

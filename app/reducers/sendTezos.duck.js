@@ -63,10 +63,9 @@ export function showConfirmation() {
 export function sendConfirmation() {
   return async (dispatch, state) => {
     const sendTezosState = state().sendTezos;
-    const walletState = state().walletInitialization;
     const identities = state().address.get('identities').toJS();
     const password = sendTezosState.get('password');
-    const walletPassword = walletState.get('password');
+    const walletPassword = state().wallet.get('password');
     const toAddress = sendTezosState.get('toAddress');
     const amount = sendTezosState.get('amount');
     const fee = sendTezosState.get('fee');

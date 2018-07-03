@@ -6,9 +6,8 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { lighten } from 'polished';
-import { getWalletName } from '../../reducers/walletInitialization.duck';
+import { getWalletName } from '../../redux/wallet/selectors';
 import SettingsController from '../SettingsController';
-import TotalBalance from '../TotalBalance';
 import TezosLogo from '../TezosLogo';
 import { ms } from '../../styles/helpers';
 
@@ -18,8 +17,8 @@ const Container = styled.div`
   align-items: center;
   padding: ${ms(0)} ${ms(3)};
   flex-shrink: 0;
-  background-color: ${({ isHomePath, theme: { colors } }) =>
-    isHomePath ? colors.gray2 : lighten(0.03, colors.gray2)};
+  background-color: ${({ onlyLogo, theme: { colors } }) =>
+  onlyLogo ? colors.gray2 : lighten(0.03, colors.gray2)};
 `;
 
 const InfoContainer = styled.div`
@@ -38,16 +37,17 @@ const Text = styled.span`
 `;
 
 type Props = {
+  onlyLogo: boolean,
   walletName: string
 };
 
 class TopBar extends Component {
   render() {
-    const isHomePath = this.props.location.pathname === '/';
+    const { onlyLogo } = this.props;
 
     return (
-      <Container isHomePath={isHomePath}>
-        {isHomePath ? (
+      <Container onlyLogo={onlyLogo}>
+        {onlyLogo ? (
           <TezosLogo />
         ) : (
           <Fragment>

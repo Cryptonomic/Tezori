@@ -9,7 +9,7 @@ import { ms } from '../../styles/helpers';
 import { H2, H4, H3 } from '../Heading/';
 import { CONSEIL } from '../../constants/NodesTypes';
 
-import { addNode, setSelected } from '../../reducers/nodes/thunks';
+import { addNode, setSelected } from '../../redux/nodes/thunks';
 import Button from '../Button/';
 
 type Props = {

@@ -1,41 +1,40 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React from 'react';
-import { Switch, Route, IndexRoute, Redirect } from 'react-router';
+import { Switch, Route, Redirect } from 'react-router';
 import App from './containers/App';
-import HomePage from './containers/HomePage';
-import AddressPage from './containers/AddressPage';
-import SettingsPage from './containers/SettingsPage';
-import TopBar from './components/TopBar/';
+import Home from './containers/Home';
+import Login from './containers/Login';
+import WalletNodesRequired from './components/WalletNodesRequired/';
 
 export default (store) => (
   <App>
     <Switch>
-      <Redirect from="/" to="/home" />
       <Route
         path="/home"
         render={(context) => {
-          if ( isLoggedIn() ) {
-            return <HomePage { ...context } />
-          }
-          return <Redirect to="/login" />
-        }}
-      >
-        <Route path="/addresses" component={AddressPage} />
-        <Route path="/settings" component={SettingsPage} />
-        <IndexRoute component={AddressPage}/>
-      </Route>
-      <Route path="/login" component={Login} >
-        <Route path="/loginHome" component={LoginHome} />
-        <Route path="/loginImport" component={LoginImport} />
-        <Route path="/loginCreate" component={loginCreate} />
-        <IndexRoute component={LoginHome}/>
-      </Route>
+          const state = store.store.getState();
 
+          console.log('state', state);
+          //!isLoggedIn(state)
+          if ( true ) {
+            return <Redirect to="/login" />
+          }
+
+          /*
+          if ( !hasNodes(state) ) {
+            return <Redirect to="/walletNodesRequired" />
+          }
+          */
+
+          return <Home { ...context } />
+        }}
+      />
+      <Route path="/walletNodesRequired" component={WalletNodesRequired} />
+      <Route path="/login" component={Login} />
+      <Redirect from="/" to="/home" />
     </Switch>
   </App>
 );
-
-//<TopBar />
 
 //<Route path="/addresses" component={AddressPage} />
 //<Route path="/settings" component={SettingsPage} />
