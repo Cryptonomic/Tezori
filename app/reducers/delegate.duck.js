@@ -63,7 +63,7 @@ export function sendConfirmation() {
       dispatch(updateIsLoading(true));
       const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
       const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-      console.log('debug - jjjjj - url, apiKey', url, apiKey);
+      console.log('-debug: - jjjjj - url, apiKey', url, apiKey);
       const operation = await sendDelegationOperation(url, keyStore, address, fee).catch((err) => {
         err.name = err.message;
         throw err;

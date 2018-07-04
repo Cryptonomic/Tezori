@@ -7,7 +7,6 @@ import Login from './containers/Login/';
 import WalletNodesRequired from './containers/WalletNodesRequired/';
 import { isLoggedIn } from './utils/login';
 import { hasNodes } from './utils/nodes';
-import { getIdentities } from './redux/wallet/selectors';
 
 export default (store) => (
   <App>
@@ -28,7 +27,21 @@ export default (store) => (
         }}
       />
       <Route path="/walletNodesRequired" component={WalletNodesRequired} />
-      <Route path="/login" component={Login} />
+      <Route
+        path="/login"
+        render={(context) => {
+          const state = store.store.getState();
+          if ( !hasNodes(state) ) {
+            return <Redirect to="/walletNodesRequired" />
+          }
+
+          if ( isLoggedIn(state) ) {
+            return <Redirect to="/home" />
+          }
+
+          return <Login { ...context } />
+        }}
+      />
       <Redirect from="/" to="/home" />
     </Switch>
   </App>

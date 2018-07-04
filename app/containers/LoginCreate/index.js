@@ -224,7 +224,6 @@ class LoginCreate extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
-
           <BackToWallet
             onClick={goBack}
           >

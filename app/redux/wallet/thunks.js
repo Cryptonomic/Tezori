@@ -54,15 +54,16 @@ const {
 } = TezosOperations;
 
 import { getSelectedNode } from '../../utils/nodes';
+let currentAccountRefreshInterval = null;
 
 export function goHomeAndClearState() {
   return dispatch => {
     dispatch(logout());
+    clearAutomaticAccountRefresh();
     dispatch(push('/'));
   };
 }
 
-let currentAccountRefreshInterval = null;
 export function automaticAccountRefresh() {
   return (dispatch, state) => {
     const oneSecond = 1000; // milliseconds
@@ -71,7 +72,7 @@ export function automaticAccountRefresh() {
     const REFRESH_INTERVAL = minutes * oneMinute;
 
     if (currentAccountRefreshInterval) {
-      clearInterval(currentAccountRefreshInterval);
+      clearAutomaticAccountRefresh();
     }
 
     currentAccountRefreshInterval = setInterval(() =>
@@ -80,6 +81,10 @@ export function automaticAccountRefresh() {
       REFRESH_INTERVAL
     );
   };
+}
+
+export function clearAutomaticAccountRefresh() {
+  clearInterval(currentAccountRefreshInterval);
 }
 
 export function syncAccount(selectedAccountHash, selectedParentHash) {
@@ -184,7 +189,6 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
       console.log('-debug: Error in: selectAccount for:' + selectedAccountHash, selectedParentHash);
       console.error(e);
       dispatch(addMessage(e.name, true));
-      dispatch(setIsLoading(false));
     }
     dispatch(setIsLoading(false));
   };
@@ -206,7 +210,7 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
       let identity = null;
       switch (activeTab) {
         case GENERATE_MNEMONIC:
-          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          identity = await unlockIdentityWithMnemonic(seed, '');
           break;
         case FUNDRAISER:
           identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
@@ -279,20 +283,26 @@ export function login(loginType, walletLocation, walletFileName, password) {
 
       const identities = wallet.identities
         .map( identity => createIdentity(identity) );
-      
-      dispatch(
-        setWallet({
-          identities,
-          walletLocation,
-          walletFileName,
-          password
-        }, 'wallet')
-      );
+
+      let selectedAccountHash ='';
+      let selectedParentHash = '';
 
       if ( identities.length ) {
         const { publicKeyHash } = identities[0];
-        dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
+        selectedAccountHash = selectedParentHash = publicKeyHash;
       }
+      
+      dispatch(
+        setWallet({
+          isLoading: true,
+          identities,
+          walletLocation,
+          walletFileName,
+          password,
+          selectedAccountHash,
+          selectedParentHash
+        }, 'wallet')
+      );
 
       dispatch(automaticAccountRefresh());
       await dispatch(syncWallet());

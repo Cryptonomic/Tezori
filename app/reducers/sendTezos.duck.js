@@ -85,7 +85,7 @@ export function sendConfirmation() {
       }
       dispatch(updateSendTezosLoading(true));
       const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-      console.log('debug - kkkkk - url, apiKey', url, apiKey);
+      console.log('-debug: - kkkkk - url, apiKey', url, apiKey);
       const res = await sendTransactionOperation(
         url,
         keyStore,

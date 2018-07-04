@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { goBack as back } from 'react-router-redux';
 import { bindActionCreators } from 'redux';
 import { Dialog, TextField } from 'material-ui';
+import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import classNames from 'classnames';
 import styled from 'styled-components'
 import { lighten } from 'polished'
@@ -69,6 +71,14 @@ const StyledTooltip = styled(Tooltip)`
   }
 `
 
+const BackToWallet = styled.div`
+  display: flex;
+  align-items: center;
+  color: #4486f0;
+  cursor: pointer;
+  margin-bottom: 3rem;
+`;
+
 const PasswordTooltip = () => {
   return (
     <TooltipContainer>
@@ -108,6 +118,7 @@ const PkhTooltip = () => {
 }
 
 type Props = {
+  goBack: Function,
   importAddress: Function,
   isLoading: boolean
 };
@@ -168,15 +179,9 @@ class AddAddress extends Component<Props> {
           <div>
             <TextField
               floatingLabelText="Seed Words"
-              style={{ width: '100%' }}
+              style={{ width: '70%' }}
               value={ seed }
               onChange={(_, newSeed) => this.setState({ seed: newSeed })}
-            />
-            <TextField
-              floatingLabelText="Password"
-              style={{ width: '100%' }}
-              value={passPhrase}
-              onChange={(_, newPassPhrase) => this.setState({ passPhrase: newPassPhrase })}
             />
           </div>
         );
@@ -281,9 +286,23 @@ class AddAddress extends Component<Props> {
 
   render() {
     const { activeTab } = this.state;
-    const { isLoading } = this.props;
+    const { isLoading, goBack } = this.props;
     return (
       <Container>
+        <BackToWallet
+          onClick={goBack}
+        >
+          <BackCaret
+            style={{
+              fill: '#4486f0',
+              height: '28px',
+              width: '28px',
+              marginRight: '5px',
+              marginLeft: '-9px'
+            }}
+          />
+          <span>Back</span>
+        </BackToWallet>
         {this.renderAppBar()}
         {this.renderTabController()}
         <div className={styles.addAddressBodyContainer}>
@@ -315,8 +334,10 @@ function mapStateToProps({ wallet, message }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    importAddress
+    importAddress,
+    goBack: () => dispatch => dispatch(back())
   }, dispatch );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddAddress);
+

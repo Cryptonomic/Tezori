@@ -84,7 +84,7 @@ export function createNewAccount() {
       const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
 
       const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-      console.log('debug - iiiii - url, apiKey', url, apiKey);
+      console.log('-debug: - iiiii - url, apiKey', url, apiKey);
       const newAccount = await sendOriginationOperation(
         url,
         keyStore,
@@ -114,6 +114,10 @@ export function createNewAccount() {
           )
         )
       );
+      dispatch(addMessage(
+        `Successfully sent origination operation ${newAccount.operationGroupID}.`,
+        false
+      ));
       dispatch(clearCreateAccountState());
     } catch (e) {
       console.error(e);
