@@ -7,3 +7,4 @@ export { default as TezosAmount } from './TezosAmount';
 export { default as TezosIcon } from './TezosIcon';
 export { default as TopBar } from './TopBar';
 export { default as TotalBalance } from './TotalBalance';
+export { default as Update } from './Update';
