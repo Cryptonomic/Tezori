@@ -97,7 +97,7 @@ class LoginHome extends Component<Props> {
               Create Wallet
             </CustomButton>
             <Tip>
-              Want to import your funraiser account?
+              Want to import your fundraiser account?
               <Strong> Create a wallet </Strong>
               first.
             </Tip>

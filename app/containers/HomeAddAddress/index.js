@@ -20,7 +20,7 @@ import styles from './styles.css';
 
 const Container = styled.div`
   width: 80%;
-  margin: 3rem auto 0;
+  margin: ${ms(1)} auto 0;
   padding: ${ms(3)} ${ms(4)};
 `;
 
@@ -150,7 +150,15 @@ class AddAddress extends Component<Props> {
         {Object.values(ADD_ADDRESS_TYPES).map(this.renderTab)}
       </div>
     );
-  }
+  };
+
+  renderAppBar = () => {
+    return (
+      <div className={styles.titleContainer}>
+        <div>Add an Address</div>
+      </div>
+    );
+  };
 
   renderAddBody() {
     const { activeTab, seed, passPhrase, pkh, username, activationCode } = this.state;
@@ -161,9 +169,14 @@ class AddAddress extends Component<Props> {
             <TextField
               floatingLabelText="Seed Words"
               style={{ width: '100%' }}
-              value={seed}
-              disabled={activeTab === ADD_ADDRESS_TYPES.GENERATE_MNEMONIC}
+              value={ seed }
               onChange={(_, newSeed) => this.setState({ seed: newSeed })}
+            />
+            <TextField
+              floatingLabelText="Password"
+              style={{ width: '100%' }}
+              value={passPhrase}
+              onChange={(_, newPassPhrase) => this.setState({ passPhrase: newPassPhrase })}
             />
           </div>
         );
@@ -267,9 +280,11 @@ class AddAddress extends Component<Props> {
   };
 
   render() {
+    const { activeTab } = this.state;
     const { isLoading } = this.props;
     return (
       <Container>
+        {this.renderAppBar()}
         {this.renderTabController()}
         <div className={styles.addAddressBodyContainer}>
           {this.renderAddBody()}
@@ -278,7 +293,11 @@ class AddAddress extends Component<Props> {
             onClick={this.importAddress}
             disabled={isLoading}
           >
-            Import
+            {
+              activeTab === ADD_ADDRESS_TYPES.FUNDRAISER
+                ? 'Import'
+                : 'Create'
+            }
           </ImportButton>
           {isLoading && <Loader />}
         </div>
@@ -286,7 +305,6 @@ class AddAddress extends Component<Props> {
     );
   }
 }
-
 
 function mapStateToProps({ wallet, message }) {
   return {

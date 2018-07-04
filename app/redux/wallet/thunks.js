@@ -190,8 +190,6 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
   };
 }
 
-
-
 export function importAddress(activeTab, seed, pkh, activationCode, username, passPhrase) {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
@@ -244,9 +242,10 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
         if ( findIdentityIndex(identities.toJS(), publicKeyHash) === -1 ) {
           identity = createIdentity(identity);
           dispatch(addNewIdentity(identity));
-          identities = wallet.get('identities');
+          identities = state().wallet.get('identities').toJS();
           await saveUpdatedWallet(identities, walletLocation, walletFileName, password);
           await dispatch(selectAccount(publicKeyHash, publicKeyHash));
+          dispatch(push('/home'));
         } else {
           dispatch(addMessage('Identity already exist', true));
         }
@@ -255,43 +254,13 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
       console.log('-debug: Error in: importAddress for:' + activeTab);
       console.error(e);
       dispatch(addMessage(e.name, true));
-      return false;
     }
 
     dispatch(setIsLoading(false));
-    return true;
   };
 }
 
-
-// todo: 1 check why when importing new identity and going to settings then back - we are going to import identity screen again
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
-export function selectDefaultAccountOrOpenModal() {
-  return async (dispatch, state) => {
-    dispatch(automaticAccountRefresh());
-    try {
-      let identities = state().wallet.get('identities').toJS();
-      if ( identities.length === 0 ) {
-        return dispatch(openAddAddressModal());
-      }
-      dispatch(setIsLoading(true));
-      identities = identities
-        .map( identity =>
-          createIdentity(identity)
-        );
-      dispatch( setIdentities( identities ) );
-
-      const { publicKeyHash } = identities[0];
-      dispatch(setSelectedAccount(publicKeyHash, publicKeyHash));
-    } catch( e ) {
-      console.log('e', e);
-    }
-
-
-    dispatch(setIsLoading(false));
-  };
-}
-
 export function login(loginType, walletLocation, walletFileName, password) {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
@@ -331,9 +300,7 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(push('/home'));
     } catch (e) {
       dispatch(addMessage(e.name, true));
-      return false;
     }
     dispatch(setIsLoading(false));
-    return true;
   };
 }

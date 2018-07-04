@@ -69,12 +69,13 @@ const Content = styled.div`
 
 const RowForParts = styled(Row)`
   margin: 0 -${ms(1)};
+  flex-wrap: wrap;
 `;
 
 const Part = styled.div`
   flex-grow: 1;
   flex-shrink: 0;
-  max-width: 50%;
+  width: 100%;
   padding: 0 ${ms(1)};
   margin-top: ${ ms(2)};
 `;

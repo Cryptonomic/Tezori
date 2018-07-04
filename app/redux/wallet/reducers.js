@@ -18,6 +18,8 @@ const initState = fromJS({
   isLoading: false,
   walletFileName: '',
   walletLocation: '',
+  selectedAccountHash: '',
+  selectedParentHash: '',
   password: ''
 });
 
@@ -53,7 +55,7 @@ export default function wallet(state = initState, action) {
       }
       return state;
     }
-    case ADD_NEW_ACCOUNT:{
+    case ADD_NEW_ACCOUNT: {
       const { publicKeyHash, account } = action;
       const identities = state.get('identities');
       const indexFound = identities
@@ -61,7 +63,8 @@ export default function wallet(state = initState, action) {
 
       if ( indexFound > -1) {
         let identity = identities.get(indexFound);
-        identity = identity.accounts.push(fromJS(account));
+        const accounts = identity.get('accounts');
+        identity = identity.set('accounts', accounts.push(fromJS(account)));
         return state.set('identities', identities.set(indexFound, identity));
       }
       return state;
