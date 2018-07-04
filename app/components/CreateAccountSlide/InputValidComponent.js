@@ -3,8 +3,7 @@ import { TextField } from 'material-ui';
 import CheckCircle from 'material-ui/svg-icons/action/check-circle';
 import Warning from 'material-ui/svg-icons/alert/warning';
 import styled from 'styled-components';
-
-import Button from '../Button';
+import classnames from 'classnames';
 
 
 const inputStyles = {
@@ -30,9 +29,8 @@ const StyledInputContainer = styled.div`
   height: 103px;
   .valid-button {
     position: absolute;
-    right: 15px;
+    right: 12px;
     top: 42px;
-    padding-left: 15px;
   }
   .valid-icon {
     fill: none !important;
@@ -55,15 +53,16 @@ const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
     return null;
   }
   if (isValid) {
-    return (<CheckCircle className='valid-icon' />);
+    return (<CheckCircle className={classnames('valid-icon', 'valid-button')} />);
   }
-  return (<Warning className='no-valid-icon' />);
+  return (<Warning className={classnames('no-valid-icon', 'valid-button')} />);
 }
 
 type Props = {
   value: string,
   index: number,
-  checkValidation: Function
+  checkValidation: Function,
+  onEnter: Function
 };
 
 export default class InputValidComponent extends Component<Props> {
@@ -107,7 +106,12 @@ export default class InputValidComponent extends Component<Props> {
 
     this.props.checkValidation(isValid);
   }
-
+  keyHandler = (ev) => {
+    if (ev.key === 'Enter') {
+      this.props.onEnter();
+      ev.preventDefault();
+    }
+  }
 
 
   render() {
@@ -123,10 +127,9 @@ export default class InputValidComponent extends Component<Props> {
           errorText={this.state.errorText}
           errorStyle={{color: '#ea776c', borderColor: '#ea776c'}}
           onChange={(_, newVal) => this.changFunc(newVal)}
+          onKeyPress={this.keyHandler}
         />
-        <Button buttonTheme="plain" className='valid-button'>
-          {validIcon(this.state.isInputVal && !this.state.isMatching, this.state.isMatched)}
-        </Button> 
+        {validIcon(this.state.isInputVal && !this.state.isMatching, this.state.isMatched)}
       </StyledInputContainer>
     );
   }  

@@ -16,18 +16,18 @@ type Props = {
 };
 
 export default class BackUpSeedPhrase extends Component<Props> {
+  
   props: Props;
   constructor(props) {
     super(props);
     this.state = { isValid: false, randomSeeds: [] };
-  } 
-
+  }
+  
   componentDidMount = () => {
     const randomSeeds = this.generateRandomSeeds();
     this.setState({randomSeeds});
   }
-
-  validationStatus = [false, false, false, false];  
+  validationStatus = [false, false, false, false];
 
   checkValidation = (index, status) => {
     this.validationStatus[index] = status;
@@ -54,8 +54,13 @@ export default class BackUpSeedPhrase extends Component<Props> {
     }
     return resultObj;
   }
+  onEnter = () => {
+    if (this.state.isValid) {
+      this.props.nextAccountSlide(2);
+    }
 
-
+  }
+  
   render() {
     
     return (
@@ -65,8 +70,15 @@ export default class BackUpSeedPhrase extends Component<Props> {
         </div>
         <div className='validFormContainer'>
           {this.state.randomSeeds.length && this.state.randomSeeds.map((item, index) => {
-            return <InputValidComponent key={index} value={item.item} index={item.index + 1} checkValidation={(validation) => this.checkValidation(index, validation)} />
-
+            return (
+              <InputValidComponent 
+                key={index}
+                value={item.item}
+                index={item.index + 1}
+                checkValidation={(validation) => this.checkValidation(index, validation)}
+                onEnter={this.onEnter}
+              />
+            );
           })}
         </div>
         <ActionButton 
