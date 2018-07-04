@@ -24,6 +24,7 @@ addons:
       - xorriso
 
 install:
+  - touch app/defaultWalletNodes.json
   - export CXX="g++-4.8"
   - yarn
   - cd app && yarn && cd ..
