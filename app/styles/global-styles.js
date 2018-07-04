@@ -39,6 +39,7 @@ injectGlobal`
   html {
     box-sizing: border-box;
     line-height: 1.618;
+    background: #edf0f7;
   }
   *, *:before, *:after {
     box-sizing: inherit;
