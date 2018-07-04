@@ -52,7 +52,12 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
-  background-color: ${({ theme: { colors } }) => colors.disabled};
+  background: ${({ isReady, theme: { colors } }) => {
+  return isReady
+    ? colors.accent
+    : colors.disabled;
+  }};
+
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 `;
@@ -204,7 +209,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
         />
 
-        <TabList>
+        <TabList isReady={ isReady } >
           {tabs.map(tab => (
             <Tab
               isActive={activeTab === tab}
