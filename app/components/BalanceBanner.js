@@ -9,6 +9,7 @@ import TezosAddress from './TezosAddress';
 import TezosIcon from './TezosIcon';
 import Tooltip from './Tooltip';
 import Button from './Button';
+import Update from './Update'
 import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
 import CopyIcon from './CopyIcon';
 
@@ -108,7 +109,7 @@ const Refresh = styled(RefreshIcon)`
 
 
 function BalanceBanner(props: Props) {
-  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
+  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress, time } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
@@ -122,33 +123,17 @@ function BalanceBanner(props: Props) {
         <Breadcrumbs>
           {breadcrumbs}
         </Breadcrumbs>
-
-        {
-          isReady
-            ?
-            (
-              <RefreshIcon
+        { isReady
+            ? <Update onClick={onRefreshClick} time={time} />
+            : <Refresh
                 style={{
                   fill: 'white',
                   height: ms(2),
                   width: ms(2),
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
                 onClick={onRefreshClick}
               />
-            )
-            :
-            (
-              <Refresh
-                style={{
-                  fill: 'white',
-                  height: ms(2),
-                  width: ms(2),
-                  cursor: 'pointer'
-                }}
-                onClick={onRefreshClick}
-              />
-            )
         }
       </TopRow>
       <BottomRow>

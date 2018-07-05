@@ -70,8 +70,6 @@ const inputStyles = {
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
-
-
 const SectionContainer = styled.div`
   display: flex;
   flex: 1;

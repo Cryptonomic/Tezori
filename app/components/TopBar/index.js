@@ -9,7 +9,8 @@ import { lighten } from 'polished';
 import { getWalletName } from '../../reducers/walletInitialization.duck';
 import SettingsController from '../SettingsController';
 import TotalBalance from '../TotalBalance';
-import TezosLogo from '../TezosLogo';
+import TezosIcon from '../TezosIcon';
+
 import { ms } from '../../styles/helpers';
 
 const Container = styled.div`
@@ -48,11 +49,11 @@ class TopBar extends Component {
     return (
       <Container isHomePath={isHomePath}>
         {isHomePath ? (
-          <TezosLogo />
+          <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
         ) : (
           <Fragment>
             <InfoContainer>
-              <TezosLogo />
+              <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
               <Text>{this.props.walletName}</Text>
             </InfoContainer>
             <SettingsController />

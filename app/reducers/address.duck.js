@@ -61,6 +61,7 @@ const SET_IDENTITIES = 'SET_IDENTITIES';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 const NEXT_ACCOUNT_SLIDE = 'NEXT_ACCOUNT_SLIDE';
+const UPDATE_FETCHED_TIME = 'UPDATE_FETCHED_TIME';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const clearEntireAddressState = actionCreator(
@@ -87,6 +88,7 @@ export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
 export const nextAccountSlide = actionCreator(NEXT_ACCOUNT_SLIDE, 'currentSlide');
+export const updateFetchedTime = actionCreator(UPDATE_FETCHED_TIME, 'time');
 
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
@@ -170,6 +172,7 @@ export function syncWallet() {
       })
     );
     dispatch( setIdentities( identities ) );
+    dispatch(updateFetchedTime(new Date()));
     dispatch(setIsLoading(false));
   }
 }
@@ -210,6 +213,7 @@ export function selectAccount(selectedAccountHash, selectedParentHash) {
   };
 }
 
+
 export function selectDefaultAccountOrOpenModal() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
@@ -236,7 +240,7 @@ export function selectDefaultAccountOrOpenModal() {
     } catch( e ) {
       console.log('e', e);
     }
-
+    
     await dispatch(syncWallet());
     dispatch(setIsLoading(false));
   };
@@ -369,8 +373,6 @@ export function importAddress() {
           break;
       }
 
-      
-
       if ( identity ) {
         const { publicKeyHash } = identity;
         if ( findIdentityIndex(identities.toJS(), publicKeyHash) === -1 ) {
@@ -413,6 +415,7 @@ const initState = fromJS({
   selectedAccountHash: '',
   selectedParentHash: '',
   currentSlide: 0,
+  time: new Date(),
 });
 
 export default function address(state = initState, action) {
@@ -491,6 +494,8 @@ export default function address(state = initState, action) {
         .set('selectedParentHash', action.selectedParentHash);
     case NEXT_ACCOUNT_SLIDE:
       return state.set('currentSlide', action.currentSlide)
+    case UPDATE_FETCHED_TIME:
+      return state.set('time', action.time);
     default:
       return state;
   }
