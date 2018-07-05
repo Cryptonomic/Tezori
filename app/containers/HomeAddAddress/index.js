@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { goBack as back } from 'react-router-redux';
 import { bindActionCreators } from 'redux';
 import { Dialog, TextField } from 'material-ui';
-import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import classNames from 'classnames';
 import styled from 'styled-components'
 import { lighten } from 'polished'
@@ -70,14 +68,6 @@ const StyledTooltip = styled(Tooltip)`
     background-color: ${({theme: {colors}}) => lighten(0.2, colors.secondary)};
   }
 `
-
-const BackToWallet = styled.div`
-  display: flex;
-  align-items: center;
-  color: #4486f0;
-  cursor: pointer;
-  margin-bottom: 3rem;
-`;
 
 const PasswordTooltip = () => {
   return (
@@ -289,20 +279,6 @@ class AddAddress extends Component<Props> {
     const { isLoading, goBack } = this.props;
     return (
       <Container>
-        <BackToWallet
-          onClick={goBack}
-        >
-          <BackCaret
-            style={{
-              fill: '#4486f0',
-              height: '28px',
-              width: '28px',
-              marginRight: '5px',
-              marginLeft: '-9px'
-            }}
-          />
-          <span>Back</span>
-        </BackToWallet>
         {this.renderAppBar()}
         {this.renderTabController()}
         <div className={styles.addAddressBodyContainer}>
@@ -334,8 +310,7 @@ function mapStateToProps({ wallet, message }) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    importAddress,
-    goBack: () => dispatch => dispatch(back())
+    importAddress
   }, dispatch );
 }
 

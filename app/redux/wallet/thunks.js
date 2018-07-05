@@ -213,7 +213,7 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
           identity = await unlockIdentityWithMnemonic(seed, '');
           break;
         case FUNDRAISER:
-          identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
+          identity = await unlockFundraiserIdentity(seed, username.trim(), passPhrase.trim(), pkh.trim());
           const conseilNode = getSelectedNode(nodes, CONSEIL);
 
           const account = await getAccount(
