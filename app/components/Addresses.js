@@ -12,7 +12,6 @@ import Tooltip from './Tooltip';
 import {
   selectAccount
 } from '../redux/wallet/thunks';
-import { openCreateAccountModal } from '../reducers/createAccount.duck';
 
 type OperationGroup = {
   hash: string,
@@ -54,7 +53,6 @@ type Identity = {
 };
 
 type Props = {
-  openCreateAccountModal: Function,
   identities: List<Identity>,
   selectAccount: Function,
   selectedAccountHash: string,
@@ -113,7 +111,6 @@ class Addresses extends Component<Props> {
             <AddressBlock
               accountBlock={accountBlock}
               accountIndex={index + 1}
-              openCreateAccountModal={this.props.openCreateAccountModal}
               selectAccount={this.props.selectAccount}
               selectedAccountHash={this.props.selectedAccountHash}
             />
@@ -136,7 +133,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      openCreateAccountModal,
       selectAccount
     },
     dispatch

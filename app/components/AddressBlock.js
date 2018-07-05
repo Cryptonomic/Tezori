@@ -14,7 +14,6 @@ import Button from './Button';
 import TezosAmount from './TezosAmount';
 import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip';
 import { READY } from '../constants/StatusTypes';
-import contentCopy from '../../resources/contentCopy.svg';
 
 import AddDelegateModal from './AddDelegateModal';
 
@@ -155,7 +154,6 @@ const Refresh = styled(RefreshIcon)`
 
 type Props = {
   accountBlock: Object, // TODO: type this
-  openCreateAccountModal: Function,
   selectAccount: Function,
   selectedAccountHash: string,
   accountIndex: number,
@@ -169,8 +167,12 @@ type State = {
 class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
-    shouldHideSmartAddressesInfo: false
+    shouldHideSmartAddressesInfo: false,
+    isDelegateModalOpen: false
   };
+
+  openDelegateModal = () =>  this.setState({ isDelegateModalOpen: true });
+  closeDelegateModal = () =>  this.setState({ isDelegateModalOpen: false });
 
   handleManagerAddressClick = () => {
     const { accountBlock } = this.props;
@@ -209,7 +211,8 @@ class AddressBlock extends Component<Props, State> {
   }
 
   render() {
-    const { accountBlock, selectedAccountHash, accountIndex, openCreateAccountModal, theme } = this.props;
+    const { isDelegateModalOpen } = this.state;
+    const { accountBlock, selectedAccountHash, accountIndex, theme } = this.props;
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
     const formatedBalance = balance.toFixed(6)
@@ -294,7 +297,7 @@ class AddressBlock extends Component<Props, State> {
             }}
             onClick={() => {
               if(isManagerReady) {
-                openCreateAccountModal();
+                this.openDelegateModal();
               }
             }}
           />
@@ -361,13 +364,16 @@ class AddressBlock extends Component<Props, State> {
               Delegation Tips
             </NoSmartAddressesTitle>
               {this.renderNoSmartAddressesDescription(noSmartAddressesDescriptionContent)}
-            <NoSmartAddressesButton small buttonTheme="secondary" onClick={openCreateAccountModal}>
+            <NoSmartAddressesButton small buttonTheme="secondary" onClick={this.openDelegateModal}>
               Add a Delegate
             </NoSmartAddressesButton>
           </NoSmartAddressesContainer>
           )
         }
-        <AddDelegateModal />
+        <AddDelegateModal
+          open={isDelegateModalOpen}
+          onCloseClick={this.closeDelegateModal}
+        />
       </Container>
     );
   }
