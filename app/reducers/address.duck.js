@@ -337,37 +337,39 @@ export function importAddress() {
         case SEED_PHRASE:
           identity = await unlockIdentityWithMnemonic(seed, '');
           break;
-        case FUNDRAISER:         
-          identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
+        case FUNDRAISER:{
+            identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
+            const conseilNode = getSelected(nodes, CONSEIL);
+
+            const account = await getAccount(
+              conseilNode.url,
+              identity.publicKeyHash,
+              conseilNode.apiKey
+            ).catch( () => false );
+
+            if ( !account ) {
+              const tezosNode = getSelected(nodes, TEZOS);
+              const activating = await sendIdentityActivationOperation(
+                tezosNode.url,
+                identity,
+                activationCode
+              )
+                .catch((err) => {
+                  err.name = err.message;
+                  throw err;
+                });
+              dispatch(addMessage(
+                `Successfully sent activation operation ${activating.operationGroupID}.`,
+                false
+              ));
+            }
+          }
           break;
         default: 
           break;
       }
 
-      const conseilNode = getSelected(nodes, CONSEIL);
-
-      const account = await getAccount(
-        conseilNode.url,
-        identity.publicKeyHash,
-        conseilNode.apiKey
-      ).catch( () => false );
-
-      if ( !account ) {
-        const tezosNode = getSelected(nodes, TEZOS);
-        const activating = await sendIdentityActivationOperation(
-          tezosNode.url,
-          identity,
-          activationCode
-        )
-          .catch((err) => {
-            err.name = err.message;
-            throw err;
-          });
-        dispatch(addMessage(
-          `Successfully sent activation operation ${activating.operationGroupID}.`,
-          false
-        ));
-      }
+      
 
       if ( identity ) {
         const { publicKeyHash } = identity;
