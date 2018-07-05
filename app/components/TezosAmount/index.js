@@ -70,7 +70,7 @@ const copyToClipboard = text => {
 
 const TezosAmount = (props: Props) => {
   const { size, color, amount, iconName, weight, className, showTooltip ,format, content, rounded} = props;
-  const formatedBalance = `${formatAmount(amount)}`
+  const formatedBalance = `${formatAmount(amount, format)}`
   return showTooltip ? (
     <Tooltip position="bottom" content={<Content formatedBalance={formatedBalance} />}>
       <Amount className={className} color={color} size={size} weight={weight} rounded={rounded}>
@@ -83,7 +83,7 @@ const TezosAmount = (props: Props) => {
     </Tooltip>
     ) : (
     <Amount className={className} color={color} size={size} weight={weight} format={format}>
-      { (rounded && format === 2) ? `~${formatAmount(amount, format)}` : formatAmount(amount, format) }
+      { (rounded && format === 2) ? `~${formatedBalance}` : formatedBalance }
       {
         iconName
           && <Icon size={size} color={color} iconName={iconName}/>
