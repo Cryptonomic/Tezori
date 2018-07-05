@@ -30,6 +30,7 @@ const Amount = styled.span`
   display: inline-flex;
   align-items: center;
   letter-spacing: 0.6px;
+  -webkit-app-region: no-drag;
 
   span {
     line-height: 0;
@@ -70,7 +71,7 @@ const TezosAmount = (props: Props) => {
   const { size, color, amount, iconName, weight, className, showTooltip ,format, content} = props;
   const formatedBalance = `${formatAmount(amount)}`
   return showTooltip ? (
-    <Tooltip position="top" content={<Content formatedBalance={formatedBalance} />}>
+    <Tooltip position="bottom" content={<Content formatedBalance={formatedBalance} />}>
       <Amount className={className} color={color} size={size} weight={weight}>
         { format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}` }
         {
@@ -93,8 +94,8 @@ const TezosAmount = (props: Props) => {
 TezosAmount.defaultProps = {
   amount: 0,
   iconName: 'tezos',
-  size: ms(2),
-  weight: 'normal',
+  size: ms(0),
+  weight: 'bold',
   color: 'primary',
   format: 6,
 };

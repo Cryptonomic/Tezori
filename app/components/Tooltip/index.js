@@ -14,7 +14,8 @@ type Props = {
 const TooltipAdapter = ({className, ...props}) => {
   return <RCTooltip {...props}
                     overlayClassName={`${className}__overlay`}
-                    prefixCls={`${className}__tooltip`} />
+                    prefixCls={`${className}__tooltip`}
+                    align={{ offset: "-22%" }} />
 }
 
 const arrowWidth = '10px';
@@ -189,7 +190,7 @@ const StyledTooltip = styled(TooltipAdapter)`
     }
 
     &-placement-bottom &-arrow {
-      left: ${props => (props.arrowPos && props.arrowPos.left? props.arrowPos.left: '50%')};
+      left: ${props => (props.arrowPos && props.arrowPos.left? props.arrowPos.left: '70%')};
     }
 
     &-placement-bottomLeft &-arrow {

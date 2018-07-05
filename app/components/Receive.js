@@ -17,11 +17,15 @@ const CopyConfirmationTooltip = styled.div`
   position: absolute;
   font-size: ${ms(-1)};
   border-radius: ${ms(0)};
-  padding: ${ms(-2)};
+  padding: ${ms(-4)};
   top: 34px;
   left: 160px;
   opacity: ${({ show }) => (show ? 1 : 0)};
   transition: opacity 0.4s;
+
+  @media (max-width: 1200px) {
+    left: 310px;
+  }
 `;
 
 const HashContainer = styled.div`

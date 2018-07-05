@@ -6,13 +6,14 @@ const Container = styled.div`
   color: ${ ({ theme: { colors } }) => colors.primary };
   font-weight: ${ ({ theme: { typo } }) => typo.weights.light };
   font-size: ${ms(-1)};
-  max-width: ${ms(14)};
+  max-width: ${ms(13)};
+  position
 `
 
 const Title = styled.p`
   font-weight: ${ ({ theme: { typo } }) => typo.weights.bold };
   font-size: ${ms(0)};
-  margin: 0 0 ${ms(0)} 0;
+  margin: 0 0 ${ms(-4)} 0;
 `
 
 function ManagerAddressTooltip() {

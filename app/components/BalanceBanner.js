@@ -51,6 +51,8 @@ const AddressTitle = styled(H4)`
   font-weight: ${({ theme: { typo: {weights} } }) => weights.bold};
   color: ${({ theme: { colors } }) => colors.white};
   margin: 0;
+  line-height: 1.75;
+  font-size: ${ms(2.2)}
 `;
 
 const AddressTitleIcon = styled(TezosIcon)`
@@ -60,12 +62,13 @@ const AddressTitleIcon = styled(TezosIcon)`
 const AddressHash = styled(H4)`
   color: ${({ theme: { colors } }) => colors.white};
   margin: 0 ${ms(1)} 0 0;
-  font-size: ${ms(3)}
+  font-size: ${ms(3)};
 `;
 
 const AddressInfo = styled.div`
   display: flex;
   align-items: center;
+  line-height: 1.9;
 
   @media (max-width: 1200px) {
     flex-direction: column;
@@ -170,10 +173,16 @@ function BalanceBanner(props: Props) {
           )}
         </AddressTitle>
         <AddressInfo>
-          <TezosAddress address={publicKeyHash} weight={theme.typo.weights.light} color={'white'} text={publicKeyHash}/>
+          <TezosAddress
+            address={publicKeyHash}
+            weight={theme.typo.weights.light}
+            color={'white'} text={publicKeyHash} 
+            size={ms(1.7)}
+          />
           <Amount
             color="white"
-            amount={ balance }
+            size={ms(4.5)}
+            amount={balance}
             weight="light"
             format={2}
             showTooltip
