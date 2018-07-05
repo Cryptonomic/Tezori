@@ -170,6 +170,7 @@ function BalanceBanner(props: Props) {
             amount={balance}
             weight="light"
             format={2}
+            rounded
             showTooltip
           />
         </AddressInfo>

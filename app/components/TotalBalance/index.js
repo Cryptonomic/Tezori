@@ -39,6 +39,7 @@ class TotalBalance extends Component {
           color="primary"
           weight="normal"
           showTooltip
+          rounded
           format={2}
         />
       </Container>

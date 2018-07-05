@@ -55,6 +55,7 @@ const TabList = styled.div`
   background-color: ${({ isReady, theme: { colors } }) => isReady ? colors.accent: colors.disabled };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 50px;
 `;
 
 const SectionContainer = styled.div`
