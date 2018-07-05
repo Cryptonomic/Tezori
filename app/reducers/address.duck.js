@@ -60,6 +60,7 @@ const UPDATE_IDENTITY = 'UPDATE_IDENTITY';
 const SET_IDENTITIES = 'SET_IDENTITIES';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
+const NEXT_ACCOUNT_SLIDE = 'NEXT_ACCOUNT_SLIDE';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const clearEntireAddressState = actionCreator(
@@ -85,7 +86,7 @@ export const updateActivationCode = actionCreator(UPDATE_ACTIVATION_CODE, 'activ
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
-
+export const nextAccountSlide = actionCreator(NEXT_ACCOUNT_SLIDE, 'currentSlide');
 
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
@@ -288,9 +289,20 @@ export function setActiveTab(activeTab) {
   };
 }
 
+export function generateNewMnemonic() {
+  return async dispatch => {
+    dispatch(setIsLoading(true));
+    const seed = await generateMnemonic();
+
+    dispatch(setIsLoading(false));
+    dispatch(updateSeed(seed));
+  };
+}
+
 function setImportDuplicationError(dispatch) {
   dispatch(addMessage('Identity already exist', true));
 }
+
 
 export function importAddress() {
   return async (dispatch, state) => {
@@ -307,6 +319,7 @@ export function importAddress() {
     const username = state().address.get('username');
     const passPhrase = state().address.get('passPhrase');
     const confirmedPassPhrase = state().address.get('confirmedPassPhrase');
+
     const nodes = state().nodes.toJS();
     const network = state().walletInitialization.get('network');
     const identities = state().address.get('identities');
@@ -314,17 +327,6 @@ export function importAddress() {
     // TODO: clear out message bar
     dispatch(addMessage('', true));
 
-    if( activeTab === GENERATE_MNEMONIC ) {
-      const validations = [
-        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase'},
-        { value: [passPhrase, confirmedPassPhrase], type: 'samePassPhrase', name: 'Pass Phrases'}
-      ];
-
-      const error = displayError(validations);
-      if ( error ) {
-        return dispatch(addMessage(error, true));
-      }
-    }
     dispatch(setIsLoading(true));
     try {
       let identity = null;
@@ -333,36 +335,41 @@ export function importAddress() {
           break;
         case GENERATE_MNEMONIC:
         case SEED_PHRASE:
-          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          identity = await unlockIdentityWithMnemonic(seed, '');
           break;
-        case FUNDRAISER:
-          identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
-          const conseilNode = getSelected(nodes, CONSEIL);
+        case FUNDRAISER:{
+            identity = await unlockFundraiserIdentity(seed, username, passPhrase, pkh);
+            const conseilNode = getSelected(nodes, CONSEIL);
 
-          const account = await getAccount(
-            conseilNode.url,
-            identity.publicKeyHash,
-            conseilNode.apiKey
-          ).catch( () => false );
+            const account = await getAccount(
+              conseilNode.url,
+              identity.publicKeyHash,
+              conseilNode.apiKey
+            ).catch( () => false );
 
-          if ( !account ) {
-            const tezosNode = getSelected(nodes, TEZOS);
-            const activating = await sendIdentityActivationOperation(
-              tezosNode.url,
-              identity,
-              activationCode
-            )
-              .catch((err) => {
-                err.name = err.message;
-                throw err;
-              });
-            dispatch(addMessage(
-              `Successfully sent activation operation ${activating.operationGroupID}.`,
-              false
-            ));
+            if ( !account ) {
+              const tezosNode = getSelected(nodes, TEZOS);
+              const activating = await sendIdentityActivationOperation(
+                tezosNode.url,
+                identity,
+                activationCode
+              )
+                .catch((err) => {
+                  err.name = err.message;
+                  throw err;
+                });
+              dispatch(addMessage(
+                `Successfully sent activation operation ${activating.operationGroupID}.`,
+                false
+              ));
+            }
           }
           break;
+        default: 
+          break;
       }
+
+      
 
       if ( identity ) {
         const { publicKeyHash } = identity;
@@ -404,7 +411,8 @@ const initState = fromJS({
   isLoading: false,
   identities: [],
   selectedAccountHash: '',
-  selectedParentHash: ''
+  selectedParentHash: '',
+  currentSlide: 0,
 });
 
 export default function address(state = initState, action) {
@@ -456,7 +464,7 @@ export default function address(state = initState, action) {
     case OPEN_ADD_ADDRESS_MODAL:
       return state.set('open', true);
     case SET_ACTIVE_ADD_ADDRESS_TAB:
-      return state.set('activeTab', action.activeTab).set('seed', '');
+      return state.set('activeTab', action.activeTab).set('seed', '').set('currentSlide', 0);
     case UPDATE_PRIVATE_KEY:
       return state.set('privateKey', action.privateKey);
     case UPDATE_PUBLIC_KEY:
@@ -481,6 +489,8 @@ export default function address(state = initState, action) {
       return state
         .set('selectedAccountHash', action.selectedAccountHash)
         .set('selectedParentHash', action.selectedParentHash);
+    case NEXT_ACCOUNT_SLIDE:
+      return state.set('currentSlide', action.currentSlide)
     default:
       return state;
   }

@@ -330,7 +330,7 @@ class Home extends Component<Props> {
           </div>
         </div>
         <TermsAndPolicySection>
-          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
+          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement} />
           <Description>
             I acknowledge that I have read and accepted
             <Link onClick={this.openLink}> the Terms of Service </Link>

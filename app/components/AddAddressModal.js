@@ -2,18 +2,20 @@ import React, { Fragment } from 'react';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import classNames from 'classnames';
-import styled from 'styled-components'
-import { lighten } from 'polished'
-import { ms } from '../styles/helpers'
+import styled from 'styled-components';
+import { lighten } from 'polished';
+import { ms } from '../styles/helpers';
 
 import Button from './Button';
-import { H4 } from './Heading'
+import { H4 } from './Heading';
 import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
 import Loader from './Loader';
 
 import Tooltip from './Tooltip';
 import styles from './AddAddressModal.css';
 import TezosIcon from "./TezosIcon";
+
+import CreateAccountSlide from './CreateAccountSlide';
 
 type Props = {
   open: boolean,
@@ -29,11 +31,12 @@ type Props = {
   isLoading: boolean,
   updateUsername: Function,
   updatePassPhrase: Function,
-  confirmPassPhrase: Function,
   updateSeed: Function,
   updatePkh: Function,
   updateActivationCode: Function,
-  selectedAccountHash: string
+  nextAccountSlide: Function,
+  currentSlide: number,
+  generateNewMnemonic: Function
 };
 
 const InputWithTooltip = styled.div`
@@ -136,20 +139,21 @@ export default function AddAddress(props: Props) {
     isLoading,
     updateUsername,
     updatePassPhrase,
-    confirmPassPhrase,
     updateSeed,
-    selectedAccountHash
+    nextAccountSlide,
+    currentSlide,
+    generateNewMnemonic
   } = props;
 
   function renderAppBar() {
     return (
       <div className={styles.titleContainer}>
         <div>Add an Address</div>
-          <CloseIcon
-            className={styles.closeIcon}
-            style={{ fill: 'white' }}
-            onClick={closeModal}
-          />
+        <CloseIcon
+          className={styles.closeIcon}
+          style={{ fill: 'white' }}
+          onClick={closeModal}
+        />
       </div>
     );
   }
@@ -184,32 +188,13 @@ export default function AddAddress(props: Props) {
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return (
-          <div>
-            <TextField
-              floatingLabelText="Seed Words"
-              style={{ width: '100%' }}
-              value={seed}
-              disabled={activeTab === ADD_ADDRESS_TYPES.GENERATE_MNEMONIC}
-              onChange={(_, newSeed) => updateSeed(newSeed)}
-            />
-            <div className={styles.fundraiserPasswordContainer}>
-              <TextField
-                floatingLabelText="Pass Phrase"
-                type="password"
-                style={{ width: '45%' }}
-                value={passPhrase}
-                onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
-              />
-              <TextField
-                floatingLabelText="Confirm Pass Phrase"
-                type="password"
-                style={{ width: '45%' }}
-                onChange={(_, newPassPhrase) =>
-                  confirmPassPhrase(newPassPhrase)
-                }
-              />
-            </div>
-          </div>
+          <CreateAccountSlide
+            seed={seed}
+            nextAccountSlide={nextAccountSlide}
+            currentSlide={currentSlide}
+            importAddress={importAddress}
+            generateNewMnemonic={generateNewMnemonic}
+          />
         );
       case ADD_ADDRESS_TYPES.FUNDRAISER:
       default:
@@ -300,6 +285,13 @@ export default function AddAddress(props: Props) {
                 </StyledTooltip>
               </InputWithTooltip>
             </TwoColumnsInputs>
+            <ImportButton
+              buttonTheme="primary"
+              onClick={importAddress}
+              disabled={isLoading}
+            >
+              Import
+            </ImportButton>
           </Fragment>
         );
     }
@@ -311,16 +303,7 @@ export default function AddAddress(props: Props) {
       {renderTabController()}
       <div className={styles.addAddressBodyContainer}>
         {renderAddBody()}
-        <Fragment>
-          <ImportButton
-            buttonTheme="primary"
-            onClick={importAddress}
-            disabled={isLoading}
-          >
-            Import
-          </ImportButton>
-          {isLoading && <Loader />}
-        </Fragment>
+        {isLoading && <Loader />}
       </div>
     </Dialog>
   );
