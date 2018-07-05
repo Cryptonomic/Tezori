@@ -44,8 +44,7 @@ app/renderer.prod.js.map
 app/style.css
 app/style.css.map
 app/defaultWalletNodes.json
-app/savedWalletNode.json
-app/walletNodes.js
+app/walletNodes.json
 dist
 dll
 main.js
