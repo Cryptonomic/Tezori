@@ -106,7 +106,7 @@ const Refresh = styled(RefreshIcon)`
 
 
 function BalanceBanner(props: Props) {
-  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress, fetchTime } = props;
+  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress, time } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
@@ -120,11 +120,8 @@ function BalanceBanner(props: Props) {
         <Breadcrumbs>
           {breadcrumbs}
         </Breadcrumbs>
-        <Update onClick={onRefreshClick}/>
-
-        {
-          isReady
-            ? <Update onClick={onRefreshClick} fetchTime={fetchTime} />
+        { isReady
+            ? <Update onClick={onRefreshClick} time={time} />
             : <Refresh
                 style={{
                   fill: 'white',

@@ -207,7 +207,7 @@ class ActionPanel extends Component<Props, State> {
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
           onRefreshClick={syncWallet}
-          fetchTime={time}
+          time={time}
         />
 
         <TabList isReady={ isReady } >
@@ -238,6 +238,7 @@ function mapStateToProps(state) {
   const jsIdentities = identities.toJS();
   const selectedAccountHash = address.get('selectedAccountHash');
   const selectedParentHash = address.get('selectedParentHash');
+  const time = address.get('time');
 
   return {
     identities,
@@ -245,7 +246,7 @@ function mapStateToProps(state) {
     selectedAccountHash,
     selectedAccount: getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash),
     selectedParentHash,
-    time: address.get('time'),
+    time,
     parentIdentity: findIdentity(jsIdentities, selectedParentHash),
     parentIndex:  findIdentityIndex(jsIdentities, selectedParentHash) + 1
 

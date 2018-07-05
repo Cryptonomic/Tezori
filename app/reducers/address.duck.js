@@ -61,7 +61,7 @@ const SET_IDENTITIES = 'SET_IDENTITIES';
 const ADD_NEW_ACCOUNT = 'ADD_NEW_ACCOUNT';
 const SELECT_ACCOUNT = 'SELECT_ACCOUNT';
 const NEXT_ACCOUNT_SLIDE = 'NEXT_ACCOUNT_SLIDE';
-const UPDATE_FETCH_TIME = 'UPDATE_FETCH_TIME';
+const UPDATE_FETCHED_TIME = 'UPDATE_FETCHED_TIME';
 
 /* ~=~=~=~=~=~=~=~=~=~=~=~= Actions ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~= */
 export const clearEntireAddressState = actionCreator(
@@ -88,7 +88,7 @@ export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
 export const nextAccountSlide = actionCreator(NEXT_ACCOUNT_SLIDE, 'currentSlide');
-export const updateFetchTime = actionCreator(UPDATE_FETCH_TIME, 'time');
+export const updateFetchedTime = actionCreator(UPDATE_FETCHED_TIME, 'time');
 
 export const addNewAccount = actionCreator(
   ADD_NEW_ACCOUNT,
@@ -172,7 +172,7 @@ export function syncWallet() {
       })
     );
     dispatch( setIdentities( identities ) );
-    dispatch(updateFetchTime(new Date()));
+    dispatch(updateFetchedTime(new Date()));
     dispatch(setIsLoading(false));
   }
 }
@@ -494,7 +494,7 @@ export default function address(state = initState, action) {
         .set('selectedParentHash', action.selectedParentHash);
     case NEXT_ACCOUNT_SLIDE:
       return state.set('currentSlide', action.currentSlide)
-    case UPDATE_FETCH_TIME:
+    case UPDATE_FETCHED_TIME:
       return state.set('time', action.time);
     default:
       return state;

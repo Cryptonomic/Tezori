@@ -11,20 +11,23 @@ const Container = styled.div`
 const Text = styled.span`
   font-size: ${ms(-1.7)};
   font-weight: ${ ({ theme: { typo: { weights } } }) => weights.light };
+  color: ${ ({ theme: { colors } }) => colors.white };
+  opacity: 0.8;
+  margin: 0 ${ms(-2)} 0 0;
 `
 
 type Props = {
   onClick?: Function,
-  fetchTime: Date,
+  time: Date,
 }
 
 class Update extends PureComponent<Props> {
   render() {
-    const { onClick, fetchTime } = this.props
+    const { onClick, time } = this.props
     return (
       <Container>
         <Text>
-          {`Last updated ${ moment(fetchTime).format('LT')}`}
+          {`Last updated ${ moment(time).format('LT')}`}
         </Text>
         <RefreshIcon
           style={{
