@@ -50,9 +50,9 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
 
   accounts = accounts.map(account => {
     const foundIndex = stateAccountIndices.indexOf(account.accountId);
-    const overrides = {};
+    let overrides = {};
     if ( foundIndex > -1 ) {
-      overrides.status = identity.accounts[foundIndex].status;
+      overrides = {...identity.accounts[foundIndex]};
     }
     return createAccount({
         ...account,
@@ -75,20 +75,17 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
   identity.accounts = accounts;
   identity.accounts = await Promise.all(
     ( identity.accounts || []).map(async account => {
-      if ( account.status !== status.READY ) {
         return await getSyncAccount(
           identities,
           account,
-          nodes,
-          publicKeyHash,
-          selectedAccountHash
+          nodes,          
+          selectedAccountHash,
+          publicKeyHash
         ).catch( e => {
           console.log('-debug: Error in: getSyncIdentity for:' + identity.publicKeyHash);
           console.error(e);
           return account;
         });
-
-      }
       return account;
     })
   );

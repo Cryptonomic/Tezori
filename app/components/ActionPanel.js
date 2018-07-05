@@ -52,7 +52,12 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
-  background-color: ${({ theme: { colors } }) => colors.disabled};
+  background: ${({ isReady, theme: { colors } }) => {
+  return isReady
+    ? colors.accent
+    : colors.disabled;
+  }};
+
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 `;
@@ -104,6 +109,9 @@ type State = {
   currentPage: number
 };
 
+const delegateAddressTabs = [TRANSACTIONS, SEND, RECEIVE];
+const managerAddresssTabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+
 class ActionPanel extends Component<Props, State> {
   props: Props;
 
@@ -114,6 +122,24 @@ class ActionPanel extends Component<Props, State> {
 
   handleLinkPress = tab => {
     this.setState({ activeTab: tab })
+  }
+
+  static getDerivedStateFromProps(prevProps, prevState) {
+    const { selectedAccountHash, selectedParentHash } = prevProps;
+    const isManagerAddress = selectedAccountHash === selectedParentHash;
+    const { activeTab } = prevState;
+
+    const tabs = isManagerAddress ?  delegateAddressTabs : managerAddresssTabs;
+
+    // activeTab may be set to something which isn't a valid tab for the current
+    // view, so set it to the first tab as default
+    if (!tabs.includes(activeTab)) {
+      return {
+        activeTab: tabs[0],
+        currentPage: 1
+      };
+    }
+    return null;
   }
 
   renderSection = () => {
@@ -169,7 +195,7 @@ class ActionPanel extends Component<Props, State> {
     const { activeTab } = this.state;
     const isReady = selectedAccount.get('status') === READY;
 
-    const tabs = isManagerAddress ? [TRANSACTIONS, SEND, RECEIVE] : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+    const tabs = isManagerAddress ?  delegateAddressTabs : managerAddresssTabs;
 
     return (
       <Container>
@@ -183,7 +209,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
         />
 
-        <TabList>
+        <TabList isReady={ isReady } >
           {tabs.map(tab => (
             <Tab
               isActive={activeTab === tab}

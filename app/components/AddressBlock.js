@@ -63,11 +63,6 @@ const AddressLabel = styled.div`
   background: ${({ theme: { colors } }) => colors.gray1};
   align-items: center;
   justify-content: space-between;
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 `;
 
 const AddressLabelIcon = styled(TezosIcon)`
