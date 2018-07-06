@@ -1,6 +1,8 @@
 import React from 'react'
+import { shell } from 'electron'
 import styled from 'styled-components'
 import moment from 'moment'
+import { TableRow } from 'material-ui'
 import { isNumber } from 'lodash'
 import { ms } from '../../styles/helpers'
 import TezosAddress from '../TezosAddress'
@@ -8,18 +10,29 @@ import TezosAmount from '../TezosAmount'
 
 const openLink = element => shell.openExternal(`https://tzscan.io/${element}`)
 
-const timeFormatter = time => moment(time).format('LT')
+const timeFormatter = timestamp => {
+  const time = new Date (timestamp)
+  return moment(time).format('LT')
+}
 
-const TransactionContainer = styled.div`
+const AmountContainer = styled.td`
+  justify-self: end;
+`
+
+const TransactionContainer = styled(TableRow)`
   display: grid;
   flex-direction: row;
   align-items: center;
-  grid-template-columns: 2fr 5fr 2fr 1fr;
+  grid-template-columns: 2fr 5fr 2fr 2fr;
   padding: ${ms(-4)} ${ms(4)};
   border-bottom: 2px solid ${ ({ theme: { colors } }) => colors.gray6 };
+  @media (max-width: 1200px) {
+    padding: ${ms(-4)} ${ms(-4)};
+    grid-template-columns: 2fr 7fr 2fr 2fr;
+  }
 `
 
-const Link = styled.span`
+const Link = styled.td`
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
@@ -29,12 +42,12 @@ const Link = styled.span`
   padding: 0 10px 0 0;
 `;
 
-const SingleTransactionDate = styled.span`
+const SingleTransactionDate = styled.td`
   color: ${ ({ theme: { colors } }) => colors.gray5 };
   font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold };
 `
 
-const TransactionDate = styled.span`
+const TransactionDate = styled.td`
   color: ${ ({ theme: { colors } }) => colors.gray5 };
 `
 
@@ -61,7 +74,7 @@ const Outgo = (props:OutgoProps) => {
         color={'red'}
         size={ms(0)}
         amount={amount}
-        format={2}
+        format={6}
       />
       <Fee>
         Fee:
@@ -83,7 +96,8 @@ type AmountProps = {
 
 const Amount = (props:AmountProps) => {
   const { fee, amount } = props
-    return isNumber(fee)
+    return <AmountContainer>
+      {isNumber(fee)
       ? <Outgo
         fee={props.fee}
         amount={props.amount}
@@ -92,13 +106,15 @@ const Amount = (props:AmountProps) => {
         color={'green'}
         size={ms(0)}
         amount={props.amount}
-        format={2}
-      />
+        format={6}
+        positive
+      />}
+      </AmountContainer>
 }
 
 type Props = {
   address: string,
-  date: Date,
+  date: number,
   fee?: number,
   amount: number,
   element?: string,
@@ -109,11 +125,13 @@ const Transaction = (props) => {
   return (
     <TransactionContainer>
       <SingleTransactionDate>{timeFormatter(date)}</SingleTransactionDate>
-      <TezosAddress
-        address={address}
-        color={'gray7'}
-        size={ms(0)}
-      />
+      <td>
+        <TezosAddress
+          address={address}
+          color={'gray7'}
+          size={ms(0)}
+        />
+      </td>
       <Amount fee={fee} amount={amount} />
       <Link onClick={() => {}}>
         Details
@@ -124,7 +142,6 @@ const Transaction = (props) => {
 
 Transaction.defaultProps = {
   address: 'tz1YttHzJvUU6BJqEh4HZKzB19j48uxUbjFc',
-  date: new Date(),
 }
 
 export default Transaction

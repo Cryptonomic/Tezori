@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
+import { TableRow } from 'material-ui'
 import { ms } from '../../styles/helpers'
 import TezosAmount from '../TezosAmount'
 
@@ -11,7 +12,7 @@ const TodayYesterdayFormat = {
 
 const timestampFormatter = timestamp => {
   const date = new Date(1000 * timestamp)
-  const time =  moment(date).isBetween(moment().subtract(1, 'days'), moment())
+  const time =  moment(date).isBetween(moment().subtract(2, 'days'), moment())
     ? moment(date).calendar(null, TodayYesterdayFormat)
     : moment(date).format('MMMM DD')
     return time
@@ -21,14 +22,23 @@ const DateContainer = styled.div`
   background-color: ${ ({ theme: { colors } }) => colors.gray1 };
   border-bottom: 2px solid ${ ({ theme: { colors } }) => colors.gray6 };
   display: grid;
-  grid-template-columns: 7fr 3fr;
-  padding: ${ms(-4)} ${ms(4)}
+  grid-template-columns: 7fr 2fr 2fr;
+  padding: ${ms(-4)} ${ms(4)};
+  align-items: center;
+  @media (max-width: 1200px) {
+    padding: ${ms(-4)} ${ms(-4)};
+    grid-template-columns: 9fr 2fr 2fr;
+  }
 `
 
 const TransactionsDate = styled.span`
   color: ${ ({ theme: { colors } }) => colors.secondary };
   line-height: 1.63;
   font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold };
+`
+
+const Amount = styled(TezosAmount)`
+  justify-self: end;
 `
 
 type Props = {
@@ -41,12 +51,13 @@ const TransactionsLabel = (props:Props) => {
   return (
     <DateContainer>
       <TransactionsDate>{timestampFormatter(date)}</TransactionsDate>
-      <TezosAmount 
+      <Amount 
         color={'secondary'}
         size={ms(0)}
         amount={amount}
-        format={2}
+        format={6}
       />
+      <div />
    </DateContainer>
   )
 }

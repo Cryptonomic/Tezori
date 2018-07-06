@@ -68,13 +68,25 @@ const copyToClipboard = text => {
   clipboard.writeText(text)
 }
 
+const getFormatAmount = ({ amount, format, rounded, positive }) => {
+  const formatedBalance = formatAmount(amount, format)
+
+  if (positive) {
+    return `+${formatedBalance}`
+  } else if (rounded) {
+    return `~${formatedBalance}`
+  } else {
+    return formatedBalance
+  }
+}
+
 const TezosAmount = (props: Props) => {
-  const { size, color, amount, iconName, weight, className, showTooltip ,format, content, rounded} = props;
-  const formatedBalance = `${formatAmount(amount, format)}`
+  const { size, color, amount, iconName, weight, className, showTooltip ,format, content, rounded, positive } = props;
+  const formatedBalance = formatAmount(amount, format)
   return showTooltip ? (
     <Tooltip position="bottom" content={<Content formatedBalance={formatedBalance} />}>
-      <Amount className={className} color={color} size={size} weight={weight} rounded={rounded}>
-        { (rounded && format === 2) ? `~${formatAmount(amount, format)}` : formatAmount(amount, format) }
+      <Amount className={className} color={color} size={size} weight={weight} rounded>
+        { getFormatAmount({ amount, format, rounded, positive }) }
         {
           iconName
           && <Icon size={size} color={color} iconName={iconName}/>
@@ -83,7 +95,7 @@ const TezosAmount = (props: Props) => {
     </Tooltip>
     ) : (
     <Amount className={className} color={color} size={size} weight={weight} format={format}>
-      { (rounded && format === 2) ? `~${formatedBalance}` : formatedBalance }
+      { getFormatAmount({ amount, format, rounded, positive }) }
       {
         iconName
           && <Icon size={size} color={color} iconName={iconName}/>

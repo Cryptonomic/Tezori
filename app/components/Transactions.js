@@ -35,53 +35,84 @@ type Props = {
   transactions: List
 };
 
-export default function Transactions(props: Props) {
-  const { transactions } = props;
+export default function Transactions(props:Props) {
+  const { transactions } = props
+  const formatedTransactions = transactions.map(transaction => {
+    const date = moment(transaction.timestamp).format('l')
+    return { ...transaction,
+      date
+    }
+  })
 
-  function renderTableRow(row, index) {
-    const rowArray = [
-      row.get('blockLevel'),
-      row.get('kind'),
-      row.get('source'),
-      row.get('destination') || 'N/A',
-      row.get('amount') || 'N/A',
-      row.get('operationGroupHash'),
-    ];
+  // const newTransaction = formatedTransactions.reduce((result, transaction) => {
+  //   if (result[transaction.date]) {
+  //     result[transaction.date] = transaction;
+  //   } else {
+  //     result[transaction.date] = [
+  //       ...result[transaction.date],
+  //       transaction
+  //     ]
+  //   }
+  //   return result
+  // }, {})
 
-    return (
-      <TableRow key={index}>
-        {rowArray.map((elem, rowArrIndex) => {
-          return (
-            <TableRowColumn key={`${elem}-${rowArrIndex}`}>
-              {rowArrIndex + 1 < rowArray.length && (
-                <RowElement>
-                  {
-                    rowArrIndex === 4
-                      ? <Amount size={ms(0)} amount={parseInt(elem)} />
-                      : elem
-                  }
-                </RowElement>
-              )}
-              {rowArrIndex + 1 === rowArray.length && (
-                <Link onClick={() => openLink(elem)}>
-                  Details
-                </Link>
-              )}
-            </TableRowColumn>
-          );
-        })}
-      </TableRow>
-    );
-  }
 
+  // const renderDayTransactions = () => formatedTransactions.map(transaction => {
+  //   return <div>
+  //     <TransactionsLabel amount={transaction.amount} date={transaction.timestamp} />
+  //     <Transaction amount={transaction.amount} fee={transaction.fee} date={transaction.timestamp} address={destination} />
+  //   </div>
+  // })
+
+  // const renderTableRow = (row, index) => {
+  //   const rowArray = [
+  //     row.get('blockLevel'),
+  //     row.get('kind'),
+  //     row.get('source'),
+  //     row.get('destination') || 'N/A',
+  //     row.get('amount') || 'N/A',
+  //     row.get('operationGroupHash'),
+  //   ];
+
+  //   return (
+  //     <TableRow key={index}>
+  //       {rowArray.map((elem, rowArrIndex) => {
+  //         return (
+  //           <TableRowColumn key={`${elem}-${rowArrIndex}`}>
+  //             {rowArrIndex + 1 < rowArray.length && (
+  //               <RowElement>
+  //                 {
+  //                   rowArrIndex === 4
+  //                     ? <Amount size={ms(0)} amount={parseInt(elem)} />
+  //                     : elem
+  //                 }
+  //               </RowElement>
+  //             )}
+  //             {rowArrIndex + 1 === rowArray.length && (
+  //               <Link onClick={() => openLink(elem)}>
+  //                 Details
+  //               </Link>
+  //             )}
+  //           </TableRowColumn>
+  //         );
+  //       })}
+  //     </TableRow>
+  //   );
+  // }
+  
   return (
     <Container>
       <Table>
         <TableBody displayRowCheckbox={false}>
-          <TransactionsLabel amount={12345678} date={1530818702} />
-          <Transaction amount={-12345678} fee={12345564} />
-          <Transaction amount={12345678} />
-          <TransactionsLabel amount={45612345678} date={1530403200} />
+          <TransactionsLabel amount={1234567+342145} date={1530880521} />
+          <Transaction amount={1234567} date={1530880521}/>
+          <Transaction amount={342145} fee={233} date={1530880521}/>
+          <TransactionsLabel amount={3*876000} date={1530794121} />
+          <Transaction amount={876000} fee={233} date={1530794121}/>
+          <Transaction amount={876000} fee={123123} date={1530794121} />
+          <Transaction amount={876000} date={1530794121} />
+          <TransactionsLabel amount={129845} date={1530707721} />
+          <Transaction amount={129845} date={1530711321}/>
         </TableBody>
       </Table>
     </Container>
