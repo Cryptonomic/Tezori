@@ -102,6 +102,10 @@ class CreateAccountSlide extends Component<Props> {
     currentSlide: 0
   };
 
+  componentDidMount() {
+    this.updateMnemonic();
+  }
+
   nextAccountSlide = (currentSlide) =>  this.setState({ currentSlide });
   updateMnemonic = () =>  this.setState({ seed: generateNewMnemonic() });
 
