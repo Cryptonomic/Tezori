@@ -303,6 +303,8 @@ class Home extends Component<Props> {
 
     if (confirmedPassword && confirmedPassword !== val) {
       this.setState({ isPasswordMatched: false, confirmPwdScore: 1, confirmPwdText: "Passwords don't Match!" });
+    } else if ((confirmedPassword && confirmedPassword === val)){
+      this.setState({ isPasswordMatched: true, confirmPwdScore: 4, confirmPwdText: "Passwords Match!" });
     }
     setPassword(val);
   }
