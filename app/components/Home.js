@@ -44,7 +44,8 @@ type Props = {
   submitAddress: Function,
   updateWalletLocation: Function,
   walletFileName: string,
-  walletLocation: string
+  walletLocation: string,
+  goHomeAndClearState: Function
 };
 
 const inputStyles = {
@@ -112,7 +113,7 @@ const CustomButton = styled(Button)`
 `
 
 const StyledInputContainer = styled.div`
-  height: 126px;
+  min-height: 93px;
 `
 const StyledInputContent = styled.div`
   width: 100%;
@@ -230,7 +231,9 @@ class Home extends Component<Props> {
   componentWillMount = () => {
     const agreement = localStorage.getItem('isTezosTermsAndPolicyAgreementAccepted')
     const isAgreement = JSON.parse(agreement) || false
-    this.setState({ isAgreement })
+    this.setState({ isAgreement });
+    setPassword('');
+    setConfirmedPassword('');
   }
 
   openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet')
@@ -293,12 +296,13 @@ class Home extends Component<Props> {
       });
 
       const isValid = score === 4;
-      const isPasswordMatched = confirmedPassword === val;
-
-      this.setState({pwdScore: score, pwdCrackTime: crackTime, pwdSuggestion: suggestion, isPasswordValidation: isValid, isPasswordMatched});
-
+      this.setState({pwdScore: score, pwdCrackTime: crackTime, pwdSuggestion: suggestion, isPasswordValidation: isValid});
     } else {
-      this.setState({pwdScore: 0, pwdCrackTime: '', pwdSuggestion: '', isPasswordValidation: false, isPasswordMatched: false});
+      this.setState({pwdScore: 0, pwdCrackTime: '', pwdSuggestion: '', isPasswordValidation: false});
+    }
+
+    if (confirmedPassword && confirmedPassword !== val) {
+      this.setState({ isPasswordMatched: false, confirmPwdScore: 1, confirmPwdText: "Passwords don't Match!" });
     }
     setPassword(val);
   }
@@ -320,6 +324,23 @@ class Home extends Component<Props> {
     }
     this.setState({ isPasswordMatched: isMatched, confirmPwdScore: score, confirmPwdText: confirmStr });    
     setConfirmedPassword(val);
+  }
+
+  goBackToMain = () => {
+    const initState = {
+      isPasswordValidation: false,    
+      isPwdShowed: false,
+      isPasswordMatched: false,
+      isConfirmPwdShowed: false,
+      pwdScore: 0,
+      pwdCrackTime: '',
+      pwdSuggestion: '',
+      confirmPwdScore: 0,
+      confirmPwdText: ''
+    };
+
+    this.setState(initState);
+    this.props.goHomeAndClearState();
   }
  
   renderSelectionState = () => {
@@ -374,8 +395,7 @@ class Home extends Component<Props> {
       walletFileName,
       isLoading,
       message,
-      submitAddress,
-      goHomeAndClearState
+      submitAddress
     } = this.props;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
 
@@ -383,7 +403,7 @@ class Home extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
-          <BackButton onClick={() => goHomeAndClearState()} />
+          <BackButton onClick={this.goBackToMain} />
           <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.walletDescription}>
             Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
