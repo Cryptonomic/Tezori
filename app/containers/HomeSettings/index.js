@@ -64,12 +64,13 @@ const BackToWallet = styled.div`
 const Content = styled.div`
   background-color: ${({theme: { colors }}) => colors.white };
   padding: ${ms(3)} ${ms(3)};
-  margin-top: ${ ms(3)};
+  margin: ${ms(3)} auto 0 auto;
 `;
 
 const RowForParts = styled(Row)`
   margin: 0 -${ms(1)};
-  flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Part = styled.div`
@@ -103,7 +104,7 @@ const OptionLabel = styled(Row)`
   flex-direction: column;
   align-items: flex-start;
   color: ${({isActive, theme: { colors }}) =>
-  isActive ? colors.blue :colors.primary };
+  isActive ? colors.blue1 : colors.primary };
 `;
 
 const NodeName = styled.div`
@@ -153,7 +154,7 @@ class SettingsPage extends Component<Props> {
                 (
                   <Check
                     style={{
-                      fill: theme.colors.blue,
+                      fill: theme.colors.blue1,
                       height: ms(1.5),
                       width: ms(1.5)
                     }}
@@ -196,7 +197,6 @@ class SettingsPage extends Component<Props> {
 
     return (
       <Container>
-
         <BackToWallet onClick={() => {
           goBack();
           syncWallet();
@@ -228,7 +228,7 @@ class SettingsPage extends Component<Props> {
                   }
                   this.openAddNodeModal(CONSEIL);
                 }}
-                style={{ width: '100%', maxWidth: '100%', color: 'blue' }}
+                style={{ width: '100%', maxWidth: '100%', color: 'blue1' }}
                 iconStyle={{ fill: 'black'  }}
                 selectionRenderer={(value, context) => {
                   return (
@@ -271,7 +271,7 @@ class SettingsPage extends Component<Props> {
                   }
                   this.openAddNodeModal(TEZOS);
                 }}
-                style={{ width: '100%', maxWidth: '100%', color: 'blue' }}
+                style={{ width: '100%', maxWidth: '100%', color: 'blue1' }}
                 labelStyle={{ color: theme.colors.primary }}
                 iconStyle={{ fill: 'black'  }}
                 selectionRenderer={(value, context) => {

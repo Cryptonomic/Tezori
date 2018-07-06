@@ -14,12 +14,14 @@ import { ms } from '../styles/helpers';
 
 import Tooltip from './Tooltip';
 import Button from './Button';
+import BackButton from './BackButton';
 import Checkbox from './Checkbox';
 import MessageBar from './MessageBar';
 import TermsModal from './TermsModal';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
 import {
+  goHomeAndClearState,
   setWalletFileName,
   setDisplay,
   setPassword,
@@ -67,8 +69,6 @@ const inputStyles = {
 };
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
-
-
 
 const SectionContainer = styled.div`
   display: flex;
@@ -330,7 +330,7 @@ class Home extends Component<Props> {
           </div>
         </div>
         <TermsAndPolicySection>
-          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
+          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement} />
           <Description>
             I acknowledge that I have read and accepted
             <Link onClick={this.openLink}> the Terms of Service </Link>
@@ -351,7 +351,8 @@ class Home extends Component<Props> {
       walletFileName,
       isLoading,
       message,
-      submitAddress
+      submitAddress,
+      goHomeAndClearState
     } = this.props;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
 
@@ -359,6 +360,7 @@ class Home extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
+          <BackButton onClick={() => goHomeAndClearState()} />
           <h3 className={styles.walletTitle}>Create a new wallet</h3>
           <div className={styles.walletDescription}>
             Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
@@ -407,7 +409,8 @@ class Home extends Component<Props> {
       password,
       setPassword,
       walletFileName,
-      walletLocation
+      walletLocation,
+      goHomeAndClearState
     } = this.props;
     const completeWalletPath = path.join(walletLocation, walletFileName);
 
@@ -415,6 +418,7 @@ class Home extends Component<Props> {
       <div className={styles.createContainer}>
         {isLoading && <Loader />}
         <div className={styles.walletContainers}>
+          <BackButton onClick={() => goHomeAndClearState()} />
           <h3 className={styles.walletTitle}>
             Import your wallet from a backup
           </h3>
@@ -470,12 +474,13 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      goHomeAndClearState,
       setWalletFileName,
       setDisplay,
       setPassword,
       setConfirmedPassword,
       submitAddress,
-      updateWalletLocation
+      updateWalletLocation,
     },
     dispatch
   );

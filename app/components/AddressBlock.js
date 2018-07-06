@@ -62,12 +62,13 @@ const AddressLabel = styled.div`
   background: ${({ theme: { colors } }) => colors.gray1};
   align-items: center;
   justify-content: space-between;
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 `;
+
+const AddDelegateLabel = styled(AddressLabel)`
+  display: flex;
+  flex-direction: row;
+  font-size: ${ms(0)}
+`
 
 const AddressLabelIcon = styled(TezosIcon)`
   padding: 0 ${ms(-6)} 0 0;
@@ -80,13 +81,21 @@ const HelpIcon = styled(TezosIcon)`
 const AddressesTitle = styled.div`
   display: flex;
   align-items: center;
+  line-height: 1.5;
 `;
 
+const DelegateTitle = styled(AddressesTitle)`
+  font-size: ${ms(-0.7)};
+  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold }
+`
+
 const AccountTitle = styled(H3)`
-  font-size: ${ms(1)};
+  font-size: ${ms(0.7)};
   font-weight: ${({theme: {typo}}) => typo.weights.bold};
+  letter-spacing: 0.8px;
   padding: 0 ${ms(-1)} 0 0;
   display: inline-block;
+  line-height: 1.5;
   border-right: 2px solid
     ${({ theme: { colors } }) => darken(0.05, colors.gray1)};
   @media (max-width: 1200px) {
@@ -229,10 +238,10 @@ class AddressBlock extends Component<Props, State> {
           <AccountTitle>{`Account ${accountIndex}`}</AccountTitle>
           <TezosAmount
             color={'primary'}
-            size={ms(1)}
+            size={ms(0)}
             amount={balance}
-            format={2}
             showTooltip
+            format={2}
           />
         </AddressLabel>
         <Address
@@ -263,10 +272,9 @@ class AddressBlock extends Component<Props, State> {
           </AddressFirstLine>
           <AddressSecondLine isActive={isManagerActive}>
             <TezosAmount
-              color={
-                publicKeyHash === selectedAccountHash ? 'white' : 'primary'
-              }
+              color={publicKeyHash === selectedAccountHash ? 'white' : 'primary'}
               amount={accountBlock.get('balance')}
+              size={ms(-0.7)}
             />
             <Syncing isReady={ isManagerReady } >
               <span>Syncing</span>
@@ -281,10 +289,10 @@ class AddressBlock extends Component<Props, State> {
           </AddressSecondLine>
         </Address>
 
-        <AddressLabel>
-          <AddressesTitle>
+        <AddDelegateLabel>
+          <DelegateTitle>
             Add a Delegate
-          </AddressesTitle>
+          </DelegateTitle>
 
           <AddCircle
             style={{
@@ -299,7 +307,7 @@ class AddressBlock extends Component<Props, State> {
               }
             }}
           />
-        </AddressLabel>
+        </AddDelegateLabel>
         {smartAddresses && smartAddresses.toArray().length ?
           smartAddresses.map((smartAddress, index) => {
             const isSmartAddressReady = smartAddress.get('status') === READY;

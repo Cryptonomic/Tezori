@@ -39,6 +39,7 @@ injectGlobal`
   html {
     box-sizing: border-box;
     line-height: 1.618;
+    background: #edf0f7;
   }
   *, *:before, *:after {
     box-sizing: inherit;
@@ -54,13 +55,8 @@ injectGlobal`
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    -webkit-app-region: no-drag;
   }
 
-  button {
-    -webkit-app-region: no-drag;
-  }
-  
   div#root {
     height: 100vh;
   }  

@@ -31,7 +31,8 @@ import {
   setIsLoading,
   setIdentities,
   addNewIdentity,
-  updateIdentity
+  updateIdentity,
+  updateFetchedTime
 } from './actions';
 
 const {
@@ -193,6 +194,7 @@ export function syncWallet() {
         })
     );
     dispatch(setIdentities( identities ));
+    dispatch(updateFetchedTime(new Date()));
     dispatch(setIsLoading(false));
   }
 }

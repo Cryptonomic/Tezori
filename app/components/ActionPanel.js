@@ -43,7 +43,7 @@ const Tab = styled(Button)`
     : inActiveColors
   }};
   color: ${({ isActive, theme: { colors } }) =>
-  isActive ? colors.primary : lighten(0.4, colors.accent)};
+  isActive ? colors.primary : lighten(0.4, colors.accent) };
   cursor: pointer;
   text-align: center;
   font-weight: 500;
@@ -52,7 +52,7 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
-  background-color: ${({ theme: { colors } }) => colors.disabled};
+  background-color: ${({ isReady, theme: { colors } }) => isReady ? colors.accent: colors.disabled };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 `;
@@ -66,7 +66,7 @@ const SectionContainer = styled.div`
 `;
 
 const Link = styled.span`
-  color: ${ ({ theme: { colors } }) => colors.blue };
+  color: ${ ({ theme: { colors } }) => colors.blue1 };
   cursor: pointer;
 `
 
@@ -102,6 +102,9 @@ type State = {
   activeTab: string,
   currentPage: number
 };
+
+const delegateAddressTabs = [TRANSACTIONS, SEND, RECEIVE];
+const managerAddresssTabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
 
 class ActionPanel extends Component<Props, State> {
   props: Props;
@@ -171,7 +174,7 @@ class ActionPanel extends Component<Props, State> {
   };
 
   render() {
-    const { identities, selectedAccountHash, selectedParentHash, syncWallet } = this.props;
+    const { identities, selectedAccountHash, selectedParentHash, syncWallet, time } = this.props;
     const jsIdentities = identities.toJS();
     const selectedAccount = getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash);
     const parentIdentity = findIdentity(jsIdentities, selectedParentHash);
@@ -193,9 +196,10 @@ class ActionPanel extends Component<Props, State> {
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
           onRefreshClick={syncWallet}
+          time={time}
         />
 
-        <TabList>
+        <TabList isReady={ isReady }>
           {tabs.map(tab => (
             <Tab
               isActive={activeTab === tab}
@@ -220,7 +224,8 @@ class ActionPanel extends Component<Props, State> {
 function mapStateToProps({ wallet }) {
   return {
     identities: wallet.get('identities'),
-    isLoadingTransactions: wallet.get('isLoading')
+    isLoadingTransactions: wallet.get('isLoading'),
+    time: wallet.get('time')
   };
 }
 function mapDispatchToProps(dispatch: Function) {

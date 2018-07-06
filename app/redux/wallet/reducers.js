@@ -9,6 +9,7 @@ import {
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
   ADD_NEW_ACCOUNT,
+  UPDATE_FETCHED_TIME,
   LOGOUT,
 } from './types';
 
@@ -17,7 +18,8 @@ const initState = fromJS({
   isLoading: false,
   walletFileName: '',
   walletLocation: '',
-  password: ''
+  password: '',
+  time: new Date()
 });
 
 export default function wallet(state = initState, action) {
@@ -66,6 +68,8 @@ export default function wallet(state = initState, action) {
       }
       return state;
     }
+    case UPDATE_FETCHED_TIME:
+      return state.set('time', action.time);
     case LOGOUT:
       return initState;
     default:

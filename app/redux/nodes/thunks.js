@@ -13,6 +13,7 @@ import {
 export function setSelected(name, target) {
   return (dispatch, state) => {
     dispatch(_setSelected(name, target));
+    console.log('setSelected', getNodes(state()).toJS());
     setWalletNodes(getNodes(state()).toJS());
   };
 }
@@ -20,6 +21,7 @@ export function setSelected(name, target) {
 export function addNode(node) {
   return (dispatch, state) => {
     dispatch(_addNode(node));
+    console.log('addNode', getNodes(state()).toJS());
     setWalletNodes(getNodes(state()).toJS());
   };
 }

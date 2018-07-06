@@ -1,5 +1,5 @@
 import { pick  } from 'lodash';
-import { TezosConseilQuery, TezosOperations  } from 'conseiljs';
+import { TezosConseilQuery, TezosOperations, TezosWallet  } from 'conseiljs';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
 import { findAccount, createSelectedAccount } from './account';
@@ -10,6 +10,8 @@ import { getSelectedNode } from './nodes';
 
 const { getEmptyTezosFilter, getOperations, getAccount } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
+const { generateMnemonic } = TezosWallet;
+
 /**
  *
  * @param timeout - number of seconds to wait
@@ -125,4 +127,8 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
 
   console.log('-debug: account.status ', account.status);
   return account;
+}
+
+export function generateNewMnemonic() {
+  return generateMnemonic();
 }

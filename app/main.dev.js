@@ -65,8 +65,7 @@ app.on('ready', async () => {
     width: 1024,
     height: 728,
     minHeight: 728,
-    minWidth: 1024,
-    titleBarStyle: 'hiddenInset'
+    minWidth: 1024
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

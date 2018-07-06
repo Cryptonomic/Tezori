@@ -37,6 +37,7 @@ class DelegateConfirmationModal extends Component<Props> {
     } = this.props;
 
     return (
+
       <Dialog
         modal
         open={open}
