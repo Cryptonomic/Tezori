@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Table,
   TableBody,
@@ -37,82 +37,48 @@ type Props = {
 
 export default function Transactions(props:Props) {
   const { transactions } = props
-  const formatedTransactions = transactions.map(transaction => {
-    const date = moment(transaction.timestamp).format('l')
+
+  const ransactionsWithDate = transactions.map(transaction => {
+    const date = moment(1000 * transaction.timestamp).format('l')
     return { ...transaction,
       date
     }
   })
 
-  // const newTransaction = formatedTransactions.reduce((result, transaction) => {
-  //   if (result[transaction.date]) {
-  //     result[transaction.date] = transaction;
-  //   } else {
-  //     result[transaction.date] = [
-  //       ...result[transaction.date],
-  //       transaction
-  //     ]
-  //   }
-  //   return result
-  // }, {})
+  const transactionsByDate = ransactionsWithDate.reduce((acc, curr) => {
+    acc[curr.date] = [].concat(acc[curr.date] || [], curr)
+    return acc;
+  }, {});
 
+  const renderTransactions = () => {
+    return Object.keys(transactionsByDate).map(day => renderDayTransactions(day, transactionsByDate[day]))
+  }
 
-  // const renderDayTransactions = () => formatedTransactions.map(transaction => {
-  //   return <div>
-  //     <TransactionsLabel amount={transaction.amount} date={transaction.timestamp} />
-  //     <Transaction amount={transaction.amount} fee={transaction.fee} date={transaction.timestamp} address={destination} />
-  //   </div>
-  // })
+  const renderDayTransactions = (day, transactions) => {
+    return (
+      <Fragment key={day}>
+        <TransactionsLabel amount={0} date={moment(day).unix()} />
+        {transactions.map(transaction => {
+          const address = transaction.fee ? transaction.destination : transaction.source
+          return (
+            <Transaction
+              key={transaction.operationId}
+              amount={transaction.amount}
+              date={transaction.timestamp}
+              fee={transaction.fee}
+              address={address}
+            />
+          )}
+        )}
+      </Fragment>
+    )
+  }
 
-  // const renderTableRow = (row, index) => {
-  //   const rowArray = [
-  //     row.get('blockLevel'),
-  //     row.get('kind'),
-  //     row.get('source'),
-  //     row.get('destination') || 'N/A',
-  //     row.get('amount') || 'N/A',
-  //     row.get('operationGroupHash'),
-  //   ];
-
-  //   return (
-  //     <TableRow key={index}>
-  //       {rowArray.map((elem, rowArrIndex) => {
-  //         return (
-  //           <TableRowColumn key={`${elem}-${rowArrIndex}`}>
-  //             {rowArrIndex + 1 < rowArray.length && (
-  //               <RowElement>
-  //                 {
-  //                   rowArrIndex === 4
-  //                     ? <Amount size={ms(0)} amount={parseInt(elem)} />
-  //                     : elem
-  //                 }
-  //               </RowElement>
-  //             )}
-  //             {rowArrIndex + 1 === rowArray.length && (
-  //               <Link onClick={() => openLink(elem)}>
-  //                 Details
-  //               </Link>
-  //             )}
-  //           </TableRowColumn>
-  //         );
-  //       })}
-  //     </TableRow>
-  //   );
-  // }
-  
   return (
     <Container>
       <Table>
         <TableBody displayRowCheckbox={false}>
-          <TransactionsLabel amount={1234567+342145} date={1530880521} />
-          <Transaction amount={1234567} date={1530880521}/>
-          <Transaction amount={342145} fee={233} date={1530880521}/>
-          <TransactionsLabel amount={3*876000} date={1530794121} />
-          <Transaction amount={876000} fee={233} date={1530794121}/>
-          <Transaction amount={876000} fee={123123} date={1530794121} />
-          <Transaction amount={876000} date={1530794121} />
-          <TransactionsLabel amount={129845} date={1530707721} />
-          <Transaction amount={129845} date={1530711321}/>
+          {renderTransactions()}
         </TableBody>
       </Table>
     </Container>

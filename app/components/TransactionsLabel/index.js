@@ -18,7 +18,7 @@ const timestampFormatter = timestamp => {
     return time
 }
 
-const DateContainer = styled.div`
+const DateContainer = styled(TableRow)`
   background-color: ${ ({ theme: { colors } }) => colors.gray1 };
   border-bottom: 2px solid ${ ({ theme: { colors } }) => colors.gray6 };
   display: grid;
@@ -27,17 +27,17 @@ const DateContainer = styled.div`
   align-items: center;
   @media (max-width: 1200px) {
     padding: ${ms(-4)} ${ms(-4)};
-    grid-template-columns: 9fr 2fr 2fr;
+    grid-template-columns: 8.5fr 2fr 2fr;
   }
 `
 
-const TransactionsDate = styled.span`
+const TransactionsDate = styled.td`
   color: ${ ({ theme: { colors } }) => colors.secondary };
   line-height: 1.63;
   font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold };
 `
 
-const Amount = styled(TezosAmount)`
+const Amount = styled.td`
   justify-self: end;
 `
 
@@ -51,13 +51,15 @@ const TransactionsLabel = (props:Props) => {
   return (
     <DateContainer>
       <TransactionsDate>{timestampFormatter(date)}</TransactionsDate>
-      <Amount 
+      <Amount>
+      <TezosAmount 
         color={'secondary'}
         size={ms(0)}
         amount={amount}
         format={6}
       />
-      <div />
+      </Amount>
+      <td />
    </DateContainer>
   )
 }

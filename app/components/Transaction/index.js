@@ -28,7 +28,7 @@ const TransactionContainer = styled(TableRow)`
   border-bottom: 2px solid ${ ({ theme: { colors } }) => colors.gray6 };
   @media (max-width: 1200px) {
     padding: ${ms(-4)} ${ms(-4)};
-    grid-template-columns: 2fr 7fr 2fr 2fr;
+    grid-template-columns: 1.5fr 7fr 2fr 2fr;
   }
 `
 
@@ -59,10 +59,10 @@ const Fee = styled.div`
 const OutgoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-end;
 `
 type OutgoProps = {
-  fee: number,
+  fee: ?number,
   amount: number,
 }
 
@@ -75,14 +75,15 @@ const Outgo = (props:OutgoProps) => {
         size={ms(0)}
         amount={amount}
         format={6}
+        fee
       />
       <Fee>
-        Fee:
+        <span>Fee: </ span>
         <TezosAmount
           color={'gray5'}
           size={ms(-2)}
           amount={fee}
-          format={2}
+          format={6}
         />
       </Fee>
     </OutgoContainer>
@@ -91,7 +92,7 @@ const Outgo = (props:OutgoProps) => {
 
 type AmountProps = {
   amount: number,
-  fee?: number,
+  fee: ?number,
 }
 
 const Amount = (props:AmountProps) => {
@@ -115,7 +116,7 @@ const Amount = (props:AmountProps) => {
 type Props = {
   address: string,
   date: number,
-  fee?: number,
+  fee: ?number,
   amount: number,
   element?: string,
 }
