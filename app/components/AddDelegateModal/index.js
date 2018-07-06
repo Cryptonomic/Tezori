@@ -17,6 +17,7 @@ import styles from './index.css';
 import { createNewAccount } from '../../redux/createDelegate/thunks';
 
 type Props = {
+  selectedParentHash: string,
   createNewAccount: Function,
   open: boolean,
   onCloseClick: Function
@@ -56,10 +57,10 @@ class AddDelegateModal extends Component<Props> {
   };
 
   createAccount = async () =>  {
-    const { createNewAccount, onCloseClick } = this.props;
+    const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
     this.setIsLoading(true);
-    if ( await createNewAccount( delegate, amount, fee, passPhrase ) ) {
+    if ( await createNewAccount( delegate, amount, fee, passPhrase, selectedParentHash ) ) {
       this.setState(defaultState);
       onCloseClick();
     } else {

@@ -11,11 +11,10 @@ import { TEZOS } from '../../constants/NodesTypes';
 
 const { sendOriginationOperation } = TezosOperations;
 
-export function createNewAccount( delegate, amount, fee, passPhrase ) {
+export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHash ) {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
     const walletPassword = state().wallet.get('password');
-    const publicKeyHash = state().wallet.get('selectedParentHash');
     const identities = state().wallet.get('identities').toJS();
     const parsedAmount = Number(amount.replace(/\,/g,''));
     const amountInUtez = tezToUtez(parsedAmount);

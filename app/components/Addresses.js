@@ -6,11 +6,11 @@ import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../styles/helpers';
 
-import { H4 } from './Heading';
+import { H4 } from './Heading/';
 import AddressBlock from './AddressBlock';
-import Tooltip from './Tooltip';
+import Tooltip from './Tooltip/';
 import {
-  selectAccount
+  syncAccountOrIdentity,
 } from '../redux/wallet/thunks';
 
 type OperationGroup = {
@@ -54,7 +54,7 @@ type Identity = {
 
 type Props = {
   identities: List<Identity>,
-  selectAccount: Function,
+  syncAccountOrIdentity: Function,
   selectedAccountHash: string,
   theme: Object
 };
@@ -87,8 +87,15 @@ class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { identities, theme: { colors } } = this.props;
-
+    const {
+      history,
+      match,
+      syncAccountOrIdentity,
+      selectedAccountHash,
+      selectedParentHash,
+      identities,
+      theme: { colors }
+    } = this.props;
     return (
       <Container>
         <AccountTitle>
@@ -111,8 +118,11 @@ class Addresses extends Component<Props> {
             <AddressBlock
               accountBlock={accountBlock}
               accountIndex={index + 1}
-              selectAccount={this.props.selectAccount}
-              selectedAccountHash={this.props.selectedAccountHash}
+              syncAccountOrIdentity={ syncAccountOrIdentity }
+              selectedAccountHash={ selectedAccountHash }
+              selectedParentHash={ selectedParentHash }
+              history={ history }
+              match={ match }
             />
           </AccountItem>
         ))}
@@ -125,15 +135,14 @@ function mapStateToProps(state) {
   const { wallet } = state;
 
   return {
-    identities: wallet.get('identities'),
-    selectedAccountHash: wallet.get('selectedAccountHash')
+    identities: wallet.get('identities')
   };
 }
 
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      selectAccount
+      syncAccountOrIdentity
     },
     dispatch
   );

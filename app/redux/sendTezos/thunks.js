@@ -34,11 +34,9 @@ export function validateAmount( amount, toAddress ) {
   };
 }
 
-export function sendTez( password, toAddress, amount, fee ) {
+export function sendTez( password, toAddress, amount, fee, selectedAccountHash, selectedParentHash ) {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
-    const selectedAccountHash = state().wallet.get('selectedAccountHash');
-    const selectedParentHash = state().wallet.get('selectedParentHash');
     const identities = state().wallet.get('identities').toJS();
     const walletPassword = state().wallet.get('password');
     const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);

@@ -108,7 +108,6 @@ const PkhTooltip = () => {
 }
 
 type Props = {
-  goBack: Function,
   importAddress: Function,
   isLoading: boolean
 };

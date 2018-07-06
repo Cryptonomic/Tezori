@@ -2,6 +2,7 @@ import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
+import { TRANSACTIONS } from '../constants/TabConstants';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
 import { getSelectedNode } from './nodes';
 
@@ -18,6 +19,7 @@ export function createAccount(account, identity) {
     script: null,
     spendable: true,
     transactions: [],
+    activeTab: TRANSACTIONS,
     status: status.CREATED,
     publicKey: identity.publicKey,
     privateKey: identity.privateKey,

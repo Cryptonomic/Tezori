@@ -1,6 +1,7 @@
 import * as status from '../constants/StatusTypes';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
 import { createAccount, getAccountsForIdentity, getSyncAccount } from './account';
+import { TRANSACTIONS } from '../constants/TabConstants';
 
 export function createIdentity(identity) {
 
@@ -11,6 +12,7 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
+    activeTab: TRANSACTIONS,
     status: status.CREATED,
     ...identity
   };
@@ -53,6 +55,7 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
     const overrides = {};
     if ( foundIndex > -1 ) {
       overrides.status = identity.accounts[foundIndex].status;
+      overrides.activeTab = identity.accounts[foundIndex].activeTab;
     }
     return createAccount({
         ...account,

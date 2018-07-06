@@ -22,7 +22,10 @@ class HomePage extends Component<Props> {
 
   render() {
     const { match, identities, isLoading } = this.props;
-    const HomeComponent = !identities || !identities.size ? HomeAddAddress: HomeAddresses
+    const redirectTo = !identities || !identities.size
+      ? `${match.url}/addAddress`
+      : `${match.url}/addresses`;
+
     return (
       <Fragment>
         <TopBar />
@@ -30,7 +33,7 @@ class HomePage extends Component<Props> {
           <Route path={`${match.path}/addresses`} component={HomeAddresses} />
           <Route path={`${match.path}/addAddress`} component={HomeAddAddress} />
           <Route path={`${match.path}/settings`} component={HomeSettings} />
-          <Route component={HomeComponent}/>
+          <Redirect to={redirectTo}/>
         </Switch>
         { isLoading && <Loader /> }
       </Fragment>

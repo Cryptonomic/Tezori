@@ -9,7 +9,6 @@ import {
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
   ADD_NEW_ACCOUNT,
-  SET_SELECT_ACCOUNT,
   LOGOUT,
 } from './types';
 
@@ -18,8 +17,6 @@ const initState = fromJS({
   isLoading: false,
   walletFileName: '',
   walletLocation: '',
-  selectedAccountHash: '',
-  selectedParentHash: '',
   password: ''
 });
 
@@ -69,10 +66,6 @@ export default function wallet(state = initState, action) {
       }
       return state;
     }
-    case SET_SELECT_ACCOUNT:
-      return state
-        .set('selectedAccountHash', action.selectedAccountHash)
-        .set('selectedParentHash', action.selectedParentHash);
     case LOGOUT:
       return initState;
     default:

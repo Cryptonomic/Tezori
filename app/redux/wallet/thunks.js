@@ -2,7 +2,6 @@ import path from 'path';
 import { push } from 'react-router-redux';
 import { flatten, pick } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
-import { updateAddress } from '../../reducers/delegate.duck';
 import { addMessage } from '../../reducers/message.duck';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
@@ -26,16 +25,13 @@ import {
 } from '../../utils/wallet';
 
 
-
 import {
   logout,
   setWallet,
   setIsLoading,
   setIdentities,
-  setSelectedAccount,
   addNewIdentity,
-  updateIdentity,
-  addNewAccount
+  updateIdentity
 } from './actions';
 
 const {
@@ -85,6 +81,47 @@ export function automaticAccountRefresh() {
 
 export function clearAutomaticAccountRefresh() {
   clearInterval(currentAccountRefreshInterval);
+}
+
+export function updateAccountActiveTab(selectedAccountHash, selectedParentHash, activeTab) {
+  return async (dispatch, state) => {
+    const identities = state().wallet.get('identities').toJS();
+    const identity = findIdentity(identities, selectedParentHash);
+    const foundIndex = findAccountIndex( identity, selectedAccountHash );
+    const account = identity.accounts[ foundIndex ];
+
+    if ( foundIndex > -1 ) {
+      identity.accounts[ foundIndex ] = {
+        ...account,
+        activeTab
+      };
+
+      dispatch(updateIdentity(identity));
+    }
+  };
+}
+
+export function updateIdentityActiveTab(selectedAccountHash, activeTab) {
+  return async (dispatch, state) => {
+    const identities = state().wallet.get('identities').toJS();
+    const identity = findIdentity(identities, selectedAccountHash);
+    if ( identity ) {
+      dispatch(updateIdentity({
+        ...identity,
+        activeTab
+      }));
+    }
+  };
+}
+
+export function updateActiveTab(selectedAccountHash, selectedParentHash, activeTab) {
+  return async (dispatch, state) => {
+    if (selectedAccountHash === selectedParentHash ) {
+      dispatch(updateIdentityActiveTab(selectedAccountHash, activeTab));
+    } else {
+      dispatch(updateAccountActiveTab(selectedAccountHash, selectedParentHash, activeTab));
+    }
+  };
 }
 
 export function syncAccount(selectedAccountHash, selectedParentHash) {
@@ -160,33 +197,17 @@ export function syncWallet() {
   }
 }
 
-export function setAccountDelegateAddress(selectedAccountHash, selectedParentHash) {
-  return async (dispatch, state) => {
-    if ( selectedAccountHash !== selectedParentHash ) {
-      const identities = state().wallet.get('identities').toJS();
-      const identity = findIdentity(identities, selectedParentHash);
-      const account = findAccount(identity, selectedAccountHash);
-      dispatch(updateAddress(account.delegateValue));
-    }
-  };
-}
-
-export function selectAccount(selectedAccountHash, selectedParentHash) {
+export function syncAccountOrIdentity(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     try{
       dispatch(setIsLoading(true));
-      dispatch(setSelectedAccount(
-        selectedAccountHash,
-        selectedParentHash
-      ));
-      dispatch(setAccountDelegateAddress(selectedAccountHash, selectedParentHash));
       if (selectedAccountHash === selectedParentHash ) {
         await dispatch(syncIdentity(selectedAccountHash));
       } else {
         await dispatch(syncAccount(selectedAccountHash, selectedParentHash));
       }
     } catch (e) {
-      console.log('-debug: Error in: selectAccount for:' + selectedAccountHash, selectedParentHash);
+      console.log('-debug: Error in: syncAccountOrIdentity for:' + selectedAccountHash, selectedParentHash);
       console.error(e);
       dispatch(addMessage(e.name, true));
     }
@@ -248,7 +269,7 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
           dispatch(addNewIdentity(identity));
           identities = state().wallet.get('identities').toJS();
           await saveUpdatedWallet(identities, walletLocation, walletFileName, password);
-          await dispatch(selectAccount(publicKeyHash, publicKeyHash));
+          await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
           dispatch(push('/home'));
         } else {
           dispatch(addMessage('Identity already exist', true));

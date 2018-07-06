@@ -32,9 +32,11 @@ const SendButton = styled(Button)`
 `
 
 type Props = {
-  isReady: boolean,
-  sendTez: Function,
-  validateAmount: Function
+  isReady?: boolean,
+  sendTez?: Function,
+  selectedAccountHash?: string,
+  selectedParentHash?: string,
+  validateAmount?: Function
 };
 
 const initialState = {
@@ -52,7 +54,7 @@ class Send extends Component<Props> {
   state = initialState;
 
   openConfirmation = () =>  this.setState({ isConfirmationModalOpen: true });
-  closeConfirmation = () =>  this.setState({ isConfirmationModalOpen: false, password: '' });
+  closeConfirmation = () =>  this.setState(initialState);
   handlePasswordChange = (_, password) =>  this.setState({ password });
   handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
   handleAmountChange = (_, amount) =>  this.setState({ amount });
@@ -66,13 +68,12 @@ class Send extends Component<Props> {
       this.openConfirmation();
     }
   };
-  
-  send = async () =>  {
+
+  onSend = async () =>  {
     const { password, toAddress, amount, fee } = this.state;
-    const { sendTez } = this.props;
+    const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await sendTez( password, toAddress, amount,  fee)) {
-      this.setState(initialState);
+    if (await sendTez( password, toAddress, amount, fee, selectedAccountHash, selectedParentHash)) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);
@@ -132,7 +133,7 @@ class Send extends Component<Props> {
           open={isConfirmationModalOpen}
           onCloseClick={this.closeConfirmation}
           onPasswordChange={this.handlePasswordChange}
-          onSend={this.send}
+          onSend={this.onSend}
           isLoading={isLoading}
         />
       </SendContainer>
