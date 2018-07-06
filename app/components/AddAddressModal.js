@@ -219,7 +219,7 @@ export default function AddAddress(props: Props) {
               style={{ width: '100%' }}
               value={seed}
               onChange={(_, newSeed) => updateSeed(newSeed)}
-              />
+            />
             <RowInputs>
               <InputWithTooltip>
                 <TextField

@@ -3,16 +3,12 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TextField } from 'material-ui';
-import CheckCircle from 'material-ui/svg-icons/action/check-circle';
-import Warning from 'material-ui/svg-icons/alert/warning';
 import { remote, shell } from 'electron';
 import styled from 'styled-components';
 import path from 'path';
-import PasswordValidator from 'password-validator';
-import classnames from 'classnames';
+import zxcvbn from 'zxcvbn';
 import { ms } from '../styles/helpers';
 
-import Tooltip from './Tooltip';
 import Button from './Button';
 import BackButton from './BackButton';
 import Checkbox from './Checkbox';
@@ -20,6 +16,7 @@ import MessageBar from './MessageBar';
 import TermsModal from './TermsModal';
 import Loader from './Loader';
 import CREATION_CONSTANTS from '../constants/CreationTypes';
+import TezosIcon from "./TezosIcon";
 import {
   goHomeAndClearState,
   setWalletFileName,
@@ -114,20 +111,120 @@ const CustomButton = styled(Button)`
   max-width: 300px;
 `
 
+const StyledInputContainer = styled.div`
+  height: 126px;
+`
+const StyledInputContent = styled.div`
+  width: 100%;
+  position: relative;
+  .input-text-field {
+    width: 100% !important;
+  }
+
+`
+const StyledSuggestion = styled.div`
+  font-size: 12px;
+  line-height: 18px;
+  color: #92949a;
+  max-width: 438px;
+`
+const StyledCrackTime = styled.div`
+  font-size: 12px;
+  line-height: 18px;
+  color: ${props => (props.color)};
+  span {
+    font-weight: bold;
+  }
+`
+const EyeIcon = styled(TezosIcon)`
+  position: absolute;
+  top: 38px;
+  right: 10px;
+`
+const CheckIcon = styled(TezosIcon)`
+  position: absolute;
+  top: 42px;
+  right: 40px;
+`
+
+type Props1 = {
+  label: string,
+  crackTime?: string,
+  suggestion?: string,
+  isShowed?: boolean,
+  status?: boolean,
+  score?: number,
+  changFunc: Function,
+  onShow: Function
+
+};
+
+const focusBorderColors = ['#2c7df7', '#ea776c', '#e69940', '#d3b53b', '#259c90'];
+
+const InputValidComponent = (props: Props1) => {
+  const borderColor = focusBorderColors[props.score];
+  let width = '';
+  if (props.score && !props.status) {
+    width = `${props.score*25}%`;
+  } else {
+    width = `100%`;
+  }
+
+  return (
+    <StyledInputContainer>
+      <StyledInputContent>
+        <TextField
+          className='input-text-field'
+          floatingLabelText={props.label}
+          type={props.isShowed? 'text': 'password'}
+          floatingLabelStyle={inputStyles.floatingLabelStyle}
+          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
+          underlineStyle={inputStyles.underlineStyle}
+          underlineFocusStyle={{borderColor, width}}                      
+          onChange={(_, newVal) => props.changFunc(newVal)}
+        />
+        {props.score===4 && <CheckIcon
+          iconName='checkmark2'
+          size={ms(0)}
+          color="check"
+          onClick={props.onShow}
+        />}
+
+        <EyeIcon
+          iconName={props.isShowed? 'view-hide': 'view-show'}
+          size={ms(2)}
+          color="secondary"
+          onClick={props.onShow}
+        />
+      </StyledInputContent>
+      {!!props.crackTime && <StyledCrackTime color={borderColor} dangerouslySetInnerHTML={{ __html: props.crackTime }} />}
+      {!!props.suggestion && <StyledSuggestion>{props.suggestion}</StyledSuggestion>}
+
+    </StyledInputContainer>
+  )
+};
+InputValidComponent.defaultProps = {
+  crackTime: '',
+  suggestion: '',
+  score: 0,
+  isShowed: false,
+  status: false
+}
+
 class Home extends Component<Props> {
   props: Props;
   
   state = {
     isAgreement: false,
-    isInputPasswod: false,
-    isPasswordValidation: false,
-    isInputConfirmPassword: false,
+    isPasswordValidation: false,    
+    isPwdShowed: false,
     isPasswordMatched: false,
-    isPwdMinLength: false,
-    hasPwdUpperCase: false,
-    hasPwdLowerCase: false,
-    hasPwdDigits: false,
-    hasPwdSymbols: false
+    isConfirmPwdShowed: false,
+    pwdScore: 0,
+    pwdCrackTime: '',
+    pwdSuggestion: '',
+    confirmPwdScore: 0,
+    confirmPwdText: ''
   }
 
   componentWillMount = () => {
@@ -187,124 +284,43 @@ class Home extends Component<Props> {
   changePassword = (val) => {
     const { confirmedPassword, setPassword } = this.props;
     if (val) {
-      if (!this.state.isInputPasswod) this.setState({ isInputPasswod: true });
-      const schemaLength = new PasswordValidator();
-      const schemaUppercase = new PasswordValidator();
-      const schemaLowerCase = new PasswordValidator();
-      const schemaDigits = new PasswordValidator();
-      const schemaSymbols = new PasswordValidator();
-      schemaLength.is().min(8).is().max(100).has().not().spaces();
-      schemaUppercase.has().uppercase().has().not().spaces();
-      schemaLowerCase.has().lowercase().has().not().spaces();
-      schemaDigits.has().digits().has().not().spaces();
-      schemaSymbols.has().symbols().has().not().spaces();
+      const pwdStrength = zxcvbn(val);
+      const score = pwdStrength.score || 1;
+      const crackTime = `Your password will take <span>${pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second}</span> to crack!`;
+      let suggestion = pwdStrength.feedback.warning;
+      pwdStrength.feedback.suggestions.forEach(item => {
+        suggestion = `${suggestion} ${item}`;
+      });
 
-      const isPwdMinLength = schemaLength.validate(val);
-      const hasPwdUpperCase = schemaUppercase.validate(val);
-      const hasPwdLowerCase = schemaLowerCase.validate(val);
-      const hasPwdDigits = schemaDigits.validate(val);
-      const hasPwdSymbols = schemaSymbols.validate(val);
+      const isValid = score === 4;
+      const isPasswordMatched = confirmedPassword === val;
 
-      
-  
-      const isValid = isPwdMinLength && hasPwdUpperCase && hasPwdLowerCase && hasPwdDigits && hasPwdSymbols;      
-      this.setState({ isPasswordValidation: isValid, isPwdMinLength, hasPwdUpperCase, hasPwdLowerCase, hasPwdDigits, hasPwdSymbols});
+      this.setState({pwdScore: score, pwdCrackTime: crackTime, pwdSuggestion: suggestion, isPasswordValidation: isValid, isPasswordMatched});
 
-      if (confirmedPassword === val){
-        this.setState({ isPasswordMatched: true});
-      } else {
-        this.setState({ isPasswordMatched: false});
-      }
     } else {
-      this.setState({ isPasswordValidation: false });
+      this.setState({pwdScore: 0, pwdCrackTime: '', pwdSuggestion: '', isPasswordValidation: false, isPasswordMatched: false});
     }
     setPassword(val);
   }
 
   confirmPassword = (val) => {
     const { password, setConfirmedPassword } = this.props;
-    if (!this.state.isInputConfirmPassword) {
-      this.setState({ isInputConfirmPassword: true });
+    const indexVal = password.indexOf(val);
+    let score = 0;
+    let isMatched = false;
+    let confirmStr = '';
+    if (password && password === val) {
+      score = 4;
+      isMatched = true;
+      confirmStr = 'Passwords Match!';
+    } else if (password !== val && indexVal<0 && val) {
+      score = 1;
+      isMatched = false;
+      confirmStr = `Passwords don't Match!`;
     }
-
-    if (this.state.isInputConfirmPassword && password && password === val) {
-      this.setState({ isPasswordMatched: true });
-    } else {
-      this.setState({ isPasswordMatched: false });
-    }
+    this.setState({ isPasswordMatched: isMatched, confirmPwdScore: score, confirmPwdText: confirmStr });    
     setConfirmedPassword(val);
   }
-
-  inputTextField = (
-    label: string,
-    type: string,    
-    changFunc: Function,
-    isErrorUnderline: boolean = false
-  ) => {
-    return (
-      <TextField
-        floatingLabelText={label}
-        className={styles.inputTextField}
-        type={type}
-        floatingLabelStyle={inputStyles.floatingLabelStyle}
-        floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
-        underlineStyle={isErrorUnderline? inputStyles.errorUnderlineStyle : inputStyles.underlineStyle}
-        underlineFocusStyle={isErrorUnderline? inputStyles.errorUnderlineStyle : inputStyles.underlineFocusStyle}            
-        onChange={(_, newVal) => changFunc(newVal)}
-      />
-    );
-  };
-
-  validIcon = (isShow: boolean = false, isInput: boolean = false, isValid: boolean = false, size: number = 20) => {
-    if (!isShow) {
-      return null;
-    }
-    if (!isInput) {
-      return (<CheckCircle className={classnames(styles.validIcon, styles.grayIconColor)} style={{height: size, width: size}} />);
-    }
-    if (isValid) {
-      return (<CheckCircle className={classnames(styles.validIcon, styles.validIconColor)} style={{height: size, width: size}} />);
-    }
-    return (<Warning className={styles.noValidIcon} style={{height: size, width: size}} />);
-  }
-
-  validText = (isInput: boolean = false, isValid: boolean = false, text: string) => {
-    if (!isInput) {
-      return (<div className={classnames(styles.validTooltipText, styles.grayFontColor)}>{text}</div>);
-    }
-
-    if (isValid) {
-      return (<div className={classnames(styles.validTooltipText, styles.validFontColor)}>{text}</div>);
-    }
-
-    return (<div className={classnames(styles.validTooltipText, styles.invalidFontColor)}>{text}</div>);
-
-  }
-
-  pwdValidationTooltip = () => (
-    <div className={styles.validTooltipContainer}>
-      <div className={styles.validTooltipContent}>
-        {this.validIcon(true, this.state.isInputPasswod, this.state.isPwdMinLength, 14)}
-        {this.validText(this.state.isInputPasswod, this.state.isPwdMinLength, 'At least 8 characters')}
-      </div>
-      <div className={styles.validTooltipContent}>
-        {this.validIcon(true, this.state.isInputPasswod, this.state.hasPwdUpperCase, 14)}
-        {this.validText(this.state.isInputPasswod, this.state.hasPwdUpperCase, '1 upper case')}
-      </div>
-      <div className={styles.validTooltipContent}>
-        {this.validIcon(true, this.state.isInputPasswod, this.state.hasPwdLowerCase, 14)}
-        {this.validText(this.state.isInputPasswod, this.state.hasPwdLowerCase, '1 lower case')}
-      </div>
-      <div className={styles.validTooltipContent}>
-        {this.validIcon(true, this.state.isInputPasswod, this.state.hasPwdSymbols, 14)}
-        {this.validText(this.state.isInputPasswod, this.state.hasPwdSymbols, '1 special character')}
-      </div>
-      <div className={styles.validTooltipContent}>
-        {this.validIcon(true, this.state.isInputPasswod, this.state.hasPwdDigits, 14)}
-        {this.validText(this.state.isInputPasswod, this.state.hasPwdDigits, '1 number')}
-      </div>
-    </div>
-  )
  
   renderSelectionState = () => {
     return (
@@ -345,6 +361,13 @@ class Home extends Component<Props> {
       </SectionContainer>
     );
   };
+  onPasswordShow = (index) => {
+    if (index) {
+      this.setState({isConfirmPwdShowed: !this.state.isConfirmPwdShowed});
+    } else {
+      this.setState({isPwdShowed: !this.state.isPwdShowed});
+    }
+  }
 
   renderCreateWallet = () => {
     const {
@@ -371,21 +394,24 @@ class Home extends Component<Props> {
             </Button>
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
-          <div className={styles.inputContainer}>
-            {this.inputTextField('Create Password', 'password', this.changePassword, this.state.isInputPasswod && !this.state.isPasswordValidation)}
-            <Tooltip position="top" content={this.pwdValidationTooltip}>
-              <Button buttonTheme="plain" className={styles.validationIcon}>
-                {this.validIcon(true, this.state.isInputPasswod, this.state.isPasswordValidation)}
-              </Button>
-            </Tooltip>
-          </div>
-
-          <div className={styles.inputContainer}>
-            {this.inputTextField('Confirm Password', 'password', this.confirmPassword, this.state.isInputConfirmPassword && !this.state.isPasswordMatched)}
-            <Button buttonTheme="plain" className={styles.validationIcon}>
-              {this.validIcon(this.state.isInputConfirmPassword, true, this.state.isPasswordMatched)}
-            </Button>            
-          </div>
+          <InputValidComponent
+            label='Create Password'
+            isShowed={this.state.isPwdShowed}
+            crackTime={this.state.pwdCrackTime}
+            suggestion={this.state.pwdSuggestion}
+            score={this.state.pwdScore}
+            changFunc={this.changePassword}
+            onShow={() => this.onPasswordShow(0)}            
+          />
+          <InputValidComponent
+            label='Confirm Password'
+            status
+            isShowed={this.state.isConfirmPwdShowed}
+            crackTime={this.state.confirmPwdText}
+            score={this.state.confirmPwdScore}
+            changFunc={this.confirmPassword}
+            onShow={() => this.onPasswordShow(1)}            
+          />
           <div className={styles.actionButtonContainer}>
             <Button
               className={styles.actionButton}

@@ -30,7 +30,10 @@ export const Theme = {
     index0: '#94a9d1',
 
     // black colors
-    black1: '#1e1313'
+    black1: '#1e1313',
+
+    // check colors
+    check: '#259c90'
   },
   animations: {
     defaultTime: '300ms',
