@@ -1,44 +1,30 @@
-import React, { Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Dialog, TextField } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import classNames from 'classnames';
 import styled from 'styled-components'
 import { lighten } from 'polished'
+import { ms } from '../../styles/helpers'
 import { shell } from 'electron'
-import { ms } from '../styles/helpers'
 
-import Button from './Button';
-import { H4 } from './Heading';
-import ADD_ADDRESS_TYPES from '../constants/AddAddressTypes';
-import Loader from './Loader';
+import Button from '../../components/Button/';
+import { H4 } from '../../components/Heading/'
+import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
+import Loader from '../../components/Loader';
 
-import Tooltip from './Tooltip';
-import styles from './AddAddressModal.css';
-import TezosIcon from "./TezosIcon";
+import Tooltip from '../../components/Tooltip/';
+import TezosIcon from '../../components/TezosIcon/';
 
-import CreateAccountSlide from './CreateAccountSlide';
+import CreateAccountSlide from '../../components/CreateAccountSlide/';
+import { importAddress } from '../../redux/wallet/thunks';
+import styles from './styles.css';
 
-type Props = {
-  open: boolean,
-  activeTab: string,
-  closeModal: Function,
-  setActiveTab: Function,
-  importAddress: Function,
-  seed: string,
-  pkh: string,
-  activationCode: string,
-  username: string,
-  passPhrase: string,
-  isLoading: boolean,
-  updateUsername: Function,
-  updatePassPhrase: Function,
-  updateSeed: Function,
-  updatePkh: Function,
-  updateActivationCode: Function,
-  nextAccountSlide: Function,
-  currentSlide: number,
-  generateNewMnemonic: Function
-};
+const Container = styled.div`
+  width: 80%;
+  margin: ${ms(1)} auto 0;
+  padding: ${ms(3)} ${ms(4)};
+`;
 
 const InputWithTooltip = styled.div`
   position: relative;
@@ -135,43 +121,25 @@ const ActivationTooltipStyled = styled(ActivationTooltip)`
   max-width: ${ms(14)}
 `
 
-export default function AddAddress(props: Props) {
-  const {
-    open,
-    activeTab,
-    closeModal,
-    setActiveTab,
-    importAddress,
-    seed,
-    pkh,
-    activationCode,
-    updatePkh,
-    updateActivationCode,
-    username,
-    passPhrase,
-    isLoading,
-    updateUsername,
-    updatePassPhrase,
-    updateSeed,
-    nextAccountSlide,
-    currentSlide,
-    generateNewMnemonic
-  } = props;
+type Props = {
+  importAddress: Function,
+  isLoading: boolean
+};
 
-  function renderAppBar() {
-    return (
-      <div className={styles.titleContainer}>
-        <div>Add an Account</div>
-          <CloseIcon
-            className={styles.closeIcon}
-            style={{ fill: 'white' }}
-            onClick={closeModal}
-          />
-      </div>
-    );
-  }
+class AddAddress extends Component<Props> {
+  props: Props;
 
-  function renderTab(tabName) {
+  state = {
+    activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
+    seed: '',
+    pkh: '',
+    activationCode: '',
+    username: '',
+    passPhrase: ''
+  };
+
+  renderTab = (tabName) => {
+    const { activeTab } = this.state;
     const tabClasses = classNames({
       [styles.tab]: true,
       [styles.inactiveTab]: tabName !== activeTab,
@@ -182,32 +150,42 @@ export default function AddAddress(props: Props) {
       <div
         key={tabName}
         className={tabClasses}
-        onClick={() => setActiveTab(tabName)}
+        onClick={() => this.setState({ activeTab: tabName })}
       >
         {tabName}
       </div>
     );
-  }
 
-  function renderTabController() {
+  };
+
+  renderTabController = () => {
     return (
       <div className={styles.tabContainer}>
-        {Object.values(ADD_ADDRESS_TYPES).map(renderTab)}
+        {Object.values(ADD_ADDRESS_TYPES).map(this.renderTab)}
       </div>
     );
-  }
+  };
 
-  function renderAddBody() {
-    switch (activeTab) {
+  renderAppBar = () => {
+    return (
+      <div className={styles.titleContainer}>
+        <div>Add an Address</div>
+      </div>
+    );
+  };
+
+  importAddress = () => {
+    const { activeTab, seed, passPhrase, pkh, username, activationCode } = this.state;
+    this.props.importAddress(activeTab, seed, pkh, activationCode, username, passPhrase);
+  };
+
+  renderAddBody() {
+    const { activeTab, seed, passPhrase, pkh, username, activationCode } = this.state;
+    const { isLoading } = this.props;
+    switch ( activeTab ) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return (
-          <CreateAccountSlide
-            seed={seed}
-            nextAccountSlide={nextAccountSlide}
-            currentSlide={currentSlide}
-            importAddress={importAddress}
-            generateNewMnemonic={generateNewMnemonic}
-          />
+          <CreateAccountSlide />
         );
       case ADD_ADDRESS_TYPES.FUNDRAISER:
       default:
@@ -217,9 +195,9 @@ export default function AddAddress(props: Props) {
             <TextField
               floatingLabelText="15 Word Secret Key"
               style={{ width: '100%' }}
-              value={seed}
-              onChange={(_, newSeed) => updateSeed(newSeed)}
-              />
+              value={ seed }
+              onChange={(_, newSeed) => this.setState({ seed: newSeed })}
+            />
             <RowInputs>
               <InputWithTooltip>
                 <TextField
@@ -227,7 +205,7 @@ export default function AddAddress(props: Props) {
                   type="password"
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={passPhrase}
-                  onChange={(_, newPassPhrase) => updatePassPhrase(newPassPhrase)}
+                  onChange={(_, newPassPhrase) => this.setState({ passPhrase: newPassPhrase })}
                 />
 
                 <StyledTooltip position="bottom" content={PasswordTooltip}>
@@ -246,7 +224,7 @@ export default function AddAddress(props: Props) {
                   floatingLabelText="Public key hash"
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={ pkh }
-                  onChange={(_, newPkh) => updatePkh(newPkh)}
+                  onChange={(_, newPkh) => this.setState({ pkh: newPkh })}
                 />
                 <StyledTooltip position="bottom" content={PkhTooltip}>
                   <Button buttonTheme="plain">
@@ -266,7 +244,7 @@ export default function AddAddress(props: Props) {
                   floatingLabelText="Fundraiser Email Address"
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={username}
-                  onChange={(_, newUsername) => updateUsername(newUsername)}
+                  onChange={(_, newUsername) => this.setState({ username: newUsername })}
                 />
 
                 <StyledTooltip position="bottom" content={EmailTooltip}>
@@ -285,7 +263,7 @@ export default function AddAddress(props: Props) {
                   floatingLabelText="Activation Code"
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={activationCode}
-                  onChange={(_, newActivationCode) => updateActivationCode(newActivationCode)}
+                  onChange={(_, newActivationCode) => this.setState({ activationCode: newActivationCode })}
                 />
                 <StyledTooltip position="bottom" content={ActivationTooltip}>
                   <Button buttonTheme="plain">
@@ -300,7 +278,7 @@ export default function AddAddress(props: Props) {
               </RowInputs>
             <ImportButton
               buttonTheme="primary"
-              onClick={importAddress}
+              onClick={this.importAddress}
               disabled={isLoading}
             >
               Import
@@ -310,14 +288,34 @@ export default function AddAddress(props: Props) {
     }
   }
 
-  return (
-    <Dialog modal open={open} bodyStyle={{ padding: '0px' }}>
-      {renderAppBar()}
-      {renderTabController()}
-      <div className={styles.addAddressBodyContainer}>
-        {renderAddBody()}
-        {isLoading && <Loader />}
-      </div>
-    </Dialog>
-  );
+  render() {
+    const { activeTab } = this.state;
+    const { isLoading, goBack } = this.props;
+    return (
+      <Container>
+        {this.renderAppBar()}
+        {this.renderTabController()}
+        <div className={styles.addAddressBodyContainer}>
+          {this.renderAddBody()}
+          {isLoading && <Loader />}
+        </div>
+      </Container>
+    );
+  }
 }
+
+function mapStateToProps({ wallet, message }) {
+  return {
+    isLoading: wallet.get('isLoading'),
+    message: message.get('message')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    importAddress
+  }, dispatch );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddAddress);
+

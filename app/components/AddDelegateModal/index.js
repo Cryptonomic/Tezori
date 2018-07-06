@@ -14,61 +14,36 @@ import Button from '../Button';
 import Loader from '../Loader';
 
 import styles from './index.css';
-import {
-  changeAmount,
-  changeDelegate,
-  changeFee,
-  createNewAccount,
-  closeCreateAccountModal,
-  updatePassPhrase
-} from '../../reducers/createAccount.duck';
+import { createNewAccount } from '../../redux/createDelegate/thunks';
 
 type Props = {
-  changeAmount: Function,
-  changeDelegate: Function,
-  changeFee: Function,
-  closeCreateAccountModal: Function,
+  selectedParentHash: string,
   createNewAccount: Function,
-  updatePassPhrase: Function,
-  isLoading: boolean,
-  isModalOpen: boolean,
-  operation: string
+  open: boolean,
+  onCloseClick: Function
 };
 
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
 
-
+const defaultState = {
+  isLoading: false,
+  delegate: '',
+  amount: null,
+  fee: 100,
+  passPhrase: ''
+};
 
 class AddDelegateModal extends Component<Props> {
   props: Props;
-  state = {
-    delegate: '',
-    amount: null,
-    fee: null,
-    passPhrase: ''
-  };
+  state = defaultState;
 
-  changeAmount = (_, amount) => {
-    this.setState({amount});
-    this.props.changeAmount(amount);
-  };
-
-  changeDelegate = (_, delegate) => {
-    this.setState({delegate});
-    this.props.changeDelegate(delegate);
-  };
-
-  changeFee = (_, index, fee) => {
-    this.setState({fee});
-    this.props.changeFee(fee);
-  };
-
-  updatePassPhrase = (_, newPassPhrase) => {
-    this.setState({passPhrase: newPassPhrase});
-    this.props.updatePassPhrase(newPassPhrase);
-  };
+  changeAmount = (_, amount) =>  this.setState({ amount });
+  changeDelegate = (_, delegate) => this.setState({ delegate });
+  changeFee = (_, index, fee) => this.setState({ fee });
+  updatePassPhrase = (_, passPhrase) => this.setState({ passPhrase });
+  setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   renderToolTipComponent = () => {
     return (
@@ -81,15 +56,35 @@ class AddDelegateModal extends Component<Props> {
     );
   };
 
-  renderCreationBody = () => {
+  createAccount = async () =>  {
+    const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
-    const isDisabled = !delegate || !amount || !fee || !passPhrase;
+    this.setIsLoading(true);
+    if ( await createNewAccount( delegate, amount, fee, passPhrase, selectedParentHash ) ) {
+      this.setState(defaultState);
+      onCloseClick();
+    } else {
+      this.setIsLoading(false);
+    }
+  };
+
+  render() {
+    const { open, onCloseClick } = this.props;
+    const { isLoading, delegate, amount, fee, passPhrase } = this.state;
+    const isDisabled = isLoading || !delegate || !amount || !fee || !passPhrase;
+
     return (
-      <Fragment>
+      <Dialog
+        modal
+        open={open}
+        title="Add a Delegate"
+        bodyStyle={{ padding: '5px 80px 50px 80px' }}
+        titleStyle={{ padding: '50px 70px 0px' }}
+      >
         <CloseIcon
           className={styles.closeIcon}
           style={{ fill: '#7190C6' }}
-          onClick={this.props.closeCreateAccountModal}
+          onClick={onCloseClick}
         />
         <div className={styles.delegateContainer}>
           <TextField
@@ -144,71 +139,26 @@ class AddDelegateModal extends Component<Props> {
         <div className={styles.passwordButtonContainer}>
           <Button
             buttonTheme="primary"
-            disabled={this.props.isLoading || isDisabled}
+            disabled={isLoading || isDisabled}
             className={styles.delegateButton}
-            onClick={this.props.createNewAccount}
+            onClick={this.createAccount}
           >
             Delegate
           </Button>
         </div>
-        {this.props.isLoading && <Loader />}
-      </Fragment>
-    );
-  };
-
-  renderOperationBody = () => {
-    return (
-      <div>
-        <div>Operation successful: {this.props.operation}</div>
-        <div>
-          <Button
-            buttonTheme="primary"
-            onClick={this.props.closeCreateAccountModal}
-            small
-          >
-            Close
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
-  render() {
-    return (
-      <Dialog
-        modal
-        open={this.props.isModalOpen}
-        title="Add a Delegate"
-        bodyStyle={{ padding: '5px 80px 50px 80px' }}
-        titleStyle={{ padding: '50px 70px 0px' }}
-      >
-        {!this.props.operation && this.renderCreationBody()}
-        {this.props.operation && this.renderOperationBody()}
+        {isLoading && <Loader />}
       </Dialog>
     );
   }
 }
 
-function mapStateToProps({ createAccount }) {
-  return {
-    isLoading: createAccount.get('isLoading'),
-    operation: createAccount.get('operation'),
-    isModalOpen: createAccount.get('isModalOpen')
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      changeAmount,
-      changeDelegate,
-      changeFee,
-      closeCreateAccountModal,
-      createNewAccount,
-      updatePassPhrase
+      createNewAccount
     },
     dispatch
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);
+export default connect(null, mapDispatchToProps)(AddDelegateModal);

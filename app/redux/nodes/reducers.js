@@ -13,7 +13,19 @@ import {
   getWalletNodes
 } from '../../utils/nodes';
 
-const initState = fromJS(getWalletNodes() || omit(defaultWalletNodes, ['default']));
+const baseDefaults = {
+  tezosSelectedNode: '',
+  conseilSelectedNode: '',
+  list: []
+};
+
+const savedWalletNodes = getWalletNodes();
+
+const initState = fromJS(Object.assign(
+  baseDefaults,
+  defaultWalletNodes && omit(defaultWalletNodes, ['default']),
+  savedWalletNodes && savedWalletNodes
+));
 export default function nodes(state = initState, action) {
   switch (action.type) {
     case SET_SELECTED: {

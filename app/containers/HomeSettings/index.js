@@ -1,33 +1,33 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as goBackToWallet } from 'react-router-redux';
 import styled, { withTheme } from 'styled-components';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { ms } from '../styles/helpers';
-import { H2, H4 } from '../components/Heading/';
+import { ms } from '../../styles/helpers';
+import { H2, H4 } from '../../components/Heading/';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Check from 'material-ui/svg-icons/navigation/check';
-import AddNodeModal from '../components/AddNodeModal/';
-import MessageBar from '../components/MessageBar';
-import { TEZOS, CONSEIL } from '../constants/NodesTypes';
+import AddNodeModal from '../../components/AddNodeModal/';
+import MessageBar from '../../components/MessageBar';
+import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 
 
-import { syncWallet } from '../reducers/address.duck';
+import { syncWallet } from '../../redux/wallet/thunks';
 import {
   setSelected,
   removeNode
-} from '../reducers/nodes/thunks';
+} from '../../redux/nodes/thunks';
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes,
-} from '../reducers/nodes/selectors';
+} from '../../redux/nodes/selectors';
 
 type Props = {
   conseilSelectedNode: string,
@@ -339,4 +339,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default withTheme(connect(mapStateToProps, mapDispatchToProps)(SettingsPage));
+export default compose(
+  withTheme,
+  connect(mapStateToProps, mapDispatchToProps)
+)(SettingsPage);

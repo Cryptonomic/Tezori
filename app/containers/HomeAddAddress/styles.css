@@ -50,7 +50,8 @@
 }
 
 .addAddressBodyContainer {
-  padding: 40px;
+  background-color: white;
+  padding: 2rem;
 }
 .fundraiserPasswordContainer {
   display: flex;

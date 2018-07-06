@@ -153,7 +153,7 @@ class Home extends Component<Props> {
         filters: dialogFilters
       },
       filePaths => {
-        if (filePaths && filePaths.length) {
+        if ( filePaths && filePaths.length ) {
           this.props.updateWalletLocation(path.dirname(filePaths[0]));
           this.props.setWalletFileName(path.basename(filePaths[0]));
         }

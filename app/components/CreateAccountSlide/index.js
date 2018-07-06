@@ -1,10 +1,15 @@
-import React, { Fragment } from 'react';
+import React, {Fragment, Component} from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import ChevronLeftIcon from 'material-ui/svg-icons/navigation/chevron-left';
 import styled from 'styled-components';
+import { generateNewMnemonic } from '../../utils/general';
 
 import Button from '../Button';
 import BackUpSeedPhrase from './BackUpSeedPhrase';
+import { GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
+import { importAddress } from '../../redux/wallet/thunks';
 
 
 const ActionButton = styled(Button)`
@@ -87,106 +92,142 @@ const SeedsContainer = styled.div`
 `
 
 type Props = {
-  seed: string,
-  currentSlide: number,
-  nextAccountSlide: Function,
-  importAddress: Function,
-  generateNewMnemonic: Function
+  importAddress: Function
 };
 
-const setupSeedColumns = (seed) => {
-  const seedWords = seed.split(" ");
-  const seeds = [];
-  let seedColums = [];
+class CreateAccountSlide extends Component<Props> {
+  props:Props;
+  state = {
+    seed: '',
+    currentSlide: 0
+  };
 
-  seedWords.forEach((item, index) => {
-    seedColums.push(item);
-    if (index%5 === 4) {
-      seeds.push(seedColums);
-      seedColums = [];
-    }    
-  });
+  componentDidMount() {
+    this.updateMnemonic();
+  }
 
-  return seeds;
-}
+  nextAccountSlide = (currentSlide) =>  this.setState({ currentSlide });
+  updateMnemonic = () =>  this.setState({ seed: generateNewMnemonic() });
 
-const ShowSeedPhrase =  ({ seed, nextAccountSlide, generateNewMnemonic }) => {
-  const seeds = setupSeedColumns(seed);
-  return (
-    <Fragment>      
-      <div className='description'>
-        Write down your seed phrase on a piece of paper and keep it in a safe place. You will need your seed phrase to recover your account.
-      </div>
-      {seeds.length && 
+  setupSeedColumns = (seed) => {
+    const seedWords = seed.split(" ");
+    const seeds = [];
+    let seedColums = [];
+
+    seedWords.forEach((item, index) => {
+      seedColums.push(item);
+      if (index%5 === 4) {
+        seeds.push(seedColums);
+        seedColums = [];
+      }
+    });
+
+    return seeds;
+  };
+
+  showSeedPhrase =  () => {
+    const seeds = this.setupSeedColumns(this.state.seed);
+    return (
+      <Fragment>
+        <div className='description'>
+          Write down your seed phrase on a piece of paper and keep it in a safe place. You will need your seed phrase to recover your account.
+        </div>
+        {seeds.length &&
         <SeedsContainer>
           { seeds.map((items, index) => {
-              return (
-                <div className="seedColumn" key={index}>
-                  {items.map((item, index1) => (<div key={index1} className="seedItem"><div>{index*5 + index1 + 1}</div>{item}</div>))}
-                </div>
-              )
-            })
+            return (
+              <div className="seedColumn" key={index}>
+                {items.map((item, index1) => (<div key={index1} className="seedItem"><div>{index*5 + index1 + 1}</div>{item}</div>))}
+              </div>
+            )
+          })
           }
         </SeedsContainer>
-      }
-      <div className="generate-part" onClick={generateNewMnemonic}>
-        <RefreshIcon
-          className='refresh-icon'
-          style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
-        />
-        Generate Another Seed Pharse
-      </div>
-      <ActionButton 
-        buttonTheme="primary"
-        onClick={() => nextAccountSlide(1)}
-      >
-        Next
-      </ActionButton>
-    </Fragment>
-  )
+        }
+        <div className="generate-part" onClick={this.updateMnemonic}>
+          <RefreshIcon
+            className='refresh-icon'
+            style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
+          />
+          Generate Another Seed Pharse
+        </div>
+        <ActionButton
+          buttonTheme="primary"
+          onClick={() => this.nextAccountSlide(1)}
+        >
+          Next
+        </ActionButton>
+      </Fragment>
+    )
+  };
 
+  importAddress = () => {
+    const { seed } = this.state;
+    this.props.importAddress(GENERATE_MNEMONIC, seed);
+  };
 
-}
-const CreateAccount = ({importAddress}) => {
-  return (
-    <Fragment>
-      <div className='title'>
-        Your Tezos account seed is backed up!
-      </div>
-      <div className='description'>
-        Make sure to keep your seed phrase in a safe place. If you forget your seed phrase, you will not be able to recover your account. We do not store your seed phrase and cannot help you recover it if you lose it.
-      </div>
+  createAccount = () => {
+    return (
+      <Fragment>
+        <div className='title'>
+          Your Tezos account seed is backed up!
+        </div>
+        <div className='description'>
+          Make sure to keep your seed phrase in a safe place. If you forget your seed phrase, you will not be able to recover your account. We do not store your seed phrase and cannot help you recover it if you lose it.
+        </div>
 
-      <ActionButton 
-        buttonTheme="primary"
-        onClick={importAddress}
-      >
-        Create Account
-      </ActionButton>
-    </Fragment>
-  )
+        <ActionButton
+          buttonTheme="primary"
+          onClick={importAddress}
+        >
+          Create Account
+        </ActionButton>
+      </Fragment>
+    )
+  };
 
-
-}
-
-export default function CreateAccountSlide(props: Props) {
-  const {currentSlide, seed, nextAccountSlide, importAddress, generateNewMnemonic} = props;
-  return(
-    <CreateAccountSlideContainer>
-      { !!currentSlide && 
-        <div className="back-part" onClick={() => nextAccountSlide(0)}>
+  render() {
+    const { currentSlide, seed } = this.state;
+    return(
+      <CreateAccountSlideContainer>
+        { !!currentSlide &&
+        <div className="back-part" onClick={() => this.nextAccountSlide(0)}>
           <ChevronLeftIcon
             className='chevron-icon'
             style={{ fill: '#4486f0' }}
           />
           Back to Seed Pharse
         </div>
-      }
-      {{
-          0: <ShowSeedPhrase seed={seed} nextAccountSlide={nextAccountSlide} generateNewMnemonic={generateNewMnemonic} />,
-          1: <BackUpSeedPhrase seed={seed} nextAccountSlide={nextAccountSlide} />,
-          2: <CreateAccount importAddress={importAddress} />,
-      }[currentSlide]}
-    </CreateAccountSlideContainer>
+        }
+        {
+          currentSlide === 0
+            ? this.showSeedPhrase()
+            : null
+        }
+        {
+          currentSlide === 1
+            ? <BackUpSeedPhrase seed={seed} nextAccountSlide={this.nextAccountSlide} />
+            : null
+        }
+        {
+          currentSlide === 2
+            ? this.createAccount()
+            : null
+        }
+      </CreateAccountSlideContainer>
+    );
+  }
+}
+
+
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      importAddress
+    },
+    dispatch
   );
 }
+
+export default connect(null, mapDispatchToProps)(CreateAccountSlide);

@@ -9,7 +9,7 @@ import { ms } from '../../styles/helpers';
 import { H2, H4, H3 } from '../Heading/';
 import { CONSEIL } from '../../constants/NodesTypes';
 
-import { addNode, setSelected } from '../../reducers/nodes/thunks';
+import { addNode, setSelected } from '../../redux/nodes/thunks';
 import Button from '../Button/';
 
 type Props = {
@@ -41,20 +41,22 @@ class AddNodeModal extends Component<Props> {
   props: Props;
   state = {
     name: '',
-    address: ''
+    apiKey: '',
+    url: ''
   };
 
   handleNameChange = (_, name) => this.setState({ name });
-  handleAddressChange = (_, address) => this.setState({ address });
+  handleApiKeyChange = (_, apiKey) => this.setState({ apiKey });
+  handleUrlChange = (_, url) => this.setState({ url });
   handleAddNode = () => {
-    const { name, address } = this.state;
+    const { name, apiKey, url } = this.state;
     const { type, closeAddNodeModal, addNode, setSelected } = this.props;
-    addNode({ name, address, type });
+    addNode({ name, apiKey, url, type });
     setSelected(name, type);
     closeAddNodeModal();
   };
   render() {
-    const { name, address } = this.state;
+    const { name, apiKey, url } = this.state;
     const { type, isModalOpen, closeAddNodeModal } = this.props;
     
     const title = type === CONSEIL
@@ -91,14 +93,14 @@ class AddNodeModal extends Component<Props> {
         <TextField
           floatingLabelText="URL (e.g https://127.0.0.1:19731/)"
           style={{ width: '100%' }}
-          value={ address }
-          onChange={this.handleAddressChange}
+          value={ url }
+          onChange={this.handleUrlChange}
         />
 
         <StyledSaveButton
           buttonTheme="primary"
           onClick={this.handleAddNode}
-          disabled={( !name || !address )}
+          disabled={( !name || !url )}
         >
           Save
         </StyledSaveButton>

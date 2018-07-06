@@ -1,29 +1,29 @@
 // @flow
 import React, { Component } from 'react';
 import { TextField, Dialog } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
-import Button from './Button';
-import { utezToTez } from '../utils/currancy';
-import { H4 } from './Heading';
-import TezosIcon from './TezosIcon';
+import { ms } from '../../styles/helpers';
+import Button from './../Button/';
+import { H4 } from './../Heading/';
+import TezosIcon from './../TezosIcon/';
+import DelegateConfirmationModal from '../DelegateConfirmationModal/';
 
-import Loader from './Loader';
-import tezosLogo from '../../resources/tezosLogo.png';
 import {
-  updatePassword,
-  updateAddress,
-  showConfirmationModal,
-  closeConfirmationModal,
-  sendConfirmation,
-} from '../reducers/delegate.duck';
+  validateAddress,
+  delegate,
+} from '../../redux/delegate/thunks';
 
-import styles from './Delegate.css';
-
-type Props = {};
+type Props = {
+  isReady?: boolean,
+  isLoading?: boolean,
+  selectedAccountHash?: string,
+  selectedParentHash?: string,
+  address?: string,
+  validateAddress?: Function,
+  delegate?: Function
+};
 
 const Container = styled.div`
   display: flex;
@@ -97,69 +97,49 @@ const SetADelegate = styled.p`
   margin-bottom: 0;
 `;
 
+const defaultState = {
+  open: false,
+  isLoading: false,
+  tempAddress: '',
+  password: '',
+  fee: 100
+};
+
 class Delegate extends Component<Props> {
   props: Props;
+  state = defaultState;
 
-  onModalClose = () => {
-    this.props.updatePassword('');
-    this.props.closeConfirmationModal();
+  openConfirmation = () =>  this.setState({ open: true });
+  closeConfirmation = () =>  this.setState(defaultState);
+  handlePasswordChange = (_, password) =>  this.setState({ password });
+  handleTempAddressChange = (_, tempAddress) =>  this.setState({ tempAddress });
+  handleFeeChange = (_, index, fee) =>  this.setState({ fee });
+  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+
+  getAddress = () =>  {
+    const { tempAddress } = this.state;
+    const { address } = this.props;
+    return tempAddress || address;
   };
 
-  renderWarningModal = () => {
-    const {
-      address,
-      delegateFee,
-      password,
-      updatePassword,
-      sendConfirmation,
-      isConfirmationModalOpen,
-      isLoading
-    } = this.props;
-
-    return (
-      <Dialog
-        modal
-        open={isConfirmationModalOpen}
-        title="Confirm Delegate Change"
-        contentStyle={{ width: '600px' }}
-      >
-        <div>
-          <CloseIcon
-            className={styles.closeIcon}
-            style={{ fill: '#7190C6' }}
-            onClick={this.onModalClose}
-          />
-          <div>Are you sure you want to change your delegate to:</div>
-          <div className={styles.modalAddress}>{address}</div>
-          <div className={styles.feeContainer}>
-            <div className={styles.feeText}>Fee: </div>
-            {utezToTez(delegateFee)}
-            <img src={tezosLogo} className={styles.tezosSymbol} />
-          </div>
-          <div className={styles.confirmationContainer}>
-            <TextField
-              floatingLabelText="Enter Password"
-              style={{ width: '50%' }}
-              type="password"
-              value={password}
-              onChange={(_, newPassword) => updatePassword(newPassword)}
-            />
-
-            <Button
-              buttonTheme="primary"
-              disabled={isLoading}
-              small
-              onClick={sendConfirmation}
-            >
-              Confirm
-            </Button>
-          </div>
-          {isLoading && <Loader />}
-        </div>
-      </Dialog>
-    );
+  validateAddress = async () =>  {
+    const { validateAddress } = this.props;
+    const address = this.getAddress();
+    if ( await validateAddress( address ) ) {
+      this.openConfirmation();
+    }
   };
 
+  onDelegate = async () =>  {
+    const { password, fee } = this.state;
+    const { delegate, selectedAccountHash, selectedParentHash } = this.props;
+    this.setIsLoading(true);
+    if (await delegate( this.getAddress(), fee, password, selectedAccountHash, selectedParentHash )) {
+      this.closeConfirmation();
+    } else {
+      this.setIsLoading(false);
+    }
+  };
 
   renderDelegationTips = (arr) => {
     return(
@@ -181,13 +161,14 @@ class Delegate extends Component<Props> {
   }
 
   render() {
-    const { isReady, address, showConfirmationModal, updateAddress, theme } = this.props;
+    const { isReady } = this.props;
+    const { isLoading, open, password, fee } = this.state;
     const delegationTips = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
       'Delegating is not instant. It takes 7 cycles (2-3 weeks) for your tez to start contributing to baking.',
       'Delegation rewards will depend on your arrangement with the delegate.'
-    ]
+    ];
 
     return (
       <Container>
@@ -197,14 +178,14 @@ class Delegate extends Component<Props> {
             <SetADelegate>Set a Delegate</SetADelegate>
             <TextField
               floatingLabelText="Address"
-              value={address}
+              value={ this.getAddress() }
               style={{minWidth: 340, width: 'auto'}}
-              onChange={(_, newAddress) => updateAddress(newAddress)}
+              onChange={this.handleTempAddressChange}
             />
 
             <UpdateButton
-              disabled={!isReady}
-              onClick={showConfirmationModal}
+              disabled={ !isReady || isLoading }
+              onClick={ this.validateAddress }
               buttonTheme="secondary"
               small
             >
@@ -217,35 +198,29 @@ class Delegate extends Component<Props> {
           </DelegationTipsContainer>
         </DelegateContainer>
 
-        {this.renderWarningModal()}
+        <DelegateConfirmationModal
+          open={ open }
+          address={ this.getAddress() }
+          password={ password }
+          fee={ fee }
+          handleFeeChange={ this.handleFeeChange }
+          handlePasswordChange={ this.handlePasswordChange }
+          onDelegate={ this.onDelegate }
+          onCloseClick={ this.closeConfirmation }
+        />
       </Container>
     );
   }
 }
 
-function mapStateToProps(state) {
-  const { delegate } = state;
-
-  return {
-    isConfirmationModalOpen: delegate.get('isConfirmationModalOpen'),
-    isLoading: delegate.get('isLoading'),
-    password: delegate.get('password'),
-    address: delegate.get('address'),
-    delegateFee: delegate.get('delegateFee')
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      updatePassword,
-      updateAddress,
-      showConfirmationModal,
-      closeConfirmationModal,
-      sendConfirmation,
+      validateAddress,
+      delegate
     },
     dispatch
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Delegate);
+export default connect(null, mapDispatchToProps)(Delegate);
