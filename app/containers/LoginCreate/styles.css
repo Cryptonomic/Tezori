@@ -39,17 +39,6 @@
   opacity: 0.5;
 }
 
-.inputContainer {
-  position: relative;
-}
-
-.validationIcon {
-  position: absolute;
-  right: 15px;
-  top: 40px;
-  padding-left: 15px;
-}
-
 .actionButtonContainer {
   width: 194px;
   margin-top: 40px;
@@ -60,51 +49,4 @@
   height: 50px;
   padding: 0;
 }
-
-.inputTextField {
-  width: 100% !important;
-}
-
-.validIcon {
-  fill: none !important;
-  stroke-width: 2;
-}
-
-.grayIconColor {
-  stroke: #9b9b9b;
-}
-
-.validIconColor {
-  stroke: #259c90;
-}
-
-.noValidIcon {
-  fill: #ea776c !important;
-}
-
-.validTooltipText {
-  margin-left: 5px;
-  margin-top: 2px;
-}
-
-.grayFontColor{
-  color: #9b9b9b;
-}
-
-.validFontColor {
-  color: #259c90;
-}
-.invalidFontColor {
-  color: #ea776c;
-}
-
-.validTooltipContainer {
-  font-size: 12px;
-}
-
-.validTooltipContent {
-  display: flex;
-  align-items: center;
-}
-
 

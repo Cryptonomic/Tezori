@@ -63,6 +63,18 @@ const getIconByName = iconName => {
       return toUnicode('e909');
     }
 
+    case 'checkmark2': {
+      return toUnicode('e90e');
+    }
+
+    case 'view-show': {
+      return toUnicode('e912');
+    }
+
+    case 'view-hide': {
+      return toUnicode('e913');
+    }
+
     default: {
       console.error(`${iconName} No such icon in Tezos icons font`);
     }
