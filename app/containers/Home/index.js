@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router';
 
-import { getIdentities, getWalletIsLoading } from '../../redux/wallet/selectors';
+import { getIdentities, getWalletIsLoading } from '../../reduxContent/wallet/selectors';
 
 import Loader from '../../components/Loader';
 import TopBar from '../../components/TopBar/';

@@ -16,18 +16,18 @@ import MessageBar from '../../components/MessageBar';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 
 
-import { syncWallet } from '../../redux/wallet/thunks';
+import { syncWallet } from '../../reduxContent/wallet/thunks';
 import {
   setSelected,
   removeNode
-} from '../../redux/nodes/thunks';
+} from '../../reduxContent/nodes/thunks';
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes,
-} from '../../redux/nodes/selectors';
+} from '../../reduxContent/nodes/selectors';
 
 type Props = {
   conseilSelectedNode: string,

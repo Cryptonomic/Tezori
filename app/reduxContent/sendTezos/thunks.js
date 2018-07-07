@@ -1,5 +1,5 @@
 import { TezosOperations } from 'conseiljs';
-import { addMessage } from '../../reducers/message.duck';
+import { addMessage } from '../../reduxContent/message/thunks';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { getSelectedKeyStore } from '../../utils/general'
 import { tezToUtez } from '../../utils/currancy';

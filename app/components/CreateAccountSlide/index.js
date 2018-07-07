@@ -9,7 +9,7 @@ import { generateNewMnemonic } from '../../utils/general';
 import Button from '../Button';
 import BackUpSeedPhrase from './BackUpSeedPhrase';
 import { GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
-import { importAddress } from '../../redux/wallet/thunks';
+import { importAddress } from '../../reduxContent/wallet/thunks';
 
 
 const ActionButton = styled(Button)`

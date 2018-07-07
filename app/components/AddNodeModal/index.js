@@ -9,7 +9,7 @@ import { ms } from '../../styles/helpers';
 import { H2, H4, H3 } from '../Heading/';
 import { CONSEIL } from '../../constants/NodesTypes';
 
-import { addNode, setSelected } from '../../redux/nodes/thunks';
+import { addNode, setSelected } from '../../reduxContent/nodes/thunks';
 import Button from '../Button/';
 
 type Props = {
@@ -36,14 +36,15 @@ const StyledSaveButton = styled(Button)`
   padding-left: ${ms(9)} ;
 `;
 
+const defaultState = {
+  name: '',
+  apiKey: '',
+  url: ''
+};
 
 class AddNodeModal extends Component<Props> {
   props: Props;
-  state = {
-    name: '',
-    apiKey: '',
-    url: ''
-  };
+  state = defaultState;
 
   handleNameChange = (_, name) => this.setState({ name });
   handleApiKeyChange = (_, apiKey) => this.setState({ apiKey });
@@ -54,6 +55,7 @@ class AddNodeModal extends Component<Props> {
     addNode({ name, apiKey, url, type });
     setSelected(name, type);
     closeAddNodeModal();
+    this.setState(defaultState);
   };
   render() {
     const { name, apiKey, url } = this.state;

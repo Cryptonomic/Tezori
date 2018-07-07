@@ -11,7 +11,7 @@ import AddressBlock from './AddressBlock';
 import Tooltip from './Tooltip/';
 import {
   syncAccountOrIdentity,
-} from '../redux/wallet/thunks';
+} from '../reduxContent/wallet/thunks';
 
 type OperationGroup = {
   hash: string,

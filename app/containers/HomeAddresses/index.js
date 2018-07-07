@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 
-import { getIdentities } from '../../redux/wallet/selectors';
+import { getIdentities } from '../../reduxContent/wallet/selectors';
 
 import Addresses from '../../components/Addresses';
 import ActionPanel from '../../components/ActionPanel';

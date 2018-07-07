@@ -17,7 +17,7 @@ import Tooltip from '../../components/Tooltip/';
 import TezosIcon from '../../components/TezosIcon/';
 
 import CreateAccountSlide from '../../components/CreateAccountSlide/';
-import { importAddress } from '../../redux/wallet/thunks';
+import { importAddress } from '../../reduxContent/wallet/thunks';
 import styles from './styles.css';
 
 const Container = styled.div`

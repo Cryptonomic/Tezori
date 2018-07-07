@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Snackbar } from 'material-ui';
 
-import { clearMessageState } from '../reducers/message.duck';
+import { clearMessageState } from '../reduxContent/message/actions';
 
 type Props = {
   clearMessageState: Function,

@@ -14,7 +14,7 @@ import Button from '../Button';
 import Loader from '../Loader';
 
 import styles from './index.css';
-import { createNewAccount } from '../../redux/createDelegate/thunks';
+import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
 
 type Props = {
   selectedParentHash: string,

@@ -2,7 +2,7 @@ import path from 'path';
 import { push } from 'react-router-redux';
 import { flatten, pick } from 'lodash';
 import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
-import { addMessage } from '../../reducers/message.duck';
+import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
