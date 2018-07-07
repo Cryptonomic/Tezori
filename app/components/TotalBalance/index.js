@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosAmount from '../TezosAmount';
-import { getTotalBalance } from '../../reducers/address.duck';
+import { getTotalBalance } from '../../reduxContent/wallet/selectors';
 
 const Container = styled.div`
   display: flex;

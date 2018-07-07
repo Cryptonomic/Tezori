@@ -7,16 +7,15 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 
 import { ms } from '../styles/helpers';
-import TezosIcon from './TezosIcon';
-import Tooltip from './Tooltip';
-import { H3 } from './Heading';
-import Button from './Button';
-import TezosAmount from './TezosAmount';
-import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip';
+import TezosIcon from './TezosIcon/';
+import Tooltip from './Tooltip/';
+import { H3 } from './Heading/';
+import Button from './Button/';
+import TezosAmount from './TezosAmount/';
+import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip/';
 import { READY } from '../constants/StatusTypes';
-import contentCopy from '../../resources/contentCopy.svg';
 
-import AddDelegateModal from './AddDelegateModal';
+import AddDelegateModal from './AddDelegateModal/';
 
 const Container = styled.div`
   overflow: hidden;
@@ -164,8 +163,7 @@ const Refresh = styled(RefreshIcon)`
 
 type Props = {
   accountBlock: Object, // TODO: type this
-  openCreateAccountModal: Function,
-  selectAccount: Function,
+  syncAccountOrIdentity: Function,
   selectedAccountHash: string,
   accountIndex: number,
   theme: Object
@@ -178,18 +176,17 @@ type State = {
 class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
-    shouldHideSmartAddressesInfo: false
+    shouldHideSmartAddressesInfo: false,
+    isDelegateModalOpen: false
   };
 
-  handleManagerAddressClick = () => {
-    const { accountBlock } = this.props;
-    const publicKeyHash = accountBlock.get('publicKeyHash');
+  openDelegateModal = () =>  this.setState({ isDelegateModalOpen: true });
+  closeDelegateModal = () =>  this.setState({ isDelegateModalOpen: false });
 
-    this.selectAccount(publicKeyHash, publicKeyHash);
-  };
-
-  selectAccount = (accountHash: string, parentHash: string) => {
-    this.props.selectAccount(accountHash, parentHash);
+  goToAccount = (selectedAccountHash, selectedParentHash) => {
+    const { history, syncAccountOrIdentity } = this.props;
+    history.push(`/home/addresses/${selectedAccountHash}/${selectedParentHash}`);
+    syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
   };
 
   closeNoSmartAddresses = () => {
@@ -218,13 +215,15 @@ class AddressBlock extends Component<Props, State> {
   }
 
   render() {
-    const { accountBlock, selectedAccountHash, accountIndex, openCreateAccountModal, theme } = this.props;
+    const { isDelegateModalOpen } = this.state;
+    const { accountBlock, selectedAccountHash, accountIndex, theme } = this.props;
+    
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
-    const formatedBalance = balance.toFixed(6)
-    const { shouldHideSmartAddressesInfo } = this.state
+    const formatedBalance = balance.toFixed(6);
+    const { shouldHideSmartAddressesInfo } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
-    const smartAddresses = accountBlock.get('accounts')
+    const smartAddresses = accountBlock.get('accounts');
     const isManagerReady = accountBlock.get('status') === READY;
     const noSmartAddressesDescriptionContent = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
@@ -248,7 +247,9 @@ class AddressBlock extends Component<Props, State> {
         <Address
           isActive={isManagerActive}
           isReady={ isManagerReady }
-          onClick={this.handleManagerAddressClick}
+          onClick={() =>
+            this.goToAccount(publicKeyHash, publicKeyHash)
+          }
         >
           <AddressFirstLine isActive={isManagerActive} >
             <AddressesTitle>
@@ -302,7 +303,7 @@ class AddressBlock extends Component<Props, State> {
             }}
             onClick={() => {
               if(isManagerReady) {
-                openCreateAccountModal();
+                this.openDelegateModal();
               }
             }}
           />
@@ -320,7 +321,7 @@ class AddressBlock extends Component<Props, State> {
                 isActive={isSmartActive}
                 isReady={ isSmartAddressReady }
                 onClick={() =>
-                  this.selectAccount(smartAddressId, publicKeyHash)
+                  this.goToAccount(smartAddressId, publicKeyHash)
                 }
               >
                 <AddressFirstLine isActive={isSmartActive}>
@@ -369,13 +370,17 @@ class AddressBlock extends Component<Props, State> {
               Delegation Tips
             </NoSmartAddressesTitle>
               {this.renderNoSmartAddressesDescription(noSmartAddressesDescriptionContent)}
-            <NoSmartAddressesButton small buttonTheme="secondary" onClick={openCreateAccountModal}>
+            <NoSmartAddressesButton small buttonTheme="secondary" onClick={this.openDelegateModal}>
               Add a Delegate
             </NoSmartAddressesButton>
           </NoSmartAddressesContainer>
           )
         }
-        <AddDelegateModal />
+        <AddDelegateModal
+          selectedParentHash={ publicKeyHash }
+          open={isDelegateModalOpen}
+          onCloseClick={this.closeDelegateModal}
+        />
       </Container>
     );
   }

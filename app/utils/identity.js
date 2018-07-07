@@ -1,6 +1,7 @@
 import * as status from '../constants/StatusTypes';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
 import { createAccount, getAccountsForIdentity, getSyncAccount } from './account';
+import { TRANSACTIONS } from '../constants/TabConstants';
 
 export function createIdentity(identity) {
 
@@ -11,6 +12,7 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
+    activeTab: TRANSACTIONS,
     status: status.CREATED,
     ...identity
   };
@@ -50,9 +52,10 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
 
   accounts = accounts.map(account => {
     const foundIndex = stateAccountIndices.indexOf(account.accountId);
-    let overrides = {};
+    const overrides = {};
     if ( foundIndex > -1 ) {
-      overrides = {...identity.accounts[foundIndex]};
+      overrides.status = identity.accounts[foundIndex].status;
+      overrides.activeTab = identity.accounts[foundIndex].activeTab;
     }
     return createAccount({
         ...account,
@@ -75,17 +78,20 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
   identity.accounts = accounts;
   identity.accounts = await Promise.all(
     ( identity.accounts || []).map(async account => {
+      if ( account.status !== status.READY ) {
         return await getSyncAccount(
           identities,
           account,
-          nodes,          
-          selectedAccountHash,
-          publicKeyHash
+          nodes,
+          publicKeyHash,
+          selectedAccountHash
         ).catch( e => {
           console.log('-debug: Error in: getSyncIdentity for:' + identity.publicKeyHash);
           console.error(e);
           return account;
         });
+
+      }
       return account;
     })
   );

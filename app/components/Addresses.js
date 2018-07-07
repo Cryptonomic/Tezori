@@ -6,14 +6,12 @@ import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../styles/helpers';
 
-import { H4 } from './Heading';
+import { H4 } from './Heading/';
 import AddressBlock from './AddressBlock';
-import Tooltip from './Tooltip';
+import Tooltip from './Tooltip/';
 import {
-  openAddAddressModal,
-  selectAccount
-} from '../reducers/address.duck';
-import { openCreateAccountModal } from '../reducers/createAccount.duck';
+  syncAccountOrIdentity,
+} from '../reduxContent/wallet/thunks';
 
 type OperationGroup = {
   hash: string,
@@ -55,10 +53,8 @@ type Identity = {
 };
 
 type Props = {
-  openCreateAccountModal: Function,
-  openAddAddressModal: Function,
   identities: List<Identity>,
-  selectAccount: Function,
+  syncAccountOrIdentity: Function,
   selectedAccountHash: string,
   theme: Object
 };
@@ -91,8 +87,15 @@ class Addresses extends Component<Props> {
   props: Props;
 
   render() {
-    const { openAddAddressModal, identities, theme: { colors } } = this.props;
-
+    const {
+      history,
+      match,
+      syncAccountOrIdentity,
+      selectedAccountHash,
+      selectedParentHash,
+      identities,
+      theme: { colors }
+    } = this.props;
     return (
       <Container>
         <AccountTitle>
@@ -115,9 +118,11 @@ class Addresses extends Component<Props> {
             <AddressBlock
               accountBlock={accountBlock}
               accountIndex={index + 1}
-              openCreateAccountModal={this.props.openCreateAccountModal}
-              selectAccount={this.props.selectAccount}
-              selectedAccountHash={this.props.selectedAccountHash}
+              syncAccountOrIdentity={ syncAccountOrIdentity }
+              selectedAccountHash={ selectedAccountHash }
+              selectedParentHash={ selectedParentHash }
+              history={ history }
+              match={ match }
             />
           </AccountItem>
         ))}
@@ -127,20 +132,17 @@ class Addresses extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { address } = state;
+  const { wallet } = state;
 
   return {
-    identities: address.get('identities'),
-    selectedAccountHash: address.get('selectedAccountHash')
+    identities: wallet.get('identities')
   };
 }
 
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
-      openCreateAccountModal,
-      openAddAddressModal,
-      selectAccount
+      syncAccountOrIdentity
     },
     dispatch
   );

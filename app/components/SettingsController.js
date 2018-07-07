@@ -9,7 +9,7 @@ import { ms } from '../styles/helpers';
 import Button from './Button';
 import settingsIcon from '../../resources/settings.png';
 import logoutIcon from '../../resources/logout.png';
-import { goHomeAndClearState } from '../reducers/walletInitialization.duck';
+import { goHomeAndClearState } from '../reduxContent/wallet/thunks';
 
 const Container = styled.div`
   display: flex;
@@ -61,7 +61,7 @@ class SettingsController extends Component<Props> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({
     goHomeAndClearState,
-    goSettings: () => dispatch => dispatch(push('/settings'))
+    goSettings: () => dispatch => dispatch(push('/home/settings'))
   }, dispatch);
 
 export default connect(null, mapDispatchToProps)(SettingsController);

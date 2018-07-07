@@ -48,13 +48,13 @@ const Heading = styled(H5)`
 
 type Props = {
   amount?: string,
+  password?: string,
   address?: string,
   open?: boolean,
-  isLoading?: boolean,
-  updatePassword?: Function,
-  password?: string,
   onCloseClick?: Function,
-  sendConfirmation?: Function
+  onPasswordChange?: Function,
+  onSend?: Function,
+  isLoading?: boolean,
 };
 
 const SendConfirmationModal = props => {
@@ -63,16 +63,11 @@ const SendConfirmationModal = props => {
     address,
     open,
     isLoading,
-    updatePassword,
+    onPasswordChange,
     password,
     onCloseClick,
-    sendConfirmation
+    onSend
   } = props;
-
-  const onClose = () => {
-    updatePassword('');
-    onCloseClick();
-  };
 
   return (
     <Dialog
@@ -85,7 +80,7 @@ const SendConfirmationModal = props => {
       <CloseIcon
         className={styles.closeIcon}
         style={{ fill: '#7190C6' }}
-        onClick={onClose}
+        onClick={onCloseClick}
       />
       <Heading>Do you confirm that you want to send</Heading>
       <AmountContainer>
@@ -102,11 +97,11 @@ const SendConfirmationModal = props => {
           style={{ width: '60%' }}
           type="password"
           value={password}
-          onChange={(_, newPassword) => updatePassword(newPassword)}
+          onChange={onPasswordChange}
         />
         <Button
           buttonTheme="secondary"
-          onClick={sendConfirmation}
+          onClick={onSend}
           disabled={isLoading}
         >
           Confirm

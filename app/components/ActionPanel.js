@@ -15,14 +15,14 @@ import PageNumbers from './PageNumbers';
 import Transactions from './Transactions';
 import Send from './Send';
 import Receive from './Receive';
-import Delegate from './Delegate';
+import Delegate from './Delegate/';
 import Loader from './Loader';
 import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 import { READY } from '../constants/StatusTypes';
 
-import { syncWallet } from '../reducers/address.duck';
+import { syncWallet, updateActiveTab } from '../reduxContent/wallet/thunks';
 
 const Container = styled.section`
   flex-grow: 1;
@@ -92,10 +92,9 @@ const Description = (props:DescriptionProps) => {
 }
 
 type Props = {
+  updateActiveTab: Function,
   identities: array,
   isLoadingTransactions: boolean,
-  selectedAccountHash: string,
-  selectedParentHash: string,
   syncWallet: Function
 };
 
@@ -111,44 +110,36 @@ class ActionPanel extends Component<Props, State> {
   props: Props;
 
   state = {
-    activeTab: TRANSACTIONS,
     currentPage: 1
   };
 
-  handleLinkPress = tab => {
-    this.setState({ activeTab: tab })
-  }
-
-  static getDerivedStateFromProps(prevProps, prevState) {
-    const { selectedAccountHash, selectedParentHash } = prevProps;
-    const isManagerAddress = selectedAccountHash === selectedParentHash;
-    const { activeTab } = prevState;
-
-    const tabs = isManagerAddress ?  delegateAddressTabs : managerAddresssTabs;
-
-    // activeTab may be set to something which isn't a valid tab for the current
-    // view, so set it to the first tab as default
-    if (!tabs.includes(activeTab)) {
-      return {
-        activeTab: tabs[0],
-        currentPage: 1
-      };
-    }
-    return null;
-  }
+  handleLinkPress = activeTab => {
+    const { selectedAccountHash, selectedParentHash, updateActiveTab } = this.props;
+    updateActiveTab( selectedAccountHash, selectedParentHash, activeTab );
+  };
 
   renderSection = () => {
-    const { selectedAccount, selectedAccountHash } = this.props;
+    const { identities, selectedAccountHash, selectedParentHash } = this.props;
+    const selectedAccount = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
     const transactions = selectedAccount.get('transactions');
     const isReady = selectedAccount.get('status') === READY;
-
-    switch (this.state.activeTab) {
+    
+    switch (selectedAccount.get('activeTab')) {
       case DELEGATE:
-        return <Delegate isReady={ isReady } />;
+        return <Delegate
+          isReady={ isReady }
+          address={selectedAccount.get('delegateValue')}
+          selectedAccountHash={ selectedAccountHash }
+          selectedParentHash={ selectedParentHash }
+        />;
       case RECEIVE:
         return <Receive address={selectedAccountHash} />;
       case SEND:
-        return <Send isReady={ isReady } />;
+        return <Send
+          isReady={ isReady }
+          selectedAccountHash={ selectedAccountHash }
+          selectedParentHash={ selectedParentHash }
+        />;
       case TRANSACTIONS:
       default: {
         return isEmpty(transactions.toJS())
@@ -183,15 +174,18 @@ class ActionPanel extends Component<Props, State> {
   };
 
   render() {
-
-    const { selectedAccountHash, selectedParentHash, selectedAccount, parentIdentity, parentIndex, syncWallet, time } = this.props;
-    const balance = selectedAccount.get('balance');
+    const { identities, selectedAccountHash, selectedParentHash, syncWallet, time } = this.props;
+    const jsIdentities = identities.toJS();
+    const selectedAccount = getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash);
+    const parentIdentity = findIdentity(jsIdentities, selectedParentHash);
+    const parentIndex =  findIdentityIndex(jsIdentities, selectedParentHash) + 1;
     const isManagerAddress = selectedAccountHash === selectedParentHash;
-    const { activeTab } = this.state;
+    const balance = selectedAccount.get('balance');
+    const activeTab = selectedAccount.get('activeTab');
+
     const isReady = selectedAccount.get('status') === READY;
 
-    const tabs = isManagerAddress ?  delegateAddressTabs : managerAddresssTabs;
-
+    const tabs = isManagerAddress ? [TRANSACTIONS, SEND, RECEIVE] : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     return (
       <Container>
         <BalanceBanner
@@ -212,7 +206,7 @@ class ActionPanel extends Component<Props, State> {
               key={tab}
               isReady={ isReady }
               buttonTheme="plain"
-              onClick={() => this.setState({ activeTab: tab })}
+              onClick={() => this.handleLinkPress(tab)}
             >
               {tab}
             </Tab>
@@ -227,29 +221,17 @@ class ActionPanel extends Component<Props, State> {
   }
 }
 
-function mapStateToProps(state) {
-  const { address } = state;
-  const identities = address.get('identities');
-  const jsIdentities = identities.toJS();
-  const selectedAccountHash = address.get('selectedAccountHash');
-  const selectedParentHash = address.get('selectedParentHash');
-  const time = address.get('time');
-
+function mapStateToProps({ wallet }) {
   return {
-    identities,
-    isLoadingTransactions: address.get('isLoading'),
-    selectedAccountHash,
-    selectedAccount: getSelectedAccount(jsIdentities, selectedAccountHash, selectedParentHash),
-    selectedParentHash,
-    time,
-    parentIdentity: findIdentity(jsIdentities, selectedParentHash),
-    parentIndex:  findIdentityIndex(jsIdentities, selectedParentHash) + 1
-
+    identities: wallet.get('identities'),
+    isLoadingTransactions: wallet.get('isLoading'),
+    time: wallet.get('time')
   };
 }
 function mapDispatchToProps(dispatch: Function) {
   return bindActionCreators(
     {
+      updateActiveTab,
       syncWallet
     },
     dispatch

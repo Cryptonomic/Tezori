@@ -16,17 +16,16 @@ type Props = {
 };
 
 export default class BackUpSeedPhrase extends Component<Props> {
-  
   props: Props;
-  constructor(props) {
-    super(props);
-    this.state = { isValid: false, randomSeeds: [] };
-  }
+  state = { 
+    isValid: false,
+    randomSeeds: [] 
+  };
   
   componentDidMount = () => {
     const randomSeeds = this.generateRandomSeeds();
-    this.setState({randomSeeds});
-  }
+    this.setState({ randomSeeds });
+  };
   validationStatus = [false, false, false, false];
 
   checkValidation = (index, status) => {
