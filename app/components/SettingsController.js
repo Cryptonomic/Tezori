@@ -9,7 +9,7 @@ import { ms } from '../styles/helpers';
 import Button from './Button';
 import settingsIcon from '../../resources/settings.png';
 import logoutIcon from '../../resources/logout.png';
-import { goHomeAndClearState } from '../redux/wallet/thunks';
+import { goHomeAndClearState } from '../reduxContent/wallet/thunks';
 
 const Container = styled.div`
   display: flex;

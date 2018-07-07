@@ -9,9 +9,6 @@ import {
 import { fromJS } from 'immutable';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 import * as defaultWalletNodes from '../../defaultWalletNodes.json';
-import {
-  getWalletNodes
-} from '../../utils/nodes';
 
 const baseDefaults = {
   tezosSelectedNode: '',
@@ -19,13 +16,11 @@ const baseDefaults = {
   list: []
 };
 
-const savedWalletNodes = getWalletNodes();
-
 const initState = fromJS(Object.assign(
   baseDefaults,
-  defaultWalletNodes && omit(defaultWalletNodes, ['default']),
-  savedWalletNodes && savedWalletNodes
+  defaultWalletNodes && omit(defaultWalletNodes, ['default'])
 ));
+
 export default function nodes(state = initState, action) {
   switch (action.type) {
     case SET_SELECTED: {

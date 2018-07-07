@@ -9,7 +9,7 @@ import Button from './Button';
 import { ms } from '../styles/helpers'
 import SendConfirmationModal from './SendConfirmationModal';
 
-import { validateAmount, sendTez } from '../redux/sendTezos/thunks';
+import { validateAmount, sendTez } from '../reduxContent/sendTezos/thunks';
 import { utezToTez } from '../utils/currancy';
 
 const SendContainer = styled.div`

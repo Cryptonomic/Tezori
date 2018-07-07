@@ -13,7 +13,7 @@ import DelegateConfirmationModal from '../DelegateConfirmationModal/';
 import {
   validateAddress,
   delegate,
-} from '../../redux/delegate/thunks';
+} from '../../reduxContent/delegate/thunks';
 
 type Props = {
   isReady?: boolean,

@@ -14,7 +14,7 @@ import Button from '../../components/Button/';
 import MessageBar from '../../components/MessageBar';
 import Loader from '../../components/Loader';
 import { IMPORT } from '../../constants/CreationTypes';
-import { login } from '../../redux/wallet/thunks';
+import { login } from '../../reduxContent/wallet/thunks';
 
 import styles from './styles.css';
 

@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { lighten } from 'polished';
-import { getWalletName } from '../../redux/wallet/selectors';
+import { getWalletName } from '../../reduxContent/wallet/selectors';
 import SettingsController from '../SettingsController';
 import { ms } from '../../styles/helpers';
 import TezosIcon from './../TezosIcon/';

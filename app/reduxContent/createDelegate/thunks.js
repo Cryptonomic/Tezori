@@ -1,6 +1,6 @@
 import { TezosOperations } from 'conseiljs';
-import { addNewAccount } from '../../redux/wallet/actions';
-import { addMessage } from '../../reducers/message.duck';
+import { addNewAccount } from '../../reduxContent/wallet/actions';
+import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
 import { tezToUtez } from '../../utils/currancy';
 import { createAccount } from '../../utils/account';

@@ -22,7 +22,7 @@ import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 import { READY } from '../constants/StatusTypes';
 
-import { syncWallet, updateActiveTab } from '../redux/wallet/thunks';
+import { syncWallet, updateActiveTab } from '../reduxContent/wallet/thunks';
 
 const Container = styled.section`
   flex-grow: 1;

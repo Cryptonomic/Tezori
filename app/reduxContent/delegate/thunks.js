@@ -1,6 +1,6 @@
 import { TezosOperations } from 'conseiljs';
-import { addMessage } from '../../reducers/message.duck';
-import { updateIdentity } from '../../redux/wallet/actions';
+import { addMessage } from '../../reduxContent/message/thunks';
+import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { displayError } from '../../utils/formValidation';
 import { getSelectedKeyStore } from '../../utils/general';
 import { getSelectedNode } from '../../utils/nodes';
