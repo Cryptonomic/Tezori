@@ -12,6 +12,7 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
+    operations: {},
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     ...identity
@@ -55,6 +56,7 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
     const overrides = {};
     if ( foundIndex > -1 ) {
       overrides.status = identity.accounts[foundIndex].status;
+      overrides.operations = identity.accounts[foundIndex].operations;
       overrides.activeTab = identity.accounts[foundIndex].activeTab;
     }
     return createAccount({

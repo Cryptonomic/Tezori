@@ -66,7 +66,7 @@ export async function revealKey(nodes, keyStore) {
   const keyRevealed = await isRevealed(nodes, keyStore);
   if ( !keyRevealed ) {
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    await sendKeyRevealOperation(url, keyStore, 0);
+    return await sendKeyRevealOperation(url, keyStore, 0);
   }
   return true;
 }
@@ -111,6 +111,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     });
     if ( revealed ) {
       account.status = status.PENDING;
+      account.operations[status.FOUND] = revealed.operationGroupID
     }
   }
 

@@ -7,6 +7,7 @@ import { createAccount } from '../../utils/account';
 import { findIdentity } from '../../utils/identity';
 import { getSelectedNode } from '../../utils/nodes';
 import { TEZOS } from '../../constants/NodesTypes';
+import { CREATED } from '../../constants/StatusTypes';
 import {
   getSelectedKeyStore,
   fetchAverageFees
@@ -79,12 +80,16 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
               accountId: newAccountHash,
               balance: amountInUtez,
               manager: publicKeyHash,
-              delegateValue: delegate
+              delegateValue: delegate,
+              operations: {
+                [ CREATED ]: newAccount.operationGroupID
+              }
             },
             identity
           )
         )
       );
+
       dispatch(addMessage(
         `Successfully sent origination operation ${newAccount.operationGroupID}.`,
         false

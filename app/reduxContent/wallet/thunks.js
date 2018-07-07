@@ -6,9 +6,9 @@ import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
+import { CREATED } from '../../constants/StatusTypes';
 
 import {
-  findAccount,
   findAccountIndex,
   getSyncAccount
 } from '../../utils/account';
@@ -260,6 +260,7 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
               `Successfully sent activation operation ${activating.operationGroupID}.`,
               false
             ));
+            identity.operations[ CREATED ] = activating.operationGroupID
           }
           break;
       }
