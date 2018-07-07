@@ -6,18 +6,11 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Button from './Button';
-import { utezToTez } from '../utils/currancy';
 import { ms } from '../styles/helpers'
 import SendConfirmationModal from './SendConfirmationModal';
-import {
-  updatePassword,
-  updateToAddress,
-  updateAmount,
-  updateFee,
-  showConfirmation,
-  clearState,
-  sendConfirmation
-} from '../reducers/sendTezos.duck';
+
+import { validateAmount, sendTez } from '../reduxContent/sendTezos/thunks';
+import { utezToTez } from '../utils/currancy';
 
 const SendContainer = styled.div`
   display: flex;
@@ -39,59 +32,85 @@ const SendButton = styled(Button)`
 `
 
 type Props = {
-  isReady: boolean,
-  updatePassword: Function,
-  updateToAddress: Function,
-  updateAmount: Function,
-  updateFee: Function,
-  showConfirmation: Function,
-  clearState: Function,
-  sendConfirmation: Function,
-  isConfirmationModalOpen: boolean,
-  isLoading: boolean,
-  password: string,
-  toAddress: string,
-  amount: string,
-  fee: number
+  isReady?: boolean,
+  sendTez?: Function,
+  selectedAccountHash?: string,
+  selectedParentHash?: string,
+  validateAmount?: Function
+};
+
+const initialState = {
+  isLoading: false,
+  isConfirmationModalOpen: false,
+  password: '',
+  toAddress: '',
+  amount: '',
+  fee: 100
 };
 
 class Send extends Component<Props> {
+  props: Props;
+
+  state = initialState;
+
+  openConfirmation = () =>  this.setState({ isConfirmationModalOpen: true });
+  closeConfirmation = () =>  this.setState(initialState);
+  handlePasswordChange = (_, password) =>  this.setState({ password });
+  handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
+  handleAmountChange = (_, amount) =>  this.setState({ amount });
+  handleFeeChange = (_, index, fee) =>  this.setState({ fee });
+  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+
+  validateAmount = async () =>  {
+    const { amount, toAddress } = this.state;
+    const { validateAmount } = this.props;
+    if ( await validateAmount( amount, toAddress ) ) {
+      this.openConfirmation();
+    }
+  };
+
+  onSend = async () =>  {
+    const { password, toAddress, amount, fee } = this.state;
+    const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
+    this.setIsLoading(true);
+    if (await sendTez( password, toAddress, amount, fee, selectedAccountHash, selectedParentHash)) {
+      this.closeConfirmation();
+    } else {
+      this.setIsLoading(false);
+    }
+  };
+
   render() {
+    const { isReady } = this.props;
+
     const {
-      isReady,
-      isConfirmationModalOpen,
       isLoading,
+      isConfirmationModalOpen,
       password,
       toAddress,
       amount,
-      fee,
-      updateToAddress,
-      updateAmount,
-      updatePassword,
-      updateFee,
-      showConfirmation,
-      clearState,
-      sendConfirmation
-    } = this.props;
+      fee
+    } = this.state;
+
     return (
       <SendContainer>
         <TextField
           floatingLabelText="Address"
           style={{ width: '100%' }}
           value={toAddress}
-          onChange={(_, newAddress) => updateToAddress(newAddress)}
+          onChange={this.handleToAddressChange}
         />
         <AmountContainer>
           <TextField
             floatingLabelText="Amount"
             style={{ width: '50%', marginRight: '50px' }}
             value={amount}
-            onChange={(_, newAmount) => updateAmount(newAmount)}
+            onChange={this.handleAmountChange}
           />
           <SelectField
             value={fee}
-            onChange={(_, index, newFee) => updateFee(newFee)}
             style={{ width: '50%' }}
+            onChange={this.handleFeeChange}
           >
             <MenuItem value={100} primaryText={ `Low Fee: ${ utezToTez(100)} ` } />
             <MenuItem value={200} primaryText={ `Medium Fee: ${ utezToTez(200)}` } />
@@ -101,7 +120,7 @@ class Send extends Component<Props> {
         </AmountContainer>
         <SendButton
           disabled={ !isReady }
-          onClick={showConfirmation}
+          onClick={this.validateAmount}
           buttonTheme="secondary"
           small
         >
@@ -109,44 +128,26 @@ class Send extends Component<Props> {
         </SendButton>
         <SendConfirmationModal
           amount={amount}
+          password={password}
           address={toAddress}
           open={isConfirmationModalOpen}
-          onCloseClick={clearState}
+          onCloseClick={this.closeConfirmation}
+          onPasswordChange={this.handlePasswordChange}
+          onSend={this.onSend}
           isLoading={isLoading}
-          updatePassword={updatePassword}
-          password={password}
-          sendConfirmation={sendConfirmation}
         />
       </SendContainer>
     );
   }
 }
 
-const mapStateToProps = state => {
-  const { sendTezos } = state;
-
-  return {
-    isConfirmationModalOpen: sendTezos.get('isConfirmationModalOpen'),
-    isLoading: sendTezos.get('isLoading'),
-    password: sendTezos.get('password'),
-    toAddress: sendTezos.get('toAddress'),
-    amount: sendTezos.get('amount'),
-    fee: sendTezos.get('fee')
-  };
-};
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      updatePassword,
-      updateToAddress,
-      updateAmount,
-      updateFee,
-      clearState,
-      showConfirmation,
-      sendConfirmation
+      sendTez,
+      validateAmount
     },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Send);
+export default connect(null, mapDispatchToProps)(Send);

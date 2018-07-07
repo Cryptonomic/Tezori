@@ -1,6 +1,7 @@
 import * as status from '../constants/StatusTypes';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
 import { createAccount, getAccountsForIdentity, getSyncAccount } from './account';
+import { TRANSACTIONS } from '../constants/TabConstants';
 
 export function createIdentity(identity) {
 
@@ -11,6 +12,7 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
+    activeTab: TRANSACTIONS,
     status: status.CREATED,
     ...identity
   };
@@ -24,10 +26,10 @@ export function findIdentityIndex(identities, publicKeyHash) {
   return (identities || []).findIndex( identity => identity.publicKeyHash === publicKeyHash );
 }
 
-export async function getSyncIdentity(identities, identity, network, selectedAccountHash) {
+export async function getSyncIdentity(identities, identity, nodes, selectedAccountHash) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, publicKeyHash );
-  identity = await activateAndUpdateAccount(identity, keyStore, network);
+  identity = await activateAndUpdateAccount(identity, keyStore, nodes);
 
   /*
    *  we are taking state identity accounts overriding their state
@@ -36,7 +38,7 @@ export async function getSyncIdentity(identities, identity, network, selectedAcc
    *  those accounts with the updated accounts we got from getAccounts.
    * */
 
-  let accounts =  await getAccountsForIdentity( network, publicKeyHash )
+  let accounts =  await getAccountsForIdentity( nodes, publicKeyHash )
     .catch( (error) => {
       console.log('-debug: Error in: status.getAccountsForIdentity for:' + publicKeyHash);
       console.error(error);
@@ -53,6 +55,7 @@ export async function getSyncIdentity(identities, identity, network, selectedAcc
     const overrides = {};
     if ( foundIndex > -1 ) {
       overrides.status = identity.accounts[foundIndex].status;
+      overrides.activeTab = identity.accounts[foundIndex].activeTab;
     }
     return createAccount({
         ...account,
@@ -79,7 +82,7 @@ export async function getSyncIdentity(identities, identity, network, selectedAcc
         return await getSyncAccount(
           identities,
           account,
-          network,
+          nodes,
           publicKeyHash,
           selectedAccountHash
         ).catch( e => {
@@ -94,7 +97,7 @@ export async function getSyncIdentity(identities, identity, network, selectedAcc
   );
 
   if ( publicKeyHash === selectedAccountHash ) {
-    identity.transactions = await getTransactions(publicKeyHash, network)
+    identity.transactions = await getTransactions(publicKeyHash, nodes)
       .catch( e => {
         console.log('-debug: Error in: getSyncIdentity -> getTransactions for:' + publicKeyHash);
         console.error(e);

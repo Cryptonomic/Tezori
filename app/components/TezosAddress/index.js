@@ -19,6 +19,8 @@ const Address = styled.span`
   font-weight: ${({weight, theme: {typo: {weights}}}) => weight ? weight : weights.normal};
   font-size: ${({size}) => size ? size : ms(2)};
   margin: 0 ${ms(0)} 0 0;
+  -webkit-app-region: no-drag;
+  user-select: all;
 `
 
 const FirstPart = styled.span`
@@ -30,8 +32,10 @@ const TezosAddress = (props: Props) => {
   const { className, address, weight, size, color, text } = props;
   return (
     <Address className={className} weight={weight} color={color} size={size} text={text}>
-      <FirstPart>{address.slice(0, 3)}</FirstPart>
-      <span>{address.slice(3)}</span>
+      <span>
+        <FirstPart>{address.slice(0, 3)}</FirstPart>
+        <span>{address.slice(3)}</span>
+      </span>
       {text && <CopyIcon text={text} color={color} />}
     </Address>
   );

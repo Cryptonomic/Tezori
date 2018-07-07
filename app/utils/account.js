@@ -1,7 +1,10 @@
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
 import * as status from '../constants/StatusTypes';
+import { TEZOS, CONSEIL } from '../constants/NodesTypes';
+import { TRANSACTIONS } from '../constants/TabConstants';
 import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
+import { getSelectedNode } from './nodes';
 
 export function createAccount(account, identity) {
 
@@ -16,6 +19,7 @@ export function createAccount(account, identity) {
     script: null,
     spendable: true,
     transactions: [],
+    activeTab: TRANSACTIONS,
     status: status.CREATED,
     publicKey: identity.publicKey,
     privateKey: identity.privateKey,
@@ -37,27 +41,26 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
   return { balance, transactions };
 }
 
-export async function getAccountsForIdentity(network, id) {
+export async function getAccountsForIdentity(nodes, id) {
   const emptyFilter = getEmptyTezosFilter();
   const filter = {...emptyFilter, account_manager: [id]};
-  const accounts = await getAccounts(network, filter);
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
+  const accounts = await getAccounts(url, filter, apiKey);
   return accounts.filter(account => account.accountId !== id);
 }
 
-export async function getSyncAccount(identities, account, network, selectedAccountHash, selectedParentHash ) {
+export async function getSyncAccount(identities, account, nodes, selectedAccountHash, selectedParentHash ) {
   const publicKeyHash  = account.accountId;
-  console.log( ' selectedAccountHash, selectedParentHash ', selectedAccountHash, selectedParentHash);
-  console.log( ' publicKeyHash ', publicKeyHash );
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, selectedParentHash );
 
-  account =  await activateAndUpdateAccount( account, keyStore, network ).catch( e => {
+  account =  await activateAndUpdateAccount( account, keyStore, nodes ).catch( e => {
     console.log('-debug: Error in: getSyncAccount for:' + publicKeyHash);
     console.error(e);
     return account;
   });
 
   if ( publicKeyHash === selectedAccountHash ) {
-    account.transactions = await getTransactions(publicKeyHash, network)
+    account.transactions = await getTransactions(publicKeyHash, nodes)
       .catch( e => {
         console.log('-debug: Error in: getSyncAccount -> getTransactions for:' + publicKeyHash);
         console.error(e);

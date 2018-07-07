@@ -9,6 +9,7 @@ import TezosAddress from './TezosAddress';
 import TezosIcon from './TezosIcon';
 import Tooltip from './Tooltip';
 import Button from './Button';
+import Update from './Update'
 import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
 import CopyIcon from './CopyIcon';
 
@@ -51,6 +52,8 @@ const AddressTitle = styled(H4)`
   font-weight: ${({ theme: { typo: {weights} } }) => weights.bold};
   color: ${({ theme: { colors } }) => colors.white};
   margin: 0;
+  line-height: 1.75;
+  font-size: ${ms(2.2)}
 `;
 
 const AddressTitleIcon = styled(TezosIcon)`
@@ -60,12 +63,13 @@ const AddressTitleIcon = styled(TezosIcon)`
 const AddressHash = styled(H4)`
   color: ${({ theme: { colors } }) => colors.white};
   margin: 0 ${ms(1)} 0 0;
-  font-size: ${ms(3)}
+  font-size: ${ms(3)};
 `;
 
 const AddressInfo = styled.div`
   display: flex;
   align-items: center;
+  line-height: 1.9;
 
   @media (max-width: 1200px) {
     flex-direction: column;
@@ -105,7 +109,7 @@ const Refresh = styled(RefreshIcon)`
 
 
 function BalanceBanner(props: Props) {
-  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress } = props;
+  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress, time } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
@@ -119,33 +123,17 @@ function BalanceBanner(props: Props) {
         <Breadcrumbs>
           {breadcrumbs}
         </Breadcrumbs>
-
-        {
-          isReady
-            ?
-            (
-              <RefreshIcon
+        { isReady
+            ? <Update onClick={onRefreshClick} time={time} />
+            : <Refresh
                 style={{
                   fill: 'white',
                   height: ms(2),
                   width: ms(2),
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
                 onClick={onRefreshClick}
               />
-            )
-            :
-            (
-              <Refresh
-                style={{
-                  fill: 'white',
-                  height: ms(2),
-                  width: ms(2),
-                  cursor: 'pointer'
-                }}
-                onClick={onRefreshClick}
-              />
-            )
         }
       </TopRow>
       <BottomRow>
@@ -170,10 +158,16 @@ function BalanceBanner(props: Props) {
           )}
         </AddressTitle>
         <AddressInfo>
-          <TezosAddress address={publicKeyHash} weight={theme.typo.weights.light} color={'white'} text={publicKeyHash}/>
+          <TezosAddress
+            address={publicKeyHash}
+            weight={theme.typo.weights.light}
+            color={'white'} text={publicKeyHash} 
+            size={ms(1.7)}
+          />
           <Amount
             color="white"
-            amount={ balance }
+            size={ms(4.5)}
+            amount={balance}
             weight="light"
             format={2}
             showTooltip

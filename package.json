@@ -17,7 +17,9 @@
     "lint-styles": "stylelint app/*.css app/components/*.css --syntax scss",
     "lint-styles-fix": "stylefmt -r app/*.css app/components/*.css",
     "package": "npm run build && build --publish never",
+    "package-debug": "cross-env DEBUG_PROD=true npm run package",
     "package-all": "npm run build && build -mwl",
+    "package-all-debug": "cross-env DEBUG_PROD=true npm run package-all",
     "package-linux": "npm run build && build --linux",
     "package-win": "npm run build && build --win --x64",
     "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && npm run flow-typed && npm run build-dll && electron-builder install-app-deps && node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
@@ -201,7 +203,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "conseiljs": "^0.1.21",
+    "conseiljs": "^0.1.23",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
     "font-awesome": "^4.7.0",
@@ -209,7 +211,7 @@
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "material-ui": "^0.20.1",
-    "password-validator": "^4.1.1",
+    "moment": "^2.22.2",
     "polished": "^1.9.2",
     "qrcode": "^1.2.0",
     "rc-tooltip": "^3.7.2",
@@ -224,8 +226,10 @@
     "react-tippy": "^1.2.2",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "source-map-support": "^0.5.6",
-    "styled-components": "^3.3.2"
+    "styled-components": "^3.3.2",
+    "zxcvbn": "^4.4.2"
   },
   "devEngines": {
     "node": ">=7.x",

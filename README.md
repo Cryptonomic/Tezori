@@ -10,7 +10,33 @@ This codebase is under active deployment and not yet ready for production use. P
 
 ## Development
 
-The wallet is built on [React](https://reactjs.org/) and [Electron](https://electronjs.org/)
+The wallet is built on [React](https://reactjs.org/) and [Electron](https://electronjs.org/).
+
+Active development happens on the develop branch with periodic merges to master.
+
+Add the file `app/defaultWalletNodes.json` with your Tezos and Conseil nodes:
+
+```json
+{
+  "tezosSelectedNode": "Cryptonomic-Nautilus",
+  "conseilSelectedNode": "Cryptonomic-Conseil",
+  "list": [
+    {
+      "name": "MyTezosNode",
+      "type": "TEZOS",
+      "url": "https://mytezosnode.com/",
+      "apiKey": "anapikey"
+    },
+    {
+      "name": "MyConseilNode",
+      "type": "CONSEIL",
+      "url": "https://myconseilnode.com/",
+      "apiKey": "anotherapikey"
+    }
+  ]
+}
+
+```
 
 To install all dependencies:
 

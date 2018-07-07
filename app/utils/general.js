@@ -1,13 +1,17 @@
 import { pick  } from 'lodash';
-import { TezosConseilQuery, TezosOperations  } from 'conseiljs';
+import { TezosConseilQuery, TezosOperations, TezosWallet  } from 'conseiljs';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 import * as status from '../constants/StatusTypes';
+import { TEZOS, CONSEIL } from '../constants/NodesTypes';
+import { getSelectedNode } from './nodes';
 
 const { getEmptyTezosFilter, getOperations, getAccount } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
+const { generateMnemonic } = TezosWallet;
+
 /**
  *
  * @param timeout - number of seconds to wait
@@ -19,7 +23,8 @@ export function awaitFor(timeout: number) {
   });
 }
 
-export async function getTransactions(accountHash, network) {
+export async function getTransactions(accountHash, nodes) {
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   const emptyFilter = getEmptyTezosFilter();
   const transFilter = {
     ...emptyFilter,
@@ -27,7 +32,7 @@ export async function getTransactions(accountHash, network) {
     operation_participant: [ accountHash ],
     operation_kind: [ 'transaction' ]
   };
-  return await getOperations(network, transFilter);
+  return await getOperations(url, transFilter, apiKey);
 }
 
 export function getSelectedAccount( identities, selectedAccountHash, selectedParentHash ) {
@@ -52,22 +57,25 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
   };
 }
 
-export async function isRevealed(network, keyStore) {
-  return await isManagerKeyRevealedForAccount(network, keyStore);
+export async function isRevealed(nodes, keyStore) {
+  const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+  return await isManagerKeyRevealedForAccount(url, keyStore);
 }
 
-export async function revealKey(network, keyStore) {
-  const keyRevealed = await isRevealed(network, keyStore);
+export async function revealKey(nodes, keyStore) {
+  const keyRevealed = await isRevealed(nodes, keyStore);
   if ( !keyRevealed ) {
-    await sendKeyRevealOperation(network, keyStore, 0);
+    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+    await sendKeyRevealOperation(url, keyStore, 0);
   }
   return true;
 }
 
-export async function activateAndUpdateAccount(account, keyStore, network) {
+export async function activateAndUpdateAccount(account, keyStore, nodes) {
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   if ( account.status === status.READY ) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(network, accountHash).catch( (error) => {
+    const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {
       console.log('-debug: Error in: status.READY for:' + accountHash);
       console.error(error);
       return false;
@@ -84,7 +92,7 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
 
   if ( account.status === status.CREATED ) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(network, accountHash).catch( (error) => {
+    const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {
       console.log('-debug: Error in: status.CREATED for:' + accountHash);
       console.error(error);
       return false;
@@ -96,7 +104,7 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
   }
 
   if ( account.status === status.FOUND ) {
-    const revealed = await revealKey(network, keyStore).catch( (error) => {
+    const revealed = await revealKey(nodes, keyStore).catch( (error) => {
       console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
       console.error(error);
       return false;
@@ -107,7 +115,7 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
   }
 
   if ( account.status === status.PENDING ) {
-    const response = await isRevealed(network, keyStore).catch( (error) => {
+    const response = await isRevealed(nodes, keyStore).catch( (error) => {
       console.log('-debug: Error in: status.PENDING for:' + (account.publicKeyHash || account.accountId));
       console.error(error);
       return false;
@@ -119,4 +127,8 @@ export async function activateAndUpdateAccount(account, keyStore, network) {
 
   console.log('-debug: account.status ', account.status);
   return account;
+}
+
+export function generateNewMnemonic() {
+  return generateMnemonic();
 }

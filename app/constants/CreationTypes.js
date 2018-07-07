@@ -1,5 +1,3 @@
-export default {
-  DEFAULT: 'default',
-  CREATE: 'create',
-  IMPORT: 'import'
-};
+export const DEFAULT = 'default';
+export const CREATE = 'create';
+export const IMPORT ='import';
