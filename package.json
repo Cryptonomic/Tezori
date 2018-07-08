@@ -203,7 +203,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "conseiljs": "^0.1.23",
+    "conseiljs": "^0.1.24",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
     "font-awesome": "^4.7.0",

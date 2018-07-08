@@ -2,15 +2,25 @@ import { TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { displayError } from '../../utils/formValidation';
-import { getSelectedKeyStore } from '../../utils/general';
 import { getSelectedNode } from '../../utils/nodes';
 import { findIdentity } from '../../utils/identity';
 import { findAccountIndex } from '../../utils/account';
 import { TEZOS } from '../../constants/NodesTypes';
+import {
+  getSelectedKeyStore,
+  fetchAverageFees
+} from '../../utils/general'
 
 const {
   sendDelegationOperation
 } = TezosOperations;
+
+export function fetchDelegationAverageFees() {
+  return async (dispatch, state) => {
+    const nodes = state().nodes.toJS();
+    return await fetchAverageFees(nodes, 'delegation');
+  }
+}
 
 export function validateAddress(address) {
   return async (dispatch, state) => {

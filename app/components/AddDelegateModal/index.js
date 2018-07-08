@@ -14,11 +14,15 @@ import Loader from '../Loader';
 import Fees from '../Fees/';
 
 import styles from './index.css';
-import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
+import {
+  createNewAccount,
+  fetchOriginationAverageFees
+} from '../../reduxContent/createDelegate/thunks';
 
 type Props = {
   selectedParentHash: string,
   createNewAccount: Function,
+  fetchOriginationAverageFees: Function,
   open: boolean,
   onCloseClick: Function
 };
@@ -32,12 +36,21 @@ const defaultState = {
   delegate: '',
   amount: null,
   fee: 100,
-  passPhrase: ''
+  passPhrase: '',
+  averageFees: {}
 };
 
 class AddDelegateModal extends Component<Props> {
   props: Props;
   state = defaultState;
+
+  async componentDidUpdate(prevProps, prevState) {
+    const { open, fetchOriginationAverageFees } = this.props;
+    if ( open !== prevProps.open ) {
+      const averageFees = await fetchOriginationAverageFees();
+      this.setState({ averageFees, fee: averageFees.low });
+    }
+  }
 
   changeAmount = (_, amount) =>  this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
@@ -70,7 +83,7 @@ class AddDelegateModal extends Component<Props> {
 
   render() {
     const { open, onCloseClick } = this.props;
-    const { isLoading, delegate, amount, fee, passPhrase } = this.state;
+    const { isLoading, averageFees, delegate, amount, fee, passPhrase } = this.state;
     const isDisabled = isLoading || !delegate || !amount || !fee || !passPhrase;
 
     return (
@@ -122,10 +135,10 @@ class AddDelegateModal extends Component<Props> {
           <div className={styles.feeContainer}>
             <Fees
               style={{ width: '50%' }}
-              low={100}
-              medium={200}
-              high={400}
-              fee={fee}
+              low={ averageFees.low }
+              medium={ averageFees.medium }
+              high={ averageFees.high }
+              fee={ fee }
               onChange={this.changeFee}
             />
           </div>
@@ -157,6 +170,7 @@ class AddDelegateModal extends Component<Props> {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      fetchOriginationAverageFees,
       createNewAccount
     },
     dispatch

@@ -14,6 +14,7 @@ import Fees from '../Fees/';
 import {
   validateAddress,
   delegate,
+  fetchDelegationAverageFees
 } from '../../reduxContent/delegate/thunks';
 
 type Props = {
@@ -104,11 +105,18 @@ const defaultState = {
   tempAddress: '',
   password: '',
   fee: 100,
+  averageFees: {}
 };
 
 class Delegate extends Component<Props> {
   props: Props;
   state = defaultState;
+
+  async componentDidMount() {
+    const { fetchDelegationAverageFees } = this.props;
+    const averageFees = await fetchDelegationAverageFees();
+    this.setState({ averageFees, fee: averageFees.low });
+  }
 
   openConfirmation = () =>  this.setState({ open: true });
   closeConfirmation = () =>  this.setState(defaultState);
@@ -163,7 +171,7 @@ class Delegate extends Component<Props> {
 
   render() {
     const { isReady } = this.props;
-    const { isLoading, open, password, fee } = this.state;
+    const { isLoading, open, password, fee, averageFees } = this.state;
     const delegationTips = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
@@ -179,10 +187,10 @@ class Delegate extends Component<Props> {
             <SetADelegate>Set a Delegate</SetADelegate>
             <Fees
               styles={{minWidth: 340, width: 'auto'}}
-              low={100}
-              medium={200}
-              high={400}
-              fee={fee}
+              low={ averageFees.low }
+              medium={ averageFees.medium }
+              high={ averageFees.high }
+              fee={ fee }
               onChange={this.handleFeeChange}
             />
             <TextField
@@ -225,6 +233,7 @@ class Delegate extends Component<Props> {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      fetchDelegationAverageFees,
       validateAddress,
       delegate
     },

@@ -9,7 +9,12 @@ import Button from './Button';
 import { ms } from '../styles/helpers'
 import SendConfirmationModal from './SendConfirmationModal';
 
-import { validateAmount, sendTez } from '../reduxContent/sendTezos/thunks';
+import {
+  validateAmount,
+  sendTez,
+  fetchTransactionAverageFees
+} from '../reduxContent/sendTezos/thunks';
+
 import Fees from './Fees/';
 
 const SendContainer = styled.div`
@@ -45,13 +50,19 @@ const initialState = {
   password: '',
   toAddress: '',
   amount: '',
-  fee: 100
+  fee: 100,
+  averageFees: {}
 };
 
 class Send extends Component<Props> {
   props: Props;
-
   state = initialState;
+
+  async componentDidMount() {
+    const { fetchTransactionAverageFees } = this.props;
+    const averageFees = await fetchTransactionAverageFees();
+    this.setState({ averageFees, fee: averageFees.low });
+  }
 
   openConfirmation = () =>  this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () =>  this.setState(initialState);
@@ -89,7 +100,8 @@ class Send extends Component<Props> {
       password,
       toAddress,
       amount,
-      fee
+      fee,
+      averageFees
     } = this.state;
 
     return (
@@ -109,10 +121,10 @@ class Send extends Component<Props> {
           />
           <Fees
             style={{ width: '50%' }}
-            low={100}
-            medium={200}
-            high={400}
-            fee={fee}
+            low={ averageFees.low }
+            medium={ averageFees.medium }
+            high={ averageFees.high }
+            fee={ fee }
             onChange={this.handleFeeChange}
           />
         </AmountContainer>
@@ -142,6 +154,7 @@ class Send extends Component<Props> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
+      fetchTransactionAverageFees,
       sendTez,
       validateAmount
     },

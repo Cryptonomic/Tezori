@@ -9,7 +9,7 @@ import { ms } from '../../styles/helpers';
 import Button from './../Button/';
 import { H4, H2 } from './../Heading/';
 
-import { utezToTez } from '../../utils/currancy';
+import { formatAmount, tezToUtez } from '../../utils/currancy';
 
 type Props = {
   low?: number,
@@ -48,7 +48,7 @@ class Fee extends Component<Props> {
   handleSetCustom = () =>  {
     const { custom } = this.state;
     const { onChange } = this.props;
-    onChange(custom);
+    onChange(tezToUtez(custom));
     this.closeConfirmation();
   };
 
@@ -68,12 +68,12 @@ class Fee extends Component<Props> {
             }
           }}
         >
-          <MenuItem value={low} primaryText={ `Low Fee: ${ utezToTez(low)} ` } />
-          <MenuItem value={medium} primaryText={ `Medium Fee: ${ utezToTez(medium)}` } />
-          <MenuItem value={high} primaryText={ `High Fee: ${ utezToTez(high)}` } />
+          <MenuItem value={low} primaryText={ `Low Fee: ${ formatAmount(low)} ` } />
+          <MenuItem value={medium} primaryText={ `Medium Fee: ${ formatAmount(medium)}` } />
+          <MenuItem value={high} primaryText={ `High Fee: ${ formatAmount(high)}` } />
           {
             custom
-              ? <MenuItem value={custom} primaryText={ `Custom Fee: ${ utezToTez(custom)}` } />
+              ? <MenuItem value={tezToUtez(custom)} primaryText={ `Custom Fee: ${ formatAmount(tezToUtez(custom))}` } />
               : null
           }
           <MenuItem value={'custom'} primaryText="Custom" onClick={this.openConfirmation} />
