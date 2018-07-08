@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { TextField, Dialog } from 'material-ui';
+import { TextField, Dialog, SelectField, MenuItem } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import Button from './../Button/';
 import { H4 } from './../Heading/';
 import TezosIcon from './../TezosIcon/';
 import DelegateConfirmationModal from '../DelegateConfirmationModal/';
+import Fees from '../Fees/';
 
 import {
   validateAddress,
@@ -102,7 +103,7 @@ const defaultState = {
   isLoading: false,
   tempAddress: '',
   password: '',
-  fee: 100
+  fee: 100,
 };
 
 class Delegate extends Component<Props> {
@@ -113,7 +114,7 @@ class Delegate extends Component<Props> {
   closeConfirmation = () =>  this.setState(defaultState);
   handlePasswordChange = (_, password) =>  this.setState({ password });
   handleTempAddressChange = (_, tempAddress) =>  this.setState({ tempAddress });
-  handleFeeChange = (_, index, fee) =>  this.setState({ fee });
+  handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   getAddress = () =>  {
@@ -176,6 +177,14 @@ class Delegate extends Component<Props> {
         <DelegateContainer>
           <DelegateInputContainer>
             <SetADelegate>Set a Delegate</SetADelegate>
+            <Fees
+              styles={{minWidth: 340, width: 'auto'}}
+              low={100}
+              medium={200}
+              high={400}
+              fee={fee}
+              onChange={this.handleFeeChange}
+            />
             <TextField
               floatingLabelText="Address"
               value={ this.getAddress() }

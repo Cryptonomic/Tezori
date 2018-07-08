@@ -8,10 +8,10 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import Tooltip from '../Tooltip';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon';
-import { utezToTez } from '../../utils/currancy';
 
 import Button from '../Button';
 import Loader from '../Loader';
+import Fees from '../Fees/';
 
 import styles from './index.css';
 import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
@@ -41,7 +41,7 @@ class AddDelegateModal extends Component<Props> {
 
   changeAmount = (_, amount) =>  this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
-  changeFee = (_, index, fee) => this.setState({ fee });
+  changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (_, passPhrase) => this.setState({ passPhrase });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
@@ -120,12 +120,14 @@ class AddDelegateModal extends Component<Props> {
             />
           </div>
           <div className={styles.feeContainer}>
-            <SelectField floatingLabelText="Fee" value={fee}  onChange={this.changeFee} className={styles.feeSelectComponent}>
-              <MenuItem value={100} primaryText={`Low Fee: ${ utezToTez(100)} `} />
-              <MenuItem value={200} primaryText={`Medium Fee: ${ utezToTez(200)}`} />
-              <MenuItem value={400} primaryText={`High Fee: ${ utezToTez(400)}`} />
-              <MenuItem value={500} primaryText="Custom" />
-            </SelectField>
+            <Fees
+              style={{ width: '50%' }}
+              low={100}
+              medium={200}
+              high={400}
+              fee={fee}
+              onChange={this.changeFee}
+            />
           </div>
         </div>
         <div className={styles.amountAndFeeContainer}>
