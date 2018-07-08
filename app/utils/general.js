@@ -8,7 +8,7 @@ import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { getSelectedNode } from './nodes';
 
-const { getEmptyTezosFilter, getOperations, getAccount } = TezosConseilQuery;
+const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 const { generateMnemonic } = TezosWallet;
 
@@ -131,4 +131,11 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
 
 export function generateNewMnemonic() {
   return generateMnemonic();
+}
+
+export async function fetchAverageFees(nodes, operationKind) {
+  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
+  const emptyFilter = getEmptyTezosFilter();
+  const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
+  return await getAverageFees(url, feeFilter, apiKey);
 }
