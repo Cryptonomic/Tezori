@@ -37,7 +37,11 @@ const defaultState = {
   amount: null,
   fee: 100,
   passPhrase: '',
-  averageFees: {}
+  averageFees: {
+    low: 100,
+    medium: 200,
+    high:400
+  }
 };
 
 class AddDelegateModal extends Component<Props> {
@@ -46,7 +50,7 @@ class AddDelegateModal extends Component<Props> {
 
   async componentDidUpdate(prevProps, prevState) {
     const { open, fetchOriginationAverageFees } = this.props;
-    if ( open !== prevProps.open ) {
+    if ( open && open !== prevProps.open ) {
       const averageFees = await fetchOriginationAverageFees();
       this.setState({ averageFees, fee: averageFees.low });
     }
@@ -73,7 +77,7 @@ class AddDelegateModal extends Component<Props> {
     const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
     this.setIsLoading(true);
-    if ( await createNewAccount( delegate, amount, fee, passPhrase, selectedParentHash ) ) {
+    if ( await createNewAccount( delegate, amount, Math.floor(fee), passPhrase, selectedParentHash ) ) {
       this.setState(defaultState);
       onCloseClick();
     } else {
@@ -84,7 +88,7 @@ class AddDelegateModal extends Component<Props> {
   render() {
     const { open, onCloseClick } = this.props;
     const { isLoading, averageFees, delegate, amount, fee, passPhrase } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !fee || !passPhrase;
+    const isDisabled = isLoading || !delegate || !amount || !passPhrase;
 
     return (
       <Dialog

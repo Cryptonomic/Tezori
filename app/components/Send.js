@@ -51,7 +51,11 @@ const initialState = {
   toAddress: '',
   amount: '',
   fee: 100,
-  averageFees: {}
+  averageFees: {
+    low: 100,
+    medium: 200,
+    high:400
+  }
 };
 
 class Send extends Component<Props> {
@@ -61,11 +65,15 @@ class Send extends Component<Props> {
   async componentDidMount() {
     const { fetchTransactionAverageFees } = this.props;
     const averageFees = await fetchTransactionAverageFees();
+    console.log('averageFees', averageFees);
     this.setState({ averageFees, fee: averageFees.low });
   }
 
   openConfirmation = () =>  this.setState({ isConfirmationModalOpen: true });
-  closeConfirmation = () =>  this.setState(initialState);
+  closeConfirmation = () =>  {
+    const { averageFees, fee } = this.state;
+    this.setState({ ...initialState, averageFees, fee });
+  };
   handlePasswordChange = (_, password) =>  this.setState({ password });
   handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
   handleAmountChange = (_, amount) =>  this.setState({ amount });
@@ -84,7 +92,7 @@ class Send extends Component<Props> {
     const { password, toAddress, amount, fee } = this.state;
     const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await sendTez( password, toAddress, amount, fee, selectedAccountHash, selectedParentHash)) {
+    if (await sendTez( password, toAddress, amount, Math.floor(fee), selectedAccountHash, selectedParentHash)) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);

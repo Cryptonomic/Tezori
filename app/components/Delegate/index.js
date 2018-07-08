@@ -99,18 +99,22 @@ const SetADelegate = styled.p`
   margin-bottom: 0;
 `;
 
-const defaultState = {
+const initialState = {
   open: false,
   isLoading: false,
   tempAddress: '',
   password: '',
   fee: 100,
-  averageFees: {}
+  averageFees: {
+    low: 100,
+    medium: 200,
+    high:400
+  }
 };
 
 class Delegate extends Component<Props> {
   props: Props;
-  state = defaultState;
+  state = initialState;
 
   async componentDidMount() {
     const { fetchDelegationAverageFees } = this.props;
@@ -119,7 +123,10 @@ class Delegate extends Component<Props> {
   }
 
   openConfirmation = () =>  this.setState({ open: true });
-  closeConfirmation = () =>  this.setState(defaultState);
+  closeConfirmation = () =>  {
+    const { averageFees, fee } = this.state;
+    this.setState({ ...initialState, averageFees, fee });
+  };
   handlePasswordChange = (_, password) =>  this.setState({ password });
   handleTempAddressChange = (_, tempAddress) =>  this.setState({ tempAddress });
   handleFeeChange = (fee) =>  this.setState({ fee });
@@ -143,7 +150,7 @@ class Delegate extends Component<Props> {
     const { password, fee } = this.state;
     const { delegate, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await delegate( this.getAddress(), fee, password, selectedAccountHash, selectedParentHash )) {
+    if (await delegate( this.getAddress(), Math.floor(fee), password, selectedAccountHash, selectedParentHash )) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);

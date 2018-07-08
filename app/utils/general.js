@@ -137,5 +137,5 @@ export async function fetchAverageFees(nodes, operationKind) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   const emptyFilter = getEmptyTezosFilter();
   const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
-  await getAverageFees(url, feeFilter, apiKey);
+  return await getAverageFees(url, feeFilter, apiKey);
 }

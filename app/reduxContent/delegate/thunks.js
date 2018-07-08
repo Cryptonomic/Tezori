@@ -53,7 +53,6 @@ export function delegate( delegateValue, fee, password, selectedAccountHash, sel
 
     const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    console.log('-debug: - jjjjj - url, apiKey', url, apiKey);
     const res = await sendDelegationOperation(url, keyStore, delegateValue, fee).catch((err) => {
       err.name = err.message;
       console.error(err);
