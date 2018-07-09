@@ -16,6 +16,7 @@ const Container = styled.div`
 
 const Title = styled(H2)`
   color: ${({ theme: { colors } }) => colors.primary };
+  font-weight: ${({theme: { typo: { weights } } }) => weights.normal };
 `
 
 const Description = styled.p`
@@ -30,13 +31,15 @@ const Link = styled.span`
 `
 const customStyles = {
   content : {
-    left: 0,
-    width: '100%',
-    bottom: 0,
-    top: '40%',
-    display: 'flex',
     alignItems: 'center',
+    border: '0',
+    borderRadius: '0',
+    bottom: 0,
+    display: 'flex',
     justifyContent: 'center',
+    left: 0,
+    top: '57%',
+    width: '100%',
   },
   overlay: {
     backgroundColor: 'rgba(155, 155, 155, 0.68)',
