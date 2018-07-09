@@ -1,18 +1,18 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 import { ms } from '../../styles/helpers'
 import { logo } from '../../config.json'
+
 const tezosLogo = require(`../../../resources/${logo}`)
 
-const TezosLogo = styled.img`
+const Tz = styled.div`
   width: ${ms(7)};
   height: ${ms(7)};
+  background-color: ${ ({ theme: { colors } }) => colors.accent };
+  mask: url(${tezosLogo}) no-repeat;
+  mask-size: cover;
 `
 
-const Logo = () => {
-  return (
-    <TezosLogo src={tezosLogo} />
-  )
-}
+const Logo = () => <Tz />
 
-export default Logo
+export default withTheme(Logo)
