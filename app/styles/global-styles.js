@@ -333,8 +333,7 @@ injectGlobal`
     left: 0;
     z-index: -1;
     width: 100vw;
-    height: 120vh;
-    min-height: 738px;
+    height: 100vh;
     overflow-x: hidden;
   }
 
@@ -343,8 +342,7 @@ injectGlobal`
     top: 0;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
-    height: 120vh;
-    min-height: 738px;
+    height: 100vh;
     overflow-x: hidden;
   }
 

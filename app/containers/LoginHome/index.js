@@ -133,7 +133,7 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('create')} 
                 disabled={!this.state.isAgreement}
               >
-                Create Wallet
+                Create New Wallet
               </CreateWalletButton>
             </div>
             <div className={styles.walletContainers}>
