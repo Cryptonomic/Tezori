@@ -345,6 +345,7 @@ injectGlobal`
     transform: translate3d(-50%, 0, 0);
     height: 120vh;
     min-height: 738px;
+    overflow-x: hidden;
   }
 
   .bg-container .bg {
