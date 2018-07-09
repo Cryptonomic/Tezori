@@ -1,0 +1,8 @@
+{
+  "name": "Tezos Wallet",
+  "version": "1.0.0",
+  "logo": "tezosLogo.svg",
+  "iconPath": "./TezosIcon",
+  "termsService": "https://github.com/Cryptonomic/Tezos-Wallet",
+  "privacyPolicy": "https://github.com/Cryptonomic/Tezos-Wallet"
+}

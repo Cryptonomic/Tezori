@@ -9,7 +9,6 @@ import {
   TableRowColumn
 } from 'material-ui';
 
-import tezosLogo from '../../resources/tezosLogo.png';
 import styled from 'styled-components';
 import TezosAmount from './TezosAmount';
 import { formatAmount } from '../utils/currancy';

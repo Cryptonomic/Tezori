@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Modal from 'react-modal';
 import { H2 } from '../Heading'
 import Button from '../Button'
+import { termsService, privacyPolicy } from '../../config.json'
 import { ms } from '../../styles/helpers'
 import theme from '../../styles/theme'
 
@@ -55,7 +56,8 @@ type Props = {
 
 
 const TermsModal = (props:Props) => {
-  const openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet')
+  const openTermsService = () => shell.openExternal(termsService)
+  const openPrivacyPolicy = () => shell.openExternal(privacyPolicy)
   const { isOpen, agreeTermsAndPolicy } = props
   return (
     <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
@@ -63,9 +65,9 @@ const TermsModal = (props:Props) => {
         <Title>Hi there!</Title>
         <Description>
           Before we get started, please read and accept our
-          <Link onClick={openLink}> Terms of Service </Link>
+          <Link onClick={openTermsService}> Terms of Service </Link>
           and
-          <Link onClick={openLink}> Privacy Policy </Link>
+          <Link onClick={openPrivacyPolicy}> Privacy Policy </Link>
         </Description>
         <Button
           buttonTheme="primary"
