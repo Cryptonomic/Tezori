@@ -43,16 +43,48 @@ const Description = styled.span`
 `;
 
 const Tip = styled(Description)`
-  max-width: 300px;
+  max-width: 18.75rem;
   padding: ${ms(2)} 0 0 0;
+  text-align: center;
+  margin: 0 auto;
 `;
 
-const Filling = styled.div`
-  height: 70px;
+const AppName = styled.h1`
+  text-align: center;
+  width: 100%;
+  font-family: 'Roboto', san-serif;
+  font-style: normal;
+  font-stretch: normal;
+  font-size: 7.5rem;
+  font-weight: 300;
+  line-height: 7.5rem;
+  letter-spacing: 0.5rem;
+  margin: 0 auto;
+  color: ${ ({ theme: { colors } }) => colors.primary };
 `;
 
-const CustomButton = styled(Button)`
-  max-width: 300px;
+const AppSubtitle = styled.h2`
+  text-align: center;
+  width: 100%;
+  font-family: 'Roboto', san-serif;
+  font-style: normal;
+  font-stretch: normal;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.5rem;
+  letter-spacing: 0.25rem;
+  margin: 0 auto 1.25rem;
+  color: ${ ({ theme: { colors } }) => colors.primary };
+`;
+
+const CreateWalletButton = styled(Button)`
+  min-width: 22rem;
+  width: 100%;
+`;
+
+const UnlockWalletButton = styled(Button)`
+  min-width: 22rem;
+  width: 100%;
 `;
 
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
@@ -88,27 +120,28 @@ class LoginHome extends Component<Props> {
       <SectionContainer>
         <div className={styles.defaultContainer}>
           <section className={styles.headerContainer}>
-            <h1>Galleon</h1>
-            <h2>Beta Wallet for Tezos Betanet</h2>
+            <AppName>Galleon</AppName>
+            <AppSubtitle>Beta Wallet for Tezos Betanet</AppSubtitle>
           </section>
           <section className={styles.optionsContainer}>
             <div className={styles.walletContainers}>
-              <CustomButton 
+              <CreateWalletButton 
                 buttonTheme="primary" 
                 onClick={() => this.goTo('create')} 
                 disabled={!this.state.isAgreement}
               >
                 Create Wallet
-              </CustomButton>
+              </CreateWalletButton>
             </div>
             <div className={styles.walletContainers}>
-              <CustomButton 
+              <UnlockWalletButton 
                 buttonTheme="secondary"
                 onClick={() => this.goTo('import')}
                 disabled={!this.state.isAgreement}
+                className={styles.unlockWalletButton}
               >
                 Unlock Existing Wallet
-              </CustomButton>
+              </UnlockWalletButton>
               <Tip>
                 Want to import your fundraiser account?
                 <Strong> Create a wallet </Strong>
