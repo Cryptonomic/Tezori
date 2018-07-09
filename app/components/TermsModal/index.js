@@ -22,12 +22,14 @@ const Title = styled(H2)`
 const Description = styled.p`
   color: ${({ theme: { colors } }) => colors.primary };
   font-weight: ${({theme: { typo: { weights } } }) => weights.light };
-  margin-bottom: ${ms(1)};
+  margin-bottom: ${ms(5)};
+  margin-top: 0.6rem;
 `
 
 const Link = styled.span`
   color: ${({ theme: { colors } }) => colors.accent };
   cursor: pointer;
+  font-weight: ${({theme: { typo: { weights } } }) => weights.normal };
 `
 const customStyles = {
   content : {
