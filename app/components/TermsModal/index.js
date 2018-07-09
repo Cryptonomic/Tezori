@@ -37,6 +37,9 @@ const customStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  overlay: {
+    backgroundColor: 'rgba(155, 155, 155, 0.68)',
   }
 };
 
