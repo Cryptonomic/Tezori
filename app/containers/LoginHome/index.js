@@ -28,10 +28,12 @@ const TermsAndPolicySection = styled.div`
   border-top-style: solid;
   justify-content: center;
   align-items: center;
+  font-weight: 300;
 `;
 
 const Strong = styled.span`
   color: ${ ({ theme: { colors } }) => colors.accent };
+  font-weight: 400;
 `;
 
 const Link = styled(Strong)`
@@ -39,14 +41,15 @@ const Link = styled(Strong)`
 `;
 
 const Description = styled.span`
-  color: ${ ({ theme: { typo: { weights } } }) => weights.light };
+  margin-left: -10px;
 `;
 
 const Tip = styled(Description)`
-  max-width: 18.75rem;
   padding: ${ms(2)} 0 0 0;
   text-align: center;
   margin: 0 auto;
+  line-height: 1.31rem;
+  font-weight: 300;
 `;
 
 const AppName = styled.h1`
@@ -143,9 +146,8 @@ class LoginHome extends Component<Props> {
                 Unlock Existing Wallet
               </UnlockWalletButton>
               <Tip>
-                Want to import your fundraiser account?
-                <Strong> Create a wallet </Strong>
-                first.
+                <div>Want to import your Fundraiser paper wallet?</div>
+                <div><Link onClick={() => this.goTo('create')}><Strong>Create a Galleon wallet</Strong></Link> first.</div>
               </Tip>
             </div>
           </section>
@@ -153,8 +155,8 @@ class LoginHome extends Component<Props> {
         <TermsAndPolicySection>
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
-            I acknowledge that I have read and accepted
-            <Link onClick={this.openLink}> the Terms of Service </Link>
+            I acknowledge that I have read and accepted the
+            <Link onClick={this.openLink}> Terms of Service </Link>
             and
             <Link onClick={this.openLink}> Privacy Policy</Link>
           </Description>
