@@ -13,7 +13,6 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 100vh;
   padding: 0 0 ${ms(3)} 0;
-  background: ${({ theme: { colors } }) => colors.gray2};
 `;
 
 export default class App extends Component<Props> {
