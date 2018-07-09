@@ -87,32 +87,35 @@ class LoginHome extends Component<Props> {
     return (
       <SectionContainer>
         <div className={styles.defaultContainer}>
-          <div className={styles.walletContainers}>
-            <div className={styles.walletTitle}>Create a new wallet</div>
-            <CustomButton 
-              buttonTheme="primary" 
-              onClick={() => this.goTo('create')} 
-              disabled={!this.state.isAgreement}
-            >
-              Create Wallet
-            </CustomButton>
-            <Tip>
-              Want to import your fundraiser account?
-              <Strong> Create a wallet </Strong>
-              first.
-            </Tip>
-          </div>
-          <div className={styles.walletContainers}>
-            <div className={styles.walletTitle}>Import an existing wallet</div>
-            <CustomButton 
-              buttonTheme="secondary"
-              onClick={() => this.goTo('import')}
-              disabled={!this.state.isAgreement}
-            >
-              Import Wallet
-            </CustomButton>
-            <Filling />
-          </div>
+          <section className={styles.headerContainer}>
+            <h1>Galleon</h1>
+            <h2>Beta Wallet for Tezos Betanet</h2>
+          </section>
+          <section className={styles.optionsContainer}>
+            <div className={styles.walletContainers}>
+              <CustomButton 
+                buttonTheme="primary" 
+                onClick={() => this.goTo('create')} 
+                disabled={!this.state.isAgreement}
+              >
+                Create Wallet
+              </CustomButton>
+            </div>
+            <div className={styles.walletContainers}>
+              <CustomButton 
+                buttonTheme="secondary"
+                onClick={() => this.goTo('import')}
+                disabled={!this.state.isAgreement}
+              >
+                Unlock Existing Wallet
+              </CustomButton>
+              <Tip>
+                Want to import your fundraiser account?
+                <Strong> Create a wallet </Strong>
+                first.
+              </Tip>
+            </div>
+          </section>
         </div>
         <TermsAndPolicySection>
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>

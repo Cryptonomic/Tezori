@@ -1,21 +1,46 @@
 .defaultContainer {
-  flex-grow: 1;
-  display: flex;
-  justify-content: space-around;
   align-items: center;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
   height: 100%;
+  justify-content: center;
   padding: 0px 50px;
 }
 
 .walletContainers {
   display: flex;
   flex-direction: column;
-  margin: 0 30px;
+  margin: 10px 30px;
+  justify-content: stretch;
 }
 
-.walletTitle {
-  color: #1A325F;
-  font-size: 36px;
+.headerContainer, .optionsContainer {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+}
+
+.headerContainer h1, .headerContainer h2 {
+  text-align: center;
+  width: 100%;
+  font-family: 'Roboto', san-serif;
   font-weight: 300;
-  margin: 0 0 30px 0;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+}
+
+.headerContainer h1 {
+  font-size: 120px;
+  line-height: 120px;
+  letter-spacing: 8.3px;
+  margin: 0 auto;
+}
+
+.headerContainer h2 {
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 4.3px;
+  margin: 0 auto 20px;
 }
