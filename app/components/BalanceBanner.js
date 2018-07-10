@@ -190,4 +190,9 @@ function BalanceBanner(props: Props) {
   );
 }
 
+BalanceBanner.defaultProps = {
+  parentIdentity: null, 
+  parentIndex: 0  
+}
+
 export default withTheme(BalanceBanner)
