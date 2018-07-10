@@ -58,7 +58,7 @@ const AppName = styled.h1`
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 7.5rem;
+  font-size: 6rem;
   font-weight: 300;
   line-height: normal;
   letter-spacing: 0.5rem;
@@ -72,9 +72,9 @@ const AppSubtitle = styled.h2`
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 300;
-  line-height: 1.5rem;
+  line-height: 1.2rem;
   letter-spacing: 0.25rem;
   margin: 0 auto 2.5rem;
   color: ${ ({ theme: { colors } }) => colors.primary };
