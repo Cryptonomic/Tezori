@@ -82,7 +82,9 @@ const InputValid = (props: Props) => {
   }
 
   return (
-    <Container>
+    <Container
+      className={props.className}
+    >
       <Content>
         <TextField
           className='input-text-field'

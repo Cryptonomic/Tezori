@@ -46,7 +46,7 @@ const BackToWallet = styled.div`
   align-items: center;
   color: #4486f0;
   cursor: pointer;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -119,28 +119,30 @@ class LoginImport extends Component<Props> {
           </BackToWallet>
 
           <h3 className={styles.walletTitle}>
-            Import your wallet from a backup
+            Open an existing wallet
           </h3>
           <div className={styles.importButtonContainer}>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
             </Button>
-            <span className={styles.walletFileName}>{completeWalletPath}</span>
+            <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <TextField
-            floatingLabelText="Password"
+            floatingLabelText="Wallet Password"
             style={{ width: '500px', marginBottom: ms(5) }}
             type="password"
             value={ password }
             onChange={(_, password) => this.setState({ password })}
           />
-          <Button
-            onClick={() => this.login(IMPORT) }
-            buttonTheme="primary"
-            disabled={isLoading}
-          >
-            Import
-          </Button>
+          <div className={styles.actionButtonContainer}>
+            <Button
+              onClick={() => this.login(IMPORT) }
+              buttonTheme="primary"
+              disabled={isLoading}
+            >
+              Import
+            </Button>
+          </div>
         </div>
         <MessageBar message={message} />
       </div>

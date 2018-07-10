@@ -29,7 +29,7 @@ const BackToWallet = styled.div`
   align-items: center;
   color: #4486f0;
   cursor: pointer;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -156,21 +156,23 @@ class LoginCreate extends Component<Props> {
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <ValidInput
-            label='Create Password'
+            label='Create Wallet Password'
             isShowed={this.state.isPwdShowed}
             crackTime={this.state.pwdCrackTime}
             suggestion={this.state.pwdSuggestion}
             score={this.state.pwdScore}
             changFunc={this.changePassword}
+            className={styles.createPasswordField}
             onShow={() => this.onPasswordShow(0)}            
           />
           <ValidInput
-            label='Confirm Password'
+            label='Confirm Wallet Password'
             status
             isShowed={this.state.isConfirmPwdShowed}
             crackTime={this.state.confirmPwdText}
             score={this.state.confirmPwdScore}
             changFunc={this.confirmPassword}
+            className={styles.confirmPasswordField}
             onShow={() => this.onPasswordShow(1)}            
           />
           <div className={styles.actionButtonContainer}>

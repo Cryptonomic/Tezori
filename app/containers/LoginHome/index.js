@@ -146,7 +146,7 @@ class LoginHome extends Component<Props> {
                 disabled={!this.state.isAgreement}
                 className={styles.unlockWalletButton}
               >
-                Unlock Existing Wallet
+                Open Existing Wallet
               </UnlockWalletButton>
               <Tip>
                 <div>Want to import your Fundraiser paper wallet?</div>
