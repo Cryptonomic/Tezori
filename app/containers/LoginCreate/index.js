@@ -156,7 +156,7 @@ class LoginCreate extends Component<Props> {
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <ValidInput
-            label='Create Password'
+            label='Create Wallet Password'
             isShowed={this.state.isPwdShowed}
             crackTime={this.state.pwdCrackTime}
             suggestion={this.state.pwdSuggestion}
@@ -166,7 +166,7 @@ class LoginCreate extends Component<Props> {
             onShow={() => this.onPasswordShow(0)}            
           />
           <ValidInput
-            label='Confirm Password'
+            label='Confirm Wallet Password'
             status
             isShowed={this.state.isConfirmPwdShowed}
             crackTime={this.state.confirmPwdText}
