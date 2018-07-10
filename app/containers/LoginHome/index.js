@@ -24,7 +24,7 @@ const TermsAndPolicySection = styled.div`
   width: 80%;
   padding: ${ms(2)} 0 ${ms(4)} 0;
   border-top-width: 1px;
-  border-top-color: ${ ({ theme: { colors } }) => colors.index0 };
+  border-top-color: ${ ({ theme: { colors } }) => colors.index1 };
   border-top-style: solid;
   justify-content: center;
   align-items: center;

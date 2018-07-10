@@ -28,6 +28,7 @@ export const Theme = {
 
     // font colors
     index0: "#94a9d1",
+    index1: "rgba(148, 169, 209, 0.57)", // Same as index0 but with 57% transparency
 
     // black colors
     black1: '#1e1313',
