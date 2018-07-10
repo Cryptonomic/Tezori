@@ -29,7 +29,7 @@ const BackToWallet = styled.div`
   align-items: center;
   color: #4486f0;
   cursor: pointer;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -162,6 +162,7 @@ class LoginCreate extends Component<Props> {
             suggestion={this.state.pwdSuggestion}
             score={this.state.pwdScore}
             changFunc={this.changePassword}
+            className={styles.createPasswordField}
             onShow={() => this.onPasswordShow(0)}            
           />
           <ValidInput
@@ -171,6 +172,7 @@ class LoginCreate extends Component<Props> {
             crackTime={this.state.confirmPwdText}
             score={this.state.confirmPwdScore}
             changFunc={this.confirmPassword}
+            className={styles.confirmPasswordField}
             onShow={() => this.onPasswordShow(1)}            
           />
           <div className={styles.actionButtonContainer}>
