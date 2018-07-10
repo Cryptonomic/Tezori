@@ -31,6 +31,13 @@ const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
 
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  display: block;
+`
+
 const defaultState = {
   isLoading: false,
   delegate: '',
@@ -129,12 +136,13 @@ class AddDelegateModal extends Component<Props> {
           </Tooltip>
         </div>
         <div className={styles.amountAndFeeContainer}>
-          <div className={styles.amountSendContainer}>
+          <div className={styles.amountSendContainer} style={{position:'relative'}}>
             <TextField
               floatingLabelText="Amount"
               style={{ width: '100%' }}
               onChange={this.changeAmount}
             />
+            <TezosIconInput color={'secondary'}/>
           </div>
           <div className={styles.feeContainer}>
             <Fees
