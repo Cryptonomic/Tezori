@@ -24,7 +24,7 @@ const TermsAndPolicySection = styled.div`
   width: 80%;
   padding: ${ms(2)} 0 ${ms(4)} 0;
   border-top-width: 1px;
-  border-top-color: ${ ({ theme: { colors } }) => colors.gray3 };
+  border-top-color: ${ ({ theme: { colors } }) => colors.index0 };
   border-top-style: solid;
   justify-content: center;
   align-items: center;
@@ -60,7 +60,7 @@ const AppName = styled.h1`
   font-stretch: normal;
   font-size: 7.5rem;
   font-weight: 300;
-  line-height: 7.5rem;
+  line-height: normal;
   letter-spacing: 0.5rem;
   margin: 0 auto;
   color: ${ ({ theme: { colors } }) => colors.primary };
@@ -74,9 +74,9 @@ const AppSubtitle = styled.h2`
   font-stretch: normal;
   font-size: 1.5rem;
   font-weight: 300;
-  line-height: 1.5rem;
+  line-height: normal;
   letter-spacing: 0.25rem;
-  margin: 0 auto 1.25rem;
+  margin: 0 auto 2rem;
   color: ${ ({ theme: { colors } }) => colors.primary };
 `;
 
