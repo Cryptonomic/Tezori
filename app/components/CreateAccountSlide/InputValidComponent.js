@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { TextField } from 'material-ui';
-import CheckCircle from 'material-ui/svg-icons/action/check-circle';
+import TezosIcon from "../TezosIcon"
 import Warning from 'material-ui/svg-icons/alert/warning';
 import styled from 'styled-components';
 import classnames from 'classnames';
+import { ms } from '../../styles/helpers'
 
 
 const inputStyles = {
@@ -42,18 +43,27 @@ const StyledInputContainer = styled.div`
   .no-valid-icon {
     fill: #ea776c !important;
     width: 18px !important;
-    height: 18px !important;    
+    height: 18px !important;
   }
 `
 
 
+const CheckIcon = styled(TezosIcon)`
+  position: absolute;
+  top: 42px;
+  right: 5px;
+`
 
 const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
   if (!isShow) {
     return null;
   }
   if (isValid) {
-    return (<CheckCircle className={classnames('valid-icon', 'valid-button')} />);
+    return (<CheckIcon
+          iconName='checkmark2'
+          size={ms(0)}
+          color="check"
+        />);
   }
   return (<Warning className={classnames('no-valid-icon', 'valid-button')} />);
 }
@@ -94,12 +104,12 @@ export default class InputValidComponent extends Component<Props> {
         this.setState({ isMatched: true, isMatching: false, errorText: '' });
         isValid = true;
       } else if (index < 0){
-        this.setState({ isMatched: false, isMatching: false, errorText: "It's a typo! Please check again" });        
+        this.setState({ isMatched: false, isMatching: false, errorText: "Invalid word, please check again!" });
       } else {
-        this.setState({ isMatched: false, isMatching: true, errorText: '' });        
+        this.setState({ isMatched: false, isMatching: true, errorText: '' });
       }
 
-      
+
     } else {
       this.setState({ isMatched: false, isMatching: false, errorText: "It's a typo! Please check again" });
     }
@@ -123,7 +133,7 @@ export default class InputValidComponent extends Component<Props> {
           floatingLabelStyle={inputStyles.floatingLabelStyle}
           floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
           underlineStyle={inputStyles.underlineStyle}
-          underlineFocusStyle={inputStyles.underlineFocusStyle}  
+          underlineFocusStyle={inputStyles.underlineFocusStyle}
           errorText={this.state.errorText}
           errorStyle={{color: '#ea776c', borderColor: '#ea776c'}}
           onChange={(_, newVal) => this.changFunc(newVal)}
@@ -132,5 +142,5 @@ export default class InputValidComponent extends Component<Props> {
         {validIcon(this.state.isInputVal && !this.state.isMatching, this.state.isMatched)}
       </StyledInputContainer>
     );
-  }  
+  }
 }

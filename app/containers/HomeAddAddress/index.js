@@ -169,7 +169,7 @@ class AddAddress extends Component<Props> {
   renderAppBar = () => {
     return (
       <div className={styles.titleContainer}>
-        <div>Add an Address</div>
+        <div>Add an Account</div>
       </div>
     );
   };
