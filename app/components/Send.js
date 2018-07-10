@@ -9,8 +9,13 @@ import Button from './Button';
 import { ms } from '../styles/helpers'
 import SendConfirmationModal from './SendConfirmationModal';
 
-import { validateAmount, sendTez } from '../reduxContent/sendTezos/thunks';
-import { utezToTez } from '../utils/currancy';
+import {
+  validateAmount,
+  sendTez,
+  fetchTransactionAverageFees
+} from '../reduxContent/sendTezos/thunks';
+
+import Fees from './Fees/';
 
 const SendContainer = styled.div`
   display: flex;
@@ -45,20 +50,34 @@ const initialState = {
   password: '',
   toAddress: '',
   amount: '',
-  fee: 100
+  fee: 100,
+  averageFees: {
+    low: 100,
+    medium: 200,
+    high:400
+  }
 };
 
 class Send extends Component<Props> {
   props: Props;
-
   state = initialState;
 
+  async componentDidMount() {
+    const { fetchTransactionAverageFees } = this.props;
+    const averageFees = await fetchTransactionAverageFees();
+    console.log('averageFees', averageFees);
+    this.setState({ averageFees, fee: averageFees.low });
+  }
+
   openConfirmation = () =>  this.setState({ isConfirmationModalOpen: true });
-  closeConfirmation = () =>  this.setState(initialState);
+  closeConfirmation = () =>  {
+    const { averageFees, fee } = this.state;
+    this.setState({ ...initialState, averageFees, fee });
+  };
   handlePasswordChange = (_, password) =>  this.setState({ password });
   handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
   handleAmountChange = (_, amount) =>  this.setState({ amount });
-  handleFeeChange = (_, index, fee) =>  this.setState({ fee });
+  handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   validateAmount = async () =>  {
@@ -73,7 +92,7 @@ class Send extends Component<Props> {
     const { password, toAddress, amount, fee } = this.state;
     const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await sendTez( password, toAddress, amount, fee, selectedAccountHash, selectedParentHash)) {
+    if (await sendTez( password, toAddress, amount, Math.floor(fee), selectedAccountHash, selectedParentHash)) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);
@@ -89,7 +108,8 @@ class Send extends Component<Props> {
       password,
       toAddress,
       amount,
-      fee
+      fee,
+      averageFees
     } = this.state;
 
     return (
@@ -107,16 +127,14 @@ class Send extends Component<Props> {
             value={amount}
             onChange={this.handleAmountChange}
           />
-          <SelectField
-            value={fee}
+          <Fees
             style={{ width: '50%' }}
+            low={ averageFees.low }
+            medium={ averageFees.medium }
+            high={ averageFees.high }
+            fee={ fee }
             onChange={this.handleFeeChange}
-          >
-            <MenuItem value={100} primaryText={ `Low Fee: ${ utezToTez(100)} ` } />
-            <MenuItem value={200} primaryText={ `Medium Fee: ${ utezToTez(200)}` } />
-            <MenuItem value={400} primaryText={ `High Fee: ${ utezToTez(400)}` } />
-            <MenuItem value={500} primaryText="Custom" />
-          </SelectField>
+          />
         </AmountContainer>
         <SendButton
           disabled={ !isReady }
@@ -144,6 +162,7 @@ class Send extends Component<Props> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
+      fetchTransactionAverageFees,
       sendTez,
       validateAmount
     },

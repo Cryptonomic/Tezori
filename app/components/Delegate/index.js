@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { TextField, Dialog } from 'material-ui';
+import { TextField, Dialog, SelectField, MenuItem } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -9,10 +9,12 @@ import Button from './../Button/';
 import { H4 } from './../Heading/';
 import TezosIcon from './../TezosIcon/';
 import DelegateConfirmationModal from '../DelegateConfirmationModal/';
+import Fees from '../Fees/';
 
 import {
   validateAddress,
   delegate,
+  fetchDelegationAverageFees
 } from '../../reduxContent/delegate/thunks';
 
 type Props = {
@@ -97,23 +99,37 @@ const SetADelegate = styled.p`
   margin-bottom: 0;
 `;
 
-const defaultState = {
+const initialState = {
   open: false,
   isLoading: false,
   tempAddress: '',
   password: '',
-  fee: 100
+  fee: 100,
+  averageFees: {
+    low: 100,
+    medium: 200,
+    high:400
+  }
 };
 
 class Delegate extends Component<Props> {
   props: Props;
-  state = defaultState;
+  state = initialState;
+
+  async componentDidMount() {
+    const { fetchDelegationAverageFees } = this.props;
+    const averageFees = await fetchDelegationAverageFees();
+    this.setState({ averageFees, fee: averageFees.low });
+  }
 
   openConfirmation = () =>  this.setState({ open: true });
-  closeConfirmation = () =>  this.setState(defaultState);
+  closeConfirmation = () =>  {
+    const { averageFees, fee } = this.state;
+    this.setState({ ...initialState, averageFees, fee });
+  };
   handlePasswordChange = (_, password) =>  this.setState({ password });
   handleTempAddressChange = (_, tempAddress) =>  this.setState({ tempAddress });
-  handleFeeChange = (_, index, fee) =>  this.setState({ fee });
+  handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   getAddress = () =>  {
@@ -134,7 +150,7 @@ class Delegate extends Component<Props> {
     const { password, fee } = this.state;
     const { delegate, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await delegate( this.getAddress(), fee, password, selectedAccountHash, selectedParentHash )) {
+    if (await delegate( this.getAddress(), Math.floor(fee), password, selectedAccountHash, selectedParentHash )) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);
@@ -162,7 +178,7 @@ class Delegate extends Component<Props> {
 
   render() {
     const { isReady } = this.props;
-    const { isLoading, open, password, fee } = this.state;
+    const { isLoading, open, password, fee, averageFees } = this.state;
     const delegationTips = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
@@ -176,6 +192,14 @@ class Delegate extends Component<Props> {
         <DelegateContainer>
           <DelegateInputContainer>
             <SetADelegate>Set a Delegate</SetADelegate>
+            <Fees
+              styles={{minWidth: 340, width: 'auto'}}
+              low={ averageFees.low }
+              medium={ averageFees.medium }
+              high={ averageFees.high }
+              fee={ fee }
+              onChange={this.handleFeeChange}
+            />
             <TextField
               floatingLabelText="Address"
               value={ this.getAddress() }
@@ -216,6 +240,7 @@ class Delegate extends Component<Props> {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      fetchDelegationAverageFees,
       validateAddress,
       delegate
     },

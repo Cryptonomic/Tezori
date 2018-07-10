@@ -17,8 +17,6 @@ const Container = styled.div`
   align-items: center;
   padding: ${ms(0)} ${ms(3)};
   flex-shrink: 0;
-  background-color: ${({ onlyLogo, theme: { colors } }) =>
-  onlyLogo ? colors.gray2 : lighten(0.03, colors.gray2)};
 `;
 
 const InfoContainer = styled.div`
