@@ -87,7 +87,8 @@ const Amount = styled(TezosAmount)`
 const Delegate = styled.span`
   color: ${ ({ theme: { colors } }) => colors.white };
   font-size: ${ms(-1)};
-  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.light }
+  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.light };
+  margin-right: 6px;
 `
 
 const DelegateContainer = styled.div`
@@ -107,7 +108,7 @@ const Refresh = styled(RefreshIcon)`
   -webkit-animation:spin 0.5s linear infinite;
   -moz-animation:spin 0.5s linear infinite;
   animation:spin 0.5s linear infinite;
-  
+
   @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
   @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
   @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
@@ -168,7 +169,7 @@ function BalanceBanner(props: Props) {
             address={publicKeyHash}
             weight={theme.typo.weights.light}
             color={'white'}
-            text={publicKeyHash} 
+            text={publicKeyHash}
             size={ms(1.7)}
           />
           <Amount
@@ -182,7 +183,7 @@ function BalanceBanner(props: Props) {
         </AddressInfo>
         { publicKeyHash !== selectedParentHash &&
           <DelegateContainer>
-            <Delegate>Delegated to the Manager Address </Delegate>
+            <Delegate>Delegated to the Manager Address:</Delegate>
             <TezosAddress address={selectedParentHash} color={'white'} size={ms(-1)} />
           </DelegateContainer> }
       </BottomRow>
@@ -191,8 +192,8 @@ function BalanceBanner(props: Props) {
 }
 
 BalanceBanner.defaultProps = {
-  parentIdentity: null, 
-  parentIndex: 0  
+  parentIdentity: null,
+  parentIndex: 0
 }
 
 export default withTheme(BalanceBanner)
