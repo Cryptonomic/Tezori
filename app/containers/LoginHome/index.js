@@ -74,9 +74,9 @@ const AppSubtitle = styled.h2`
   font-stretch: normal;
   font-size: 1.5rem;
   font-weight: 300;
-  line-height: normal;
+  line-height: 1.5rem;
   letter-spacing: 0.25rem;
-  margin: 0 auto 2rem;
+  margin: 0 auto 2.5rem;
   color: ${ ({ theme: { colors } }) => colors.primary };
 `;
 
