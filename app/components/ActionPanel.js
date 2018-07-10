@@ -60,7 +60,6 @@ const TabList = styled.div`
 const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% - 150px);
   background-color: white;
   padding: ${ms(4)};
 `;
