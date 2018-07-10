@@ -181,7 +181,6 @@ class ActionPanel extends Component<Props, State> {
     const isManagerAddress = selectedAccountHash === selectedParentHash;
     const balance = selectedAccount.get('balance');
     const activeTab = selectedAccount.get('activeTab');
-
     const isReady = selectedAccount.get('status') === READY;
 
     const tabs = isManagerAddress ? [TRANSACTIONS, SEND, RECEIVE] : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
@@ -195,6 +194,7 @@ class ActionPanel extends Component<Props, State> {
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
           onRefreshClick={syncWallet}
+          selectedParentHash={selectedParentHash}
           time={time}
         />
 

@@ -5,7 +5,6 @@ import { darken } from 'polished';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
-
 import { ms } from '../styles/helpers';
 import TezosIcon from './TezosIcon/';
 import Tooltip from './Tooltip/';

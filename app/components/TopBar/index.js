@@ -9,7 +9,7 @@ import { lighten } from 'polished';
 import { getWalletName } from '../../reduxContent/wallet/selectors';
 import SettingsController from '../SettingsController';
 import { ms } from '../../styles/helpers';
-import TezosIcon from './../TezosIcon/';
+import Logo from './../Logo';
 
 const Container = styled.div`
   display: flex;
@@ -46,11 +46,11 @@ class TopBar extends Component {
     return (
       <Container onlyLogo={onlyLogo}>
         {onlyLogo ? (
-          <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
+          <Logo />
         ) : (
           <Fragment>
             <InfoContainer>
-              <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
+              <Logo />
               <Text>{this.props.walletName}</Text>
             </InfoContainer>
             <SettingsController />
