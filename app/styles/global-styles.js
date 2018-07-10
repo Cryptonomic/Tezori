@@ -180,7 +180,7 @@ injectGlobal`
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    background-image: linear-gradient(to bottom, #f9fafd, #f1f4fb);
+    background-color: #edf0f7;
   }
 
   div#root {
