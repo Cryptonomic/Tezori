@@ -90,6 +90,9 @@ const UnlockWalletButton = styled(Button)`
   width: 100%;
 `;
 
+const Background = styled.div`
+`;
+
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 
 class LoginHome extends Component<Props> {
@@ -165,6 +168,13 @@ class LoginHome extends Component<Props> {
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
+        <Background className={styles.bgContainer}>
+          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src="../resources/bg-hero/bg-hero.jpg" />
+          <img className={styles.bgCircle1} src="../resources/bg-hero/bg-circle_01.png" />
+          <img className={styles.bgCircle2} src="../resources/bg-hero/bg-circle_02.png" />
+          <img className={styles.bgCircle3} src="../resources/bg-hero/bg-circle_03.png" />
+          <img className={styles.bgCircle4} src="../resources/bg-hero/bg-circle_04.png" />
+        </Background>
       </SectionContainer>
     );
   }
