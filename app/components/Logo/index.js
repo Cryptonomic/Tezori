@@ -2,7 +2,6 @@ import React from 'react'
 import styled, { withTheme } from 'styled-components'
 import { ms } from '../../styles/helpers'
 import { logo } from '../../config.json'
-
 const tezosLogo = require(`../../../resources/${logo}`)
 
 const Tz = styled.div`
