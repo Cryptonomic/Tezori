@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
+import TezosIcon from '../../components/TezosIcon';
 import Button from './../Button/';
 import { H4, H2 } from './../Heading/';
 
@@ -68,9 +69,9 @@ class Fee extends Component<Props> {
             }
           }}
         >
-          <MenuItem value={low} primaryText={ `Low Fee: ${ formatAmount(low)} ` } />
-          <MenuItem value={medium} primaryText={ `Medium Fee: ${ formatAmount(medium)}` } />
-          <MenuItem value={high} primaryText={ `High Fee: ${ formatAmount(high)}` } />
+          <MenuItem value={low} primaryText={<div>Low Fee: { formatAmount(low)} <TezosIcon color={'black'}/></div>} />
+          <MenuItem value={medium} primaryText={<div>Medium Fee: { formatAmount(medium)} <TezosIcon color={'black'}/></div>} />
+          <MenuItem value={high} primaryText={ <div>High Fee: { formatAmount(high)} <TezosIcon color={'black'}/></div>} />
           {
             custom
               ? <MenuItem value={tezToUtez(custom)} primaryText={ `Custom Fee: ${ formatAmount(tezToUtez(custom))}` } />
