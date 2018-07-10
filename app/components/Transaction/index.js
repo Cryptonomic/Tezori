@@ -73,52 +73,56 @@ const timeFormatter = timestamp => {
   return moment(time).format('LT')
 }
 
+const getIsFee = (fee) => {
+  const realFee = Number.parseInt(fee, 10);
+  return !!realFee;
+}
+
+const getPosition = (source, myaddress) => source === myaddress;
+const getIsAmount = (amount) => !!amount;
+
 const getStatus = (transaction, selectedAccountHash) => {
-  const status = {icon: 'receive', preposition: 'from', state: 'RECEIVED', isFee: false, color: 'error1', sign: '-'};
   const type = transaction.kind;
   if (type === 'reveal') {
     return {icon: 'broadcast', preposition: 'of', state: 'KEY REVEAL', isFee: false, color: 'gray8', sign: ''};
   }
-  if (transaction.source === selectedAccountHash) {
-    status.icon = 'send';
-    status.preposition = 'to';
-    status.state = 'SENT';
-    status.isFee = true;
-    status.color = 'check';
-    status.sign = '+';
+
+  if (type === 'activation') {
+    return {icon: 'star', preposition: 'of', state: 'ACTIVATION', isFee: false, color: 'gray8', sign: ''};
   }
 
-  if (!transaction.amount) {
-    status.color = 'gray8';
-    status.sign = '';
+  const isSameLocation = getPosition(transaction.source, selectedAccountHash);
+  const isFee = getIsFee(transaction.fee);
+  const isAmount = getIsAmount(transaction.amount);
+
+  if (type === 'origination' && isSameLocation) {
+    return {icon: 'send', preposition: 'of', state: 'ORIGINATION', isFee, color: isAmount? 'error1': 'gray8', sign: isAmount? '-': ''};
   }
 
-  if (type === 'origination') {
-    status.state = 'ORIGINATION';
-    status.isFee = false;
+  if (type === 'origination' && !isSameLocation) {
+    return {icon: 'receive', preposition: 'from', state: 'ORIGINATION', isFee, color: isAmount? 'check': 'gray8', sign: isAmount? '+': ''};
   }
-  return status;
+
+  if (type === 'transaction' && isSameLocation) {
+    return {icon: 'send', preposition: 'to', state: 'SENT', isFee, color: isAmount? 'error1': 'gray8', sign: isAmount? '-': ''};
+  }
+
+  if (type === 'transaction' && !isSameLocation) {
+    return {icon: 'receive', preposition: 'from', state: 'RECEIVED', isFee: false, color: isAmount? 'check': 'gray8', sign: isAmount? '+': ''};
+  }
 }
 
 const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
   const address = transaction.source === selectedAccountHash? transaction.destination : transaction.source;
   const type = transaction.kind;
-  if (type === 'origination' || type === 'reveal') {
-    if (transaction.source === selectedAccountHash) {
-      return <AddressText>this address</AddressText>;
-    }
-
-    if (transaction.source === selectedParentHash) {
-      return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;
-    }
-    return (
-      <TezosAddress
-        address={transaction.source}
-        size='14px'
-        weight='200'
-        color='black2'
-      />
-    );    
+  if (type === 'reveal') {
+    return <AddressText>this address</AddressText>;
+  }
+  if (type === 'origination' && transaction.source === selectedParentHash && selectedAccountHash !== selectedParentHash) {
+      return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;  
+  }
+  if (!address) {
+    return null;
   }
   return (
     <TezosAddress
