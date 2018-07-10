@@ -5,8 +5,8 @@ export async function saveUpdatedWallet(identities, walletLocation, walletFileNa
   const completeWalletPath = path.join(walletLocation, walletFileName);
 
   identities = identities
-    .map(({ publicKey, privateKey, publicKeyHash }) => {
-      return { publicKey, privateKey, publicKeyHash };
+    .map(({ publicKey, privateKey, publicKeyHash, storeTypes }) => {
+      return { publicKey, privateKey, publicKeyHash, storeTypes };
     });
 
   return await saveWallet( completeWalletPath, { identities }, password );

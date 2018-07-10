@@ -7,6 +7,7 @@ import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
+import * as storeTypes from '../../constants/StoreTypes';
 
 import {
   findAccountIndex,
@@ -180,13 +181,12 @@ export function syncWallet() {
     dispatch(setIsLoading(true));
     const nodes = state().nodes.toJS();
     let identities = state().wallet.get('identities').toJS();
-    const selectedAccountHash = state().wallet.get('selectedAccountHash');
 
     identities = await Promise.all(
       ( identities || [])
         .map(async identity => {
           const { publicKeyHash } = identity;
-          return await getSyncIdentity(identities, identity, nodes, selectedAccountHash).catch( e => {
+          return await getSyncIdentity(identities, identity, nodes).catch( e => {
             console.log('-debug: Error in: syncIdentity for: ' + publicKeyHash);
             console.error(e);
             return identity;
@@ -234,9 +234,11 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
+          identity.storeTypes = storeTypes.MNEMONIC;
           break;
         case FUNDRAISER:
           identity = await unlockFundraiserIdentity(seed, username.trim(), passPhrase.trim(), pkh.trim());
+          identity.storeTypes = storeTypes.FUNDRAISER;
           const conseilNode = getSelectedNode(nodes, CONSEIL);
 
           const account = await getAccount(
@@ -260,7 +262,9 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
               `Successfully sent activation operation ${activating.operationGroupID}.`,
               false
             ));
-            identity.operations[ CREATED ] = activating.operationGroupID
+            identity.operations = {
+              [ CREATED ]: activating.operationGroupID
+            }
           }
           break;
       }

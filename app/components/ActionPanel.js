@@ -6,8 +6,6 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { isEmpty } from 'lodash'
 
-import { getSelectedAccount } from '../utils/general';
-import { findIdentity, findIdentityIndex } from '../utils/identity';
 import Button from './Button';
 import BalanceBanner from './BalanceBanner';
 import EmptyState from './EmptyState';
@@ -22,6 +20,9 @@ import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
 import { READY } from '../constants/StatusTypes';
 
+import { getSelectedAccount, isReady } from '../utils/general';
+import { findIdentity, findIdentityIndex } from '../utils/identity';
+
 import { syncWallet, updateActiveTab } from '../reduxContent/wallet/thunks';
 
 const Container = styled.section`
@@ -29,22 +30,12 @@ const Container = styled.section`
 `;
 
 const Tab = styled(Button)`
-  background: ${({ isActive, isReady, theme: { colors } }) => {
-  const color = isActive
-    ? colors.white
-    : colors.accent;
-
-  const inActiveColors = isActive
-    ? colors.white
-    : colors.disabled;
-
-  return isReady
-    ? color
-    : inActiveColors
-  }};
+  background: ${({ isActive, theme: { colors } }) =>
+    isActive ? colors.white : colors.accent};
   color: ${({ isActive, theme: { colors } }) =>
-  isActive ? colors.primary : lighten(0.4, colors.accent) };
-  cursor: pointer;
+    isActive ? colors.primary : lighten(0.4, colors.accent)};
+  cursor: ${({ isReady }) =>
+    isReady ? 'pointer' : 'initial'};
   text-align: center;
   font-weight: 500;
   padding: ${ms(-1)} ${ms(1)};
@@ -52,9 +43,14 @@ const Tab = styled(Button)`
 `;
 
 const TabList = styled.div`
-  background-color: ${({ isReady, theme: { colors } }) => isReady ? colors.accent: colors.disabled };
+  background-color: ${({ theme: { colors } }) => colors.accent };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+`;
+
+const TabText = styled.span`
+  opacity: ${({ isReady }) =>
+  isReady ? '1' : '0.5'};
 `;
 
 const SectionContainer = styled.div`
@@ -68,12 +64,12 @@ const SectionContainer = styled.div`
 const Link = styled.span`
   color: ${ ({ theme: { colors } }) => colors.blue1 };
   cursor: pointer;
-`
+`;
 
 const DescriptionContainer = styled.p`
   color: ${ ({ theme: { colors } }) => colors.gray5 };
   text-align: center;
-`
+`;
 
 type DescriptionProps = {
   onSendClick: Function,
@@ -103,9 +99,6 @@ type State = {
   currentPage: number
 };
 
-const delegateAddressTabs = [TRANSACTIONS, SEND, RECEIVE];
-const managerAddresssTabs = [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
-
 class ActionPanel extends Component<Props, State> {
   props: Props;
 
@@ -122,12 +115,12 @@ class ActionPanel extends Component<Props, State> {
     const { identities, selectedAccountHash, selectedParentHash } = this.props;
     const selectedAccount = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
     const transactions = selectedAccount.get('transactions');
-    const isReady = selectedAccount.get('status') === READY;
+    const ready = selectedAccount.get('status') === READY;
     
     switch (selectedAccount.get('activeTab')) {
       case DELEGATE:
         return <Delegate
-          isReady={ isReady }
+          isReady={ ready }
           address={selectedAccount.get('delegateValue')}
           selectedAccountHash={ selectedAccountHash }
           selectedParentHash={ selectedParentHash }
@@ -136,7 +129,7 @@ class ActionPanel extends Component<Props, State> {
         return <Receive address={selectedAccountHash} />;
       case SEND:
         return <Send
-          isReady={ isReady }
+          isReady={ ready }
           selectedAccountHash={ selectedAccountHash }
           selectedParentHash={ selectedParentHash }
         />;
@@ -183,13 +176,14 @@ class ActionPanel extends Component<Props, State> {
     const balance = selectedAccount.get('balance');
     const activeTab = selectedAccount.get('activeTab');
 
-    const isReady = selectedAccount.get('status') === READY;
+    const storeTypes = selectedAccount.get('storeTypes');
+    const status = selectedAccount.get('status');
 
     const tabs = isManagerAddress ? [TRANSACTIONS, SEND, RECEIVE] : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     return (
       <Container>
         <BalanceBanner
-          isReady={ isReady }
+          isReady={ isReady(status, storeTypes) }
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIdentity={parentIdentity}
@@ -199,18 +193,25 @@ class ActionPanel extends Component<Props, State> {
           time={time}
         />
 
-        <TabList isReady={ isReady }>
-          {tabs.map(tab => (
-            <Tab
-              isActive={activeTab === tab}
-              key={tab}
-              isReady={ isReady }
-              buttonTheme="plain"
-              onClick={() => this.handleLinkPress(tab)}
-            >
-              {tab}
-            </Tab>
-          ))}
+        <TabList>
+          {tabs.map(tab => {
+            const ready = isReady(status, storeTypes, tab);
+            return (
+              <Tab
+                isActive={ activeTab === tab }
+                key={tab}
+                isReady={ ready }
+                buttonTheme="plain"
+                onClick={() => {
+                  if ( ready ) {
+                    this.handleLinkPress(tab)
+                  }
+                }}
+              >
+                <TabText isReady={ ready }>{ tab }</TabText>
+              </Tab>
+            );
+          })}
         </TabList>
         <SectionContainer>
           { this.renderSection() }

@@ -4,54 +4,20 @@ import styled, { withTheme } from 'styled-components';
 import { darken } from 'polished';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 
 import { ms } from '../styles/helpers';
 import TezosIcon from './TezosIcon/';
-import Tooltip from './Tooltip/';
 import { H3 } from './Heading/';
 import Button from './Button/';
 import TezosAmount from './TezosAmount/';
-import ManagerAddressTooltip from './Tooltips/ManagerAddressTooltip/';
+import Address from './Address/';
+import AddressStatus from './AddressStatus/';
 import { READY } from '../constants/StatusTypes';
-
+import { isReady } from '../utils/general';
 import AddDelegateModal from './AddDelegateModal/';
 
 const Container = styled.div`
   overflow: hidden;
-`;
-
-const Address = styled.div`
-  border-bottom: 1px solid
-    ${({ theme: { colors } }) => darken(0.1, colors.white)};
-  padding: ${ms(-2)} ${ms(2)};
-  cursor: pointer;
-  background: ${({ isActive, isReady, theme: { colors } }) => {
-    const color = isActive
-      ? colors.accent
-      : colors.white;
-
-    return isReady
-      ? color
-      : colors.disabled
-  }};
-  display: flex;
-  flex-direction: column;
-`;
-
-const AddressFirstLine = styled.span`
-  font-weight: ${({theme: {typo}}) => typo.weights.bold};
-  color: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.white : colors.secondary};
-`;
-
-const AddressSecondLine = styled.span`
-  color: ${({ isActive, theme: { colors } }) =>
-    isActive ? colors.white : colors.primary};
-  font-weight: ${({theme: {typo}}) => typo.weights.light};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 `;
 
 const AddressLabel = styled.div`
@@ -69,14 +35,6 @@ const AddDelegateLabel = styled(AddressLabel)`
   flex-direction: row;
   font-size: ${ms(0)}
 `
-
-const AddressLabelIcon = styled(TezosIcon)`
-  padding: 0 ${ms(-6)} 0 0;
-`;
-
-const HelpIcon = styled(TezosIcon)`
-  padding: 0 0 0 ${ms(-4)};
-`;
 
 const AddressesTitle = styled.div`
   display: flex;
@@ -145,20 +103,7 @@ const NoSmartAddressesButton = styled(Button)`
   width: 100%;
 `
 
-const Syncing = styled.div`
-  display: ${({ isReady }) =>  isReady ? 'none' : 'flex'};
-  align-items: center;
-`
-
-const Refresh = styled(RefreshIcon)`
-  -webkit-animation:spin 0.5s linear infinite;
-  -moz-animation:spin 0.5s linear infinite;
-  animation:spin 0.5s linear infinite;
-
-  @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-  @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-`
+AddDelegateLabel
 
 
 type Props = {
@@ -186,6 +131,11 @@ class AddressBlock extends Component<Props, State> {
   goToAccount = (selectedAccountHash, selectedParentHash) => {
     const { history, syncAccountOrIdentity } = this.props;
     history.push(`/home/addresses/${selectedAccountHash}/${selectedParentHash}`);
+    syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
+  };
+
+  refreshAccount = (selectedAccountHash, selectedParentHash) => {
+    const { syncAccountOrIdentity } = this.props;
     syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
   };
 
@@ -220,7 +170,6 @@ class AddressBlock extends Component<Props, State> {
     
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
-    const formatedBalance = balance.toFixed(6);
     const { shouldHideSmartAddressesInfo } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts');
@@ -231,6 +180,8 @@ class AddressBlock extends Component<Props, State> {
       'It takes 7 cycles (19.91 days) for your tez to start contributing to baking.',
       'Delegation rewards will depend on your arrangement with the delegate.'
     ]
+
+    const ready = isReady(accountBlock.get('status'), accountBlock.get('storeTypes'));
 
     return (
       <Container>
@@ -244,50 +195,32 @@ class AddressBlock extends Component<Props, State> {
             format={2}
           />
         </AddressLabel>
-        <Address
-          isActive={isManagerActive}
-          isReady={ isManagerReady }
-          onClick={() =>
-            this.goToAccount(publicKeyHash, publicKeyHash)
-          }
-        >
-          <AddressFirstLine isActive={isManagerActive} >
-            <AddressesTitle>
-              <AddressLabelIcon
-                iconName="manager"
-                size={ms(0)}
-                color={isManagerActive ? 'white' : 'secondary'}
+
+        {
+          ready
+            ?
+            (
+              <Address
+                isManager
+                isActive={isManagerActive}
+                balance={ accountBlock.get('balance') }
+                onClick={() =>
+                  this.goToAccount(publicKeyHash, publicKeyHash)
+                }
               />
-              Manager Address
-              <Tooltip position="bottom" content={ManagerAddressTooltip}>
-                <Button buttonTheme="plain">
-                  <HelpIcon
-                    iconName="help"
-                    size={ms(0)}
-                    color={isManagerActive ? 'white' : 'secondary'}
-                  />
-                </Button>
-              </Tooltip>
-            </AddressesTitle>
-          </AddressFirstLine>
-          <AddressSecondLine isActive={isManagerActive}>
-            <TezosAmount
-              color={publicKeyHash === selectedAccountHash ? 'white' : 'primary'}
-              amount={accountBlock.get('balance')}
-              size={ms(-0.7)}
-            />
-            <Syncing isReady={ isManagerReady } >
-              <span>Syncing</span>
-              <Refresh
-                style={{
-                  fill: isManagerActive ? theme.colors.white : theme.colors.primary,
-                  height: ms(2),
-                  width: ms(2)
-                }}
+            )
+            :
+            (
+              <AddressStatus
+                isManager
+                isActive={isManagerActive}
+                address={ accountBlock }
+                onClick={() =>
+                  this.goToAccount(publicKeyHash, publicKeyHash)
+                }
               />
-            </Syncing>
-          </AddressSecondLine>
-        </Address>
+            )
+        }
 
         <AddDelegateLabel>
           <DelegateTitle>
@@ -310,48 +243,35 @@ class AddressBlock extends Component<Props, State> {
         </AddDelegateLabel>
         {smartAddresses && smartAddresses.toArray().length ?
           smartAddresses.map((smartAddress, index) => {
-            const isSmartAddressReady = smartAddress.get('status') === READY;
             const smartAddressId = smartAddress.get('accountId');
             const isSmartActive = smartAddressId === selectedAccountHash;
-            const smartAddressBalance = smartAddress.get('balance');
+            const smartAddressReady = isReady(smartAddress.get('status'));
 
-            return (
-              <Address
-                key={smartAddressId}
-                isActive={isSmartActive}
-                isReady={ isSmartAddressReady }
-                onClick={() =>
+            return smartAddressReady
+              ?
+              (
+                <Address
+                  key={ smartAddressId }
+                  index={index}
+                  isActive={isSmartActive}
+                  balance={ smartAddress.get('balance') }
+                  onClick={() =>
                   this.goToAccount(smartAddressId, publicKeyHash)
                 }
-              >
-                <AddressFirstLine isActive={isSmartActive}>
-                  <AddressesTitle>
-                    <AddressLabelIcon
-                      iconName="smart-address"
-                      size={ms(0)}
-                      color={isSmartActive ? 'white' : 'secondary'}
-                    />
-                    {`Delegated Address ${index + 1}`}
-                  </AddressesTitle>
-                </AddressFirstLine>
-                <AddressSecondLine isActive={isSmartActive}>
-                  <TezosAmount
-                    color={isSmartActive ? 'white' : 'primary'}
-                    amount={smartAddressBalance}
-                  />
-                  <Syncing isReady={ isSmartAddressReady } >
-                    <span>Syncing</span>
-                    <Refresh
-                      style={{
-                        fill: isSmartActive ? theme.colors.white : theme.colors.primary,
-                        height: ms(2),
-                        width: ms(2)
-                      }}
-                    />
-                  </Syncing>
-                </AddressSecondLine>
-              </Address>
-            );
+                />
+              )
+              :
+              (
+                <AddressStatus
+                  key={ smartAddressId }
+                  isActive={ isSmartActive }
+                  address={ smartAddress }
+                  onClick={() =>
+                    this.refreshAccount(smartAddressId, publicKeyHash)
+                  }
+                />
+              )
+            ;
           }) : !shouldHideSmartAddressesInfo && (
           <NoSmartAddressesContainer>
             <CloseIcon
