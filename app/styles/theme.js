@@ -25,15 +25,22 @@ export const Theme = {
     gray3: "#5571a7",
     gray4: "#fcfcfc",
     gray5: "#9b9b9b",
+    gray6: "#99a5b9",
+    gray7: "#e2e7f2",
+    gray8: "#cfcece",
 
     // font colors
     index0: "#94a9d1",
 
     // black colors
     black1: '#1e1313',
+    black2: '#4a4a4a',
 
     // check colors
-    check: '#259c90'
+    check: '#259c90',
+
+    // error colors
+    error1: '#ea776c'
   },
   animations: {
     defaultTime: "300ms",

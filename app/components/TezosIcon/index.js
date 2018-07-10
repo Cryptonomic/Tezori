@@ -75,6 +75,26 @@ const getIconByName = iconName => {
       return toUnicode('e913');
     }
 
+    case 'send': {
+      return toUnicode('e90f');
+    }
+
+    case 'broadcast': {
+      return toUnicode('e911');
+    }
+
+    case 'receive': {
+      return toUnicode('e915');
+    }
+
+    case 'new-window' : {
+      return toUnicode('e916');
+    }
+
+    case 'change' : {
+      return toUnicode('e914');
+    }
+
     default: {
       console.error(`${iconName} No such icon in Tezos icons font`);
     }

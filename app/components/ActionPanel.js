@@ -55,6 +55,7 @@ const TabList = styled.div`
   background-color: ${({ isReady, theme: { colors } }) => isReady ? colors.accent: colors.disabled };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 50px;
 `;
 
 const SectionContainer = styled.div`
@@ -78,13 +79,13 @@ const DescriptionContainer = styled.p`
 type DescriptionProps = {
   onSendClick: Function,
   onReceiveClick: Function
-}
+};
 
-const Description = (props:DescriptionProps) => {
+const Description = (props: DescriptionProps) => {
   const { onSendClick, onReceiveClick } = props
   return (
     <DescriptionContainer>
-      It's pretty empty here. Get started
+      {"It's pretty empty here. Get started"}
       <Link onClick={onSendClick}> sending</Link> and
       <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
     </DescriptionContainer>
@@ -126,40 +127,49 @@ class ActionPanel extends Component<Props, State> {
     
     switch (selectedAccount.get('activeTab')) {
       case DELEGATE:
-        return <Delegate
-          isReady={ isReady }
-          address={selectedAccount.get('delegateValue')}
-          selectedAccountHash={ selectedAccountHash }
-          selectedParentHash={ selectedParentHash }
-        />;
+        return (
+          <Delegate
+            isReady={isReady}
+            address={selectedAccount.get('delegateValue')}
+            selectedAccountHash={selectedAccountHash}
+            selectedParentHash={selectedParentHash}
+          />
+        )
       case RECEIVE:
         return <Receive address={selectedAccountHash} />;
       case SEND:
-        return <Send
-          isReady={ isReady }
-          selectedAccountHash={ selectedAccountHash }
-          selectedParentHash={ selectedParentHash }
-        />;
+        return(
+          <Send
+            isReady={isReady}
+            selectedAccountHash={selectedAccountHash}
+            selectedParentHash={selectedParentHash}
+          />
+        )
       case TRANSACTIONS:
       default: {
-        return isEmpty(transactions.toJS())
+        const JSTransactions = transactions.toJS();
+        return isEmpty(JSTransactions)
           ?
           (
             <EmptyState
               imageSrc={transactionsEmptyState}
-              title={'You have not made any transactions yet'}
+              title='You have not made any transactions yet'
               description={
-              <Description
-                onReceiveClick={() => this.handleLinkPress(RECEIVE)}
-                onSendClick={() => this.handleLinkPress(SEND)}
-              />
+                <Description
+                  onReceiveClick={() => this.handleLinkPress(RECEIVE)}
+                  onSendClick={() => this.handleLinkPress(SEND)}
+                />
             }
             />
           )
           :
           (
             <Fragment>
-              <Transactions transactions={transactions} />
+              <Transactions
+                transactions={JSTransactions}
+                selectedAccountHash={selectedAccountHash}
+                selectedParentHash={selectedParentHash}
+              />
               <PageNumbers
                 currentPage={this.state.currentPage}
                 numberOfPages={4}
@@ -189,7 +199,7 @@ class ActionPanel extends Component<Props, State> {
     return (
       <Container>
         <BalanceBanner
-          isReady={ isReady }
+          isReady={isReady}
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIdentity={parentIdentity}
@@ -199,12 +209,12 @@ class ActionPanel extends Component<Props, State> {
           time={time}
         />
 
-        <TabList isReady={ isReady }>
+        <TabList isReady={isReady}>
           {tabs.map(tab => (
             <Tab
               isActive={activeTab === tab}
               key={tab}
-              isReady={ isReady }
+              isReady={isReady}
               buttonTheme="plain"
               onClick={() => this.handleLinkPress(tab)}
             >
