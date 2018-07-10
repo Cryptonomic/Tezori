@@ -12,7 +12,7 @@ type Props = {
 }
 
 const styles = {
-  width: 0
+  width: 'auto'
 }
 
 const iconStyles = {
