@@ -24,7 +24,8 @@ type Props = {
   isManagerAddress: boolean,
   theme: Object,
   parentIndex?: number,
-  parentIdentity?: Object
+  parentIdentity?: Object,
+  selectedParentHash: string,
 };
 
 const Container = styled.header`
@@ -86,6 +87,12 @@ const Amount = styled(TezosAmount)`
 const Delegate = styled.span`
   color: ${ ({ theme: { colors } }) => colors.white };
   font-size: ${ms(-1)};
+  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.light };
+  margin-right: 6px;
+`
+
+const DelegateContainer = styled.div`
+  display: flex;
 `
 
 const Breadcrumbs = styled.div`
@@ -101,7 +108,7 @@ const Refresh = styled(RefreshIcon)`
   -webkit-animation:spin 0.5s linear infinite;
   -moz-animation:spin 0.5s linear infinite;
   animation:spin 0.5s linear infinite;
-  
+
   @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
   @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
   @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
@@ -109,7 +116,7 @@ const Refresh = styled(RefreshIcon)`
 
 
 function BalanceBanner(props: Props) {
-  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, isManagerAddress, time } = props;
+  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, selectedParentHash, isManagerAddress, time } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
@@ -161,7 +168,8 @@ function BalanceBanner(props: Props) {
           <TezosAddress
             address={publicKeyHash}
             weight={theme.typo.weights.light}
-            color={'white'} text={publicKeyHash} 
+            color={'white'}
+            text={publicKeyHash}
             size={ms(1.7)}
           />
           <Amount
@@ -173,10 +181,19 @@ function BalanceBanner(props: Props) {
             showTooltip
           />
         </AddressInfo>
-        {!isManagerAddress && <Delegate>Delegated to the Manager Address</Delegate>}
+        { publicKeyHash !== selectedParentHash &&
+          <DelegateContainer>
+            <Delegate>Delegated to the Manager Address:</Delegate>
+            <TezosAddress address={selectedParentHash} color={'white'} size={ms(-1)} />
+          </DelegateContainer> }
       </BottomRow>
     </Container>
   );
+}
+
+BalanceBanner.defaultProps = {
+  parentIdentity: null,
+  parentIndex: 0
 }
 
 export default withTheme(BalanceBanner)
