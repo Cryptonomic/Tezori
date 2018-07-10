@@ -31,3 +31,97 @@
   border-color: #5d4444;
   background-color: rgba(255, 255, 255, 0.5);
 }
+
+/** bg image **/
+.fadeIn {
+  transform: translateZ(0);
+}
+
+body:not(.loading) .fadeIn {
+  animation: fadeIn 3s forwards;
+}
+
+.bgContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.bgContainerImg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  height: 100vh;
+  overflow-x: hidden;
+  z-index: 0;
+}
+
+.bgCircle1, .bgCircle2, .bgCircle3, .bgCircle4 {
+  z-index: 1;
+}
+
+// Animation
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+.bgCircle1, 
+.bgCircle2, 
+.bgCircle3, 
+.bgCircle4 {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  height: 100vh;
+  overflow-x: hidden;
+  opacity: 0;
+  backface-visibility: hidden;
+  animation: fadeInOut 2000ms ease-in-out infinite alternate;
+}
+
+.bgCircle1 {
+  animation-delay: 2000ms;
+}
+
+.bgCircle2 {
+  animation-delay: 2400ms;
+}
+
+.bgCircle3 {
+  animation-delay: 2800ms;
+}
+
+.bgCircle4 {
+  animation-delay: 3200ms;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
