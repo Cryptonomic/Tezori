@@ -92,13 +92,12 @@ function AccountStatus(props: Props) {
     case statuses.FOUND:
     case statuses.PENDING:
       title = 'Preparing your account...';
-      const operationID = operations[ statuses.FOUND ] || operations[ statuses.PENDING ];
-      if ( operationID ) {
+      if ( operations[ statuses.FOUND ] ) {
         info = (
           <Info
             firstIconName="icon-broadcast"
             operationName="public key reveal operation id"
-            operationId={ operationID }
+            operationId={ operations[ statuses.FOUND ] }
             lastIconName="icon-new-window"
           />
         );

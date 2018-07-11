@@ -192,6 +192,7 @@ class ActionPanel extends Component<Props, State> {
     return (
       <Container>
         <BalanceBanner
+          storeTypes={ storeTypes }
           isReady={ isReady(status, storeTypes) }
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}

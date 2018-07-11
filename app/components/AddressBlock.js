@@ -13,6 +13,7 @@ import TezosAmount from './TezosAmount/';
 import Address from './Address/';
 import AddressStatus from './AddressStatus/';
 import { READY } from '../constants/StatusTypes';
+import { MNEMONIC } from '../constants/StoreTypes';
 import { isReady } from '../utils/general';
 import AddDelegateModal from './AddDelegateModal/';
 
@@ -181,19 +182,27 @@ class AddressBlock extends Component<Props, State> {
       'Delegation rewards will depend on your arrangement with the delegate.'
     ]
 
-    const ready = isReady(accountBlock.get('status'), accountBlock.get('storeTypes'));
+    const storeTypes = accountBlock.get('storeTypes');
+    const ready = isReady(accountBlock.get('status'), storeTypes);
 
     return (
       <Container>
         <AddressLabel>
           <AccountTitle>{`Account ${accountIndex}`}</AccountTitle>
-          <TezosAmount
-            color={'primary'}
-            size={ms(0)}
-            amount={balance}
-            showTooltip
-            format={2}
-          />
+          {
+            ready || storeTypes === MNEMONIC
+              ?
+              (
+                <TezosAmount
+                  color={'primary'}
+                  size={ms(0)}
+                  amount={balance}
+                  showTooltip
+                  format={2}
+                />
+              )
+              : null
+          }
         </AddressLabel>
 
         {

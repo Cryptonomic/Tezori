@@ -11,12 +11,11 @@ import Tooltip from './Tooltip';
 import Button from './Button';
 import Update from './Update'
 import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
-import CopyIcon from './CopyIcon';
-
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { findAccountIndex } from '../utils/account';
+import { MNEMONIC } from '../constants/StoreTypes';
 
 type Props = {
+  storeTypes: string,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
@@ -61,12 +60,6 @@ const AddressTitleIcon = styled(TezosIcon)`
   padding: 0 ${ms(-6)} 0 0;
 `;
 
-const AddressHash = styled(H4)`
-  color: ${({ theme: { colors } }) => colors.white};
-  margin: 0 ${ms(1)} 0 0;
-  font-size: ${ms(3)};
-`;
-
 const AddressInfo = styled.div`
   display: flex;
   align-items: center;
@@ -106,7 +99,8 @@ const HelpIcon = styled(TezosIcon)`
 
 
 function BalanceBanner(props: Props) {
-  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, selectedParentHash, isManagerAddress, time } = props;
+  const { storeTypes, isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex,
+    parentIdentity, selectedParentHash, isManagerAddress, time } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
@@ -151,14 +145,22 @@ function BalanceBanner(props: Props) {
             text={publicKeyHash}
             size={ms(1.7)}
           />
-          <Amount
-            color="white"
-            size={ms(4.5)}
-            amount={balance}
-            weight="light"
-            format={2}
-            showTooltip
-          />
+
+          {
+            isReady || storeTypes === MNEMONIC
+              ?
+              (
+                <Amount
+                  color="white"
+                  size={ms(4.5)}
+                  amount={balance}
+                  weight="light"
+                  format={2}
+                  showTooltip
+                />
+              )
+              : null
+          }
         </AddressInfo>
         { publicKeyHash !== selectedParentHash &&
           <DelegateContainer>
