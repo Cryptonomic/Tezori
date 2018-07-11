@@ -47,6 +47,7 @@ const TabList = styled.div`
   background-color: ${({ theme: { colors } }) => colors.accent };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 50px;
 `;
 
 const TabText = styled.span`
@@ -74,13 +75,13 @@ const DescriptionContainer = styled.p`
 type DescriptionProps = {
   onSendClick: Function,
   onReceiveClick: Function
-}
+};
 
-const Description = (props:DescriptionProps) => {
+const Description = (props: DescriptionProps) => {
   const { onSendClick, onReceiveClick } = props
   return (
     <DescriptionContainer>
-      It's pretty empty here. Get started
+      {"It's pretty empty here. Get started"}
       <Link onClick={onSendClick}> sending</Link> and
       <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
     </DescriptionContainer>
@@ -138,25 +139,29 @@ class ActionPanel extends Component<Props, State> {
         if ( !ready ) {
           return <AccountStatus address={ selectedAccount }  />
         }
-
-        return isEmpty(transactions.toJS())
+        const JSTransactions = transactions.toJS();
+        return isEmpty(JSTransactions)
           ?
           (
             <EmptyState
               imageSrc={transactionsEmptyState}
-              title={'You have not made any transactions yet'}
+              title='You have not made any transactions yet'
               description={
-              <Description
-                onReceiveClick={() => this.handleLinkPress(RECEIVE)}
-                onSendClick={() => this.handleLinkPress(SEND)}
-              />
+                <Description
+                  onReceiveClick={() => this.handleLinkPress(RECEIVE)}
+                  onSendClick={() => this.handleLinkPress(SEND)}
+                />
             }
             />
           )
           :
           (
             <Fragment>
-              <Transactions transactions={transactions} />
+              <Transactions
+                transactions={JSTransactions}
+                selectedAccountHash={selectedAccountHash}
+                selectedParentHash={selectedParentHash}
+              />
               <PageNumbers
                 currentPage={this.state.currentPage}
                 numberOfPages={4}

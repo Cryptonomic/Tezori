@@ -44,7 +44,7 @@ const CreateAccountSlideContainer = styled.div`
     display: flex;
     float: right;
     margin-top: 16px;
-    color: ${({ theme: { colors } }) => colors.blue};
+    color: ${({ theme: { colors } }) => colors.blue1};
     font-size: 14px;
     cursor: pointer;
   }
@@ -97,7 +97,7 @@ type Props = {
 };
 
 class CreateAccountSlide extends Component<Props> {
-  props:Props;
+  props: Props;
   state = {
     seed: '',
     currentSlide: 0

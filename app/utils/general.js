@@ -43,7 +43,7 @@ export async function getTransactions(accountHash, nodes) {
     ...emptyFilter,
     limit: 100,
     operation_participant: [ accountHash ],
-    operation_kind: [ 'transaction' ]
+    operation_kind: [ 'transaction', 'activate_account', 'reveal', 'origination' ]
   };
   return await getOperations(url, transFilter, apiKey);
 }

@@ -18,7 +18,7 @@ const Address = styled.span`
   color: ${({color, theme: { colors }}) => colors[color] };
   font-weight: ${({weight, theme: {typo: {weights}}}) => weight ? weight : weights.normal};
   font-size: ${({size}) => size ? size : ms(2)};
-  margin: 0 ${ms(0)} 0 0;
+  margin: 0 0 0 0;
   -webkit-app-region: no-drag;
   user-select: all;
 `

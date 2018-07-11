@@ -77,12 +77,36 @@ const getIconByName = iconName => {
       return toUnicode('e90e');
     }
 
+    case 'send': {
+      return toUnicode('e90f');
+    }
+
+    case 'star': {
+      return toUnicode('e910');
+    }
+
+    case 'broadcast': {
+      return toUnicode('e911');
+    }
+
     case 'view-show': {
       return toUnicode('e912');
     }
 
     case 'view-hide': {
       return toUnicode('e913');
+    }
+
+    case 'change' : {
+      return toUnicode('e914');
+    }   
+
+    case 'receive': {
+      return toUnicode('e915');
+    }
+
+    case 'new-window' : {
+      return toUnicode('e916');
     }
 
     default: {
