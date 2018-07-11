@@ -24,14 +24,16 @@ const TermsAndPolicySection = styled.div`
   width: 80%;
   padding: ${ms(2)} 0 ${ms(4)} 0;
   border-top-width: 1px;
-  border-top-color: ${ ({ theme: { colors } }) => colors.gray3 };
+  border-top-color: ${ ({ theme: { colors } }) => colors.index1 };
   border-top-style: solid;
   justify-content: center;
   align-items: center;
+  font-weight: 300;
 `;
 
 const Strong = styled.span`
   color: ${ ({ theme: { colors } }) => colors.accent };
+  font-weight: 400;
 `;
 
 const Link = styled(Strong)`
@@ -39,20 +41,56 @@ const Link = styled(Strong)`
 `;
 
 const Description = styled.span`
-  color: ${ ({ theme: { typo: { weights } } }) => weights.light };
+  margin-left: -10px;
 `;
 
 const Tip = styled(Description)`
-  max-width: 300px;
   padding: ${ms(2)} 0 0 0;
+  text-align: center;
+  margin: 0 auto;
+  line-height: 1.31rem;
+  font-weight: 300;
 `;
 
-const Filling = styled.div`
-  height: 70px;
+const AppName = styled.h1`
+  text-align: center;
+  width: 100%;
+  font-family: 'Roboto', san-serif;
+  font-style: normal;
+  font-stretch: normal;
+  font-size: 6rem;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: 0.5rem;
+  margin: 0 auto;
+  color: ${ ({ theme: { colors } }) => colors.primary };
 `;
 
-const CustomButton = styled(Button)`
-  max-width: 300px;
+const AppSubtitle = styled.h2`
+  text-align: center;
+  width: 100%;
+  font-family: 'Roboto', san-serif;
+  font-style: normal;
+  font-stretch: normal;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.2rem;
+  letter-spacing: 0.25rem;
+  margin: 0 auto 2.5rem;
+  color: ${ ({ theme: { colors } }) => colors.primary };
+`;
+
+const CreateWalletButton = styled(Button)`
+  min-width: 22rem;
+  width: 100%;
+`;
+
+const UnlockWalletButton = styled(Button)`
+  min-width: 22rem;
+  width: 100%;
+`;
+
+const Background = styled.div`
 `;
 
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
@@ -87,38 +125,41 @@ class LoginHome extends Component<Props> {
     return (
       <SectionContainer>
         <div className={styles.defaultContainer}>
-          <div className={styles.walletContainers}>
-            <div className={styles.walletTitle}>Create a new wallet</div>
-            <CustomButton 
-              buttonTheme="primary" 
-              onClick={() => this.goTo('create')} 
-              disabled={!this.state.isAgreement}
-            >
-              Create Wallet
-            </CustomButton>
-            <Tip>
-              Want to import your fundraiser account?
-              <Strong> Create a wallet </Strong>
-              first.
-            </Tip>
-          </div>
-          <div className={styles.walletContainers}>
-            <div className={styles.walletTitle}>Import an existing wallet</div>
-            <CustomButton 
-              buttonTheme="secondary"
-              onClick={() => this.goTo('import')}
-              disabled={!this.state.isAgreement}
-            >
-              Import Wallet
-            </CustomButton>
-            <Filling />
-          </div>
+          <section className={styles.headerContainer}>
+            <AppName>Galleon</AppName>
+            <AppSubtitle>Beta Wallet for Tezos Betanet</AppSubtitle>
+          </section>
+          <section className={styles.optionsContainer}>
+            <div className={styles.walletContainers}>
+              <CreateWalletButton 
+                buttonTheme="primary" 
+                onClick={() => this.goTo('create')} 
+                disabled={!this.state.isAgreement}
+              >
+                Create New Wallet
+              </CreateWalletButton>
+            </div>
+            <div className={styles.walletContainers}>
+              <UnlockWalletButton 
+                buttonTheme="secondary"
+                onClick={() => this.goTo('import')}
+                disabled={!this.state.isAgreement}
+                className={styles.unlockWalletButton}
+              >
+                Open Existing Wallet
+              </UnlockWalletButton>
+              <Tip>
+                <div>Want to import your Fundraiser paper wallet?</div>
+                <div><Link onClick={() => this.goTo('create')}><Strong>Create a Galleon wallet</Strong></Link> first.</div>
+              </Tip>
+            </div>
+          </section>
         </div>
         <TermsAndPolicySection>
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
-            I acknowledge that I have read and accepted
-            <Link onClick={this.openLink}> the Terms of Service </Link>
+            I acknowledge that I have read and accepted the
+            <Link onClick={this.openLink}> Terms of Service </Link>
             and
             <Link onClick={this.openLink}> Privacy Policy</Link>
           </Description>
@@ -127,6 +168,13 @@ class LoginHome extends Component<Props> {
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
+        <Background className={styles.bgContainer}>
+          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src="../resources/bg-hero/bg-hero.jpg" />
+          <img className={styles.bgCircle1} src="../resources/bg-hero/bg-circle_01.png" />
+          <img className={styles.bgCircle2} src="../resources/bg-hero/bg-circle_02.png" />
+          <img className={styles.bgCircle3} src="../resources/bg-hero/bg-circle_03.png" />
+          <img className={styles.bgCircle4} src="../resources/bg-hero/bg-circle_04.png" />
+        </Background>
       </SectionContainer>
     );
   }

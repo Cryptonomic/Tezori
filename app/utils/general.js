@@ -157,10 +157,10 @@ export async function fetchAverageFees(nodes, operationKind) {
 
 export function isReady(addressStatus, storeTypes, tab) {
   return addressStatus === status.READY
-    //||
-    //(storeTypes === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
-    //||
-    //(storeTypes === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
+    ||
+    (storeTypes === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
+    ||
+    (storeTypes === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
     ;
 }
 

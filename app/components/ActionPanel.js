@@ -15,7 +15,7 @@ import Send from './Send';
 import Receive from './Receive';
 import Delegate from './Delegate/';
 import Loader from './Loader';
-import AccountStatus from './AccountStatus';
+import AccountStatus from './AccountStatus/';
 import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
 import { ms } from '../styles/helpers';
 import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
@@ -57,7 +57,6 @@ const TabText = styled.span`
 const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% - 150px);
   background-color: white;
   padding: ${ms(4)};
 `;
@@ -195,6 +194,7 @@ class ActionPanel extends Component<Props, State> {
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
           onRefreshClick={syncWallet}
+          selectedParentHash={selectedParentHash}
           time={time}
         />
 

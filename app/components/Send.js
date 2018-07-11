@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 import Button from './Button';
 import { ms } from '../styles/helpers'
+import TezosIcon from './TezosIcon'
 import SendConfirmationModal from './SendConfirmationModal';
 
 import {
@@ -34,6 +35,18 @@ const AmountContainer = styled.div`
 
 const SendButton = styled(Button)`
   margin-top: ${ms(2)}
+`
+
+const InputAmount = styled.div`
+  position: relative;
+  width: 50%;
+  margin-right: 50px;
+`
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  display: block;
 `
 
 type Props = {
@@ -120,12 +133,15 @@ class Send extends Component<Props> {
           onChange={this.handleToAddressChange}
         />
         <AmountContainer>
-          <TextField
-            floatingLabelText="Amount"
-            style={{ width: '50%', marginRight: '50px' }}
-            value={amount}
-            onChange={this.handleAmountChange}
-          />
+          <InputAmount>
+            <TextField
+              floatingLabelText="Amount"
+              style={{ width: '100%'}}
+              value={amount}
+              onChange={this.handleAmountChange}
+            />
+            <TezosIconInput color={'secondary'}/>
+          </InputAmount>
           <Fees
             style={{ width: '50%' }}
             low={ averageFees.low }
