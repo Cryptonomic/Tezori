@@ -96,7 +96,7 @@ type Props = {
 };
 
 class CreateAccountSlide extends Component<Props> {
-  props:Props;
+  props: Props;
   state = {
     seed: '',
     currentSlide: 0
