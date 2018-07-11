@@ -11,6 +11,7 @@ const Container = styled.section`
   background-color: ${({ theme: { colors } }) => colors.white};
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const SectionContainer = styled.div`

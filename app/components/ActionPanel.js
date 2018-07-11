@@ -60,6 +60,7 @@ const SectionContainer = styled.div`
   flex-direction: column;
   background-color: white;
   padding: ${ms(4)};
+  min-height: 600px;
 `;
 
 const Link = styled.span`
@@ -92,11 +93,12 @@ type Props = {
   updateActiveTab: Function,
   identities: array,
   isLoadingTransactions: boolean,
-  syncWallet: Function
+  syncWallet: Function,
+  selectedAccountHash: string,
+  selectedParentHash: string
 };
 
 type State = {
-  activeTab: string,
   currentPage: number
 };
 
@@ -112,39 +114,49 @@ class ActionPanel extends Component<Props, State> {
     updateActiveTab( selectedAccountHash, selectedParentHash, activeTab );
   };
 
-  renderSection = () => {
-    const { identities, selectedAccountHash, selectedParentHash } = this.props;
-    const selectedAccount = getSelectedAccount(identities.toJS(), selectedAccountHash, selectedParentHash);
+  renderSection = (selectedAccount, activeTab) => {
+    const { selectedAccountHash, selectedParentHash } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
     
-    switch (selectedAccount.get('activeTab')) {
+    switch (activeTab) {
       case DELEGATE:
-        return <Delegate
-          isReady={ ready }
-          address={selectedAccount.get('delegateValue')}
-          selectedAccountHash={ selectedAccountHash }
-          selectedParentHash={ selectedParentHash }
-        />;
+        return (
+          <Delegate
+            isReady={ready}
+            address={selectedAccount.get('delegateValue')}
+            selectedAccountHash={selectedAccountHash}
+            selectedParentHash={selectedParentHash}
+          />
+        );
       case RECEIVE:
         return <Receive address={selectedAccountHash} />;
       case SEND:
-        return <Send
-          isReady={ ready }
-          selectedAccountHash={ selectedAccountHash }
-          selectedParentHash={ selectedParentHash }
-        />;
+        return (
+          <Send
+            isReady={ready}
+            selectedAccountHash={selectedAccountHash}
+            selectedParentHash={selectedParentHash}
+          />
+        );
       case TRANSACTIONS:
       default: {
         if ( !ready ) {
           return (
             <AccountStatus
-              address={ selectedAccount }
-              isManager={ selectedAccountHash === selectedParentHash }
+              address={selectedAccount}
+              isManager={selectedAccountHash === selectedParentHash}
             />
           );
         }
         const JSTransactions = transactions.toJS();
+        const itemsCount = 5;
+        const pageCount = Math.ceil(JSTransactions.length/itemsCount);
+
+        const firstNumber = (this.state.currentPage - 1) * itemsCount;
+        const lastNumber = this.state.currentPage * itemsCount;
+        const showedTransactions = JSTransactions.slice(firstNumber, lastNumber);
+
         return isEmpty(JSTransactions)
           ?
           (
@@ -163,15 +175,15 @@ class ActionPanel extends Component<Props, State> {
           (
             <Fragment>
               <Transactions
-                transactions={JSTransactions}
+                transactions={showedTransactions}
                 selectedAccountHash={selectedAccountHash}
                 selectedParentHash={selectedParentHash}
               />
-              <PageNumbers
+              {pageCount>1 && <PageNumbers
                 currentPage={this.state.currentPage}
-                numberOfPages={4}
+                numberOfPages={pageCount}
                 onClick={currentPage => this.setState({ currentPage })}
-              />
+              />}
               {this.props.isLoadingTransactions && <Loader />}
             </Fragment>
           )
@@ -230,7 +242,7 @@ class ActionPanel extends Component<Props, State> {
           })}
         </TabList>
         <SectionContainer>
-          { this.renderSection() }
+          { this.renderSection(selectedAccount, activeTab) }
         </SectionContainer>
 
       </Container>
