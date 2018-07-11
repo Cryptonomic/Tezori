@@ -164,7 +164,6 @@ class CreateAccountSlide extends Component<Props> {
 
   importAddress = () => {
     const { seed } = this.state;
-    console.log('aaaaaaaaaaaaaaa', seed);
     this.props.importAddress(GENERATE_MNEMONIC, seed);
   };
 

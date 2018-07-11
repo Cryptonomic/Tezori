@@ -7,7 +7,7 @@ import { findIdentity } from './identity';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { MNEMONIC } from '../constants/StoreTypes';
-import { SEND } from '../constants/TabConstants';
+import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
@@ -156,7 +156,11 @@ export async function fetchAverageFees(nodes, operationKind) {
 }
 
 export function isReady(addressStatus, storeTypes, tab) {
-  console.log('addressStatus, storeTypes, tab', addressStatus, storeTypes, tab);
-  return addressStatus === status.READY || (storeTypes === MNEMONIC && addressStatus === status.CREATED && tab !== SEND);
+  return addressStatus === status.READY
+    //||
+    //(storeTypes === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
+    //||
+    //(storeTypes === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
+    ;
 }
 
