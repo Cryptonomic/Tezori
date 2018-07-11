@@ -12,7 +12,7 @@
  */
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
-import { name } from './config.json';
+import { name, version } from './config.json';
 
 let mainWindow = null;
 
@@ -67,7 +67,7 @@ app.on('ready', async () => {
     height: 728,
     minHeight: 728,
     minWidth: 1024,
-    title: name,
+    title: `${name} - v${version}`,
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
