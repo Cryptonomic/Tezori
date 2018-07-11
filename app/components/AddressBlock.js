@@ -163,7 +163,7 @@ class AddressBlock extends Component<Props, State> {
   render() {
     const { isDelegateModalOpen } = this.state;
     const { accountBlock, selectedAccountHash, accountIndex, theme } = this.props;
-    
+
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
     const { shouldHideSmartAddressesInfo } = this.state;
@@ -173,7 +173,7 @@ class AddressBlock extends Component<Props, State> {
     const noSmartAddressesDescriptionContent = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
-      'It takes 7 cycles (19.91 days) for your tez to start contributing to baking.',
+      'It takes 7 cycles (~20 days) for your tez to start contributing to baking.',
       'Delegation rewards will depend on your arrangement with the delegate.'
     ]
 
