@@ -24,9 +24,8 @@ const Address = styled.span`
 `
 
 const FirstPart = styled.span`
-  font-weight: ${({theme: {typo: {weights}}}) => weights.bold};
+  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold };
 `
-
 
 const TezosAddress = (props: Props) => {
   const { className, address, weight, size, color, text } = props;
@@ -42,7 +41,6 @@ const TezosAddress = (props: Props) => {
 };
 
 TezosAddress.defaultProps = {
-  weight: 'normal',
   color: 'primary',
 };
 

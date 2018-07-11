@@ -239,6 +239,7 @@ class AddressBlock extends Component<Props, State> {
             color={'primary'}
             size={ms(0)}
             amount={balance}
+            rounded
             showTooltip
             format={2}
           />

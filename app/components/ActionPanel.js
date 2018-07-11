@@ -55,6 +55,7 @@ const TabList = styled.div`
   background-color: ${({ isReady, theme: { colors } }) => isReady ? colors.accent: colors.disabled };
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 50px;
 `;
 
 const SectionContainer = styled.div`
@@ -141,7 +142,8 @@ class ActionPanel extends Component<Props, State> {
         />;
       case TRANSACTIONS:
       default: {
-        return isEmpty(transactions.toJS())
+        const JSTransactions = transactions.toJS()
+        return isEmpty(JSTransactions)
           ?
           (
             <EmptyState
@@ -158,7 +160,7 @@ class ActionPanel extends Component<Props, State> {
           :
           (
             <Fragment>
-              <Transactions transactions={transactions} />
+              <Transactions transactions={JSTransactions} />
               <PageNumbers
                 currentPage={this.state.currentPage}
                 numberOfPages={4}

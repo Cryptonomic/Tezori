@@ -30,6 +30,7 @@ const Amount = styled.span`
   align-items: center;
   letter-spacing: 0.6px;
   -webkit-app-region: no-drag;
+  line-height: 1;
 
   span {
     line-height: 0;
@@ -66,13 +67,27 @@ const copyToClipboard = text => {
   clipboard.writeText(text)
 }
 
+const getFormatAmount = ({ amount, format, rounded, positive, fee }) => {
+  const formatedBalance = formatAmount(amount, format)
+
+  if (positive) {
+    return `+${formatedBalance}`
+  } else if (fee) {
+    return `-${formatedBalance}`
+  } else if (rounded) {
+    return `~${formatedBalance}`
+  } else {
+    return formatedBalance
+  }
+}
+
 const TezosAmount = (props: Props) => {
-  const { size, color, amount, iconName, weight, className, showTooltip ,format, content} = props;
-  const formatedBalance = `${formatAmount(amount)}`
+  const { size, color, amount, iconName, weight, className, showTooltip ,format, content, rounded, positive, fee } = props;
+  const formatedBalance = formatAmount(amount, format)
   return showTooltip ? (
     <Tooltip position="bottom" content={<Content formatedBalance={formatedBalance} />}>
-      <Amount className={className} color={color} size={size} weight={weight}>
-        { format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}` }
+      <Amount className={className} color={color} size={size} weight={weight} rounded>
+        { getFormatAmount({ amount, format, rounded, positive }) }
         {
           iconName
           && <Icon size={size} color={color} iconName={iconName}/>
@@ -80,8 +95,8 @@ const TezosAmount = (props: Props) => {
       </Amount>
     </Tooltip>
     ) : (
-    <Amount className={className} color={color} size={size} weight={weight} format={format}>
-      { format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}` }
+    <Amount className={className} color={color} size={size} weight={weight} format={format} fee={fee}>
+      { getFormatAmount({ amount, format, rounded, positive, fee }) }
       {
         iconName
           && <Icon size={size} color={color} iconName={iconName}/>
