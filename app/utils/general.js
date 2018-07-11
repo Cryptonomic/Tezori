@@ -1,3 +1,4 @@
+import { shell } from 'electron';
 import { pick  } from 'lodash';
 import { TezosConseilQuery, TezosOperations, TezosWallet  } from 'conseiljs';
 import { fromJS } from 'immutable';
@@ -6,6 +7,8 @@ import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
+import { MNEMONIC } from '../constants/StoreTypes';
+import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
@@ -21,6 +24,17 @@ export function awaitFor(timeout: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, timeout*1000);
   });
+}
+
+export function getSelectedHash() {
+  let hash = location.hash.replace(/$\//, '');
+  let segments = hash.split('/');
+  const selectedParentHash = segments.pop();
+  const selectedAccountHash = segments.pop();
+  return {
+    selectedParentHash,
+    selectedAccountHash
+  };
 }
 
 export async function getTransactions(accountHash, nodes) {
@@ -66,7 +80,7 @@ export async function revealKey(nodes, keyStore) {
   const keyRevealed = await isRevealed(nodes, keyStore);
   if ( !keyRevealed ) {
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    await sendKeyRevealOperation(url, keyStore, 0);
+    return await sendKeyRevealOperation(url, keyStore, 0);
   }
   return true;
 }
@@ -104,6 +118,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
   }
 
   if ( account.status === status.FOUND ) {
+    console.log( '-debug - nodes, keyStore', nodes, keyStore);
     const revealed = await revealKey(nodes, keyStore).catch( (error) => {
       console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
       console.error(error);
@@ -111,6 +126,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     });
     if ( revealed ) {
       account.status = status.PENDING;
+      account.operations[status.FOUND] = revealed.operationGroupID
     }
   }
 
@@ -138,4 +154,19 @@ export async function fetchAverageFees(nodes, operationKind) {
   const emptyFilter = getEmptyTezosFilter();
   const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
   return await getAverageFees(url, feeFilter, apiKey);
+}
+
+export function isReady(addressStatus, storeTypes, tab) {
+  return addressStatus === status.READY
+    ||
+    (storeTypes === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
+    ||
+    (storeTypes === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
+    ;
+}
+
+
+
+export function openLink(link) {
+  shell.openExternal(link)
 }

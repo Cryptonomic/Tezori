@@ -1,7 +1,8 @@
 import * as status from '../constants/StatusTypes';
-import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
+import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
 import { createAccount, getAccountsForIdentity, getSyncAccount } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
+import { FUNDRAISER } from '../constants/StoreTypes';
 
 export function createIdentity(identity) {
 
@@ -12,6 +13,8 @@ export function createIdentity(identity) {
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
+    operations: {},
+    storeTypes: FUNDRAISER,
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     ...identity
@@ -26,7 +29,7 @@ export function findIdentityIndex(identities, publicKeyHash) {
   return (identities || []).findIndex( identity => identity.publicKeyHash === publicKeyHash );
 }
 
-export async function getSyncIdentity(identities, identity, nodes, selectedAccountHash) {
+export async function getSyncIdentity(identities, identity, nodes) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, publicKeyHash );
   identity = await activateAndUpdateAccount(identity, keyStore, nodes);
@@ -55,6 +58,7 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
     const overrides = {};
     if ( foundIndex > -1 ) {
       overrides.status = identity.accounts[foundIndex].status;
+      overrides.operations = identity.accounts[foundIndex].operations;
       overrides.activeTab = identity.accounts[foundIndex].activeTab;
     }
     return createAccount({
@@ -83,8 +87,8 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
           identities,
           account,
           nodes,
-          publicKeyHash,
-          selectedAccountHash
+          account.accountId,
+          publicKeyHash
         ).catch( e => {
           console.log('-debug: Error in: getSyncIdentity for:' + identity.publicKeyHash);
           console.error(e);
@@ -96,6 +100,7 @@ export async function getSyncIdentity(identities, identity, nodes, selectedAccou
     })
   );
 
+  const { selectedAccountHash } = getSelectedHash();
   if ( publicKeyHash === selectedAccountHash ) {
     identity.transactions = await getTransactions(publicKeyHash, nodes)
       .catch( e => {

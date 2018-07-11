@@ -11,12 +11,11 @@ import Tooltip from './Tooltip';
 import Button from './Button';
 import Update from './Update'
 import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
-import CopyIcon from './CopyIcon';
-
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import { findAccountIndex } from '../utils/account';
+import { MNEMONIC } from '../constants/StoreTypes';
 
 type Props = {
+  storeTypes?: string,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
@@ -30,8 +29,7 @@ type Props = {
 
 const Container = styled.header`
   padding: ${ms(0)} ${ms(4)};
-  background-color: ${({ isReady, theme: { colors } }) =>
-  isReady ? colors.accent : colors.disabled};
+  background-color: ${({ theme: { colors } }) => colors.accent};
 `;
 
 const Row = styled.div`
@@ -41,12 +39,13 @@ const Row = styled.div`
 const TopRow = styled(Row)`
   display: flex;
   justify-content: space-between;
-  color: ${({ isReady, theme: { colors } }) =>
-  isReady ? lighten(0.3, colors.accent) : colors.white};
+  color: ${({ theme: { colors } }) => lighten(0.3, colors.accent)};
+  opacity: ${({ isReady }) => isReady ? '1' : '0.5'};
 `;
 
 const BottomRow = styled(Row)`
   color: ${({ theme: { colors } }) => colors.white};
+  opacity: ${({ isReady }) => isReady ? '1' : '0.5'};
 `;
 
 const AddressTitle = styled(H4)`
@@ -59,12 +58,6 @@ const AddressTitle = styled(H4)`
 
 const AddressTitleIcon = styled(TezosIcon)`
   padding: 0 ${ms(-6)} 0 0;
-`;
-
-const AddressHash = styled(H4)`
-  color: ${({ theme: { colors } }) => colors.white};
-  margin: 0 ${ms(1)} 0 0;
-  font-size: ${ms(3)};
 `;
 
 const AddressInfo = styled.div`
@@ -89,61 +82,41 @@ const Delegate = styled.span`
   font-size: ${ms(-1)};
   font-weight: ${ ({ theme: { typo: { weights } } }) => weights.light };
   margin-right: 6px;
-`
+`;
 
 const DelegateContainer = styled.div`
   display: flex;
-`
+`;
 
 const Breadcrumbs = styled.div`
   font-size: ${ms(-1)};
-`
+`;
 
 
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
 
-const Refresh = styled(RefreshIcon)`
-  -webkit-animation:spin 0.5s linear infinite;
-  -moz-animation:spin 0.5s linear infinite;
-  animation:spin 0.5s linear infinite;
-
-  @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-  @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-`
-
 
 function BalanceBanner(props: Props) {
-  const { isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex, parentIdentity, selectedParentHash, isManagerAddress, time } = props;
+  const { storeTypes, isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex,
+    parentIdentity, selectedParentHash, isManagerAddress, time } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
     : 'Manager Address';
 
   const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;
-  const formatedBalance = balance.toFixed(6)
+
   return (
-    <Container isReady={ isReady }>
+    <Container>
       <TopRow isReady={ isReady }>
         <Breadcrumbs>
           {breadcrumbs}
         </Breadcrumbs>
-        { isReady
-            ? <Update onClick={onRefreshClick} time={time} />
-            : <Refresh
-                style={{
-                  fill: 'white',
-                  height: ms(2),
-                  width: ms(2),
-                  cursor: 'pointer',
-                }}
-                onClick={onRefreshClick}
-              />
-        }
+        <Update onClick={ onRefreshClick } time={ time } isReady={ isReady } />
       </TopRow>
-      <BottomRow>
+      <BottomRow isReady={ isReady }>
         <AddressTitle>
           <AddressTitleIcon
             iconName={isManagerAddress ? 'manager' : 'smart-address'}
@@ -172,14 +145,22 @@ function BalanceBanner(props: Props) {
             text={publicKeyHash}
             size={ms(1.7)}
           />
-          <Amount
-            color="white"
-            size={ms(4.5)}
-            amount={balance}
-            weight="light"
-            format={2}
-            showTooltip
-          />
+
+          {
+            isReady || storeTypes === MNEMONIC
+              ?
+              (
+                <Amount
+                  color="white"
+                  size={ms(4.5)}
+                  amount={balance}
+                  weight="light"
+                  format={2}
+                  showTooltip
+                />
+              )
+              : null
+          }
         </AddressInfo>
         { publicKeyHash !== selectedParentHash &&
           <DelegateContainer>
@@ -194,6 +175,6 @@ function BalanceBanner(props: Props) {
 BalanceBanner.defaultProps = {
   parentIdentity: null,
   parentIndex: 0
-}
+};
 
 export default withTheme(BalanceBanner)

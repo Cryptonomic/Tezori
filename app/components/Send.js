@@ -78,7 +78,6 @@ class Send extends Component<Props> {
   async componentDidMount() {
     const { fetchTransactionAverageFees } = this.props;
     const averageFees = await fetchTransactionAverageFees();
-    console.log('averageFees', averageFees);
     this.setState({ averageFees, fee: averageFees.low });
   }
 
