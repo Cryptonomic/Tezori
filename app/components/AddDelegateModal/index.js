@@ -130,7 +130,7 @@ class AddDelegateModal extends Component<Props> {
               <HelpIcon
                 iconName="help"
                 size={ms(0)}
-                color={'secondary'}
+                color='secondary'
               />
             </Button>
           </Tooltip>
@@ -141,8 +141,9 @@ class AddDelegateModal extends Component<Props> {
               floatingLabelText="Amount"
               style={{ width: '100%' }}
               onChange={this.changeAmount}
+              type="number"
             />
-            <TezosIconInput color={'secondary'}/>
+            <TezosIconInput color='secondary' />
           </div>
           <div className={styles.feeContainer}>
             <Fees
