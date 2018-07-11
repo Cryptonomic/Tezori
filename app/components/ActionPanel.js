@@ -137,7 +137,12 @@ class ActionPanel extends Component<Props, State> {
       case TRANSACTIONS:
       default: {
         if ( !ready ) {
-          return <AccountStatus address={ selectedAccount }  />
+          return (
+            <AccountStatus
+              address={ selectedAccount }
+              isManager={ selectedAccountHash === selectedParentHash }
+            />
+          );
         }
         const JSTransactions = transactions.toJS();
         return isEmpty(JSTransactions)

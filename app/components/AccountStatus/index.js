@@ -9,7 +9,7 @@ import LoaderSpinner from '../LoaderSpinner/';
 import { H4 } from '../Heading/';
 
 import * as statuses from '../../constants/StatusTypes';
-import { MNEMONIC, FUNDRAISER } from '../../constants/StoreTypes';
+import { MNEMONIC } from '../../constants/StoreTypes';
 import { formatAmount } from '../../utils/currancy';
 import Info from './Info';
 
@@ -48,11 +48,12 @@ const Description = styled.div`
 `;
 
 type Props = {
+  isManager?: boolean,
   address?: object
 };
 
 function AccountStatus(props: Props) {
-  const { address, theme } = props;
+  const { isManager, address, theme } = props;
 
   const storeTypes = address.get('storeTypes');
   const status = address.get('status');
@@ -69,6 +70,9 @@ function AccountStatus(props: Props) {
   let title = '';
   let description = '';
   let info = null;
+  const typeText = isManager
+    ? 'account'
+    : 'address';
   switch( status ) {
     case statuses.CREATED:
       if ( storeTypes === MNEMONIC ) {
@@ -76,9 +80,9 @@ function AccountStatus(props: Props) {
         title = 'Your account is currently not ready.';
         description = 'The first transaction will get your account ready to send and delegate. Getting your account ready after your first transaction might take a while.';
       } else {
-        title = 'Retrieving your account...';
+        title = `Retrieving your ${ typeText }...`;
         if ( operations[ statuses.CREATED ] ) {
-          const operationName = storeTypes === FUNDRAISER
+          const operationName = isManager
             ? 'activation operation id'
             : 'origination operation id';
           info = (
@@ -94,7 +98,7 @@ function AccountStatus(props: Props) {
       break;
     case statuses.FOUND:
     case statuses.PENDING:
-      title = 'Preparing your account...';
+      title = `Preparing your ${ typeText }...`;
       if ( operations[ statuses.FOUND ] ) {
         info = (
           <Info

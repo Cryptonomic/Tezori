@@ -8,6 +8,7 @@ import TezosIcon from '../TezosIcon/';
 import { H4 } from '../Heading/';
 
 import { limitLength } from '../../utils/strings';
+import { openLink } from '../../utils/general';
 
 const Container = styled.div`
   display: flex;
@@ -25,6 +26,7 @@ const ActivationOperation = styled.div`
   text-transform: uppercase;
   margin-left: 5px;
   margin-right: 5px;
+  cursor: pointer;
 `;
 
 const ActivationOperationId = styled.div`
@@ -54,7 +56,11 @@ function Info(props: Props) {
         color="accent"
         iconName={ firstIconName }
       />
-      <ActivationOperation>
+      <ActivationOperation
+        onClick={ () => {
+          openLink(`http://tzscan.io/${ operationId }`);
+        }}
+      >
         { operationName }
       </ActivationOperation>
       <ActivationOperationId>

@@ -1,3 +1,4 @@
+import { shell } from 'electron';
 import { pick  } from 'lodash';
 import { TezosConseilQuery, TezosOperations, TezosWallet  } from 'conseiljs';
 import { fromJS } from 'immutable';
@@ -164,3 +165,8 @@ export function isReady(addressStatus, storeTypes, tab) {
     ;
 }
 
+
+
+export function openLink(link) {
+  shell.openExternal(link)
+}
