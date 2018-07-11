@@ -26,14 +26,14 @@ const Container = styled.div`
 
 const Title = styled.span`
   line-height: 3;
-  color: ${({ isManager }) => {
-    return isManager
+  color: ${({ isActive }) => {
+    return isActive
       ? '#ffffff'
       : '#94a9d1';
   }};
   font-size: ${ms(-0.8)};
-  opacity: ${({ isManager }) => {
-    return isManager
+  opacity: ${({ isActive }) => {
+    return isActive
       ? '0.70'
       : '1';
   }};
@@ -76,11 +76,11 @@ export default function AddressStatus(props: Props) {
       <LoaderSpinner
         size="sm"
         styles={{
-          color: isManager ? '#ffffff' : '#94a9d1',
-          opacity: isManager ? '0.70' : '1'
+          color: isManager || isActive ? '#ffffff' : '#94a9d1',
+          opacity: isManager || isActive ? '0.70' : '1'
         }}
       />
-      <Title isManager={ isManager }>{ text }</Title>
+      <Title isActive={ isManager || isActive }>{ text }</Title>
     </Container>
   );
 }

@@ -135,11 +135,6 @@ class AddressBlock extends Component<Props, State> {
     syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
   };
 
-  refreshAccount = (selectedAccountHash, selectedParentHash) => {
-    const { syncAccountOrIdentity } = this.props;
-    syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
-  };
-
   closeNoSmartAddresses = () => {
     this.setState({
       shouldHideSmartAddressesInfo: true
@@ -276,7 +271,7 @@ class AddressBlock extends Component<Props, State> {
                   isActive={ isSmartActive }
                   address={ smartAddress }
                   onClick={() =>
-                    this.refreshAccount(smartAddressId, publicKeyHash)
+                    this.goToAccount(smartAddressId, publicKeyHash)
                   }
                 />
               )

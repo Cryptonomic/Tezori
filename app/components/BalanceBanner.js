@@ -15,7 +15,7 @@ import { findAccountIndex } from '../utils/account';
 import { MNEMONIC } from '../constants/StoreTypes';
 
 type Props = {
-  storeTypes: string,
+  storeTypes?: string,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,

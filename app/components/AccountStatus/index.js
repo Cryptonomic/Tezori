@@ -9,7 +9,7 @@ import LoaderSpinner from '../LoaderSpinner/';
 import { H4 } from '../Heading/';
 
 import * as statuses from '../../constants/StatusTypes';
-import { MNEMONIC } from '../../constants/StoreTypes';
+import { MNEMONIC, FUNDRAISER } from '../../constants/StoreTypes';
 import { formatAmount } from '../../utils/currancy';
 import Info from './Info';
 
@@ -78,10 +78,13 @@ function AccountStatus(props: Props) {
       } else {
         title = 'Retrieving your account...';
         if ( operations[ statuses.CREATED ] ) {
+          const operationName = storeTypes === FUNDRAISER
+            ? 'activation operation id'
+            : 'origination operation id';
           info = (
             <Info
               firstIconName="icon-star"
-              operationName="activation operation id"
+              operationName={ operationName }
               operationId={ operations[ statuses.CREATED ] }
               lastIconName="icon-new-window"
             />
