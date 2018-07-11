@@ -8,6 +8,7 @@ import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import { remote } from 'electron';
 import path from 'path';
 import zxcvbn from 'zxcvbn';
+import { ms } from '../../styles/helpers'
 import Button from '../../components/Button/';
 import MessageBar from '../../components/MessageBar';
 import Loader from '../../components/Loader';
@@ -15,6 +16,7 @@ import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 import ValidInput from '../../components/ValidInput'
 import createFileEmptyIcon from '../../../resources/createFileEmpty.svg'
+import TezosIcon from "../../components/TezosIcon"
 
 import styles from './styles.css';
 
@@ -33,10 +35,23 @@ const BackToWallet = styled.div`
   margin-bottom: 1rem;
 `;
 
+const WalletFileName = styled.div`
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: -0.7px;
+  color: ${ ({ theme: { colors } }) => colors.accent };
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 10rem;
+`;
+
+const CheckIcon = styled(TezosIcon)``;
+
 const CreateFileSelector = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: column;
   border-width: 1.5px;
   border-style: dashed;
@@ -44,6 +59,7 @@ const CreateFileSelector = styled.div`
   background: white;
   border-radius: 5px;
   width: 13rem;
+  height: 13.5rem;
   margin-right: 2.37rem;
 `;
 
@@ -140,6 +156,17 @@ class LoginCreate extends Component<Props> {
     const { message, goBack } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
+    let walletFileSection = <img className={styles.createFileEmptyIcon} src={createFileEmptyIcon} />;
+
+    if (walletFileName) {
+      walletFileSection = <div className={styles.walletFileSection}><CheckIcon
+          iconName='checkmark2'
+          size={ms(5)}
+          color="check"
+          className={styles.checkMark}
+        />
+        <WalletFileName>{walletFileName}</WalletFileName></div>;
+    }
 
     return (
       <div className={styles.createContainer}>
@@ -166,8 +193,7 @@ class LoginCreate extends Component<Props> {
           </div>
           <div className={styles.formContainer}>
             <CreateFileSelector>
-              <img className={styles.createFileEmptyIcon} src={createFileEmptyIcon} />
-              <div className={styles.walletFileName}>{walletFileName}</div>
+              {walletFileSection}
               <Button buttonTheme="secondary" onClick={this.saveFile} small className={styles.createFileButton}>
                 Create Wallet File
               </Button>
