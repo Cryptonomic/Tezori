@@ -99,9 +99,8 @@ export async function getSyncIdentity(identities, identity, nodes) {
       return account;
     })
   );
-
   
-  if ( publicKeyHash === selectedAccountHash ) {
+  if ( publicKeyHash === selectedAccountHash || selectedAccountHash === 'login') {
     identity.transactions = await getTransactions(publicKeyHash, nodes)
       .catch( e => {
         console.log('-debug: Error in: getSyncIdentity -> getTransactions for:' + publicKeyHash);

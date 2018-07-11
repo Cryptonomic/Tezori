@@ -99,11 +99,7 @@ type Props = {
 };
 
 type State = {
-  activeTab: string,
-  currentPage: number,
-  transactions: array,
-  isPage: boolean
-
+  currentPage: number
 };
 
 class ActionPanel extends Component<Props, State> {
@@ -112,10 +108,6 @@ class ActionPanel extends Component<Props, State> {
   state = {
     currentPage: 1
   };
-
-  componentDidMount() {
-    
-  }
 
   handleLinkPress = activeTab => {
     const { selectedAccountHash, selectedParentHash, updateActiveTab } = this.props;

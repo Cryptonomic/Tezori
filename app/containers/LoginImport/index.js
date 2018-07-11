@@ -108,6 +108,7 @@ class LoginImport extends Component<Props> {
           />
           <div className={styles.actionButtonContainer}>
             <Button
+              className={styles.actionButton}
               onClick={() => this.login(IMPORT)}
               buttonTheme="primary"
               disabled={isLoading}
