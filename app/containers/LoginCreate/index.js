@@ -30,6 +30,7 @@ type Props = {
 const BackToWallet = styled.div`
   display: flex;
   align-items: center;
+  align-self: flex-start;
   color: #4486f0;
   cursor: pointer;
   margin-bottom: 1rem;
@@ -181,7 +182,8 @@ class LoginCreate extends Component<Props> {
               height: '28px',
               width: '28px',
               marginRight: '5px',
-              marginLeft: '-9px'
+              marginLeft: '-9px',
+              marginTop: '4px'
             }}
             />
             <span>Back</span>
