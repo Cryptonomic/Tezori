@@ -36,6 +36,13 @@ const StyledCloseIcon = styled(CloseIcon)`
   right: 15px;
 `;
 
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  display: block;
+`;
+
 class Fee extends Component<Props> {
   props: Props;
   state = {
@@ -87,22 +94,28 @@ class Fee extends Component<Props> {
         >
           <StyledCloseIcon
             style={{ fill: '#7190C6' }}
-            onClick={ this.closeConfirmation }
+            onClick={this.closeConfirmation}
           />
-          <H2>Enter Custom amount</H2>
-          <TextField
-            floatingLabelText="Custom Fee"
-            style={{ width: '100%' }}
-            value={ custom }
-            onChange={this.handleCustomChange}
-          />
+          <div>
+            <H2>Enter Custom Amount</H2>
+            <div style={{position:'relative'}}>
+              <TextField
+                floatingLabelText="Custom Fee"
+                style={{ width: '100%' }}
+                value={custom}
+                onChange={this.handleCustomChange}
+                type="number"
+              />
+              <TezosIconInput color='secondary' />
+            </div>
 
-          <StyledSaveButton
-            buttonTheme="primary"
-            onClick={this.handleSetCustom}
-          >
-            Set Custom Fee
-          </StyledSaveButton>
+            <StyledSaveButton
+              buttonTheme="primary"
+              onClick={this.handleSetCustom}
+            >
+              Set Custom Fee
+            </StyledSaveButton>
+          </div>
         </Dialog>
       </Fragment>
     );
