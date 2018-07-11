@@ -140,8 +140,9 @@ class Send extends Component<Props> {
               style={{ width: '100%'}}
               value={amount}
               onChange={this.handleAmountChange}
+              type="number"
             />
-            <TezosIconInput color={'secondary'}/>
+            <TezosIconInput color='secondary' />
           </InputAmount>
           <Fees
             style={{ width: '50%' }}
