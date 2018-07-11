@@ -10,6 +10,7 @@ import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import { shell } from 'electron';
 import styles from './styles.css';
+import { name, tagline } from '../../config.json';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -126,21 +127,21 @@ class LoginHome extends Component<Props> {
       <SectionContainer>
         <div className={styles.defaultContainer}>
           <section className={styles.headerContainer}>
-            <AppName>Galleon</AppName>
-            <AppSubtitle>Beta Wallet for Tezos Betanet</AppSubtitle>
+            <AppName>{name}</AppName>
+            <AppSubtitle>{tagline}</AppSubtitle>
           </section>
           <section className={styles.optionsContainer}>
             <div className={styles.walletContainers}>
-              <CreateWalletButton 
-                buttonTheme="primary" 
-                onClick={() => this.goTo('create')} 
+              <CreateWalletButton
+                buttonTheme="primary"
+                onClick={() => this.goTo('create')}
                 disabled={!this.state.isAgreement}
               >
                 Create New Wallet
               </CreateWalletButton>
             </div>
             <div className={styles.walletContainers}>
-              <UnlockWalletButton 
+              <UnlockWalletButton
                 buttonTheme="secondary"
                 onClick={() => this.goTo('import')}
                 disabled={!this.state.isAgreement}
@@ -150,7 +151,7 @@ class LoginHome extends Component<Props> {
               </UnlockWalletButton>
               <Tip>
                 <div>Want to import your Fundraiser paper wallet?</div>
-                <div><Link onClick={() => this.goTo('create')}><Strong>Create a Galleon wallet</Strong></Link> first.</div>
+                <div><Link onClick={() => this.goTo('create')}><Strong>{`Create a ${name} wallet`}</Strong></Link> first.</div>
               </Tip>
             </div>
           </section>
