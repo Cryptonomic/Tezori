@@ -99,7 +99,7 @@ const getIconByName = iconName => {
 
     case 'change' : {
       return toUnicode('e914');
-    }   
+    }
 
     case 'receive': {
       return toUnicode('e915');
