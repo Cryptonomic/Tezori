@@ -36,6 +36,17 @@ const StyledCloseIcon = styled(CloseIcon)`
   right: 15px;
 `;
 
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  display: block;
+`
+
+const FeeInput = styled.div`
+  position: relative;
+`;
+
 class Fee extends Component<Props> {
   props: Props;
   state = {
@@ -74,7 +85,7 @@ class Fee extends Component<Props> {
           <MenuItem value={high} primaryText={ <div>High Fee: { formatAmount(high)} <TezosIcon color={'black'}/></div>} />
           {
             custom
-              ? <MenuItem value={tezToUtez(custom)} primaryText={ `Custom Fee: ${ formatAmount(tezToUtez(custom))}` } />
+              ? <MenuItem value={tezToUtez(custom)} primaryText={<div>Custom Fee: { formatAmount(tezToUtez(custom))} <TezosIcon color={'black'}/></div>} />
               : null
           }
           <MenuItem value={'custom'} primaryText="Custom" onClick={this.openConfirmation} />
@@ -90,12 +101,15 @@ class Fee extends Component<Props> {
             onClick={ this.closeConfirmation }
           />
           <H2>Enter Custom amount</H2>
-          <TextField
-            floatingLabelText="Custom Fee"
-            style={{ width: '100%' }}
-            value={ custom }
-            onChange={this.handleCustomChange}
-          />
+          <FeeInput>
+            <TextField
+              floatingLabelText="Custom Fee"
+              style={{ width: '100%' }}
+              value={ custom }
+              onChange={this.handleCustomChange}
+            />
+            <TezosIconInput color={'secondary'}/>
+          </FeeInput>
 
           <StyledSaveButton
             buttonTheme="primary"

@@ -143,7 +143,7 @@ class Send extends Component<Props> {
             <TezosIconInput color={'secondary'}/>
           </InputAmount>
           <Fees
-            style={{ width: '50%' }}
+            styles={{ width: '50%' }}
             low={ averageFees.low }
             medium={ averageFees.medium }
             high={ averageFees.high }
