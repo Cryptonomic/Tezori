@@ -61,6 +61,7 @@ type Props = {
 
 const Container = styled.aside`
   width: 30%;
+  max-width: 320px;
   flex-shrink: 0;
   padding: 0 ${ms(3)} 0 0;
 `;
