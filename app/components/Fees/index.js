@@ -41,6 +41,10 @@ const TezosIconInput = styled(TezosIcon)`
   right: 0px;
   top: 40px;
   display: block;
+`
+
+const FeeInput = styled.div`
+  position: relative;
 `;
 
 class Fee extends Component<Props> {
@@ -81,10 +85,10 @@ class Fee extends Component<Props> {
           <MenuItem value={high} primaryText={ <div>High Fee: { formatAmount(high)} <TezosIcon color={'black'}/></div>} />
           {
             custom
-              ? <MenuItem value={tezToUtez(custom)} primaryText={ `Custom Fee: ${ formatAmount(tezToUtez(custom))}` } />
+              ? <MenuItem value={tezToUtez(custom)} primaryText={<div>Custom Fee: { formatAmount(tezToUtez(custom))} <TezosIcon color={'black'}/></div>} />
               : null
           }
-          <MenuItem value={'custom'} primaryText="Custom" onClick={this.openConfirmation} />
+          <MenuItem value='custom' primaryText="Custom" onClick={this.openConfirmation} />
         </SelectField>
         <Dialog
           modal
@@ -94,20 +98,20 @@ class Fee extends Component<Props> {
         >
           <StyledCloseIcon
             style={{ fill: '#7190C6' }}
-            onClick={this.closeConfirmation}
+            onClick={ this.closeConfirmation }
           />
           <div>
             <H2>Enter Custom Amount</H2>
-            <div style={{position:'relative'}}>
+            <FeeInput>
               <TextField
                 floatingLabelText="Custom Fee"
                 style={{ width: '100%' }}
                 value={custom}
-                onChange={this.handleCustomChange}
                 type="number"
+                onChange={this.handleCustomChange}
               />
               <TezosIconInput color='secondary' />
-            </div>
+            </FeeInput>
 
             <StyledSaveButton
               buttonTheme="primary"

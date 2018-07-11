@@ -182,7 +182,7 @@ class Delegate extends Component<Props> {
     const delegationTips = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
-      'Delegating is not instant. It takes 7 cycles (2-3 weeks) for your tez to start contributing to baking.',
+      'Delegating is not instant. It takes 7 cycles (~20 days) for your tez to start contributing to baking.',
       'Delegation rewards will depend on your arrangement with the delegate.'
     ];
 

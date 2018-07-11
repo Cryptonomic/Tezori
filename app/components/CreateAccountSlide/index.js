@@ -51,6 +51,7 @@ const CreateAccountSlideContainer = styled.div`
   .back-part {
     margin: 0 0 20px -8px;
     color: #4486f0;
+    cursor: pointer;
     display: flex;
     font-size: 16px;
     .chevron-icon {
@@ -178,7 +179,7 @@ class CreateAccountSlide extends Component<Props> {
 
         <ActionButton
           buttonTheme="primary"
-          onClick={importAddress}
+          onClick={this.importAddress}
         >
           Create Account
         </ActionButton>

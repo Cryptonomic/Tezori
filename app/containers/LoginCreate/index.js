@@ -8,12 +8,15 @@ import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import { remote } from 'electron';
 import path from 'path';
 import zxcvbn from 'zxcvbn';
+import { ms } from '../../styles/helpers'
 import Button from '../../components/Button/';
 import MessageBar from '../../components/MessageBar';
 import Loader from '../../components/Loader';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 import ValidInput from '../../components/ValidInput'
+import createFileEmptyIcon from '../../../resources/createFileEmpty.svg'
+import TezosIcon from "../../components/TezosIcon"
 
 import styles from './styles.css';
 
@@ -27,9 +30,38 @@ type Props = {
 const BackToWallet = styled.div`
   display: flex;
   align-items: center;
+  align-self: flex-start;
   color: #4486f0;
   cursor: pointer;
   margin-bottom: 1rem;
+`;
+
+const WalletFileName = styled.div`
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: -0.7px;
+  color: ${ ({ theme: { colors } }) => colors.accent };
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 10rem;
+`;
+
+const CheckIcon = styled(TezosIcon)``;
+
+const CreateFileSelector = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  border-width: 1.5px;
+  border-style: dashed;
+  border-color: ${ ({ theme: { colors } }) => colors.gray9 };
+  background: white;
+  border-radius: 5px;
+  width: 13rem;
+  height: 13.5rem;
+  margin-right: 2.37rem;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -125,6 +157,17 @@ class LoginCreate extends Component<Props> {
     const { message, goBack } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
+    let walletFileSection = <img className={styles.createFileEmptyIcon} src={createFileEmptyIcon} />;
+
+    if (walletFileName) {
+      walletFileSection = <div className={styles.walletFileSection}><CheckIcon
+          iconName='checkmark2'
+          size={ms(5)}
+          color="check"
+          className={styles.checkMark}
+        />
+        <WalletFileName>{walletFileName}</WalletFileName></div>;
+    }
 
     return (
       <div className={styles.createContainer}>
@@ -139,7 +182,8 @@ class LoginCreate extends Component<Props> {
               height: '28px',
               width: '28px',
               marginRight: '5px',
-              marginLeft: '-9px'
+              marginLeft: '-9px',
+              marginTop: '4px'
             }}
             />
             <span>Back</span>
@@ -149,41 +193,45 @@ class LoginCreate extends Component<Props> {
           <div className={styles.walletDescription}>
             Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
           </div>
-          <div className={styles.importButtonContainer}>
-            <Button buttonTheme="secondary" onClick={this.saveFile} small>
-              Create Wallet File
-            </Button>
-            <span className={styles.walletFileName}>{walletFileName}</span>
-          </div>
-          <ValidInput
-            label='Create Wallet Password'
-            isShowed={this.state.isPwdShowed}
-            crackTime={this.state.pwdCrackTime}
-            suggestion={this.state.pwdSuggestion}
-            score={this.state.pwdScore}
-            changFunc={this.changePassword}
-            className={styles.createPasswordField}
-            onShow={() => this.onPasswordShow(0)}            
-          />
-          <ValidInput
-            label='Confirm Wallet Password'
-            status
-            isShowed={this.state.isConfirmPwdShowed}
-            crackTime={this.state.confirmPwdText}
-            score={this.state.confirmPwdScore}
-            changFunc={this.confirmPassword}
-            className={styles.confirmPasswordField}
-            onShow={() => this.onPasswordShow(1)}            
-          />
-          <div className={styles.actionButtonContainer}>
-            <Button
-              className={styles.actionButton}
-              buttonTheme="primary"
-              onClick={() => this.login(CREATE)}
-              disabled={isDisabled}
-            >
-              Create Wallet
-            </Button>
+          <div className={styles.formContainer}>
+            <CreateFileSelector>
+              {walletFileSection}
+              <Button buttonTheme="secondary" onClick={this.saveFile} small className={styles.createFileButton}>
+                Create Wallet File
+              </Button>
+            </CreateFileSelector>
+            <div className={styles.passwordsContainer}>
+              <ValidInput
+                label='Create Wallet Password'
+                isShowed={this.state.isPwdShowed}
+                crackTime={this.state.pwdCrackTime}
+                suggestion={this.state.pwdSuggestion}
+                score={this.state.pwdScore}
+                changFunc={this.changePassword}
+                className={styles.createPasswordField}
+                onShow={() => this.onPasswordShow(0)}            
+              />
+              <ValidInput
+                label='Confirm Wallet Password'
+                status
+                isShowed={this.state.isConfirmPwdShowed}
+                crackTime={this.state.confirmPwdText}
+                score={this.state.confirmPwdScore}
+                changFunc={this.confirmPassword}
+                className={styles.confirmPasswordField}
+                onShow={() => this.onPasswordShow(1)}            
+              />
+              </div>
+            </div>
+            <div className={styles.actionButtonContainer}>
+              <Button
+                className={styles.actionButton}
+                buttonTheme="primary"
+                onClick={() => this.login(CREATE)}
+                disabled={isDisabled}
+              >
+                Create Wallet
+              </Button>
           </div>
         </div>
         <MessageBar message={message} />

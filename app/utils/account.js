@@ -1,10 +1,10 @@
 import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
-const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { TRANSACTIONS } from '../constants/TabConstants';
-import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore } from './general';
+import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
 import { getSelectedNode } from './nodes';
+const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
 
 export function createAccount(account, identity) {
 
@@ -21,6 +21,7 @@ export function createAccount(account, identity) {
     transactions: [],
     activeTab: TRANSACTIONS,
     status: status.CREATED,
+    operations: {},
     publicKey: identity.publicKey,
     privateKey: identity.privateKey,
     ...account
@@ -49,20 +50,19 @@ export async function getAccountsForIdentity(nodes, id) {
   return accounts.filter(account => account.accountId !== id);
 }
 
-export async function getSyncAccount(identities, account, nodes, selectedAccountHash, selectedParentHash ) {
-  const publicKeyHash  = account.accountId;
-  const keyStore = getSelectedKeyStore( identities, publicKeyHash, selectedParentHash );
-
+export async function getSyncAccount( identities, account, nodes, accountHash, parentHash ) {
+  const keyStore = getSelectedKeyStore( identities, accountHash, parentHash );
   account =  await activateAndUpdateAccount( account, keyStore, nodes ).catch( e => {
-    console.log('-debug: Error in: getSyncAccount for:' + publicKeyHash);
+    console.log('-debug: Error in: getSyncAccount for:' + accountHash);
     console.error(e);
     return account;
   });
-
-  if ( publicKeyHash === selectedAccountHash ) {
-    account.transactions = await getTransactions(publicKeyHash, nodes)
+  
+  const { selectedAccountHash } = getSelectedHash();
+  if ( accountHash === selectedAccountHash ) {
+    account.transactions = await getTransactions(accountHash, nodes)
       .catch( e => {
-        console.log('-debug: Error in: getSyncAccount -> getTransactions for:' + publicKeyHash);
+        console.log('-debug: Error in: getSyncAccount -> getTransactions for:' + accountHash);
         console.error(e);
         return account.transactions;
       });

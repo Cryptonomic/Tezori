@@ -21,13 +21,23 @@ type Props = {
   iconName: string,
   color: string,
   size: any,
-  onClick?: Function,
+  onClick?: Function
 };
 
 const getIconByName = iconName => {
   const toUnicode = unicode => String.fromCharCode(parseInt(unicode, 16));
 
   switch (iconName) {
+
+    case 'icon-new-window': {
+      return toUnicode('e916');
+    }
+    case 'icon-star': {
+      return toUnicode('e910');
+    }
+    case 'icon-broadcast': {
+      return toUnicode('e911');
+    }
     case 'arrow-left': {
       return toUnicode('e900');
     }
@@ -89,7 +99,7 @@ const getIconByName = iconName => {
 
     case 'change' : {
       return toUnicode('e914');
-    }   
+    }
 
     case 'receive': {
       return toUnicode('e915');
