@@ -33,7 +33,7 @@ export async function getSyncIdentity(identities, identity, nodes) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, publicKeyHash );
   identity = await activateAndUpdateAccount(identity, keyStore, nodes);
-
+  const { selectedAccountHash } = getSelectedHash();
   /*
    *  we are taking state identity accounts overriding their state
    *  with the new account we got from setAccounts.. check if any of any new accounts
@@ -82,7 +82,7 @@ export async function getSyncIdentity(identities, identity, nodes) {
   identity.accounts = accounts;
   identity.accounts = await Promise.all(
     ( identity.accounts || []).map(async account => {
-      if ( account.status !== status.READY ) {
+      if ( account.status !== status.READY || selectedAccountHash === account.accountId ) {
         return await getSyncAccount(
           identities,
           account,
@@ -100,7 +100,7 @@ export async function getSyncIdentity(identities, identity, nodes) {
     })
   );
 
-  const { selectedAccountHash } = getSelectedHash();
+  
   if ( publicKeyHash === selectedAccountHash ) {
     identity.transactions = await getTransactions(publicKeyHash, nodes)
       .catch( e => {

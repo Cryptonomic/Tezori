@@ -23,24 +23,6 @@ type Props = {
   login: Function,
 };
 
-const inputStyles = {
-  underlineFocusStyle: {
-    borderColor: '#2c7df7',
-  },
-  underlineStyle: {
-    borderColor: '#d0d2d8',
-  },
-  errorUnderlineStyle: {
-    borderColor: '#ea776c',
-  },
-  floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)',
-  },
-  floatingLabelFocusStyle: {
-    color: '#5571a7',
-  }
-};
-
 const BackToWallet = styled.div`
   display: flex;
   align-items: center;
@@ -58,17 +40,7 @@ class LoginImport extends Component<Props> {
     isLoading: false,
     walletLocation: '',
     walletFileName: '',
-    password: '',
-    isAgreement: false,
-    isInputPasswod: false,
-    isPasswordValidation: false,
-    isInputConfirmPassword: false,
-    isPasswordMatched: false,
-    isPwdMinLength: false,
-    hasPwdUpperCase: false,
-    hasPwdLowerCase: false,
-    hasPwdDigits: false,
-    hasPwdSymbols: false
+    password: ''
   };
 
   openFile = () => {
@@ -131,12 +103,12 @@ class LoginImport extends Component<Props> {
             floatingLabelText="Wallet Password"
             style={{ width: '500px', marginBottom: ms(5) }}
             type="password"
-            value={ password }
+            value={password}
             onChange={(_, password) => this.setState({ password })}
           />
           <div className={styles.actionButtonContainer}>
             <Button
-              onClick={() => this.login(IMPORT) }
+              onClick={() => this.login(IMPORT)}
               buttonTheme="primary"
               disabled={isLoading}
             >
