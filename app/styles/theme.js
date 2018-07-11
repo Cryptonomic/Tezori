@@ -28,6 +28,7 @@ export const Theme = {
     gray6: "#99a5b9",
     gray7: "#e2e7f2",
     gray8: "#cfcece",
+    gray9: "#b5c5e3",
 
     // font colors
     index0: "#94a9d1",

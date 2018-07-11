@@ -14,6 +14,7 @@ import Loader from '../../components/Loader';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 import ValidInput from '../../components/ValidInput'
+import createFileEmptyIcon from '../../../resources/createFileEmpty.svg'
 
 import styles from './styles.css';
 
@@ -30,6 +31,20 @@ const BackToWallet = styled.div`
   color: #4486f0;
   cursor: pointer;
   margin-bottom: 1rem;
+`;
+
+const CreateFileSelector = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-width: 1.5px;
+  border-style: dashed;
+  border-color: ${ ({ theme: { colors } }) => colors.gray9 };
+  background: white;
+  border-radius: 5px;
+  width: 13rem;
+  margin-right: 2.37rem;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -149,41 +164,46 @@ class LoginCreate extends Component<Props> {
           <div className={styles.walletDescription}>
             Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
           </div>
-          <div className={styles.importButtonContainer}>
-            <Button buttonTheme="secondary" onClick={this.saveFile} small>
-              Create Wallet File
-            </Button>
-            <span className={styles.walletFileName}>{walletFileName}</span>
-          </div>
-          <ValidInput
-            label='Create Wallet Password'
-            isShowed={this.state.isPwdShowed}
-            crackTime={this.state.pwdCrackTime}
-            suggestion={this.state.pwdSuggestion}
-            score={this.state.pwdScore}
-            changFunc={this.changePassword}
-            className={styles.createPasswordField}
-            onShow={() => this.onPasswordShow(0)}            
-          />
-          <ValidInput
-            label='Confirm Wallet Password'
-            status
-            isShowed={this.state.isConfirmPwdShowed}
-            crackTime={this.state.confirmPwdText}
-            score={this.state.confirmPwdScore}
-            changFunc={this.confirmPassword}
-            className={styles.confirmPasswordField}
-            onShow={() => this.onPasswordShow(1)}            
-          />
-          <div className={styles.actionButtonContainer}>
-            <Button
-              className={styles.actionButton}
-              buttonTheme="primary"
-              onClick={() => this.login(CREATE)}
-              disabled={isDisabled}
-            >
-              Create Wallet
-            </Button>
+          <div className={styles.formContainer}>
+            <CreateFileSelector>
+              <img className={styles.createFileEmptyIcon} src={createFileEmptyIcon} />
+              <div className={styles.walletFileName}>{walletFileName}</div>
+              <Button buttonTheme="secondary" onClick={this.saveFile} small className={styles.createFileButton}>
+                Create Wallet File
+              </Button>
+            </CreateFileSelector>
+            <div className={styles.passwordsContainer}>
+              <ValidInput
+                label='Create Wallet Password'
+                isShowed={this.state.isPwdShowed}
+                crackTime={this.state.pwdCrackTime}
+                suggestion={this.state.pwdSuggestion}
+                score={this.state.pwdScore}
+                changFunc={this.changePassword}
+                className={styles.createPasswordField}
+                onShow={() => this.onPasswordShow(0)}            
+              />
+              <ValidInput
+                label='Confirm Wallet Password'
+                status
+                isShowed={this.state.isConfirmPwdShowed}
+                crackTime={this.state.confirmPwdText}
+                score={this.state.confirmPwdScore}
+                changFunc={this.confirmPassword}
+                className={styles.confirmPasswordField}
+                onShow={() => this.onPasswordShow(1)}            
+              />
+              </div>
+            </div>
+            <div className={styles.actionButtonContainer}>
+              <Button
+                className={styles.actionButton}
+                buttonTheme="primary"
+                onClick={() => this.login(CREATE)}
+                disabled={isDisabled}
+              >
+                Create Wallet
+              </Button>
           </div>
         </div>
         <MessageBar message={message} />

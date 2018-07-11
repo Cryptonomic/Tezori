@@ -28,12 +28,6 @@
   max-width: 659px;
 }
 
-.importButtonContainer {
-  display: flex;
-  align-items: center;
-  margin-top: 30px;
-}
-
 .walletFileName {
   font-size: 15px;
   margin-left: 15px;
@@ -51,7 +45,28 @@
   padding: 0;
 }
 
-
 .createPasswordField {
   margin-top: 1.2rem;
+}
+
+.formContainer {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.passwordsContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.createFileEmptyIcon {
+  height: 6.75rem;
+  margin-bottom: 1.18rem;
+}
+
+.createFileButton {
+  padding-left: 0;
+  padding-right: 0;
+  width: 9.18rem;
 }
