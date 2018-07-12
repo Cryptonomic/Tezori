@@ -25,7 +25,7 @@ const initState = fromJS({
 export default function wallet(state = initState, action) {
   switch (action.type) {
     case SET_WALLET:
-      return fromJS(action.wallet);
+      return fromJS({ ...state.toJS(), ...action.wallet });
     case SET_IS_LOADING:
       return state.set('isLoading', action.isLoading);
     case SET_WALLET_FILENAME:

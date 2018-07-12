@@ -276,8 +276,8 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
           dispatch(addNewIdentity(identity));
           identities = state().wallet.get('identities').toJS();
           await saveUpdatedWallet(identities, walletLocation, walletFileName, password);
-          await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
           dispatch(push('/home'));
+          await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
         } else {
           dispatch(addMessage('Identity already exist', true));
         }
@@ -311,14 +311,6 @@ export function login(loginType, walletLocation, walletFileName, password) {
 
       const identities = wallet.identities
         .map( identity => createIdentity(identity) );
-
-      let selectedAccountHash ='';
-      let selectedParentHash = '';
-
-      if ( identities.length ) {
-        const { publicKeyHash } = identities[0];
-        selectedAccountHash = selectedParentHash = publicKeyHash;
-      }
       
       dispatch(
         setWallet({
@@ -326,16 +318,13 @@ export function login(loginType, walletLocation, walletFileName, password) {
           identities,
           walletLocation,
           walletFileName,
-          password,
-          selectedAccountHash,
-          selectedParentHash
+          password
         }, 'wallet')
       );
 
       dispatch(automaticAccountRefresh());
-      await dispatch(syncWallet());
-
       dispatch(push('/home'));
+      await dispatch(syncWallet());
     } catch (e) {
       dispatch(addMessage(e.name, true));
     }
