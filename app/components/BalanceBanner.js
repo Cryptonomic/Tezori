@@ -25,6 +25,7 @@ type Props = {
   parentIndex?: number,
   parentIdentity?: Object,
   selectedParentHash: string,
+  delegatedAddress?: string
 };
 
 const Container = styled.header`
@@ -100,7 +101,7 @@ const HelpIcon = styled(TezosIcon)`
 
 function BalanceBanner(props: Props) {
   const { storeTypes, isReady, balance, publicKeyHash, onRefreshClick, theme, parentIndex,
-    parentIdentity, selectedParentHash, isManagerAddress, time } = props;
+    parentIdentity, selectedParentHash, isManagerAddress, time, delegatedAddress } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel = !isManagerAddress && smartAddressIndex
     ? `Delegated Address ${smartAddressIndex}`
@@ -162,10 +163,10 @@ function BalanceBanner(props: Props) {
               : null
           }
         </AddressInfo>
-        { publicKeyHash !== selectedParentHash &&
+        { delegatedAddress &&
           <DelegateContainer>
-            <Delegate>Delegated to the Manager Address:</Delegate>
-            <TezosAddress address={selectedParentHash} color={'white'} size={ms(-1)} />
+            <Delegate>Delegated to {delegatedAddress===selectedParentHash?'the Manager Address': ''}</Delegate>
+            <TezosAddress address={delegatedAddress} color='white' size={ms(-1)} weight={300} />
           </DelegateContainer> }
       </BottomRow>
     </Container>
