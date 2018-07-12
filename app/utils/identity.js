@@ -82,7 +82,7 @@ export async function getSyncIdentity(identities, identity, nodes) {
   identity.accounts = accounts;
   identity.accounts = await Promise.all(
     ( identity.accounts || []).map(async account => {
-      if ( account.status !== status.READY || selectedAccountHash === account.accountId ) {
+      if ( account.status !== status.READY ) {
         return await getSyncAccount(
           identities,
           account,
@@ -95,12 +95,19 @@ export async function getSyncIdentity(identities, identity, nodes) {
           return account;
         });
 
+      } else if ( selectedAccountHash === account.accountId ) {
+        account.transactions = await getTransactions(selectedAccountHash, nodes)
+          .catch( e => {
+            console.log('-debug: Error in: else -> getSyncIdentity -> getTransactions for:' + selectedAccountHash);
+            console.error(e);
+            return account.transactions;
+          });
       }
       return account;
     })
   );
   
-  if ( publicKeyHash === selectedAccountHash || selectedAccountHash === 'login') {
+  if ( publicKeyHash === selectedAccountHash) {
     identity.transactions = await getTransactions(publicKeyHash, nodes)
       .catch( e => {
         console.log('-debug: Error in: getSyncIdentity -> getTransactions for:' + publicKeyHash);
