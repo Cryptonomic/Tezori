@@ -1,0 +1,9 @@
+{
+  "name": "Tezori",
+  "version": "0.1.0",
+  "logo": "tezosLogo.svg",
+  "icon": "tezos",
+  "termsService": "https://github.com/Cryptonomic/Tezos-Wallet",
+  "privacyPolicy": "https://github.com/Cryptonomic/Tezos-Wallet",
+  "tagline": "A community wallet for Tezos"
+}

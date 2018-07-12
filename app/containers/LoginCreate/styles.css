@@ -16,32 +16,23 @@
   color: #1A325F;
   font-size: 36px;
   font-weight: 300;
-  margin: 0 0 30px 0;
+  margin: 0 0 0.75rem 0;
 }
 
 .walletDescription {
   font-size: 18px;
+  font-weight: 300;
   line-height: 27px;
   letter-spacing: 0.7px;
   color: #1e1313;
   max-width: 659px;
 }
 
-.importButtonContainer {
-  display: flex;
-  align-items: center;
-  margin-top: 30px;
-}
-
-.walletFileName {
-  font-size: 15px;
-  margin-left: 15px;
-  opacity: 0.5;
-}
-
 .actionButtonContainer {
   width: 194px;
   margin-top: 40px;
+  display: flex;
+  align-self: center;
 }
 
 .actionButton {
@@ -50,3 +41,35 @@
   padding: 0;
 }
 
+.formContainer {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.passwordsContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.createFileEmptyIcon {
+  height: 6.75rem;
+  margin-bottom: 1.18rem;
+}
+
+.createFileButton {
+  padding-left: 0;
+  padding-right: 0;
+  width: 9.18rem;
+  margin-bottom: 1.6rem;
+}
+
+.walletFileSection {
+  text-align: center;
+  margin-bottom: 1.125rem;
+}
+
+.checkMark {
+  display: block;
+  margin-bottom: 15px;
+}

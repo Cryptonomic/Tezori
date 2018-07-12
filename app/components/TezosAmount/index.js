@@ -6,7 +6,6 @@ import CopyIcon from '../CopyIcon';
 import Tooltip from '../Tooltip';
 import { formatAmount } from "../../utils/currancy";
 import { ms } from '../../styles/helpers';
-import contentCopy from '../../../resources/contentCopy.svg';
 
 type Props = {
   amount: number,

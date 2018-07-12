@@ -23,30 +23,12 @@ type Props = {
   login: Function,
 };
 
-const inputStyles = {
-  underlineFocusStyle: {
-    borderColor: '#2c7df7',
-  },
-  underlineStyle: {
-    borderColor: '#d0d2d8',
-  },
-  errorUnderlineStyle: {
-    borderColor: '#ea776c',
-  },
-  floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)',
-  },
-  floatingLabelFocusStyle: {
-    color: '#5571a7',
-  }
-};
-
 const BackToWallet = styled.div`
   display: flex;
   align-items: center;
   color: #4486f0;
   cursor: pointer;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -58,17 +40,7 @@ class LoginImport extends Component<Props> {
     isLoading: false,
     walletLocation: '',
     walletFileName: '',
-    password: '',
-    isAgreement: false,
-    isInputPasswod: false,
-    isPasswordValidation: false,
-    isInputConfirmPassword: false,
-    isPasswordMatched: false,
-    isPwdMinLength: false,
-    hasPwdUpperCase: false,
-    hasPwdLowerCase: false,
-    hasPwdDigits: false,
-    hasPwdSymbols: false
+    password: ''
   };
 
   openFile = () => {
@@ -119,28 +91,31 @@ class LoginImport extends Component<Props> {
           </BackToWallet>
 
           <h3 className={styles.walletTitle}>
-            Import your wallet from a backup
+            Open an existing wallet
           </h3>
           <div className={styles.importButtonContainer}>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
             </Button>
-            <span className={styles.walletFileName}>{completeWalletPath}</span>
+            <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <TextField
-            floatingLabelText="Password"
+            floatingLabelText="Wallet Password"
             style={{ width: '500px', marginBottom: ms(5) }}
             type="password"
-            value={ password }
+            value={password}
             onChange={(_, password) => this.setState({ password })}
           />
-          <Button
-            onClick={() => this.login(IMPORT) }
-            buttonTheme="primary"
-            disabled={isLoading}
-          >
-            Import
-          </Button>
+          <div className={styles.actionButtonContainer}>
+            <Button
+              className={styles.actionButton}
+              onClick={() => this.login(IMPORT)}
+              buttonTheme="primary"
+              disabled={isLoading}
+            >
+              Import
+            </Button>
+          </div>
         </div>
         <MessageBar message={message} />
       </div>

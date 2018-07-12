@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Modal from 'react-modal';
 import { H2 } from '../Heading'
 import Button from '../Button'
+import { termsService, privacyPolicy } from '../../config.json'
 import { ms } from '../../styles/helpers'
 import theme from '../../styles/theme'
 
@@ -16,27 +17,35 @@ const Container = styled.div`
 
 const Title = styled(H2)`
   color: ${({ theme: { colors } }) => colors.primary };
+  font-weight: ${({theme: { typo: { weights } } }) => weights.normal };
 `
 
 const Description = styled.p`
   color: ${({ theme: { colors } }) => colors.primary };
   font-weight: ${({theme: { typo: { weights } } }) => weights.light };
-  margin-bottom: ${ms(1)};
+  margin-bottom: ${ms(5)};
+  margin-top: 0.6rem;
 `
 
 const Link = styled.span`
   color: ${({ theme: { colors } }) => colors.accent };
   cursor: pointer;
+  font-weight: ${({theme: { typo: { weights } } }) => weights.normal };
 `
 const customStyles = {
   content : {
-    left: 0,
-    width: '100%',
-    bottom: 0,
-    top: '40%',
-    display: 'flex',
     alignItems: 'center',
+    border: '0',
+    borderRadius: '0',
+    bottom: 0,
+    display: 'flex',
     justifyContent: 'center',
+    left: 0,
+    top: '57%',
+    width: '100%',
+  },
+  overlay: {
+    backgroundColor: 'rgba(155, 155, 155, 0.68)',
   }
 };
 
@@ -47,7 +56,8 @@ type Props = {
 
 
 const TermsModal = (props:Props) => {
-  const openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet')
+  const openTermsService = () => shell.openExternal(termsService)
+  const openPrivacyPolicy = () => shell.openExternal(privacyPolicy)
   const { isOpen, agreeTermsAndPolicy } = props
   return (
     <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
@@ -55,9 +65,9 @@ const TermsModal = (props:Props) => {
         <Title>Hi there!</Title>
         <Description>
           Before we get started, please read and accept our
-          <Link onClick={openLink}> Terms of Service </Link>
+          <Link onClick={openTermsService}> Terms of Service </Link>
           and
-          <Link onClick={openLink}> Privacy Policy </Link>
+          <Link onClick={openPrivacyPolicy}> Privacy Policy </Link>
         </Description>
         <Button
           buttonTheme="primary"

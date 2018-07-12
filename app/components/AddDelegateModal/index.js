@@ -8,17 +8,21 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import Tooltip from '../Tooltip';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon';
-import { utezToTez } from '../../utils/currancy';
 
 import Button from '../Button';
 import Loader from '../Loader';
+import Fees from '../Fees/';
 
 import styles from './index.css';
-import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
+import {
+  createNewAccount,
+  fetchOriginationAverageFees
+} from '../../reduxContent/createDelegate/thunks';
 
 type Props = {
   selectedParentHash: string,
   createNewAccount: Function,
+  fetchOriginationAverageFees: Function,
   open: boolean,
   onCloseClick: Function
 };
@@ -27,21 +31,41 @@ const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
 
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  display: block;
+`
+
 const defaultState = {
   isLoading: false,
   delegate: '',
   amount: null,
   fee: 100,
-  passPhrase: ''
+  passPhrase: '',
+  averageFees: {
+    low: 100,
+    medium: 200,
+    high:400
+  }
 };
 
 class AddDelegateModal extends Component<Props> {
   props: Props;
   state = defaultState;
 
+  async componentDidUpdate(prevProps, prevState) {
+    const { open, fetchOriginationAverageFees } = this.props;
+    if ( open && open !== prevProps.open ) {
+      const averageFees = await fetchOriginationAverageFees();
+      this.setState({ averageFees, fee: averageFees.low });
+    }
+  }
+
   changeAmount = (_, amount) =>  this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
-  changeFee = (_, index, fee) => this.setState({ fee });
+  changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (_, passPhrase) => this.setState({ passPhrase });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
@@ -60,7 +84,7 @@ class AddDelegateModal extends Component<Props> {
     const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
     this.setIsLoading(true);
-    if ( await createNewAccount( delegate, amount, fee, passPhrase, selectedParentHash ) ) {
+    if ( await createNewAccount( delegate, amount, Math.floor(fee), passPhrase, selectedParentHash ) ) {
       this.setState(defaultState);
       onCloseClick();
     } else {
@@ -70,8 +94,8 @@ class AddDelegateModal extends Component<Props> {
 
   render() {
     const { open, onCloseClick } = this.props;
-    const { isLoading, delegate, amount, fee, passPhrase } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !fee || !passPhrase;
+    const { isLoading, averageFees, delegate, amount, fee, passPhrase } = this.state;
+    const isDisabled = isLoading || !delegate || !amount || !passPhrase;
 
     return (
       <Dialog
@@ -106,26 +130,30 @@ class AddDelegateModal extends Component<Props> {
               <HelpIcon
                 iconName="help"
                 size={ms(0)}
-                color={'secondary'}
+                color='secondary'
               />
             </Button>
           </Tooltip>
         </div>
         <div className={styles.amountAndFeeContainer}>
-          <div className={styles.amountSendContainer}>
+          <div className={styles.amountSendContainer} style={{position:'relative'}}>
             <TextField
               floatingLabelText="Amount"
               style={{ width: '100%' }}
               onChange={this.changeAmount}
+              type="number"
             />
+            <TezosIconInput color='secondary' />
           </div>
           <div className={styles.feeContainer}>
-            <SelectField floatingLabelText="Fee" value={fee}  onChange={this.changeFee} className={styles.feeSelectComponent}>
-              <MenuItem value={100} primaryText={`Low Fee: ${ utezToTez(100)} `} />
-              <MenuItem value={200} primaryText={`Medium Fee: ${ utezToTez(200)}`} />
-              <MenuItem value={400} primaryText={`High Fee: ${ utezToTez(400)}`} />
-              <MenuItem value={500} primaryText="Custom" />
-            </SelectField>
+            <Fees
+              style={{ width: '50%' }}
+              low={ averageFees.low }
+              medium={ averageFees.medium }
+              high={ averageFees.high }
+              fee={ fee }
+              onChange={this.changeFee}
+            />
           </div>
         </div>
         <div className={styles.amountAndFeeContainer}>
@@ -155,6 +183,7 @@ class AddDelegateModal extends Component<Props> {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      fetchOriginationAverageFees,
       createNewAccount
     },
     dispatch

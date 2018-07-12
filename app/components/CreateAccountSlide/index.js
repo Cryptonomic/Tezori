@@ -44,13 +44,14 @@ const CreateAccountSlideContainer = styled.div`
     display: flex;
     float: right;
     margin-top: 16px;
-    color: ${({ theme: { colors } }) => colors.blue};
+    color: ${({ theme: { colors } }) => colors.blue1};
     font-size: 14px;
     cursor: pointer;
   }
   .back-part {
     margin: 0 0 20px -8px;
     color: #4486f0;
+    cursor: pointer;
     display: flex;
     font-size: 16px;
     .chevron-icon {
@@ -96,7 +97,7 @@ type Props = {
 };
 
 class CreateAccountSlide extends Component<Props> {
-  props:Props;
+  props: Props;
   state = {
     seed: '',
     currentSlide: 0
@@ -178,7 +179,7 @@ class CreateAccountSlide extends Component<Props> {
 
         <ActionButton
           buttonTheme="primary"
-          onClick={importAddress}
+          onClick={this.importAddress}
         >
           Create Account
         </ActionButton>

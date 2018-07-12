@@ -5,8 +5,9 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Button from './../Button/';
-import { utezToTez } from '../../utils/currancy';
-import tezosLogo from '../../../resources/tezosLogo.png';
+import TezosIcon from '../TezosIcon'
+import { formatAmount } from '../../utils/currancy';
+import { ms } from '../../styles/helpers'
 
 import styles from './index.css';
 
@@ -54,12 +55,12 @@ class DelegateConfirmationModal extends Component<Props> {
           <div className={styles.modalAddress}>{address}</div>
           <div className={styles.feeContainer}>
             <div className={styles.feeText}>Fee: </div>
-            {utezToTez(fee)}
-            <img src={tezosLogo} className={styles.tezosSymbol} />
+            { formatAmount(fee) }
+            <TezosIcon color='secondary' />
           </div>
           <div className={styles.confirmationContainer}>
             <TextField
-              floatingLabelText="Enter Password"
+              floatingLabelText="Enter Wallet Password"
               style={{ width: '50%' }}
               type="password"
               value={password}
