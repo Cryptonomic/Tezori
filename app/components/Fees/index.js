@@ -88,7 +88,7 @@ class Fee extends Component<Props> {
               ? <MenuItem value={tezToUtez(custom)} primaryText={<div>Custom Fee: { formatAmount(tezToUtez(custom))} <TezosIcon color={'black'}/></div>} />
               : null
           }
-          <MenuItem value={'custom'} primaryText="Custom" onClick={this.openConfirmation} />
+          <MenuItem value='custom' primaryText="Custom" onClick={this.openConfirmation} />
         </SelectField>
         <Dialog
           modal
@@ -100,23 +100,26 @@ class Fee extends Component<Props> {
             style={{ fill: '#7190C6' }}
             onClick={ this.closeConfirmation }
           />
-          <H2>Enter Custom amount</H2>
-          <FeeInput>
-            <TextField
-              floatingLabelText="Custom Fee"
-              style={{ width: '100%' }}
-              value={ custom }
-              onChange={this.handleCustomChange}
-            />
-            <TezosIconInput color={'secondary'}/>
-          </FeeInput>
+          <div>
+            <H2>Enter Custom Amount</H2>
+            <FeeInput>
+              <TextField
+                floatingLabelText="Custom Fee"
+                style={{ width: '100%' }}
+                value={custom}
+                type="number"
+                onChange={this.handleCustomChange}
+              />
+              <TezosIconInput color='secondary' />
+            </FeeInput>
 
-          <StyledSaveButton
-            buttonTheme="primary"
-            onClick={this.handleSetCustom}
-          >
-            Set Custom Fee
-          </StyledSaveButton>
+            <StyledSaveButton
+              buttonTheme="primary"
+              onClick={this.handleSetCustom}
+            >
+              Set Custom Fee
+            </StyledSaveButton>
+          </div>
         </Dialog>
       </Fragment>
     );
