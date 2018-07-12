@@ -67,7 +67,7 @@ app.on('ready', async () => {
     height: 728,
     minHeight: 728,
     minWidth: 1024,
-    title: `${name} - v${version}`,
+    title: `${name} - v${version}`
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

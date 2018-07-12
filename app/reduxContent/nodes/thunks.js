@@ -3,12 +3,10 @@ import {
   setSelected as _setSelected,
   addNode as _addNode,
   removeNode as _removeNode,
-  updateNode as _updateNode,
+  updateNode as _updateNode
 } from './actions';
 
-import {
-  getNodes
-} from './selectors';
+import { getNodes } from './selectors';
 
 export function setSelected(name, target) {
   return (dispatch, state) => {

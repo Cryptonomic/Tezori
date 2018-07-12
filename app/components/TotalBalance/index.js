@@ -27,7 +27,7 @@ type Props = {
   totalBalance: number
 };
 
-class TotalBalance extends Component {
+class TotalBalance extends Component<Props> {
   render() {
     const { totalBalance } = this.props;
     return (

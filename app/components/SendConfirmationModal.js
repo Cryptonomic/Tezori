@@ -34,13 +34,6 @@ const PaswordContainer = styled.div`
   align-items: flex-end;
 `;
 
-const TezosSymbol = styled.img`
-  height: 17px;
-  width: 17px;
-  filter: brightness(0%);
-  opacity: 0.5;
-`;
-
 const Heading = styled(H5)`
   margin-bottom: 20px;
   color: ${({ theme: { colors } }) => colors.primary};
@@ -54,10 +47,10 @@ type Props = {
   onCloseClick?: Function,
   onPasswordChange?: Function,
   onSend?: Function,
-  isLoading?: boolean,
+  isLoading?: boolean
 };
 
-const SendConfirmationModal = props => {
+const SendConfirmationModal = (props: Props) => {
   const {
     amount,
     address,
@@ -86,7 +79,7 @@ const SendConfirmationModal = props => {
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosIcon color='secondary'/>
+          <TezosIcon color="secondary" />
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>
@@ -99,11 +92,7 @@ const SendConfirmationModal = props => {
           value={password}
           onChange={onPasswordChange}
         />
-        <Button
-          buttonTheme="secondary"
-          onClick={onSend}
-          disabled={isLoading}
-        >
+        <Button buttonTheme="secondary" onClick={onSend} disabled={isLoading}>
           Confirm
         </Button>
       </PaswordContainer>

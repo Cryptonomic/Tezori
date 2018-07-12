@@ -230,7 +230,9 @@ export default class MenuBuilder {
           {
             label: 'Search Issues',
             click() {
-              shell.openExternal('https://github.com/Cryptonomic/Tezori/issues');
+              shell.openExternal(
+                'https://github.com/Cryptonomic/Tezori/issues'
+              );
             }
           }
         ]

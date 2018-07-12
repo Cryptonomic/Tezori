@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { TextField } from 'material-ui';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
@@ -30,7 +28,7 @@ const TermsAndPolicySection = styled.div`
   width: 80%;
   padding: ${ms(2)} 0 ${ms(4)} 0;
   border-top-width: 1px;
-  border-top-color: ${ ({ theme: { colors } }) => colors.index1 };
+  border-top-color: ${({ theme: { colors } }) => colors.index1};
   border-top-style: solid;
   justify-content: center;
   align-items: center;
@@ -38,7 +36,7 @@ const TermsAndPolicySection = styled.div`
 `;
 
 const Strong = styled.span`
-  color: ${ ({ theme: { colors } }) => colors.accent };
+  color: ${({ theme: { colors } }) => colors.accent};
   font-weight: 400;
 `;
 
@@ -69,7 +67,7 @@ const AppName = styled.h1`
   line-height: normal;
   letter-spacing: 0.5rem;
   margin: 0 auto;
-  color: ${ ({ theme: { colors } }) => colors.primary };
+  color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const AppSubtitle = styled.h2`
@@ -83,7 +81,7 @@ const AppSubtitle = styled.h2`
   line-height: 1.2rem;
   letter-spacing: 0.25rem;
   margin: 0 auto 2.5rem;
-  color: ${ ({ theme: { colors } }) => colors.primary };
+  color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const CreateWalletButton = styled(Button)`
@@ -96,8 +94,7 @@ const UnlockWalletButton = styled(Button)`
   width: 100%;
 `;
 
-const Background = styled.div`
-`;
+const Background = styled.div``;
 
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 
@@ -120,9 +117,9 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  goTo = (route) => {
+  goTo = route => {
     const { match, history } = this.props;
-    history.push(`${match.path}/${ route }`);
+    history.push(`${match.path}/${route}`);
   };
 
   openTermsService = () => this.goTo('conditions/termsOfService');
@@ -157,13 +154,21 @@ class LoginHome extends Component<Props> {
               </UnlockWalletButton>
               <Tip>
                 <div>Want to import your Fundraiser paper wallet?</div>
-                <div><Link onClick={() => this.goTo('create')}><Strong>{`Create a ${name} wallet`}</Strong></Link> first.</div>
+                <div>
+                  <Link onClick={() => this.goTo('create')}>
+                    <Strong>{`Create a ${name} wallet`}</Strong>
+                  </Link>{' '}
+                  first.
+                </div>
               </Tip>
             </div>
           </section>
         </div>
         <TermsAndPolicySection>
-          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
+          <Checkbox
+            isChecked={this.state.isAgreement}
+            onCheck={this.updateStatusAgreement}
+          />
           <Description>
             I acknowledge that I have read and accepted the
             <Link onClick={this.openTermsService}> Terms of Service </Link>
@@ -172,16 +177,22 @@ class LoginHome extends Component<Props> {
           </Description>
         </TermsAndPolicySection>
         <TermsModal
-          goTo={ this.goTo }
+          goTo={this.goTo}
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
         <Background className={styles.bgContainer}>
-          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src={ bgHero } />
-          <img className={styles.bgCircle1} src={ bgCircle01 } />
-          <img className={styles.bgCircle2} src={ bgCircle02 } />
-          <img className={styles.bgCircle3} src={ bgCircle03 } />
-          <img className={styles.bgCircle4} src={ bgCircle04 } />
+          <img
+            className={`${styles.bgContainerImg} ${styles.fadeIn} ${
+              styles.delay500
+            }`}
+            src={bgHero}
+            alt=""
+          />
+          <img className={styles.bgCircle1} src={bgCircle01} alt="" />
+          <img className={styles.bgCircle2} src={bgCircle02} alt="" />
+          <img className={styles.bgCircle3} src={bgCircle03} alt="" />
+          <img className={styles.bgCircle4} src={bgCircle04} alt="" />
         </Background>
       </SectionContainer>
     );

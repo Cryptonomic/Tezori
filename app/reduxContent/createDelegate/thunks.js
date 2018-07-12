@@ -12,30 +12,39 @@ import {
   getSelectedKeyStore,
   fetchAverageFees,
   clearOperationId
-} from '../../utils/general'
+} from '../../utils/general';
 
 const { sendOriginationOperation } = TezosOperations;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
-    return await fetchAverageFees(nodes, 'origination');
-  }
+    const averageFees = await fetchAverageFees(nodes, 'origination');
+    return averageFees;
+  };
 }
 
-export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHash ) {
+export function createNewAccount(
+  delegate,
+  amount,
+  fee,
+  passPhrase,
+  publicKeyHash
+) {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
     const walletPassword = state().wallet.get('password');
-    const identities = state().wallet.get('identities').toJS();
-    const parsedAmount = Number(amount.replace(/\,/g,''));
+    const identities = state()
+      .wallet.get('identities')
+      .toJS();
+    const parsedAmount = Number(amount.replace(/,/g, ''));
     const amountInUtez = tezToUtez(parsedAmount);
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount'},
-      { value: parsedAmount, type: 'validAmount'},
-      { value: amountInUtez, type: 'posNum', name: 'Amount'},
-      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase'},
+      { value: amount, type: 'notEmpty', name: 'Amount' },
+      { value: parsedAmount, type: 'validAmount' },
+      { value: amountInUtez, type: 'posNum', name: 'Amount' },
+      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase' },
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' }
     ];
 
@@ -45,14 +54,18 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
       return false;
     }
 
-    if ( passPhrase !== walletPassword ) {
+    if (passPhrase !== walletPassword) {
       const error = 'Incorrect password';
       dispatch(addMessage(error, true));
       return false;
     }
 
     const identity = findIdentity(identities, publicKeyHash);
-    const keyStore = getSelectedKeyStore(identities, publicKeyHash, publicKeyHash);
+    const keyStore = getSelectedKeyStore(
+      identities,
+      publicKeyHash,
+      publicKeyHash
+    );
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
     console.log('-debug: - iiiii - url, apiKey', url, apiKey);
     const newAccount = await sendOriginationOperation(
@@ -63,28 +76,30 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
       true,
       true,
       fee
-    ).catch((err) => {
-      err.name = err.message;
-      console.error(err);
-      dispatch(addMessage(err.name, true));
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(errorObj);
+      dispatch(addMessage(errorObj.name, true));
       return false;
     });
 
-    if ( newAccount ) {
+    if (newAccount) {
       const newAccountHash =
-        newAccount.results.contents[0].metadata.operation_result.originated_contracts[0];
+        newAccount.results.contents[0].metadata.operation_result
+          .originated_contracts[0];
 
       const operationId = clearOperationId(newAccount.operationGroupID);
       dispatch(
         addNewAccount(
           publicKeyHash,
-          createAccount({
+          createAccount(
+            {
               accountId: newAccountHash,
               balance: amountInUtez,
               manager: publicKeyHash,
               delegateValue: '',
               operations: {
-                [ CREATED ]: operationId
+                [CREATED]: operationId
               }
             },
             identity
@@ -92,11 +107,13 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
         )
       );
 
-      dispatch(addMessage(
-        `Successfully started address origination.`,
-        false,
-        operationId
-      ));
+      dispatch(
+        addMessage(
+          `Successfully started address origination.`,
+          false,
+          operationId
+        )
+      );
 
       return true;
     }

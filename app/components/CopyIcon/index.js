@@ -1,19 +1,18 @@
-import React, { Component } from 'react'
-import { clipboard } from 'electron'
-import styled, { withTheme } from 'styled-components'
-import TezosIcon from '../TezosIcon'
+import React, { Component } from 'react';
+import { clipboard } from 'electron';
+import styled, { withTheme } from 'styled-components';
 import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-import { ms } from '../../styles/helpers'
+import { ms } from '../../styles/helpers';
 
 const CopyConfirmationTooltip = styled.div`
   position: absolute;
   top: -35px;
   right: -55px;
-  background: ${({ theme: { colors } }) => colors.white };
-  color: ${({ theme: { colors } }) => colors.accent };
+  background: ${({ theme: { colors } }) => colors.white};
+  color: ${({ theme: { colors } }) => colors.accent};
   font-size: ${ms(-1)};
   border-radius: ${ms(0)};
-  border: 1px solid ${ ({ theme: { colors } }) => colors.accent };
+  border: 1px solid ${({ theme: { colors } }) => colors.accent};
   padding: ${ms(-5)};
   opacity: ${({ show }) => (show ? 1 : 0)};
   transition: opacity 0.4s;
@@ -22,19 +21,19 @@ const CopyConfirmationTooltip = styled.div`
 
 const Container = styled.div`
   position: relative;
-`
+`;
 
 class CopyIcon extends Component<Props> {
   state = {
     showCopyConfirmation: false
-  }
+  };
 
   copyToClipboard = text => {
     try {
       clipboard.writeText(text);
-      this.setState({ showCopyConfirmation: true}, () => {
+      this.setState({ showCopyConfirmation: true }, () => {
         setTimeout(() => {
-            this.setState({ showCopyConfirmation: false });
+          this.setState({ showCopyConfirmation: false });
         }, 1000);
       });
     } catch (e) {
@@ -42,8 +41,13 @@ class CopyIcon extends Component<Props> {
     }
   };
 
-  render () {
-    const { text, color, theme: { colors }, className } = this.props
+  render() {
+    const {
+      text,
+      color,
+      theme: { colors },
+      className
+    } = this.props;
     return (
       <Container>
         <ContentCopy
@@ -53,7 +57,7 @@ class CopyIcon extends Component<Props> {
             height: ms(1),
             color: colors[color],
             cursor: 'pointer',
-            marginLeft: ms(0),
+            marginLeft: ms(0)
           }}
           className={className}
         />
@@ -61,12 +65,12 @@ class CopyIcon extends Component<Props> {
           Copied!
         </CopyConfirmationTooltip>
       </Container>
-    )
+    );
   }
 }
 
 CopyIcon.defaultProps = {
   color: 'white'
-}
+};
 
-export default withTheme(CopyIcon)
+export default withTheme(CopyIcon);
