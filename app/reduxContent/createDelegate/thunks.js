@@ -4,12 +4,23 @@ import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
 import { tezToUtez } from '../../utils/currancy';
 import { createAccount } from '../../utils/account';
-import { getSelectedKeyStore } from '../../utils/general'
 import { findIdentity } from '../../utils/identity';
 import { getSelectedNode } from '../../utils/nodes';
 import { TEZOS } from '../../constants/NodesTypes';
+import { CREATED } from '../../constants/StatusTypes';
+import {
+  getSelectedKeyStore,
+  fetchAverageFees
+} from '../../utils/general'
 
 const { sendOriginationOperation } = TezosOperations;
+
+export function fetchOriginationAverageFees() {
+  return async (dispatch, state) => {
+    const nodes = state().nodes.toJS();
+    return await fetchAverageFees(nodes, 'origination');
+  }
+}
 
 export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHash ) {
   return async (dispatch, state) => {
@@ -69,12 +80,16 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
               accountId: newAccountHash,
               balance: amountInUtez,
               manager: publicKeyHash,
-              delegateValue: delegate
+              delegateValue: delegate,
+              operations: {
+                [ CREATED ]: newAccount.operationGroupID
+              }
             },
             identity
           )
         )
       );
+
       dispatch(addMessage(
         `Successfully sent origination operation ${newAccount.operationGroupID}.`,
         false

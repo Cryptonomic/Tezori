@@ -1,9 +1,12 @@
 import { TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
-import { getSelectedKeyStore } from '../../utils/general'
 import { tezToUtez } from '../../utils/currancy';
 import { displayError  } from '../../utils/formValidation';
+import {
+  getSelectedKeyStore,
+  fetchAverageFees
+} from '../../utils/general'
 
 const {
   sendTransactionOperation
@@ -11,6 +14,13 @@ const {
 
 import { getSelectedNode } from '../../utils/nodes';
 
+
+export function fetchTransactionAverageFees() {
+  return async (dispatch, state) => {
+    const nodes = state().nodes.toJS();
+    return await fetchAverageFees(nodes, 'transaction');
+  }
+}
 
 export function validateAmount( amount, toAddress ) {
   return async (dispatch, state) => {

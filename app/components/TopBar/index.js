@@ -9,7 +9,7 @@ import { lighten } from 'polished';
 import { getWalletName } from '../../reduxContent/wallet/selectors';
 import SettingsController from '../SettingsController';
 import { ms } from '../../styles/helpers';
-import TezosIcon from './../TezosIcon/';
+import Logo from './../Logo';
 
 const Container = styled.div`
   display: flex;
@@ -17,8 +17,6 @@ const Container = styled.div`
   align-items: center;
   padding: ${ms(0)} ${ms(3)};
   flex-shrink: 0;
-  background-color: ${({ onlyLogo, theme: { colors } }) =>
-  onlyLogo ? colors.gray2 : lighten(0.03, colors.gray2)};
 `;
 
 const InfoContainer = styled.div`
@@ -48,11 +46,11 @@ class TopBar extends Component {
     return (
       <Container onlyLogo={onlyLogo}>
         {onlyLogo ? (
-          <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
+          <Logo />
         ) : (
           <Fragment>
             <InfoContainer>
-              <TezosIcon iconName="tezos" size={ms(7)} color="accent" />
+              <Logo />
               <Text>{this.props.walletName}</Text>
             </InfoContainer>
             <SettingsController />

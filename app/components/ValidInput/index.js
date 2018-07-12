@@ -15,6 +15,10 @@ const Content = styled.div`
   }
 
 `
+const PasswordStrengthSuggestions = styled.div`
+  height: 3.3rem;
+  width: 24rem;
+`
 const Suggestion = styled.div`
   font-size: 12px;
   line-height: 18px;
@@ -82,7 +86,9 @@ const InputValid = (props: Props) => {
   }
 
   return (
-    <Container>
+    <Container
+      className={props.className}
+    >
       <Content>
         <TextField
           className='input-text-field'
@@ -91,7 +97,7 @@ const InputValid = (props: Props) => {
           floatingLabelStyle={inputStyles.floatingLabelStyle}
           floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
           underlineStyle={inputStyles.underlineStyle}
-          underlineFocusStyle={{borderColor, width}}                      
+          underlineFocusStyle={{borderColor, width}}
           onChange={(_, newVal) => props.changFunc(newVal)}
         />
         {props.score===4 && <CheckIcon
@@ -108,8 +114,10 @@ const InputValid = (props: Props) => {
           onClick={props.onShow}
         />
       </Content>
-      {!!props.crackTime && <CrackTime color={borderColor} dangerouslySetInnerHTML={{ __html: props.crackTime }} />}
-      {!!props.suggestion && <Suggestion>{props.suggestion}</Suggestion>}
+      <PasswordStrengthSuggestions>
+        {!!props.crackTime && <CrackTime color={borderColor} dangerouslySetInnerHTML={{ __html: props.crackTime }} />}
+        {!!props.suggestion && <Suggestion>{props.suggestion}</Suggestion>}
+      </PasswordStrengthSuggestions>
 
     </Container>
   )

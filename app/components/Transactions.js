@@ -1,124 +1,65 @@
 // @flow
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn
-} from 'material-ui';
+import moment from 'moment'
 
-import tezosLogo from '../../resources/tezosLogo.png';
 import styled from 'styled-components';
-import TezosAmount from './TezosAmount';
-import { formatAmount } from '../utils/currancy';
-import { ms } from '../styles/helpers';
+import TransactionsLabel from './TransactionsLabel';
+import Transaction from './Transaction';
 
 const Container = styled.section`
   height: 100%;
   background-color: ${({ theme: { colors } }) => colors.white};
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  flex: 1;
 `;
 
-const Details = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  cursor: pointer;
-  text-decoration: underline;
-`;
-
-const Link = styled.a`
-  color: ${({ theme: { colors } }) => colors.gray0};
-`;
-
-const Amount = styled(TezosAmount)`
-  color: inherit;
-`;
-
-const TezosSymbol = styled.img`
-  height: 17px;
-  width: 17px;
-  filter: brightness(0%);
-`;
-
-const RowElement = styled.div`
-  display: flex;
+const SectionContainer = styled.div`
 `;
 
 type Props = {
-  transactions: List
+  transactions: List,
+  selectedAccountHash: string,
+  selectedParentHash: string
 };
 
 export default function Transactions(props: Props) {
-  const { transactions } = props;
+  const { transactions, selectedAccountHash, selectedParentHash } = props
 
-  function renderTableHeader() {
-    return (
-      <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-        <TableRow>
-          <TableHeaderColumn>Block Level</TableHeaderColumn>
-          <TableHeaderColumn>Kind</TableHeaderColumn>
-          <TableHeaderColumn>Source</TableHeaderColumn>
-          <TableHeaderColumn>Destination</TableHeaderColumn>
-          <TableHeaderColumn>Amount</TableHeaderColumn>
-          <TableHeaderColumn />
-        </TableRow>
-      </TableHeader>
-    );
+  const ransactionsWithDate = transactions.map(transaction => {
+    const date = moment(transaction.timestamp).format('l')
+    return { ...transaction,
+      date
+    }
+  })
+
+  const transactionsByDate = ransactionsWithDate.reduce((acc, curr) => {
+    acc[curr.date] = [].concat(acc[curr.date] || [], curr)
+    return acc;
+  }, {});
+
+  const renderTransactions = () => {
+    return Object.keys(transactionsByDate).map(day => renderDayTransactions(day, transactionsByDate[day]))
   }
 
-  function renderTableRow(row, index) {
-    const rowArray = [
-      row.get('blockLevel'),
-      row.get('kind'),
-      row.get('source'),
-      row.get('destination') || 'N/A',
-      row.get('amount') || 'N/A',
-      row.get('operationGroupHash'),
-    ];
-
-    return (
-      <TableRow key={index}>
-        {rowArray.map((elem, rowArrIndex) => {
-          return (
-            <TableRowColumn key={`${elem}-${rowArrIndex}`}>
-              {rowArrIndex + 1 < rowArray.length && (
-                <RowElement>
-                  {
-                    rowArrIndex === 4
-                      ? <Amount size={ms(0)} amount={parseInt(elem)} />
-                      : elem
-                  }
-                </RowElement>
-              )}
-              {rowArrIndex + 1 === rowArray.length && (
-                <Details>
-                  <Link
-                    href={`https://tzscan.io/${elem}`}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Details
-                  </Link>
-                </Details>
-              )}
-            </TableRowColumn>
-          );
-        })}
-      </TableRow>
-    );
-  }
+  const renderDayTransactions = (day, transactions) => (
+    <SectionContainer key={day}>
+      <TransactionsLabel amount={0} date={day} />
+      {transactions.map(transaction => {
+        return (<Transaction
+          key={transaction.operationId}
+          transaction={transaction}
+          selectedAccountHash={selectedAccountHash}
+          selectedParentHash={selectedParentHash}
+        />)
+      }
+      )}
+    </SectionContainer>
+  )
 
   return (
-    <Container>
-      <Table>
-        {renderTableHeader()}
-        <TableBody displayRowCheckbox={false}>
-          {transactions.map(renderTableRow)}
-        </TableBody>
-      </Table>
+    <Container>        
+      {renderTransactions()}        
     </Container>
   );
 }

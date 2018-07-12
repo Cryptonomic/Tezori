@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import { ms } from '../styles/helpers';
 
 import { H5 } from './Heading';
-import tezosLogo from '../../resources/tezosLogo.png';
 import Loader from './Loader';
 import Button from './Button';
+import TezosIcon from './TezosIcon';
 
 import styles from './SendConfirmationModal.css';
 
@@ -86,14 +86,14 @@ const SendConfirmationModal = props => {
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosSymbol src={tezosLogo} />
+          <TezosIcon color='secondary'/>
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>
       </AmountContainer>
       <PaswordContainer>
         <TextField
-          floatingLabelText="Enter Password"
+          floatingLabelText="Enter Wallet Password"
           style={{ width: '60%' }}
           type="password"
           value={password}
