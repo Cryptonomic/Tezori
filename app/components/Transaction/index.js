@@ -1,11 +1,11 @@
 import React from 'react'
-import { shell } from 'electron'
 import styled from 'styled-components'
 import moment from 'moment'
 import { ms } from '../../styles/helpers'
 import TezosAddress from '../TezosAddress'
 import TezosAmount from '../TezosAmount'
 import TezosIcon from "../TezosIcon"
+import { openLinkToBlockExplorer } from '../../utils/general'
 
 const AmountContainer = styled.div`
   color: ${ ({ theme: { colors }, color }) => colors[color] };
@@ -33,6 +33,7 @@ const StateIcon = styled(TezosIcon)`
 `
 const LinkIcon = styled(TezosIcon)`
   margin-left: 6px;
+  cursor: pointer;
 `
 const StateText = styled.div`
   font-size: 10px;
@@ -66,7 +67,7 @@ const Header = styled.div`
   line-height: 30px;
 `
 
-const openLink = element => shell.openExternal(`https://tzscan.io/${element}`)
+const openLink = element => openLinkToBlockExplorer(element);
 
 const timeFormatter = timestamp => {
   const time = new Date (timestamp)
@@ -145,7 +146,7 @@ const Transaction = (props: Props) => {
   const fee = Number.parseInt(transaction.fee, 10);
   const {icon, preposition, state, isFee, color, sign} = getStatus(transaction, selectedAccountHash, selectedParentHash);
   const amount = transaction.amount? Number.parseInt(transaction.amount, 10) : 0;
-  
+
   return (
     <TransactionContainer>
       <Header>
