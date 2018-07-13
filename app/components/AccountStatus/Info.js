@@ -27,7 +27,6 @@ const ActivationOperation = styled.div`
   text-transform: uppercase;
   margin-left: 5px;
   margin-right: 5px;
-  cursor: pointer;
 `;
 
 const ActivationOperationId = styled.div`
@@ -58,11 +57,7 @@ function Info(props: Props) {
         color="accent"
         iconName={ firstIconName }
       />
-      <ActivationOperation
-        onClick={ () => {
-          openLinkToBlockExplorer(operationId);
-        }}
-      >
+      <ActivationOperation>
         { operationName }
       </ActivationOperation>
       <ActivationOperationId>
