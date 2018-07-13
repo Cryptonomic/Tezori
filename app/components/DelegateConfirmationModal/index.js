@@ -1,85 +1,216 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import { TextField, Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+
+import styled from 'styled-components';
 import Button from './../Button/';
 import TezosIcon from '../TezosIcon'
-import { formatAmount } from '../../utils/currancy';
-import { ms } from '../../styles/helpers'
+import { ms } from '../../styles/helpers';
+import TezosAddress from '../TezosAddress';
+import Fees from '../Fees/';
+import Loader from '../Loader';
 
-import styles from './index.css';
+const inputStyles = {
+  underlineFocusStyle: {
+    borderColor: '#2c7df7',
+  },
+  underlineStyle: {
+    borderColor: '#d0d2d8',
+  },
+  errorUnderlineStyle: {
+    borderColor: '#ea776c',
+  },
+  floatingLabelStyle: {
+    color: 'rgba(0, 0, 0, 0.38)',
+  },
+  floatingLabelFocusStyle: {
+    color: '#5571a7',
+  },
+};
+const ModalDialog = styled(Dialog)`
+  padding-top: 0px !important;
+  &> div > div > div > div {
+    max-height: none !important;
+  }
+`
+
+const ModalContainer = styled.div`
+  padding: 0 98px 43px 98px;
+`
+const DelegateTitle = styled.div`
+  color: ${({ theme: { colors } }) => colors.gray5};
+  font-size: 16px;
+  letter-spacing: 0.7px;
+`
+const AddressContainer = styled.div`
+  background-color: ${({ theme: { colors } }) => colors.light};
+  height: 53px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 21px;
+  margin-top: 10px;
+`
+const NewAddressTextField = styled(TextField)`
+  width: 100% !important;
+`
+const PasswordTextField = styled(TextField)`
+  width: 50% !important;
+  margin-top: -27px;
+`
+const BottomContainer = styled.div`
+  width: 100%;
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 98px;
+  background-color: ${({ theme: { colors } }) => colors.light};
+`
+const DelegateButton = styled(Button)`
+  height: 50px;
+  width: 194px;
+  padding: 0;
+`
+
+const WarningContainer = styled.div`
+  height: 91px;
+  width: 100%;
+  border: solid 1px rgba(148, 169, 209, 0.49);
+  border-radius: 3px;
+  background-color: ${({ theme: { colors } }) => colors.light};
+  display: flex;
+  align-items: center;
+  padding: 0 19px;
+  margin-top: 36px;
+`
+const InfoText = styled.div`
+  color: ${({ theme: { colors } }) => colors.primary};
+  font-size: 16px;
+  letter-spacing: 0.7px;
+  margin-left: 11px;
+  line-height: 21px;
+`
+const StyledCloseIcon = styled(CloseIcon)`
+  cursor: pointer;
+  position: absolute;
+  top: 47px;
+  right: 66px;
+  fill: #7190C6 !important;
+
+`
 
 type Props = {
   open?: boolean,
-  fee?: any,
+  address: string,
+  newAddress?: string,
   password?: string,
-  address?: string,
-  onCloseClick?: Function,
-  handlePasswordChange?: Function,
-  onDelegate?: Function,
-  isLoading?: boolean,
+  fee?: number,
+  averageFees: any,
+  handleFeeChange: Function,
+  handlePasswordChange: Function,
+  onAddressChange: Function,
+  onDelegate: Function,
+  onCloseClick: Function,
+  isLoading?: boolean
 };
 
-class DelegateConfirmationModal extends Component<Props> {
-  props: Props;
+const DelegateConfirmationModal = (props: Props) => {
+  const {
+    open,
+    address,
+    newAddress,
+    password,
+    fee,
+    averageFees,
+    handleFeeChange,    
+    handlePasswordChange,
+    onAddressChange,
+    onDelegate,
+    onCloseClick,
+    isLoading
+  } = props;
+  const isDisabled = isLoading || !fee || !newAddress || !password;
 
-  render() {
-    const {
-      open,
-      fee,
-      password,
-      address,
-      onCloseClick,
-      handlePasswordChange,
-      onDelegate,
-      isLoading
-    } = this.props;
-
-    return (
-
-      <Dialog
-        modal
-        open={open}
-        title="Confirm Delegate Change"
-        contentStyle={{ width: '600px' }}
-      >
-        <div>
-          <CloseIcon
-            className={styles.closeIcon}
-            style={{ fill: '#7190C6' }}
-            onClick={onCloseClick}
+  return (
+    <ModalDialog
+      modal
+      open={open}
+      title="Change Delegate"
+      bodyStyle={{ padding: '0' }}
+      contentStyle={{ width: '671px', maxHeight: 'none' }}
+      titleStyle={{ padding: '43px 98px 21px 98px',  fontSize: '24px', color: '#123262', letterSpacing: '1px', lineHeight: '42px' }}
+    >
+      <ModalContainer>
+        <StyledCloseIcon
+          onClick={onCloseClick}
+        />
+        <DelegateTitle>You are currently delegating to</DelegateTitle>
+        <AddressContainer>
+          <TezosAddress
+            address={address}
+            size='16px'
+            color='primary'
+            color2='index0'
           />
-          <div>Are you sure you want to change your delegate to:</div>
-          <div className={styles.modalAddress}>{address}</div>
-          <div className={styles.feeContainer}>
-            <div className={styles.feeText}>Fee: </div>
-            { formatAmount(fee) }
-            <TezosIcon color='secondary' />
-          </div>
-          <div className={styles.confirmationContainer}>
-            <TextField
-              floatingLabelText="Enter Wallet Password"
-              style={{ width: '50%' }}
-              type="password"
-              value={password}
-              onChange={ handlePasswordChange }
-            />
-
-            <Button
-              buttonTheme="primary"
-              disabled={isLoading}
-              small
-              onClick={onDelegate}
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-      </Dialog>
-    );
-  }
+        </AddressContainer>
+        <NewAddressTextField
+          floatingLabelText="Change Delegate to New Address"
+          value={newAddress}
+          floatingLabelStyle={inputStyles.floatingLabelStyle}
+          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
+          underlineStyle={inputStyles.underlineStyle}
+          onChange={onAddressChange}
+        />
+        <Fees
+          styles={{minWidth: 206, width: 'auto'}}
+          underlineStyle={inputStyles.underlineStyle}
+          low={averageFees.low}
+          medium={averageFees.medium}
+          high={averageFees.high}
+          fee={fee}
+          onChange={handleFeeChange}
+        />
+        <WarningContainer>
+          <TezosIcon
+            iconName='info'
+            size={ms(5)}
+            color="info"
+          />
+          <InfoText>
+            Your delegation change will not show up until the change is confirmed on the blockchain.
+          </InfoText>
+        </WarningContainer>
+      </ModalContainer>
+      <BottomContainer>
+        <PasswordTextField
+          type="password"
+          floatingLabelText="Wallet Password"
+          value={password}
+          floatingLabelStyle={inputStyles.floatingLabelStyle}
+          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
+          underlineStyle={inputStyles.underlineStyle}
+          onChange={handlePasswordChange}
+        />
+        <DelegateButton
+          buttonTheme="primary"
+          disabled={isDisabled}
+          small
+          onClick={onDelegate}
+        >
+          Change Delegate
+        </DelegateButton>
+      </BottomContainer>
+      {isLoading && <Loader />}
+    </ModalDialog>
+  );
 }
-
-export default connect()(DelegateConfirmationModal);
+DelegateConfirmationModal.defaultProps = {
+  open: false,
+  newAddress: '',
+  fee: 100,
+  password: '',
+  isLoading: false
+}
+export default DelegateConfirmationModal;

@@ -10,6 +10,7 @@ type Props = {
   color?: string,
   size?: string,
   text?: string,
+  color2?: string
 };
 
 const Address = styled.span`
@@ -25,15 +26,16 @@ const Address = styled.span`
 
 const FirstPart = styled.span`
   font-weight: ${({theme: {typo: {weights}}}) => weights.bold};
+  color: ${({color, theme: { colors }}) => colors[color] };
 `
 
 
 const TezosAddress = (props: Props) => {
-  const { className, address, weight, size, color, text } = props;
+  const { className, address, weight, size, color, text, color2 } = props;
   return (
     <Address className={className} weight={weight} color={color} size={size} text={text}>
       <span>
-        <FirstPart>{address.slice(0, 3)}</FirstPart>
+        <FirstPart color={color2}>{address.slice(0, 3)}</FirstPart>
         <span>{address.slice(3)}</span>
       </span>
       {text && <CopyIcon text={text} color={color} />}

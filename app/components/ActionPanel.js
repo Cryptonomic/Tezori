@@ -219,6 +219,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
           selectedParentHash={selectedParentHash}
           time={time}
+          delegatedAddress={selectedAccount.get('delegateValue')}
         />
 
         <TabList>

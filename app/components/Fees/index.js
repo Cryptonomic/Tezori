@@ -17,6 +17,7 @@ type Props = {
   medium?: number,
   high?: number,
   styles?: object,
+  underlineStyle?: object,
   fee?: any,
   onChange?: Function
 };
@@ -66,7 +67,7 @@ class Fee extends Component<Props> {
 
   render() {
     const { open, custom } = this.state;
-    const { low, medium, high, styles, fee, onChange } = this.props;
+    const { low, medium, high, styles, fee, onChange, underlineStyle } = this.props;
 
     return (
       <Fragment>
@@ -74,6 +75,7 @@ class Fee extends Component<Props> {
           floatingLabelText="Fee"
           value={fee}
           style={styles}
+          underlineStyle={underlineStyle}
           onChange={(_, index, fee) => {
             if( fee !== 'custom' ) {
               onChange(fee);

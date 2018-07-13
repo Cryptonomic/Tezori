@@ -42,7 +42,10 @@ export const Theme = {
     check: '#259c90',
 
     // error colors
-    error1: '#ea776c'
+    error1: '#ea776c',
+
+    // info color
+    info: '#c8d2e7'
   },
   animations: {
     defaultTime: "300ms",
