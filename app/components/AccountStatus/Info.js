@@ -58,11 +58,7 @@ function Info(props: Props) {
         color="accent"
         iconName={ firstIconName }
       />
-      <ActivationOperation
-        onClick={ () => {
-          openLinkToBlockExplorer(operationId);
-        }}
-      >
+      <ActivationOperation>
         { operationName }
       </ActivationOperation>
       <ActivationOperationId>
