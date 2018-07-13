@@ -85,7 +85,7 @@ const getIsAmount = (amount) => !!amount;
 const getStatus = (transaction, selectedAccountHash) => {
   const type = transaction.kind;
   if (type === 'reveal') {
-    return {icon: 'broadcast', preposition: 'of', state: 'KEY REVEAL', isFee: false, color: 'gray8', sign: ''};
+    return {icon: 'broadcast', preposition: 'of', state: 'PUBLIC KEY REVEAL', isFee: false, color: 'gray8', sign: ''};
   }
 
   if (type === 'activation') {
