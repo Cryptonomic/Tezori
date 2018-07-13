@@ -93,7 +93,7 @@ const SendConfirmationModal = props => {
       </AmountContainer>
       <PaswordContainer>
         <TextField
-          floatingLabelText="Enter Wallet Password"
+          floatingLabelText="Wallet Password"
           style={{ width: '60%' }}
           type="password"
           value={password}
