@@ -202,9 +202,9 @@ class Delegate extends Component<Props> {
 
     return (
       <Container>
-        <Title>Delegate Settings</Title>         
+        <Title>Delegate Settings</Title>
         <DelegateContainer>
-          {address && 
+          {address &&
             <DelegateInputContainer>
               <SetADelegate>You are currently delegating to:</SetADelegate>
               <TezosAddress
@@ -223,7 +223,7 @@ class Delegate extends Component<Props> {
               </UpdateButton>
             </DelegateInputContainer>
           }
-          {!address && 
+          {!address &&
             <WarningContainer>
               <TezosIcon
                 iconName='info'
@@ -231,9 +231,9 @@ class Delegate extends Component<Props> {
                 color="info"
               />
               <InfoText>
-                Your delegae settings will not show up until confirmed on the blockchain.
+                Your delegate settings will not show up until confirmed on the blockchain.
               </InfoText>
-            </WarningContainer>        
+            </WarningContainer>
           }
           <DelegationTipsContainer>
             <DelegationTitle>Delegation Tips</DelegationTitle>
