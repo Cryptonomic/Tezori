@@ -1,8 +1,8 @@
 {
   "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "productName": "Tezori",
   "version": "0.13.3",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "description": "A community wallet for Tezos",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -41,8 +41,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "Tezori",
+    "appId": "tech.cryptonomic.Tezori",
     "files": [
       "dist/",
       "node_modules/",
@@ -84,7 +84,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chentsulin/electron-react-boilerplate.git"
+    "url": "git+https://github.com/Cryptonomic/Tezos-Wallet.git"
   },
   "author": {
     "name": "C. T. Lin",
@@ -93,7 +93,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chentsulin/electron-react-boilerplate/issues"
+    "url": "https://github.com/Cryptonomic/Tezos-Wallet/issues"
   },
   "keywords": [
     "electron",
