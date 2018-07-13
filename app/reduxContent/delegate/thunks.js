@@ -73,7 +73,7 @@ export function delegate( delegateValue, fee, password, selectedAccountHash, sel
       if ( foundIndex > -1 ) {
         identity.accounts[ foundIndex ] = {
           ...account,
-          delegateValue
+          delegateValue: ''
         };
 
         dispatch(updateIdentity(identity));

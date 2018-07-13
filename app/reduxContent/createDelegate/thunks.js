@@ -80,7 +80,8 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
               accountId: newAccountHash,
               balance: amountInUtez,
               manager: publicKeyHash,
-              delegateValue: delegate,
+              delegateValue: '',
+              activeTab: 'Delegate',
               operations: {
                 [ CREATED ]: newAccount.operationGroupID
               }

@@ -102,6 +102,24 @@ const SetADelegate = styled.div`
   margin-bottom: 14px;
   color: ${({ theme: { colors } }) => colors.black2};
 `;
+const WarningContainer = styled.div`
+  height: 91px;
+  width: 60%;
+  border: solid 1px rgba(148, 169, 209, 0.49);
+  border-radius: 3px;
+  background-color: ${({ theme: { colors } }) => colors.light};
+  display: flex;
+  align-items: center;
+  padding: 0 19px;
+  margin-right: 5%;
+`
+const InfoText = styled.div`
+  color: ${({ theme: { colors } }) => colors.primary};
+  font-size: 16px;
+  letter-spacing: 0.7px;
+  margin-left: 11px;
+  line-height: 21px;
+`
 
 const initialState = {
   open: false,
@@ -143,10 +161,10 @@ class Delegate extends Component<Props> {
   };
 
   onDelegate = async () =>  {
-    const { password, fee } = this.state;
+    const { password, fee, tempAddress } = this.state;
     const { delegate, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await delegate( this.getAddress(), Math.floor(fee), password, selectedAccountHash, selectedParentHash )) {
+    if (await delegate( tempAddress, Math.floor(fee), password, selectedAccountHash, selectedParentHash )) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);
@@ -184,25 +202,39 @@ class Delegate extends Component<Props> {
 
     return (
       <Container>
-        <Title>Delegate Settings</Title>
+        <Title>Delegate Settings</Title>         
         <DelegateContainer>
-          <DelegateInputContainer>
-            <SetADelegate>You are currently delegating to:</SetADelegate>
-            <TezosAddress
-              address={address}
-              size='16px'
-              color='primary'
-              color2='index0'
-            />
-            <UpdateButton
-              disabled={isLoading}
-              onClick={this.openConfirmation}
-              buttonTheme="secondary"
-              small
-            >
-              Change Delegate
-            </UpdateButton>
-          </DelegateInputContainer>
+          {address && 
+            <DelegateInputContainer>
+              <SetADelegate>You are currently delegating to:</SetADelegate>
+              <TezosAddress
+                address={address}
+                size='16px'
+                color='primary'
+                color2='index0'
+              />
+              <UpdateButton
+                disabled={isLoading}
+                onClick={this.openConfirmation}
+                buttonTheme="secondary"
+                small
+              >
+                Change Delegate
+              </UpdateButton>
+            </DelegateInputContainer>
+          }
+          {!address && 
+            <WarningContainer>
+              <TezosIcon
+                iconName='info'
+                size={ms(5)}
+                color="info"
+              />
+              <InfoText>
+                Your delegae settings will not show up until confirmed on the blockchain.
+              </InfoText>
+            </WarningContainer>        
+          }
           <DelegationTipsContainer>
             <DelegationTitle>Delegation Tips</DelegationTitle>
             {this.renderDelegationTips(delegationTips)}

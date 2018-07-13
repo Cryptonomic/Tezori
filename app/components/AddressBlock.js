@@ -104,8 +104,6 @@ const NoSmartAddressesButton = styled(Button)`
   width: 100%;
 `
 
-AddDelegateLabel
-
 
 type Props = {
   accountBlock: Object, // TODO: type this

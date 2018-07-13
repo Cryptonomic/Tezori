@@ -165,7 +165,7 @@ function BalanceBanner(props: Props) {
         </AddressInfo>
         { delegatedAddress &&
           <DelegateContainer>
-            <Delegate>Delegated to {delegatedAddress===selectedParentHash?'the Manager Address': ''}</Delegate>
+            <Delegate>Delegated to </Delegate>
             <TezosAddress address={delegatedAddress} color='white' size={ms(-1)} weight={300} />
           </DelegateContainer> }
       </BottomRow>
