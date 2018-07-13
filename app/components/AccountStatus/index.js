@@ -39,6 +39,8 @@ const Icon = styled.div`
 
 const Title = styled(H4)`
   font-weight: normal;
+  font-size: 1.2rem;
+  padding-bottom: .2rem
 `;
 
 const Description = styled.div`
