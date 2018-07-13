@@ -1,7 +1,7 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "Tezori",
   "productName": "Tezori",
-  "version": "0.13.3",
+  "version": "0.1.0b",
   "description": "A community wallet for Tezos",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -84,29 +84,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Cryptonomic/Tezos-Wallet.git"
+    "url": "git+https://github.com/Cryptonomic/Tezori.git"
   },
   "author": {
-    "name": "C. T. Lin",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin"
+    "name": "Cryptonomic Inc",
+    "email": "info@cryptonomic.tech",
+    "url": "https://github.com/Cryptonomic"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Cryptonomic/Tezos-Wallet/issues"
+    "url": "https://github.com/Cryptonomic/Tezori/issues"
   },
   "keywords": [
-    "electron",
-    "boilerplate",
-    "react",
-    "redux",
-    "flow",
-    "sass",
-    "webpack",
-    "hot",
-    "reload"
+    "tezos"
   ],
-  "homepage": "https://github.com/chentsulin/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/Cryptonomic/Tezori",
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
