@@ -8,7 +8,7 @@ import TezosIcon from '../TezosIcon/';
 import { H4 } from '../Heading/';
 
 import { limitLength } from '../../utils/strings';
-import { openLink } from '../../utils/general';
+import { openLinkToBlockExplorer } from '../../utils/general';
 
 const Container = styled.div`
   display: flex;
@@ -19,6 +19,7 @@ const Container = styled.div`
 
 const InfoIcon = styled(TezosIcon)`
   font-size: ${ms(-1)};
+  cursor: pointer;
 `;
 
 const ActivationOperation = styled.div`
@@ -37,6 +38,7 @@ const ActivationOperationId = styled.div`
 const Details = styled.div`
   color: ${({ theme: { colors } }) => colors.primary };
   margin-right: 5px;
+  cursor: pointer;
 `;
 
 type Props = {
@@ -58,7 +60,7 @@ function Info(props: Props) {
       />
       <ActivationOperation
         onClick={ () => {
-          openLink(`http://tzscan.io/${ operationId }`);
+          openLinkToBlockExplorer(operationId);
         }}
       >
         { operationName }
@@ -66,13 +68,20 @@ function Info(props: Props) {
       <ActivationOperationId>
         { limitLength(operationId, 17) }
       </ActivationOperationId>
-      <Details>
+      <Details
+        onClick={ () => {
+          openLinkToBlockExplorer(operationId);
+        }}
+      >
         Details
       </Details>
       <InfoIcon
         size={ ms(1) }
         color="primary"
         iconName={ lastIconName }
+        onClick={ () => {
+          openLinkToBlockExplorer(operationId);
+        }}
       />
     </Container>
   );

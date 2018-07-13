@@ -10,6 +10,7 @@ import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { MNEMONIC } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
+import { blockExplorerHost } from '../config.json';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
@@ -165,8 +166,10 @@ export function isReady(addressStatus, storeTypes, tab) {
     ;
 }
 
-
-
 export function openLink(link) {
-  shell.openExternal(link)
+  shell.openExternal(link);
+}
+
+export function openLinkToBlockExplorer( url ) {
+  openLink(blockExplorerHost + url);
 }

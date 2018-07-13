@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { shell } from 'electron'
 import styled from 'styled-components'
 import Modal from 'react-modal';
 import { H2 } from '../Heading'
 import Button from '../Button'
 import { termsService, privacyPolicy } from '../../config.json'
 import { ms } from '../../styles/helpers'
-import theme from '../../styles/theme'
+import { openLink } from '../../utils/general'
 
 const Container = styled.div`
   background-color: ${ ({ theme: { colors } }) => colors.white };
@@ -56,8 +55,8 @@ type Props = {
 
 
 const TermsModal = (props:Props) => {
-  const openTermsService = () => shell.openExternal(termsService)
-  const openPrivacyPolicy = () => shell.openExternal(privacyPolicy)
+  const openTermsService = () => openLink(termsService);
+  const openPrivacyPolicy = () => openLink(privacyPolicy);
   const { isOpen, agreeTermsAndPolicy } = props
   return (
     <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
