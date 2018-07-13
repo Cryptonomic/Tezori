@@ -42,7 +42,7 @@ const StateText = styled.div`
     font-size: 12px;
     color: ${ ({ theme: { colors } }) => colors.gray6 };
     margin: 0 6px;
-  }  
+  }
 `
 const AddressText = styled.div`
   color: ${ ({ theme: { colors } }) => colors.black2 };
@@ -97,11 +97,11 @@ const getStatus = (transaction, selectedAccountHash) => {
   const isAmount = getIsAmount(transaction.amount);
 
   if (type === 'origination' && isSameLocation) {
-    return {icon: 'send', preposition: 'of', state: 'ORIGINATION', isFee, color: isAmount? 'error1': 'gray8', sign: isAmount? '-': ''};
+    return {icon: 'send', preposition: '', state: 'ORIGINATION', isFee, color: isAmount? 'error1': 'gray8', sign: isAmount? '-': ''};
   }
 
   if (type === 'origination' && !isSameLocation) {
-    return {icon: 'receive', preposition: 'from', state: 'ORIGINATION', isFee, color: isAmount? 'check': 'gray8', sign: isAmount? '+': ''};
+    return {icon: 'receive', preposition: '', state: 'ORIGINATION', isFee, color: isAmount? 'check': 'gray8', sign: isAmount? '+': ''};
   }
 
   if (type === 'transaction' && isSameLocation) {
@@ -120,7 +120,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
     return <AddressText>this address</AddressText>;
   }
   if (type === 'origination' && transaction.source === selectedParentHash && selectedAccountHash !== selectedParentHash) {
-      return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;  
+      return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;
   }
   if (!address) {
     return null;
@@ -162,7 +162,7 @@ const Transaction = (props: Props) => {
         </AmountContainer>
       </Header>
       <Container>
-        <ContentDiv>        
+        <ContentDiv>
           <StateIcon
             iconName={icon}
             size={ms(-2)}
@@ -180,7 +180,7 @@ const Transaction = (props: Props) => {
           />
 
         </ContentDiv>
-        {isFee && 
+        {isFee &&
           <Fee>
             <span>Fee: </span>
             <TezosAmount
@@ -191,7 +191,7 @@ const Transaction = (props: Props) => {
             />
           </Fee>
         }
-      </Container>       
+      </Container>
     </TransactionContainer>
   )
 }
