@@ -77,8 +77,8 @@ function AccountStatus(props: Props) {
     case statuses.CREATED:
       if ( storeTypes === MNEMONIC ) {
         icon = <Image alt={'Creating account'} src={transactionsEmptyState} />;
-        title = 'Your account is currently not ready.';
-        description = 'The first transaction will get your account ready to send and delegate. Getting your account ready after your first transaction might take a while.';
+        title = 'Your account is ready to receive transactions!';
+        description = 'Your first transaction will commit your new address to the blockchain. This process may take some time until you are all set to send and delegate.';
       } else {
         title = `Retrieving your ${ typeText }...`;
         if ( operations[ statuses.CREATED ] ) {
