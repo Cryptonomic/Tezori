@@ -27,7 +27,6 @@ const ActivationOperation = styled.div`
   text-transform: uppercase;
   margin-left: 5px;
   margin-right: 5px;
-  cursor: pointer;
 `;
 
 const ActivationOperationId = styled.div`
