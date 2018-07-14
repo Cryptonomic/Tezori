@@ -8,7 +8,8 @@ import { findAccountIndex } from '../../utils/account';
 import { TEZOS } from '../../constants/NodesTypes';
 import {
   getSelectedKeyStore,
-  fetchAverageFees
+  fetchAverageFees,
+  clearOperationId
 } from '../../utils/general'
 
 const {
@@ -62,7 +63,7 @@ export function delegate( delegateValue, fee, password, selectedAccountHash, sel
 
     if ( res ) {
       dispatch(addMessage(
-        `Successfully sent delegation operation ${ res.operationGroupID }.`,
+        `Successfully sent delegation operation ${ clearOperationId(res.operationGroupID) }.`,
         false
       ));
 
@@ -73,7 +74,7 @@ export function delegate( delegateValue, fee, password, selectedAccountHash, sel
       if ( foundIndex > -1 ) {
         identity.accounts[ foundIndex ] = {
           ...account,
-          delegateValue
+          delegateValue: ''
         };
 
         dispatch(updateIdentity(identity));

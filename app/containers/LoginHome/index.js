@@ -8,9 +8,10 @@ import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
-import { shell } from 'electron';
 import styles from './styles.css';
 import { name, tagline } from '../../config.json';
+import { termsService, privacyPolicy } from '../../config.json'
+import { openLink } from '../../utils/general'
 
 const SectionContainer = styled.div`
   display: flex;
@@ -115,7 +116,9 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet');
+  openALink = () => openLink('https://github.com/Cryptonomic/Tezos-Wallet');
+  openTermsService = () => openLink(termsService);
+  openPrivacyPolicy = () => openLink(privacyPolicy);
 
   goTo = (route) => {
     const { match, history } = this.props;
@@ -160,9 +163,9 @@ class LoginHome extends Component<Props> {
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
             I acknowledge that I have read and accepted the
-            <Link onClick={this.openLink}> Terms of Service </Link>
+            <Link onClick={this.openTermsService}> Terms of Service </Link>
             and
-            <Link onClick={this.openLink}> Privacy Policy</Link>
+            <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
           </Description>
         </TermsAndPolicySection>
         <TermsModal

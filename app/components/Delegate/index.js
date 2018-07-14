@@ -1,15 +1,13 @@
 // @flow
 import React, { Component } from 'react';
-import { TextField, Dialog, SelectField, MenuItem } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import Button from './../Button/';
-import { H4 } from './../Heading/';
 import TezosIcon from './../TezosIcon/';
 import DelegateConfirmationModal from '../DelegateConfirmationModal/';
-import Fees from '../Fees/';
+import TezosAddress from '../TezosAddress';
 
 import {
   validateAddress,
@@ -36,6 +34,7 @@ const Container = styled.div`
 const DelegateContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  padding-top: ${ms(2)};
 `;
 
 const DelegateInputContainer = styled.div`
@@ -43,7 +42,6 @@ const DelegateInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-top: ${ms(1)};
 `;
 
 const UpdateButton = styled(Button)`
@@ -51,10 +49,15 @@ const UpdateButton = styled(Button)`
   margin: ${ms(2)} 0 0 0;
 `;
 
-const Title = styled(H4)`
+const Title = styled.div`
+  font-size: 24px;
+  line-height: 34px;
+  letter-spacing: 1px;
+  font-weight:300;
   width: 100%;
+  color: ${({ theme: { colors } }) => colors.primary};
   border-bottom: 1px solid #e2e7f2;
-  padding-bottom: ${ms(-4)}
+  padding-bottom: ${ms(-4)};
 `;
 
 const DelegationTipsList = styled.ul`
@@ -84,7 +87,6 @@ const DelegationTipsContainer = styled.div`
   color: ${({ theme: { colors } }) => colors.secondary};
   font-size: ${ms(-1)};
   position: relative;
-  margin-top: ${ms(1)};
 `
 
 const DelegationTitle = styled.span`
@@ -93,11 +95,31 @@ const DelegationTitle = styled.span`
   font-size: ${ms(1)};
 `
 
-const SetADelegate = styled.p`
+const SetADelegate = styled.div`
   font-weight: 300;
-  font-size: ${ms(1)};
-  margin-bottom: 0;
+  font-size: 18px;
+  line-height: 21px;
+  margin-bottom: 14px;
+  color: ${({ theme: { colors } }) => colors.black2};
 `;
+const WarningContainer = styled.div`
+  height: 91px;
+  width: 60%;
+  border: solid 1px rgba(148, 169, 209, 0.49);
+  border-radius: 3px;
+  background-color: ${({ theme: { colors } }) => colors.light};
+  display: flex;
+  align-items: center;
+  padding: 0 19px;
+  margin-right: 5%;
+`
+const InfoText = styled.div`
+  color: ${({ theme: { colors } }) => colors.primary};
+  font-size: 16px;
+  letter-spacing: 0.7px;
+  margin-left: 11px;
+  line-height: 21px;
+`
 
 const initialState = {
   open: false,
@@ -138,19 +160,11 @@ class Delegate extends Component<Props> {
     return tempAddress || address;
   };
 
-  validateAddress = async () =>  {
-    const { validateAddress } = this.props;
-    const address = this.getAddress();
-    if ( await validateAddress( address ) ) {
-      this.openConfirmation();
-    }
-  };
-
   onDelegate = async () =>  {
-    const { password, fee } = this.state;
+    const { password, fee, tempAddress } = this.state;
     const { delegate, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await delegate( this.getAddress(), Math.floor(fee), password, selectedAccountHash, selectedParentHash )) {
+    if (await delegate( tempAddress, Math.floor(fee), password, selectedAccountHash, selectedParentHash )) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);
@@ -177,12 +191,12 @@ class Delegate extends Component<Props> {
   }
 
   render() {
-    const { isReady } = this.props;
-    const { isLoading, open, password, fee, averageFees } = this.state;
+    const { address } = this.props;
+    const { isLoading, open, password, fee, averageFees, tempAddress } = this.state;
     const delegationTips = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
-      'Delegating is not instant. It takes 7 cycles (~20 days) for your tez to start contributing to baking.',
+      'It takes 7 cycles (~20 days) for your tez to start contributing to baking.',
       'Delegation rewards will depend on your arrangement with the delegate.'
     ];
 
@@ -190,32 +204,37 @@ class Delegate extends Component<Props> {
       <Container>
         <Title>Delegate Settings</Title>
         <DelegateContainer>
-          <DelegateInputContainer>
-            <SetADelegate>Set a Delegate</SetADelegate>
-            <Fees
-              styles={{minWidth: 340, width: 'auto'}}
-              low={ averageFees.low }
-              medium={ averageFees.medium }
-              high={ averageFees.high }
-              fee={ fee }
-              onChange={this.handleFeeChange}
-            />
-            <TextField
-              floatingLabelText="Address"
-              value={ this.getAddress() }
-              style={{minWidth: 340, width: 'auto'}}
-              onChange={this.handleTempAddressChange}
-            />
-
-            <UpdateButton
-              disabled={ !isReady || isLoading }
-              onClick={ this.validateAddress }
-              buttonTheme="secondary"
-              small
-            >
-              Update
-            </UpdateButton>
-          </DelegateInputContainer>
+          {address &&
+            <DelegateInputContainer>
+              <SetADelegate>You are currently delegating to:</SetADelegate>
+              <TezosAddress
+                address={address}
+                size='16px'
+                color='primary'
+                color2='index0'
+              />
+              <UpdateButton
+                disabled={isLoading}
+                onClick={this.openConfirmation}
+                buttonTheme="secondary"
+                small
+              >
+                Change Delegate
+              </UpdateButton>
+            </DelegateInputContainer>
+          }
+          {!address &&
+            <WarningContainer>
+              <TezosIcon
+                iconName='info'
+                size={ms(5)}
+                color="info"
+              />
+              <InfoText>
+                Your delegate settings will not show up until confirmed on the blockchain.
+              </InfoText>
+            </WarningContainer>
+          }
           <DelegationTipsContainer>
             <DelegationTitle>Delegation Tips</DelegationTitle>
             {this.renderDelegationTips(delegationTips)}
@@ -223,14 +242,18 @@ class Delegate extends Component<Props> {
         </DelegateContainer>
 
         <DelegateConfirmationModal
-          open={ open }
-          address={ this.getAddress() }
-          password={ password }
-          fee={ fee }
-          handleFeeChange={ this.handleFeeChange }
-          handlePasswordChange={ this.handlePasswordChange }
-          onDelegate={ this.onDelegate }
-          onCloseClick={ this.closeConfirmation }
+          open={open}
+          address={address}
+          newAddress={tempAddress}
+          password={password}
+          fee={fee}
+          averageFees={averageFees}
+          handleFeeChange={this.handleFeeChange}
+          handlePasswordChange={this.handlePasswordChange}
+          onAddressChange={this.handleTempAddressChange}
+          onDelegate={this.onDelegate}
+          onCloseClick={this.closeConfirmation}
+          isLoading={isLoading}
         />
       </Container>
     );

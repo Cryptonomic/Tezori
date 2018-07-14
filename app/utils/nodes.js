@@ -4,7 +4,7 @@ import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 const filename = path.join(__dirname, 'defaultWalletNodes.json');
 
 export function setWalletNodes(nodes) {
-  if (fs.fs.existsSync(filename)) {
+  if (fs.existsSync(filename)) {
     fs.writeFileSync(filename, Buffer.from(JSON.stringify(nodes, null,  2)));
   }
 }
