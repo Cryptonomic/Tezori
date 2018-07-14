@@ -176,5 +176,8 @@ export function openLinkToBlockExplorer( url ) {
 }
 
 export function clearOperationId( operationId ) {
-  return operationId.replace(/^"|"$/g, '');
+  if ( typeof operationId === 'string' ) {
+    return operationId.replace(/^"|"$/g, '');
+  }
+  return operationId;
 }
