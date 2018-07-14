@@ -80,7 +80,7 @@ export default function AddressStatus(props: Props) {
           opacity: isManager || isActive ? '0.70' : '1'
         }}
       />
-      <Title isActive={ isManager || isActive }>{ aaaaaaaaa }</Title>
+      <Title isActive={ isManager || isActive }>{ 'aaaaaaaaa' }</Title>
     </Container>
   );
 }
