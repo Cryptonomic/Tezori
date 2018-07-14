@@ -141,11 +141,12 @@ type Props = {
   selectedParentHash: string
 };
 
-const Transaction = (props: Props) => {
+function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash } = props;
   const fee = Number.parseInt(transaction.fee, 10);
   const {icon, preposition, state, isFee, color, sign} = getStatus(transaction, selectedAccountHash, selectedParentHash);
-  const amount = transaction.amount? Number.parseInt(transaction.amount, 10) : 0;
+  const amount = transaction.amount? parseInt(transaction.amount, 10) : 0;
+  const address = getAddress(transaction, selectedAccountHash, selectedParentHash);
 
   return (
     <TransactionContainer>
@@ -169,14 +170,18 @@ const Transaction = (props: Props) => {
             color="accent"
           />
           <StateText>
-            {state}<span>{preposition}</span>
+            {state}
+            { address
+              ? <span>{preposition}</span>
+              : null
+            }
           </StateText>
-          {getAddress(transaction, selectedAccountHash, selectedParentHash)}
+          { address }
           <LinkIcon
             iconName='new-window'
             size={ms(0)}
             color="primary"
-            onClick={()=>openLink(transaction.operationId)}
+            onClick={()=>openLink(transaction.operationGroupHash)}
           />
 
         </ContentDiv>

@@ -40,7 +40,7 @@ type Props = {
   amount: number
 };
 
-const TransactionsLabel = (props: Props) => {
+function TransactionsLabel(props: Props) {
   const { date, amount } = props
   return (
     <DateContainer>

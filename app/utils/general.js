@@ -127,7 +127,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     });
     if ( revealed ) {
       account.status = status.PENDING;
-      account.operations[status.FOUND] = revealed.operationGroupID
+      account.operations[status.FOUND] = clearOperationId(revealed.operationGroupID)
     }
   }
 
@@ -158,6 +158,7 @@ export async function fetchAverageFees(nodes, operationKind) {
 }
 
 export function isReady(addressStatus, storeTypes, tab) {
+  return false;
   return addressStatus === status.READY
     ||
     (storeTypes === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
@@ -172,4 +173,8 @@ export function openLink(link) {
 
 export function openLinkToBlockExplorer( url ) {
   openLink(blockExplorerHost + url);
+}
+
+export function clearOperationId( operationId ) {
+  return operationId.replace(/^"|"$/g, '');
 }

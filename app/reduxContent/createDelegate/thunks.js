@@ -10,7 +10,8 @@ import { TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import {
   getSelectedKeyStore,
-  fetchAverageFees
+  fetchAverageFees,
+  clearOperationId
 } from '../../utils/general'
 
 const { sendOriginationOperation } = TezosOperations;
@@ -73,6 +74,7 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
       const newAccountHash =
         newAccount.results.contents[0].metadata.operation_result.originated_contracts[0];
 
+      const operationId = clearOperationId(newAccount.operationGroupID);
       dispatch(
         addNewAccount(
           publicKeyHash,
@@ -83,7 +85,7 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
               delegateValue: '',
               activeTab: 'Delegate',
               operations: {
-                [ CREATED ]: newAccount.operationGroupID
+                [ CREATED ]: operationId
               }
             },
             identity
@@ -92,7 +94,7 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
       );
 
       dispatch(addMessage(
-        `Successfully sent origination operation ${newAccount.operationGroupID}.`,
+        `Successfully sent origination operation ${ operationId }.`,
         false
       ));
 
