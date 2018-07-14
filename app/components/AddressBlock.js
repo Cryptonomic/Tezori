@@ -292,7 +292,7 @@ class AddressBlock extends Component<Props, State> {
               Delegation Tips
             </NoSmartAddressesTitle>
               {this.renderNoSmartAddressesDescription(noSmartAddressesDescriptionContent)}
-            <NoSmartAddressesButton small buttonTheme="secondary" onClick={this.openDelegateModal}>
+            <NoSmartAddressesButton small buttonTheme="secondary" onClick={this.openDelegateModal} disabled={!isManagerReady}>
               Add a Delegate
             </NoSmartAddressesButton>
           </NoSmartAddressesContainer>
