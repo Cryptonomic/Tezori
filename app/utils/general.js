@@ -176,7 +176,7 @@ export function openLinkToBlockExplorer( url ) {
 
 export function clearOperationId( operationId ) {
   if ( typeof operationId === 'string' ) {
-    return operationId.replace(/^"|"$/g, '');
+    return operationId.replace(/"/g, '');
   }
   return operationId;
 }
