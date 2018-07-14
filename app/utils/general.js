@@ -127,7 +127,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     });
     if ( revealed ) {
       account.status = status.PENDING;
-      account.operations[status.FOUND] = revealed.operationGroupID
+      account.operations[status.FOUND] = clearOperationId(revealed.operationGroupID)
     }
   }
 
@@ -172,4 +172,11 @@ export function openLink(link) {
 
 export function openLinkToBlockExplorer( url ) {
   openLink(blockExplorerHost + url);
+}
+
+export function clearOperationId( operationId ) {
+  if ( typeof operationId === 'string' ) {
+    return operationId.replace(/"/g, '');
+  }
+  return operationId;
 }

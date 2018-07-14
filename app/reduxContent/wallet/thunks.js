@@ -25,6 +25,8 @@ import {
   saveUpdatedWallet,
 } from '../../utils/wallet';
 
+import { clearOperationId } from '../../utils/general';
+
 
 import {
   logout,
@@ -258,12 +260,13 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
                 err.name = err.message;
                 throw err;
               });
+            const operationId = clearOperationId(activating.operationGroupID);
             dispatch(addMessage(
-              `Successfully sent activation operation ${activating.operationGroupID}.`,
+              `Successfully sent activation operation ${operationId}.`,
               false
             ));
             identity.operations = {
-              [ CREATED ]: activating.operationGroupID
+              [ CREATED ]: operationId
             }
           }
           break;
