@@ -11,7 +11,6 @@ import path from 'path';
 import { ms } from '../../styles/helpers';
 
 import Button from '../../components/Button/';
-import MessageBar from '../../components/MessageBar';
 import Loader from '../../components/Loader';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
@@ -19,7 +18,6 @@ import { login } from '../../reduxContent/wallet/thunks';
 import styles from './styles.css';
 
 type Props = {
-  message: Object,
   login: Function,
 };
 
@@ -67,9 +65,8 @@ class LoginImport extends Component<Props> {
   };
 
   render() {
-    const { message, goBack } = this.props;
+    const { goBack } = this.props;
     const { walletFileName, walletLocation, password, isLoading } = this.state;
-    const completeWalletPath = path.join(walletLocation, walletFileName);
 
     return (
       <div className={styles.createContainer}>
@@ -117,16 +114,9 @@ class LoginImport extends Component<Props> {
             </Button>
           </div>
         </div>
-        <MessageBar message={message} />
       </div>
     );
   }
-}
-
-function mapStateToProps({ message }) {
-  return {
-    message: message.get('message')
-  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -136,4 +126,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginImport);
+export default connect(null, mapDispatchToProps)(LoginImport);

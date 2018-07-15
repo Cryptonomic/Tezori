@@ -10,7 +10,6 @@ import path from 'path';
 import zxcvbn from 'zxcvbn';
 import { ms } from '../../styles/helpers'
 import Button from '../../components/Button/';
-import MessageBar from '../../components/MessageBar';
 import Loader from '../../components/Loader';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
@@ -22,7 +21,6 @@ import styles from './styles.css';
 
 
 type Props = {
-  message: Object,
   login: Function,
   goBack: Function
 };
@@ -154,7 +152,7 @@ class LoginCreate extends Component<Props> {
   }
 
   render() {
-    const { message, goBack } = this.props;
+    const { goBack } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
     let walletFileSection = <img className={styles.createFileEmptyIcon} src={createFileEmptyIcon} />;
@@ -234,16 +232,9 @@ class LoginCreate extends Component<Props> {
               </Button>
           </div>
         </div>
-        <MessageBar message={message} />
       </div>
     );
   }
-}
-
-function mapStateToProps({ message }) {
-  return {
-    message: message.get('message')
-  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -253,4 +244,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginCreate);
+export default connect(null, mapDispatchToProps)(LoginCreate);
