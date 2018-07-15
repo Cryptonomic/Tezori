@@ -58,10 +58,10 @@
 }
 
 .createFileButton {
-  padding-left: 0;
-  padding-right: 0;
-  width: 9.18rem;
-  margin-bottom: 1.6rem;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 9.18rem !important;
+  margin-bottom: 1.6rem !important;
 }
 
 .walletFileSection {
