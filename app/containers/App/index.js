@@ -1,11 +1,14 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import type { Node } from 'react';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
+import MessageBar from '../../components/MessageBar';
 
 type Props = {
-  children: Node
+  children: Node,
+  message: Object
 };
 
 const Container = styled.div`
@@ -15,10 +18,24 @@ const Container = styled.div`
   padding: 0 0 ${ms(3)} 0;
 `;
 
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   props: Props;
 
   render() {
-    return <Container>{this.props.children}</Container>;
+    const { message } = this.props;
+    return (
+      <Container>
+        { this.props.children }
+        <MessageBar message={message} />
+      </Container>
+    );
   }
 }
+
+function mapStateToProps({ message }) {
+  return {
+    message: message.get('message')
+  };
+}
+
+export default connect(mapStateToProps, null)(App);

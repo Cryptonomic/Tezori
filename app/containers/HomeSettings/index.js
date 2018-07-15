@@ -12,7 +12,6 @@ import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Check from 'material-ui/svg-icons/navigation/check';
 import AddNodeModal from '../../components/AddNodeModal/';
-import MessageBar from '../../components/MessageBar';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 
 
@@ -38,7 +37,6 @@ type Props = {
   setSelected: Function,
   removeNode: Function,
   goBack: Function,
-  message: Object,
   theme: Object
 };
 
@@ -185,7 +183,6 @@ class SettingsPage extends Component<Props> {
     const {
       syncWallet,
       goBack,
-      message,
       theme,
       conseilSelectedNode,
       conseilNodes,
@@ -311,7 +308,6 @@ class SettingsPage extends Component<Props> {
           type={ type }
           closeAddNodeModal={ this.closeAddNodeModal }
         />
-        <MessageBar message={message} />
       </Container>
     );
   }
@@ -322,8 +318,7 @@ function mapStateToProps(state) {
     conseilSelectedNode: getConseilSelectedNode(state),
     conseilNodes: getConseilNodes(state),
     tezosSelectedNode: getTezosSelectedNode(state),
-    tezosNodes: getTezosNodes(state),
-    message: state.message.get('message')
+    tezosNodes: getTezosNodes(state)
   };
 }
 

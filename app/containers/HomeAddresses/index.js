@@ -10,11 +10,10 @@ import { getIdentities } from '../../reduxContent/wallet/selectors';
 
 import Addresses from '../../components/Addresses';
 import ActionPanel from '../../components/ActionPanel';
-import MessageBar from '../../components/MessageBar';
 
 
 type Props = {
-  message: Object
+  identities: array
 };
 
 const Container = styled.div`
@@ -26,7 +25,7 @@ class AddressPage extends Component<Props> {
   props: Props;
 
   render() {
-    const { message, match, history, identities } = this.props;
+    const { match, identities } = this.props;
     const { publicKeyHash } = identities[0];
     const redirectUrl =`${match.url}/${publicKeyHash}/${publicKeyHash}`;
 
@@ -45,7 +44,6 @@ class AddressPage extends Component<Props> {
                 { ...context }
                 { ...params }
               />
-              <MessageBar message={message} />
             </Container>
           );
         }}
@@ -57,10 +55,8 @@ class AddressPage extends Component<Props> {
 }
 
 function mapStateToProps(state) {
-  const { message } = state;
   return {
-    identities: getIdentities(state).toJS(),
-    message: message.get('message')
+    identities: getIdentities(state).toJS()
   };
 }
 
