@@ -13,6 +13,12 @@ import { name, tagline } from '../../config.json';
 import { termsService, privacyPolicy } from '../../config.json'
 import { openLink } from '../../utils/general'
 
+import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
+import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
+import bgCircle02 from '../../../resources/bg-hero/bg-circle_02.png';
+import bgCircle03 from '../../../resources/bg-hero/bg-circle_03.png';
+import bgCircle04 from '../../../resources/bg-hero/bg-circle_04.png';
+
 const SectionContainer = styled.div`
   display: flex;
   flex: 1;
@@ -173,11 +179,11 @@ class LoginHome extends Component<Props> {
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
         <Background className={styles.bgContainer}>
-          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src="../resources/bg-hero/bg-hero.jpg" />
-          <img className={styles.bgCircle1} src="../resources/bg-hero/bg-circle_01.png" />
-          <img className={styles.bgCircle2} src="../resources/bg-hero/bg-circle_02.png" />
-          <img className={styles.bgCircle3} src="../resources/bg-hero/bg-circle_03.png" />
-          <img className={styles.bgCircle4} src="../resources/bg-hero/bg-circle_04.png" />
+          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src={ bgHero } />
+          <img className={styles.bgCircle1} src={ bgCircle01 } />
+          <img className={styles.bgCircle2} src={ bgCircle02 } />
+          <img className={styles.bgCircle3} src={ bgCircle03 } />
+          <img className={styles.bgCircle4} src={ bgCircle04 } />
         </Background>
       </SectionContainer>
     );
