@@ -48,6 +48,7 @@ const LinkContainer = styled.div`
   display: flex;
   align-items: center;
   margin-left: 7px;
+  cursor: pointer;
 `
 const LinkTitle = styled.div`
   font-size: 12px;
