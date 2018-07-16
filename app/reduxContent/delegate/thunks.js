@@ -63,8 +63,9 @@ export function delegate( delegateValue, fee, password, selectedAccountHash, sel
 
     if ( res ) {
       dispatch(addMessage(
-        `Successfully sent delegation operation ${ clearOperationId(res.operationGroupID) }.`,
-        false
+        `Successfully started delegation update.`,
+        false,
+        clearOperationId(res.operationGroupID)
       ));
 
       const identity = findIdentity(identities, selectedParentHash);

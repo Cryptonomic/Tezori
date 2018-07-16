@@ -78,11 +78,12 @@ export function sendTez( password, toAddress, amount, fee, selectedAccountHash, 
       dispatch(addMessage(err.name, true));
       return false;
     });
-
+    
     if ( res ) {
       dispatch(addMessage(
-        `Successfully sent send Tez operation ${clearOperationId(res.operationGroupID)}.`,
-        false
+        `Success! You sent ${amount} tz.`,
+        false,
+        clearOperationId(res.operationGroupID)
       ));
       return true;
     }

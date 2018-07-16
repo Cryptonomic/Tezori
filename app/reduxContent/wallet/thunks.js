@@ -262,8 +262,9 @@ export function importAddress(activeTab, seed, pkh, activationCode, username, pa
               });
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(addMessage(
-              `Successfully sent activation operation ${operationId}.`,
-              false
+              `Successfully started account activitation.`,
+              false,
+              operationId
             ));
             identity.operations = {
               [ CREATED ]: operationId
