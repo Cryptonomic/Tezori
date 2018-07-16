@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Messages clear and create should return exact type 1`] = `
+Array [
+  Object {
+    "type": "CLEAR_MESSAGE_STATE",
+  },
+]
+`;
+
+exports[`Messages clear and create should return exact type and payload 1`] = `
+Array [
+  Object {
+    "isError": true,
+    "message": "test",
+    "type": "ADD_MESSAGE",
+  },
+]
+`;
