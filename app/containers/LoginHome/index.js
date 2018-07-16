@@ -11,7 +11,7 @@ import TermsModal from '../../components/TermsModal/';
 import styles from './styles.css';
 import { name, tagline } from '../../config.json';
 import { termsService, privacyPolicy } from '../../config.json'
-import { openLink } from '../../utils/general'
+import { openPdfLink } from '../../utils/general';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -122,9 +122,8 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  openALink = () => openLink('https://github.com/Cryptonomic/Tezos-Wallet');
-  openTermsService = () => openLink(termsService);
-  openPrivacyPolicy = () => openLink(privacyPolicy);
+  openTermsService = () => openPdfLink(termsService);
+  openPrivacyPolicy = () => openPdfLink(privacyPolicy);
 
   goTo = (route) => {
     const { match, history } = this.props;
