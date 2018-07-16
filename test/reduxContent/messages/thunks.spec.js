@@ -9,20 +9,20 @@ const mockStore = configureStore(middlewares)
 const store = mockStore()
 
 beforeEach(() => {
-    store.clearActions();
+  store.clearActions();
 });
 
 describe('Thunk action', () => {
-    it('should dispatch expected actions', () => {
-        const expectedActions = [
-            'ADD_MESSAGE',
-        ];
+  it('should dispatch expected actions', () => {
+    const expectedActions = [{
+      type: 'ADD_MESSAGE',
+      message: 'test',
+      isError: true
+    }];
 
-        return
-        store.dispatch(addMessage('test', true))
-            .then(() => {
-                const actualActions = store.getActions().map(action => action.type)
-                expect(actualActions).toEqual(expectedActions)
-            })
-    })
+    store.dispatch(addMessage('test', true));
+    expect(store.getActions()).toEqual(expectedActions);
+
+
+  })
 });
