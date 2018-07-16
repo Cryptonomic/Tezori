@@ -93,8 +93,9 @@ export function createNewAccount( delegate, amount, fee, passPhrase, publicKeyHa
       );
 
       dispatch(addMessage(
-        `Successfully sent origination operation ${ operationId }.`,
-        false
+        `Successfully started address origination.`,
+        false,
+        operationId
       ));
 
       return true;
