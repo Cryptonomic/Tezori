@@ -89,8 +89,6 @@ class Addresses extends Component<Props> {
 
   render() {
     const {
-      history,
-      match,
       syncAccountOrIdentity,
       selectedAccountHash,
       selectedParentHash,
@@ -122,8 +120,6 @@ class Addresses extends Component<Props> {
               syncAccountOrIdentity={ syncAccountOrIdentity }
               selectedAccountHash={ selectedAccountHash }
               selectedParentHash={ selectedParentHash }
-              history={ history }
-              match={ match }
             />
           </AccountItem>
         ))}

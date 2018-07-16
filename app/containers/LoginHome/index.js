@@ -10,8 +10,6 @@ import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import styles from './styles.css';
 import { name, tagline } from '../../config.json';
-import { termsService, privacyPolicy } from '../../config.json'
-import { openLink } from '../../utils/general'
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -122,14 +120,13 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  openALink = () => openLink('https://github.com/Cryptonomic/Tezos-Wallet');
-  openTermsService = () => openLink(termsService);
-  openPrivacyPolicy = () => openLink(privacyPolicy);
-
   goTo = (route) => {
     const { match, history } = this.props;
     history.push(`${match.path}/${ route }`);
   };
+
+  openTermsService = () => this.goTo('conditions/termsOfService');
+  openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
     return (
@@ -175,6 +172,7 @@ class LoginHome extends Component<Props> {
           </Description>
         </TermsAndPolicySection>
         <TermsModal
+          goTo={ this.goTo }
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
