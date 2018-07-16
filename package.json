@@ -198,6 +198,7 @@
     "conseiljs": "^0.1.25",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
+    "electron-pdf-window": "^1.0.12",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "immutable": "^3.8.2",

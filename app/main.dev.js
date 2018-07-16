@@ -10,11 +10,18 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import PDFWindow from 'electron-pdf-window';
 import MenuBuilder from './menu';
 import { name, version } from './config.json';
 
 let mainWindow = null;
+const windowDimensions  = {
+  width: 1024,
+  height: 728,
+  minHeight: 728,
+  minWidth: 1024
+};
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -63,11 +70,17 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
-    minHeight: 728,
-    minWidth: 1024,
+    ...windowDimensions,
     title: `${name} - v${version}`,
+    webPreferences: {
+      plugins: true
+    }
+  });
+
+  ipcMain.on('synchronous-message', (event, pdfUrl) => {
+    const win = new PDFWindow(windowDimensions);
+    win.loadURL(pdfUrl);
+    event.returnValue = 'pong'
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

@@ -1,4 +1,4 @@
-import { shell } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import { pick  } from 'lodash';
 import { TezosConseilQuery, TezosOperations, TezosWallet  } from 'conseiljs';
 import { fromJS } from 'immutable';
@@ -164,6 +164,10 @@ export function isReady(addressStatus, storeTypes, tab) {
     ||
     (storeTypes === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
     ;
+}
+
+export function openPdfLink(link) {
+  ipcRenderer.sendSync('synchronous-message', link);
 }
 
 export function openLink(link) {
