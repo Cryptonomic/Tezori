@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Modal from 'react-modal';
 import { H2 } from '../Heading'
 import Button from '../Button'
-import { termsService, privacyPolicy } from '../../config.json'
 import { ms } from '../../styles/helpers'
 import { openLink } from '../../utils/general'
 
@@ -50,14 +49,17 @@ const customStyles = {
 
 type Props = {
   isOpen: boolean,
+  goTo: Function,
   agreeTermsAndPolicy: Function,
-}
+};
 
 
 const TermsModal = (props:Props) => {
-  const openTermsService = () => openLink(termsService);
-  const openPrivacyPolicy = () => openLink(privacyPolicy);
-  const { isOpen, agreeTermsAndPolicy } = props
+  const { goTo, isOpen, agreeTermsAndPolicy } = props;
+
+  const openTermsService = () => goTo('conditions/termsOfService');
+  const openPrivacyPolicy = () => goTo('conditions/privacyPolicy');
+
   return (
     <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
       <Container>
