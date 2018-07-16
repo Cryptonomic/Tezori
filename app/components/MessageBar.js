@@ -89,7 +89,7 @@ const MessageContent = (props: Props1) => {
       {!!hash && 
         <MessageFooter>
           <HashTitle>OPERATION ID:</HashTitle>
-          <HashValue>oocw...28rtz</HashValue>
+          <HashValue>{hash}</HashValue>
           <LinkContainer onClick={openLink}>
             <LinkTitle>View on a block explorer</LinkTitle>
             <BroadIcon
