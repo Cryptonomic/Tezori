@@ -17,8 +17,7 @@ describe('Thunk action', () => {
     const expectedActions = [{
       type: 'ADD_MESSAGE',
       message: 'test',
-      isError: true,
-      "hash": undefined
+      isError: true
     }];
 
     store.dispatch(addMessage('test', true));
