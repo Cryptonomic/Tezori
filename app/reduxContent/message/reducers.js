@@ -1,4 +1,5 @@
 import { omit } from 'lodash';
+import Immutable from 'immutable';
 import { fromJS } from 'immutable';
 import { LOGOUT } from '../wallet/types';
 import {
@@ -7,10 +8,12 @@ import {
 } from './types';
 
 
-const emptyMessage = fromJS({
+const emptyMessage = Immutable.Map({
   message: '',
   isError: false
 });
+
+const ImmutableState = Immutable.Map({})
 
 const initState = fromJS({
   message: {}
@@ -24,7 +27,7 @@ export default function messages(state = initState, action) {
       const message = emptyMessage
         .set('message', action.message)
         .set('isError', action.isError);
-      return state.set('message', message);
+      return ImmutableState.set('message', message);
     }
     case LOGOUT:
       return initState;
