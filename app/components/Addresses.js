@@ -53,6 +53,7 @@ type Identity = {
 };
 
 type Props = {
+  history: object,
   identities: List<Identity>,
   syncAccountOrIdentity: Function,
   selectedAccountHash: string,
@@ -89,6 +90,7 @@ class Addresses extends Component<Props> {
 
   render() {
     const {
+      history,
       syncAccountOrIdentity,
       selectedAccountHash,
       selectedParentHash,
@@ -120,6 +122,7 @@ class Addresses extends Component<Props> {
               syncAccountOrIdentity={ syncAccountOrIdentity }
               selectedAccountHash={ selectedAccountHash }
               selectedParentHash={ selectedParentHash }
+              history={ history }
             />
           </AccountItem>
         ))}

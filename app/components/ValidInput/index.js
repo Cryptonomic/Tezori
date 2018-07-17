@@ -24,14 +24,14 @@ const Suggestion = styled.div`
   line-height: 18px;
   color: #92949a;
   max-width: 438px;
-`
-const CrackTime = styled.div`
-  font-size: 12px;
-  line-height: 18px;
-  color: ${props => (props.color)};
   span {
     font-weight: bold;
   }
+`
+const Error = styled.div`
+  font-size: 12px;
+  line-height: 18px;
+  color: ${props => (props.color)};
 `
 const EyeIcon = styled(TezosIcon)`
   position: absolute;
@@ -46,14 +46,13 @@ const CheckIcon = styled(TezosIcon)`
 
 type Props = {
   label: string,
-  crackTime?: string,
+  error?: string,
   suggestion?: string,
   isShowed?: boolean,
   status?: boolean,
   score?: number,
   changFunc: Function,
   onShow: Function
-
 };
 
 const inputStyles = {
@@ -115,15 +114,15 @@ const InputValid = (props: Props) => {
         />
       </Content>
       <PasswordStrengthSuggestions>
-        {!!props.crackTime && <CrackTime color={borderColor} dangerouslySetInnerHTML={{ __html: props.crackTime }} />}
-        {!!props.suggestion && <Suggestion>{props.suggestion}</Suggestion>}
+        {!!props.error && <Error color={borderColor}>{props.error}</Error>}
+        {!!props.suggestion && <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />}
       </PasswordStrengthSuggestions>
 
     </Container>
   )
 };
 InputValid.defaultProps = {
-  crackTime: '',
+  error: '',
   suggestion: '',
   score: 0,
   isShowed: false,
