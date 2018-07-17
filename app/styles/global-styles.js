@@ -22,6 +22,7 @@ import RobotoCondensedFontRegularItalic from "../../resources/fonts/Roboto/Robot
 import RobotoCondensedFontBold from "../../resources/fonts/Roboto/RobotoCondensed-Bold.ttf"
 import RobotoCondensedFontBoldItalic from "../../resources/fonts/Roboto/RobotoCondensed-BoldItalic.ttf"
 import TezosIconsFontTTF from "../../resources/fonts/TezosIcons/Tezos-icons.ttf";
+import fontAwesome from '../../node_modules/font-awesome/css/font-awesome.css';
 
 
 injectGlobal`
@@ -160,7 +161,7 @@ injectGlobal`
     font-style: normal;
   }
 
-  @import "~font-awesome/css/font-awesome.css";
+  @import ${fontAwesome};
   
   html {
     box-sizing: border-box;

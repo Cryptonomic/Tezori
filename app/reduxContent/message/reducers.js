@@ -8,12 +8,11 @@ import {
 } from './types';
 
 
-const emptyMessage = Immutable.Map({
+const emptyMessage = fromJS({
   message: '',
-  isError: false
+  isError: false,
+  hash: ''
 });
-
-const ImmutableState = Immutable.Map({})
 
 const initState = fromJS({
   message: {}
@@ -26,8 +25,9 @@ export default function messages(state = initState, action) {
     case ADD_MESSAGE: {
       const message = emptyMessage
         .set('message', action.message)
-        .set('isError', action.isError);
-      return ImmutableState.set('message', message);
+        .set('isError', action.isError)
+        .set('hash', action.hash);
+      return state.set('message', message);
     }
     case LOGOUT:
       return initState;

@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import styled from 'styled-components'
 import { lighten } from 'polished'
 import { ms } from '../../styles/helpers'
-import { shell } from 'electron'
 
 import Button from '../../components/Button/';
 import { H4 } from '../../components/Heading/'
@@ -19,6 +18,7 @@ import TezosIcon from '../../components/TezosIcon/';
 import CreateAccountSlide from '../../components/CreateAccountSlide/';
 import { importAddress } from '../../reduxContent/wallet/thunks';
 import styles from './styles.css';
+import { openLink } from '../../utils/general'
 
 const Container = styled.div`
   width: 80%;
@@ -97,13 +97,13 @@ const EmailTooltip = () => {
 }
 
 const ActivationTooltip = () => {
-  const openLink = () => shell.openExternal('https://verification.tezos.com/')
+  const openALink = () => openLink('https://verification.tezos.com/');
   return (
     <TooltipContainer>
       <TooltipTitle>Activation Code</TooltipTitle>
       This is the activation code that you received after completing the KYC/AML process. An activation code corresponds
       to a public key hash and is required if you participated in the Fundraiser.
-      You may complete the process at <Link onClick={openLink}>verification.tezos.com</Link> if you have not done so already.
+      You may complete the process at <Link onClick={openALink}>verification.tezos.com</Link> if you have not done so already.
     </TooltipContainer>
   )
 }

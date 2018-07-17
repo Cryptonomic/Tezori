@@ -8,9 +8,14 @@ import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
-import { shell } from 'electron';
 import styles from './styles.css';
 import { name, tagline } from '../../config.json';
+
+import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
+import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
+import bgCircle02 from '../../../resources/bg-hero/bg-circle_02.png';
+import bgCircle03 from '../../../resources/bg-hero/bg-circle_03.png';
+import bgCircle04 from '../../../resources/bg-hero/bg-circle_04.png';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -115,12 +120,13 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  openLink = () => shell.openExternal('https://github.com/Cryptonomic/Tezos-Wallet');
-
   goTo = (route) => {
     const { match, history } = this.props;
     history.push(`${match.path}/${ route }`);
   };
+
+  openTermsService = () => this.goTo('conditions/termsOfService');
+  openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
     return (
@@ -160,21 +166,22 @@ class LoginHome extends Component<Props> {
           <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
           <Description>
             I acknowledge that I have read and accepted the
-            <Link onClick={this.openLink}> Terms of Service </Link>
+            <Link onClick={this.openTermsService}> Terms of Service </Link>
             and
-            <Link onClick={this.openLink}> Privacy Policy</Link>
+            <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
           </Description>
         </TermsAndPolicySection>
         <TermsModal
+          goTo={ this.goTo }
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
         <Background className={styles.bgContainer}>
-          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src="../resources/bg-hero/bg-hero.jpg" />
-          <img className={styles.bgCircle1} src="../resources/bg-hero/bg-circle_01.png" />
-          <img className={styles.bgCircle2} src="../resources/bg-hero/bg-circle_02.png" />
-          <img className={styles.bgCircle3} src="../resources/bg-hero/bg-circle_03.png" />
-          <img className={styles.bgCircle4} src="../resources/bg-hero/bg-circle_04.png" />
+          <img className={`${styles.bgContainerImg} ${styles.fadeIn} ${styles.delay500}`} src={ bgHero } />
+          <img className={styles.bgCircle1} src={ bgCircle01 } />
+          <img className={styles.bgCircle2} src={ bgCircle02 } />
+          <img className={styles.bgCircle3} src={ bgCircle03 } />
+          <img className={styles.bgCircle4} src={ bgCircle04 } />
         </Background>
       </SectionContainer>
     );

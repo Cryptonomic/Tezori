@@ -10,7 +10,6 @@ import path from 'path';
 import zxcvbn from 'zxcvbn';
 import { ms } from '../../styles/helpers'
 import Button from '../../components/Button/';
-import MessageBar from '../../components/MessageBar';
 import Loader from '../../components/Loader';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
@@ -22,7 +21,6 @@ import styles from './styles.css';
 
 
 type Props = {
-  message: Object,
   login: Function,
   goBack: Function
 };
@@ -80,7 +78,7 @@ class LoginCreate extends Component<Props> {
     isPasswordMatched: false,
     isConfirmPwdShowed: false,
     pwdScore: 0,
-    pwdCrackTime: '',
+    pwdError: '',
     pwdSuggestion: '',
     confirmPwdScore: 0,
     confirmPwdText: ''
@@ -102,16 +100,22 @@ class LoginCreate extends Component<Props> {
     if (password) {
       const pwdStrength = zxcvbn(password);
       const score = pwdStrength.score || 1;
-      const crackTime = `Your password will take <span>${pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second}</span> to crack!`;
-      let suggestion = pwdStrength.feedback.warning;
-      pwdStrength.feedback.suggestions.forEach(item => {
-        suggestion = `${suggestion} ${item}`;
-      });
-
+      let crackTime = `It will take <span>${pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second}</span> to crack!`;
+      let error = '';
+      if (score < 3) {
+        error = 'Your password is not strong enough.';
+        crackTime += ' Add another word or two.';
+      } else if (score === 3) {
+        error = 'You are almost there!';
+        crackTime += ' Add another word or two.';
+      } else {
+        error = 'You got it!';
+      }
+      
       const isValid = score === 4;
-      this.setState({pwdScore: score, pwdCrackTime: crackTime, pwdSuggestion: suggestion, isPasswordValidation: isValid, password});
+      this.setState({pwdScore: score, pwdError: error, pwdSuggestion: crackTime, isPasswordValidation: isValid, password});
     } else {
-      this.setState({pwdScore: 0, pwdCrackTime: '', pwdSuggestion: '', isPasswordValidation: false, password});
+      this.setState({pwdScore: 0, pwdError: '', pwdSuggestion: '', isPasswordValidation: false, password});
     }
 
     if (confirmPassword && confirmPassword !== password) {
@@ -154,7 +158,7 @@ class LoginCreate extends Component<Props> {
   }
 
   render() {
-    const { message, goBack } = this.props;
+    const { goBack } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled = isLoading || !this.state.isPasswordValidation || !this.state.isPasswordMatched || !walletFileName;
     let walletFileSection = <img className={styles.createFileEmptyIcon} src={createFileEmptyIcon} />;
@@ -204,7 +208,7 @@ class LoginCreate extends Component<Props> {
               <ValidInput
                 label='Create Wallet Password'
                 isShowed={this.state.isPwdShowed}
-                crackTime={this.state.pwdCrackTime}
+                error={this.state.pwdError}
                 suggestion={this.state.pwdSuggestion}
                 score={this.state.pwdScore}
                 changFunc={this.changePassword}
@@ -215,7 +219,7 @@ class LoginCreate extends Component<Props> {
                 label='Confirm Wallet Password'
                 status
                 isShowed={this.state.isConfirmPwdShowed}
-                crackTime={this.state.confirmPwdText}
+                error={this.state.confirmPwdText}
                 score={this.state.confirmPwdScore}
                 changFunc={this.confirmPassword}
                 className={styles.confirmPasswordField}
@@ -234,16 +238,9 @@ class LoginCreate extends Component<Props> {
               </Button>
           </div>
         </div>
-        <MessageBar message={message} />
       </div>
     );
   }
-}
-
-function mapStateToProps({ message }) {
-  return {
-    message: message.get('message')
-  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -253,4 +250,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginCreate);
+export default connect(null, mapDispatchToProps)(LoginCreate);

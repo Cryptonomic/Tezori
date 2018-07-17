@@ -4,4 +4,4 @@ import {
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 export const clearMessageState = actionCreator(CLEAR_MESSAGE_STATE);
-export const createMessage = actionCreator(ADD_MESSAGE, 'message', 'isError');
+export const createMessage = actionCreator(ADD_MESSAGE, 'message', 'isError', 'hash');

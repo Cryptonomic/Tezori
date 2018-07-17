@@ -10,6 +10,7 @@ import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { MNEMONIC } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
+import { blockExplorerHost } from '../config.json';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
@@ -126,7 +127,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     });
     if ( revealed ) {
       account.status = status.PENDING;
-      account.operations[status.FOUND] = revealed.operationGroupID
+      account.operations[status.FOUND] = clearOperationId(revealed.operationGroupID)
     }
   }
 
@@ -165,8 +166,17 @@ export function isReady(addressStatus, storeTypes, tab) {
     ;
 }
 
-
-
 export function openLink(link) {
-  shell.openExternal(link)
+  shell.openExternal(link);
+}
+
+export function openLinkToBlockExplorer( url ) {
+  openLink(blockExplorerHost + url);
+}
+
+export function clearOperationId( operationId ) {
+  if ( typeof operationId === 'string' ) {
+    return operationId.replace(/"/g, '');
+  }
+  return operationId;
 }

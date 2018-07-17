@@ -1,11 +1,11 @@
 import React from 'react'
-import { shell } from 'electron'
 import styled from 'styled-components'
 import moment from 'moment'
 import { ms } from '../../styles/helpers'
 import TezosAddress from '../TezosAddress'
 import TezosAmount from '../TezosAmount'
 import TezosIcon from "../TezosIcon"
+import { openLinkToBlockExplorer } from '../../utils/general'
 
 const AmountContainer = styled.div`
   color: ${ ({ theme: { colors }, color }) => colors[color] };
@@ -33,6 +33,7 @@ const StateIcon = styled(TezosIcon)`
 `
 const LinkIcon = styled(TezosIcon)`
   margin-left: 6px;
+  cursor: pointer;
 `
 const StateText = styled.div`
   font-size: 10px;
@@ -41,7 +42,7 @@ const StateText = styled.div`
     font-size: 12px;
     color: ${ ({ theme: { colors } }) => colors.gray6 };
     margin: 0 6px;
-  }  
+  }
 `
 const AddressText = styled.div`
   color: ${ ({ theme: { colors } }) => colors.black2 };
@@ -66,7 +67,7 @@ const Header = styled.div`
   line-height: 30px;
 `
 
-const openLink = element => shell.openExternal(`https://tzscan.io/${element}`)
+const openLink = element => openLinkToBlockExplorer(element);
 
 const timeFormatter = timestamp => {
   const time = new Date (timestamp)
@@ -84,7 +85,7 @@ const getIsAmount = (amount) => !!amount;
 const getStatus = (transaction, selectedAccountHash) => {
   const type = transaction.kind;
   if (type === 'reveal') {
-    return {icon: 'broadcast', preposition: 'of', state: 'KEY REVEAL', isFee: false, color: 'gray8', sign: ''};
+    return {icon: 'broadcast', preposition: 'of', state: 'PUBLIC KEY REVEAL', isFee: false, color: 'gray8', sign: ''};
   }
 
   if (type === 'activation') {
@@ -96,11 +97,11 @@ const getStatus = (transaction, selectedAccountHash) => {
   const isAmount = getIsAmount(transaction.amount);
 
   if (type === 'origination' && isSameLocation) {
-    return {icon: 'send', preposition: 'of', state: 'ORIGINATION', isFee, color: isAmount? 'error1': 'gray8', sign: isAmount? '-': ''};
+    return {icon: 'send', preposition: '', state: 'ORIGINATION', isFee, color: isAmount? 'error1': 'gray8', sign: isAmount? '-': ''};
   }
 
   if (type === 'origination' && !isSameLocation) {
-    return {icon: 'receive', preposition: 'from', state: 'ORIGINATION', isFee, color: isAmount? 'check': 'gray8', sign: isAmount? '+': ''};
+    return {icon: 'receive', preposition: '', state: 'ORIGINATION', isFee, color: isAmount? 'check': 'gray8', sign: isAmount? '+': ''};
   }
 
   if (type === 'transaction' && isSameLocation) {
@@ -119,7 +120,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
     return <AddressText>this address</AddressText>;
   }
   if (type === 'origination' && transaction.source === selectedParentHash && selectedAccountHash !== selectedParentHash) {
-      return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;  
+      return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;
   }
   if (!address) {
     return null;
@@ -140,12 +141,13 @@ type Props = {
   selectedParentHash: string
 };
 
-const Transaction = (props: Props) => {
+function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash } = props;
   const fee = Number.parseInt(transaction.fee, 10);
   const {icon, preposition, state, isFee, color, sign} = getStatus(transaction, selectedAccountHash, selectedParentHash);
-  const amount = transaction.amount? Number.parseInt(transaction.amount, 10) : 0;
-  
+  const amount = transaction.amount? parseInt(transaction.amount, 10) : 0;
+  const address = getAddress(transaction, selectedAccountHash, selectedParentHash);
+
   return (
     <TransactionContainer>
       <Header>
@@ -161,25 +163,29 @@ const Transaction = (props: Props) => {
         </AmountContainer>
       </Header>
       <Container>
-        <ContentDiv>        
+        <ContentDiv>
           <StateIcon
             iconName={icon}
             size={ms(-2)}
             color="accent"
           />
           <StateText>
-            {state}<span>{preposition}</span>
+            {state}
+            { address
+              ? <span>{preposition}</span>
+              : null
+            }
           </StateText>
-          {getAddress(transaction, selectedAccountHash, selectedParentHash)}
+          { address }
           <LinkIcon
             iconName='new-window'
             size={ms(0)}
             color="primary"
-            onClick={()=>openLink(transaction.operationId)}
+            onClick={()=>openLink(transaction.operationGroupHash)}
           />
 
         </ContentDiv>
-        {isFee && 
+        {isFee &&
           <Fee>
             <span>Fee: </span>
             <TezosAmount
@@ -190,7 +196,7 @@ const Transaction = (props: Props) => {
             />
           </Fee>
         }
-      </Container>       
+      </Container>
     </TransactionContainer>
   )
 }

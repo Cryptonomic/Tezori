@@ -5,7 +5,8 @@ import { tezToUtez } from '../../utils/currancy';
 import { displayError  } from '../../utils/formValidation';
 import {
   getSelectedKeyStore,
-  fetchAverageFees
+  fetchAverageFees,
+  clearOperationId
 } from '../../utils/general'
 
 const {
@@ -77,11 +78,12 @@ export function sendTez( password, toAddress, amount, fee, selectedAccountHash, 
       dispatch(addMessage(err.name, true));
       return false;
     });
-
+    
     if ( res ) {
       dispatch(addMessage(
-        `Successfully sent send Tez operation ${res.operationGroupID}.`,
-        false
+        `Success! You sent ${amount} tz.`,
+        false,
+        clearOperationId(res.operationGroupID)
       ));
       return true;
     }

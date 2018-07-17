@@ -108,6 +108,10 @@ const getIconByName = iconName => {
     case 'new-window' : {
       return toUnicode('e916');
     }
+    
+    case 'info' : {
+      return toUnicode('e917');
+    }
 
     default: {
       console.error(`${iconName} No such icon in Tezos icons font`);
