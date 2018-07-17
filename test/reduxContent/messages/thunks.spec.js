@@ -14,15 +14,11 @@ beforeEach(() => {
 
 describe('Thunk action', () => {
   it('should dispatch expected actions', () => {
-    const expectedActions = [{
-      type: 'ADD_MESSAGE',
-      message: 'test',
-      isError: true
-    }];
-
+    const expectedActions = [
+       'ADD_MESSAGE',
+    ];
     store.dispatch(addMessage('test', true));
-    expect(store.getActions()).toEqual(expectedActions);
-
-
+    const actualActions = store.getActions().map(action => action.type);
+    expect(actualActions).toEqual(expectedActions);
   })
 });
