@@ -13,7 +13,8 @@ const expectedActions = {
   ADD_MESSAGE: [{
     type: 'ADD_MESSAGE',
     message: 'test',
-    isError: true
+    isError: true,
+    hash: 'hash'
   }],
   CLEAR_MESSAGE_STATE: [{
     type: 'CLEAR_MESSAGE_STATE',
@@ -27,7 +28,7 @@ describe('Messages clear and create', () => {
   });
 
   it('should return exact type and payload', () => {
-    store.dispatch(actions.createMessage('test', true));
+    store.dispatch(actions.createMessage('test', true, 'hash'));
     expect(store.getActions()).toEqual(expectedActions['ADD_MESSAGE']);
   });
 })
