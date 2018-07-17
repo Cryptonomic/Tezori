@@ -9,7 +9,8 @@ import {
 
 const emptyMessage = fromJS({
   message: '',
-  isError: false
+  isError: false,
+  hash: ''
 });
 
 const initState = fromJS({
@@ -23,7 +24,8 @@ export default function messages(state = initState, action) {
     case ADD_MESSAGE: {
       const message = emptyMessage
         .set('message', action.message)
-        .set('isError', action.isError);
+        .set('isError', action.isError)
+        .set('hash', action.hash);
       return state.set('message', message);
     }
     case LOGOUT:
