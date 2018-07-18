@@ -12,10 +12,45 @@ import { ms } from '../../styles/helpers';
 
 import Button from '../../components/Button/';
 import Loader from '../../components/Loader';
+import TezosIcon from "../../components/TezosIcon";
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 
 import styles from './styles.css';
+
+const InputContainer = styled.div`
+  position: relative;
+`
+const EyeIcon = styled(TezosIcon)`
+  position: absolute;
+  top: 38px;
+  right: 10px;
+`
+type Props1 = {
+  isShowed: boolean,
+  changFunc: Function,
+  onShow: Function
+};
+
+const PasswordInput = (props: Props1) => {
+  const { isShowed, changFunc, onShow } = props;
+  return (
+    <InputContainer>
+      <TextField
+        floatingLabelText="Wallet Password"
+        style={{ width: '500px', marginBottom: ms(5) }}
+        type={isShowed? 'text': 'password'}
+        onChange={(_, password) => changFunc(password)}
+      />
+      <EyeIcon
+        iconName={props.isShowed? 'view-hide': 'view-show'}
+        size={ms(2)}
+        color="secondary"
+        onClick={onShow}
+      />      
+    </InputContainer>
+  );
+}
 
 type Props = {
   login: Function,
@@ -38,7 +73,8 @@ class LoginImport extends Component<Props> {
     isLoading: false,
     walletLocation: '',
     walletFileName: '',
-    password: ''
+    password: '',
+    isShowed: false
   };
 
   openFile = () => {
@@ -63,6 +99,14 @@ class LoginImport extends Component<Props> {
     const { login } = this.props;
     await login(loginType, walletLocation, walletFileName, password);
   };
+
+  changePassword = (password) => {
+    this.setState({ password });
+  }
+
+  onShow = () => {
+    this.setState({isShowed: !this.state.isShowed});
+  }
 
   render() {
     const { goBack } = this.props;
@@ -96,12 +140,10 @@ class LoginImport extends Component<Props> {
             </Button>
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
-          <TextField
-            floatingLabelText="Wallet Password"
-            style={{ width: '500px', marginBottom: ms(5) }}
-            type="password"
-            value={password}
-            onChange={(_, password) => this.setState({ password })}
+          <PasswordInput
+            isShowed={this.state.isShowed}
+            changFunc={this.changePassword}
+            onShow={this.onShow}
           />
           <div className={styles.actionButtonContainer}>
             <Button
