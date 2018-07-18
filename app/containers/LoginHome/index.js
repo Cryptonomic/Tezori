@@ -2,12 +2,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { compose } from 'redux';
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import styles from './styles.css';
 import { name, tagline } from '../../config.json';
+import { wrapComponent } from '../../utils/i18n';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -126,6 +128,7 @@ class LoginHome extends Component<Props> {
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
+    const { t } = this.props;
     return (
       <SectionContainer>
         <div className={styles.defaultContainer}>
@@ -140,7 +143,7 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('create')}
                 disabled={!this.state.isAgreement}
               >
-                Create New Wallet
+                {t('login.create_new_wallet_btn')}
               </CreateWalletButton>
             </div>
             <div className={styles.walletContainers}>
@@ -150,15 +153,15 @@ class LoginHome extends Component<Props> {
                 disabled={!this.state.isAgreement}
                 className={styles.unlockWalletButton}
               >
-                Open Existing Wallet
+                {t('login.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
               <Tip>
-                <div>Want to import your Fundraiser paper wallet?</div>
+                <div>{t('login.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
                   <Link onClick={() => this.goTo('create')}>
-                    <Strong>{`Create a ${name} wallet`}</Strong>
+                    <Strong>{t('login.create_named_wallet', { name })}</Strong>
                   </Link>{' '}
-                  first.
+                  {t('login.create_named_wallet_end')}
                 </div>
               </Tip>
             </div>
@@ -199,4 +202,4 @@ class LoginHome extends Component<Props> {
   }
 }
 
-export default connect()(LoginHome);
+export default compose(wrapComponent, connect())(LoginHome);
