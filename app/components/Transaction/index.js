@@ -92,6 +92,10 @@ const getStatus = (transaction, selectedAccountHash) => {
     return {icon: 'star', preposition: 'of', state: 'ACTIVATION', isFee: false, color: 'gray8', sign: ''};
   }
 
+  if (type === 'delegation') {
+    return {icon: 'change', preposition: 'to', state: 'UPDATED DELEGATE', isFee: true, color: 'gray8', sign: ''};
+  }
+
   const isSameLocation = getPosition(transaction.source, selectedAccountHash);
   const isFee = getIsFee(transaction.fee);
   const isAmount = getIsAmount(transaction.amount);
@@ -119,9 +123,20 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
   if (type === 'reveal') {
     return <AddressText>this address</AddressText>;
   }
+  if (type === 'delegation') {
+    return (
+      <TezosAddress
+        address={transaction.delegate}
+        size='14px'
+        weight='200'
+        color='black2'
+      />
+    )
+  }
   if (type === 'origination' && transaction.source === selectedParentHash && selectedAccountHash !== selectedParentHash) {
       return <AddressText><span>your</span>&nbsp;Account 1 Manager Address</AddressText>;
   }
+  
   if (!address) {
     return null;
   }
