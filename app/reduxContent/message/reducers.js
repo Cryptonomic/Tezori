@@ -1,5 +1,4 @@
 import { omit } from 'lodash';
-import Immutable from 'immutable';
 import { fromJS } from 'immutable';
 import { LOGOUT } from '../wallet/types';
 import {
