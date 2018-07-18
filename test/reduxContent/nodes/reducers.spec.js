@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import { omit } from 'lodash';
+import * as matchers from 'jest-immutable-matchers';
 
 import nodes from '../../../app/reduxContent/nodes/reducers';
 import * as actions from '../../../app/reduxContent/nodes/actions';
@@ -16,27 +17,66 @@ const initState = fromJS(Object.assign(
   defaultWalletNodes && omit(defaultWalletNodes, ['default'])
 ));
 
-const expectedState = {
-  CLEAR_STATE: initState,
-  SET_SELECTED_CONSEIL_TRUE: initState.set('conseilSelectedNode', 'test'),
-  SET_SELECTED_CONSEIL_FALSE: initState.set('tezosSelectedNode', 'test')
-}
+beforeEach(function () {
+  jest.addMatchers(matchers);
+});
 
-describe('action type CLEAR_STATE', () => {
-  test('returns the correct state', () => {
-    expect(nodes(undefined, actions.clearState())).toEqual(expectedState['CLEAR_STATE']);
+describe('nodes default reducer', () => {
+
+  it('should return default for unknown action', () => {
+    expect(nodes(undefined, {})).toEqualImmutable(initState);
+  });
+
+});
+
+describe('nodes CLEAR_STATE reducer', () => {
+
+  test('should return initState', () => {
+    const expectedState = initState;
+    expect(nodes(undefined, actions.clearState())).toEqualImmutable(expectedState);
+  });
+
+});
+
+describe('nodes SET_SELECTED reducer', () => {
+
+  test('should set conseilSelectedNode property', () => {
+    const expectedState = initState.set('conseilSelectedNode', 'test');
+    expect(nodes(undefined, actions.setSelected('test', 'CONSEIL'))).toEqualImmutable(expectedState);
+  });
+
+  test('should set tezosSelectedNode property', () => {
+    const expectedState = initState.set('tezosSelectedNode', 'test');
+    expect(nodes(undefined, actions.setSelected('test', 'test'))).toEqualImmutable(expectedState);
   });
 });
 
-describe('action type SET_SELECTED with target equal CONSEIL', () => {
-  test('returns the correct state', () => {
-    expect(nodes(undefined, actions.setSelected('test', 'CONSEIL'))).toEqual(expectedState['SET_SELECTED_CONSEIL_TRUE']);
+describe('nodes ADD_NODE reducer', () => {
+
+  test('should return state with new node', () => {
+    const expectedState = initState.update('list', list => list.push('testNode'))
+    expect(nodes(undefined, actions.addNode('testNode'))).toEqualImmutable(expectedState);
   });
+
 });
 
-describe('action type SET_SELECTED with target not equal CONSEIL', () => {
-  test('returns the correct state', () => {
-    expect(nodes(undefined, actions.setSelected('test', 'test'))).toEqual(expectedState['SET_SELECTED_CONSEIL_FALSE']);
+describe('nodes REMOVE_NODE reducer', () => {
+
+  test('should remove Cryptonomic-Nautilus node', () => {
+    const expectedState = initState.update('list', list =>  
+    list.filter(item =>  item.get('name') !== 'Cryptonomic-Nautilus'
+  ))
+    expect(nodes(undefined, actions.removeNode('Cryptonomic-Nautilus'))).toEqualImmutable(expectedState);
   });
+
+});
+
+describe('nodes UPDATE_NODE reducer', () => {
+
+  test('should update last node', () => {
+    const expectedState = initState.update('list',  list => list.set(-1, 'testNode'))
+    expect(nodes(undefined, actions.updateNode('testNode'))).toEqualImmutable(expectedState);
+  });
+
 });
 

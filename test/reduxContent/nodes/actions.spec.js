@@ -9,54 +9,52 @@ beforeEach(() => {
   store.clearActions();
 });
 
-const expectedActions = {
-  UPDATE_NODE: [{
-    type: 'UPDATE_NODE',
-    node: 'test',
-  }],
-  CLEAR_STATE: [{
-    type: 'CLEAR_STATE',
-  }],
-  REMOVE_NODE: [{
-    type: 'REMOVE_NODE',
-    name: 'test',
-  }],
-  ADD_NODE: [{
-    type: 'ADD_NODE',
-    node: 'test',
-  }],
-  SET_SELECTED: [{
-    type: 'SET_SELECTED',
-    selected: 'test',
-    target: 'test'
-
-  }],
-};
-
 describe('Actions', () => {
 
   it('should return exact type payload', () => {
+    const expectedAction = [{
+      type: 'CLEAR_STATE',
+    }];
+
     store.dispatch(actions.clearState());
-    expect(store.getActions()).toEqual(expectedActions['CLEAR_STATE']);
+    expect(store.getActions()).toEqual(expectedAction);
   });
 
-  it('should return exact type and payload', () => {
+  it('should return exact type and node ', () => {
+    const expectedAction = [{
+      type: 'UPDATE_NODE',
+      node: 'test',
+    }];
+
     store.dispatch(actions.updateNode('test'));
-    expect(store.getActions()).toEqual(expectedActions['UPDATE_NODE']);
+    expect(store.getActions()).toEqual(expectedAction);
   });
 
-  it('should return exact type and payload', () => {
+  it('should return exact type and name', () => {
+    const expectedAction = [{
+      type: 'REMOVE_NODE',
+      name: 'test',
+    }];
     store.dispatch(actions.removeNode('test'));
-    expect(store.getActions()).toEqual(expectedActions['REMOVE_NODE']);
+    expect(store.getActions()).toEqual(expectedAction);
   });
 
-  it('should return exact type and payload', () => {
+  it('should return exact type and node', () => {
+    const expectedAction =  [{
+      type: 'ADD_NODE',
+      node: 'test',
+    }];
     store.dispatch(actions.addNode('test'));
-    expect(store.getActions()).toEqual(expectedActions['ADD_NODE']);
+    expect(store.getActions()).toEqual(expectedAction);
   });
 
-  it('should return exact type and payload', () => {
+  it('should return exact type, selected and target', () => {
+    const expectedAction = [{
+      type: 'SET_SELECTED',
+      selected: 'test',
+      target: 'test'
+    }];
     store.dispatch(actions.setSelected('test', 'test'));
-    expect(store.getActions()).toEqual(expectedActions['SET_SELECTED']);
+    expect(store.getActions()).toEqual(expectedAction);
   });
 })
