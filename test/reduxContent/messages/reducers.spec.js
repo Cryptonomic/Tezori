@@ -1,39 +1,62 @@
 import { fromJS } from 'immutable';
+import * as matchers from 'jest-immutable-matchers';
 
 import messages from '../../../app/reduxContent/message/reducers';
-import * as actions from '../../../app/reduxContent/message/actions';
-import { logout } from '../../../app/reduxContent/wallet/actions';
 
-const initState = fromJS({
+const initState = {
   message: {},
-})
-
-const messageTest = fromJS({
-  message: 'test',
-  isError: true,
-  hash: 'hash'
-});
-
-const expectedState = {     
-  LOGOUT: initState,
-  CLEAR_MESSAGE_STATE: initState,
-  ADD_MESSAGE: initState.set('message', messageTest),
 }
 
+beforeEach(function () {
+  jest.addMatchers(matchers);
+});
+
+
 describe('action type CLEAR_MESSAGE_STATE', () => {
-    test('returns the correct state', () => {  
-      expect(messages(undefined, actions.clearMessageState())).toEqual(expectedState['CLEAR_MESSAGE_STATE']); 
-    });
+  const expectedState = fromJS({
+    ...initState,
+  })
+
+  const action = {
+    type: 'CLEAR_MESSAGE_STATE',
+  }
+
+  test('should return the init state', () => {
+    expect(messages(undefined, action)).toEqualImmutable(expectedState);
+  });
+});
+
+describe('action type ADD_MESSAGE', () => {
+  const expectedState = fromJS({
+    message: {
+      message: 'test',
+      isError: true,
+      hash: 'hash'
+    },
   });
 
-  describe('action type ADD_MESSAGE', () => {
-    test('returns the correct state', () => {  
-      expect(messages(undefined, actions.createMessage('test', true, 'hash'))).toEqual(expectedState['ADD_MESSAGE']); 
-    });
+  const action = {
+    type: 'ADD_MESSAGE',
+    message: 'test',
+    isError: true,
+    hash: 'hash'
+  }
+
+  test('should return correct state', () => {
+    expect(messages(undefined, action)).toEqualImmutable(expectedState);
+  });
+});
+
+describe('action type LOGOUT', () => {
+  const expectedState = fromJS({
+    ...initState,
   });
 
-  describe('action type LOGOUT', () => {
-    test('returns the correct state', () => {  
-      expect(messages(undefined, logout())).toEqual(expectedState['LOGOUT']); 
-    });
+  const action = {
+    type: 'CLEAR_MESSAGE_STATE',
+  }
+
+  test('should return correct state', () => {
+    expect(messages(undefined, action)).toEqualImmutable(expectedState);
   });
+});
