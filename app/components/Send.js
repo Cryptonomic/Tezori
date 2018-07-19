@@ -150,7 +150,7 @@ class Send extends Component<Props> {
               onChange={this.handleAmountChange}
               type="number"
             />
-            <TezosIconInput color="secondary" />
+            <TezosIconInput color="secondary" iconName="tezos" />
           </InputAmount>
           <Fees
             styles={{ width: '50%' }}

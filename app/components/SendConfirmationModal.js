@@ -79,7 +79,7 @@ const SendConfirmationModal = (props: Props) => {
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosIcon color="secondary" />
+          <TezosIcon color="secondary" iconName="tezos" />
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>

@@ -93,7 +93,8 @@ class Fee extends Component<Props> {
             value={low}
             primaryText={
               <div>
-                Low Fee: {formatAmount(low)} <TezosIcon color="black" />
+                Low Fee: {formatAmount(low)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
               </div>
             }
           />
@@ -101,7 +102,8 @@ class Fee extends Component<Props> {
             value={medium}
             primaryText={
               <div>
-                Medium Fee: {formatAmount(medium)} <TezosIcon color="black" />
+                Medium Fee: {formatAmount(medium)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
               </div>
             }
           />
@@ -109,7 +111,8 @@ class Fee extends Component<Props> {
             value={high}
             primaryText={
               <div>
-                High Fee: {formatAmount(high)} <TezosIcon color="black" />
+                High Fee: {formatAmount(high)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
               </div>
             }
           />
@@ -119,7 +122,7 @@ class Fee extends Component<Props> {
               primaryText={
                 <div>
                   Custom Fee: {formatAmount(tezToUtez(custom))}{' '}
-                  <TezosIcon color="black" />
+                  <TezosIcon color="black" iconName="tezos" />
                 </div>
               }
             />
@@ -150,7 +153,7 @@ class Fee extends Component<Props> {
                 type="number"
                 onChange={this.handleCustomChange}
               />
-              <TezosIconInput color="secondary" />
+              <TezosIconInput color="secondary" iconName="tezos" />
             </FeeInput>
 
             <StyledSaveButton

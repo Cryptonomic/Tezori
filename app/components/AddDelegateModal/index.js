@@ -165,7 +165,7 @@ class AddDelegateModal extends Component<Props> {
               onChange={this.changeAmount}
               type="number"
             />
-            <TezosIconInput color="secondary" />
+            <TezosIconInput color="secondary" iconName="tezos" />
           </div>
           <div className={styles.feeContainer}>
             <Fees
