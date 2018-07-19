@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import type { Node } from 'react';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
-import MessageBar from '../../components/MessageBar';
+import MessageBar from '../../components/MessageBar/';
 
 type Props = {
   children: Node,

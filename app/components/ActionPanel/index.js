@@ -6,25 +6,25 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { isEmpty } from 'lodash'
 
-import Button from './Button';
-import BalanceBanner from './BalanceBanner';
-import EmptyState from './EmptyState';
-import PageNumbers from './PageNumbers';
-import Transactions from './Transactions';
-import Send from './Send';
-import Receive from './Receive';
-import Delegate from './Delegate/';
-import Loader from './Loader';
-import AccountStatus from './AccountStatus/';
-import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../constants/TabConstants';
-import { ms } from '../styles/helpers';
-import transactionsEmptyState from '../../resources/transactionsEmptyState.svg'
-import { READY } from '../constants/StatusTypes';
+import Button from '../Button/';
+import BalanceBanner from '../BalanceBanner/';
+import EmptyState from '../EmptyState/';
+import PageNumbers from '../PageNumbers';
+import Transactions from '../Transactions';
+import Send from '../Send';
+import Receive from '../Receive';
+import Delegate from '../Delegate/';
+import Loader from '../Loader/';
+import AccountStatus from '../AccountStatus/';
+import { TRANSACTIONS, SEND, RECEIVE, DELEGATE } from '../../constants/TabConstants';
+import { ms } from '../../styles/helpers';
+import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg'
+import { READY } from '../../constants/StatusTypes';
 
-import { getSelectedAccount, isReady } from '../utils/general';
-import { findIdentity, findIdentityIndex } from '../utils/identity';
+import { getSelectedAccount, isReady } from '../../utils/general';
+import { findIdentity, findIdentityIndex } from '../../utils/identity';
 
-import { syncWallet, updateActiveTab } from '../reduxContent/wallet/thunks';
+import { syncWallet, updateActiveTab } from '../../reduxContent/wallet/thunks';
 
 const Container = styled.section`
   flex-grow: 1;

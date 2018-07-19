@@ -10,7 +10,7 @@ import { ms } from '../../styles/helpers'
 import Button from '../../components/Button/';
 import { H4 } from '../../components/Heading/'
 import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
-import Loader from '../../components/Loader';
+import Loader from '../../components/Loader/';
 
 import Tooltip from '../../components/Tooltip/';
 import TezosIcon from '../../components/TezosIcon/';

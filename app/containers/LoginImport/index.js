@@ -11,7 +11,7 @@ import path from 'path';
 import { ms } from '../../styles/helpers';
 
 import Button from '../../components/Button/';
-import Loader from '../../components/Loader';
+import Loader from '../../components/Loader/';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 

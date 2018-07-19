@@ -4,14 +4,14 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import styled, { withTheme } from 'styled-components';
-import { ms } from '../styles/helpers';
+import { ms } from '../../styles/helpers';
 
-import { H4 } from './Heading/';
-import AddressBlock from './AddressBlock';
-import Tooltip from './Tooltip/';
+import { H4 } from '../Heading/';
+import AddressBlock from '../AddressBlock/';
+import Tooltip from '../Tooltip/';
 import {
   syncAccountOrIdentity,
-} from '../reduxContent/wallet/thunks';
+} from '../../reduxContent/wallet/thunks';
 
 type OperationGroup = {
   hash: string,

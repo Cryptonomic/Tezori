@@ -9,7 +9,7 @@ import TezosIcon from '../TezosIcon'
 import { ms } from '../../styles/helpers';
 import TezosAddress from '../TezosAddress';
 import Fees from '../Fees/';
-import Loader from '../Loader';
+import Loader from '../Loader/';
 
 const inputStyles = {
   underlineFocusStyle: {

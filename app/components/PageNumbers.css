@@ -1,41 +1,4 @@
-.pageNumbersContainer {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 45px;
-  user-select: none;
-}
 
-.leftButton {
-  background-color: #E3E7F1;
-  padding: 10px 10px 10px 15px;
-  border-top-left-radius: 50%;
-  border-bottom-left-radius: 50%;
-  cursor: pointer;
-  height: 100%;
-  margin-right: 3px;
-}
-
-.leftButton:hover {
-  background-color: lightgray;
-  transition: background-color 0.2s;
-}
-
-.rightButton {
-  background-color: #E3E7F1;
-  padding: 10px 15px 10px 10px;
-  border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%;
-  cursor: pointer;
-  height: 100%;
-  margin-left: 3px;
-}
-
-.rightButton:hover {
-  background-color: lightgray;
-  transition: background-color 0.2s;
-}
 
 .nonActivePage {
   background-color: #E3E7F1;
@@ -54,11 +17,11 @@
 
 .activePage {
   background-color: lightgray;
+  font-weight: 600;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px 10px;
   cursor: pointer;
-  font-weight: 600;
 }

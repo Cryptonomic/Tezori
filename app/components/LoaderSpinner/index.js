@@ -234,12 +234,13 @@ const Container = styled.div`
 
 
 type Props = {
+  bubblesStyle?: object,
   styles?: object,
   size?: string
 };
 
 export default function LoaderSpinner(props: Props) {
-  const { styles, size } = props;
+  const { styles, bubblesStyle, size } = props;
 
   let spinnerClass = 'la-ball-spin-clockwise ';
 
@@ -264,14 +265,14 @@ export default function LoaderSpinner(props: Props) {
         style={ styles }
         className={ spinnerClass }
       >
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
+        <div style={ bubblesStyle }></div>
       </div>
     </Container>
   );

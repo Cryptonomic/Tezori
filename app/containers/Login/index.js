@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router';
 
 import { getWalletIsLoading } from '../../reduxContent/wallet/selectors';
 
-import Loader from '../../components/Loader';
+import Loader from '../../components/Loader/';
 import TopBar from '../../components/TopBar/';
 import LoginHome from './../LoginHome/';
 import LoginImport from './../LoginImport/';

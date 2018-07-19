@@ -10,7 +10,7 @@ import path from 'path';
 import zxcvbn from 'zxcvbn';
 import { ms } from '../../styles/helpers'
 import Button from '../../components/Button/';
-import Loader from '../../components/Loader';
+import Loader from '../../components/Loader/';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 import ValidInput from '../../components/ValidInput'

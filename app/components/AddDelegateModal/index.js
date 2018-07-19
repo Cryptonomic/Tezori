@@ -10,7 +10,7 @@ import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon';
 
 import Button from '../Button';
-import Loader from '../Loader';
+import Loader from '../Loader/';
 import Fees from '../Fees/';
 
 import styles from './index.css';

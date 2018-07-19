@@ -2,17 +2,17 @@
 import React from 'react';
 import styled, {withTheme} from 'styled-components';
 import { lighten } from 'polished';
-import { ms } from '../styles/helpers';
-import { H4 } from './Heading';
-import TezosAmount from './TezosAmount';
-import TezosAddress from './TezosAddress';
-import TezosIcon from './TezosIcon';
-import Tooltip from './Tooltip';
-import Button from './Button';
-import Update from './Update'
-import ManagerAddressTooltip from "./Tooltips/ManagerAddressTooltip";
-import { findAccountIndex } from '../utils/account';
-import { MNEMONIC } from '../constants/StoreTypes';
+import { ms } from '../../styles/helpers';
+import { H4 } from '../Heading/';
+import TezosAmount from '../TezosAmount/';
+import TezosAddress from '../TezosAddress/';
+import TezosIcon from '../TezosIcon/';
+import Tooltip from '../Tooltip/';
+import Button from '../Button/';
+import Update from '../Update/'
+import ManagerAddressTooltip from "../Tooltips/ManagerAddressTooltip/";
+import { findAccountIndex } from '../../utils/account';
+import { MNEMONIC } from '../../constants/StoreTypes';
 
 type Props = {
   storeTypes?: string,

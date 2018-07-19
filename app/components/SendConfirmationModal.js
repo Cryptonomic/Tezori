@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { ms } from '../styles/helpers';
 
 import { H5 } from './Heading';
-import Loader from './Loader';
+import Loader from './Loader/';
 import Button from './Button';
 import TezosIcon from './TezosIcon';
 
