@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css, withTheme } from 'styled-components';
+import styled, { css } from 'styled-components';
 import LeftIcon from 'material-ui/svg-icons/navigation/chevron-left';
 import RightIcon from 'material-ui/svg-icons/navigation/chevron-right';
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Dialog, TextField } from 'material-ui';
 import classNames from 'classnames';
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { lighten } from 'polished'
 import { ms } from '../../styles/helpers'
 
@@ -17,7 +17,6 @@ import TezosIcon from '../../components/TezosIcon/';
 
 import CreateAccountSlide from '../../components/CreateAccountSlide/';
 import { importAddress } from '../../reduxContent/wallet/thunks';
-import styles from './styles.css';
 import { openLink } from '../../utils/general'
 
 const Container = styled.div`
@@ -34,11 +33,11 @@ const InputWithTooltip = styled.div`
     top: 50%;
     right: ${ms(-2)};
   }
-`
+`;
 
 const FormTitle = styled(H4)`
   font-size: ${ms(1)};
-`
+`;
 
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
@@ -49,34 +48,85 @@ const TooltipContainer = styled.div`
   color: ${({ theme: { colors } }) => colors.primary };
   max-width: ${ms(15.5)};
   font-weight: ${({theme: {typo}}) => typo.weights.light };
-`
+`;
 
 const TooltipTitle = styled.p`
   font-weight: ${({theme: {typo}}) => typo.weights.bold };
   margin: 0 0 ${ms(-1)} 0;
-`
+`;
 
 const RowInputs = styled.div`
   display: grid;
   grid-column-gap: ${ms(1)};
   grid-template-columns: 3fr 4fr;
-`
+`;
 
 const ImportButton = styled(Button)`
   margin: ${ms(6)} 0 0 0;
-`
+`;
 
 const StyledTooltip = styled(Tooltip)`
   &__tooltip-inner {
     background-color: ${({theme: {colors}}) => lighten(0.2, colors.secondary)};
   }
-`
+`;
 
 const Link = styled.span`
   cursor: pointer;
   text-decoration: underline;
   color: ${ ({ theme: { colors } }) => colors.blue2 };
-`
+`;
+
+const TitleContainer = styled.div`
+  background-color: #417DEF;
+  color: white;
+  font-size: 24px;
+  width: 100%;
+  height: 80px;
+  padding: 20px 60px;
+  display: flex;
+  align-items: center;
+`;
+
+const TabContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+  justify-content: space-around;
+`;
+
+const Tab = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  ${({ isActive, theme: { colors } }) => {
+    if ( isActive ) {
+      return css`
+        color: #1A325F;
+        background-color: white;
+        text-align: center;
+        padding: 0 10px;
+      `;
+    }
+    return css`
+      background-color: #417DEF;
+      color: white;
+      text-align: center;
+      padding: 0 10px;
+    `;
+  }};
+`;
+
+const AddAddressBodyContainer = styled.div`
+  background-color: white;
+  padding: 2rem;
+`;
+
+
 
 const PasswordTooltip = () => {
   return (
@@ -85,7 +135,7 @@ const PasswordTooltip = () => {
       This is the password that you used when generating a Tezos paper wallet to participate in the Fundraiser.
     </TooltipContainer>
   )
-}
+};
 
 const EmailTooltip = () => {
   return (
@@ -94,7 +144,7 @@ const EmailTooltip = () => {
       This is the email address that you used when generating a Tezos paper wallet to participate in the Fundraiser
     </TooltipContainer>
   )
-}
+};
 
 const ActivationTooltip = () => {
   const openALink = () => openLink('https://verification.tezos.com/');
@@ -106,7 +156,7 @@ const ActivationTooltip = () => {
       You may complete the process at <Link onClick={openALink}>verification.tezos.com</Link> if you have not done so already.
     </TooltipContainer>
   )
-}
+};
 
 const PkhTooltip = () => {
   return (
@@ -115,11 +165,8 @@ const PkhTooltip = () => {
       This is the public key hash as provided in the paper wallet.
     </TooltipContainer>
   )
-}
+};
 
-const ActivationTooltipStyled = styled(ActivationTooltip)`
-  max-width: ${ms(14)}
-`
 
 type Props = {
   importAddress: Function,
@@ -147,30 +194,31 @@ class AddAddress extends Component<Props> {
     });
 
     return (
-      <div
+      <Tab
         key={tabName}
+        isActive={ tabName === activeTab }
         className={tabClasses}
         onClick={() => this.setState({ activeTab: tabName })}
       >
         {tabName}
-      </div>
+      </Tab>
     );
 
   };
 
   renderTabController = () => {
     return (
-      <div className={styles.tabContainer}>
+      <TabContainer>
         {Object.values(ADD_ADDRESS_TYPES).map(this.renderTab)}
-      </div>
+      </TabContainer>
     );
   };
 
   renderAppBar = () => {
     return (
-      <div className={styles.titleContainer}>
+      <TitleContainer>
         <div>Add an Account</div>
-      </div>
+      </TitleContainer>
     );
   };
 
@@ -289,16 +337,15 @@ class AddAddress extends Component<Props> {
   }
 
   render() {
-    const { activeTab } = this.state;
-    const { isLoading, goBack } = this.props;
+    const { isLoading } = this.props;
     return (
       <Container>
         {this.renderAppBar()}
         {this.renderTabController()}
-        <div className={styles.addAddressBodyContainer}>
+        <AddAddressBodyContainer>
           {this.renderAddBody()}
           {isLoading && <Loader />}
-        </div>
+        </AddAddressBodyContainer>
       </Container>
     );
   }
