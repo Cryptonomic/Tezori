@@ -114,8 +114,7 @@ type Props = {
   syncAccountOrIdentity: Function,
   selectedAccountHash: string,
   accountIndex: number,
-  theme: Object,
-  history: Object
+  theme: Object
 };
 
 type State = {
@@ -287,6 +286,7 @@ class AddressBlock extends Component<Props, State> {
               small
               buttonTheme="secondary"
               onClick={this.openDelegateModal}
+              disabled={!isManagerReady}
             >
                   Add a Delegate
             </NoSmartAddressesButton>

@@ -27,7 +27,7 @@ type Props = {
   title: string,
   description: React.Node,
   imageSrc: string,
-  className: string
+  className?: string
 };
 
 const EmptyState = (props: Props) => {
