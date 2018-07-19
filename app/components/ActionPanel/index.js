@@ -9,10 +9,10 @@ import { isEmpty } from 'lodash'
 import Button from '../Button/';
 import BalanceBanner from '../BalanceBanner/';
 import EmptyState from '../EmptyState/';
-import PageNumbers from '../PageNumbers';
-import Transactions from '../Transactions';
-import Send from '../Send';
-import Receive from '../Receive';
+import PageNumbers from '../PageNumbers/';
+import Transactions from '../Transactions/';
+import Send from '../Send/';
+import Receive from '../Receive/';
 import Delegate from '../Delegate/';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';

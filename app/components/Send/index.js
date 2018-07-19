@@ -5,18 +5,18 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Button from './Button';
-import { ms } from '../styles/helpers'
-import TezosIcon from './TezosIcon'
-import SendConfirmationModal from './SendConfirmationModal';
+import Button from '../Button/';
+import { ms } from '../../styles/helpers'
+import TezosIcon from '../TezosIcon/'
+import SendConfirmationModal from '../SendConfirmationModal/';
 
 import {
   validateAmount,
   sendTez,
   fetchTransactionAverageFees
-} from '../reduxContent/sendTezos/thunks';
+} from '../../reduxContent/sendTezos/thunks';
 
-import Fees from './Fees/';
+import Fees from '../Fees/';
 
 const SendContainer = styled.div`
   display: flex;
