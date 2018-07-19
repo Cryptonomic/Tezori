@@ -93,7 +93,7 @@ export default function PageNumbers({ currentPage, numberOfPages, onClick }) {
   function renderPageNumber(pageNum) {
     return (
       <PageNumber
-        activePage={ pageNum === currentPage }
+        activePage={ pageNum !== currentPage }
         key={pageNum}
         onClick={onPageClick(pageNum)}
       >
