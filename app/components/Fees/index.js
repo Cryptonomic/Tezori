@@ -82,6 +82,7 @@ class Fee extends Component<Props> {
             }
           }}
         >
+          <MenuItem value={0} primaryText={<div>Low Fee: { formatAmount(0)} <TezosIcon color={'black'}/></div>} />
           <MenuItem value={low} primaryText={<div>Low Fee: { formatAmount(low)} <TezosIcon color={'black'}/></div>} />
           <MenuItem value={medium} primaryText={<div>Medium Fee: { formatAmount(medium)} <TezosIcon color={'black'}/></div>} />
           <MenuItem value={high} primaryText={ <div>High Fee: { formatAmount(high)} <TezosIcon color={'black'}/></div>} />

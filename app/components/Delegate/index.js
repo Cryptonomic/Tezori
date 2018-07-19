@@ -141,7 +141,7 @@ class Delegate extends Component<Props> {
   async componentDidMount() {
     const { fetchDelegationAverageFees } = this.props;
     const averageFees = await fetchDelegationAverageFees();
-    this.setState({ averageFees, fee: averageFees.low });
+    this.setState({ averageFees, fee: 0 });
   }
 
   openConfirmation = () =>  this.setState({ open: true });
