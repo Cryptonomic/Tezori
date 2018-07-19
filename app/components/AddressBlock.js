@@ -16,6 +16,8 @@ import { READY } from '../constants/StatusTypes';
 import { MNEMONIC } from '../constants/StoreTypes';
 import { isReady } from '../utils/general';
 import AddDelegateModal from './AddDelegateModal/';
+import Tooltip from './Tooltip';
+import NoFundTooltip from "./Tooltips/NoFundTooltip";
 
 const Container = styled.div`
   overflow: hidden;
@@ -45,7 +47,8 @@ const AddressesTitle = styled.div`
 
 const DelegateTitle = styled(AddressesTitle)`
   font-size: ${ms(-0.7)};
-  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold }
+  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold };
+  opacity: ${props => (props.isReady ? 1 : 0.5)};
 `
 
 const AccountTitle = styled(H3)`
@@ -188,7 +191,7 @@ class AddressBlock extends Component<Props, State> {
               ?
               (
                 <TezosAmount
-                  color={'primary'}
+                  color='primary'
                   size={ms(0)}
                   amount={balance}
                   showTooltip
@@ -226,23 +229,34 @@ class AddressBlock extends Component<Props, State> {
         }
 
         <AddDelegateLabel>
-          <DelegateTitle>
-            Add a Delegate
-          </DelegateTitle>
+          <DelegateTitle isReady={isManagerReady}>Add a Delegate</DelegateTitle>
+          {isManagerReady && (
+            <AddCircle
+              style={{
+                fill: '#7B91C0',
+                height: ms(1),
+                width: ms(1),
+                cursor: 'pointer'
+              }}
+              onClick={this.openDelegateModal}
+            />
 
-          <AddCircle
-            style={{
-              fill: '#7B91C0',
-              height: ms(1),
-              width: ms(1),
-              cursor: !isManagerReady ? 'not-allowed' : 'pointer'
-            }}
-            onClick={() => {
-              if(isManagerReady) {
-                this.openDelegateModal();
-              }
-            }}
-          />
+          )}
+          {!isManagerReady && (
+            <Tooltip position="bottom" offset='-24%' content={<NoFundTooltip content="You don't have funds to delegate." />}>
+              <Button buttonTheme="plain">
+                <AddCircle
+                  style={{
+                    fill: '#7B91C0',
+                    height: ms(1),
+                    width: ms(1),
+                    opacity: 0.5,
+                    cursor: 'not-allowed'
+                  }}
+                />
+              </Button>
+            </Tooltip>
+          )}
         </AddDelegateLabel>
         {smartAddresses && smartAddresses.toArray().length ?
           smartAddresses.map((smartAddress, index) => {

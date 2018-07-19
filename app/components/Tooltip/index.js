@@ -8,14 +8,15 @@ import { ms } from '../../styles/helpers';
 
 type Props = {
   content: any,
-  trigger: Array<string>
+  trigger: Array<string>,
+  offset?: string
 };
 
-const TooltipAdapter = ({className, ...props}) => {
+const TooltipAdapter = ({className, offset, ...props}) => {
   return <RCTooltip {...props}
                     overlayClassName={`${className}__overlay`}
                     prefixCls={`${className}__tooltip`}
-                    align={{ offset: "-22%" }} />
+                    align={{ offset: offset }} />
 }
 
 const arrowWidth = '10px';
@@ -204,16 +205,17 @@ const StyledTooltip = styled(TooltipAdapter)`
 `;
 
 function Tooltip(props: Props) {
-  const { children, className, content, position, arrowPos, ...restOfProps } = props;
+  const { children, className, content, position, arrowPos, offset, ...restOfProps } = props;
   return (
-    <StyledTooltip placement={position} className={className} overlay={content} arrowPos={arrowPos} {...restOfProps}>
+    <StyledTooltip placement={position} className={className} overlay={content} arrowPos={arrowPos} offset={offset} {...restOfProps}>
       {children}
     </StyledTooltip>
   );
 }
 
 Tooltip.defaultProps = {
-  trigger: ['hover']
+  trigger: ['hover'],
+  offset: '-22%'
 };
 
 export default Tooltip;

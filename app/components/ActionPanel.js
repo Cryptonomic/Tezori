@@ -25,6 +25,8 @@ import { getSelectedAccount, isReady } from '../utils/general';
 import { findIdentity, findIdentityIndex } from '../utils/identity';
 
 import { syncWallet, updateActiveTab } from '../reduxContent/wallet/thunks';
+import Tooltip from './Tooltip';
+import NoFundTooltip from "./Tooltips/NoFundTooltip";
 
 const Container = styled.section`
   flex-grow: 1;
@@ -113,6 +115,19 @@ class ActionPanel extends Component<Props, State> {
     const { selectedAccountHash, selectedParentHash, updateActiveTab } = this.props;
     updateActiveTab( selectedAccountHash, selectedParentHash, activeTab );
   };
+
+  renderTabItem = (tab, ready) => {
+    if (tab === 'Send' && !ready) {
+      return (
+        <Tooltip position="bottom" offset='-24%' content={<NoFundTooltip content="You don't have funds to send transactions." />}>
+          <TabText>{ tab }</TabText>
+        </Tooltip>
+      );
+    }
+
+    return (<TabText isReady={ready}>{ tab }</TabText>);
+
+  }
 
   renderSection = (selectedAccount, activeTab) => {
     const { selectedAccountHash, selectedParentHash } = this.props;
@@ -225,7 +240,7 @@ class ActionPanel extends Component<Props, State> {
         <TabList>
           {tabs.map(tab => {
             const ready = isReady(status, storeTypes, tab);
-            return (
+            return (              
               <Tab
                 isActive={ activeTab === tab }
                 key={tab}
@@ -237,7 +252,7 @@ class ActionPanel extends Component<Props, State> {
                   }
                 }}
               >
-                <TabText isReady={ ready }>{ tab }</TabText>
+                {this.renderTabItem(tab, ready)}
               </Tab>
             );
           })}
