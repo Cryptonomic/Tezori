@@ -6,7 +6,6 @@ import { TextField } from 'material-ui';
 
 import { H3 } from '../../components/Heading/';
 import styled from 'styled-components';
-import styles from './styles.css';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -14,6 +13,26 @@ const SectionContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+`;
+
+const DefaultContainer = styled.div`
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  padding: 0px 50px;
+`;
+
+const WalletContainers = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 30px;
+`;
+
+const StyledPre = styled.pre`
+  border: 1px solid #d0d0d0;
+  background: white;
 `;
 
 const preContent = `
@@ -43,16 +62,16 @@ class WalletNodesRequired extends Component<Props> {
   render() {
     return (
       <SectionContainer>
-        <div className={styles.defaultContainer}>
-          <div className={styles.walletContainers}>
+        <DefaultContainer>
+          <WalletContainers>
             <H3>Node configuration is missing</H3>
             <p>Please close the wallet and edit "defaultWalletNodes.json" and open the wallet again. <br/>
               defaultWalletNodes should look like: </p>
-            <pre className={styles.styledPre}>
+            <StyledPre>
               { preContent }
-            </pre>
-          </div>
-        </div>
+            </StyledPre>
+          </WalletContainers>
+        </DefaultContainer>
       </SectionContainer>
     );
   }

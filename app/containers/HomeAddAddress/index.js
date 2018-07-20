@@ -187,17 +187,11 @@ class AddAddress extends Component<Props> {
 
   renderTab = (tabName) => {
     const { activeTab } = this.state;
-    const tabClasses = classNames({
-      [styles.tab]: true,
-      [styles.inactiveTab]: tabName !== activeTab,
-      [styles.activeTab]: tabName === activeTab
-    });
 
     return (
       <Tab
         key={tabName}
         isActive={ tabName === activeTab }
-        className={tabClasses}
         onClick={() => this.setState({ activeTab: tabName })}
       >
         {tabName}

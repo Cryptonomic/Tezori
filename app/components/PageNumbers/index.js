@@ -47,16 +47,16 @@ const PageNumber = styled.div`
   ${({ activePage, theme: { colors } }) => {
     if ( activePage ) {
       return css`
-        background-color: #E3E7F1;
-        &:hover {
-          background-color: lightgray;
-          transition: background-color 0.2s;
-        }
+        background-color: lightgray;
+        font-weight: 600;
       `;
     }
     return css`
-      background-color: lightgray;
-      font-weight: 600;
+      background-color: #E3E7F1;
+      &:hover {
+        background-color: lightgray;
+        transition: background-color 0.2s;
+      }
     `;
   }};
 `;
@@ -93,7 +93,7 @@ export default function PageNumbers({ currentPage, numberOfPages, onClick }) {
   function renderPageNumber(pageNum) {
     return (
       <PageNumber
-        activePage={ pageNum !== currentPage }
+        activePage={ pageNum === currentPage }
         key={pageNum}
         onClick={onPageClick(pageNum)}
       >

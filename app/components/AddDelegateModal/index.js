@@ -38,6 +38,74 @@ const TezosIconInput = styled(TezosIcon)`
   display: block;
 `
 
+const AmountSendContainer = styled.div`
+  width: 45%;
+  position:'relative;
+`;
+
+const FeeContainer = styled.div`
+  width: 45%;
+  display: flex;
+`;
+
+const PasswordButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 42px;
+`;
+
+const DelegateButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+`;
+
+const DelegateContainer = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+const TextfieldTooltip = styled(Button)`
+  position: absolute;
+  right: 10px;
+  top: 44px;
+`;
+
+const AmountAndFeeContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`;
+
+const TooltipContainer = styled.div`
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  max-width: 312px;
+  
+  .customArrow .rc-tooltip-arrow {
+    left: 66%;
+  }
+`;
+
+const TooltipTitle = styled.div`
+  color: #123262;
+  font-weight: bold;
+  font-size: 16px;
+`;
+
+const TooltipContent1 = styled.div`
+  border-bottom:solid 1px #94a9d1;
+  padding: 12px 0;
+`;
+
+const TooltipContent2 = styled.div`
+  padding: 12px 0;
+`;
+
+
+
+
 const defaultState = {
   isLoading: false,
   delegate: '',
@@ -71,12 +139,12 @@ class AddDelegateModal extends Component<Props> {
 
   renderToolTipComponent = () => {
     return (
-      <div className={styles.tooltipContainer}>
-        <div className={styles.tooltipTitle}>Setting a Delegate</div>
-        <div className={styles.tooltipContent1}>You can always change the delegate at a later time.</div>
-        <div className={styles.tooltipContent1}>There is a fee for changing the delegate.</div>
-        <div className={styles.tooltipContent2}>You can only delegate to the Manager Address. The Manager Address always starts with "tz1".</div>
-      </div>
+      <TooltipContainer>
+        <TooltipTitle>Setting a Delegate</TooltipTitle>
+        <TooltipContent1>You can always change the delegate at a later time.</TooltipContent1>
+        <TooltipContent1>There is a fee for changing the delegate.</TooltipContent1>
+        <TooltipContent2>You can only delegate to the Manager Address. The Manager Address always starts with "tz1".</TooltipContent2>
+      </TooltipContainer>
     );
   };
 
@@ -106,11 +174,18 @@ class AddDelegateModal extends Component<Props> {
         titleStyle={{ padding: '50px 70px 0px' }}
       >
         <CloseIcon
-          className={styles.closeIcon}
-          style={{ fill: '#7190C6' }}
+          style={{
+            fill: '#7190C6',
+            cursor: 'pointer',
+            height: '20px',
+            width: '20px',
+            position: 'absolute',
+            top: '10px',
+            right: '15px',
+          }}
           onClick={onCloseClick}
         />
-        <div className={styles.delegateContainer}>
+        <DelegateContainer>
           <TextField
             floatingLabelText="Delegate Address"
             style={{ width: '100%' }}
@@ -126,17 +201,19 @@ class AddDelegateModal extends Component<Props> {
               left: '70%'
             }}
           >
-            <Button buttonTheme="plain" className={styles.textfieldTooltip}>
+            <TextfieldTooltip
+              buttonTheme="plain"
+            >
               <HelpIcon
                 iconName="help"
                 size={ms(0)}
                 color='secondary'
               />
-            </Button>
+            </TextfieldTooltip>
           </Tooltip>
-        </div>
-        <div className={styles.amountAndFeeContainer}>
-          <div className={styles.amountSendContainer} style={{position:'relative'}}>
+        </DelegateContainer>
+        <AmountAndFeeContainer>
+          <AmountSendContainer>
             <TextField
               floatingLabelText="Amount"
               style={{ width: '100%' }}
@@ -144,8 +221,8 @@ class AddDelegateModal extends Component<Props> {
               type="number"
             />
             <TezosIconInput color='secondary' />
-          </div>
-          <div className={styles.feeContainer}>
+          </AmountSendContainer>
+          <FeeContainer>
             <Fees
               style={{ width: '50%' }}
               low={ averageFees.low }
@@ -154,26 +231,25 @@ class AddDelegateModal extends Component<Props> {
               fee={ fee }
               onChange={this.changeFee}
             />
-          </div>
-        </div>
-        <div className={styles.amountAndFeeContainer}>
+          </FeeContainer>
+        </AmountAndFeeContainer>
+        <AmountAndFeeContainer>
           <TextField
             floatingLabelText="Wallet Password"
             type="password"
             style={{ width: '100%' }}
             onChange={this.updatePassPhrase}
           />
-        </div>
-        <div className={styles.passwordButtonContainer}>
-          <Button
+        </AmountAndFeeContainer>
+        <PasswordButtonContainer>
+          <DelegateButton
             buttonTheme="primary"
             disabled={isLoading || isDisabled}
-            className={styles.delegateButton}
             onClick={this.createAccount}
           >
             Delegate
-          </Button>
-        </div>
+          </DelegateButton>
+        </PasswordButtonContainer>
         {isLoading && <Loader />}
       </Dialog>
     );

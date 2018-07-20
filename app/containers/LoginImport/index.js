@@ -15,8 +15,6 @@ import Loader from '../../components/Loader/';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 
-import styles from './styles.css';
-
 type Props = {
   login: Function,
 };
@@ -27,6 +25,50 @@ const BackToWallet = styled.div`
   color: #4486f0;
   cursor: pointer;
   margin-bottom: 1rem;
+`;
+
+const CreateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+`;
+
+const WalletContainers = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 30px;
+`;
+
+const WalletTitle = styled.h3`
+  color: #1A325F;
+  font-size: 36px;
+  font-weight: 300;
+  margin: 0 0 1.7rem 0;
+`;
+
+const ImportButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 1rem;
+`;
+
+const WalletFileName = styled.span`
+  font-size: 15px;
+  margin-left: 15px;
+  opacity: 0.5;
+`;
+
+const ActionButtonContainer = styled.div`
+  width: 194px;
+`;
+
+const ActionButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+  padding: 0;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -69,9 +111,9 @@ class LoginImport extends Component<Props> {
     const { walletFileName, walletLocation, password, isLoading } = this.state;
 
     return (
-      <div className={styles.createContainer}>
+      <CreateContainer>
         {isLoading && <Loader />}
-        <div className={styles.walletContainers}>
+        <WalletContainers>
           <BackToWallet
             onClick={goBack}
           >
@@ -87,15 +129,17 @@ class LoginImport extends Component<Props> {
             <span>Back</span>
           </BackToWallet>
 
-          <h3 className={styles.walletTitle}>
+          <WalletTitle>
             Open an existing wallet
-          </h3>
-          <div className={styles.importButtonContainer}>
+          </WalletTitle>
+          <ImportButtonContainer>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
             </Button>
-            <span className={styles.walletFileName}>{walletFileName}</span>
-          </div>
+            <WalletFileName>
+              { walletFileName }
+            </WalletFileName>
+          </ImportButtonContainer>
           <TextField
             floatingLabelText="Wallet Password"
             style={{ width: '500px', marginBottom: ms(5) }}
@@ -103,18 +147,17 @@ class LoginImport extends Component<Props> {
             value={password}
             onChange={(_, password) => this.setState({ password })}
           />
-          <div className={styles.actionButtonContainer}>
-            <Button
-              className={styles.actionButton}
+          <ActionButtonContainer>
+            <ActionButton
               onClick={() => this.login(IMPORT)}
               buttonTheme="primary"
               disabled={isLoading}
             >
               Import
-            </Button>
-          </div>
-        </div>
-      </div>
+            </ActionButton>
+          </ActionButtonContainer>
+        </WalletContainers>
+      </CreateContainer>
     );
   }
 }
