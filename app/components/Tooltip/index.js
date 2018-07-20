@@ -12,16 +12,20 @@ type Props = {
 };
 
 const TooltipAdapter = ({className, ...props}) => {
-  return <RCTooltip {...props}
-                    overlayClassName={`${className}__overlay`}
-                    prefixCls={`${className}__tooltip`}
-                    align={{ offset: "-22%" }} />
+  return (
+    <RCTooltip
+      {...props}
+      overlayClassName={`${className}__overlay`}
+      prefixCls={`${className}__tooltip`}
+      align={{ offset: "-22%" }}
+    />
+  );
 }
 
 const arrowWidth = '10px';
 const tooltipDistance = '14px';
 const tooltipDistanceUnitless= stripUnit(tooltipDistance);
-const arrowWidthUnitless = stripUnit(arrowWidth)
+const arrowWidthUnitless = stripUnit(arrowWidth);
 
 const StyledTooltip = styled(TooltipAdapter)`
   cursor: pointer;

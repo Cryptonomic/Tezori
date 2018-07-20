@@ -5,15 +5,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import Tooltip from '../Tooltip';
+import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
-import TezosIcon from '../TezosIcon';
+import TezosIcon from '../TezosIcon/';
 
-import Button from '../Button';
+import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
 
-import styles from './index.css';
 import {
   createNewAccount,
   fetchOriginationAverageFees
