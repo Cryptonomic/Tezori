@@ -10,7 +10,7 @@ import {
   UPDATE_IDENTITY,
   ADD_NEW_ACCOUNT,
   UPDATE_FETCHED_TIME,
-  LOGOUT,
+  LOGOUT
 } from './types';
 
 const initState = fromJS({
@@ -46,21 +46,26 @@ export default function wallet(state = initState, action) {
     case UPDATE_IDENTITY: {
       const { publicKeyHash } = action.identity;
       const identities = state.get('identities');
-      const indexFound = identities
-        .findIndex((identity) => publicKeyHash === identity.get('publicKeyHash') );
+      const indexFound = identities.findIndex(
+        identity => publicKeyHash === identity.get('publicKeyHash')
+      );
 
-      if ( indexFound > -1) {
-        return state.set('identities', identities.set(indexFound, fromJS(action.identity)));
+      if (indexFound > -1) {
+        return state.set(
+          'identities',
+          identities.set(indexFound, fromJS(action.identity))
+        );
       }
       return state;
     }
     case ADD_NEW_ACCOUNT: {
       const { publicKeyHash, account } = action;
       const identities = state.get('identities');
-      const indexFound = identities
-        .findIndex((identity) => publicKeyHash === identity.get('publicKeyHash') );
+      const indexFound = identities.findIndex(
+        identity => publicKeyHash === identity.get('publicKeyHash')
+      );
 
-      if ( indexFound > -1) {
+      if (indexFound > -1) {
         let identity = identities.get(indexFound);
         const accounts = identity.get('accounts');
         identity = identity.set('accounts', accounts.push(fromJS(account)));

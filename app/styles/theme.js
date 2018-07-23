@@ -1,16 +1,16 @@
 export const Theme = {
   colors: {
     // Basic colors
-    primary: "#123262",
-    secondary: "#7691c4",
-    accent: "#2c7df7",
-    light: "#FAFBFB",
-    disabled: "#C8D0D3",
-    transparent: "transparent",
+    primary: '#123262',
+    secondary: '#7691c4',
+    accent: '#2c7df7',
+    light: '#FAFBFB',
+    disabled: '#C8D0D3',
+    transparent: 'transparent',
 
     // State colors
-    error: "#F22121",
-    success: "#18CE7E",
+    error: '#F22121',
+    success: '#18CE7E',
 
     // Regular colors
     white: '#FFFFFF',
@@ -19,20 +19,20 @@ export const Theme = {
     blue3: '#4486f0',
 
     // Gray colors
-    gray0: "#191414",
-    gray1: "#f7f9fb",
-    gray2: "#edf0f7",
-    gray3: "#5571a7",
-    gray4: "#fcfcfc",
-    gray5: "#9b9b9b",
-    gray6: "#99a5b9",
-    gray7: "#e2e7f2",
-    gray8: "#cfcece",
-    gray9: "#b5c5e3",
+    gray0: '#191414',
+    gray1: '#f7f9fb',
+    gray2: '#edf0f7',
+    gray3: '#5571a7',
+    gray4: '#fcfcfc',
+    gray5: '#9b9b9b',
+    gray6: '#99a5b9',
+    gray7: '#e2e7f2',
+    gray8: '#cfcece',
+    gray9: '#b5c5e3',
 
     // font colors
-    index0: "#94a9d1",
-    index1: "rgba(148, 169, 209, 0.57)", // Same as index0 but with 57% transparency
+    index0: '#94a9d1',
+    index1: 'rgba(148, 169, 209, 0.57)', // Same as index0 but with 57% transparency
 
     // black colors
     black1: '#1e1313',
@@ -48,11 +48,11 @@ export const Theme = {
     info: '#c8d2e7'
   },
   animations: {
-    defaultTime: "300ms",
-    secondaryTime: "450ms"
+    defaultTime: '300ms',
+    secondaryTime: '450ms'
   },
   animationCurves: {
-    defaultCurve: "cubic-bezier(0.23, 1, 0.32, 1) "
+    defaultCurve: 'cubic-bezier(0.23, 1, 0.32, 1) '
   },
   typo: {
     fontFamily: {

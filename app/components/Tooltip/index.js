@@ -3,25 +3,28 @@ import React from 'react';
 import RCTooltip from 'rc-tooltip';
 
 import styled from 'styled-components';
-import {stripUnit, lighten} from 'polished';
+import { stripUnit, lighten } from 'polished';
 import { ms } from '../../styles/helpers';
 
-type Props = {
-  content: any,
-  trigger: Array<string>
+type AdapterProps = {
+  className: string
 };
 
-const TooltipAdapter = ({className, ...props}) => {
-  return <RCTooltip {...props}
-                    overlayClassName={`${className}__overlay`}
-                    prefixCls={`${className}__tooltip`}
-                    align={{ offset: "-22%" }} />
-}
+const TooltipAdapter = ({ className, ...props }: AdapterProps) => {
+  return (
+    <RCTooltip
+      {...props}
+      overlayClassName={`${className}__overlay`}
+      prefixCls={`${className}__tooltip`}
+      align={{ offset: '-22%' }}
+    />
+  );
+};
 
 const arrowWidth = '10px';
 const tooltipDistance = '14px';
-const tooltipDistanceUnitless= stripUnit(tooltipDistance);
-const arrowWidthUnitless = stripUnit(arrowWidth)
+const tooltipDistanceUnitless = stripUnit(tooltipDistance);
+const arrowWidthUnitless = stripUnit(arrowWidth);
 
 const StyledTooltip = styled(TooltipAdapter)`
   cursor: pointer;
@@ -41,27 +44,35 @@ const StyledTooltip = styled(TooltipAdapter)`
       display: none;
     }
 
-    &-placement-top, &-placement-topLeft, &-placement-topRight {
+    &-placement-top,
+    &-placement-topLeft,
+    &-placement-topRight {
       padding: ${arrowWidth} 0 ${tooltipDistance} 0;
     }
-    &-placement-right, &-placement-rightTop, &-placement-rightBottom {
+    &-placement-right,
+    &-placement-rightTop,
+    &-placement-rightBottom {
       padding: 0 ${arrowWidth} 0 ${tooltipDistance};
     }
-    &-placement-bottom, &-placement-bottomLeft, &-placement-bottomRight {
+    &-placement-bottom,
+    &-placement-bottomLeft,
+    &-placement-bottomRight {
       padding: ${tooltipDistance} 0 ${arrowWidthUnitless / 2}px 0;
     }
-    &-placement-left, &-placement-leftTop, &-placement-leftBottom {
+    &-placement-left,
+    &-placement-leftTop,
+    &-placement-leftBottom {
       padding: 0 ${tooltipDistance} 0 ${arrowWidth};
     }
 
-
     &-inner {
       padding: ${ms(-2)};
-      color: ${({theme: {colors}}) => colors.primary};
+      color: ${({ theme: { colors } }) => colors.primary};
       text-align: left;
       text-decoration: none;
-      background-color: ${({theme: {colors}}) => colors.white};
-      border: 1px solid ${({theme: {colors}}) => lighten(0.1, colors.secondary)};
+      background-color: ${({ theme: { colors } }) => colors.white};
+      border: 1px solid
+        ${({ theme: { colors } }) => lighten(0.1, colors.secondary)};
       -webkit-app-region: no-drag;
     }
 
@@ -69,7 +80,7 @@ const StyledTooltip = styled(TooltipAdapter)`
       width: 0;
       height: 0;
       position: absolute;
-      
+
       &::after {
         content: '';
         display: block;
@@ -85,12 +96,13 @@ const StyledTooltip = styled(TooltipAdapter)`
       margin-left: -${arrowWidth};
       border-left: ${arrowWidthUnitless + 7}px solid transparent;
       border-right: ${arrowWidthUnitless + 7}px solid transparent;
-      border-top: ${arrowWidth} solid ${({theme: {colors}}) => colors.white};
-      
+      border-top: ${arrowWidth} solid ${({ theme: { colors } }) => colors.white};
+
       &::after {
         border-left: ${arrowWidthUnitless + 7}px solid transparent;
         border-right: ${arrowWidthUnitless + 7}px solid transparent;
-        border-top: ${arrowWidth} solid ${({theme: {colors}}) => colors.secondary};
+        border-top: ${arrowWidth} solid
+          ${({ theme: { colors } }) => colors.secondary};
         bottom: -1px;
         right: -${arrowWidthUnitless + 7}px;
         margin-left: -${arrowWidth};
@@ -114,14 +126,16 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-rightBottom &-arrow {
       left: ${tooltipDistanceUnitless - arrowWidthUnitless + 1}px;
       margin-top: -${arrowWidthUnitless + 7}px;
-      border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
-      border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent; 
-      border-right: ${(arrowWidth)} solid ${({theme: {colors}}) => colors.white}; 
-      
+      border-top: ${arrowWidthUnitless + 7}px solid transparent;
+      border-bottom: ${arrowWidthUnitless + 7}px solid transparent;
+      border-right: ${arrowWidth} solid
+        ${({ theme: { colors } }) => colors.white};
+
       &::after {
-        border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
-        border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent; 
-        border-right: ${(arrowWidth)} solid ${({theme: {colors}}) => colors.secondary}; 
+        border-top: ${arrowWidthUnitless + 7}px solid transparent;
+        border-bottom: ${arrowWidthUnitless + 7}px solid transparent;
+        border-right: ${arrowWidth} solid
+          ${({ theme: { colors } }) => colors.secondary};
         left: -1px;
         bottom: -${arrowWidthUnitless + 7}px;
       }
@@ -145,14 +159,16 @@ const StyledTooltip = styled(TooltipAdapter)`
     &-placement-leftBottom &-arrow {
       right: ${tooltipDistanceUnitless - arrowWidthUnitless + 1}px;
       margin-top: -${arrowWidthUnitless + 7}px;
-      border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
-      border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent;
-      border-left: ${(arrowWidthUnitless)}px solid ${({theme: {colors}}) => colors.white};
-      
+      border-top: ${arrowWidthUnitless + 7}px solid transparent;
+      border-bottom: ${arrowWidthUnitless + 7}px solid transparent;
+      border-left: ${arrowWidthUnitless}px solid
+        ${({ theme: { colors } }) => colors.white};
+
       &::after {
-        border-top: ${(arrowWidthUnitless + 7)}px solid transparent;
-        border-bottom: ${(arrowWidthUnitless + 7)}px solid transparent;
-        border-left: ${(arrowWidthUnitless)}px solid ${({theme: {colors}}) => colors.secondary};
+        border-top: ${arrowWidthUnitless + 7}px solid transparent;
+        border-bottom: ${arrowWidthUnitless + 7}px solid transparent;
+        border-left: ${arrowWidthUnitless}px solid
+          ${({ theme: { colors } }) => colors.secondary};
         right: -1px;
         bottom: -${arrowWidthUnitless + 7}px;
       }
@@ -178,19 +194,22 @@ const StyledTooltip = styled(TooltipAdapter)`
       margin-left: -${arrowWidth};
       border-left: ${arrowWidthUnitless + 7}px solid transparent;
       border-right: ${arrowWidthUnitless + 7}px solid transparent;
-      border-bottom: ${arrowWidth} solid ${({theme: {colors}}) => colors.white};
-      
-       &::after {
+      border-bottom: ${arrowWidth} solid
+        ${({ theme: { colors } }) => colors.white};
+
+      &::after {
         border-left: ${arrowWidthUnitless + 7}px solid transparent;
         border-right: ${arrowWidthUnitless + 7}px solid transparent;
-        border-bottom: ${arrowWidth} solid ${({theme: {colors}}) => colors.secondary};
+        border-bottom: ${arrowWidth} solid
+          ${({ theme: { colors } }) => colors.secondary};
         right: -${arrowWidthUnitless + 7}px;
         bottom: -${arrowWidthUnitless - 1}px;
       }
     }
 
     &-placement-bottom &-arrow {
-      left: ${props => (props.arrowPos && props.arrowPos.left? props.arrowPos.left: '70%')};
+      left: ${props =>
+        props.arrowPos && props.arrowPos.left ? props.arrowPos.left : '70%'};
     }
 
     &-placement-bottomLeft &-arrow {
@@ -203,10 +222,32 @@ const StyledTooltip = styled(TooltipAdapter)`
   }
 `;
 
+type Props = {
+  content: any,
+  trigger: Array<string>,
+  children: any,
+  className: any,
+  position: any,
+  arrowPos: any
+};
+
 function Tooltip(props: Props) {
-  const { children, className, content, position, arrowPos, ...restOfProps } = props;
+  const {
+    children,
+    className,
+    content,
+    position,
+    arrowPos,
+    ...restOfProps
+  } = props;
   return (
-    <StyledTooltip placement={position} className={className} overlay={content} arrowPos={arrowPos} {...restOfProps}>
+    <StyledTooltip
+      placement={position}
+      className={className}
+      overlay={content}
+      arrowPos={arrowPos}
+      {...restOfProps}
+    >
       {children}
     </StyledTooltip>
   );

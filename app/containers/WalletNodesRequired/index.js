@@ -1,11 +1,9 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { TextField } from 'material-ui';
+import styled from 'styled-components';
 
 import { H3 } from '../../components/Heading/';
-import styled from 'styled-components';
 import styles from './styles.css';
 
 const SectionContainer = styled.div`
@@ -46,11 +44,14 @@ class WalletNodesRequired extends Component<Props> {
         <div className={styles.defaultContainer}>
           <div className={styles.walletContainers}>
             <H3>Node configuration is missing</H3>
-            <p>Please close the wallet and edit "defaultWalletNodes.json" and open the wallet again. <br/>
-              defaultWalletNodes should look like: </p>
-            <pre className={styles.styledPre}>
-              { preContent }
-            </pre>
+            <p>
+              {
+                'Please close the wallet and edit "defaultWalletNodes.json" and open the wallet again.'
+              }
+              <br />
+              {'defaultWalletNodes should look like:'}
+            </p>
+            <pre className={styles.styledPre}>{preContent}</pre>
           </div>
         </div>
       </SectionContainer>

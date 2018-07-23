@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { clipboard } from 'electron';
 import QRCode from 'qrcode';
-import Button from './Button';
 import styled from 'styled-components';
+import Button from './Button';
 import { ms } from '../styles/helpers';
 import { H4 } from './Heading';
 
@@ -66,13 +66,23 @@ const QRCodeContainer = styled.canvas`
   }
 `;
 
-
 export default class Receive extends Component<Props> {
   props: Props;
 
   state = {
     showCopyConfirmation: false
   };
+
+  componentDidMount() {
+    this.renderQRCode();
+  }
+
+  componentDidUpdate(newProps) {
+    const { address } = this.props;
+    if (newProps.address !== address) {
+      this.renderQRCode();
+    }
+  }
 
   renderQRCode() {
     try {
@@ -86,17 +96,6 @@ export default class Receive extends Component<Props> {
       );
     } catch (e) {
       console.error(e);
-    }
-  }
-
-  componentDidMount() {
-    this.renderQRCode();
-  }
-
-  componentDidUpdate(newProps) {
-    const { address } = this.props;
-    if ( newProps.address !== address ) {
-      this.renderQRCode();
     }
   }
 
@@ -132,10 +131,7 @@ export default class Receive extends Component<Props> {
           <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
             Copied!
           </CopyConfirmationTooltip>
-          <Button
-            onClick={this.copyToClipboard}
-            buttonTheme="secondary" small
-          >
+          <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
             Copy Address
           </Button>
         </HashContainer>

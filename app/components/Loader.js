@@ -2,7 +2,11 @@ import React from 'react';
 
 import styles from './Loader.css';
 
-export default function Loader({ height = '80px' }) {
+type Props = {
+  height?: string
+};
+
+export default function Loader({ height = '80px' }: Props) {
   return (
     <div className={styles.showbox}>
       <div className={styles.loader} style={{ height }}>

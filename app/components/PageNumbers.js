@@ -5,7 +5,17 @@ import RightIcon from 'material-ui/svg-icons/navigation/chevron-right';
 
 import styles from './PageNumbers.css';
 
-export default function PageNumbers({ currentPage, numberOfPages, onClick }) {
+type Props = {
+  currentPage: number,
+  numberOfPages: number,
+  onClick: Function
+};
+
+export default function PageNumbers({
+  currentPage,
+  numberOfPages,
+  onClick
+}: Props) {
   function onPageClick(pageNum) {
     return () => {
       if (pageNum > 0 && pageNum <= numberOfPages) {
