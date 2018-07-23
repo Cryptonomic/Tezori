@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Snackbar } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
-import { ms } from '../../styles/helpers'
+import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
 
 import { clearMessageState } from '../../reduxContent/message/actions';
@@ -13,7 +13,7 @@ import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
   padding: 10px 0;
-`
+`;
 const StyledCloseIcon = styled(CloseIcon)`
   cursor: pointer;
   position: absolute;
@@ -22,13 +22,13 @@ const StyledCloseIcon = styled(CloseIcon)`
   top: 10px;
   right: 10px;
   fill: #ffffff !important;
-`
+`;
 const CheckIcon = styled(TezosIcon)`
   margin-right: 13px;
-`
+`;
 const BroadIcon = styled(TezosIcon)`
-  margin-left: 2px;  
-`
+  margin-left: 2px;
+`;
 const MessageHeader = styled.div`
   display: flex;
   justify-content: center;
@@ -36,32 +36,32 @@ const MessageHeader = styled.div`
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 1.1px;
-`
+`;
 const MessageFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: baseline;
   line-height: 16px;
   padding-bottom: 16px;
-`
+`;
 const LinkContainer = styled.div`
   display: flex;
   align-items: center;
   margin-left: 7px;
   cursor: pointer;
-`
+`;
 const LinkTitle = styled.div`
   font-size: 12px;
   text-decoration: underline;
-`
+`;
 const HashValue = styled.div`
   font-size: 12px;
   margin-left: 5px;
-`
+`;
 const HashTitle = styled.div`
   font-size: 10px;
   font-weight: 500;
-`
+`;
 
 type Props1 = {
   content: string,
@@ -70,40 +70,30 @@ type Props1 = {
   onClose: Function
 };
 const MessageContent = (props: Props1) => {
-  const {content, hash, openLink, onClose} = props;
-  return(
+  const { content, hash, openLink, onClose } = props;
+  return (
     <MessageContainer>
-      <StyledCloseIcon
-        onClick={onClose}
-      />
+      <StyledCloseIcon onClick={onClose} />
       <MessageHeader>
-        {!!hash && 
-          <CheckIcon
-            iconName='checkmark2'
-            size={ms(0)}
-            color="white"
-          />        
-        }
+        {!!hash && (
+          <CheckIcon iconName="checkmark2" size={ms(0)} color="white" />
+        )}
         {content}
       </MessageHeader>
       {/* {!!hash && <LinkButton onClick={openLink}>See it on chain</LinkButton>} */}
-      {!!hash && 
+      {!!hash && (
         <MessageFooter>
           <HashTitle>OPERATION ID:</HashTitle>
           <HashValue>{hash}</HashValue>
           <LinkContainer onClick={openLink}>
             <LinkTitle>View on a block explorer</LinkTitle>
-            <BroadIcon
-              iconName='new-window'
-              size={ms(0)}
-              color="white"
-            />          
+            <BroadIcon iconName="new-window" size={ms(0)} color="white" />
           </LinkContainer>
         </MessageFooter>
-      }
+      )}
     </MessageContainer>
-  )
-}
+  );
+};
 
 type Props = {
   clearMessageState: Function,
@@ -113,11 +103,11 @@ type Props = {
 class MessageBar extends React.Component<Props> {
   props: Props;
 
-  openLink = (url) => {
+  openLink = url => {
     const { clearMessageState } = this.props;
     clearMessageState();
     openLinkToBlockExplorer(url);
-  }
+  };
 
   changeHash = (hash: string) => {
     let newHash = '';
@@ -126,7 +116,7 @@ class MessageBar extends React.Component<Props> {
       newHash = `${hash.slice(0, 4)}...${hash.slice(hashLen - 4, hashLen)}`;
     }
     return newHash;
-  }
+  };
 
   render() {
     const { message, clearMessageState } = this.props;
@@ -142,7 +132,14 @@ class MessageBar extends React.Component<Props> {
       <Snackbar
         open={!!messageText}
         bodyStyle={bodyStyle}
-        message={<MessageContent content={messageText} hash={this.changeHash(hash)} openLink={()=>this.openLink(hash)} onClose={clearMessageState} />}
+        message={
+          <MessageContent
+            content={messageText}
+            hash={this.changeHash(hash)}
+            openLink={() => this.openLink(hash)}
+            onClose={clearMessageState}
+          />
+        }
       />
     );
   }

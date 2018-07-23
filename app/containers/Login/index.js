@@ -13,7 +13,8 @@ import LoginCreate from './../LoginCreate/';
 import LoginConditions from './../LoginConditions/';
 
 type Props = {
-  isLoading: boolean
+  isLoading: boolean,
+  match: Object
 };
 
 class LoginPage extends Component<Props> {
@@ -29,10 +30,13 @@ class LoginPage extends Component<Props> {
           <Route path={`${match.path}/home`} component={LoginHome} />
           <Route path={`${match.path}/import`} component={LoginImport} />
           <Route path={`${match.path}/create`} component={LoginCreate} />
-          <Route path={`${match.path}/conditions/:type`} component={LoginConditions} />
-          <Route component={LoginHome}/>
+          <Route
+            path={`${match.path}/conditions/:type`}
+            component={LoginConditions}
+          />
+          <Route component={LoginHome} />
         </Switch>
-        { isLoading && <Loader /> }
+        {isLoading && <Loader />}
       </Fragment>
     );
   }

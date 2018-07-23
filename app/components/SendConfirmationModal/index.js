@@ -45,10 +45,10 @@ type Props = {
   onCloseClick?: Function,
   onPasswordChange?: Function,
   onSend?: Function,
-  isLoading?: boolean,
+  isLoading?: boolean
 };
 
-const SendConfirmationModal = props => {
+const SendConfirmationModal = (props: Props) => {
   const {
     amount,
     address,
@@ -84,7 +84,7 @@ const SendConfirmationModal = props => {
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosIcon color='secondary'/>
+          <TezosIcon color="secondary" iconName="tezos" />
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>
@@ -97,11 +97,7 @@ const SendConfirmationModal = props => {
           value={password}
           onChange={onPasswordChange}
         />
-        <Button
-          buttonTheme="secondary"
-          onClick={onSend}
-          disabled={isLoading}
-        >
+        <Button buttonTheme="secondary" onClick={onSend} disabled={isLoading}>
           Confirm
         </Button>
       </PaswordContainer>

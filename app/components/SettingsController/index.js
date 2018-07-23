@@ -34,7 +34,8 @@ const Separator = styled.div`
 `;
 
 type Props = {
-  goHomeAndClearState: Function
+  goHomeAndClearState: Function,
+  goSettings: Function
 };
 
 class SettingsController extends Component<Props> {
@@ -42,10 +43,7 @@ class SettingsController extends Component<Props> {
     const { goHomeAndClearState, goSettings } = this.props;
     return (
       <Container>
-        <Button
-          onClick={goSettings}
-          buttonTheme="plain"
-        >
+        <Button onClick={goSettings} buttonTheme="plain">
           <SettingsIcon alt="Settings" src={settingsIcon} />
         </Button>
         <Separator />
@@ -58,9 +56,12 @@ class SettingsController extends Component<Props> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({
-    goHomeAndClearState,
-    goSettings: () => dispatch => dispatch(push('/home/settings'))
-  }, dispatch);
+  bindActionCreators(
+    {
+      goHomeAndClearState,
+      goSettings: () => dispatch => dispatch(push('/home/settings'))
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(SettingsController);

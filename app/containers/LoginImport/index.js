@@ -17,6 +17,7 @@ import { login } from '../../reduxContent/wallet/thunks';
 
 type Props = {
   login: Function,
+  goBack: Function
 };
 
 const BackToWallet = styled.div`
@@ -100,7 +101,7 @@ class LoginImport extends Component<Props> {
     );
   };
 
-  login = async (loginType) => {
+  login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
     await login(loginType, walletLocation, walletFileName, password);
@@ -108,7 +109,7 @@ class LoginImport extends Component<Props> {
 
   render() {
     const { goBack } = this.props;
-    const { walletFileName, walletLocation, password, isLoading } = this.state;
+    const { walletFileName, password, isLoading } = this.state;
 
     return (
       <CreateContainer>
@@ -119,12 +120,12 @@ class LoginImport extends Component<Props> {
           >
             <BackCaret
               style={{
-              fill: '#4486f0',
-              height: '28px',
-              width: '28px',
-              marginRight: '5px',
-              marginLeft: '-9px'
-            }}
+                fill: '#4486f0',
+                height: '28px',
+                width: '28px',
+                marginRight: '5px',
+                marginLeft: '-9px'
+              }}
             />
             <span>Back</span>
           </BackToWallet>
@@ -163,10 +164,13 @@ class LoginImport extends Component<Props> {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ 
-    login,
-    goBack: () => dispatch => dispatch(back())
-  }, dispatch );
+  return bindActionCreators(
+    {
+      login,
+      goBack: () => dispatch => dispatch(back())
+    },
+    dispatch
+  );
 }
 
 export default connect(null, mapDispatchToProps)(LoginImport);

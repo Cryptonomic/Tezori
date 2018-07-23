@@ -1,14 +1,14 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { TextField } from 'material-ui';
 import styled from 'styled-components';
+import { compose } from 'redux';
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import { name, tagline } from '../../config.json';
+import { wrapComponent } from '../../utils/i18n';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -29,7 +29,7 @@ const TermsAndPolicySection = styled.div`
   width: 80%;
   padding: ${ms(2)} 0 ${ms(4)} 0;
   border-top-width: 1px;
-  border-top-color: ${ ({ theme: { colors } }) => colors.index1 };
+  border-top-color: ${({ theme: { colors } }) => colors.index1};
   border-top-style: solid;
   justify-content: center;
   align-items: center;
@@ -37,7 +37,7 @@ const TermsAndPolicySection = styled.div`
 `;
 
 const Strong = styled.span`
-  color: ${ ({ theme: { colors } }) => colors.accent };
+  color: ${({ theme: { colors } }) => colors.accent};
   font-weight: 400;
 `;
 
@@ -68,7 +68,7 @@ const AppName = styled.h1`
   line-height: normal;
   letter-spacing: 0.5rem;
   margin: 0 auto;
-  color: ${ ({ theme: { colors } }) => colors.primary };
+  color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const AppSubtitle = styled.h2`
@@ -82,7 +82,7 @@ const AppSubtitle = styled.h2`
   line-height: 1.2rem;
   letter-spacing: 0.25rem;
   margin: 0 auto 2.5rem;
-  color: ${ ({ theme: { colors } }) => colors.primary };
+  color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const CreateWalletButton = styled(Button)`
@@ -222,15 +222,16 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  goTo = (route) => {
+  goTo = route => {
     const { match, history } = this.props;
-    history.push(`${match.path}/${ route }`);
+    history.push(`${match.path}/${route}`);
   };
 
   openTermsService = () => this.goTo('conditions/termsOfService');
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
+    const { t } = this.props;
     return (
       <SectionContainer>
         <DefaultContainer>
@@ -245,7 +246,7 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('create')}
                 disabled={!this.state.isAgreement}
               >
-                Create New Wallet
+                {t('login.create_new_wallet_btn')}
               </CreateWalletButton>
             </WalletContainers>
             <WalletContainers>
@@ -254,17 +255,25 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('import')}
                 disabled={!this.state.isAgreement}
               >
-                Open Existing Wallet
+                {t('login.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
               <Tip>
-                <div>Want to import your Fundraiser paper wallet?</div>
-                <div><Link onClick={() => this.goTo('create')}><Strong>{`Create a ${name} wallet`}</Strong></Link> first.</div>
+                <div>{t('login.want_to_import_fundraiser_paper_wallet')}</div>
+                <div>
+                  <Link onClick={() => this.goTo('create')}>
+                    <Strong>{t('login.create_named_wallet', { name })}</Strong>
+                  </Link>{' '}
+                  {t('login.create_named_wallet_end')}
+                </div>
               </Tip>
             </WalletContainers>
           </Section>
         </DefaultContainer>
         <TermsAndPolicySection>
-          <Checkbox isChecked={this.state.isAgreement} onCheck={this.updateStatusAgreement}/>
+          <Checkbox
+            isChecked={this.state.isAgreement}
+            onCheck={this.updateStatusAgreement}
+          />
           <Description>
             I acknowledge that I have read and accepted the
             <Link onClick={this.openTermsService}> Terms of Service </Link>
@@ -273,20 +282,20 @@ class LoginHome extends Component<Props> {
           </Description>
         </TermsAndPolicySection>
         <TermsModal
-          goTo={ this.goTo }
+          goTo={this.goTo}
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
         <Background>
-          <BgContainerImg src={ bgHero } />
-          <BgCircle1 src={ bgCircle01 } />
-          <BgCircle2 src={ bgCircle02 } />
-          <BgCircle3 src={ bgCircle03 } />
-          <BgCircle4 src={ bgCircle04 } />
+          <BgContainerImg src={bgHero} />
+          <BgCircle1 src={bgCircle01} />
+          <BgCircle2 src={bgCircle02} />
+          <BgCircle3 src={bgCircle03} />
+          <BgCircle4 src={bgCircle04} />
         </Background>
       </SectionContainer>
     );
   }
 }
 
-export default connect()(LoginHome);
+export default compose(wrapComponent, connect())(LoginHome);

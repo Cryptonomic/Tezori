@@ -24,6 +24,10 @@ const Wrapper = styled.div`
   }
 `;
 
+type Props = {
+  theme: object
+};
+
 function Loader(props: Props) {
   const { theme } = props;
   return (
@@ -32,7 +36,7 @@ function Loader(props: Props) {
         <LoaderSpinner
           size="x2"
           bubblesStyle={{
-            border:  '1px solid ' + theme.colors.primary
+            border:  `1px solid ${theme.colors.primary}`
           }}
           styles={{
             color:  theme.colors.light

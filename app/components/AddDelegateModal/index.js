@@ -1,9 +1,9 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
+import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
@@ -35,7 +35,7 @@ const TezosIconInput = styled(TezosIcon)`
   right: 0px;
   top: 40px;
   display: block;
-`
+`;
 
 const AmountSendContainer = styled.div`
   width: 45%;
@@ -102,9 +102,6 @@ const TooltipContent2 = styled.div`
   padding: 12px 0;
 `;
 
-
-
-
 const defaultState = {
   isLoading: false,
   delegate: '',
@@ -114,7 +111,7 @@ const defaultState = {
   averageFees: {
     low: 100,
     medium: 200,
-    high:400
+    high: 400
   }
 };
 
@@ -122,36 +119,52 @@ class AddDelegateModal extends Component<Props> {
   props: Props;
   state = defaultState;
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
     const { open, fetchOriginationAverageFees } = this.props;
-    if ( open && open !== prevProps.open ) {
+    if (open && open !== prevProps.open) {
       const averageFees = await fetchOriginationAverageFees();
-      this.setState({ averageFees, fee: averageFees.low });
+      this.setState({ averageFees, fee: averageFees.low });// eslint-disable-line react/no-did-update-set-state
     }
   }
 
-  changeAmount = (_, amount) =>  this.setState({ amount });
+  changeAmount = (_, amount) => this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
-  changeFee = (fee) => this.setState({ fee });
+  changeFee = fee => this.setState({ fee });
   updatePassPhrase = (_, passPhrase) => this.setState({ passPhrase });
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+  setIsLoading = isLoading => this.setState({ isLoading });
 
   renderToolTipComponent = () => {
     return (
       <TooltipContainer>
         <TooltipTitle>Setting a Delegate</TooltipTitle>
-        <TooltipContent1>You can always change the delegate at a later time.</TooltipContent1>
-        <TooltipContent1>There is a fee for changing the delegate.</TooltipContent1>
-        <TooltipContent2>You can only delegate to the Manager Address. The Manager Address always starts with "tz1".</TooltipContent2>
+        <TooltipContent1>
+          You can always change the delegate at a later time.
+        </TooltipContent1>
+        <TooltipContent1>
+          There is a fee for changing the delegate.
+        </TooltipContent1>
+        <TooltipContent2>
+          {
+            'You can only delegate to the Manager Address. The Manager Address always starts with "tz1".'
+          }
+        </TooltipContent2>
       </TooltipContainer>
     );
   };
 
-  createAccount = async () =>  {
+  createAccount = async () => {
     const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
     this.setIsLoading(true);
-    if ( await createNewAccount( delegate, amount, Math.floor(fee), passPhrase, selectedParentHash ) ) {
+    if (
+      await createNewAccount(
+        delegate,
+        amount,
+        Math.floor(fee),
+        passPhrase,
+        selectedParentHash
+      )
+    ) {
       this.setState(defaultState);
       onCloseClick();
     } else {
@@ -161,7 +174,14 @@ class AddDelegateModal extends Component<Props> {
 
   render() {
     const { open, onCloseClick } = this.props;
-    const { isLoading, averageFees, delegate, amount, fee, passPhrase } = this.state;
+    const {
+      isLoading,
+      averageFees,
+      delegate,
+      amount,
+      fee,
+      passPhrase
+    } = this.state;
     const isDisabled = isLoading || !delegate || !amount || !passPhrase;
 
     return (
@@ -194,7 +214,7 @@ class AddDelegateModal extends Component<Props> {
             position="bottom"
             content={this.renderToolTipComponent()}
             align={{
-              offset: [70, 0],
+              offset: [70, 0]
             }}
             arrowPos={{
               left: '70%'
@@ -219,15 +239,15 @@ class AddDelegateModal extends Component<Props> {
               onChange={this.changeAmount}
               type="number"
             />
-            <TezosIconInput color='secondary' />
+            <TezosIconInput color='secondary' iconName="tezos" />
           </AmountSendContainer>
           <FeeContainer>
             <Fees
               style={{ width: '50%' }}
-              low={ averageFees.low }
-              medium={ averageFees.medium }
-              high={ averageFees.high }
-              fee={ fee }
+              low={averageFees.low}
+              medium={averageFees.medium}
+              high={averageFees.high}
+              fee={fee}
               onChange={this.changeFee}
             />
           </FeeContainer>

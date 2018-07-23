@@ -1,14 +1,14 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
+import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { ms } from '../../styles/helpers';
-import { H2, H4, H3 } from '../Heading/';
+import { H4 } from '../Heading/';
 import { CONSEIL } from '../../constants/NodesTypes';
-import TezosIcon from "../TezosIcon/"
+import TezosIcon from '../TezosIcon/';
 
 import { addNode, setSelected } from '../../reduxContent/nodes/thunks';
 import Button from '../Button/';
@@ -30,28 +30,26 @@ const StyledCloseIcon = styled(CloseIcon)`
   right: 15px;
 `;
 
-
 const StyledSaveButton = styled(Button)`
   margin-top: ${ms(4)};
-  padding-right: ${ms(9)} ;
-  padding-left: ${ms(9)} ;
+  padding-right: ${ms(9)};
+  padding-left: ${ms(9)};
 `;
 
 const Container = styled.div`
   min-height: 93px;
-`
+`;
 const Content = styled.div`
   width: 100%;
   position: relative;
   .input-text-field {
     width: 100% !important;
   }
-
 `;
 const Error = styled.div`
   height: 2rem;
   width: 100%;
-  color: ${ ({ theme: { colors } }) =>  colors.error1 };
+  color: ${({ theme: { colors } }) => colors.error1};
   font-size: ${ms(-2)};
 `;
 
@@ -60,7 +58,6 @@ const FeedbackIcon = styled(TezosIcon)`
   top: 42px;
   right: 40px;
 `;
-
 
 const defaultState = {
   name: '',
@@ -88,48 +85,45 @@ class AddNodeModal extends Component<Props> {
   handleAddNode = () => {
     const { name, apiKey, url } = this.state;
     const { type, closeAddNodeModal, addNode, setSelected } = this.props;
-    if ( this.isValidUrl() ) {
+    if (this.isValidUrl()) {
       addNode({ name, apiKey, url, type });
       setSelected(name, type);
       closeAddNodeModal();
       this.setState(defaultState);
     } else {
-      this.setState({ error: 'Node\'s protocol must be https' });
+      this.setState({ error: "Node's protocol must be https" });
     }
-    
   };
   render() {
     const { name, apiKey, url, error } = this.state;
     const { type, isModalOpen } = this.props;
-    
-    const title = type === CONSEIL
-      ? 'Conseil'
-      : 'Tezos';
+
+    const title = type === CONSEIL ? 'Conseil' : 'Tezos';
 
     return (
       <Dialog
         modal
-        open={ isModalOpen }
+        open={isModalOpen}
         bodyStyle={{ padding: '50px 80px' }}
         titleStyle={{ padding: '50px 70px 0px' }}
       >
         <StyledCloseIcon
           style={{ fill: '#7190C6' }}
-          onClick={ this.handleClose }
+          onClick={this.handleClose}
         />
-        <H4>Set Up Your Custom { title } Node</H4>
+        <H4>Set Up Your Custom {title} Node</H4>
 
         <TextField
           floatingLabelText="Node Name"
           style={{ width: '100%' }}
-          value={ name }
-          onChange={ this.handleNameChange }
+          value={name}
+          onChange={this.handleNameChange}
         />
 
         <TextField
           floatingLabelText="Api Key"
           style={{ width: '100%' }}
-          value={ apiKey }
+          value={apiKey}
           onChange={this.handleApiKeyChange}
         />
 
@@ -138,33 +132,20 @@ class AddNodeModal extends Component<Props> {
             <TextField
               style={{ width: '100%' }}
               floatingLabelText="URL (e.g https://127.0.0.1:19731/)"
-              value={ url }
+              value={url}
               onChange={this.handleUrlChange}
             />
-            {
-              error
-                ?
-                (
-                  <FeedbackIcon
-                    iconName="warning"
-                    size={ms(0)}
-                    color="error1"
-                  />
-                )
-                : null
-            }
+            {error ? (
+              <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
+            ) : null}
           </Content>
-          {
-            error
-              ? <Error> { error } </Error>
-              : null
-          }
+          {error ? <Error> {error} </Error> : null}
         </Container>
 
         <StyledSaveButton
           buttonTheme="primary"
           onClick={this.handleAddNode}
-          disabled={( !name || !url )}
+          disabled={!name || !url}
         >
           Save
         </StyledSaveButton>
@@ -174,7 +155,7 @@ class AddNodeModal extends Component<Props> {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators( { addNode, setSelected }, dispatch );
+  return bindActionCreators({ addNode, setSelected }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(AddNodeModal);

@@ -1,10 +1,8 @@
 // @flow
-
-import React, { Component } from 'react';
+import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import { darken } from 'polished';
 import { ms } from '../../styles/helpers';
-import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg'
+import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
 import LoaderSpinner from '../LoaderSpinner/';
 import { H4 } from '../Heading/';
 
@@ -30,7 +28,7 @@ const Image = styled.img`(
 )`;
 
 const Icon = styled.div`
-  height:180px;
+  height: 180px;
   width: 180px;
   display: flex;
   align-items: center;
@@ -39,19 +37,20 @@ const Icon = styled.div`
 
 const Title = styled(H4)`
   font-weight: normal;
-  font-size: 1.2rem;
-  padding-bottom: .2rem
+  font-size: ${ms(1)};
+  padding-bottom: ${ms(-9)};
 `;
 
 const Description = styled.div`
   font-weight: 300;
   color: #4a4a4a;
-  font-size: ${ms(-0.5)}
+  font-size: ${ms(-0.5)};
 `;
 
 type Props = {
   isManager?: boolean,
-  address?: object
+  address?: object,
+  theme?: object
 };
 
 function AccountStatus(props: Props) {
@@ -65,33 +64,32 @@ function AccountStatus(props: Props) {
     <LoaderSpinner
       size="x4"
       styles={{
-          color:  theme.colors.accent
-        }}
+        color: theme.colors.accent
+      }}
     />
   );
   let title = '';
   let description = '';
   let info = null;
-  const typeText = isManager
-    ? 'account'
-    : 'address';
-  switch( status ) {
+  const typeText = isManager ? 'account' : 'address';
+  switch (status) {
     case statuses.CREATED:
-      if ( storeTypes === MNEMONIC ) {
-        icon = <Image alt={'Creating account'} src={transactionsEmptyState} />;
+      if (storeTypes === MNEMONIC) {
+        icon = <Image alt="Creating account" src={transactionsEmptyState} />;
         title = 'Your account is ready to receive transactions!';
-        description = 'Your first transaction will commit your new address to the blockchain. This process may take some time until you are all set to send and delegate.';
+        description =
+          'Your first transaction will commit your new address to the blockchain. This process may take some time until you are all set to send and delegate.';
       } else {
-        title = `Retrieving your ${ typeText }...`;
-        if ( operations[ statuses.CREATED ] ) {
+        title = `Retrieving your ${typeText}...`;
+        if (operations[statuses.CREATED]) {
           const operationName = isManager
             ? 'activation operation id'
             : 'origination operation id';
           info = (
             <Info
               firstIconName="icon-star"
-              operationName={ operationName }
-              operationId={ operations[ statuses.CREATED ] }
+              operationName={operationName}
+              operationId={operations[statuses.CREATED]}
               lastIconName="icon-new-window"
             />
           );
@@ -100,36 +98,37 @@ function AccountStatus(props: Props) {
       break;
     case statuses.FOUND:
     case statuses.PENDING:
-      title = `Preparing your ${ typeText }...`;
-      if ( operations[ statuses.FOUND ] ) {
+      title = `Preparing your ${typeText}...`;
+      if (operations[statuses.FOUND]) {
         info = (
           <Info
             firstIconName="icon-broadcast"
             operationName="public key reveal operation id"
-            operationId={ operations[ statuses.FOUND ] }
+            operationId={operations[statuses.FOUND]}
             lastIconName="icon-new-window"
           />
         );
       }
 
-      if ( storeTypes === MNEMONIC ) {
+      if (storeTypes === MNEMONIC) {
         const transaction = address.get('transactions').toJS();
         const { amount } = transaction[0];
-        description = `We have received your first transaction of ${ formatAmount(amount, 2) } tez! Preparing your account now, this might take a while.`;
+        description = `We have received your first transaction of ${formatAmount(
+          amount,
+          2
+        )} tez! Preparing your account now, this might take a while.`;
       }
+      break;
+    default:
       break;
   }
 
   return (
     <Container>
-      <Icon>{ icon }</Icon>
-      <Title>{ title }</Title>
-      {
-        description
-          ? <Description>{ description }</Description>
-          : null
-      }
-      { info }
+      <Icon>{icon}</Icon>
+      <Title>{title}</Title>
+      {description ? <Description>{description}</Description> : null}
+      {info}
     </Container>
   );
 }

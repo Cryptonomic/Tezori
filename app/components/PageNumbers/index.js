@@ -44,7 +44,7 @@ const PageNumber = styled.div`
   justify-content: center;
   padding: 10px 10px;
   cursor: pointer;
-  ${({ activePage, theme: { colors } }) => {
+  ${({ activePage }) => {
     if ( activePage ) {
       return css`
         background-color: lightgray;
@@ -61,7 +61,17 @@ const PageNumber = styled.div`
   }};
 `;
 
-export default function PageNumbers({ currentPage, numberOfPages, onClick }) {
+type Props = {
+  currentPage: number,
+  numberOfPages: number,
+  onClick: Function
+};
+
+export default function PageNumbers({
+  currentPage,
+  numberOfPages,
+  onClick
+}: Props) {
   function onPageClick(pageNum) {
     return () => {
       if (pageNum > 0 && pageNum <= numberOfPages) {
@@ -93,7 +103,7 @@ export default function PageNumbers({ currentPage, numberOfPages, onClick }) {
   function renderPageNumber(pageNum) {
     return (
       <PageNumber
-        activePage={ pageNum === currentPage }
+        activePage={pageNum === currentPage}
         key={pageNum}
         onClick={onPageClick(pageNum)}
       >

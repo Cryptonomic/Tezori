@@ -25,7 +25,7 @@ class App extends Component<Props> {
     const { message } = this.props;
     return (
       <Container>
-        { this.props.children }
+        {this.props.children}
         <MessageBar message={message} />
       </Container>
     );

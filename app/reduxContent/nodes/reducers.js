@@ -1,4 +1,5 @@
 import { omit } from 'lodash';
+import { fromJS } from 'immutable';
 import {
   SET_SELECTED,
   ADD_NODE,
@@ -6,8 +7,7 @@ import {
   UPDATE_NODE,
   CLEAR_STATE
 } from './types';
-import { fromJS } from 'immutable';
-import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
+import { CONSEIL } from '../../constants/NodesTypes';
 import * as defaultWalletNodes from '../../defaultWalletNodes.json';
 
 const baseDefaults = {
@@ -16,22 +16,24 @@ const baseDefaults = {
   list: []
 };
 
-const initState = fromJS(Object.assign(
-  baseDefaults,
-  defaultWalletNodes && omit(defaultWalletNodes, ['default'])
-));
+const initState = fromJS(
+  Object.assign(
+    baseDefaults,
+    defaultWalletNodes && omit(defaultWalletNodes, ['default'])
+  )
+);
 
 export default function nodes(state = initState, action) {
   switch (action.type) {
     case SET_SELECTED: {
       return action.target === CONSEIL
         ? state.set('conseilSelectedNode', action.selected)
-        : state.set('tezosSelectedNode',  action.selected);
+        : state.set('tezosSelectedNode', action.selected);
     }
     case ADD_NODE: {
       const newNode = action.node;
       const list = state.get('list');
-      const indexFound = list.findIndex((item) => {
+      const indexFound = list.findIndex(item => {
         return item.get('name') === newNode.name;
       });
 
@@ -41,9 +43,9 @@ export default function nodes(state = initState, action) {
       return state;
     }
     case REMOVE_NODE: {
-      const name = action.name;
+      const { name } = action;
       const list = state.get('list');
-      const indexFound = list.findIndex((item) => {
+      const indexFound = list.findIndex(item => {
         return item.get('name') === name;
       });
 
@@ -55,7 +57,7 @@ export default function nodes(state = initState, action) {
     case UPDATE_NODE: {
       const newNode = action.node;
       const list = state.get('list');
-      const indexFound = list.findIndex((item) => {
+      const indexFound = list.findIndex(item => {
         return item.get('name') === newNode.name;
       });
 

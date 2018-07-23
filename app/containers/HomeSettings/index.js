@@ -6,26 +6,22 @@ import { goBack as goBackToWallet } from 'react-router-redux';
 import styled, { withTheme } from 'styled-components';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { ms } from '../../styles/helpers';
-import { H2, H4 } from '../../components/Heading/';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Check from 'material-ui/svg-icons/navigation/check';
+import { ms } from '../../styles/helpers';
+import { H2, H4 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 
-
 import { syncWallet } from '../../reduxContent/wallet/thunks';
-import {
-  setSelected,
-  removeNode
-} from '../../reduxContent/nodes/thunks';
+import { setSelected, removeNode } from '../../reduxContent/nodes/thunks';
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
-  getTezosNodes,
+  getTezosNodes
 } from '../../reduxContent/nodes/selectors';
 
 type Props = {
@@ -35,7 +31,6 @@ type Props = {
   tezosNodes: array,
   syncWallet: Function,
   setSelected: Function,
-  removeNode: Function,
   goBack: Function,
   theme: Object
 };
@@ -60,7 +55,7 @@ const BackToWallet = styled.div`
 `;
 
 const Content = styled.div`
-  background-color: ${({theme: { colors }}) => colors.white };
+  background-color: ${({ theme: { colors } }) => colors.white};
   padding: ${ms(3)} ${ms(3)};
   margin: ${ms(3)} auto 0 auto;
 `;
@@ -76,14 +71,14 @@ const Part = styled.div`
   flex-shrink: 0;
   width: 100%;
   padding: 0 ${ms(1)};
-  margin-top: ${ ms(2)};
+  margin-top: ${ms(2)};
 `;
 
 const AddCustomNode = styled(Row)`
   margin: 0 -24px -16px;
   padding: 5px 24px;
   background-color: #f7f9fb;
-  color: ${({theme: { colors }}) => colors.primary };
+  color: ${({ theme: { colors } }) => colors.primary};
   cursor: pointer;
 `;
 
@@ -101,25 +96,25 @@ const OptionStatus = styled(Row)`
 const OptionLabel = styled(Row)`
   flex-direction: column;
   align-items: flex-start;
-  color: ${({isActive, theme: { colors }}) =>
-  isActive ? colors.blue1 : colors.primary };
+  color: ${({ isActive, theme: { colors } }) =>
+    isActive ? colors.blue1 : colors.primary};
 `;
 
 const NodeName = styled.div`
   font-size: 16px;
-  line-height:16px;
+  line-height: 16px;
   letter-spacing: 0.7;
 `;
 
 const NodeUrl = styled.div`
   font-size: 12px;
-  line-height:16px;
+  line-height: 16px;
   letter-spacing: 0.5;
 `;
 
 const NodeUrlSpan = styled(NodeUrl)`
   font-size: 12px;
-  line-height:16px;
+  line-height: 16px;
   letter-spacing: 0.5;
   display: inline;
 `;
@@ -132,52 +127,47 @@ class SettingsPage extends Component<Props> {
     isModalOpen: false
   };
 
-  handleConseilChange = (newValue) => this.props.setSelected(newValue, CONSEIL);
-  handleTezosChange = (newValue) => this.props.setSelected(newValue, TEZOS);
-  openAddNodeModal = (type) => this.setState({ type, isModalOpen: true });
+  handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
+  handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
+  openAddNodeModal = type => this.setState({ type, isModalOpen: true });
   closeAddNodeModal = () => this.setState({ type: '', isModalOpen: false });
-  
-  renderNodes( nodes, selectedNode ) {
+
+  renderNodes(nodes, selectedNode) {
     const { theme } = this.props;
-    return nodes.map( ( node, index ) => {
+    return nodes.map((node, index) => {
       const name = node.get('name');
       const url = node.get('url');
       const selected = selectedNode === name;
       const option = (
         <SelectOption>
           <OptionStatus>
-            {
-              selected
-                ?
-                (
-                  <Check
-                    style={{
-                      fill: theme.colors.blue1,
-                      height: ms(1.5),
-                      width: ms(1.5)
-                    }}
-                  />
-                )
-                : null
-            }
+            {selected ? (
+              <Check
+                style={{
+                  fill: theme.colors.blue1,
+                  height: ms(1.5),
+                  width: ms(1.5)
+                }}
+              />
+            ) : null}
           </OptionStatus>
-          <OptionLabel isActive={ selected }>
-            <NodeName>{ name }</NodeName>
-            <NodeUrl>{ url }</NodeUrl>
+          <OptionLabel isActive={selected}>
+            <NodeName>{name}</NodeName>
+            <NodeUrl>{url}</NodeUrl>
           </OptionLabel>
         </SelectOption>
       );
       return (
         <MenuItem
-          style={{ marginTop: index === 0 ? '-16px ' : 0}}
+          style={{ marginTop: index === 0 ? '-16px ' : 0 }}
           key={index}
-          url={ url }
-          value={ name }
+          url={url}
+          value={name}
           primaryText={option}
         />
       );
     });
-  };
+  }
 
   render() {
     const {
@@ -194,10 +184,11 @@ class SettingsPage extends Component<Props> {
 
     return (
       <Container>
-        <BackToWallet onClick={() => {
-          goBack();
-          syncWallet();
-        }}
+        <BackToWallet
+          onClick={() => {
+            goBack();
+            syncWallet();
+          }}
         >
           <BackCaret
             style={{
@@ -219,30 +210,30 @@ class SettingsPage extends Component<Props> {
                 floatingLabelText="Conseil Nodes"
                 value={conseilSelectedNode}
                 onChange={(event, index, newValue) => {
-                  if( newValue !== 'add-more' ) {
+                  if (newValue !== 'add-more') {
                     this.handleConseilChange(newValue);
                     return true;
                   }
                   this.openAddNodeModal(CONSEIL);
                 }}
                 style={{ width: '100%', maxWidth: '100%', color: 'blue1' }}
-                iconStyle={{ fill: 'black'  }}
+                iconStyle={{ fill: 'black' }}
                 selectionRenderer={(value, context) => {
                   return (
                     <div>
-                     <span>{value} </span>
-                     <NodeUrlSpan>({context.props.url})</NodeUrlSpan>
+                      <span>{value} </span>
+                      <NodeUrlSpan>({context.props.url})</NodeUrlSpan>
                     </div>
                   );
                 }}
                 labelStyle={{ color: theme.colors.primary }}
               >
-                { this.renderNodes(conseilNodes, conseilSelectedNode) }
+                {this.renderNodes(conseilNodes, conseilSelectedNode)}
                 <MenuItem
                   style={{ margin: '0' }}
                   value="add-more"
                   primaryText={
-                    <AddCustomNode >
+                    <AddCustomNode>
                       <AddCircle
                         style={{
                           fill: '#7B91C0',
@@ -262,7 +253,7 @@ class SettingsPage extends Component<Props> {
                 floatingLabelText="Tezos Nodes"
                 value={tezosSelectedNode}
                 onChange={(event, index, newValue) => {
-                  if( newValue !== 'add-more' ) {
+                  if (newValue !== 'add-more') {
                     this.handleTezosChange(newValue);
                     return true;
                   }
@@ -270,22 +261,22 @@ class SettingsPage extends Component<Props> {
                 }}
                 style={{ width: '100%', maxWidth: '100%', color: 'blue1' }}
                 labelStyle={{ color: theme.colors.primary }}
-                iconStyle={{ fill: 'black'  }}
+                iconStyle={{ fill: 'black' }}
                 selectionRenderer={(value, context) => {
                   return (
                     <div>
-                     <span>{value} </span>
-                     <NodeUrlSpan>({ context.props.url })</NodeUrlSpan>
+                      <span>{value} </span>
+                      <NodeUrlSpan>({context.props.url})</NodeUrlSpan>
                     </div>
                   );
                 }}
               >
-                { this.renderNodes(tezosNodes, tezosSelectedNode) }
+                {this.renderNodes(tezosNodes, tezosSelectedNode)}
                 <MenuItem
                   style={{ margin: '0px' }}
                   value="add-more"
                   primaryText={
-                    <AddCustomNode >
+                    <AddCustomNode>
                       <AddCircle
                         style={{
                           fill: '#7B91C0',
@@ -304,9 +295,9 @@ class SettingsPage extends Component<Props> {
         </Content>
 
         <AddNodeModal
-          isModalOpen={ isModalOpen }
-          type={ type }
-          closeAddNodeModal={ this.closeAddNodeModal }
+          isModalOpen={isModalOpen}
+          type={type}
+          closeAddNodeModal={this.closeAddNodeModal}
         />
       </Container>
     );
@@ -334,7 +325,6 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(
-  withTheme,
-  connect(mapStateToProps, mapDispatchToProps)
-)(SettingsPage);
+export default compose(withTheme, connect(mapStateToProps, mapDispatchToProps))(
+  SettingsPage
+);
