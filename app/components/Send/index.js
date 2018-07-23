@@ -44,7 +44,7 @@ const InputAmount = styled.div`
 `;
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
-  right: 0px;
+  right: 20px;
   top: 40px;
   display: block;
 `;

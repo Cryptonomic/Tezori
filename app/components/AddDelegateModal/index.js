@@ -30,35 +30,6 @@ const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
 
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 0px;
-  top: 40px;
-  display: block;
-`;
-
-const AmountSendContainer = styled.div`
-  width: 45%;
-  position:'relative;
-`;
-
-const FeeContainer = styled.div`
-  width: 45%;
-  display: flex;
-`;
-
-const PasswordButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 42px;
-`;
-
-const DelegateButton = styled(Button)`
-  width: 194px;
-  height: 50px;
-`;
-
 const DelegateContainer = styled.div`
   width: 100%;
   position: relative;
@@ -68,12 +39,6 @@ const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
   top: 44px;
-`;
-
-const AmountAndFeeContainer = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
 `;
 
 const TooltipContainer = styled.div`
@@ -100,6 +65,41 @@ const TooltipContent1 = styled.div`
 
 const TooltipContent2 = styled.div`
   padding: 12px 0;
+`;
+
+const AmountFeePassContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`;
+
+const AmountSendContainer = styled.div`
+  width: 45%;
+  position: relative;
+`;
+
+const FeeContainer = styled.div`
+  width: 45%;
+  display: flex;
+`;
+
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  right: 20px;
+  top: 40px;
+  display: block;
+`;
+
+const PasswordButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 42px;
+`;
+
+const DelegateButton = styled(Button)`
+  width: 194px;
+  height: 50px;
 `;
 
 const defaultState = {
@@ -231,7 +231,7 @@ class AddDelegateModal extends Component<Props> {
             </TextfieldTooltip>
           </Tooltip>
         </DelegateContainer>
-        <AmountAndFeeContainer>
+        <AmountFeePassContainer>
           <AmountSendContainer>
             <TextField
               floatingLabelText="Amount"
@@ -251,15 +251,15 @@ class AddDelegateModal extends Component<Props> {
               onChange={this.changeFee}
             />
           </FeeContainer>
-        </AmountAndFeeContainer>
-        <AmountAndFeeContainer>
+        </AmountFeePassContainer>
+        <AmountFeePassContainer>
           <TextField
             floatingLabelText="Wallet Password"
             type="password"
             style={{ width: '100%' }}
             onChange={this.updatePassPhrase}
           />
-        </AmountAndFeeContainer>
+        </AmountFeePassContainer>
         <PasswordButtonContainer>
           <DelegateButton
             buttonTheme="primary"
