@@ -1,11 +1,8 @@
 // @flow
-
-import React, { Component } from 'react';
+import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import { darken } from 'polished';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
-import { H4 } from '../Heading/';
 
 import { limitLength } from '../../utils/strings';
 import { openLinkToBlockExplorer } from '../../utils/general';
@@ -23,7 +20,7 @@ const InfoIcon = styled(TezosIcon)`
 `;
 
 const ActivationOperation = styled.div`
-  color: ${({ theme: { colors } }) => colors.accent };
+  color: ${({ theme: { colors } }) => colors.accent};
   text-transform: uppercase;
   margin-left: 5px;
   margin-right: 5px;
@@ -35,7 +32,7 @@ const ActivationOperationId = styled.div`
 `;
 
 const Details = styled.div`
-  color: ${({ theme: { colors } }) => colors.primary };
+  color: ${({ theme: { colors } }) => colors.primary};
   margin-right: 5px;
   cursor: pointer;
 `;
@@ -52,29 +49,23 @@ function Info(props: Props) {
 
   return (
     <Container>
-      <InfoIcon
-        size={ ms(1) }
-        color="accent"
-        iconName={ firstIconName }
-      />
-      <ActivationOperation>
-        { operationName }
-      </ActivationOperation>
+      <InfoIcon size={ms(1)} color="accent" iconName={firstIconName} />
+      <ActivationOperation>{operationName}</ActivationOperation>
       <ActivationOperationId>
-        { limitLength(operationId, 17) }
+        {limitLength(operationId, 17)}
       </ActivationOperationId>
       <Details
-        onClick={ () => {
+        onClick={() => {
           openLinkToBlockExplorer(operationId);
         }}
       >
         Details
       </Details>
       <InfoIcon
-        size={ ms(1) }
+        size={ms(1)}
         color="primary"
-        iconName={ lastIconName }
-        onClick={ () => {
+        iconName={lastIconName}
+        onClick={() => {
           openLinkToBlockExplorer(operationId);
         }}
       />

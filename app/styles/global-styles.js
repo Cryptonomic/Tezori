@@ -1,29 +1,28 @@
 /* eslint no-unused-expressions: 0 */
 
-import { injectGlobal } from "styled-components";
-import { normalize } from "polished";
+import { injectGlobal } from 'styled-components';
+import { normalize } from 'polished';
 
-import RobotoFontThin from "../../resources/fonts/Roboto/Roboto-Thin.ttf";
-import RobotoFontThinItalic from "../../resources/fonts/Roboto/Roboto-ThinItalic.ttf";
-import RobotoFontLight from "../../resources/fonts/Roboto/Roboto-Light.ttf";
-import RobotoFontLightItalic from "../../resources/fonts/Roboto/Roboto-LightItalic.ttf";
-import RobotoFontMedium from "../../resources/fonts/Roboto/Roboto-Medium.ttf";
-import RobotoFontMediumItalic from "../../resources/fonts/Roboto/Roboto-MediumItalic.ttf";
-import RobotoFontRegular from "../../resources/fonts/Roboto/Roboto-Regular.ttf";
-import RobotoFontRegularItalic from "../../resources/fonts/Roboto/Roboto-Italic.ttf";
-import RobotoFontBold from "../../resources/fonts/Roboto/Roboto-Bold.ttf";
-import RobotoFontBoldItalic from "../../resources/fonts/Roboto/Roboto-BoldItalic.ttf";
-import RobotoFontBlack from "../../resources/fonts/Roboto/Roboto-Black.ttf";
-import RobotoFontBlackItalic from "../../resources/fonts/Roboto/Roboto-BlackItalic.ttf";
-import RobotoCondensedFontLight from "../../resources/fonts/Roboto/RobotoCondensed-Light.ttf"
-import RobotoCondensedFontLightItalic from "../../resources/fonts/Roboto/RobotoCondensed-LightItalic.ttf"
-import RobotoCondensedFontRegular from "../../resources/fonts/Roboto/RobotoCondensed-Regular.ttf"
-import RobotoCondensedFontRegularItalic from "../../resources/fonts/Roboto/RobotoCondensed-Italic.ttf"
-import RobotoCondensedFontBold from "../../resources/fonts/Roboto/RobotoCondensed-Bold.ttf"
-import RobotoCondensedFontBoldItalic from "../../resources/fonts/Roboto/RobotoCondensed-BoldItalic.ttf"
-import TezosIconsFontTTF from "../../resources/fonts/TezosIcons/Tezos-icons.ttf";
+import RobotoFontThin from '../../resources/fonts/Roboto/Roboto-Thin.ttf';
+import RobotoFontThinItalic from '../../resources/fonts/Roboto/Roboto-ThinItalic.ttf';
+import RobotoFontLight from '../../resources/fonts/Roboto/Roboto-Light.ttf';
+import RobotoFontLightItalic from '../../resources/fonts/Roboto/Roboto-LightItalic.ttf';
+import RobotoFontMedium from '../../resources/fonts/Roboto/Roboto-Medium.ttf';
+import RobotoFontMediumItalic from '../../resources/fonts/Roboto/Roboto-MediumItalic.ttf';
+import RobotoFontRegular from '../../resources/fonts/Roboto/Roboto-Regular.ttf';
+import RobotoFontRegularItalic from '../../resources/fonts/Roboto/Roboto-Italic.ttf';
+import RobotoFontBold from '../../resources/fonts/Roboto/Roboto-Bold.ttf';
+import RobotoFontBoldItalic from '../../resources/fonts/Roboto/Roboto-BoldItalic.ttf';
+import RobotoFontBlack from '../../resources/fonts/Roboto/Roboto-Black.ttf';
+import RobotoFontBlackItalic from '../../resources/fonts/Roboto/Roboto-BlackItalic.ttf';
+import RobotoCondensedFontLight from '../../resources/fonts/Roboto/RobotoCondensed-Light.ttf';
+import RobotoCondensedFontLightItalic from '../../resources/fonts/Roboto/RobotoCondensed-LightItalic.ttf';
+import RobotoCondensedFontRegular from '../../resources/fonts/Roboto/RobotoCondensed-Regular.ttf';
+import RobotoCondensedFontRegularItalic from '../../resources/fonts/Roboto/RobotoCondensed-Italic.ttf';
+import RobotoCondensedFontBold from '../../resources/fonts/Roboto/RobotoCondensed-Bold.ttf';
+import RobotoCondensedFontBoldItalic from '../../resources/fonts/Roboto/RobotoCondensed-BoldItalic.ttf';
+import TezosIconsFontTTF from '../../resources/fonts/TezosIcons/Tezos-icons.ttf';
 import fontAwesome from '../../node_modules/font-awesome/css/font-awesome.css';
-
 
 injectGlobal`
   ${normalize()}
@@ -162,7 +161,7 @@ injectGlobal`
   }
 
   @import ${fontAwesome};
-  
+
   html {
     box-sizing: border-box;
     line-height: 1.618;
@@ -170,7 +169,7 @@ injectGlobal`
   *, *:before, *:after {
     box-sizing: inherit;
   }
-  
+
   html,
   body {
     width: 100%;
@@ -188,6 +187,6 @@ injectGlobal`
     height: 100vh;
     max-width: 1440px;
     margin: 0 auto;
-  }  
+  }
 
 `;

@@ -4,22 +4,21 @@ import * as matchers from 'jest-immutable-matchers';
 import messages from '../../../app/reduxContent/message/reducers';
 
 const initState = {
-  message: {},
-}
+  message: {}
+};
 
-beforeEach(function () {
+beforeEach(() => {
   jest.addMatchers(matchers);
 });
 
-
 describe('action type CLEAR_MESSAGE_STATE', () => {
   const expectedState = fromJS({
-    ...initState,
-  })
+    ...initState
+  });
 
   const action = {
-    type: 'CLEAR_MESSAGE_STATE',
-  }
+    type: 'CLEAR_MESSAGE_STATE'
+  };
 
   test('should return the init state', () => {
     expect(messages(undefined, action)).toEqualImmutable(expectedState);
@@ -32,7 +31,7 @@ describe('action type ADD_MESSAGE', () => {
       message: 'test',
       isError: true,
       hash: 'hash'
-    },
+    }
   });
 
   const action = {
@@ -40,7 +39,7 @@ describe('action type ADD_MESSAGE', () => {
     message: 'test',
     isError: true,
     hash: 'hash'
-  }
+  };
 
   test('should return correct state', () => {
     expect(messages(undefined, action)).toEqualImmutable(expectedState);
@@ -49,12 +48,12 @@ describe('action type ADD_MESSAGE', () => {
 
 describe('action type LOGOUT', () => {
   const expectedState = fromJS({
-    ...initState,
+    ...initState
   });
 
   const action = {
-    type: 'CLEAR_MESSAGE_STATE',
-  }
+    type: 'CLEAR_MESSAGE_STATE'
+  };
 
   test('should return correct state', () => {
     expect(messages(undefined, action)).toEqualImmutable(expectedState);
