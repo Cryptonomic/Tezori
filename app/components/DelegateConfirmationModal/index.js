@@ -9,7 +9,8 @@ import TezosIcon from '../TezosIcon/';
 import { ms } from '../../styles/helpers';
 import TezosAddress from '../TezosAddress/';
 import Fees from '../Fees/';
-import Loader from '../Loader/';
+import Loader from '../Loader';
+import PasswordInput from '../PasswordInput';
 
 const inputStyles = {
   underlineFocusStyle: {
@@ -54,11 +55,7 @@ const AddressContainer = styled.div`
 `;
 const NewAddressTextField = styled(TextField)`
   width: 100% !important;
-`;
-const PasswordTextField = styled(TextField)`
-  width: 50% !important;
-  margin-top: -27px;
-`;
+`
 const BottomContainer = styled.div`
   width: 100%;
   height: 98px;
@@ -112,7 +109,9 @@ type Props = {
   onAddressChange: Function,
   onDelegate: Function,
   onCloseClick: Function,
-  isLoading?: boolean
+  isLoading?: boolean,
+  isShowedPwd: boolean,
+  onShowPwd: Function
 };
 
 const DelegateConfirmationModal = (props: Props) => {
@@ -128,9 +127,11 @@ const DelegateConfirmationModal = (props: Props) => {
     onAddressChange,
     onDelegate,
     onCloseClick,
-    isLoading
+    isLoading,
+    isShowedPwd,
+    onShowPwd
   } = props;
-  const isDisabled = isLoading || !fee || !newAddress || !password;
+  const isDisabled = isLoading || !newAddress || !password;
 
   return (
     <ModalDialog
@@ -184,14 +185,13 @@ const DelegateConfirmationModal = (props: Props) => {
         </WarningContainer>
       </ModalContainer>
       <BottomContainer>
-        <PasswordTextField
-          type="password"
-          floatingLabelText="Wallet Password"
-          value={password}
-          floatingLabelStyle={inputStyles.floatingLabelStyle}
-          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
-          underlineStyle={inputStyles.underlineStyle}
-          onChange={handlePasswordChange}
+        <PasswordInput
+          label='Wallet Password'
+          isShowed={isShowedPwd}
+          password={password}
+          changFunc={handlePasswordChange}
+          onShow={onShowPwd}
+          containerStyle={{marginTop: '-27px', width: '50%'}}
         />
         <DelegateButton
           buttonTheme="primary"

@@ -1,14 +1,15 @@
 // @flow
 import React from 'react';
-import { Dialog, TextField } from 'material-ui';
+import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 
-import { H5 } from '../Heading/';
-import Loader from '../Loader/';
-import Button from '../Button/';
-import TezosIcon from '../TezosIcon/';
+import { H5 } from '../Heading';
+import Loader from '../Loader';
+import Button from '../Button';
+import TezosIcon from '../TezosIcon';
+import PasswordInput from '../PasswordInput';
 
 const AmountContainer = styled.div`
   marginbottom: ${ms(4)};
@@ -45,7 +46,9 @@ type Props = {
   onCloseClick?: Function,
   onPasswordChange?: Function,
   onSend?: Function,
-  isLoading?: boolean
+  isLoading?: boolean,
+  isShowedPwd?: boolean,
+  onShowPwd: Function
 };
 
 const SendConfirmationModal = (props: Props) => {
@@ -57,7 +60,9 @@ const SendConfirmationModal = (props: Props) => {
     onPasswordChange,
     password,
     onCloseClick,
-    onSend
+    onSend,
+    isShowedPwd,
+    onShowPwd
   } = props;
 
   return (
@@ -90,12 +95,13 @@ const SendConfirmationModal = (props: Props) => {
         <DataToSend>{address}</DataToSend>
       </AmountContainer>
       <PaswordContainer>
-        <TextField
-          floatingLabelText="Wallet Password"
-          style={{ width: '60%' }}
-          type="password"
-          value={password}
-          onChange={onPasswordChange}
+        <PasswordInput
+          label='Wallet Password'
+          isShowed={isShowedPwd}
+          password={password}
+          changFunc={onPasswordChange}
+          onShow={onShowPwd}
+          containerStyle={{width: '70%'}}
         />
         <Button buttonTheme="secondary" onClick={onSend} disabled={isLoading}>
           Confirm

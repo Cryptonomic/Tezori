@@ -12,6 +12,7 @@ import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
+import PasswordInput from '../PasswordInput';
 
 import {
   createNewAccount,
@@ -108,6 +109,7 @@ const defaultState = {
   amount: null,
   fee: 100,
   passPhrase: '',
+  isShowedPwd: false, 
   averageFees: {
     low: 100,
     medium: 200,
@@ -129,9 +131,9 @@ class AddDelegateModal extends Component<Props> {
 
   changeAmount = (_, amount) => this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
-  changeFee = fee => this.setState({ fee });
-  updatePassPhrase = (_, passPhrase) => this.setState({ passPhrase });
-  setIsLoading = isLoading => this.setState({ isLoading });
+  changeFee = (fee) => this.setState({ fee });
+  updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
+  setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   renderToolTipComponent = () => {
     return (
@@ -174,14 +176,7 @@ class AddDelegateModal extends Component<Props> {
 
   render() {
     const { open, onCloseClick } = this.props;
-    const {
-      isLoading,
-      averageFees,
-      delegate,
-      amount,
-      fee,
-      passPhrase
-    } = this.state;
+    const { isLoading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
     const isDisabled = isLoading || !delegate || !amount || !passPhrase;
 
     return (
@@ -251,15 +246,15 @@ class AddDelegateModal extends Component<Props> {
               onChange={this.changeFee}
             />
           </FeeContainer>
-        </AmountFeePassContainer>
-        <AmountFeePassContainer>
-          <TextField
-            floatingLabelText="Wallet Password"
-            type="password"
-            style={{ width: '100%' }}
-            onChange={this.updatePassPhrase}
-          />
-        </AmountFeePassContainer>
+        </AmountFeePassContainer>        
+        
+        <PasswordInput
+          label='Wallet Password'
+          isShowed={isShowedPwd}
+          changFunc={this.updatePassPhrase}
+          onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}   
+        />
+       
         <PasswordButtonContainer>
           <DelegateButton
             buttonTheme="primary"

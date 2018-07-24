@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
-import SendConfirmationModal from '../SendConfirmationModal/';
+import SendConfirmationModal from '../SendConfirmationModal';
 
 import {
   validateAmount,
@@ -64,6 +64,7 @@ const initialState = {
   toAddress: '',
   amount: '',
   fee: 100,
+  isShowedPwd: false,
   averageFees: {
     low: 100,
     medium: 200,
@@ -86,11 +87,11 @@ class Send extends Component<Props> {
     const { averageFees, fee } = this.state;
     this.setState({ ...initialState, averageFees, fee });
   };
-  handlePasswordChange = (_, password) => this.setState({ password });
-  handleToAddressChange = (_, toAddress) => this.setState({ toAddress });
-  handleAmountChange = (_, amount) => this.setState({ amount });
-  handleFeeChange = fee => this.setState({ fee });
-  setIsLoading = isLoading => this.setState({ isLoading });
+  handlePasswordChange = (password) =>  this.setState({ password });
+  handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
+  handleAmountChange = (_, amount) =>  this.setState({ amount });
+  handleFeeChange = (fee) =>  this.setState({ fee });
+  setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   validateAmount = async () => {
     const { amount, toAddress } = this.state;
@@ -130,7 +131,8 @@ class Send extends Component<Props> {
       toAddress,
       amount,
       fee,
-      averageFees
+      averageFees,
+      isShowedPwd
     } = this.state;
 
     return (
@@ -178,6 +180,8 @@ class Send extends Component<Props> {
           onPasswordChange={this.handlePasswordChange}
           onSend={this.onSend}
           isLoading={isLoading}
+          isShowedPwd={isShowedPwd}
+          onShowPwd={()=> this.setState({isShowedPwd: !isShowedPwd})}
         />
       </SendContainer>
     );
