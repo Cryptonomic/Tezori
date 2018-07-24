@@ -191,7 +191,7 @@ class AddressBlock extends Component<Props, State> {
               ?
               (
                 <TezosAmount
-                  color='primary'
+                  color="primary"
                   size={ms(0)}
                   amount={balance}
                   showTooltip
@@ -243,7 +243,11 @@ class AddressBlock extends Component<Props, State> {
 
           )}
           {!isManagerReady && (
-            <Tooltip position="bottom" offset='-24%' content={<NoFundTooltip content="You don't have funds to delegate." />}>
+            <Tooltip
+              position="bottom"
+              offset='-24%'
+              content={<NoFundTooltip content="You account is not ready to delegate." />}
+              >
               <Button buttonTheme="plain">
                 <AddCircle
                   style={{
@@ -251,7 +255,7 @@ class AddressBlock extends Component<Props, State> {
                     height: ms(1),
                     width: ms(1),
                     opacity: 0.5,
-                    cursor: 'not-allowed'
+                    cursor: 'default'
                   }}
                 />
               </Button>

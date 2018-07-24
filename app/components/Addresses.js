@@ -109,7 +109,7 @@ class Addresses extends Component<Props> {
                 opacity: 0.5,
                 width: ms(3),
                 height: ms(3) ,
-                cursor: 'pointer'
+                cursor: 'default'
               }}
             />
           </Tooltip>
