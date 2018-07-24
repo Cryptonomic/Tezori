@@ -112,7 +112,11 @@ const InputValid = (props: Props) => {
           color="check"
           onClick={props.onShow}
         />}
-        <ShowHidePwd onClick={props.onShow}>{props.isShowed? 'Hide':'Show'}</ShowHidePwd>
+        <ShowHidePwd
+          onClick={props.onShow}
+          style={{cursor: 'pointer'}}>
+          {props.isShowed? 'Hide':'Show'}
+        </ShowHidePwd>
       </Content>
       <PasswordStrengthSuggestions>
         {!!props.error && <Error color={borderColor}>{props.error}</Error>}

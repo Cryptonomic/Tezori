@@ -278,7 +278,11 @@ class AddAddress extends Component<Props> {
                     this.setState({ passPhrase: newPassPhrase })
                   }
                 />
-                <ShowHidePwd onClick={()=> this.setState({isShowedPwd: !isShowedPwd})}>{isShowedPwd? 'Hide':'Show'}</ShowHidePwd>
+                <ShowHidePwd
+                  onClick={()=> this.setState({isShowedPwd: !isShowedPwd})}
+                  style={{cursor: 'pointer'}}>
+                  {isShowedPwd? 'Hide':'Show'}
+                </ShowHidePwd>
 
                 <StyledTooltip position="bottom" content={PasswordTooltip}>
                   <Button buttonTheme="plain">
