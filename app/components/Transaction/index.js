@@ -106,6 +106,17 @@ const getStatus = (transaction, selectedAccountHash) => {
     };
   }
 
+  if (type === 'delegation') {
+    return {
+      icon: 'change',
+      preposition: 'to',
+      state: 'UPDATED DELEGATE',
+      isFee: true,
+      color: 'gray8',
+      sign: ''
+    };
+  }
+
   const isSameLocation = getPosition(transaction.source, selectedAccountHash);
   const isFee = getIsFee(transaction.fee);
   const isAmount = getIsAmount(transaction.amount);
@@ -164,6 +175,16 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
   if (type === 'reveal') {
     return <AddressText>this address</AddressText>;
   }
+  if (type === 'delegation') {
+    return (
+      <TezosAddress
+        address={transaction.delegate}
+        size='14px'
+        weight='200'
+        color='black2'
+      />
+    );
+  }
   if (
     type === 'origination' &&
     transaction.source === selectedParentHash &&
@@ -175,6 +196,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
       </AddressText>
     );
   }
+  
   if (!address) {
     return null;
   }
