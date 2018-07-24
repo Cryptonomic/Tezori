@@ -1,24 +1,23 @@
-import React from 'react'
-import styled from 'styled-components'
-import { TextField } from 'material-ui'
-import TezosIcon from "../TezosIcon"
-import { ms } from '../../styles/helpers'
+import React from 'react';
+import styled from 'styled-components';
+import { TextField } from 'material-ui';
+import TezosIcon from '../TezosIcon';
+import { ms } from '../../styles/helpers';
 
 const Container = styled.div`
   min-height: 93px;
-`
+`;
 const Content = styled.div`
   width: 100%;
   position: relative;
   .input-text-field {
     width: 100% !important;
   }
-
-`
+`;
 const PasswordStrengthSuggestions = styled.div`
   height: 3.3rem;
   width: 24rem;
-`
+`;
 const Suggestion = styled.div`
   font-size: 12px;
   line-height: 18px;
@@ -27,7 +26,7 @@ const Suggestion = styled.div`
   span {
     font-weight: bold;
   }
-`
+`;
 const Error = styled.div`
   font-size: 12px;
   line-height: 18px;
@@ -61,29 +60,35 @@ type Props = {
 
 const inputStyles = {
   underlineFocusStyle: {
-    borderColor: '#2c7df7',
+    borderColor: '#2c7df7'
   },
   underlineStyle: {
-    borderColor: '#d0d2d8',
+    borderColor: '#d0d2d8'
   },
   errorUnderlineStyle: {
-    borderColor: '#ea776c',
+    borderColor: '#ea776c'
   },
   floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)',
+    color: 'rgba(0, 0, 0, 0.38)'
   },
   floatingLabelFocusStyle: {
-    color: '#5571a7',
-  },
+    color: '#5571a7'
+  }
 };
 
-const focusBorderColors = ['#2c7df7', '#ea776c', '#e69940', '#d3b53b', '#259c90'];
+const focusBorderColors = [
+  '#2c7df7',
+  '#ea776c',
+  '#e69940',
+  '#d3b53b',
+  '#259c90'
+];
 
 const InputValid = (props: Props) => {
   const borderColor = focusBorderColors[props.score];
   let width = '';
   if (props.score && !props.status) {
-    width = `${props.score*25}%`;
+    width = `${props.score * 25}%`;
   } else {
     width = `100%`;
   }
@@ -92,13 +97,13 @@ const InputValid = (props: Props) => {
     <Container>
       <Content>
         <TextField
-          className='input-text-field'
+          className="input-text-field"
           floatingLabelText={props.label}
-          type={props.isShowed? 'text': 'password'}
+          type={props.isShowed ? 'text' : 'password'}
           floatingLabelStyle={inputStyles.floatingLabelStyle}
           floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
           underlineStyle={inputStyles.underlineStyle}
-          underlineFocusStyle={{borderColor, width}}
+          underlineFocusStyle={{ borderColor, width }}
           onChange={(_, newVal) => props.changFunc(newVal)}
         />
         {props.score===4 && <CheckIcon
@@ -111,11 +116,12 @@ const InputValid = (props: Props) => {
       </Content>
       <PasswordStrengthSuggestions>
         {!!props.error && <Error color={borderColor}>{props.error}</Error>}
-        {!!props.suggestion && <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />}
+        {!!props.suggestion && (
+          <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />
+        )}
       </PasswordStrengthSuggestions>
-
     </Container>
-  )
+  );
 };
 InputValid.defaultProps = {
   error: '',
@@ -123,6 +129,6 @@ InputValid.defaultProps = {
   score: 0,
   isShowed: false,
   status: false
-}
+};
 
-export default InputValid
+export default InputValid;

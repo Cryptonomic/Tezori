@@ -3,15 +3,13 @@ import React from 'react';
 import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
+import { ms } from '../../styles/helpers';
 
-import { H5 } from './Heading';
-import Loader from './Loader';
-import Button from './Button';
-import TezosIcon from './TezosIcon';
-import PasswordInput from './PasswordInput';
-
-import styles from './SendConfirmationModal.css';
+import { H5 } from '../Heading';
+import Loader from '../Loader';
+import Button from '../Button';
+import TezosIcon from '../TezosIcon';
+import PasswordInput from '../PasswordInput';
 
 const AmountContainer = styled.div`
   marginbottom: ${ms(4)};
@@ -76,15 +74,22 @@ const SendConfirmationModal = (props: Props) => {
       titleStyle={{ padding: '50px 50px 0px' }}
     >
       <CloseIcon
-        className={styles.closeIcon}
-        style={{ fill: '#7190C6' }}
+        style={{
+          fill: '#7190C6',
+          cursor: 'pointer',
+          height: '20px',
+          width: '20px',
+          position: 'absolute',
+          top: '10px',
+          right: '15px'
+        }}
         onClick={onCloseClick}
       />
       <Heading>Do you confirm that you want to send</Heading>
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosIcon color='secondary' />
+          <TezosIcon color="secondary" iconName="tezos" />
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>
@@ -98,11 +103,7 @@ const SendConfirmationModal = (props: Props) => {
           onShow={onShowPwd}
           containerStyle={{width: '70%'}}
         />
-        <Button
-          buttonTheme="secondary"
-          onClick={onSend}
-          disabled={isLoading}
-        >
+        <Button buttonTheme="secondary" onClick={onSend} disabled={isLoading}>
           Confirm
         </Button>
       </PaswordContainer>

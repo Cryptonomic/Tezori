@@ -1,13 +1,11 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React, { Component, Fragment } from 'react';
-import { isNil } from 'lodash';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { lighten } from 'polished';
 import { getWalletName } from '../../reduxContent/wallet/selectors';
-import SettingsController from '../SettingsController';
+import SettingsController from '../SettingsController/';
 import { ms } from '../../styles/helpers';
 import Logo from './../Logo';
 
@@ -35,13 +33,13 @@ const Text = styled.span`
 `;
 
 type Props = {
-  onlyLogo: boolean,
+  onlyLogo: boolean | void,
   walletName: string
 };
 
-class TopBar extends Component {
+class TopBar extends Component<Props> {
   render() {
-    const { onlyLogo } = this.props;
+    const { onlyLogo, walletName } = this.props;
 
     return (
       <Container onlyLogo={onlyLogo}>
@@ -51,7 +49,7 @@ class TopBar extends Component {
           <Fragment>
             <InfoContainer>
               <Logo />
-              <Text>{this.props.walletName}</Text>
+              <Text>{walletName}</Text>
             </InfoContainer>
             <SettingsController />
           </Fragment>

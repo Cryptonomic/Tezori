@@ -10,21 +10,20 @@ import {
   getSelectedKeyStore,
   fetchAverageFees,
   clearOperationId
-} from '../../utils/general'
+} from '../../utils/general';
 
-const {
-  sendDelegationOperation
-} = TezosOperations;
+const { sendDelegationOperation } = TezosOperations;
 
 export function fetchDelegationAverageFees() {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
-    return await fetchAverageFees(nodes, 'delegation');
-  }
+    const averageFees = await fetchAverageFees(nodes, 'delegation');
+    return averageFees;
+  };
 }
 
 export function validateAddress(address) {
-  return async (dispatch, state) => {
+  return async dispatch => {
     const validations = [
       { value: address, type: 'notEmpty', name: 'Address' },
       { value: address, type: 'validAddress' }
@@ -40,40 +39,59 @@ export function validateAddress(address) {
   };
 }
 
-export function delegate( delegateValue, fee, password, selectedAccountHash, selectedParentHash ) {
+export function delegate(
+  delegateValue,
+  fee,
+  password,
+  selectedAccountHash,
+  selectedParentHash
+) {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
-    const identities = state().wallet.get('identities').toJS();
+    const identities = state()
+      .wallet.get('identities')
+      .toJS();
     const walletPassword = state().wallet.get('password');
 
-    if ( password !== walletPassword ) {
+    if (password !== walletPassword) {
       const error = 'Incorrect password';
       dispatch(addMessage(error, true));
       return false;
     }
 
-    const keyStore = getSelectedKeyStore(identities, selectedAccountHash, selectedParentHash);
-    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    const res = await sendDelegationOperation(url, keyStore, delegateValue, fee).catch((err) => {
-      err.name = err.message;
-      console.error(err);
-      dispatch(addMessage(err.name, true));
+    const keyStore = getSelectedKeyStore(
+      identities,
+      selectedAccountHash,
+      selectedParentHash
+    );
+    const { url } = getSelectedNode(nodes, TEZOS);
+    const res = await sendDelegationOperation(
+      url,
+      keyStore,
+      delegateValue,
+      fee
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(errorObj);
+      dispatch(addMessage(errorObj.name, true));
       return false;
     });
 
-    if ( res ) {
-      dispatch(addMessage(
-        `Successfully started delegation update.`,
-        false,
-        clearOperationId(res.operationGroupID)
-      ));
+    if (res) {
+      dispatch(
+        addMessage(
+          `Successfully started delegation update.`,
+          false,
+          clearOperationId(res.operationGroupID)
+        )
+      );
 
       const identity = findIdentity(identities, selectedParentHash);
-      const foundIndex = findAccountIndex( identity, selectedAccountHash );
-      const account = identity.accounts[ foundIndex ];
+      const foundIndex = findAccountIndex(identity, selectedAccountHash);
+      const account = identity.accounts[foundIndex];
 
-      if ( foundIndex > -1 ) {
-        identity.accounts[ foundIndex ] = {
+      if (foundIndex > -1) {
+        identity.accounts[foundIndex] = {
           ...account,
           delegateValue: ''
         };
@@ -84,5 +102,5 @@ export function delegate( delegateValue, fee, password, selectedAccountHash, sel
       return true;
     }
     return false;
-  }
+  };
 }

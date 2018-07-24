@@ -1,11 +1,6 @@
-import { omit } from 'lodash';
 import { fromJS } from 'immutable';
 import { LOGOUT } from '../wallet/types';
-import {
-  CLEAR_MESSAGE_STATE,
-  ADD_MESSAGE,
-} from './types';
-
+import { CLEAR_MESSAGE_STATE, ADD_MESSAGE } from './types';
 
 const emptyMessage = fromJS({
   message: '',

@@ -14,10 +14,9 @@ import PasswordInput from '../../components/PasswordInput';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 
-import styles from './styles.css';
-
 type Props = {
   login: Function,
+  goBack: Function
 };
 
 const BackToWallet = styled.div`
@@ -26,6 +25,52 @@ const BackToWallet = styled.div`
   color: #4486f0;
   cursor: pointer;
   margin-bottom: 1rem;
+`;
+
+const CreateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1; 
+`;
+
+const WalletContainers = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 30px;
+  min-width: 500px;
+`;
+
+const WalletTitle = styled.h3`
+  color: #1A325F;
+  font-size: 36px;
+  font-weight: 300;
+  margin: 0 0 1.7rem 0;
+`;
+
+const ImportButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 1rem;
+`;
+
+const WalletFileName = styled.span`
+  font-size: 15px;
+  margin-left: 15px;
+  opacity: 0.5;
+`;
+
+const ActionButtonContainer = styled.div`
+  width: 194px;
+  margin-top: 30px;
+`;
+
+const ActionButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+  padding: 0;
 `;
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
@@ -58,7 +103,7 @@ class LoginImport extends Component<Props> {
     );
   };
 
-  login = async (loginType) => {
+  login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
     await login(loginType, walletLocation, walletFileName, password);
@@ -74,36 +119,39 @@ class LoginImport extends Component<Props> {
 
   render() {
     const { goBack } = this.props;
-    const { walletFileName, walletLocation, password, isLoading, isShowedPwd } = this.state;
+    const { walletFileName, password, isLoading, isShowedPwd } = this.state;
+    const isDisabled = isLoading || !walletFileName || !password;
 
     return (
-      <div className={styles.createContainer}>
+      <CreateContainer>
         {isLoading && <Loader />}
-        <div className={styles.walletContainers}>
+        <WalletContainers>
           <BackToWallet
             onClick={goBack}
           >
             <BackCaret
               style={{
-              fill: '#4486f0',
-              height: '28px',
-              width: '28px',
-              marginRight: '5px',
-              marginLeft: '-9px'
-            }}
+                fill: '#4486f0',
+                height: '28px',
+                width: '28px',
+                marginRight: '5px',
+                marginLeft: '-9px'
+              }}
             />
             <span>Back</span>
           </BackToWallet>
 
-          <h3 className={styles.walletTitle}>
+          <WalletTitle>
             Open an existing wallet
-          </h3>
-          <div className={styles.importButtonContainer}>
+          </WalletTitle>
+          <ImportButtonContainer>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
-            </Button>
-            <span className={styles.walletFileName}>{walletFileName}</span>
-          </div>
+            </Button>          
+            <WalletFileName>
+              { walletFileName }
+            </WalletFileName>
+          </ImportButtonContainer>
           <PasswordInput
             label='Wallet Password'
             isShowed={isShowedPwd}
@@ -111,27 +159,29 @@ class LoginImport extends Component<Props> {
             changFunc={(newpassword) => this.setState({ password: newpassword })}
             onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
           />
-          <div className={styles.actionButtonContainer}>
-            <Button
-              className={styles.actionButton}
+          <ActionButtonContainer>
+            <ActionButton
               onClick={() => this.login(IMPORT)}
               buttonTheme="primary"
-              disabled={isLoading}
+              disabled={isDisabled}
             >
               Import
-            </Button>
-          </div>
-        </div>
-      </div>
+            </ActionButton>
+          </ActionButtonContainer>
+        </WalletContainers>
+      </CreateContainer>
     );
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ 
-    login,
-    goBack: () => dispatch => dispatch(back())
-  }, dispatch );
+  return bindActionCreators(
+    {
+      login,
+      goBack: () => dispatch => dispatch(back())
+    },
+    dispatch
+  );
 }
 
 export default connect(null, mapDispatchToProps)(LoginImport);
