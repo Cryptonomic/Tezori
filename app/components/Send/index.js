@@ -1,22 +1,22 @@
 // @flow
 import React, { Component } from 'react';
-import { TextField, SelectField, MenuItem } from 'material-ui';
+import { TextField } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Button from './Button';
-import { ms } from '../styles/helpers'
-import TezosIcon from './TezosIcon'
-import SendConfirmationModal from './SendConfirmationModal';
+import Button from '../Button/';
+import { ms } from '../../styles/helpers';
+import TezosIcon from '../TezosIcon/';
+import SendConfirmationModal from '../SendConfirmationModal/';
 
 import {
   validateAmount,
   sendTez,
   fetchTransactionAverageFees
-} from '../reduxContent/sendTezos/thunks';
+} from '../../reduxContent/sendTezos/thunks';
 
-import Fees from './Fees/';
+import Fees from '../Fees/';
 
 const SendContainer = styled.div`
   display: flex;
@@ -34,20 +34,20 @@ const AmountContainer = styled.div`
 `;
 
 const SendButton = styled(Button)`
-  margin-top: ${ms(2)}
-`
+  margin-top: ${ms(2)};
+`;
 
 const InputAmount = styled.div`
   position: relative;
   width: 50%;
   margin-right: 50px;
-`
+`;
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
-  right: 0px;
+  right: 20px;
   top: 40px;
   display: block;
-`
+`;
 
 type Props = {
   isReady?: boolean,
@@ -67,7 +67,7 @@ const initialState = {
   averageFees: {
     low: 100,
     medium: 200,
-    high:400
+    high: 400
   }
 };
 
@@ -75,36 +75,45 @@ class Send extends Component<Props> {
   props: Props;
   state = initialState;
 
-  async componentDidMount() {
+  async componentWillMount() {
     const { fetchTransactionAverageFees } = this.props;
     const averageFees = await fetchTransactionAverageFees();
     this.setState({ averageFees, fee: averageFees.low });
   }
 
-  openConfirmation = () =>  this.setState({ isConfirmationModalOpen: true });
-  closeConfirmation = () =>  {
+  openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
+  closeConfirmation = () => {
     const { averageFees, fee } = this.state;
     this.setState({ ...initialState, averageFees, fee });
   };
-  handlePasswordChange = (_, password) =>  this.setState({ password });
-  handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
-  handleAmountChange = (_, amount) =>  this.setState({ amount });
-  handleFeeChange = (fee) =>  this.setState({ fee });
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+  handlePasswordChange = (_, password) => this.setState({ password });
+  handleToAddressChange = (_, toAddress) => this.setState({ toAddress });
+  handleAmountChange = (_, amount) => this.setState({ amount });
+  handleFeeChange = fee => this.setState({ fee });
+  setIsLoading = isLoading => this.setState({ isLoading });
 
-  validateAmount = async () =>  {
+  validateAmount = async () => {
     const { amount, toAddress } = this.state;
     const { validateAmount } = this.props;
-    if ( await validateAmount( amount, toAddress ) ) {
+    if (await validateAmount(amount, toAddress)) {
       this.openConfirmation();
     }
   };
 
-  onSend = async () =>  {
+  onSend = async () => {
     const { password, toAddress, amount, fee } = this.state;
     const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (await sendTez( password, toAddress, amount, Math.floor(fee), selectedAccountHash, selectedParentHash)) {
+    if (
+      await sendTez(
+        password,
+        toAddress,
+        amount,
+        Math.floor(fee),
+        selectedAccountHash,
+        selectedParentHash
+      )
+    ) {
       this.closeConfirmation();
     } else {
       this.setIsLoading(false);
@@ -136,24 +145,24 @@ class Send extends Component<Props> {
           <InputAmount>
             <TextField
               floatingLabelText="Amount"
-              style={{ width: '100%'}}
+              style={{ width: '100%' }}
               value={amount}
               onChange={this.handleAmountChange}
               type="number"
             />
-            <TezosIconInput color='secondary' />
+            <TezosIconInput color="secondary" iconName="tezos" />
           </InputAmount>
           <Fees
             styles={{ width: '50%' }}
-            low={ averageFees.low }
-            medium={ averageFees.medium }
-            high={ averageFees.high }
-            fee={ fee }
+            low={averageFees.low}
+            medium={averageFees.medium}
+            high={averageFees.high}
+            fee={fee}
             onChange={this.handleFeeChange}
           />
         </AmountContainer>
         <SendButton
-          disabled={ !isReady }
+          disabled={!isReady}
           onClick={this.validateAmount}
           buttonTheme="secondary"
           small

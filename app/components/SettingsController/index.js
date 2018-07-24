@@ -4,12 +4,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
 
-import Button from './Button';
-import settingsIcon from '../../resources/settings.png';
-import logoutIcon from '../../resources/logout.png';
-import { goHomeAndClearState } from '../reduxContent/wallet/thunks';
+import Button from '../Button/';
+import settingsIcon from '../../../resources/settings.png';
+import logoutIcon from '../../../resources/logout.png';
+import { goHomeAndClearState } from '../../reduxContent/wallet/thunks';
 
 const Container = styled.div`
   display: flex;
@@ -35,7 +34,8 @@ const Separator = styled.div`
 `;
 
 type Props = {
-  goHomeAndClearState: Function
+  goHomeAndClearState: Function,
+  goSettings: Function
 };
 
 class SettingsController extends Component<Props> {
@@ -43,10 +43,7 @@ class SettingsController extends Component<Props> {
     const { goHomeAndClearState, goSettings } = this.props;
     return (
       <Container>
-        <Button
-          onClick={goSettings}
-          buttonTheme="plain"
-        >
+        <Button onClick={goSettings} buttonTheme="plain">
           <SettingsIcon alt="Settings" src={settingsIcon} />
         </Button>
         <Separator />
@@ -59,9 +56,12 @@ class SettingsController extends Component<Props> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({
-    goHomeAndClearState,
-    goSettings: () => dispatch => dispatch(push('/home/settings'))
-  }, dispatch);
+  bindActionCreators(
+    {
+      goHomeAndClearState,
+      goSettings: () => dispatch => dispatch(push('/home/settings'))
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(SettingsController);

@@ -1,22 +1,22 @@
-import React from 'react'
-import styled, { withTheme } from 'styled-components'
+import React from 'react';
+import styled, { withTheme } from 'styled-components';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-import { ms } from '../../styles/helpers'
+import { ms } from '../../styles/helpers';
 
 const Back = styled.div`
   display: flex;
   align-items: center;
-  color: ${ ({ theme: { colors } }) => colors.blue3 };
+  color: ${({ theme: { colors } }) => colors.blue3};
   cursor: pointer;
   margin: 0 0 ${ms(2)} 0;
 `;
 
 type Props = {
   onClick: Function
-}
+};
 
- const BackButton = (props:Props) => {
-  const { onClick } = props
+const BackButton = (props: Props) => {
+  const { onClick } = props;
   return (
     <Back onClick={onClick}>
       <BackCaret
@@ -30,7 +30,7 @@ type Props = {
       />
       <span>Back</span>
     </Back>
-  )
-}
+  );
+};
 
-export default withTheme(BackButton)
+export default withTheme(BackButton);

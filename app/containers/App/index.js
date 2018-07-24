@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import type { Node } from 'react';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
-import MessageBar from '../../components/MessageBar';
+import MessageBar from '../../components/MessageBar/';
 
 type Props = {
   children: Node,
@@ -25,7 +25,7 @@ class App extends Component<Props> {
     const { message } = this.props;
     return (
       <Container>
-        { this.props.children }
+        {this.props.children}
         <MessageBar message={message} />
       </Container>
     );

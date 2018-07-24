@@ -3,14 +3,12 @@ import React from 'react';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
+import { ms } from '../../styles/helpers';
 
-import { H5 } from './Heading';
-import Loader from './Loader';
-import Button from './Button';
-import TezosIcon from './TezosIcon';
-
-import styles from './SendConfirmationModal.css';
+import { H5 } from '../Heading/';
+import Loader from '../Loader/';
+import Button from '../Button/';
+import TezosIcon from '../TezosIcon/';
 
 const AmountContainer = styled.div`
   marginbottom: ${ms(4)};
@@ -34,13 +32,6 @@ const PaswordContainer = styled.div`
   align-items: flex-end;
 `;
 
-const TezosSymbol = styled.img`
-  height: 17px;
-  width: 17px;
-  filter: brightness(0%);
-  opacity: 0.5;
-`;
-
 const Heading = styled(H5)`
   margin-bottom: 20px;
   color: ${({ theme: { colors } }) => colors.primary};
@@ -54,10 +45,10 @@ type Props = {
   onCloseClick?: Function,
   onPasswordChange?: Function,
   onSend?: Function,
-  isLoading?: boolean,
+  isLoading?: boolean
 };
 
-const SendConfirmationModal = props => {
+const SendConfirmationModal = (props: Props) => {
   const {
     amount,
     address,
@@ -78,15 +69,22 @@ const SendConfirmationModal = props => {
       titleStyle={{ padding: '50px 50px 0px' }}
     >
       <CloseIcon
-        className={styles.closeIcon}
-        style={{ fill: '#7190C6' }}
+        style={{
+          fill: '#7190C6',
+          cursor: 'pointer',
+          height: '20px',
+          width: '20px',
+          position: 'absolute',
+          top: '10px',
+          right: '15px'
+        }}
         onClick={onCloseClick}
       />
       <Heading>Do you confirm that you want to send</Heading>
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosIcon color='secondary'/>
+          <TezosIcon color="secondary" iconName="tezos" />
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>
@@ -99,11 +97,7 @@ const SendConfirmationModal = props => {
           value={password}
           onChange={onPasswordChange}
         />
-        <Button
-          buttonTheme="secondary"
-          onClick={onSend}
-          disabled={isLoading}
-        >
+        <Button buttonTheme="secondary" onClick={onSend} disabled={isLoading}>
           Confirm
         </Button>
       </PaswordContainer>

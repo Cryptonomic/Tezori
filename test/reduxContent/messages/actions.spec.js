@@ -11,21 +11,25 @@ beforeEach(() => {
 
 describe('Messages clear, create and logout', () => {
   it('should return exact type', () => {
-    const expectedAction = [{
-      type: 'CLEAR_MESSAGE_STATE'
-    }]
+    const expectedAction = [
+      {
+        type: 'CLEAR_MESSAGE_STATE'
+      }
+    ];
     store.dispatch(actions.clearMessageState());
     expect(store.getActions()).toEqual(expectedAction);
   });
 
   it('should return exact type and payload', () => {
-    const expectedAction = [{
-      type: 'ADD_MESSAGE',
-      message: 'test',
-      isError: true,
-      hash: 'hash'
-    }]
+    const expectedAction = [
+      {
+        type: 'ADD_MESSAGE',
+        message: 'test',
+        isError: true,
+        hash: 'hash'
+      }
+    ];
     store.dispatch(actions.createMessage('test', true, 'hash'));
     expect(store.getActions()).toEqual(expectedAction);
   });
-})
+});
