@@ -134,8 +134,8 @@ const initialState = {
 class Delegate extends Component<Props> {
   props: Props;
   state = initialState;
-
-  async componentDidMount() {
+  
+  async componentWillMount() {
     const { fetchDelegationAverageFees } = this.props;
     const averageFees = await fetchDelegationAverageFees();
     this.setState({ averageFees, fee: averageFees.low });

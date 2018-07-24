@@ -5,11 +5,11 @@ import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
 import styled from 'styled-components';
 import Button from './../Button/';
-import TezosIcon from '../TezosIcon';
+import TezosIcon from '../TezosIcon/';
 import { ms } from '../../styles/helpers';
-import TezosAddress from '../TezosAddress';
+import TezosAddress from '../TezosAddress/';
 import Fees from '../Fees/';
-import Loader from '../Loader';
+import Loader from '../Loader/';
 
 const inputStyles = {
   underlineFocusStyle: {

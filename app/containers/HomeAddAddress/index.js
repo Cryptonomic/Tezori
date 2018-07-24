@@ -2,22 +2,20 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { TextField } from 'material-ui';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { lighten } from 'polished';
 import { ms } from '../../styles/helpers';
 
 import Button from '../../components/Button/';
 import { H4 } from '../../components/Heading/';
 import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
-import Loader from '../../components/Loader';
+import Loader from '../../components/Loader/';
 
 import Tooltip from '../../components/Tooltip/';
 import TezosIcon from '../../components/TezosIcon/';
 
 import CreateAccountSlide from '../../components/CreateAccountSlide/';
 import { importAddress } from '../../reduxContent/wallet/thunks';
-import styles from './styles.css';
 import { openLink } from '../../utils/general';
 
 const Container = styled.div`
@@ -48,7 +46,7 @@ const TooltipContainer = styled.div`
   font-size: ${ms(-1)};
   color: ${({ theme: { colors } }) => colors.primary};
   max-width: ${ms(15.5)};
-  font-weight: ${({ theme: { typo } }) => typo.weights.light};
+  font-weight: ${({theme: {typo}}) => typo.weights.light };
 `;
 
 const TooltipTitle = styled.p`
@@ -78,6 +76,57 @@ const Link = styled.span`
   text-decoration: underline;
   color: ${({ theme: { colors } }) => colors.blue2};
 `;
+
+const TitleContainer = styled.div`
+  background-color: #417DEF;
+  color: white;
+  font-size: 24px;
+  width: 100%;
+  height: 80px;
+  padding: 20px 60px;
+  display: flex;
+  align-items: center;
+`;
+
+const TabContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+  justify-content: space-around;
+`;
+
+const Tab = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  ${({ isActive }) => {
+    if ( isActive ) {
+      return css`
+        color: #1A325F;
+        background-color: white;
+        text-align: center;
+        padding: 0 10px;
+      `;
+    }
+    return css`
+      background-color: #417DEF;
+      color: white;
+      text-align: center;
+      padding: 0 10px;
+    `;
+  }};
+`;
+
+const AddAddressBodyContainer = styled.div`
+  background-color: white;
+  padding: 2rem;
+`;
+
+
 
 const PasswordTooltip = () => {
   return (
@@ -141,36 +190,31 @@ class AddAddress extends Component<Props> {
 
   renderTab = tabName => {
     const { activeTab } = this.state;
-    const tabClasses = classNames({
-      [styles.tab]: true,
-      [styles.inactiveTab]: tabName !== activeTab,
-      [styles.activeTab]: tabName === activeTab
-    });
 
     return (
-      <div
+      <Tab
         key={tabName}
-        className={tabClasses}
+        isActive={tabName === activeTab}
         onClick={() => this.setState({ activeTab: tabName })}
       >
         {tabName}
-      </div>
+      </Tab>
     );
   };
 
   renderTabController = () => {
     return (
-      <div className={styles.tabContainer}>
+      <TabContainer>
         {Object.values(ADD_ADDRESS_TYPES).map(this.renderTab)}
-      </div>
+      </TabContainer>
     );
   };
 
   renderAppBar = () => {
     return (
-      <div className={styles.titleContainer}>
+      <TitleContainer>
         <div>Add an Account</div>
-      </div>
+      </TitleContainer>
     );
   };
 
@@ -306,10 +350,10 @@ class AddAddress extends Component<Props> {
       <Container>
         {this.renderAppBar()}
         {this.renderTabController()}
-        <div className={styles.addAddressBodyContainer}>
+        <AddAddressBodyContainer>
           {this.renderAddBody()}
           {isLoading && <Loader />}
-        </div>
+        </AddAddressBodyContainer>
       </Container>
     );
   }

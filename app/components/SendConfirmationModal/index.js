@@ -3,14 +3,12 @@ import React from 'react';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
-import { ms } from '../styles/helpers';
+import { ms } from '../../styles/helpers';
 
-import { H5 } from './Heading';
-import Loader from './Loader';
-import Button from './Button';
-import TezosIcon from './TezosIcon';
-
-import styles from './SendConfirmationModal.css';
+import { H5 } from '../Heading/';
+import Loader from '../Loader/';
+import Button from '../Button/';
+import TezosIcon from '../TezosIcon/';
 
 const AmountContainer = styled.div`
   marginbottom: ${ms(4)};
@@ -71,8 +69,15 @@ const SendConfirmationModal = (props: Props) => {
       titleStyle={{ padding: '50px 50px 0px' }}
     >
       <CloseIcon
-        className={styles.closeIcon}
-        style={{ fill: '#7190C6' }}
+        style={{
+          fill: '#7190C6',
+          cursor: 'pointer',
+          height: '20px',
+          width: '20px',
+          position: 'absolute',
+          top: '10px',
+          right: '15px'
+        }}
         onClick={onCloseClick}
       />
       <Heading>Do you confirm that you want to send</Heading>

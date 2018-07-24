@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { clipboard } from 'electron';
 import QRCode from 'qrcode';
 import styled from 'styled-components';
-import Button from './Button';
-import { ms } from '../styles/helpers';
-import { H4 } from './Heading';
+import Button from '../Button/';
+import { ms } from '../../styles/helpers';
+import { H4 } from '../Heading/';
 
 type Props = {
   address: string

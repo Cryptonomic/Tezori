@@ -4,32 +4,12 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import styled, { withTheme } from 'styled-components';
-import { ms } from '../styles/helpers';
+import { ms } from '../../styles/helpers';
 
-import { H4 } from './Heading/';
-import AddressBlock from './AddressBlock';
-import Tooltip from './Tooltip/';
-import { syncAccountOrIdentity } from '../reduxContent/wallet/thunks';
-
-// TODO: Check if it's still needed
-// type OperationGroup = {
-//   hash: string,
-//   branch: string,
-//   kind: string,
-//   block: string,
-//   level: number,
-//   slots: number,
-//   signature: string,
-//   proposals: string,
-//   period: number,
-//   source: string,
-//   proposal: string,
-//   ballot: string,
-//   chain: string,
-//   counter: number,
-//   fee: number,
-//   blockId: string
-// };
+import { H4 } from '../Heading/';
+import AddressBlock from '../AddressBlock/';
+import Tooltip from '../Tooltip/';
+import { syncAccountOrIdentity } from '../../reduxContent/wallet/thunks';
 
 type Account = {
   accountId: string,

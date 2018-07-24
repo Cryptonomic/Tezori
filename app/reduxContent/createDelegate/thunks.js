@@ -84,10 +84,21 @@ export function createNewAccount(
     });
 
     if (newAccount) {
-      const newAccountHash =
-        newAccount.results.contents[0].metadata.operation_result
-          .originated_contracts[0];
+      const operationResult = newAccount
+        && newAccount.results
+        && newAccount.results.contents
+        && newAccount.results.contents[0]
+        && newAccount.results.contents[0].metadata
+        && newAccount.results.contents[0].metadata.operation_result;
 
+      if ( operationResult && operationResult.errors && operationResult.errors.length ) {
+        const error = 'Origination operation failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+
+      const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
       dispatch(
         addNewAccount(

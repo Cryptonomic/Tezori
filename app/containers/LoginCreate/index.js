@@ -10,14 +10,12 @@ import path from 'path';
 import zxcvbn from 'zxcvbn';
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
-import Loader from '../../components/Loader';
+import Loader from '../../components/Loader/';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
-import ValidInput from '../../components/ValidInput';
+import ValidInput from '../../components/ValidInput/';
 import createFileEmptyIcon from '../../../resources/createFileEmpty.svg';
-import TezosIcon from '../../components/TezosIcon';
-
-import styles from './styles.css';
+import TezosIcon from '../../components/TezosIcon/';
 
 type Props = {
   login: Function,
@@ -44,7 +42,10 @@ const WalletFileName = styled.div`
   width: 10rem;
 `;
 
-const CheckIcon = styled(TezosIcon)``;
+const CheckIcon = styled(TezosIcon)`
+  display: block;
+  margin-bottom: 15px;
+`;
 
 const CreateFileSelector = styled.div`
   display: flex;
@@ -60,6 +61,78 @@ const CreateFileSelector = styled.div`
   height: 13.5rem;
   margin-right: 2.37rem;
 `;
+
+const CreateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+`;
+
+const WalletContainers = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 30px;
+`;
+
+const WalletTitle = styled.h3`
+  color: #1A325F;
+  font-size: 36px;
+  font-weight: 300;
+  margin: 0 0 0.75rem 0;
+`;
+
+const WalletDescription = styled.div`
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 27px;
+  letter-spacing: 0.7px;
+  color: #1e1313;
+  max-width: 659px;
+`;
+
+const ActionButtonContainer = styled.div`
+  width: 194px;
+  margin-top: 40px;
+  display: flex;
+  align-self: center;
+`;
+
+const ActionButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+  padding: 0;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  margin-top: 1rem;
+`;
+
+const PasswordsContainer = styled.div`
+ display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;
+
+const CreateFileEmptyIcon = styled.img`
+  height: 6.75rem;
+  margin-bottom: 1.18rem;
+`;
+
+const CreateFileButton = styled(Button)`
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 9.18rem !important;
+  margin-bottom: 1.6rem !important;
+`;
+
+const WalletFileSection = styled.div`
+  text-align: center;
+  margin-bottom: 1.125rem;
+`;
+
 
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
@@ -196,32 +269,31 @@ class LoginCreate extends Component<Props> {
       !this.state.isPasswordMatched ||
       !walletFileName;
     let walletFileSection = (
-      <img
-        className={styles.createFileEmptyIcon}
-        src={createFileEmptyIcon}
-        alt=""
-      />
+      <CreateFileEmptyIcon src={createFileEmptyIcon} />
     );
 
     if (walletFileName) {
       walletFileSection = (
-        <div className={styles.walletFileSection}>
+        <WalletFileSection>
           <CheckIcon
             iconName="checkmark2"
             size={ms(5)}
             color="check"
-            className={styles.checkMark}
           />
-          <WalletFileName>{walletFileName}</WalletFileName>
-        </div>
+          <WalletFileName>
+            { walletFileName }
+          </WalletFileName>
+        </WalletFileSection>
       );
     }
 
     return (
-      <div className={styles.createContainer}>
+      <CreateContainer>
         {isLoading && <Loader />}
-        <div className={styles.walletContainers}>
-          <BackToWallet onClick={goBack}>
+        <WalletContainers>
+          <BackToWallet
+            onClick={goBack}
+          >
             <BackCaret
               style={{
                 fill: '#4486f0',
@@ -235,24 +307,22 @@ class LoginCreate extends Component<Props> {
             <span>Back</span>
           </BackToWallet>
 
-          <h3 className={styles.walletTitle}>Create a new wallet</h3>
-          <div className={styles.walletDescription}>
-            Your wallet information will be saved to your computer. It will be
-            encrypted with a password that you set.
-          </div>
-          <div className={styles.formContainer}>
+          <WalletTitle>Create a new wallet</WalletTitle>
+          <WalletDescription>
+            Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
+          </WalletDescription>
+          <FormContainer>
             <CreateFileSelector>
               {walletFileSection}
-              <Button
+              <CreateFileButton
                 buttonTheme="secondary"
                 onClick={this.saveFile}
                 small
-                className={styles.createFileButton}
               >
                 Create Wallet File
-              </Button>
+              </CreateFileButton>
             </CreateFileSelector>
-            <div className={styles.passwordsContainer}>
+            <PasswordsContainer>
               <ValidInput
                 label="Create Wallet Password"
                 isShowed={this.state.isPwdShowed}
@@ -260,7 +330,6 @@ class LoginCreate extends Component<Props> {
                 suggestion={this.state.pwdSuggestion}
                 score={this.state.pwdScore}
                 changFunc={this.changePassword}
-                className={styles.createPasswordField}
                 onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
@@ -270,23 +339,21 @@ class LoginCreate extends Component<Props> {
                 error={this.state.confirmPwdText}
                 score={this.state.confirmPwdScore}
                 changFunc={this.confirmPassword}
-                className={styles.confirmPasswordField}
                 onShow={() => this.onPasswordShow(1)}
               />
-            </div>
-          </div>
-          <div className={styles.actionButtonContainer}>
-            <Button
-              className={styles.actionButton}
+            </PasswordsContainer>
+          </FormContainer>
+          <ActionButtonContainer>
+            <ActionButton
               buttonTheme="primary"
               onClick={() => this.login(CREATE)}
               disabled={isDisabled}
             >
               Create Wallet
-            </Button>
-          </div>
-        </div>
-      </div>
+            </ActionButton>
+          </ActionButtonContainer>
+        </WalletContainers>
+      </CreateContainer>
     );
   }
 }

@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { getWalletName } from '../../reduxContent/wallet/selectors';
-import SettingsController from '../SettingsController';
+import SettingsController from '../SettingsController/';
 import { ms } from '../../styles/helpers';
 import Logo from './../Logo';
 

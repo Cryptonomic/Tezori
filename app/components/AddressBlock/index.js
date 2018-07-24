@@ -5,17 +5,17 @@ import { darken } from 'polished';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
-import { ms } from '../styles/helpers';
-import TezosIcon from './TezosIcon/';
-import { H3 } from './Heading/';
-import Button from './Button/';
-import TezosAmount from './TezosAmount/';
-import Address from './Address/';
-import AddressStatus from './AddressStatus/';
-import { READY } from '../constants/StatusTypes';
-import { MNEMONIC } from '../constants/StoreTypes';
-import { isReady } from '../utils/general';
-import AddDelegateModal from './AddDelegateModal/';
+import { ms } from '../../styles/helpers';
+import TezosIcon from '../TezosIcon/';
+import { H3 } from '../Heading/';
+import Button from '../Button/';
+import TezosAmount from '../TezosAmount/';
+import Address from '../Address/';
+import AddressStatus from '../AddressStatus/';
+import { READY } from '../../constants/StatusTypes';
+import { MNEMONIC } from '../../constants/StoreTypes';
+import { isReady } from '../../utils/general';
+import AddDelegateModal from '../AddDelegateModal/';
 
 const Container = styled.div`
   overflow: hidden;

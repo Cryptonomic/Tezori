@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { Snackbar } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
-import { ms } from './../styles/helpers';
-import TezosIcon from './TezosIcon';
+import { ms } from '../../styles/helpers';
+import TezosIcon from '../TezosIcon/';
 
-import { clearMessageState } from '../reduxContent/message/actions';
-import { openLinkToBlockExplorer } from './../utils/general';
+import { clearMessageState } from '../../reduxContent/message/actions';
+import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
   padding: 10px 0;

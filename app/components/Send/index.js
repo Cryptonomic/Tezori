@@ -5,18 +5,18 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import Button from './Button';
-import { ms } from '../styles/helpers';
-import TezosIcon from './TezosIcon';
-import SendConfirmationModal from './SendConfirmationModal';
+import Button from '../Button/';
+import { ms } from '../../styles/helpers';
+import TezosIcon from '../TezosIcon/';
+import SendConfirmationModal from '../SendConfirmationModal/';
 
 import {
   validateAmount,
   sendTez,
   fetchTransactionAverageFees
-} from '../reduxContent/sendTezos/thunks';
+} from '../../reduxContent/sendTezos/thunks';
 
-import Fees from './Fees/';
+import Fees from '../Fees/';
 
 const SendContainer = styled.div`
   display: flex;
@@ -44,7 +44,7 @@ const InputAmount = styled.div`
 `;
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
-  right: 0px;
+  right: 20px;
   top: 40px;
   display: block;
 `;
@@ -75,7 +75,7 @@ class Send extends Component<Props> {
   props: Props;
   state = initialState;
 
-  async componentDidMount() {
+  async componentWillMount() {
     const { fetchTransactionAverageFees } = this.props;
     const averageFees = await fetchTransactionAverageFees();
     this.setState({ averageFees, fee: averageFees.low });

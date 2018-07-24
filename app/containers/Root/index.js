@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
 import { I18nextProvider } from 'react-i18next';
-import Theme from '../../styles/theme';
+import theme from '../../styles/theme';
 import Routes from '../../routes';
 import { instance } from '../../utils/i18n';
 
@@ -13,11 +13,11 @@ type Props = {
   history: {}
 };
 
-export default class Root extends Component<Props> {
+class Root extends Component<Props> {
   render() {
     return (
       <Provider store={this.props.store}>
-        <ThemeProvider theme={Theme}>
+        <ThemeProvider theme={theme}>
           <ConnectedRouter history={this.props.history}>
             <I18nextProvider i18n={instance}>
               <Routes store={this.props.store} />
@@ -28,3 +28,5 @@ export default class Root extends Component<Props> {
     );
   }
 }
+
+export default Root;

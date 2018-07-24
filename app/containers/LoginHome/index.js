@@ -7,7 +7,6 @@ import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
-import styles from './styles.css';
 import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 
@@ -94,9 +93,113 @@ const CreateWalletButton = styled(Button)`
 const UnlockWalletButton = styled(Button)`
   min-width: 22rem;
   width: 100%;
+  color: black;
+  border-color: black;
+  background-color: rgba(255, 255, 255, 0.2);
+  &:hover {
+    color: #5d4444;
+    border-color: #5d4444;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
 `;
 
-const Background = styled.div``;
+const DefaultContainer = styled.div`
+  justify-content: center;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  height: 100%;
+  padding: 0px 50px;
+`;
+
+const WalletContainers = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 10px 30px;
+  justify-content: stretch;
+`;
+
+const Section = styled.section`
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+`;
+
+const Background = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+`;
+
+const BgContainerImg = styled.img`
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  height: 100vh;
+  overflow-x: hidden;
+  z-index: 0;
+  animation: fadeIn 3s forwards;
+  animation-delay: 0.5s;
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`;
+
+const BgCircle = styled.img`
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  height: 100vh;
+  overflow-x: hidden;
+  opacity: 0;
+  backface-visibility: hidden;
+  animation: fadeInOut 2000ms ease-in-out infinite alternate;
+  
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translate3d(-50%, 0, 0);
+    }
+      50% {
+        opacity: 1;
+      transform: translate3d(-50%, 0, 0);
+    }
+      100% {
+        opacity: 1;
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+`;
+
+const BgCircle1 = styled(BgCircle)`
+  animation-delay: 2000ms;
+`;
+
+const BgCircle2 = styled(BgCircle)`
+  animation-delay: 2400ms;
+`;
+
+const BgCircle3 = styled(BgCircle)`
+  animation-delay: 2800ms;
+`;
+
+const BgCircle4 = styled(BgCircle)`
+  animation-delay: 3200ms;
+`;
+
 
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 
@@ -131,13 +234,13 @@ class LoginHome extends Component<Props> {
     const { t } = this.props;
     return (
       <SectionContainer>
-        <div className={styles.defaultContainer}>
-          <section className={styles.headerContainer}>
+        <DefaultContainer>
+          <Section>
             <AppName>{name}</AppName>
             <AppSubtitle>{tagline}</AppSubtitle>
-          </section>
-          <section className={styles.optionsContainer}>
-            <div className={styles.walletContainers}>
+          </Section>
+          <Section>
+            <WalletContainers>
               <CreateWalletButton
                 buttonTheme="primary"
                 onClick={() => this.goTo('create')}
@@ -145,13 +248,12 @@ class LoginHome extends Component<Props> {
               >
                 {t('login.create_new_wallet_btn')}
               </CreateWalletButton>
-            </div>
-            <div className={styles.walletContainers}>
+            </WalletContainers>
+            <WalletContainers>
               <UnlockWalletButton
                 buttonTheme="secondary"
                 onClick={() => this.goTo('import')}
                 disabled={!this.state.isAgreement}
-                className={styles.unlockWalletButton}
               >
                 {t('login.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
@@ -164,9 +266,9 @@ class LoginHome extends Component<Props> {
                   {t('login.create_named_wallet_end')}
                 </div>
               </Tip>
-            </div>
-          </section>
-        </div>
+            </WalletContainers>
+          </Section>
+        </DefaultContainer>
         <TermsAndPolicySection>
           <Checkbox
             isChecked={this.state.isAgreement}
@@ -184,18 +286,12 @@ class LoginHome extends Component<Props> {
           isOpen={!this.state.isAgreement}
           agreeTermsAndPolicy={this.updateStatusAgreement}
         />
-        <Background className={styles.bgContainer}>
-          <img
-            className={`${styles.bgContainerImg} ${styles.fadeIn} ${
-              styles.delay500
-            }`}
-            src={bgHero}
-            alt=""
-          />
-          <img className={styles.bgCircle1} src={bgCircle01} alt="" />
-          <img className={styles.bgCircle2} src={bgCircle02} alt="" />
-          <img className={styles.bgCircle3} src={bgCircle03} alt="" />
-          <img className={styles.bgCircle4} src={bgCircle04} alt="" />
+        <Background>
+          <BgContainerImg src={bgHero} />
+          <BgCircle1 src={bgCircle01} />
+          <BgCircle2 src={bgCircle02} />
+          <BgCircle3 src={bgCircle03} />
+          <BgCircle4 src={bgCircle04} />
         </Background>
       </SectionContainer>
     );

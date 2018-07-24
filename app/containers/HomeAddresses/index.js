@@ -7,8 +7,8 @@ import { ms } from '../../styles/helpers';
 
 import { getIdentities } from '../../reduxContent/wallet/selectors';
 
-import Addresses from '../../components/Addresses';
-import ActionPanel from '../../components/ActionPanel';
+import Addresses from '../../components/Addresses/';
+import ActionPanel from '../../components/ActionPanel/';
 
 type Props = {
   identities: array,

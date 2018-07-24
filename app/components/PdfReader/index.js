@@ -27,7 +27,7 @@ export default class Delegate extends Component<Props> {
   props: Props;
   state = initialState;
 
-  async componentDidMount() {
+  async componentWillMount() {
     const { pdfUrl } = this.props;
     if (pdfUrl && /.pdf$/.test(pdfUrl)) {
       this.setState({ fetching: true });

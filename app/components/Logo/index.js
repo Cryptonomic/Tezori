@@ -3,7 +3,7 @@ import styled, { withTheme } from 'styled-components';
 import { ms } from '../../styles/helpers';
 import { logo } from '../../config.json';
 
-const tezosLogo = require(`../../../resources/${logo}`);
+const tezosLogo = require(`../../../resources/${logo}`);// eslint-disable-line import/no-dynamic-require
 
 const Tz = styled.div`
   width: ${ms(7)};
