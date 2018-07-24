@@ -5,7 +5,7 @@ import { ms } from '../../styles/helpers'
 
 const Container = styled.div`
   position: relative;
-`
+`;
 
 const ShowHidePwd = styled.div`
   position: absolute;
@@ -14,7 +14,7 @@ const ShowHidePwd = styled.div`
   color: ${({ theme: { colors } }) => colors.accent };
   font-size: 12px;
   font-weight: 500;
-`
+`;
 
 type Props = {
   label: string,
@@ -35,11 +35,15 @@ const PasswordInput = (props: Props) => {
         style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
         onChange={(_, newVal) => changFunc(newVal)}
       />
-      <ShowHidePwd onClick={onShow}>{isShowed? 'Hide':'Show'}</ShowHidePwd>
-
+      <ShowHidePwd
+        style={{cursor: 'pointer'}}
+        onClick={onShow}>
+        {isShowed? 'Hide':'Show'}
+      </ShowHidePwd>
     </Container>
   )
 };
+
 PasswordInput.defaultProps = {
   isShowed: false,
   containerStyle: {},
