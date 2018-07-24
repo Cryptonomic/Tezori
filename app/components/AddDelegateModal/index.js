@@ -1,13 +1,15 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
+import TezosNumericInput from '../TezosNumericInput'
+import { wrapComponent } from '../../utils/i18n';
 
 import Button from '../Button/';
 import Loader from '../Loader/';
@@ -24,7 +26,8 @@ type Props = {
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
   open: boolean,
-  onCloseClick: () => {}
+  onCloseClick: () => {},
+  t: () => {}
 };
 
 const HelpIcon = styled(TezosIcon)`
@@ -82,13 +85,6 @@ const AmountSendContainer = styled.div`
 const FeeContainer = styled.div`
   width: 45%;
   display: flex;
-`;
-
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 20px;
-  top: 40px;
-  display: block;
 `;
 
 const PasswordButtonContainer = styled.div`
@@ -175,7 +171,7 @@ class AddDelegateModal extends Component<Props> {
   };
 
   render() {
-    const { open, onCloseClick } = this.props;
+    const { open, onCloseClick, t } = this.props;
     const { isLoading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
     const isDisabled = isLoading || !delegate || !amount || !passPhrase;
 
@@ -228,13 +224,7 @@ class AddDelegateModal extends Component<Props> {
         </DelegateContainer>
         <AmountFeePassContainer>
           <AmountSendContainer>
-            <TextField
-              floatingLabelText="Amount"
-              style={{ width: '100%' }}
-              onChange={this.changeAmount}
-              type="number"
-            />
-            <TezosIconInput color='secondary' iconName="tezos" />
+            <TezosNumericInput labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
           </AmountSendContainer>
           <FeeContainer>
             <Fees
@@ -280,4 +270,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(AddDelegateModal);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(AddDelegateModal);

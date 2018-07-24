@@ -1,13 +1,17 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { TextField, Dialog, SelectField, MenuItem } from 'material-ui';
+import { Dialog, SelectField, MenuItem } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../../components/TezosIcon';
 import Button from './../Button/';
 import { H2 } from './../Heading/';
+import { wrapComponent } from '../../utils/i18n';
+import TezosNumericInput from '../TezosNumericInput'
+
 
 import { formatAmount, tezToUtez } from '../../utils/currancy';
 
@@ -18,7 +22,8 @@ type Props = {
   styles?: object,
   underlineStyle?: object,
   fee?: any,
-  onChange?: () => {}
+  onChange?: () => {},
+  t: () => {}
 };
 
 const StyledSaveButton = styled(Button)`
@@ -36,27 +41,16 @@ const StyledCloseIcon = styled(CloseIcon)`
   right: 15px;
 `;
 
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 20px;
-  top: 40px;
-  display: block;
-`;
-
-const FeeInput = styled.div`
-  position: relative;
-`;
-
 class Fee extends Component<Props> {
   props: Props;
   state = {
     open: false,
-    custom: ''
+    custom: null
   };
 
   openConfirmation = () => this.setState({ open: true });
   closeConfirmation = () => this.setState({ open: false });
-  handleCustomChange = (_, custom) => this.setState({ custom });
+  handleCustomChange = (_, maskedCustom, custom) => this.setState({ custom });
   handleSetCustom = () => {
     const { custom } = this.state;
     const { onChange } = this.props;
@@ -73,7 +67,8 @@ class Fee extends Component<Props> {
       styles,
       fee,
       onChange,
-      underlineStyle
+      underlineStyle,
+      t
     } = this.props;
 
     return (
@@ -145,17 +140,7 @@ class Fee extends Component<Props> {
           />
           <div>
             <H2>Enter Custom Amount</H2>
-            <FeeInput>
-              <TextField
-                floatingLabelText="Custom Fee"
-                style={{ width: '100%' }}
-                value={custom}
-                type="number"
-                onChange={this.handleCustomChange}
-              />
-              <TezosIconInput color="secondary" iconName="tezos" />
-            </FeeInput>
-
+            <TezosNumericInput labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
@@ -169,4 +154,4 @@ class Fee extends Component<Props> {
   }
 }
 
-export default connect()(Fee);
+export default compose(wrapComponent, connect())(Fee);
