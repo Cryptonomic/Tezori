@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Dialog, TextField } from 'material-ui';
+import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
 import { ms } from '../styles/helpers';
@@ -9,6 +9,7 @@ import { H5 } from './Heading';
 import Loader from './Loader';
 import Button from './Button';
 import TezosIcon from './TezosIcon';
+import PasswordInput from './PasswordInput';
 
 import styles from './SendConfirmationModal.css';
 
@@ -34,13 +35,6 @@ const PaswordContainer = styled.div`
   align-items: flex-end;
 `;
 
-const TezosSymbol = styled.img`
-  height: 17px;
-  width: 17px;
-  filter: brightness(0%);
-  opacity: 0.5;
-`;
-
 const Heading = styled(H5)`
   margin-bottom: 20px;
   color: ${({ theme: { colors } }) => colors.primary};
@@ -55,9 +49,11 @@ type Props = {
   onPasswordChange?: Function,
   onSend?: Function,
   isLoading?: boolean,
+  isShowedPwd?: boolean,
+  onShowPwd: Function
 };
 
-const SendConfirmationModal = props => {
+const SendConfirmationModal = (props: Props) => {
   const {
     amount,
     address,
@@ -66,7 +62,9 @@ const SendConfirmationModal = props => {
     onPasswordChange,
     password,
     onCloseClick,
-    onSend
+    onSend,
+    isShowedPwd,
+    onShowPwd
   } = props;
 
   return (
@@ -86,18 +84,19 @@ const SendConfirmationModal = props => {
       <AmountContainer>
         <DataToSend>
           {amount}
-          <TezosIcon color='secondary'/>
+          <TezosIcon color='secondary' />
         </DataToSend>
         <Connector>to</Connector>
         <DataToSend>{address}</DataToSend>
       </AmountContainer>
       <PaswordContainer>
-        <TextField
-          floatingLabelText="Wallet Password"
-          style={{ width: '60%' }}
-          type="password"
-          value={password}
-          onChange={onPasswordChange}
+        <PasswordInput
+          label='Wallet Password'
+          isShowed={isShowedPwd}
+          password={password}
+          changFunc={onPasswordChange}
+          onShow={onShowPwd}
+          containerStyle={{width: '70%'}}
         />
         <Button
           buttonTheme="secondary"

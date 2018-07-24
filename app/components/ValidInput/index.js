@@ -33,15 +33,19 @@ const Error = styled.div`
   line-height: 18px;
   color: ${props => (props.color)};
 `
-const EyeIcon = styled(TezosIcon)`
+
+const ShowHidePwd = styled.div`
   position: absolute;
-  top: 38px;
   right: 10px;
+  top: 40px;
+  color: ${({ theme: { colors } }) => colors.accent };
+  font-size: 12px;
+  font-weight: 500;
 `
 const CheckIcon = styled(TezosIcon)`
   position: absolute;
   top: 42px;
-  right: 40px;
+  right: 45px;
 `
 
 type Props = {
@@ -85,9 +89,7 @@ const InputValid = (props: Props) => {
   }
 
   return (
-    <Container
-      className={props.className}
-    >
+    <Container>
       <Content>
         <TextField
           className='input-text-field'
@@ -105,13 +107,7 @@ const InputValid = (props: Props) => {
           color="check"
           onClick={props.onShow}
         />}
-
-        <EyeIcon
-          iconName={props.isShowed? 'view-hide': 'view-show'}
-          size={ms(2)}
-          color="secondary"
-          onClick={props.onShow}
-        />
+        <ShowHidePwd onClick={props.onShow}>{props.isShowed? 'Hide':'Show'}</ShowHidePwd>
       </Content>
       <PasswordStrengthSuggestions>
         {!!props.error && <Error color={borderColor}>{props.error}</Error>}

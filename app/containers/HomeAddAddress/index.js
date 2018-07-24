@@ -31,7 +31,7 @@ const InputWithTooltip = styled.div`
   
   & button {
     position: absolute;
-    top: 50%;
+    top: 56%;
     right: ${ms(-2)};
   }
 `
@@ -76,6 +76,15 @@ const Link = styled.span`
   cursor: pointer;
   text-decoration: underline;
   color: ${ ({ theme: { colors } }) => colors.blue2 };
+`
+
+const ShowHidePwd = styled.div`
+  position: absolute;
+  top: 55%;
+  right: ${ms(4)};
+  color: ${({ theme: { colors } }) => colors.accent };
+  font-size: 12px;
+  font-weight: 500;
 `
 
 const PasswordTooltip = () => {
@@ -135,7 +144,8 @@ class AddAddress extends Component<Props> {
     pkh: '',
     activationCode: '',
     username: '',
-    passPhrase: ''
+    passPhrase: '',
+    isShowedPwd: false
   };
 
   renderTab = (tabName) => {
@@ -180,7 +190,7 @@ class AddAddress extends Component<Props> {
   };
 
   renderAddBody() {
-    const { activeTab, seed, passPhrase, pkh, username, activationCode } = this.state;
+    const { activeTab, seed, passPhrase, pkh, username, activationCode, isShowedPwd } = this.state;
     const { isLoading } = this.props;
     switch ( activeTab ) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
@@ -202,11 +212,12 @@ class AddAddress extends Component<Props> {
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Fundraiser Password"
-                  type="password"
+                  type={isShowedPwd? 'text': 'password'}
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={passPhrase}
                   onChange={(_, newPassPhrase) => this.setState({ passPhrase: newPassPhrase })}
                 />
+                <ShowHidePwd onClick={()=> this.setState({isShowedPwd: !isShowedPwd})}>{isShowedPwd? 'Hide':'Show'}</ShowHidePwd>
 
                 <StyledTooltip position="bottom" content={PasswordTooltip}>
                   <Button buttonTheme="plain">

@@ -4,53 +4,17 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
-import { TextField } from 'material-ui';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import { remote } from 'electron';
 import path from 'path';
-import { ms } from '../../styles/helpers';
 
 import Button from '../../components/Button/';
 import Loader from '../../components/Loader';
-import TezosIcon from "../../components/TezosIcon";
+import PasswordInput from '../../components/PasswordInput';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 
 import styles from './styles.css';
-
-const InputContainer = styled.div`
-  position: relative;
-`
-const EyeIcon = styled(TezosIcon)`
-  position: absolute;
-  top: 38px;
-  right: 10px;
-`
-type Props1 = {
-  isShowed: boolean,
-  changFunc: Function,
-  onShow: Function
-};
-
-const PasswordInput = (props: Props1) => {
-  const { isShowed, changFunc, onShow } = props;
-  return (
-    <InputContainer>
-      <TextField
-        floatingLabelText="Wallet Password"
-        style={{ width: '500px', marginBottom: ms(5) }}
-        type={isShowed? 'text': 'password'}
-        onChange={(_, password) => changFunc(password)}
-      />
-      <EyeIcon
-        iconName={props.isShowed? 'view-hide': 'view-show'}
-        size={ms(2)}
-        color="secondary"
-        onClick={onShow}
-      />      
-    </InputContainer>
-  );
-}
 
 type Props = {
   login: Function,
@@ -74,7 +38,7 @@ class LoginImport extends Component<Props> {
     walletLocation: '',
     walletFileName: '',
     password: '',
-    isShowed: false
+    isShowedPwd: false
   };
 
   openFile = () => {
@@ -110,7 +74,7 @@ class LoginImport extends Component<Props> {
 
   render() {
     const { goBack } = this.props;
-    const { walletFileName, walletLocation, password, isLoading } = this.state;
+    const { walletFileName, walletLocation, password, isLoading, isShowedPwd } = this.state;
 
     return (
       <div className={styles.createContainer}>
@@ -141,9 +105,11 @@ class LoginImport extends Component<Props> {
             <span className={styles.walletFileName}>{walletFileName}</span>
           </div>
           <PasswordInput
-            isShowed={this.state.isShowed}
-            changFunc={this.changePassword}
-            onShow={this.onShow}
+            label='Wallet Password'
+            isShowed={isShowedPwd}
+            password={password}
+            changFunc={(newpassword) => this.setState({ password: newpassword })}
+            onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
           />
           <div className={styles.actionButtonContainer}>
             <Button

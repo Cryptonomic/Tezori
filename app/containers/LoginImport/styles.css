@@ -22,6 +22,7 @@
   display: flex;
   flex-direction: column;
   margin: 0 30px;
+  min-width: 500px;
 }
 
 .walletTitle {
@@ -54,6 +55,7 @@
 
 .actionButtonContainer {
   width: 194px;
+  margin-top: 20px;
 }
 
 .actionButton {

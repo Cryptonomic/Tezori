@@ -71,8 +71,8 @@ class LoginCreate extends Component<Props> {
     isLoading: false,
     walletLocation: false,
     walletFileName: false,
-    password: false,
-    confirmPassword: false,
+    password: '',
+    confirmPassword: '',
     isPasswordValidation: false,    
     isPwdShowed: false,
     isPasswordMatched: false,
@@ -212,7 +212,6 @@ class LoginCreate extends Component<Props> {
                 suggestion={this.state.pwdSuggestion}
                 score={this.state.pwdScore}
                 changFunc={this.changePassword}
-                className={styles.createPasswordField}
                 onShow={() => this.onPasswordShow(0)}            
               />
               <ValidInput
@@ -222,20 +221,19 @@ class LoginCreate extends Component<Props> {
                 error={this.state.confirmPwdText}
                 score={this.state.confirmPwdScore}
                 changFunc={this.confirmPassword}
-                className={styles.confirmPasswordField}
                 onShow={() => this.onPasswordShow(1)}            
               />
-              </div>
             </div>
-            <div className={styles.actionButtonContainer}>
-              <Button
-                className={styles.actionButton}
-                buttonTheme="primary"
-                onClick={() => this.login(CREATE)}
-                disabled={isDisabled}
-              >
-                Create Wallet
-              </Button>
+          </div>
+          <div className={styles.actionButtonContainer}>
+            <Button
+              className={styles.actionButton}
+              buttonTheme="primary"
+              onClick={() => this.login(CREATE)}
+              disabled={isDisabled}
+            >
+              Create Wallet
+            </Button>
           </div>
         </div>
       </div>
