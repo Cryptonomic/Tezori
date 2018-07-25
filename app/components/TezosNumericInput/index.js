@@ -32,7 +32,7 @@ const TezosNumericInput = (props: Props) =>
         onChange={props.handleAmountChange}
         type="text"
       >
-        <CurrencyInput allowEmpty value={props.amount}  onChangeEvent={props.handleAmountChange} />
+        <CurrencyInput precision="6" thousandSeparator='' allowEmpty value={props.amount}  onChangeEvent={props.handleAmountChange} />
       </TextField>
       <TezosIconInput color="secondary" iconName="tezos" />
     </NumericInput>
