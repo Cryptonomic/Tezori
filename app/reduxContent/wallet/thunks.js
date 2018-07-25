@@ -17,7 +17,7 @@ import {
   getSyncIdentity
 } from '../../utils/identity';
 
-import { clearOperationId } from '../../utils/general';
+import { clearOperationId, isServerResponsive } from '../../utils/general';
 
 import { saveUpdatedWallet } from '../../utils/wallet';
 
@@ -194,6 +194,15 @@ export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
     const nodes = state().nodes.toJS();
+
+    if ( !await isServerResponsive(nodes) ) {
+      dispatch(setIsLoading(false));
+      const err = 'Server is offline or not responsive please delay father actions';
+      console.error(err);
+      dispatch(addMessage(err, true));
+      return false;
+    }
+
     let identities = state()
       .wallet.get('identities')
       .toJS();
@@ -295,7 +304,7 @@ export function importAddress(
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
-                `Successfully started account activitation.`,
+                `Successfully started account activation.`,
                 false,
                 operationId
               )
