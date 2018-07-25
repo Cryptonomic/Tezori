@@ -1,6 +1,12 @@
 import { shell } from 'electron';
 import { pick  } from 'lodash';
-import { TezosConseilQuery, TezosOperations, TezosWallet  } from 'conseiljs';
+import {
+  TezosConseilQuery,
+  TezosNode,
+  TezosOperations,
+  TezosWallet
+} from 'conseiljs';
+
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
 import { findAccount, createSelectedAccount } from './account';
@@ -15,6 +21,15 @@ import { blockExplorerHost } from '../config.json';
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 const { generateMnemonic } = TezosWallet;
+
+
+export async function isServerResponsive(nodes) {
+  const selectedTezosNode = getSelectedNode(nodes, TEZOS);
+  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch(() => false );
+  const selectedConseilNode = getSelectedNode(nodes, CONSEIL);
+  const consRes = await TezosConseilQuery.getBlockHead(selectedConseilNode.url, selectedConseilNode.apiKey).catch(() => false );
+  return tezRes && consRes;
+}
 
 /**
  *
