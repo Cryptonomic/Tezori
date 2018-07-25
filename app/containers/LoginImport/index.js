@@ -4,14 +4,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
-import { TextField } from 'material-ui';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import { remote } from 'electron';
 import path from 'path';
-import { ms } from '../../styles/helpers';
 
 import Button from '../../components/Button/';
-import Loader from '../../components/Loader/';
+import Loader from '../../components/Loader';
+import PasswordInput from '../../components/PasswordInput';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 
@@ -33,13 +32,14 @@ const CreateContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  flex-grow: 1; 
 `;
 
 const WalletContainers = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 30px;
+  min-width: 500px;
 `;
 
 const WalletTitle = styled.h3`
@@ -64,6 +64,7 @@ const WalletFileName = styled.span`
 
 const ActionButtonContainer = styled.div`
   width: 194px;
+  margin-top: 30px;
 `;
 
 const ActionButton = styled(Button)`
@@ -81,7 +82,8 @@ class LoginImport extends Component<Props> {
     isLoading: false,
     walletLocation: '',
     walletFileName: '',
-    password: ''
+    password: '',
+    isShowedPwd: false
   };
 
   openFile = () => {
@@ -107,9 +109,18 @@ class LoginImport extends Component<Props> {
     await login(loginType, walletLocation, walletFileName, password);
   };
 
+  changePassword = (password) => {
+    this.setState({ password });
+  }
+
+  onShow = () => {
+    this.setState({isShowed: !this.state.isShowed});
+  }
+
   render() {
     const { goBack } = this.props;
-    const { walletFileName, password, isLoading } = this.state;
+    const { walletFileName, password, isLoading, isShowedPwd } = this.state;
+    const isDisabled = isLoading || !walletFileName || !password;
 
     return (
       <CreateContainer>
@@ -136,23 +147,23 @@ class LoginImport extends Component<Props> {
           <ImportButtonContainer>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
-            </Button>
+            </Button>          
             <WalletFileName>
               { walletFileName }
             </WalletFileName>
           </ImportButtonContainer>
-          <TextField
-            floatingLabelText="Wallet Password"
-            style={{ width: '500px', marginBottom: ms(5) }}
-            type="password"
-            value={password}
-            onChange={(_, password) => this.setState({ password })}
+          <PasswordInput
+            label='Wallet Password'
+            isShowed={isShowedPwd}
+            password={password}
+            changFunc={(newpassword) => this.setState({ password: newpassword })}
+            onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
           />
           <ActionButtonContainer>
             <ActionButton
               onClick={() => this.login(IMPORT)}
               buttonTheme="primary"
-              disabled={isLoading}
+              disabled={isDisabled}
             >
               Import
             </ActionButton>

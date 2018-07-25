@@ -30,18 +30,22 @@ const Suggestion = styled.div`
 const Error = styled.div`
   font-size: 12px;
   line-height: 18px;
-  color: ${props => props.color};
-`;
-const EyeIcon = styled(TezosIcon)`
+  color: ${props => (props.color)};
+`
+
+const ShowHidePwd = styled.div`
   position: absolute;
-  top: 38px;
   right: 10px;
-`;
+  top: 40px;
+  color: ${({ theme: { colors } }) => colors.accent };
+  font-size: 12px;
+  font-weight: 500;
+`
 const CheckIcon = styled(TezosIcon)`
   position: absolute;
   top: 42px;
-  right: 40px;
-`;
+  right: 45px;
+`
 
 type Props = {
   label: string,
@@ -51,8 +55,7 @@ type Props = {
   status?: boolean,
   score?: number,
   changFunc: Function,
-  onShow: Function,
-  className?: string
+  onShow: Function
 };
 
 const inputStyles = {
@@ -91,7 +94,7 @@ const InputValid = (props: Props) => {
   }
 
   return (
-    <Container className={props.className}>
+    <Container>
       <Content>
         <TextField
           className="input-text-field"
@@ -103,21 +106,17 @@ const InputValid = (props: Props) => {
           underlineFocusStyle={{ borderColor, width }}
           onChange={(_, newVal) => props.changFunc(newVal)}
         />
-        {props.score === 4 && (
-          <CheckIcon
-            iconName="checkmark2"
-            size={ms(0)}
-            color="check"
-            onClick={props.onShow}
-          />
-        )}
-
-        <EyeIcon
-          iconName={props.isShowed ? 'view-hide' : 'view-show'}
-          size={ms(2)}
-          color="secondary"
+        {props.score===4 && <CheckIcon
+          iconName='checkmark2'
+          size={ms(0)}
+          color="check"
           onClick={props.onShow}
-        />
+        />}
+        <ShowHidePwd
+          onClick={props.onShow}
+          style={{cursor: 'pointer'}}>
+          {props.isShowed? 'Hide':'Show'}
+        </ShowHidePwd>
       </Content>
       <PasswordStrengthSuggestions>
         {!!props.error && <Error color={borderColor}>{props.error}</Error>}

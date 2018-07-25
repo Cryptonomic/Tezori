@@ -143,9 +143,9 @@ class LoginCreate extends Component<Props> {
     isLoading: false,
     walletLocation: false,
     walletFileName: false,
-    password: false,
-    confirmPassword: false,
-    isPasswordValidation: false,
+    password: '',
+    confirmPassword: '',
+    isPasswordValidation: false,    
     isPwdShowed: false,
     isPasswordMatched: false,
     isConfirmPwdShowed: false,
@@ -330,7 +330,7 @@ class LoginCreate extends Component<Props> {
                 suggestion={this.state.pwdSuggestion}
                 score={this.state.pwdScore}
                 changFunc={this.changePassword}
-                onShow={() => this.onPasswordShow(0)}
+                onShow={() => this.onPasswordShow(0)}            
               />
               <ValidInput
                 label="Confirm Wallet Password"
