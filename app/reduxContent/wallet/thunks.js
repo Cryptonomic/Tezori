@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
-import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
+import { FUNDRAISER, GENERATE_MNEMONIC, RESTORE } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
@@ -306,6 +306,10 @@ export function importAddress(
           }
           break;
         }
+        case RESTORE:
+          identity = await unlockIdentityWithMnemonic(seed, '');
+          identity.storeTypes = storeTypes.RESTORE;
+          break;
         default:
           break;
       }

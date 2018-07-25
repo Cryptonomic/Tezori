@@ -13,6 +13,7 @@ import Loader from '../../components/Loader/';
 
 import Tooltip from '../../components/Tooltip/';
 import TezosIcon from '../../components/TezosIcon/';
+import RestoreBackup from '../../components/RestoreBackup';
 
 import CreateAccountSlide from '../../components/CreateAccountSlide/';
 import { importAddress } from '../../reduxContent/wallet/thunks';
@@ -253,6 +254,10 @@ class AddAddress extends Component<Props> {
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;
+      case ADD_ADDRESS_TYPES.RESTORE:        
+        return (
+          <RestoreBackup />
+        )
       case ADD_ADDRESS_TYPES.FUNDRAISER:
       default:
         return (
@@ -280,7 +285,8 @@ class AddAddress extends Component<Props> {
                 />
                 <ShowHidePwd
                   onClick={()=> this.setState({isShowedPwd: !isShowedPwd})}
-                  style={{cursor: 'pointer'}}>
+                  style={{cursor: 'pointer'}}
+                >
                   {isShowedPwd? 'Hide':'Show'}
                 </ShowHidePwd>
 
