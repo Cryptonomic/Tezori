@@ -195,3 +195,77 @@ export function clearOperationId( operationId ) {
   }
   return operationId;
 }
+
+/*
+const state = {
+  identities: [
+    {
+      publicKeyHash:'',
+      order: 0,
+      status: 'ready',
+      storeTypes: '',
+      balance: '',
+      operations: {},
+      transactions: [],
+      accounts: [
+        {
+          accountId: '',
+          order: 0,
+          balance: 0,
+          delegateValue: null,
+          manager: '',
+          transactions: [],
+          status: 'ready',
+          operations: {}
+        }
+      ]
+    }
+  ]
+};
+
+ amount
+ :
+ null
+ balance
+ :
+ "154000000"
+ blockHash
+ :
+ "BMDujqeRpDC4HFmHDmRekzs1XFt8SZEtWRM5NwEFFu5bykpkBMN"
+ blockLevel
+ :
+ 11225
+ delegate
+ :
+ "tz1anMWAvvrGoR7XRK3XvmJcq7pdB8fbSWRZ"
+ destination
+ :
+ null
+ fee
+ :
+ "116717"
+ gasLimit
+ :
+ null
+ kind
+ :
+ "origination"
+ operationGroupHash
+ :
+ "opEqK5QDwgjXfHXssnjuEojBrkRhATS497X8twkMeqggz2xbRXf"
+ operationId
+ :
+ 997116
+ pkh
+ :
+ null
+ source
+ :
+ "tz1cnkCgZ6Q7EcTMoRGsc4ukDzgUmUGCMQmX"
+ storageLimit
+ :
+ null
+ timestamp
+ :
+ 1532401947000
+*/
