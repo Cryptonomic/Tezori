@@ -18,7 +18,7 @@ const NumericInput = styled.div`
 
 type Props = {
   handleAmountChange: Function,
-  amount: number | null | string,
+  amount: ?number,
   labelText: string
 };
 

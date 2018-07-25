@@ -23,12 +23,11 @@ export function fetchTransactionAverageFees() {
 
 export function validateAmount(amount, toAddress) {
   return async dispatch => {
-    const parsedAmount = amount;
-    const amountInUtez = tezToUtez(parsedAmount);
+    const amountInUtez = tezToUtez(amount);
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount' },
-      { value: parsedAmount, type: 'validAmount' },
+      { value: amount, type: 'validAmount' },
       { value: amountInUtez, type: 'posNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
     ];
