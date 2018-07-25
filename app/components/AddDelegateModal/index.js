@@ -125,7 +125,7 @@ class AddDelegateModal extends Component<Props> {
     }
   }
 
-  changeAmount = (_, amount) => this.setState({ amount });
+  changeAmount = (_, maskedAmount, amount) => this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
