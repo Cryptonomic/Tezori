@@ -19,7 +19,6 @@ const ShowHidePwd = styled.div`
 type Props = {
   label: string,
   isShowed?: boolean,
-  password?: string,
   containerStyle?: object,
   changFunc: Function,
   onShow: Function
@@ -35,9 +34,7 @@ const PasswordInput = (props: Props) => {
         style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
         onChange={(_, newVal) => changFunc(newVal)}
       />
-      <ShowHidePwd
-        style={{cursor: 'pointer'}}
-        onClick={onShow}>
+      <ShowHidePwd style={{cursor: 'pointer'}} onClick={onShow}>
         {isShowed? 'Hide':'Show'}
       </ShowHidePwd>
     </Container>
@@ -46,8 +43,7 @@ const PasswordInput = (props: Props) => {
 
 PasswordInput.defaultProps = {
   isShowed: false,
-  containerStyle: {},
-  password: ''
+  containerStyle: {}
 }
 
 export default PasswordInput

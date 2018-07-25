@@ -197,7 +197,7 @@ export function syncWallet() {
 
     if ( !await isServerResponsive(nodes) ) {
       dispatch(setIsLoading(false));
-      const err = 'Server is offline or not responsive please delay father actions';
+      const err = 'Something\'s wrong with our servers. Please delay further actions.';
       console.error(err);
       dispatch(addMessage(err, true));
       return false;
