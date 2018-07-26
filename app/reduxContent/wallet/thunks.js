@@ -316,9 +316,26 @@ export function importAddress(
           break;
         }
         case RESTORE:
+        {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           identity.storeTypes = storeTypes.RESTORE;
+          const conseilNode = getSelectedNode(nodes, CONSEIL);
+
+          const account = await getAccount(
+            conseilNode.url,
+            identity.publicKeyHash,
+            conseilNode.apiKey
+          ).catch(() => false);
+          
+          if (!account) {
+            const title = 'The account does not exist.'
+            dispatch(addMessage(title, true));
+            dispatch(setIsLoading(false));
+            return null;
+          }
+    
           break;
+        }
         default:
           break;
       }
