@@ -62,6 +62,16 @@ export default merge.smart(baseConfig, {
     rules: [
       {
         test: /\.jsx?$/,
+        enforce: "pre",
+        exclude: /node_modules/,
+        loader: "eslint-loader",
+        options: {
+          formatter: require("eslint-formatter-pretty"),
+          failOnError: true
+        }
+      },
+      {
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
