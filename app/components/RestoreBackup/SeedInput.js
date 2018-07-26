@@ -105,16 +105,20 @@ const ChipContent = (props: ChipProps) => {
   return <ChipContainer><span>{index+1}</span>{value}</ChipContainer>
 }
 
-const getSuggestions = (inputValue) => {
+const getSuggestions = (inputValue, selectedItems) => {
   if(inputValue.length<2) {
     return [];
   }
-  return seedJson.filter(suggestion => (!inputValue || suggestion.label.toLowerCase().startsWith(inputValue.toLowerCase())))
+  return seedJson.filter(suggestion => {
+    if (selectedItems.indexOf(suggestion.label) > -1) {
+      return false;
+    }
+    return suggestion.label.toLowerCase().startsWith(inputValue.toLowerCase());
+  })
 }
 
 const styles = () => ({
   container: {
-    flexGrow: 1,
     position: 'relative',
   },
   inputRoot: {
@@ -124,7 +128,7 @@ const styles = () => ({
 });
 
 type Props = {
-  selectedItem: array,
+  selectedItems: array,
   inputValue: string,
   classes?: any,
   onChangeInput: Function,
@@ -137,39 +141,42 @@ class SeedInput extends Component<Props> {
   }
 
   handleKeyDown = event => {
-    const { inputValue, selectedItem, onChangeItems } = this.props;
-    if (selectedItem.length && !inputValue.length && keycode(event) === 'backspace') {
-      const newItems = selectedItem.slice(0, selectedItem.length - 1);
+    const { inputValue, selectedItems, onChangeItems } = this.props;
+    if (selectedItems.length && !inputValue.length && keycode(event) === 'backspace') {
+      const newItems = selectedItems.slice(0, selectedItems.length - 1);
       onChangeItems(newItems);
     }
   };
 
   handleInputChange = event => {
-    const { onChangeInput } = this.props;
+    const { onChangeInput, selectedItems } = this.props;
+    if (selectedItems.length>14) {
+      return;
+    }
     const newValue = event.target.value;
     onChangeInput(newValue);
   };
 
   handleChange = item => {
-    let { selectedItem } = this.props;
+    let { selectedItems } = this.props;
     const { onChangeItems } = this.props;
 
-    if (selectedItem.indexOf(item) === -1) {
-      selectedItem = [...selectedItem, item];
+    if (selectedItems.indexOf(item) === -1) {
+      selectedItems = [...selectedItems, item];
     }   
-    onChangeItems(selectedItem);
+    onChangeItems(selectedItems);
   };
 
   handleDelete = item => () => {
-    const { onChangeItems, selectedItem } = this.props;
-    selectedItem.splice(selectedItem.indexOf(item), 1);
-    onChangeItems(selectedItem);
+    const { onChangeItems, selectedItems } = this.props;
+    selectedItems.splice(selectedItems.indexOf(item), 1);
+    onChangeItems(selectedItems);
   };
 
   render() {
-    const { classes, inputValue, selectedItem } = this.props;
+    const { classes, inputValue, selectedItems } = this.props;
     return (
-      <Downshift inputValue={inputValue} onChange={this.handleChange} selectedItem={selectedItem}>
+      <Downshift inputValue={inputValue} onChange={this.handleChange} selectedItem={selectedItems} defaultHighlightedIndex={0}>
         {({
           getInputProps,
           getItemProps,
@@ -183,7 +190,7 @@ class SeedInput extends Component<Props> {
               fullWidth: true,
               classes,
               InputProps: getInputProps({
-                startAdornment: selectedItem.map((item, index) => {
+                startAdornment: selectedItems.map((item, index) => {
 
                   return (
                     <ChipWrapper
@@ -203,7 +210,7 @@ class SeedInput extends Component<Props> {
             })}
             {isOpen ? (
               <PaperWrapper square>
-                {getSuggestions(inputValue2).map((suggestion, index) =>
+                {getSuggestions(inputValue2, selectedItems).map((suggestion, index) =>
                   renderSuggestion({
                     suggestion,
                     index,

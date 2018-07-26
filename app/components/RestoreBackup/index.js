@@ -12,8 +12,10 @@ import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
 
 const MainContainer = styled.div`
   position: relative;
-  height: 300px;
+  min-height: 300px;
   padding: 0 10px;
+  display: flex;
+  flex-direction: column;
 `
 const RestoreHeader = styled.div`
   font-size: 18px;
@@ -42,13 +44,16 @@ const RestoreTabItem = styled.div`
 `
 
 const ToggleWrapper = styled(Toggle)`
-  max-width: 380px;
+  max-width: 60%;  
   margin-top: 35px;
 `
+const RestoreFooter = styled.div`
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 50px;
+`
 const RestoreButton = styled(Button)`
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
   width: 194px;
   height: 50px;
   text-align: center;
@@ -135,7 +140,7 @@ class RestoreBackup extends Component<Props> {
         {type==='phrase' && 
           <Fragment>
             <SeedInput
-              selectedItem={seeds}
+              selectedItems={seeds}
               inputValue={inputValue}
               onChangeInput={this.onChangeInput}
               onChangeItems={this.onChangeItems}
@@ -156,6 +161,7 @@ class RestoreBackup extends Component<Props> {
                 password={password}
                 changFunc={(newpassword) => this.setState({ password: newpassword })}
                 onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
+                containerStyle={{width: '60%'}}
               />
             }
           </Fragment>        
@@ -170,13 +176,15 @@ class RestoreBackup extends Component<Props> {
           />
 
         }
-        <RestoreButton
-          buttonTheme="primary"
-          disabled={isdisabled}
-          onClick={this.importAddress}
-        >
-          Restore
-        </RestoreButton>
+        <RestoreFooter>
+          <RestoreButton
+            buttonTheme="primary"
+            disabled={isdisabled}
+            onClick={this.importAddress}
+          >
+            Restore
+          </RestoreButton>
+        </RestoreFooter>
       </MainContainer>
     );
   }
