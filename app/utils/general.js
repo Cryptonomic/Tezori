@@ -196,7 +196,7 @@ export function clearOperationId( operationId ) {
   return operationId;
 }
 
-/*
+
 const state = {
   identities: [
     {
@@ -206,66 +206,50 @@ const state = {
       storeTypes: '',
       balance: '',
       operations: {},
-      transactions: [],
+      transactions: [
+        {
+          blockLevel: 11225,
+          delegate: "tz1anMWAvvrGoR7XRK3XvmJcq7pdB8fbSWRZ",
+          destination: null,
+          fee: "116717",
+          kind: "origination",
+          operationGroupHash: "opEqK5QDwgjXfHXssnjuEojBrkRhATS497X8twkMeqggz2xbRXf",
+          operationId: 997116,
+          source: "tz1cnkCgZ6Q7EcTMoRGsc4ukDzgUmUGCMQmX",
+          status: 'ready',
+          timestamp: 1532401947000
+        }
+      ],
       accounts: [
         {
           accountId: '',
           order: 0,
           balance: 0,
+          fee: "116717",
           delegateValue: null,
           manager: '',
-          transactions: [],
           status: 'ready',
-          operations: {}
+          operations: {},
+          transactions: []
         }
       ]
     }
   ]
 };
-
- amount
- :
- null
- balance
- :
- "154000000"
- blockHash
- :
- "BMDujqeRpDC4HFmHDmRekzs1XFt8SZEtWRM5NwEFFu5bykpkBMN"
- blockLevel
- :
- 11225
- delegate
- :
- "tz1anMWAvvrGoR7XRK3XvmJcq7pdB8fbSWRZ"
- destination
- :
- null
- fee
- :
- "116717"
- gasLimit
- :
- null
- kind
- :
- "origination"
- operationGroupHash
- :
- "opEqK5QDwgjXfHXssnjuEojBrkRhATS497X8twkMeqggz2xbRXf"
- operationId
- :
- 997116
- pkh
- :
- null
- source
- :
- "tz1cnkCgZ6Q7EcTMoRGsc4ukDzgUmUGCMQmX"
- storageLimit
- :
- null
- timestamp
- :
- 1532401947000
+/*
+ amoun: null
+ balance: "154000000"
+ blockHash: "BMDujqeRpDC4HFmHDmRekzs1XFt8SZEtWRM5NwEFFu5bykpkBMN"
+ blockLevel: 11225
+ delegate: "tz1anMWAvvrGoR7XRK3XvmJcq7pdB8fbSWRZ"
+ destination: null
+ fee: "116717"
+ gasLimit: null
+ kind: "origination"
+ operationGroupHash: "opEqK5QDwgjXfHXssnjuEojBrkRhATS497X8twkMeqggz2xbRXf"
+ operationId: 997116
+ pkh: null
+ source: "tz1cnkCgZ6Q7EcTMoRGsc4ukDzgUmUGCMQmX"
+ storageLimit: null
+ timestamp: 1532401947000
 */
