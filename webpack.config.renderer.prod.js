@@ -5,7 +5,6 @@
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
@@ -180,17 +179,6 @@ export default merge.smart(baseConfig, {
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true'
-    }),
-
-    new CopyWebpackPlugin(
-      [
-        {
-          from: 'app/locales/',
-          to: 'locales',
-          toType: 'dir'
-        }
-      ],
-      {}
-    )
+    })
   ]
 });
