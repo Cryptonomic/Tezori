@@ -106,7 +106,10 @@ const ChipContent = (props: ChipProps) => {
 }
 
 const getSuggestions = (inputValue) => {
-  return seedJson.filter(suggestion => (!inputValue || suggestion.label.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1))
+  if(inputValue.length<2) {
+    return [];
+  }
+  return seedJson.filter(suggestion => (!inputValue || suggestion.label.toLowerCase().startsWith(inputValue.toLowerCase())))
 }
 
 const styles = () => ({
