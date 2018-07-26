@@ -7,7 +7,6 @@ import Button from '../Button/';
 import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
 
-
 const TooltipContainer = styled.div`
   padding: 10px;
   color: #000;
@@ -67,19 +66,33 @@ const renderToolTipComponent = () => {
     </TooltipContainer>
   );
 };
+const validateAddress = (event, changeDelegate)=>{
+  const delegateText = event.target.value;
+  const regEx =  /^(tz1|tz2|tz3)([a-zA-Z1-9]{33})$/;
 
+  if(!regEx.test(delegateText) && delegateText !== '') {
+    error = 'The delegate address is not valid';
+  } else {
+    error = '';
+  }
+
+  changeDelegate(delegateText);
+}
 type Props = {
   labelText: string,
   changeDelegate: Function,
   tooltip: boolean
 };
 
+let error = "";
+
 const InputAddress = (props: Props) => (
   <DelegateContainer>
     <TextField
       floatingLabelText={props.labelText}
       style={{ width: '100%' }}
-      onChange={props.changeDelegate}
+      onChange={(e)=> validateAddress(e,props.changeDelegate)}
+      errorText={error}
     />
     {props.tooltip && 
     <Tooltip
