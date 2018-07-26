@@ -126,6 +126,7 @@ const styles = () => ({
 type Props = {
   selectedItem: array,
   inputValue: string,
+  classes?: any,
   onChangeInput: Function,
   onChangeItems: Function
 };

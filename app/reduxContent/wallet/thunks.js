@@ -316,7 +316,7 @@ export function importAddress(
           break;
         }
         case RESTORE:
-          identity = await unlockIdentityWithMnemonic(seed, '');
+          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           identity.storeTypes = storeTypes.RESTORE;
           break;
         default:
