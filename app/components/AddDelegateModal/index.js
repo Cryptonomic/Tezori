@@ -13,7 +13,6 @@ import Fees from '../Fees/';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
 
-
 import {
   createNewAccount,
   fetchOriginationAverageFees

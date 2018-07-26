@@ -9,6 +9,7 @@ import Button from '../Button/';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
 import SendConfirmationModal from '../SendConfirmationModal';
+import InputAddress from '../InputAddress';
 
 import {
   validateAmount,
@@ -137,12 +138,7 @@ class Send extends Component<Props> {
 
     return (
       <SendContainer>
-        <TextField
-          floatingLabelText="Address"
-          style={{ width: '100%' }}
-          value={toAddress}
-          onChange={this.handleToAddressChange}
-        />
+        <InputAddress tooltip={false} labelText="Address" changeDelegate={this.handleToAddressChange} />
         <AmountContainer>
           <InputAmount>
             <TextField
