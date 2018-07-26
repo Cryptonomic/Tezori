@@ -58,7 +58,7 @@ const initialState = {
   isConfirmationModalOpen: false,
   password: '',
   toAddress: '',
-  amount: null,
+  amount: '',
   fee: 100,
   isShowedPwd: false,
   averageFees: {

@@ -39,7 +39,7 @@ const Heading = styled(H5)`
 `;
 
 type Props = {
-  amount?: number | null | string,
+  amount: ?string,
   password?: string,
   address?: string,
   open?: boolean,
@@ -88,7 +88,7 @@ const SendConfirmationModal = (props: Props) => {
       <Heading>Do you confirm that you want to send</Heading>
       <AmountContainer>
         <DataToSend>
-          {amount}
+          {parseFloat(amount)}
           <TezosIcon color="secondary" iconName="tezos" />
         </DataToSend>
         <Connector>to</Connector>

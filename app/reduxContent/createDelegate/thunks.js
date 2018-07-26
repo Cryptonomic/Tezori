@@ -37,11 +37,11 @@ export function createNewAccount(
     const identities = state()
       .wallet.get('identities')
       .toJS();
-    const amountInUtez = tezToUtez(amount);
+    const amountInUtez = tezToUtez(parseFloat(amount));
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount' },
-      { value: amount, type: 'validAmount' },
+      { value: parseFloat(amount), type: 'validAmount' },
       { value: amountInUtez, type: 'posNum', name: 'Amount' },
       { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase' },
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' }

@@ -45,12 +45,12 @@ class Fee extends Component<Props> {
   props: Props;
   state = {
     open: false,
-    custom: null
+    custom: ''
   };
 
   openConfirmation = () => this.setState({ open: true });
   closeConfirmation = () => this.setState({ open: false });
-  handleCustomChange = (_, maskedCustom, custom) => this.setState({ custom });
+  handleCustomChange = (custom) => this.setState({ custom });
   handleSetCustom = () => {
     const { custom } = this.state;
     const { onChange } = this.props;

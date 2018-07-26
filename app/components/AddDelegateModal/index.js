@@ -102,7 +102,7 @@ const DelegateButton = styled(Button)`
 const defaultState = {
   isLoading: false,
   delegate: '',
-  amount: null,
+  amount: '',
   fee: 100,
   passPhrase: '',
   isShowedPwd: false,
@@ -125,7 +125,7 @@ class AddDelegateModal extends Component<Props> {
     }
   }
 
-  changeAmount = (_, maskedAmount, amount) => this.setState({ amount });
+  changeAmount = (amount) => this.setState({ amount });
   changeDelegate = (_, delegate) => this.setState({ delegate });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });

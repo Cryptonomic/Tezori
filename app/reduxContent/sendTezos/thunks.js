@@ -23,11 +23,11 @@ export function fetchTransactionAverageFees() {
 
 export function validateAmount(amount, toAddress) {
   return async dispatch => {
-    const amountInUtez = tezToUtez(amount);
+    const amountInUtez = tezToUtez(parseFloat(amount));
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount' },
-      { value: amount, type: 'validAmount' },
+      { value: parseFloat(amount), type: 'validAmount' },
       { value: amountInUtez, type: 'posNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
     ];
@@ -92,7 +92,7 @@ export function sendTez(
     if (res) {
       dispatch(
         addMessage(
-          `Success! You sent ${amount} tz.`,
+          `Success! You sent ${parseFloat(amount)} tz.`,
           false,
           clearOperationId(res.operationGroupID)
         )

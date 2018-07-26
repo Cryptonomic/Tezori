@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { TextField } from 'material-ui';
-import CurrencyInput from 'react-currency-input';
 
 import TezosIcon from '../TezosIcon';
 
@@ -16,9 +15,28 @@ const NumericInput = styled.div`
   position: relative;
 `;
 
+const validateInput = (event, handleChange) => {
+  const amount = event.target.value;
+  let counter = 0;
+
+  let validatedAmount = amount
+    .replace(/^[.]/gi, '')
+    .replace(/[^0-9.]/gi, '')
+    .replace(/\./g, () => counter++ ? '' : '.');
+
+  const precisionCount = validatedAmount.includes('.') ? validatedAmount.split(".")[1].length : 0;
+  if (precisionCount > 6) {
+    const splitedAmount = validatedAmount.split(".");
+    const fractional = splitedAmount[1].substring(0, 6);
+    validatedAmount = `${splitedAmount[0]}.${fractional}`;
+  };
+
+  handleChange(validatedAmount);
+};
+
 type Props = {
   handleAmountChange: Function,
-  amount: ?number,
+  amount: ?string,
   labelText: string
 };
 
@@ -29,13 +47,11 @@ const TezosNumericInput = (props: Props) =>
         floatingLabelText={props.labelText}
         style={{ width: '100%' }}
         value={props.amount}
-        onChange={props.handleAmountChange}
+        onChange={(e) => validateInput(e, props.handleAmountChange)}
         type="text"
-      >
-        <CurrencyInput precision="6" thousandSeparator='' allowEmpty value={props.amount}  onChangeEvent={props.handleAmountChange} />
-      </TextField>
+      />
       <TezosIconInput color="secondary" iconName="tezos" />
     </NumericInput>
-      );
-    
+  );
+
 export default TezosNumericInput;
