@@ -224,7 +224,7 @@ class AddDelegateModal extends Component<Props> {
         </DelegateContainer>
         <AmountFeePassContainer>
           <AmountSendContainer>
-            <TezosNumericInput labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
           </AmountSendContainer>
           <FeeContainer>
             <Fees

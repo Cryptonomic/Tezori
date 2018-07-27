@@ -141,7 +141,7 @@ class Send extends Component<Props> {
         />
         <AmountContainer>
           <InputAmount>
-            <TezosNumericInput labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
           </InputAmount>
           <Fees
             styles={{ width: '50%' }}

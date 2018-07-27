@@ -140,7 +140,7 @@ class Fee extends Component<Props> {
           />
           <div>
             <H2>Enter Custom Amount</H2>
-            <TezosNumericInput labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}

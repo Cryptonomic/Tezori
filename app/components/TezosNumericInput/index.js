@@ -15,20 +15,24 @@ const NumericInput = styled.div`
   position: relative;
 `;
 
-const validateInput = (event, handleChange) => {
+const validateInput = (event, handleChange, decimalSeparator) => {
+  const separator = decimalSeparator;
   const amount = event.target.value;
+  const preventSeparatorAtStart = new RegExp(`^[${separator}]`,"g");
+  const allowOnlyNumbers = new RegExp(`[^0-9${separator}]`,"g");
+  const allowOnlyOneSeparator = new RegExp(`\\${separator}`,"g");
   let counter = 0;
 
   let validatedAmount = amount
-    .replace(/^[.]/gi, '')
-    .replace(/[^0-9.]/gi, '')
-    .replace(/\./g, () => counter++ ? '' : '.');
+    .replace(preventSeparatorAtStart, '')
+    .replace(allowOnlyNumbers, '')
+    .replace(allowOnlyOneSeparator, () => counter++ ? '' : separator);
 
-  const precisionCount = validatedAmount.includes('.') ? validatedAmount.split(".")[1].length : 0;
+  const precisionCount = validatedAmount.includes(separator) ? validatedAmount.split(separator)[1].length : 0;
   if (precisionCount > 6) {
-    const splitedAmount = validatedAmount.split(".");
+    const splitedAmount = validatedAmount.split(separator);
     const fractional = splitedAmount[1].substring(0, 6);
-    validatedAmount = `${splitedAmount[0]}.${fractional}`;
+    validatedAmount = `${splitedAmount[0]}${separator}${fractional}`;
   };
 
   handleChange(validatedAmount);
@@ -37,7 +41,8 @@ const validateInput = (event, handleChange) => {
 type Props = {
   handleAmountChange: Function,
   amount: ?string,
-  labelText: string
+  labelText: string,
+  decimalSeparator: string
 };
 
 const TezosNumericInput = (props: Props) =>
@@ -47,7 +52,7 @@ const TezosNumericInput = (props: Props) =>
         floatingLabelText={props.labelText}
         style={{ width: '100%' }}
         value={props.amount}
-        onChange={(e) => validateInput(e, props.handleAmountChange)}
+        onChange={(e) => validateInput(e, props.handleAmountChange, props.decimalSeparator)}
         type="text"
       />
       <TezosIconInput color="secondary" iconName="tezos" />
