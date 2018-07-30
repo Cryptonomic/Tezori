@@ -54,7 +54,7 @@ class Fee extends Component<Props> {
   handleSetCustom = () => {
     const { custom } = this.state;
     const { onChange } = this.props;
-    onChange(tezToUtez(custom));
+    onChange(tezToUtez(custom.replace(/,/g,'.')));
     this.closeConfirmation();
   };
 
@@ -113,10 +113,10 @@ class Fee extends Component<Props> {
           />
           {custom ? (
             <MenuItem
-              value={tezToUtez(custom)}
+              value={tezToUtez(custom.replace(/,/g,'.'))}
               primaryText={
                 <div>
-                  Custom Fee: {formatAmount(tezToUtez(custom))}{' '}
+                  Custom Fee: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
                   <TezosIcon color="black" iconName="tezos" />
                 </div>
               }

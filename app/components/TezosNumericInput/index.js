@@ -26,7 +26,7 @@ const validateInput = (event, handleChange, decimalSeparator) => {
   let validatedAmount = amount
     .replace(preventSeparatorAtStart, '')
     .replace(allowOnlyNumbers, '')
-    .replace(allowOnlyOneSeparator, () => counter++ ? '' : separator);
+    .replace(allowOnlyOneSeparator, () => {counter += 1; return counter > 1 ? '' : separator});
 
   const precisionCount = validatedAmount.includes(separator) ? validatedAmount.split(separator)[1].length : 0;
   if (precisionCount > 6) {
@@ -39,7 +39,7 @@ const validateInput = (event, handleChange, decimalSeparator) => {
 };
 
 type Props = {
-  handleAmountChange: Function,
+  handleAmountChange: () => {},
   amount: ?string,
   labelText: string,
   decimalSeparator: string

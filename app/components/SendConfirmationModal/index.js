@@ -88,7 +88,7 @@ const SendConfirmationModal = (props: Props) => {
       <Heading>Do you confirm that you want to send</Heading>
       <AmountContainer>
         <DataToSend>
-          {parseFloat(amount)}
+          {amount}
           <TezosIcon color="secondary" iconName="tezos" />
         </DataToSend>
         <Connector>to</Connector>
