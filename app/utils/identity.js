@@ -10,6 +10,7 @@ export function createIdentity(identity) {
     transactions: [],
     balance: 0,
     accounts: [],
+    counter: 1,
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
@@ -34,6 +35,7 @@ export async function getSyncIdentity(identities, identity, nodes) {
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, publicKeyHash );
   identity = await activateAndUpdateAccount(identity, keyStore, nodes);
   const { selectedAccountHash } = getSelectedHash();
+  console.log('-debug: identity', identity);
   /*
    *  we are taking state identity accounts overriding their state
    *  with the new account we got from setAccounts.. check if any of any new accounts
@@ -47,6 +49,8 @@ export async function getSyncIdentity(identities, identity, nodes) {
       console.error(error);
       return [];
     });
+
+  console.log('-debug: accounts', accounts);
 
   const stateAccountIndices = identity.accounts
     .map( account =>

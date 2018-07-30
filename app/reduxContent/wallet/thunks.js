@@ -8,7 +8,10 @@ import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
 
-import { findAccountIndex, getSyncAccount } from '../../utils/account';
+import {
+  findAccountIndex,
+  getSyncAccount
+} from '../../utils/account';
 
 import {
   findIdentity,
@@ -19,7 +22,7 @@ import {
 
 import { clearOperationId, isServerResponsive } from '../../utils/general';
 
-import { saveUpdatedWallet } from '../../utils/wallet';
+import { saveUpdatedWallet, loadPersistedState, persistWalletState } from '../../utils/wallet';
 
 import {
   logout,
@@ -36,8 +39,7 @@ import { getSelectedNode } from '../../utils/nodes';
 const {
   unlockFundraiserIdentity,
   unlockIdentityWithMnemonic,
-  createWallet,
-  loadWallet
+  createWallet
 } = TezosWallet;
 
 const { getAccount } = TezosConseilQuery;
@@ -163,6 +165,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
     }
 
     dispatch(updateIdentity(identity));
+    await persistWalletState(state().wallet.toJS());
   };
 }
 
@@ -187,6 +190,7 @@ export function syncIdentity(publicKeyHash) {
     });
 
     dispatch(updateIdentity(identity));
+    await persistWalletState(state().wallet.toJS());
   };
 }
 
@@ -224,6 +228,7 @@ export function syncWallet() {
     );
     dispatch(setIdentities(identities));
     dispatch(updateFetchedTime(new Date()));
+    await persistWalletState(state().wallet.toJS());
     dispatch(setIsLoading(false));
   };
 }
@@ -321,7 +326,9 @@ export function importAddress(
 
       if (identity) {
         const { publicKeyHash } = identity;
-        if (findIdentityIndex(identities.toJS(), publicKeyHash) === -1) {
+        const jsIdentities = identities.toJS();
+        if (findIdentityIndex(jsIdentities, publicKeyHash) === -1) {
+          identity.counter = jsIdentities.length + 1;
           identity = createIdentity(identity);
           dispatch(addNewIdentity(identity));
           identities = state()
@@ -333,6 +340,7 @@ export function importAddress(
             walletFileName,
             password
           );
+          await persistWalletState(state().wallet.toJS());
           dispatch(push('/home'));
           await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
         } else {
@@ -360,19 +368,19 @@ export function login(loginType, walletLocation, walletFileName, password) {
       if (loginType === CREATE) {
         wallet = await createWallet(completeWalletPath, password);
       } else if (loginType === IMPORT) {
-        wallet = await loadWallet(completeWalletPath, password).catch(err => {
-          const errorObj = {
-            name: 'Invalid wallet/password combination.',
-            ...err
-          };
-          throw errorObj;
-        });
+        wallet = await loadPersistedState(completeWalletPath, password);
       }
 
-      const identities = wallet.identities.map(identity =>
-        createIdentity(identity)
-      );
+      console.log('-debug: wallet', wallet);
 
+      const identities = wallet.identities
+        .map((identity, identityIndex) => {
+          return createIdentity({
+            ...identity,
+            counter: identity.counter || (identityIndex + 1)
+          });
+        });
+      
       dispatch(
         setWallet(
           {
@@ -390,6 +398,7 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(push('/home'));
       await dispatch(syncWallet());
     } catch (e) {
+      console.error(e);
       dispatch(addMessage(e.name, true));
     }
     dispatch(setIsLoading(false));

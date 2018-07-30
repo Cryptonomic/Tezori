@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import { omit } from 'lodash';
+import { omit, pick } from 'lodash';
 import { TezosWallet } from 'conseiljs';
 const { saveWallet, loadWallet } = TezosWallet;
-const walletStatePath = path.join(__dirname, 'walletState');
+const walletStatePath = path.join(__dirname, 'walletState.json');
 
 export async function saveUpdatedWallet(identities, walletLocation, walletFileName, password) {
   const completeWalletPath = path.join(walletLocation, walletFileName);
@@ -19,26 +19,16 @@ export async function saveUpdatedWallet(identities, walletLocation, walletFileNa
 function prepareToPersist(walletState) {
   walletState.identities = walletState.identities
     .map((identity) => {
-      identity = omit(identity, [ 'publicKey', 'privateKey' ]);
-      identity.accounts = identity.accounts.map((account) => {
-        account = omit(account, [ 'publicKey', 'privateKey' ]);
-        account.transactions = account.transactions
-          .map((transaction) =>
-            omit(transaction, [ 'publicKey', 'privateKey' ])
-          );
-
-        return account;
-      });
-
-      identity.transactions = identity.transactions
-        .map((transaction) =>
-          omit(transaction, [ 'publicKey', 'privateKey' ])
-        );
+      identity = omit(identity, [ 'publicKey', 'privateKey', 'activeTab' ]);
+      identity.accounts = identity.accounts
+        .map((account) => {
+          account = omit(account, [ 'publicKey', 'privateKey', 'activeTab' ]);
+          return account;
+        });
 
       return identity;
     });
-
-  return walletState;
+  return pick(walletState, [ 'identities' ]);
 }
 
 export function persistWalletState(walletState) {
@@ -48,13 +38,42 @@ export function persistWalletState(walletState) {
 
   fs.writeFileSync(
     walletStatePath,
-    Buffer.from(JSON.stringify(prepareToPersist(walletState)), 'binary')
+    Buffer.from(JSON.stringify(prepareToPersist(walletState), null,  2), 'binary')
   );
 }
 
 
-function prepareToLoad(savedWallet, persistedState) {
+function prepareToLoad(savedWallet, persistedState = {}) {
+  const newWalletState = { ...savedWallet, ...persistedState };
+  newWalletState.identities =  savedWallet.identities
+    .map(savedIdentity => {
+      const foundIdentity = persistedState
+        && persistedState.identities
+        && persistedState.identities
+        .find((persistedIdentity) => {
+          return savedIdentity.publicKeyHash === persistedIdentity.publicKeyHash;
+        });
 
+      if ( foundIdentity ) {
+        savedIdentity = {
+          ...savedIdentity,
+          ...foundIdentity
+        };
+      }
+
+      if ( savedIdentity.accounts ) {
+        savedIdentity.accounts = savedIdentity.accounts
+          .map((account) => {
+            return {
+              ...account,
+              ...pick(savedIdentity, [ 'publicKey', 'privateKey' ])
+            }
+          });
+      }
+
+      return savedIdentity;
+    });
+  return newWalletState;
 }
 
 export async function loadPersistedState(walletPath, password) {
@@ -63,6 +82,7 @@ export async function loadPersistedState(walletPath, password) {
       name: 'Invalid wallet/password combination.',
       ...err
     };
+    console.error(errorObj);
     throw errorObj;
   });
 

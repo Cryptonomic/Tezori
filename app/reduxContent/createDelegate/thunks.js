@@ -8,6 +8,8 @@ import { findIdentity } from '../../utils/identity';
 import { getSelectedNode } from '../../utils/nodes';
 import { TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
+import { persistWalletState } from '../../utils/wallet';
+
 import {
   getSelectedKeyStore,
   fetchAverageFees,
@@ -111,13 +113,15 @@ export function createNewAccount(
               delegateValue: '',
               operations: {
                 [CREATED]: operationId
-              }
+              },
+              counter: ( identity.accounts.length || 0 ) + 1
             },
             identity
           )
         )
       );
 
+      // todo: add transaction
       dispatch(
         addMessage(
           `Successfully started address origination.`,
@@ -126,6 +130,7 @@ export function createNewAccount(
         )
       );
 
+      await persistWalletState(state().wallet.toJS());
       return true;
     }
 

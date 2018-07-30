@@ -3,6 +3,8 @@ import { addMessage } from '../../reduxContent/message/thunks';
 import { TEZOS } from '../../constants/NodesTypes';
 import { tezToUtez } from '../../utils/currancy';
 import { displayError } from '../../utils/formValidation';
+//  import { persistWalletState } from '../../utils/wallet';
+
 import {
   getSelectedKeyStore,
   fetchAverageFees,

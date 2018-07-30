@@ -6,6 +6,8 @@ import { getSelectedNode } from '../../utils/nodes';
 import { findIdentity } from '../../utils/identity';
 import { findAccountIndex } from '../../utils/account';
 import { TEZOS } from '../../constants/NodesTypes';
+import { persistWalletState } from '../../utils/wallet';
+
 import {
   getSelectedKeyStore,
   fetchAverageFees,
@@ -97,6 +99,7 @@ export function delegate(
         };
 
         dispatch(updateIdentity(identity));
+        await persistWalletState(state().wallet.toJS());
       }
 
       return true;
