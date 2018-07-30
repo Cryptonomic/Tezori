@@ -138,7 +138,7 @@ class Send extends Component<Props> {
 
     return (
       <SendContainer>
-        <InputAddress tooltip={false} labelText="Address" changeDelegate={this.handleToAddressChange} />
+        <InputAddress userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} labelText="Address" changeDelegate={this.handleToAddressChange} />
         <AmountContainer>
           <InputAmount>
             <TextField

@@ -138,7 +138,7 @@ class AddDelegateModal extends Component<Props> {
           }}
           onClick={onCloseClick}
         />
-        <InputAddress tooltip labelText="Delegate Address" changeDelegate={this.changeDelegate} />
+        <InputAddress addressType="delegate" tooltip labelText="Delegate Address" changeDelegate={this.changeDelegate} />
         <AmountFeePassContainer>
           <AmountSendContainer>
             <TextField

@@ -12,7 +12,6 @@ const TooltipContainer = styled.div`
   color: #000;
   font-size: 14px;
   max-width: 312px;
-  
   .customArrow .rc-tooltip-arrow {
     left: 66%;
   }
@@ -66,57 +65,93 @@ const renderToolTipComponent = () => {
     </TooltipContainer>
   );
 };
-const validateAddress = (event, changeDelegate)=>{
-  const delegateText = event.target.value;
-  const regEx =  /^(tz1|tz2|tz3)([a-zA-Z1-9]{33})$/;
 
-  if(!regEx.test(delegateText) && delegateText !== '') {
-    error = 'The delegate address is not valid';
-  } else {
-    error = '';
-  }
-
-  changeDelegate(delegateText);
-}
 type Props = {
   labelText: string,
   changeDelegate: Function,
-  tooltip: boolean
+  tooltip: boolean,
+  userAddress?: string,
+  addressType: 'send' | 'delegate'
 };
 
-let error = "";
 
-const InputAddress = (props: Props) => (
-  <DelegateContainer>
-    <TextField
-      floatingLabelText={props.labelText}
-      style={{ width: '100%' }}
-      onChange={(e)=> validateAddress(e,props.changeDelegate)}
-      errorText={error}
-    />
-    {props.tooltip && 
-    <Tooltip
-      position="bottom"
-      content={renderToolTipComponent()}
-      align={{
-        offset: [70, 0]
-      }}
-      arrowPos={{
-        left: '70%'
-      }}
-    >
-      <TextfieldTooltip
-        buttonTheme="plain"
-      >
-        <HelpIcon
-          iconName="help"
-          size={ms(0)}
-          color='secondary'
-        />
-      </TextfieldTooltip>
-    </Tooltip>
+class InputAddress extends React.PureComponent<Props> {
+  props: Props;
+
+  state = {
+    error: ''
+  }
+
+  validateAddress = (event, changeDelegate, addressType = 'send') => {
+    const delegateText = event.target.value;
+    let firstCharactersRegEx = /^(tz1|tz2|tz3|TZ11|TZ2|TZ3)/;
+    const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
+    const excludeSpecialChars = /[^\w]/;
+
+    if(addressType === 'send') {
+      firstCharactersRegEx = /^(tz1|tz2|tz3|kt1|TZ11|TZ2|TZ3|KT1)/;
     }
-  </DelegateContainer>
-)
+
+    if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
+      this.setState({
+        error: addressType === 'send' ? 'Addresses can only start TZ1, TZ2, TZ3 or KT1' :  'You can only delegate to TZ1, TZ2 or TZ3 addresses.'
+      })
+    } else if (!lengthRegEx.test(delegateText) && delegateText !== '') {
+      this.setState({
+        error: 'Addresses must be 36 characters long.'
+      })
+    } else if (excludeSpecialChars.test(delegateText) && delegateText !== '') {
+      this.setState({
+        error: ' Addresses cannot contain any special characters.'
+      })
+    }  else if ((this.props.userAddress === delegateText) && delegateText !== '') {
+      this.setState({
+        error: 'You cant send funds to yourself.'
+      })
+    } else {
+      this.setState({
+        error: ''
+      })
+
+    }
+
+    changeDelegate(delegateText);
+  }
+
+  render() {
+    return (
+      <DelegateContainer>
+        <TextField
+          floatingLabelText={this.props.labelText}
+          style={{ width: '100%' }}
+          onChange={(e) => this.validateAddress(e, this.props.changeDelegate, this.props.addressType)}
+          errorText={this.state.error}
+        />
+        {this.props.tooltip &&
+          <Tooltip
+            position="bottom"
+            content={renderToolTipComponent()}
+            align={{
+              offset: [70, 0]
+            }}
+            arrowPos={{
+              left: '70%'
+            }}
+          >
+            <TextfieldTooltip
+              buttonTheme="plain"
+            >
+              <HelpIcon
+                iconName="help"
+                size={ms(0)}
+                color='secondary'
+              />
+            </TextfieldTooltip>
+          </Tooltip>
+        }
+      </DelegateContainer>
+    )
+  }
+}
 
 export default InputAddress
