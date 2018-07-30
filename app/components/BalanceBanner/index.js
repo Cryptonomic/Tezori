@@ -19,7 +19,7 @@ type Props = {
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
-  onRefreshClick: Function,
+  onRefreshClick: () => {},
   isManagerAddress: boolean,
   theme: Object,
   parentIndex?: number,

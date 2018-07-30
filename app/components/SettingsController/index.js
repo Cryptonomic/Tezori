@@ -34,8 +34,8 @@ const Separator = styled.div`
 `;
 
 type Props = {
-  goHomeAndClearState: Function,
-  goSettings: Function
+  goHomeAndClearState: () => {},
+  goSettings: () => {}
 };
 
 class SettingsController extends Component<Props> {

@@ -45,7 +45,7 @@ const SpinningRefreshIcon = styled(RefreshIcon)`
 
 type Props = {
   isReady?: boolean,
-  onClick?: Function,
+  onClick?: () => {},
   time: Date
 };
 

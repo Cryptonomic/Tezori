@@ -104,14 +104,14 @@ type Props = {
   password?: string,
   fee?: number,
   averageFees: any,
-  handleFeeChange: Function,
-  handlePasswordChange: Function,
-  onAddressChange: Function,
-  onDelegate: Function,
-  onCloseClick: Function,
+  handleFeeChange: () => {},
+  handlePasswordChange: () => {},
+  onAddressChange: () => {},
+  onDelegate: () => {},
+  onCloseClick: () => {},
   isLoading?: boolean,
   isShowedPwd: boolean,
-  onShowPwd: Function
+  onShowPwd: () => {}
 };
 
 const DelegateConfirmationModal = (props: Props) => {

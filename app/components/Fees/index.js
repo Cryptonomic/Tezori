@@ -18,7 +18,7 @@ type Props = {
   styles?: object,
   underlineStyle?: object,
   fee?: any,
-  onChange?: Function
+  onChange?: () => {}
 };
 
 const StyledSaveButton = styled(Button)`

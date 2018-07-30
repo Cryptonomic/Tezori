@@ -7,7 +7,7 @@ import theme from '../../styles/theme';
 
 type Props = {
   isChecked: boolean,
-  onCheck: Function
+  onCheck: () => {}
 };
 
 const styles = {

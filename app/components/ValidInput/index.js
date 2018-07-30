@@ -54,8 +54,8 @@ type Props = {
   isShowed?: boolean,
   status?: boolean,
   score?: number,
-  changFunc: Function,
-  onShow: Function
+  changFunc: () => {},
+  onShow: () => {}
 };
 
 const inputStyles = {
