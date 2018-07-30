@@ -24,9 +24,10 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 const ContentDiv = styled.div`
-  display: Flex;
+  display: flex;
   align-items: center;
   line-height: 14px;
+  flex: 1;
 `;
 const StateIcon = styled(TezosIcon)`
   margin-right: 5px;
@@ -67,7 +68,15 @@ const Header = styled.div`
   line-height: 30px;
 `;
 
+const Linebar = styled.div`
+  height: 14px;
+  margin: 0 7px;
+  width: 1px;
+  background-color: ${({ theme: { colors } }) => colors.gray5};
+`
+
 const openLink = element => openLinkToBlockExplorer(element);
+const getDotAddress =address => `${address.slice(0, 12)}...${address.slice(24)}`;
 
 const timeFormatter = timestamp => {
   const time = new Date(timestamp);
@@ -128,7 +137,8 @@ const getStatus = (transaction, selectedAccountHash) => {
       state: 'ORIGINATION',
       isFee,
       color: isAmount ? 'error1' : 'gray8',
-      sign: isAmount ? '-' : ''
+      sign: isAmount ? '-' : '',
+      isBrun: true
     };
   }
 
@@ -176,9 +186,10 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
     return <AddressText>this address</AddressText>;
   }
   if (type === 'delegation') {
+    const newAddress = getDotAddress(transaction.delegate);
     return (
       <TezosAddress
-        address={transaction.delegate}
+        address={newAddress}
         size='14px'
         weight='200'
         color='black2'
@@ -200,8 +211,9 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
   if (!address) {
     return null;
   }
+  const newAddress = getDotAddress(address);
   return (
-    <TezosAddress address={address} size="14px" weight="200" color="black2" />
+    <TezosAddress address={newAddress} size="14px" weight="200" color="black2" />
   );
 };
 
@@ -214,7 +226,7 @@ type Props = {
 function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash } = props;
   const fee = Number.parseInt(transaction.fee, 10);
-  const { icon, preposition, state, isFee, color, sign } = getStatus(
+  const { icon, preposition, state, isFee, color, sign, isBrun } = getStatus(
     transaction,
     selectedAccountHash,
     selectedParentHash
@@ -252,6 +264,13 @@ function Transaction(props: Props) {
             onClick={() => openLink(transaction.operationGroupHash)}
           />
         </ContentDiv>
+        {isBrun && (
+          <Fee>
+            <span>Burn: </span>
+            <TezosAmount color="gray5" size={ms(-2)} amount={25700} format={6} />
+          </Fee>
+        )}
+        {isBrun && isFee && <Linebar />}
         {isFee && (
           <Fee>
             <span>Fee: </span>
