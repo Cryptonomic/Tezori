@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
@@ -11,6 +11,7 @@ import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
 import PasswordInput from '../PasswordInput';
+import { wrapComponent } from '../../utils/i18n';
 import InputAddress from '../InputAddress/';
 
 import {
@@ -23,7 +24,8 @@ type Props = {
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
   open: boolean,
-  onCloseClick: () => {}
+  onCloseClick: () => {},
+  t: () => {}
 };
 
 const AmountFeePassContainer = styled.div`
@@ -88,7 +90,7 @@ class AddDelegateModal extends Component<Props> {
   }
 
   changeAmount = (_, amount) => this.setState({ amount });
-  changeDelegate = (_, delegate) => this.setState({ delegate });
+  changeDelegate = (delegate) => this.setState({ delegate });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
@@ -114,7 +116,7 @@ class AddDelegateModal extends Component<Props> {
   };
 
   render() {
-    const { open, onCloseClick } = this.props;
+    const { open, onCloseClick, t } = this.props;
     const { isLoading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
     const isDisabled = isLoading || !delegate || !amount || !passPhrase;
 
@@ -138,7 +140,7 @@ class AddDelegateModal extends Component<Props> {
           }}
           onClick={onCloseClick}
         />
-        <InputAddress addressType="delegate" tooltip labelText="Delegate Address" changeDelegate={this.changeDelegate} />
+        <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate} />
         <AmountFeePassContainer>
           <AmountSendContainer>
             <TextField
@@ -193,4 +195,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(AddDelegateModal);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(AddDelegateModal);

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { TextField } from 'material-ui';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -9,6 +9,7 @@ import Button from '../Button/';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
 import SendConfirmationModal from '../SendConfirmationModal';
+import { wrapComponent } from '../../utils/i18n';
 import InputAddress from '../InputAddress';
 
 import {
@@ -55,7 +56,8 @@ type Props = {
   sendTez?: () => {},
   selectedAccountHash?: string,
   selectedParentHash?: string,
-  validateAmount?: () => {}
+  validateAmount?: () => {},
+  t: () => {}
 };
 
 const initialState = {
@@ -123,7 +125,7 @@ class Send extends Component<Props> {
   };
 
   render() {
-    const { isReady } = this.props;
+    const { isReady, t } = this.props;
 
     const {
       isLoading,
@@ -138,7 +140,7 @@ class Send extends Component<Props> {
 
     return (
       <SendContainer>
-        <InputAddress userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} labelText="Address" changeDelegate={this.handleToAddressChange} />
+        <InputAddress labelText={t('general.address')} userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} changeDelegate={this.handleToAddressChange} />
         <AmountContainer>
           <InputAmount>
             <TextField
@@ -194,4 +196,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(null, mapDispatchToProps)(Send);
+  export default compose(wrapComponent, connect(null, mapDispatchToProps))(Send);

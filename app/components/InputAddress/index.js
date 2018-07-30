@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { TextField } from 'material-ui';
+import { compose } from 'redux';
 
+import { wrapComponent } from '../../utils/i18n';
 import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
 import Tooltip from '../Tooltip/';
@@ -47,33 +49,14 @@ const TextfieldTooltip = styled(Button)`
   top: 44px;
 `;
 
-const renderToolTipComponent = () => {
-  return (
-    <TooltipContainer>
-      <TooltipTitle>Setting a Delegate</TooltipTitle>
-      <TooltipContent1>
-        You can always change the delegate at a later time.
-      </TooltipContent1>
-      <TooltipContent1>
-        There is a fee for changing the delegate.
-      </TooltipContent1>
-      <TooltipContent2>
-        {
-          'You can only delegate to the Manager Address. The Manager Address always starts with "tz1".'
-        }
-      </TooltipContent2>
-    </TooltipContainer>
-  );
-};
-
 type Props = {
   labelText: string,
   changeDelegate: Function,
   tooltip: boolean,
   userAddress?: string,
-  addressType: 'send' | 'delegate'
+  addressType: 'send' | 'delegate',
+  t: Function
 };
-
 
 class InputAddress extends React.PureComponent<Props> {
   props: Props;
@@ -81,32 +64,48 @@ class InputAddress extends React.PureComponent<Props> {
   state = {
     error: ''
   }
+  
+  renderToolTipComponent = () => {
+    const {t} = this.props;
+    return (
+      <TooltipContainer>
+        <TooltipTitle>{t('general.tooltips.delegate.title')}</TooltipTitle>
+        <TooltipContent1>
+          {t('general.tooltips.delegate.content1')}
+        </TooltipContent1>
+        <TooltipContent1>
+          {t('general.tooltips.delegate.content2')}
+        </TooltipContent1>
+        <TooltipContent2>
+          {t('general.tooltips.delegate.content3')}
+        </TooltipContent2>
+      </TooltipContainer>
+    );
+  };
 
   validateAddress = (event, changeDelegate, addressType = 'send') => {
+    const {t} = this.props;
     const delegateText = event.target.value;
-    let firstCharactersRegEx = /^(tz1|tz2|tz3|TZ11|TZ2|TZ3)/;
+     
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
-
-    if(addressType === 'send') {
-      firstCharactersRegEx = /^(tz1|tz2|tz3|kt1|TZ11|TZ2|TZ3|KT1)/;
-    }
+    const firstCharactersRegEx = addressType === 'send' ? /^(tz1|tz2|tz3|kt1|TZ1|TZ2|TZ3|KT1)/ : /^(tz1|tz2|tz3|TZ1|TZ2|TZ3)/;
 
     if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: addressType === 'send' ? 'Addresses can only start TZ1, TZ2, TZ3 or KT1' :  'You can only delegate to TZ1, TZ2 or TZ3 addresses.'
+        error: addressType === 'send' ? t('general.errors.address_validation.send_address') :  t('general.errors.address_validation.delegate_address')
       })
     } else if (!lengthRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: 'Addresses must be 36 characters long.'
+        error: t('general.errors.address_validation.length')
       })
     } else if (excludeSpecialChars.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: ' Addresses cannot contain any special characters.'
+        error: t('general.errors.address_validation.special_chars')
       })
     }  else if ((this.props.userAddress === delegateText) && delegateText !== '') {
       this.setState({
-        error: 'You cant send funds to yourself.'
+        error:  t('general.errors.address_validation.send_funds')
       })
     } else {
       this.setState({
@@ -130,7 +129,7 @@ class InputAddress extends React.PureComponent<Props> {
         {this.props.tooltip &&
           <Tooltip
             position="bottom"
-            content={renderToolTipComponent()}
+            content={this.renderToolTipComponent()}
             align={{
               offset: [70, 0]
             }}
@@ -153,5 +152,4 @@ class InputAddress extends React.PureComponent<Props> {
     )
   }
 }
-
-export default InputAddress
+export default compose(wrapComponent)(InputAddress)
