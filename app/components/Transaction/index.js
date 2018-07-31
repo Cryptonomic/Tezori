@@ -24,9 +24,10 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 const ContentDiv = styled.div`
-  display: Flex;
-  align-items: center;
+  display: flex;
+  align-items: baseline;
   line-height: 14px;
+  flex: 1;
 `;
 const StateIcon = styled(TezosIcon)`
   margin-right: 5px;
@@ -67,8 +68,15 @@ const Header = styled.div`
   line-height: 30px;
 `;
 
-const openLink = element => openLinkToBlockExplorer(element);
+const Linebar = styled.div`
+  height: 14px;
+  margin: 0 7px 0 5px;
+  width: 1px;
+  background-color: ${({ theme: { colors } }) => colors.gray10};
+  opacity: 0.29;
+`;
 
+const openLink = element => openLinkToBlockExplorer(element);
 const timeFormatter = timestamp => {
   const time = new Date(timestamp);
   return moment(time).format('LT');
@@ -128,7 +136,8 @@ const getStatus = (transaction, selectedAccountHash) => {
       state: 'ORIGINATION',
       isFee,
       color: isAmount ? 'error1' : 'gray8',
-      sign: isAmount ? '-' : ''
+      sign: isAmount ? '-' : '',
+      isBurn: true
     };
   }
 
@@ -214,7 +223,7 @@ type Props = {
 function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash } = props;
   const fee = Number.parseInt(transaction.fee, 10);
-  const { icon, preposition, state, isFee, color, sign } = getStatus(
+  const { icon, preposition, state, isFee, color, sign, isBurn } = getStatus(
     transaction,
     selectedAccountHash,
     selectedParentHash
@@ -252,6 +261,13 @@ function Transaction(props: Props) {
             onClick={() => openLink(transaction.operationGroupHash)}
           />
         </ContentDiv>
+        {isBurn && (
+          <Fee>
+            <span>Burn: </span>
+            <TezosAmount color="gray5" size={ms(-2)} amount={257000} format={6} />
+          </Fee>
+        )}
+        {isBurn && isFee && <Linebar />}
         {isFee && (
           <Fee>
             <span>Fee: </span>
