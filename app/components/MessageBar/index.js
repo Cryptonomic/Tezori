@@ -97,7 +97,7 @@ const MessageContent = (props: Props1) => {
 
 type Props = {
   clearMessageState: () => {},
-  message: Object
+  message: object
 };
 
 class MessageBar extends React.Component<Props> {

@@ -60,8 +60,8 @@ type Props = {
   identities: List<Identity>,
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
-  theme: Object,
-  history: Object,
+  theme: object,
+  history: object,
   selectedParentHash: string
 };
 

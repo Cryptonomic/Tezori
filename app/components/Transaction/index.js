@@ -196,7 +196,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
       </AddressText>
     );
   }
-  
+
   if (!address) {
     return null;
   }
@@ -206,7 +206,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
 };
 
 type Props = {
-  transaction: Object,
+  transaction: object,
   selectedAccountHash: string,
   selectedParentHash: string
 };
