@@ -1,14 +1,15 @@
 // @flow
 import React, { Component } from 'react';
 import { TextField } from 'material-ui';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
-import TezosIcon from '../TezosIcon/';
-import SendConfirmationModal from '../SendConfirmationModal';
+import SendConfirmationModal from '../SendConfirmationModal/';
+import { wrapComponent } from '../../utils/i18n';
+import TezosNumericInput from '../TezosNumericInput'
 
 import {
   validateAmount,
@@ -42,19 +43,14 @@ const InputAmount = styled.div`
   width: 50%;
   margin-right: 50px;
 `;
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 20px;
-  top: 40px;
-  display: block;
-`;
 
 type Props = {
   isReady?: boolean,
   sendTez?: () => {},
   selectedAccountHash?: string,
   selectedParentHash?: string,
-  validateAmount?: () => {}
+  validateAmount?: () => {},
+  t: () => {}
 };
 
 const initialState = {
@@ -89,7 +85,7 @@ class Send extends Component<Props> {
   };
   handlePasswordChange = (password) =>  this.setState({ password });
   handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
-  handleAmountChange = (_, amount) =>  this.setState({ amount });
+  handleAmountChange = (amount) =>  this.setState({ amount });
   handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
@@ -122,7 +118,7 @@ class Send extends Component<Props> {
   };
 
   render() {
-    const { isReady } = this.props;
+    const { isReady, t } = this.props;
 
     const {
       isLoading,
@@ -145,14 +141,7 @@ class Send extends Component<Props> {
         />
         <AmountContainer>
           <InputAmount>
-            <TextField
-              floatingLabelText="Amount"
-              style={{ width: '100%' }}
-              value={amount}
-              onChange={this.handleAmountChange}
-              type="number"
-            />
-            <TezosIconInput color="secondary" iconName="tezos" />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
           </InputAmount>
           <Fees
             styles={{ width: '50%' }}
@@ -198,4 +187,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(null, mapDispatchToProps)(Send);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(Send);
