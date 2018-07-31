@@ -303,8 +303,9 @@ export function importAddress(
               identity,
               activationCode
             ).catch(err => {
-              const errorObj = { name: err.message, ...err };
-              throw errorObj;
+              const error = err;
+              error.name = err.message;
+              throw error;
             });
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
@@ -333,12 +334,11 @@ export function importAddress(
           ).catch(() => false);
           
           if (!account) {
-            const title = 'The account does not exist.'
-            dispatch(addMessage(title, true));
-            dispatch(setIsLoading(false));
-            return null;
+            const title = 'The account does not exist.';
+            const err = new Error(title);
+            err.name = title;
+            throw err;
           }
-    
           break;
         }
         default:
@@ -349,7 +349,7 @@ export function importAddress(
         const { publicKeyHash } = identity;
         const jsIdentities = identities.toJS();
         if (findIdentityIndex(jsIdentities, publicKeyHash) === -1) {
-          identity.counter = jsIdentities.length + 1;
+          identity.order = jsIdentities.length + 1;
           identity = createIdentity(identity);
           dispatch(addNewIdentity(identity));
           identities = state()
@@ -398,7 +398,7 @@ export function login(loginType, walletLocation, walletFileName, password) {
         .map((identity, identityIndex) => {
           return createIdentity({
             ...identity,
-            counter: identity.counter || (identityIndex + 1)
+            order: identity.order || (identityIndex + 1)
           });
         });
       
