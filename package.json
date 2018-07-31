@@ -137,6 +137,7 @@
     "babel-register": "^6.26.0",
     "chalk": "^2.4.1",
     "concurrently": "^3.5.1",
+    "copy-webpack-plugin": "^4.5.2",
     "cross-env": "^5.1.6",
     "cross-spawn": "^6.0.5",
     "css-loader": "^0.28.11",
@@ -197,9 +198,12 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "@material-ui/core": "^1.4.1",
+    "@material-ui/icons": "^2.0.0",
     "classnames": "^2.2.6",
     "conseiljs": "^0.1.25",
     "devtron": "^1.4.0",
+    "downshift": "^2.0.19",
     "electron-debug": "^2.0.0",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",

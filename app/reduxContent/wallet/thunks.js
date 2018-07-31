@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
-import { FUNDRAISER, GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
+import { FUNDRAISER, GENERATE_MNEMONIC, RESTORE } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
@@ -318,6 +318,27 @@ export function importAddress(
               [CREATED]: operationId
             };
           }
+          break;
+        }
+        case RESTORE:
+        {
+          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+          identity.storeTypes = storeTypes.RESTORE;
+          const conseilNode = getSelectedNode(nodes, CONSEIL);
+
+          const account = await getAccount(
+            conseilNode.url,
+            identity.publicKeyHash,
+            conseilNode.apiKey
+          ).catch(() => false);
+          
+          if (!account) {
+            const title = 'The account does not exist.'
+            dispatch(addMessage(title, true));
+            dispatch(setIsLoading(false));
+            return null;
+          }
+    
           break;
         }
         default:
