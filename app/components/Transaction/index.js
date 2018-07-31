@@ -25,7 +25,7 @@ const Container = styled.div`
 `;
 const ContentDiv = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   line-height: 14px;
   flex: 1;
 `;
@@ -70,14 +70,13 @@ const Header = styled.div`
 
 const Linebar = styled.div`
   height: 14px;
-  margin: 0 7px;
+  margin: 0 7px 0 5px;
   width: 1px;
-  background-color: ${({ theme: { colors } }) => colors.gray5};
+  background-color: ${({ theme: { colors } }) => colors.gray10};
+  opacity: 0.29;
 `
 
 const openLink = element => openLinkToBlockExplorer(element);
-const getDotAddress =address => `${address.slice(0, 12)}...${address.slice(24)}`;
-
 const timeFormatter = timestamp => {
   const time = new Date(timestamp);
   return moment(time).format('LT');
@@ -186,10 +185,9 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
     return <AddressText>this address</AddressText>;
   }
   if (type === 'delegation') {
-    const newAddress = getDotAddress(transaction.delegate);
     return (
       <TezosAddress
-        address={newAddress}
+        address={transaction.delegate}
         size='14px'
         weight='200'
         color='black2'
@@ -211,9 +209,8 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
   if (!address) {
     return null;
   }
-  const newAddress = getDotAddress(address);
   return (
-    <TezosAddress address={newAddress} size="14px" weight="200" color="black2" />
+    <TezosAddress address={address} size="14px" weight="200" color="black2" />
   );
 };
 
