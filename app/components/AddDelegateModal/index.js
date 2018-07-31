@@ -3,11 +3,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField } from 'material-ui';
+import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import Tooltip from '../Tooltip/';
-import { ms } from '../../styles/helpers';
-import TezosIcon from '../TezosIcon/';
 import TezosNumericInput from '../TezosNumericInput'
 import { wrapComponent } from '../../utils/i18n';
 
@@ -15,6 +12,7 @@ import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
 import PasswordInput from '../PasswordInput';
+import InputAddress from '../InputAddress/';
 
 import {
   createNewAccount,
@@ -29,47 +27,6 @@ type Props = {
   onCloseClick: () => {},
   t: () => {}
 };
-
-const HelpIcon = styled(TezosIcon)`
-  padding: 0 0 0 ${ms(-4)};
-`;
-
-const DelegateContainer = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
-const TextfieldTooltip = styled(Button)`
-  position: absolute;
-  right: 10px;
-  top: 44px;
-`;
-
-const TooltipContainer = styled.div`
-  padding: 10px;
-  color: #000;
-  font-size: 14px;
-  max-width: 312px;
-
-  .customArrow .rc-tooltip-arrow {
-    left: 66%;
-  }
-`;
-
-const TooltipTitle = styled.div`
-  color: #123262;
-  font-weight: bold;
-  font-size: 16px;
-`;
-
-const TooltipContent1 = styled.div`
-  border-bottom:solid 1px #94a9d1;
-  padding: 12px 0;
-`;
-
-const TooltipContent2 = styled.div`
-  padding: 12px 0;
-`;
 
 const AmountFeePassContainer = styled.div`
   display: flex;
@@ -125,30 +82,12 @@ class AddDelegateModal extends Component<Props> {
     }
   }
 
+
+  changeDelegate = (delegate) => this.setState({ delegate });
   changeAmount = (amount) => this.setState({ amount });
-  changeDelegate = (_, delegate) => this.setState({ delegate });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
-
-  renderToolTipComponent = () => {
-    return (
-      <TooltipContainer>
-        <TooltipTitle>Setting a Delegate</TooltipTitle>
-        <TooltipContent1>
-          You can always change the delegate at a later time.
-        </TooltipContent1>
-        <TooltipContent1>
-          There is a fee for changing the delegate.
-        </TooltipContent1>
-        <TooltipContent2>
-          {
-            'You can only delegate to the Manager Address. The Manager Address always starts with "tz1".'
-          }
-        </TooltipContent2>
-      </TooltipContainer>
-    );
-  };
 
   createAccount = async () => {
     const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
@@ -195,33 +134,7 @@ class AddDelegateModal extends Component<Props> {
           }}
           onClick={onCloseClick}
         />
-        <DelegateContainer>
-          <TextField
-            floatingLabelText="Delegate Address"
-            style={{ width: '100%' }}
-            onChange={this.changeDelegate}
-          />
-          <Tooltip
-            position="bottom"
-            content={this.renderToolTipComponent()}
-            align={{
-              offset: [70, 0]
-            }}
-            arrowPos={{
-              left: '70%'
-            }}
-          >
-            <TextfieldTooltip
-              buttonTheme="plain"
-            >
-              <HelpIcon
-                iconName="help"
-                size={ms(0)}
-                color='secondary'
-              />
-            </TextfieldTooltip>
-          </Tooltip>
-        </DelegateContainer>
+        <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate} />
         <AmountFeePassContainer>
           <AmountSendContainer>
             <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />

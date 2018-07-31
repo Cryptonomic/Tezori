@@ -1,14 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import { TextField } from 'material-ui';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
-import SendConfirmationModal from '../SendConfirmationModal/';
+import SendConfirmationModal from '../SendConfirmationModal';
 import { wrapComponent } from '../../utils/i18n';
+import InputAddress from '../InputAddress';
 import TezosNumericInput from '../TezosNumericInput'
 
 import {
@@ -84,7 +84,7 @@ class Send extends Component<Props> {
     this.setState({ ...initialState, averageFees, fee });
   };
   handlePasswordChange = (password) =>  this.setState({ password });
-  handleToAddressChange = (_, toAddress) =>  this.setState({ toAddress });
+  handleToAddressChange = (toAddress) =>  this.setState({ toAddress });
   handleAmountChange = (amount) =>  this.setState({ amount });
   handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
@@ -133,12 +133,7 @@ class Send extends Component<Props> {
 
     return (
       <SendContainer>
-        <TextField
-          floatingLabelText="Address"
-          style={{ width: '100%' }}
-          value={toAddress}
-          onChange={this.handleToAddressChange}
-        />
+        <InputAddress labelText={t('general.address')} userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} changeDelegate={this.handleToAddressChange} />
         <AmountContainer>
           <InputAmount>
             <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
