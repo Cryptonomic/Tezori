@@ -3,9 +3,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField } from 'material-ui';
+import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import TezosIcon from '../TezosIcon/';
 import TezosNumericInput from '../TezosNumericInput'
 import { wrapComponent } from '../../utils/i18n';
 
@@ -13,7 +12,6 @@ import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
 import PasswordInput from '../PasswordInput';
-import { wrapComponent } from '../../utils/i18n';
 import InputAddress from '../InputAddress/';
 
 import {

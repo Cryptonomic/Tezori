@@ -1,13 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import { TextField } from 'material-ui';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
-import TezosIcon from '../TezosIcon/';
 import SendConfirmationModal from '../SendConfirmationModal';
 import { wrapComponent } from '../../utils/i18n';
 import InputAddress from '../InputAddress';
