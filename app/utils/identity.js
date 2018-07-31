@@ -10,11 +10,11 @@ export function createIdentity(identity) {
     transactions: [],
     balance: 0,
     accounts: [],
-    counter: 1,
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
     operations: {},
+    order: null,
     storeTypes: FUNDRAISER,
     activeTab: TRANSACTIONS,
     status: status.CREATED,
@@ -57,13 +57,14 @@ export async function getSyncIdentity(identities, identity, nodes) {
       account.accountId
     );
 
-  accounts = accounts.map(account => {
+  accounts = accounts.map((account) => {
     const foundIndex = stateAccountIndices.indexOf(account.accountId);
     const overrides = {};
     if ( foundIndex > -1 ) {
       overrides.status = identity.accounts[foundIndex].status;
       overrides.operations = identity.accounts[foundIndex].operations;
       overrides.activeTab = identity.accounts[foundIndex].activeTab;
+      overrides.order = identity.accounts[foundIndex].order;
     }
     return createAccount({
         ...account,
@@ -83,7 +84,12 @@ export async function getSyncIdentity(identities, identity, nodes) {
   });
 
   accounts = accounts.concat(accountsToConcat);
-  identity.accounts = accounts;
+  
+  //  Adding order to accounts without it - in-case of import.
+  identity.accounts = accounts.map((account, accountIndex) => {
+    account.order = account.order || (accountIndex + 1);
+    return account;
+  });
   identity.accounts = await Promise.all(
     ( identity.accounts || []).map(async account => {
       if ( account.status !== status.READY ) {

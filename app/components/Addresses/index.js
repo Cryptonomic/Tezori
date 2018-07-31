@@ -10,7 +10,7 @@ import { H4 } from '../Heading/';
 import AddressBlock from '../AddressBlock/';
 import Tooltip from '../Tooltip/';
 import { syncAccountOrIdentity } from '../../reduxContent/wallet/thunks';
-import { sortByCounter } from '../../utils/array';
+import { sortByOrder } from '../../utils/array';
 
 type Account = {
   accountId: string,
@@ -103,7 +103,7 @@ class Addresses extends Component<Props> {
           </Tooltip>
         </AccountTitle>
         { identities
-          .sort(sortByCounter)
+          .sort(sortByOrder)
           .map((accountBlock, index) => (
             <AccountItem key={accountBlock.get('publicKeyHash')}>
               <AddressBlock

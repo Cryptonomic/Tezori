@@ -114,7 +114,7 @@ export function createNewAccount(
               operations: {
                 [CREATED]: operationId
               },
-              counter: ( identity.accounts.length || 0 ) + 1
+              order: ( identity.accounts.length || 0 ) + 1
             },
             identity
           )

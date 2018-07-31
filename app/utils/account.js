@@ -22,6 +22,7 @@ export function createAccount(account, identity) {
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     operations: {},
+    order: null,
     publicKey: identity.publicKey,
     privateKey: identity.privateKey,
     ...account

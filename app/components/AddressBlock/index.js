@@ -16,7 +16,7 @@ import { READY } from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
-import { sortByCounter } from '../../utils/array';
+import { sortByOrder } from '../../utils/array';
 
 const Container = styled.div`
   overflow: hidden;
@@ -242,7 +242,7 @@ class AddressBlock extends Component<Props, State> {
           smartAddresses && smartAddresses.toArray().length
           ?
             smartAddresses
-              .sort(sortByCounter)
+              .sort(sortByOrder)
               .map((smartAddress, index) => {
                 const smartAddressId = smartAddress.get('accountId');
                 const isSmartActive = smartAddressId === selectedAccountHash;

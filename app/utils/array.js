@@ -1,9 +1,12 @@
-export function sortByCounter(a, b) {
-  if (a.counter < b.counter) {
+export function sortByOrder(a, b) {
+  const aOrder = a.get('order');
+  const bOrder = b.get('order');
+
+  if (aOrder < bOrder) {
     return -1;
   }
 
-  if (a.counter > b.counter) {
+  if (aOrder > bOrder) {
     return 1;
   }
 
