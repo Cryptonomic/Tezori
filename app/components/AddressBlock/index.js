@@ -111,7 +111,7 @@ const NoSmartAddressesButton = styled(Button)`
 type Props = {
   history: object,
   accountBlock: Object, // TODO: type this
-  syncAccountOrIdentity: Function,
+  syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
   accountIndex: number,
   theme: Object

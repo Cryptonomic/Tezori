@@ -29,9 +29,9 @@ type Props = {
   conseilNodes: array,
   tezosSelectedNode: string,
   tezosNodes: array,
-  syncWallet: Function,
-  setSelected: Function,
-  goBack: Function,
+  syncWallet: () => {},
+  setSelected: () => {},
+  goBack: () => {},
   theme: Object
 };
 

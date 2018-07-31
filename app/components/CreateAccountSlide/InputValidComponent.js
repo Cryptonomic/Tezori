@@ -65,8 +65,8 @@ const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
 type Props = {
   value: string,
   index: number,
-  checkValidation: Function,
-  onEnter: Function
+  checkValidation: () => {},
+  onEnter: () => {}
 };
 
 export default class InputValidComponent extends Component<Props> {

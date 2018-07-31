@@ -35,7 +35,7 @@ type Props = {
   isManager?: boolean,
   isActive?: boolean,
   address?: object,
-  onClick?: Function
+  onClick?: () => {}
 };
 
 export default function AddressStatus(props: Props) {

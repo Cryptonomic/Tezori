@@ -21,10 +21,10 @@ import {
 
 type Props = {
   selectedParentHash: string,
-  createNewAccount: Function,
-  fetchOriginationAverageFees: Function,
+  createNewAccount: () => {},
+  fetchOriginationAverageFees: () => {},
   open: boolean,
-  onCloseClick: Function
+  onCloseClick: () => {}
 };
 
 const HelpIcon = styled(TezosIcon)`
@@ -47,7 +47,7 @@ const TooltipContainer = styled.div`
   color: #000;
   font-size: 14px;
   max-width: 312px;
-  
+
   .customArrow .rc-tooltip-arrow {
     left: 66%;
   }
@@ -109,7 +109,7 @@ const defaultState = {
   amount: null,
   fee: 100,
   passPhrase: '',
-  isShowedPwd: false, 
+  isShowedPwd: false,
   averageFees: {
     low: 100,
     medium: 200,
@@ -246,15 +246,15 @@ class AddDelegateModal extends Component<Props> {
               onChange={this.changeFee}
             />
           </FeeContainer>
-        </AmountFeePassContainer>        
-        
+        </AmountFeePassContainer>
+
         <PasswordInput
           label='Wallet Password'
           isShowed={isShowedPwd}
           changFunc={this.updatePassPhrase}
-          onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}   
+          onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
         />
-       
+
         <PasswordButtonContainer>
           <DelegateButton
             buttonTheme="primary"

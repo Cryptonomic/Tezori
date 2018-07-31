@@ -18,8 +18,8 @@ import createFileEmptyIcon from '../../../resources/createFileEmpty.svg';
 import TezosIcon from '../../components/TezosIcon/';
 
 type Props = {
-  login: Function,
-  goBack: Function
+  login: () => {},
+  goBack: () => {}
 };
 
 const BackToWallet = styled.div`
@@ -145,7 +145,7 @@ class LoginCreate extends Component<Props> {
     walletFileName: false,
     password: '',
     confirmPassword: '',
-    isPasswordValidation: false,    
+    isPasswordValidation: false,
     isPwdShowed: false,
     isPasswordMatched: false,
     isConfirmPwdShowed: false,
@@ -330,7 +330,7 @@ class LoginCreate extends Component<Props> {
                 suggestion={this.state.pwdSuggestion}
                 score={this.state.pwdScore}
                 changFunc={this.changePassword}
-                onShow={() => this.onPasswordShow(0)}            
+                onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
                 label="Confirm Wallet Password"

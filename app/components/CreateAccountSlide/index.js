@@ -91,7 +91,7 @@ const SeedsContainer = styled.div`
 `;
 
 type Props = {
-  importAddress: Function
+  importAddress: () => {}
 };
 
 class CreateAccountSlide extends Component<Props> {

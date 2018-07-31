@@ -55,7 +55,7 @@ type Props = {
   isActive?: boolean,
   balance?: number,
   index?: number,
-  onClick?: Function
+  onClick?: () => {}
 };
 
 export default function Address(props: Props) {

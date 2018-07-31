@@ -51,10 +51,10 @@ const TezosIconInput = styled(TezosIcon)`
 
 type Props = {
   isReady?: boolean,
-  sendTez?: Function,
+  sendTez?: () => {},
   selectedAccountHash?: string,
   selectedParentHash?: string,
-  validateAmount?: Function
+  validateAmount?: () => {}
 };
 
 const initialState = {

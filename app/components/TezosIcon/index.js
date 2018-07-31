@@ -20,7 +20,7 @@ type Props = {
   iconName?: string,
   color: string,
   size: any,
-  onClick?: Function,
+  onClick?: () => {},
   className?: string
 };
 

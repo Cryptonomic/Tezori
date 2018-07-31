@@ -43,12 +43,12 @@ type Props = {
   password?: string,
   address?: string,
   open?: boolean,
-  onCloseClick?: Function,
-  onPasswordChange?: Function,
-  onSend?: Function,
+  onCloseClick?: () => {},
+  onPasswordChange?: () => {},
+  onSend?: () => {},
   isLoading?: boolean,
   isShowedPwd?: boolean,
-  onShowPwd: Function
+  onShowPwd: () => {}
 };
 
 const SendConfirmationModal = (props: Props) => {

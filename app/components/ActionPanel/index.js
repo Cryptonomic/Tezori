@@ -77,8 +77,8 @@ const DescriptionContainer = styled.p`
 `;
 
 type DescriptionProps = {
-  onSendClick: Function,
-  onReceiveClick: Function
+  onSendClick: () => {},
+  onReceiveClick: () => {}
 };
 
 const Description = (props: DescriptionProps) => {
@@ -93,10 +93,10 @@ const Description = (props: DescriptionProps) => {
 };
 
 type Props = {
-  updateActiveTab: Function,
+  updateActiveTab: () => {},
   identities: array,
   isLoadingTransactions: boolean,
-  syncWallet: Function,
+  syncWallet: () => {},
   selectedAccountHash: string,
   selectedParentHash: string,
   time: any
@@ -277,7 +277,7 @@ function mapStateToProps({ wallet }) {
     time: wallet.get('time')
   };
 }
-function mapDispatchToProps(dispatch: Function) {
+function mapDispatchToProps(dispatch: () => {}) {
   return bindActionCreators(
     {
       updateActiveTab,

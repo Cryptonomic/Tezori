@@ -12,7 +12,7 @@ import { termsService, privacyPolicy } from '../../config.json';
 
 type Props = {
   match?: object,
-  goBack: Function
+  goBack: () => {}
 };
 
 const BackToWallet = styled.div`
