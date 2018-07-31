@@ -11,10 +11,11 @@ export const instance = i18n.use(Backend).init({
   debug: true,
   backend: {
     loadPath: () => {
-      const filename = `locales/{{lng}}.json`;
+      const filename = `../locales/{{lng}}.json`;
       if (process.env.NODE_ENV === 'production') {
-        return path.join(remote.app.getAppPath(), 'dist', filename);
+        return path.join(remote.app.getAppPath(), filename);
       }
+
       return path.join(__dirname, filename);
     }
   },
