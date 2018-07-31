@@ -32,7 +32,7 @@ type Props = {
   syncWallet: () => {},
   setSelected: () => {},
   goBack: () => {},
-  theme: Object
+  theme: object
 };
 
 const Row = styled.div`

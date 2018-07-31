@@ -14,7 +14,7 @@ import LoginConditions from './../LoginConditions/';
 
 type Props = {
   isLoading: boolean,
-  match: Object
+  match: object
 };
 
 class LoginPage extends Component<Props> {

@@ -39,7 +39,7 @@ const Heading = styled(H5)`
 `;
 
 type Props = {
-  amount?: string,
+  amount: ?string,
   password?: string,
   address?: string,
   open?: boolean,

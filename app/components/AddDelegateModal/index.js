@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import TezosIcon from '../TezosIcon/';
+import TezosNumericInput from '../TezosNumericInput'
+import { wrapComponent } from '../../utils/i18n';
 
 import Button from '../Button/';
 import Loader from '../Loader/';
@@ -44,13 +46,6 @@ const FeeContainer = styled.div`
   display: flex;
 `;
 
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 20px;
-  top: 40px;
-  display: block;
-`;
-
 const PasswordButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -66,7 +61,7 @@ const DelegateButton = styled(Button)`
 const defaultState = {
   isLoading: false,
   delegate: '',
-  amount: null,
+  amount: '',
   fee: 100,
   passPhrase: '',
   isShowedPwd: false,
@@ -89,8 +84,9 @@ class AddDelegateModal extends Component<Props> {
     }
   }
 
-  changeAmount = (_, amount) => this.setState({ amount });
+
   changeDelegate = (delegate) => this.setState({ delegate });
+  changeAmount = (amount) => this.setState({ amount });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
@@ -143,13 +139,7 @@ class AddDelegateModal extends Component<Props> {
         <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate} />
         <AmountFeePassContainer>
           <AmountSendContainer>
-            <TextField
-              floatingLabelText="Amount"
-              style={{ width: '100%' }}
-              onChange={this.changeAmount}
-              type="number"
-            />
-            <TezosIconInput color='secondary' iconName="tezos" />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
           </AmountSendContainer>
           <FeeContainer>
             <Fees

@@ -8,7 +8,7 @@ import MessageBar from '../../components/MessageBar/';
 
 type Props = {
   children: Node,
-  message: Object
+  message: object
 };
 
 const Container = styled.div`

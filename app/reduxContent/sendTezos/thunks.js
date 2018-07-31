@@ -23,8 +23,8 @@ export function fetchTransactionAverageFees() {
 
 export function validateAmount(amount, toAddress) {
   return async dispatch => {
-    const parsedAmount = Number(amount.replace(/,/g, ''));
-    const amountInUtez = tezToUtez(parsedAmount);
+    const parsedAmount = Number(amount.replace(/,/g, '.'));
+    const amountInUtez = tezToUtez(parseFloat(parsedAmount));
 
     const validations = [
       { value: amount, type: 'notEmpty', name: 'Amount' },
@@ -81,7 +81,7 @@ export function sendTez(
       url,
       keyStore,
       toAddress,
-      tezToUtez(Number(amount.replace(/,/g, ''))),
+      tezToUtez(Number(amount.replace(/,/g, '.'))),
       fee
     ).catch(err => {
       const errorObj = { name: err.message, ...err };

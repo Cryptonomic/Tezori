@@ -18,7 +18,7 @@ import HomeSettings from './../HomeSettings/';
 type Props = {
   identities: List<Identity>,
   isLoading: boolean,
-  match: Object
+  match: object
 };
 
 class HomePage extends Component<Props> {

@@ -21,9 +21,9 @@ type Props = {
   publicKeyHash: string,
   onRefreshClick: () => {},
   isManagerAddress: boolean,
-  theme: Object,
+  theme: object,
   parentIndex?: number,
-  parentIdentity?: Object,
+  parentIdentity?: object,
   delegatedAddress?: string,
   time: any
 };
