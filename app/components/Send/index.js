@@ -9,7 +9,9 @@ import { ms } from '../../styles/helpers';
 import SendConfirmationModal from '../SendConfirmationModal';
 import { wrapComponent } from '../../utils/i18n';
 import InputAddress from '../InputAddress';
-import TezosNumericInput from '../TezosNumericInput'
+import TezosNumericInput from '../TezosNumericInput';
+import TezosAmount from '../TezosAmount/';
+import TezosIcon from '../TezosIcon/';
 
 import {
   validateAmount,
@@ -29,9 +31,9 @@ const SendContainer = styled.div`
 
 const AmountContainer = styled.div`
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  width: 100%;
+  flex-direction: column;
+  width: 45%;
+  justify-content: center;
 `;
 
 const SendButton = styled(Button)`
@@ -40,9 +42,70 @@ const SendButton = styled(Button)`
 
 const InputAmount = styled.div`
   position: relative;
-  width: 50%;
-  margin-right: 50px;
+  width: 100%;
 `;
+
+const MainContainer = styled.div`
+  display: flex;
+  width: 100%;
+`;
+const BalanceContainer = styled.div`
+  padding: 0 0px 0 20px;
+  flex: 1;
+  position: relative;
+  margin: 15px 0 0px 40px;
+`;
+const BalanceArrow = styled.div`
+  top: 50%;
+  left: 4px;
+  margin-top: -17px;
+  border-top: 17px solid transparent;
+  border-bottom: 17px solid transparent;
+  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};;
+  width: 0;
+  height: 0;
+  position: absolute;
+`;
+const BalanceContent = styled.div`
+  padding: ${ms(1)} ${ms(1)} ${ms(1)} ${ms(4)};
+  color: #123262;
+  text-align: left;
+  height: 100%;
+  background-color: ${({ theme: { colors } }) => colors.gray1};
+`;
+
+const UseMax = styled.div`
+  position: absolute;
+  right: 23px;
+  top: 38px;
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
+  color: ${({ theme: { colors } }) => colors.accent};
+  cursor: pointer;
+`;
+const TotalAmount = styled(TezosAmount)`
+  margin-bottom: 22px;
+`;
+const BalanceAmount = styled(TezosAmount)`
+`;
+
+const WarningIcon = styled(TezosIcon)`
+  padding: 0 ${ms(-9)} 0 0;
+`;
+const BalanceTitle = styled.div`
+  color: ${({ theme: { colors } }) => colors.gray5};
+  font-size: 14px;
+`;
+const ErrorContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme: { colors } }) => colors.error1};
+`;
+
+const utez = 1000000;
 
 type Props = {
   isReady?: boolean,
@@ -50,7 +113,8 @@ type Props = {
   selectedAccountHash?: string,
   selectedParentHash?: string,
   validateAmount?: () => {},
-  t: () => {}
+  t: () => {},
+  addressBalance: number
 };
 
 const initialState = {
@@ -73,9 +137,19 @@ class Send extends Component<Props> {
   state = initialState;
 
   async componentWillMount() {
-    const { fetchTransactionAverageFees } = this.props;
+    const { fetchTransactionAverageFees, addressBalance } = this.props;
     const averageFees = await fetchTransactionAverageFees();
-    this.setState({ averageFees, fee: averageFees.low });
+    this.setState({ averageFees, fee: averageFees.low, total: averageFees.low, balance: addressBalance });
+  }
+
+  onUseMax = () => {
+    const { addressBalance } = this.props;
+    const { fee } = this.state;
+    const max = addressBalance - fee - 1;
+    const amount = (max/utez).toFixed(6);
+    const total = addressBalance - 1;
+    const balance = 1;
+    this.setState({ amount, total, balance });
   }
 
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
@@ -86,7 +160,25 @@ class Send extends Component<Props> {
   handlePasswordChange = (password) =>  this.setState({ password });
   handleToAddressChange = (toAddress) =>  this.setState({ toAddress });
   handleAmountChange = (amount) =>  this.setState({ amount });
-  handleFeeChange = (fee) =>  this.setState({ fee });
+  handleAmountChange = (amount) => {
+    const { addressBalance } = this.props;
+    const { fee } = this.state;
+    const newAmount = amount || '0';
+    const numAmount = parseFloat(newAmount) * utez;
+    const total = numAmount + fee;
+    const balance = addressBalance - total;
+    this.setState({ amount, total, balance });
+  };
+  handleFeeChange = (fee) => {
+    const { addressBalance } = this.props;
+    const { amount } = this.state;
+    const newAmount = amount || '0';
+    const numAmount = parseFloat(newAmount) * utez;
+    const total = numAmount + fee;
+    const balance = addressBalance - total;
+    this.setState({ fee, total, balance });
+  };
+
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   validateAmount = async () => {
@@ -128,25 +220,60 @@ class Send extends Component<Props> {
       amount,
       fee,
       averageFees,
-      isShowedPwd
+      isShowedPwd,
+      total,
+      balance
     } = this.state;
 
     return (
       <SendContainer>
         <InputAddress labelText={t('general.address')} userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} changeDelegate={this.handleToAddressChange} />
-        <AmountContainer>
-          <InputAmount>
-            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
-          </InputAmount>
-          <Fees
-            styles={{ width: '50%' }}
-            low={averageFees.low}
-            medium={averageFees.medium}
-            high={averageFees.high}
-            fee={fee}
-            onChange={this.handleFeeChange}
-          />
-        </AmountContainer>
+        <MainContainer>
+          <AmountContainer>
+            <InputAmount>
+              <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
+              <UseMax onClick={this.onUseMax}>Use Max</UseMax>
+            </InputAmount>
+            <Fees
+              styles={{ width: '100%' }}
+              low={averageFees.low}
+              medium={averageFees.medium}
+              high={averageFees.high}
+              fee={fee}
+              onChange={this.handleFeeChange}
+            />
+          </AmountContainer>
+          <BalanceContainer>
+            <BalanceArrow />
+            <BalanceContent>
+              <BalanceTitle>Total</BalanceTitle>
+              <TotalAmount
+                weight='500'
+                color="gray3"
+                size={ms(1)}
+                amount={total}
+              />              
+              <BalanceTitle>Remaining Balance</BalanceTitle>
+              <BalanceAmount
+                weight='500'
+                color={balance<1?'error1':'gray3'}
+                size={ms(-1)}
+                amount={balance}
+              />
+              {balance < 1 &&
+                <ErrorContainer>
+                  <WarningIcon
+                    iconName="warning"
+                    size={ms(-1)}
+                    color='error1'
+                  />
+                  Total exceeds available funds.
+                </ErrorContainer>
+              }
+              
+            </BalanceContent>
+          </BalanceContainer>
+        </MainContainer>
         <SendButton
           disabled={!isReady}
           onClick={this.validateAmount}
