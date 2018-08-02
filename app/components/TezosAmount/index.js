@@ -54,7 +54,7 @@ type Props = {
   amount: number,
   color: string,
   iconName?: string,
-  size: any,
+  size?: string,
   weight: string,
   format: number,
   className?: string,
