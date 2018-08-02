@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { TextField, Dialog } from 'material-ui';
+import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
 
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import TezosAddress from '../TezosAddress/';
 import Fees from '../Fees/';
 import Loader from '../Loader';
 import PasswordInput from '../PasswordInput';
+import InputAddress from '../InputAddress/';
 
 const inputStyles = {
   underlineFocusStyle: {
@@ -53,9 +54,7 @@ const AddressContainer = styled.div`
   padding-left: 21px;
   margin-top: 10px;
 `;
-const NewAddressTextField = styled(TextField)`
-  width: 100% !important;
-`
+
 const BottomContainer = styled.div`
   width: 100%;
   height: 98px;
@@ -103,7 +102,7 @@ type Props = {
   newAddress?: string,
   password?: string,
   fee?: number,
-  averageFees: any,
+  averageFees: object,
   handleFeeChange: () => {},
   handlePasswordChange: () => {},
   onAddressChange: () => {},
@@ -159,13 +158,11 @@ const DelegateConfirmationModal = (props: Props) => {
             color2="index0"
           />
         </AddressContainer>
-        <NewAddressTextField
-          floatingLabelText="Change Delegate to New Address"
-          value={newAddress}
-          floatingLabelStyle={inputStyles.floatingLabelStyle}
-          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
-          underlineStyle={inputStyles.underlineStyle}
-          onChange={onAddressChange}
+        <InputAddress 
+          labelText='Change Delegate to New Address' 
+          addressType="delegate"
+          tooltip={false}
+          changeDelegate={onAddressChange}
         />
         <Fees
           styles={{ minWidth: 206, width: 'auto' }}
