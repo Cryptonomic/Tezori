@@ -67,11 +67,11 @@ const renderInput = (inputProps) => {
   );
 }
 type Props1 = {
-  highlightedIndex: any,
-  index: any,
+  highlightedIndex: number | null,
+  index: number | null,
   itemProps: object,
   selectedItem: array,
-  suggestion: any
+  suggestion: object
 };
 
 const renderSuggestion = (props: Props1) => {
@@ -130,7 +130,7 @@ const styles = () => ({
 type Props = {
   selectedItems: array,
   inputValue: string,
-  classes?: any,
+  classes?: object,
   onChangeInput: () => {},
   onChangeItems: () => {}
 };

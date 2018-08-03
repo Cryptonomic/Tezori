@@ -99,7 +99,7 @@ type Props = {
   syncWallet: () => {},
   selectedAccountHash: string,
   selectedParentHash: string,
-  time: any
+  time?: Date
 };
 
 type State = {
