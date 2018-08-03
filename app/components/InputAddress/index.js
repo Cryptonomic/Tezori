@@ -51,11 +51,11 @@ const TextfieldTooltip = styled(Button)`
 
 type Props = {
   labelText: string,
-  changeDelegate: Function,
+  changeDelegate: () => {},
   tooltip: boolean,
   userAddress?: string,
   addressType: 'send' | 'delegate',
-  t: Function
+  t: () => {}
 };
 
 class InputAddress extends React.PureComponent<Props> {

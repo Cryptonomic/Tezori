@@ -223,12 +223,12 @@ const StyledTooltip = styled(TooltipAdapter)`
 `;
 
 type Props = {
-  content: any,
-  trigger: Array<string>,
-  children: any,
-  className: any,
-  position: any,
-  arrowPos: any
+  content?: React.Element,
+  trigger?: string[],
+  children?: React.Element,
+  className?: string,
+  position?: string,
+  arrowPos?: object
 };
 
 function Tooltip(props: Props) {
