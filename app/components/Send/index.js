@@ -33,7 +33,6 @@ const AmountContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 45%;
-  justify-content: center;
 `;
 
 const SendButton = styled(Button)`
@@ -67,7 +66,7 @@ const BalanceArrow = styled.div`
   position: absolute;
 `;
 const BalanceContent = styled.div`
-  padding: ${ms(1)} ${ms(1)} ${ms(1)} ${ms(4)};
+  padding: ${ms(0)} ${ms(0)} ${ms(0)} ${ms(3)};
   color: #123262;
   text-align: left;
   height: 100%;
@@ -96,6 +95,7 @@ const WarningIcon = styled(TezosIcon)`
 const BalanceTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
   font-size: 14px;
+  font-weight: 300;
 `;
 const ErrorContainer = styled.div`
   display: flex;
@@ -114,7 +114,8 @@ type Props = {
   selectedParentHash?: string,
   validateAmount?: () => {},
   t: () => {},
-  addressBalance: number
+  addressBalance: number,
+  isManager: boolean
 };
 
 const initialState = {
@@ -143,19 +144,22 @@ class Send extends Component<Props> {
   }
 
   onUseMax = () => {
-    const { addressBalance } = this.props;
+    const { addressBalance, isManager } = this.props;
     const { fee } = this.state;
-    const max = addressBalance - fee - 1;
+    let balance = 1;
+    if (!isManager) {
+      balance = 0;
+    }
+    const max = addressBalance - fee - balance;
     const amount = (max/utez).toFixed(6);
-    const total = addressBalance - 1;
-    const balance = 1;
+    const total = addressBalance - balance;    
     this.setState({ amount, total, balance });
   }
 
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () => {
     const { averageFees, fee } = this.state;
-    this.setState({ ...initialState, averageFees, fee });
+    this.setState({ ...initialState, toAddress: '', averageFees, fee, total: averageFees.low });
   };
   handlePasswordChange = (password) =>  this.setState({ password });
   handleToAddressChange = (toAddress) =>  this.setState({ toAddress });
@@ -209,8 +213,38 @@ class Send extends Component<Props> {
     }
   };
 
+  getBalanceState = (balance, amount, isManager) => {
+    if (balance < 0) {
+      return {
+        isIssue: true,
+        warningMessage: 'Total exceeds available funds',
+        balanceColor: 'error1'
+      };
+    }
+    if (isManager && balance === 0 ) {
+      return {
+        isIssue: true,
+        warningMessage: 'Manager Addresses are not yet allowed to have less than 1 µtz',
+        balanceColor: 'error1'
+      };
+    }
+    
+    if (amount) {
+      return {
+        isIssue: false,
+        warningMessage: '',
+        balanceColor: 'gray3'
+      };
+    }
+    return {
+      isIssue: false,
+      warningMessage: '',
+      balanceColor: 'gray8'
+    };
+  }
+
   render() {
-    const { isReady, t } = this.props;
+    const { isReady, t, isManager } = this.props;
 
     const {
       isLoading,
@@ -224,6 +258,14 @@ class Send extends Component<Props> {
       total,
       balance
     } = this.state;
+
+    const {
+      isIssue,
+      warningMessage,
+      balanceColor
+    } = this.getBalanceState(balance, amount, isManager);
+
+    const isDisabled = !isReady || isIssue || isLoading || !amount || !toAddress;
 
     return (
       <SendContainer>
@@ -249,25 +291,25 @@ class Send extends Component<Props> {
               <BalanceTitle>Total</BalanceTitle>
               <TotalAmount
                 weight='500'
-                color="gray3"
-                size={ms(1)}
+                color={amount?'gray3':'gray8'}
+                size={ms(0.65)}
                 amount={total}
               />              
               <BalanceTitle>Remaining Balance</BalanceTitle>
               <BalanceAmount
                 weight='500'
-                color={balance<1?'error1':'gray3'}
-                size={ms(-1)}
+                color={balanceColor}
+                size={ms(-0.75)}
                 amount={balance}
               />
-              {balance < 1 &&
+              {isIssue &&
                 <ErrorContainer>
                   <WarningIcon
                     iconName="warning"
                     size={ms(-1)}
                     color='error1'
                   />
-                  Total exceeds available funds.
+                  {warningMessage}
                 </ErrorContainer>
               }
               
@@ -275,7 +317,7 @@ class Send extends Component<Props> {
           </BalanceContainer>
         </MainContainer>
         <SendButton
-          disabled={!isReady}
+          disabled={isDisabled}
           onClick={this.validateAmount}
           buttonTheme="secondary"
           small

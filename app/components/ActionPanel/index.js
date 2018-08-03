@@ -146,6 +146,7 @@ class ActionPanel extends Component<Props, State> {
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
             addressBalance={balance}
+            isManager={selectedAccountHash === selectedParentHash}
           />
         );
       case TRANSACTIONS:
