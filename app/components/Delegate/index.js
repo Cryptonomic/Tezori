@@ -148,7 +148,7 @@ class Delegate extends Component<Props> {
     this.setState({ ...initialState, averageFees, fee });
   };
   handlePasswordChange = (password) =>  this.setState({ password });
-  handleTempAddressChange = (_, tempAddress) =>  this.setState({ tempAddress });
+  handleTempAddressChange = (tempAddress) =>  this.setState({ tempAddress });
   handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
