@@ -159,8 +159,8 @@ class Send extends Component<Props> {
 
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () => {
-    const { averageFees, fee } = this.state;
-    this.setState({ ...initialState, toAddress: '', averageFees, fee, total: averageFees.low });
+    const { averageFees } = this.state;
+    this.setState({ ...initialState, toAddress: '', averageFees, fee: averageFees.low, total: averageFees.low });
   };
   handlePasswordChange = (password) =>  this.setState({ password });
   handleToAddressChange = (toAddress) =>  this.setState({ toAddress });
@@ -270,7 +270,7 @@ class Send extends Component<Props> {
 
     return (
       <SendContainer>
-        <InputAddress labelText={t('general.address')} userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} changeDelegate={this.handleToAddressChange} />
+        <InputAddress address={toAddress} labelText={t('general.address')} userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} changeDelegate={this.handleToAddressChange} />
         <MainContainer>
           <AmountContainer>
             <InputAmount>
