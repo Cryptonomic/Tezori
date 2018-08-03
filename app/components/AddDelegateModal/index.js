@@ -124,14 +124,16 @@ const BalanceAmount = styled(TezosAmount)`
 
 const WarningIcon = styled(TezosIcon)`
   padding: 0 ${ms(-9)} 0 0;
+  position: relative;
+  top: 1px;
 `;
 const BalanceTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
   font-size: 14px;
+  font-weight: 300;
 `;
 const ErrorContainer = styled.div`
-  display: flex;
-  align-items: center;
+  display: block;
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme: { colors } }) => colors.error1};
@@ -255,6 +257,36 @@ class AddDelegateModal extends Component<Props> {
     this.props.onCloseClick();
   }
 
+  getBalanceState = (balance, amount) => {
+    if (balance < 0) {
+      return {
+        isIssue: true,
+        warningMessage: 'Total exceeds available funds',
+        balanceColor: 'error1'
+      };
+    }
+    if (balance === 0 ) {
+      return {
+        isIssue: true,
+        warningMessage: 'Manager Addresses are not yet allowed to have less than 1 µtz',
+        balanceColor: 'error1'
+      };
+    }
+    
+    if (amount) {
+      return {
+        isIssue: false,
+        warningMessage: '',
+        balanceColor: 'gray3'
+      };
+    }
+    return {
+      isIssue: false,
+      warningMessage: '',
+      balanceColor: 'gray8'
+    };
+  }
+
   render() {
     const { open, t } = this.props;
     const {
@@ -270,7 +302,11 @@ class AddDelegateModal extends Component<Props> {
       balance
     } = this.state;
     const isDisabled = isLoading || !delegate || !amount || !passPhrase || balance<1;
-
+    const {
+      isIssue,
+      warningMessage,
+      balanceColor
+    } = this.getBalanceState(balance, amount);
     return (
       <Dialog
         modal
@@ -344,25 +380,25 @@ class AddDelegateModal extends Component<Props> {
               <BalanceTitle>Total</BalanceTitle>
               <TotalAmount
                 weight='500'
-                color="gray3"
-                size={ms(1)}
+                color={amount?'gray3':'gray8'}
+                size={ms(0.65)}
                 amount={total}
               />              
               <BalanceTitle>Remaining Balance</BalanceTitle>
               <BalanceAmount
                 weight='500'
-                color={balance<1?'error1':'gray3'}
-                size={ms(-1)}
+                color={balanceColor}
+                size={ms(-0.75)}
                 amount={balance}
               />
-              {balance < 1 &&
+              {isIssue &&
                 <ErrorContainer>
                   <WarningIcon
                     iconName="warning"
                     size={ms(-1)}
                     color='error1'
                   />
-                  Total exceeds available funds.
+                  {warningMessage}
                 </ErrorContainer>
               }
               
