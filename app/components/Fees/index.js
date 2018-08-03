@@ -21,7 +21,7 @@ type Props = {
   high?: number,
   styles?: object,
   underlineStyle?: object,
-  fee?: any,
+  fee?: number,
   onChange?: () => {},
   t: () => {}
 };

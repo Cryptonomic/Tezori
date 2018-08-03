@@ -25,7 +25,7 @@ type Props = {
   parentIndex?: number,
   parentIdentity?: object,
   delegatedAddress?: string,
-  time: any
+  time?: Date
 };
 
 const Container = styled.header`
