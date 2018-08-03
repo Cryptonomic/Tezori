@@ -19,7 +19,7 @@ const Icon = styled.span`
 type Props = {
   iconName?: string,
   color: string,
-  size: any,
+  size?: string,
   onClick?: () => {},
   className?: string
 };

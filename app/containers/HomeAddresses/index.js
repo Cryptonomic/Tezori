@@ -12,7 +12,7 @@ import ActionPanel from '../../components/ActionPanel/';
 
 type Props = {
   identities: array,
-  match: any
+  match: object
 };
 
 const Container = styled.div`

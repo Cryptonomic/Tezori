@@ -103,7 +103,7 @@ type Props = {
   newAddress?: string,
   password?: string,
   fee?: number,
-  averageFees: any,
+  averageFees: object,
   handleFeeChange: () => {},
   handlePasswordChange: () => {},
   onAddressChange: () => {},
