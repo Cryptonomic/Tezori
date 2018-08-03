@@ -91,6 +91,8 @@ const BalanceAmount = styled(TezosAmount)`
 
 const WarningIcon = styled(TezosIcon)`
   padding: 0 ${ms(-9)} 0 0;
+  position: relative;
+  top: 1px;
 `;
 const BalanceTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
@@ -98,8 +100,7 @@ const BalanceTitle = styled.div`
   font-weight: 300;
 `;
 const ErrorContainer = styled.div`
-  display: flex;
-  align-items: center;
+  display: block;
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme: { colors } }) => colors.error1};
