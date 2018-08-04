@@ -12,7 +12,7 @@ import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
-import PasswordInput from '../PasswordInput';
+import PasswordInput from '../PasswordInput/';
 
 import {
   createNewAccount,
@@ -104,7 +104,7 @@ const DelegateButton = styled(Button)`
 `;
 
 const defaultState = {
-  isLoading: false,
+  loading: false,
   delegate: '',
   amount: null,
   fee: 100,
@@ -133,7 +133,7 @@ class AddDelegateModal extends Component<Props> {
   changeDelegate = (_, delegate) => this.setState({ delegate });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+  setLoading = (loading) =>  this.setState({ loading });
 
   renderToolTipComponent = () => {
     return (
@@ -157,7 +157,7 @@ class AddDelegateModal extends Component<Props> {
   createAccount = async () => {
     const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
-    this.setIsLoading(true);
+    this.setLoading(true);
     if (
       await createNewAccount(
         delegate,
@@ -170,14 +170,14 @@ class AddDelegateModal extends Component<Props> {
       this.setState(defaultState);
       onCloseClick();
     } else {
-      this.setIsLoading(false);
+      this.setLoading(false);
     }
   };
 
   render() {
     const { open, onCloseClick } = this.props;
-    const { isLoading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !passPhrase;
+    const { loading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
+    const isDisabled = loading || !delegate || !amount || !passPhrase;
 
     return (
       <Dialog
@@ -258,16 +258,22 @@ class AddDelegateModal extends Component<Props> {
         <PasswordButtonContainer>
           <DelegateButton
             buttonTheme="primary"
-            disabled={isLoading || isDisabled}
+            disabled={isDisabled}
             onClick={this.createAccount}
           >
             Delegate
           </DelegateButton>
         </PasswordButtonContainer>
-        {isLoading && <Loader />}
+        {loading && <Loader />}
       </Dialog>
     );
   }
+}
+
+function mapStateToProps({ wallet }) {
+  return {
+    isLoading: wallet.get('isLoading')
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -280,4 +286,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(AddDelegateModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);

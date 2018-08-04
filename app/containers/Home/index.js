@@ -10,6 +10,7 @@ import {
 
 import Loader from '../../components/Loader/';
 import TopBar from '../../components/TopBar/';
+import NodesStatus from '../../components/NodesStatus/';
 
 import HomeAddresses from './../HomeAddresses/';
 import HomeAddAddress from './../HomeAddAddress/';
@@ -34,6 +35,7 @@ class HomePage extends Component<Props> {
     return (
       <Fragment>
         <TopBar />
+        <NodesStatus />
         <Switch>
           <Route path={`${match.path}/addresses`} component={HomeAddresses} />
           <Route path={`${match.path}/addAddress`} component={HomeAddAddress} />

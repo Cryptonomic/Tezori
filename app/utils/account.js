@@ -2,7 +2,8 @@ import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { TRANSACTIONS } from '../constants/TabConstants';
-import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
+import { getSyncTransactions, syncTransactionsWithState } from './transaction';
+import { activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
 import { getSelectedNode } from './nodes';
 const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
 
@@ -58,16 +59,21 @@ export async function getSyncAccount( identities, account, nodes, accountHash, p
     console.error(e);
     return account;
   });
-  
+
   const { selectedAccountHash } = getSelectedHash();
   if ( accountHash === selectedAccountHash ) {
-    account.transactions = await getTransactions(accountHash, nodes)
-      .catch( e => {
-        console.log('-debug: Error in: getSyncAccount -> getTransactions for:' + accountHash);
-        console.error(e);
-        return account.transactions;
-      });
+    account.transactions = await getSyncTransactions(accountHash, nodes, account.transactions);
   }
 
   return account;
+}
+
+export function syncAccountWithState(syncAccount, stateAccount) {
+  syncAccount.activeTab = stateAccount.activeTab;
+  syncAccount.transactions = syncTransactionsWithState(
+    syncAccount.transactions,
+    stateAccount.transactions
+  );
+
+  return syncAccount;
 }

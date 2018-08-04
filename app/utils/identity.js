@@ -1,13 +1,13 @@
 import * as status from '../constants/StatusTypes';
-import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
-import { createAccount, getAccountsForIdentity, getSyncAccount } from './account';
+import { getSyncTransactions, syncTransactionsWithState } from './transaction';
+import { activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
+import { createAccount, getAccountsForIdentity, getSyncAccount, syncAccountWithState } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
-import { FUNDRAISER } from '../constants/StoreTypes';
+import { FUNDRAISER } from '../constants/storeTypes';
 
 export function createIdentity(identity) {
 
   return {
-    transactions: [],
     balance: 0,
     accounts: [],
     publicKeyHash: '', 
@@ -15,9 +15,10 @@ export function createIdentity(identity) {
     privateKey: '',
     operations: {},
     order: null,
-    storeTypes: FUNDRAISER,
+    storeType: FUNDRAISER,
     activeTab: TRANSACTIONS,
     status: status.CREATED,
+    transactions: [],
     ...identity
   };
 }
@@ -35,7 +36,6 @@ export async function getSyncIdentity(identities, identity, nodes) {
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, publicKeyHash );
   identity = await activateAndUpdateAccount(identity, keyStore, nodes);
   const { selectedAccountHash } = getSelectedHash();
-  console.log('-debug: identity', identity);
   /*
    *  we are taking state identity accounts overriding their state
    *  with the new account we got from setAccounts.. check if any of any new accounts
@@ -50,14 +50,12 @@ export async function getSyncIdentity(identities, identity, nodes) {
       return [];
     });
 
-  console.log('-debug: accounts', accounts);
-
   const stateAccountIndices = identity.accounts
     .map( account =>
       account.accountId
     );
 
-  accounts = accounts.map((account) => {
+  accounts = accounts.map(account => {
     const foundIndex = stateAccountIndices.indexOf(account.accountId);
     const overrides = {};
     if ( foundIndex > -1 ) {
@@ -65,6 +63,7 @@ export async function getSyncIdentity(identities, identity, nodes) {
       overrides.operations = identity.accounts[foundIndex].operations;
       overrides.activeTab = identity.accounts[foundIndex].activeTab;
       overrides.order = identity.accounts[foundIndex].order;
+      overrides.transactions = identity.accounts[foundIndex].transactions;
     }
     return createAccount({
         ...account,
@@ -106,25 +105,44 @@ export async function getSyncIdentity(identities, identity, nodes) {
         });
 
       } else if ( selectedAccountHash === account.accountId ) {
-        account.transactions = await getTransactions(selectedAccountHash, nodes)
-          .catch( e => {
-            console.log('-debug: Error in: else -> getSyncIdentity -> getTransactions for:' + selectedAccountHash);
-            console.error(e);
-            return account.transactions;
-          });
+        account.transactions = await getSyncTransactions(selectedAccountHash, nodes, account.transactions);
       }
       return account;
     })
   );
   
-  if ( publicKeyHash === selectedAccountHash) {
-    identity.transactions = await getTransactions(publicKeyHash, nodes)
-      .catch( e => {
-        console.log('-debug: Error in: getSyncIdentity -> getTransactions for:' + publicKeyHash);
-        console.error(e);
-        return identity.transactions;
-      });
+  if ( publicKeyHash === selectedAccountHash ) {
+    identity.transactions = await getSyncTransactions(publicKeyHash, nodes, identity.transactions);
   }
 
   return identity;
+}
+
+export function syncIdentityWithState(syncIdentity, stateIdentity) {
+  const newAccounts = stateIdentity.accounts
+    .filter(stateIdentityAccount => {
+      const syncIdentityAccountIndex = syncIdentity.accounts
+        .findIndex(syncIdentityAccount =>
+          syncIdentityAccount.accountId === stateIdentityAccount.accountId
+        );
+
+      if ( syncIdentityAccountIndex > -1 ) {
+        syncIdentity.accounts[syncIdentityAccountIndex] = syncAccountWithState(
+          syncIdentity.accounts[syncIdentityAccountIndex],
+          stateIdentityAccount
+        );
+        return false;
+      }
+
+      return true;
+    });
+
+  syncIdentity.activeTab = stateIdentity.activeTab;
+  syncIdentity.accounts = syncIdentity.accounts.concat(newAccounts);
+  syncIdentity.transactions = syncTransactionsWithState(
+    syncIdentity.transactions,
+    stateIdentity.transactions
+  );
+  
+  return syncIdentity;
 }

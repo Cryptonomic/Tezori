@@ -1,5 +1,5 @@
 import { TezosOperations } from 'conseiljs';
-import { addNewAccount } from '../../reduxContent/wallet/actions';
+import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
 import { tezToUtez } from '../../utils/currancy';
@@ -9,6 +9,8 @@ import { getSelectedNode } from '../../utils/nodes';
 import { TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import { persistWalletState } from '../../utils/wallet';
+import { createTransaction } from '../../utils/transaction';
+import { ORIGINATION } from '../../constants/TransactionTypes';
 
 import {
   getSelectedKeyStore,
@@ -102,24 +104,34 @@ export function createNewAccount(
 
       const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
-      dispatch(
-        addNewAccount(
-          publicKeyHash,
-          createAccount(
-            {
-              accountId: newAccountHash,
-              balance: amountInUtez,
-              manager: publicKeyHash,
-              delegateValue: '',
-              operations: {
-                [CREATED]: operationId
-              },
-              order: ( identity.accounts.length || 0 ) + 1
+
+      identity.accounts.push(
+        createAccount(
+          {
+            accountId: newAccountHash,
+            balance: amountInUtez,
+            manager: publicKeyHash,
+            delegateValue: '',
+            operations: {
+              [CREATED]: operationId
             },
-            identity
-          )
+            order: ( identity.accounts.length || 0 ) + 1
+          },
+          identity
         )
       );
+
+      identity.transactions.push(
+        createTransaction({
+          delegate,
+          kind: ORIGINATION,
+          operationGroupHash: operationId,
+          source: keyStore.publicKeyHash,
+          fee
+        })
+      );
+
+      dispatch(updateIdentity(identity));
 
       // todo: add transaction
       dispatch(
