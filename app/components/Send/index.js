@@ -27,6 +27,8 @@ const SendContainer = styled.div`
   align-items: flex-start;
   width: 100%;
   padding: 20px;
+  height: 345px;
+  position: relative;
 `;
 
 const AmountContainer = styled.div`
@@ -36,7 +38,8 @@ const AmountContainer = styled.div`
 `;
 
 const SendButton = styled(Button)`
-  margin-top: ${ms(2)};
+  position: absolute;
+  bottom: 0;
 `;
 
 const InputAmount = styled.div`
