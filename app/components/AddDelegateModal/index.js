@@ -185,7 +185,7 @@ class AddDelegateModal extends Component<Props> {
       const averageFees = await fetchOriginationAverageFees();
       const fee = averageFees.low;
       const total = fee + this.state.gas;
-      this.setState({ averageFees, fee, total, balance: managerBalance});// eslint-disable-line react/no-did-update-set-state
+      this.setState({ averageFees, fee, total, balance: managerBalance - total});// eslint-disable-line react/no-did-update-set-state
     }
   }
 
@@ -253,7 +253,7 @@ class AddDelegateModal extends Component<Props> {
     const { managerBalance } = this.props;
     const fee = averageFees.low;
     const total = fee + gas;
-    this.setState({...defaultState, total, balance: managerBalance});
+    this.setState({...defaultState, total, balance: managerBalance - total});
     this.props.onCloseClick();
   }
 
