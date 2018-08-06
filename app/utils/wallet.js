@@ -1,9 +1,15 @@
 import path from 'path';
 import fs from 'fs';
+import { remote } from 'electron';
 import { omit, pick } from 'lodash';
 import { TezosWallet } from 'conseiljs';
 const { saveWallet, loadWallet } = TezosWallet;
-const walletStatePath = path.join(__dirname, 'walletState.json');
+
+const fileName = 'walletState';
+let walletStatePath = path.join(__dirname, '../resources/', fileName);
+if (process.env.NODE_ENV === 'production') {
+  walletStatePath = path.join(remote.app.getAppPath(), '..', fileName);
+}
 
 export async function saveUpdatedWallet(identities, walletLocation, walletFileName, password) {
   const completeWalletPath = path.join(walletLocation, walletFileName);
@@ -38,7 +44,7 @@ export function persistWalletState(walletState) {
 
   fs.writeFileSync(
     walletStatePath,
-    Buffer.from(JSON.stringify(prepareToPersist(walletState), null,  2), 'binary')
+    Buffer.from(JSON.stringify(prepareToPersist(walletState)), 'binary')
   );
 }
 
