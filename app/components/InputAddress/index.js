@@ -55,7 +55,8 @@ type Props = {
   tooltip: boolean,
   userAddress?: string,
   addressType: 'send' | 'delegate',
-  t: () => {}
+  t: () => {},
+  onIssue?: () => {}
 };
 
 class InputAddress extends React.PureComponent<Props> {
@@ -84,12 +85,13 @@ class InputAddress extends React.PureComponent<Props> {
   };
 
   validateAddress = (event, changeDelegate, addressType = 'send') => {
-    const {t} = this.props;
+    const {t, onIssue} = this.props;
     const delegateText = event.target.value;
      
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
     const firstCharactersRegEx = addressType === 'send' ? /^(tz1|tz2|tz3|kt1|TZ1|TZ2|TZ3|KT1)/ : /^(tz1|tz2|tz3|TZ1|TZ2|TZ3)/;
+    let errorState = true;
 
     if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
@@ -111,10 +113,11 @@ class InputAddress extends React.PureComponent<Props> {
       this.setState({
         error: ''
       })
-
+      errorState = false;
     }
 
     changeDelegate(delegateText);
+    onIssue(errorState);
   }
 
   render() {

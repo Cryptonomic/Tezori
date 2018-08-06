@@ -67,7 +67,8 @@ const defaultState = {
     low: 100,
     medium: 200,
     high: 400
-  }
+  },
+  isDelegateIssue: true
 };
 
 class AddDelegateModal extends Component<Props> {
@@ -111,8 +112,8 @@ class AddDelegateModal extends Component<Props> {
 
   render() {
     const { open, onCloseClick, t } = this.props;
-    const { isLoading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !passPhrase;
+    const { isLoading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd, isDelegateIssue } = this.state;
+    const isDisabled = isLoading || !delegate || !amount || !passPhrase || isDelegateIssue;
 
     return (
       <Dialog
@@ -134,7 +135,7 @@ class AddDelegateModal extends Component<Props> {
           }}
           onClick={onCloseClick}
         />
-        <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate} />
+        <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate}  onIssue={(status)=> this.setState({isDelegateIssue: status})} />
         <AmountFeePassContainer>
           <AmountSendContainer>
             <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
