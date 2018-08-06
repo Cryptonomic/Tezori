@@ -122,7 +122,7 @@ class ActionPanel extends Component<Props, State> {
     updateActiveTab(selectedAccountHash, selectedParentHash, activeTab);
   };
 
-  renderSection = (selectedAccount, activeTab) => {
+  renderSection = (selectedAccount, activeTab, balance) => {
     const { selectedAccountHash, selectedParentHash } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
@@ -145,6 +145,8 @@ class ActionPanel extends Component<Props, State> {
             isReady={ready}
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
+            addressBalance={balance}
+            isManager={selectedAccountHash === selectedParentHash}
           />
         );
       case TRANSACTIONS:
@@ -266,7 +268,7 @@ class ActionPanel extends Component<Props, State> {
           })}
         </TabList>
         <SectionContainer>
-          {this.renderSection(selectedAccount, activeTab)}
+          {this.renderSection(selectedAccount, activeTab, balance || 0)}
         </SectionContainer>
       </Container>
     );

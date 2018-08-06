@@ -304,6 +304,7 @@ class AddressBlock extends Component<Props, State> {
           selectedParentHash={publicKeyHash}
           open={isDelegateModalOpen}
           onCloseClick={this.closeDelegateModal}
+          managerBalance={balance}
         />
       </Container>
     );
