@@ -41,7 +41,7 @@ export function createNewAccount(
     const identities = state()
       .wallet.get('identities')
       .toJS();
-    const parsedAmount = Number(amount.replace(/,/g, '.'));
+    const parsedAmount = Number(amount.replace(/,/g, ''));
     const amountInUtez = tezToUtez(parsedAmount);
 
     const validations = [
