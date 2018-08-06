@@ -16,6 +16,8 @@ import { READY } from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
+import Tooltip from '../Tooltip';
+import NoFundTooltip from "../Tooltips/NoFundTooltip";
 
 const Container = styled.div`
   overflow: hidden;
@@ -222,20 +224,37 @@ class AddressBlock extends Component<Props, State> {
 
         <AddDelegateLabel>
           <DelegateTitle>Add a Delegate</DelegateTitle>
+          {isManagerReady && (
+            <AddCircle
+              style={{
+                fill: '#7B91C0',
+                height: ms(1),
+                width: ms(1),
+                cursor: 'pointer'
+              }}
+              onClick={this.openDelegateModal}
+            />
 
-          <AddCircle
-            style={{
-              fill: '#7B91C0',
-              height: ms(1),
-              width: ms(1),
-              cursor: !isManagerReady ? 'not-allowed' : 'pointer'
-            }}
-            onClick={() => {
-              if (isManagerReady) {
-                this.openDelegateModal();
-              }
-            }}
-          />
+          )}
+          {!isManagerReady && (
+            <Tooltip
+              position='bottom'
+              offset='-24%'
+              content={<NoFundTooltip content="You account is not ready to delegate." />}
+            >
+              <Button buttonTheme="plain">
+                <AddCircle
+                  style={{
+                    fill: '#7B91C0',
+                    height: ms(1),
+                    width: ms(1),
+                    opacity: 0.5,
+                    cursor: 'default'
+                  }}
+                />
+              </Button>
+            </Tooltip>
+          )}
         </AddDelegateLabel>
         {smartAddresses && smartAddresses.toArray().length
           ? smartAddresses.map((smartAddress, index) => {
