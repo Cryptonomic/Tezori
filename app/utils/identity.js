@@ -3,7 +3,7 @@ import { getSyncTransactions, syncTransactionsWithState } from './transaction';
 import { activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
 import { createAccount, getAccountsForIdentity, getSyncAccount, syncAccountWithState } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
-import { FUNDRAISER } from '../constants/storeTypes';
+import { FUNDRAISER } from '../constants/StoreTypes';
 
 export function createIdentity(identity) {
 

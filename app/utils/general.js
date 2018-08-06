@@ -15,7 +15,7 @@ import { createTransaction } from './transaction';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { REVEAL } from '../constants/TransactionTypes';
-import { MNEMONIC } from '../constants/storeTypes';
+import { MNEMONIC } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
@@ -26,10 +26,17 @@ const { generateMnemonic } = TezosWallet;
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
-  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch(() => false );
+  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch((err) => {
+    console.error(err);
+    return false;
+  });
   const selectedConseilNode = getSelectedNode(nodes, CONSEIL);
-  const consRes = await TezosConseilQuery.getBlockHead(selectedConseilNode.url, selectedConseilNode.apiKey).catch(() => false );
-  
+  const consRes = await TezosConseilQuery.getBlockHead(selectedConseilNode.url, selectedConseilNode.apiKey).catch((err) => {
+    console.error(err);
+    return false;
+  });
+
+  console.log('-debug: tezRes, consRes', tezRes, consRes);
   return {
     tezos: Object.assign(
       {
