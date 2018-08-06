@@ -115,7 +115,6 @@ export function sendTez(
         return false;
       }
 
-
       const identity = findIdentity(identities, selectedParentHash);
       const clearedOperationId = clearOperationId(res.operationGroupID);
       const transaction = createTransaction({

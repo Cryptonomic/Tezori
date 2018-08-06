@@ -327,11 +327,21 @@ class AddDelegateModal extends Component<Props> {
           }}
           onClick={this.onCloseClick}
         />
-        <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate} />
+        <InputAddress
+          labelText={t('general.delegate_address')}
+          addressType="delegate"
+          tooltip
+          changeDelegate={this.changeDelegate}
+        />
         <MainContainer>
           <AmountFeePassContainer>
             <AmountSendContainer>
-              <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
+              <TezosNumericInput
+                decimalSeparator={t('general.decimal_separator')}
+                labelText={t('general.amount')}
+                amount={this.state.amount}
+                handleAmountChange={this.changeAmount}
+              />
               <UseMax onClick={this.onUseMax}>Use Max</UseMax>
             </AmountSendContainer>
             <FeeContainer>
