@@ -8,7 +8,9 @@ import {
   CLEAR_STATE
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
-import * as defaultWalletNodes from '../../defaultWalletNodes.json';
+import { getWalletNodes } from '../../utils/nodes';
+
+const defaultWalletNodes = getWalletNodes();
 
 const baseDefaults = {
   tezosSelectedNode: '',

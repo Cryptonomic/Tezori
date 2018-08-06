@@ -6,9 +6,9 @@ import { TezosWallet } from 'conseiljs';
 const { saveWallet, loadWallet } = TezosWallet;
 
 const fileName = 'walletState';
-let walletStatePath = path.join(__dirname, '../resources/', fileName);
+let walletStatePath = path.join(__dirname, '../extraResources/', fileName);
 if (process.env.NODE_ENV === 'production') {
-  walletStatePath = path.join(remote.app.getAppPath(), '..', fileName);
+  walletStatePath = path.join(remote.app.getAppPath(), '../extraResources/', fileName);
 }
 
 export async function saveUpdatedWallet(identities, walletLocation, walletFileName, password) {

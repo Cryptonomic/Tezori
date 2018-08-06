@@ -65,7 +65,7 @@ class WalletNodesRequired extends Component<Props> {
             <H3>Node configuration is missing</H3>
             <p>
               {
-                'Please close the wallet and edit "defaultWalletNodes.json" and open the wallet again.'
+                'Please close the wallet and edit "extraResources/defaultWalletNodes.json" and open the wallet again.'
               }
               <br />
               {'defaultWalletNodes should look like:'}

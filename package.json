@@ -43,7 +43,7 @@
   "build": {
     "productName": "Tezori",
     "appId": "tech.cryptonomic.Tezori",
-    "extraResources": ["./locales/**"],
+    "extraResources": ["./extraResources/**/*"],
     "files": [
       "dist/",
       "node_modules/",
