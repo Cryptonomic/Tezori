@@ -59,10 +59,10 @@ const AccountsTooltip = styled.div`
 
 type Props = {
   identities: List<Identity>,
-  syncAccountOrIdentity: Function,
+  syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
-  theme: Object,
-  history: Object,
+  theme: object,
+  history: object,
   selectedParentHash: string
 };
 
@@ -130,7 +130,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch: Function) {
+function mapDispatchToProps(dispatch: () => {}) {
   return bindActionCreators(
     {
       syncAccountOrIdentity

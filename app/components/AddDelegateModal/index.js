@@ -1,18 +1,18 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField } from 'material-ui';
+import { Dialog } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import Tooltip from '../Tooltip/';
-import { ms } from '../../styles/helpers';
-import TezosIcon from '../TezosIcon/';
+import TezosNumericInput from '../TezosNumericInput/'
+import { wrapComponent } from '../../utils/i18n';
 
 import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
 import PasswordInput from '../PasswordInput/';
+import InputAddress from '../InputAddress/';
 
 import {
   createNewAccount,
@@ -21,52 +21,12 @@ import {
 
 type Props = {
   selectedParentHash: string,
-  createNewAccount: Function,
-  fetchOriginationAverageFees: Function,
+  createNewAccount: () => {},
+  fetchOriginationAverageFees: () => {},
   open: boolean,
-  onCloseClick: Function
+  onCloseClick: () => {},
+  t: () => {}
 };
-
-const HelpIcon = styled(TezosIcon)`
-  padding: 0 0 0 ${ms(-4)};
-`;
-
-const DelegateContainer = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
-const TextfieldTooltip = styled(Button)`
-  position: absolute;
-  right: 10px;
-  top: 44px;
-`;
-
-const TooltipContainer = styled.div`
-  padding: 10px;
-  color: #000;
-  font-size: 14px;
-  max-width: 312px;
-  
-  .customArrow .rc-tooltip-arrow {
-    left: 66%;
-  }
-`;
-
-const TooltipTitle = styled.div`
-  color: #123262;
-  font-weight: bold;
-  font-size: 16px;
-`;
-
-const TooltipContent1 = styled.div`
-  border-bottom:solid 1px #94a9d1;
-  padding: 12px 0;
-`;
-
-const TooltipContent2 = styled.div`
-  padding: 12px 0;
-`;
 
 const AmountFeePassContainer = styled.div`
   display: flex;
@@ -84,13 +44,6 @@ const FeeContainer = styled.div`
   display: flex;
 `;
 
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 20px;
-  top: 40px;
-  display: block;
-`;
-
 const PasswordButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -106,10 +59,10 @@ const DelegateButton = styled(Button)`
 const defaultState = {
   loading: false,
   delegate: '',
-  amount: null,
+  amount: '',
   fee: 100,
   passPhrase: '',
-  isShowedPwd: false, 
+  isShowedPwd: false,
   averageFees: {
     low: 100,
     medium: 200,
@@ -129,30 +82,12 @@ class AddDelegateModal extends Component<Props> {
     }
   }
 
-  changeAmount = (_, amount) => this.setState({ amount });
-  changeDelegate = (_, delegate) => this.setState({ delegate });
+
+  changeDelegate = (delegate) => this.setState({ delegate });
+  changeAmount = (amount) => this.setState({ amount });
   changeFee = (fee) => this.setState({ fee });
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
   setLoading = (loading) =>  this.setState({ loading });
-
-  renderToolTipComponent = () => {
-    return (
-      <TooltipContainer>
-        <TooltipTitle>Setting a Delegate</TooltipTitle>
-        <TooltipContent1>
-          You can always change the delegate at a later time.
-        </TooltipContent1>
-        <TooltipContent1>
-          There is a fee for changing the delegate.
-        </TooltipContent1>
-        <TooltipContent2>
-          {
-            'You can only delegate to the Manager Address. The Manager Address always starts with "tz1".'
-          }
-        </TooltipContent2>
-      </TooltipContainer>
-    );
-  };
 
   createAccount = async () => {
     const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
@@ -175,7 +110,7 @@ class AddDelegateModal extends Component<Props> {
   };
 
   render() {
-    const { open, onCloseClick } = this.props;
+    const { open, onCloseClick, t } = this.props;
     const { loading, averageFees, delegate, amount, fee, passPhrase, isShowedPwd } = this.state;
     const isDisabled = loading || !delegate || !amount || !passPhrase;
 
@@ -199,42 +134,10 @@ class AddDelegateModal extends Component<Props> {
           }}
           onClick={onCloseClick}
         />
-        <DelegateContainer>
-          <TextField
-            floatingLabelText="Delegate Address"
-            style={{ width: '100%' }}
-            onChange={this.changeDelegate}
-          />
-          <Tooltip
-            position="bottom"
-            content={this.renderToolTipComponent()}
-            align={{
-              offset: [70, 0]
-            }}
-            arrowPos={{
-              left: '70%'
-            }}
-          >
-            <TextfieldTooltip
-              buttonTheme="plain"
-            >
-              <HelpIcon
-                iconName="help"
-                size={ms(0)}
-                color='secondary'
-              />
-            </TextfieldTooltip>
-          </Tooltip>
-        </DelegateContainer>
+        <InputAddress labelText={t('general.delegate_address')} addressType="delegate" tooltip changeDelegate={this.changeDelegate} />
         <AmountFeePassContainer>
           <AmountSendContainer>
-            <TextField
-              floatingLabelText="Amount"
-              style={{ width: '100%' }}
-              onChange={this.changeAmount}
-              type="number"
-            />
-            <TezosIconInput color='secondary' iconName="tezos" />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
           </AmountSendContainer>
           <FeeContainer>
             <Fees
@@ -246,15 +149,15 @@ class AddDelegateModal extends Component<Props> {
               onChange={this.changeFee}
             />
           </FeeContainer>
-        </AmountFeePassContainer>        
-        
+        </AmountFeePassContainer>
+
         <PasswordInput
           label='Wallet Password'
           isShowed={isShowedPwd}
           changFunc={this.updatePassPhrase}
-          onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}   
+          onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
         />
-       
+
         <PasswordButtonContainer>
           <DelegateButton
             buttonTheme="primary"
@@ -286,4 +189,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);
+export default compose(
+  wrapComponent,
+  connect(mapStateToProps, mapDispatchToProps)
+)(AddDelegateModal);

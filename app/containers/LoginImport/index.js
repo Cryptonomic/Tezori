@@ -15,8 +15,8 @@ import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
 
 type Props = {
-  login: Function,
-  goBack: Function
+  login: () => {},
+  goBack: () => {}
 };
 
 const BackToWallet = styled.div`
@@ -32,7 +32,7 @@ const CreateContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1; 
+  flex-grow: 1;
 `;
 
 const WalletContainers = styled.div`
@@ -147,7 +147,7 @@ class LoginImport extends Component<Props> {
           <ImportButtonContainer>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               Select Wallet File
-            </Button>          
+            </Button>
             <WalletFileName>
               { walletFileName }
             </WalletFileName>

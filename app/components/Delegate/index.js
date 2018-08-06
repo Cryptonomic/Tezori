@@ -19,7 +19,7 @@ type Props = {
   selectedAccountHash?: string,
   selectedParentHash?: string,
   address?: string,
-  delegate?: Function
+  delegate?: () => {}
 };
 
 const Container = styled.div`
@@ -135,7 +135,7 @@ const initialState = {
 class Delegate extends Component<Props> {
   props: Props;
   state = initialState;
-  
+
   async componentWillMount() {
     const { fetchDelegationAverageFees } = this.props;
     const averageFees = await fetchDelegationAverageFees();

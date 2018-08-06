@@ -19,8 +19,8 @@ const Icon = styled.span`
 type Props = {
   iconName?: string,
   color: string,
-  size: any,
-  onClick?: Function,
+  size?: string,
+  onClick?: () => {},
   className?: string
 };
 

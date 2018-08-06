@@ -19,13 +19,13 @@ type Props = {
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
-  onRefreshClick: Function,
+  onRefreshClick: () => {},
   isManagerAddress: boolean,
-  theme: Object,
+  theme: object,
   parentIndex?: number,
-  parentIdentity?: Object,
+  parentIdentity?: object,
   delegatedAddress?: string,
-  time: any
+  time?: Date
 };
 
 const Container = styled.header`

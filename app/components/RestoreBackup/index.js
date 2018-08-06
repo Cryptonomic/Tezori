@@ -44,7 +44,7 @@ const RestoreTabItem = styled.div`
 `
 
 const ToggleWrapper = styled(Toggle)`
-  max-width: 60%;  
+  max-width: 60%;
   margin-top: 35px;
 `
 const RestoreFooter = styled.div`
@@ -62,7 +62,7 @@ const RestoreButton = styled(Button)`
 `
 type Props1 = {
   type: string,
-  changeFunc: Function
+  changeFunc: () => {}
 };
 const RestoreTabs = (props: Props1) => {
   const { type, changeFunc } = props;
@@ -71,14 +71,14 @@ const RestoreTabs = (props: Props1) => {
       <RestoreTabItem active={type==='phrase'} onClick={() => changeFunc('phrase')}>SEED PHRASE</RestoreTabItem>
       {/* <RestoreTabItem active={type==='key'} onClick={() => changeFunc('key')}>PRIVATE KEY</RestoreTabItem> */}
       <RestoreTabItem active={type==='key'}>PRIVATE KEY</RestoreTabItem>
-    </RestoreTabContainer>    
+    </RestoreTabContainer>
   )
 }
 
 
 
 type Props = {
-  importAddress?: Function
+  importAddress?: () => {}
 };
 
 class RestoreBackup extends Component<Props> {
@@ -105,7 +105,7 @@ class RestoreBackup extends Component<Props> {
         }
       });
     }
-    
+
     if (inputValue) {
       if (seeds.length) {
         str += ` ${inputValue}`;
@@ -137,7 +137,7 @@ class RestoreBackup extends Component<Props> {
         <RestoreHeader>
           Restore from <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} />
         </RestoreHeader>
-        {type==='phrase' && 
+        {type==='phrase' &&
           <Fragment>
             <SeedInput
               selectedItems={seeds}
@@ -154,7 +154,7 @@ class RestoreBackup extends Component<Props> {
               onToggle={()=> this.setState({isPassword: !isPassword})}
             />
 
-            {isPassword && 
+            {isPassword &&
               <PasswordInput
                 label='Seed Pharse Password'
                 isShowed={isShowedPwd}
@@ -164,7 +164,7 @@ class RestoreBackup extends Component<Props> {
                 containerStyle={{width: '60%'}}
               />
             }
-          </Fragment>        
+          </Fragment>
         }
         {type==='key' &&
           <TextField

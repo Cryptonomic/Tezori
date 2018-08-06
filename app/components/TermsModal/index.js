@@ -60,8 +60,8 @@ const customStyles = {
 
 type Props = {
   isOpen: boolean,
-  goTo: Function,
-  agreeTermsAndPolicy: Function
+  goTo: () => {},
+  agreeTermsAndPolicy: () => {}
 };
 
 const TermsModal = (props: Props) => {

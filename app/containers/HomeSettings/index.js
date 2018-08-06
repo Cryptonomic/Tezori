@@ -29,10 +29,10 @@ type Props = {
   conseilNodes: array,
   tezosSelectedNode: string,
   tezosNodes: array,
-  syncWallet: Function,
-  setSelected: Function,
-  goBack: Function,
-  theme: Object
+  syncWallet: () => {},
+  setSelected: () => {},
+  goBack: () => {},
+  theme: object
 };
 
 const Row = styled.div`

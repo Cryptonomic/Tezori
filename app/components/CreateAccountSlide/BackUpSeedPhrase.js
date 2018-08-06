@@ -11,7 +11,7 @@ const ActionButton = styled(Button)`
 
 type Props = {
   seed: string,
-  nextAccountSlide: Function
+  nextAccountSlide: () => {}
 };
 
 export default class BackUpSeedPhrase extends Component<Props> {

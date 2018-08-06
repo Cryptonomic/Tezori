@@ -16,7 +16,7 @@ const PageNavButtons = styled.div`
   background-color: #E3E7F1;
   cursor: pointer;
   height: 100%;
-  
+
   &:hover {
     background-color: lightgray;
     transition: background-color 0.2s;
@@ -64,7 +64,7 @@ const PageNumber = styled.div`
 type Props = {
   currentPage: number,
   numberOfPages: number,
-  onClick: Function
+  onClick: () => {}
 };
 
 export default function PageNumbers({

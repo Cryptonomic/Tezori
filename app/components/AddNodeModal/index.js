@@ -14,9 +14,9 @@ import { addNode, setSelected } from '../../reduxContent/nodes/thunks';
 import Button from '../Button/';
 
 type Props = {
-  setSelected: Function,
-  addNode: Function,
-  closeAddNodeModal: Function,
+  setSelected: () => {},
+  addNode: () => {},
+  closeAddNodeModal: () => {},
   isModalOpen: boolean,
   type: string
 };

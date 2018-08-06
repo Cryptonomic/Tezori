@@ -70,7 +70,6 @@ export function sendTez(
       selectedAccountHash,
       selectedParentHash
     );
-    
 
     if (password !== walletPassword) {
       const error = 'Incorrect password';

@@ -22,7 +22,7 @@ const ChipWrapper = styled(Chip)`
     height: 24px;
     font-weight: 300;
   }
-  
+
 `
 const ChipContainer = styled.div`
   span {
@@ -40,14 +40,14 @@ const PaperWrapper = styled(Paper)`
     right: 0;
     max-height: 240px;
     overflow: auto;
-    color: ${ ({ theme: { colors } }) => colors.primary };    
+    color: ${ ({ theme: { colors } }) => colors.primary };
   }
-  
+
 `
 const CloseIconWrapper = styled(CloseIcon)`
   &&& {
     width: 15px;
-  } 
+  }
 `
 
 const renderInput = (inputProps) => {
@@ -67,11 +67,11 @@ const renderInput = (inputProps) => {
   );
 }
 type Props1 = {
-  highlightedIndex: any,
-  index: any,
+  highlightedIndex: number | null,
+  index: number | null,
   itemProps: object,
   selectedItem: array,
-  suggestion: any
+  suggestion: object
 };
 
 const renderSuggestion = (props: Props1) => {
@@ -130,14 +130,14 @@ const styles = () => ({
 type Props = {
   selectedItems: array,
   inputValue: string,
-  classes?: any,
-  onChangeInput: Function,
-  onChangeItems: Function
+  classes?: object,
+  onChangeInput: () => {},
+  onChangeItems: () => {}
 };
 
 class SeedInput extends Component<Props> {
   componentDidMount() {
-    
+
   }
 
   handleKeyDown = event => {
@@ -163,7 +163,7 @@ class SeedInput extends Component<Props> {
 
     if (selectedItems.indexOf(item) === -1) {
       selectedItems = [...selectedItems, item];
-    }   
+    }
     onChangeItems(selectedItems);
   };
 

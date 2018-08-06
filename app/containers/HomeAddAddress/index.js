@@ -182,7 +182,7 @@ const PkhTooltip = () => {
 };
 
 type Props = {
-  importAddress: Function,
+  importAddress: () => {},
   isLoading: boolean
 };
 
@@ -254,7 +254,7 @@ class AddAddress extends Component<Props> {
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;
-      case ADD_ADDRESS_TYPES.RESTORE:        
+      case ADD_ADDRESS_TYPES.RESTORE:
         return (
           <RestoreBackup />
         )

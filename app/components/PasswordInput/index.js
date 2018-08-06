@@ -20,8 +20,8 @@ type Props = {
   label: string,
   isShowed?: boolean,
   containerStyle?: object,
-  changFunc: Function,
-  onShow: Function
+  changFunc: () => {},
+  onShow: () => {}
 };
 
 const PasswordInput = (props: Props) => {

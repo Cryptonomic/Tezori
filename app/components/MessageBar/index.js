@@ -66,8 +66,8 @@ const HashTitle = styled.div`
 type Props1 = {
   content: string,
   hash: string,
-  openLink: Function,
-  onClose: Function
+  openLink: () => {},
+  onClose: () => {}
 };
 const MessageContent = (props: Props1) => {
   const { content, hash, openLink, onClose } = props;
@@ -96,8 +96,8 @@ const MessageContent = (props: Props1) => {
 };
 
 type Props = {
-  clearMessageState: Function,
-  message: Object
+  clearMessageState: () => {},
+  message: object
 };
 
 class MessageBar extends React.Component<Props> {
