@@ -162,7 +162,8 @@ const DelegateConfirmationModal = (props: Props) => {
             color2="index0"
           />
         </AddressContainer>
-        <InputAddress 
+        <InputAddress
+          address={newAddress}
           labelText='Change Delegate to New Address' 
           addressType="delegate"
           tooltip={false}
