@@ -5,9 +5,9 @@ import {
   SET_WALLET_LOCATION,
   SET_PASSWORD,
   SET_IDENTITIES,
+  SET_NODES_STATUS,
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
-  ADD_NEW_ACCOUNT,
   UPDATE_FETCHED_TIME,
   LOGOUT
 } from './types';
@@ -25,12 +25,8 @@ export const updateWalletLocation = actionCreator(
 );
 export const setPassword = actionCreator(SET_PASSWORD, 'password');
 export const setIdentities = actionCreator(SET_IDENTITIES, 'identities');
+export const setNodesStatus = actionCreator(SET_NODES_STATUS, 'nodesStatus');
 export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
-export const addNewAccount = actionCreator(
-  ADD_NEW_ACCOUNT,
-  'publicKeyHash',
-  'account'
-);
 export const updateFetchedTime = actionCreator(UPDATE_FETCHED_TIME, 'time');
 export const logout = actionCreator(LOGOUT);

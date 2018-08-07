@@ -67,6 +67,7 @@ export default merge.smart(baseConfig, {
         loader: "eslint-loader",
         options: {
           formatter: require("eslint-formatter-pretty"),
+          quiet: true,
           failOnError: true
         }
       },

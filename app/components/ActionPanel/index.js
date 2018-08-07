@@ -25,7 +25,7 @@ import {
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
 import { READY } from '../../constants/StatusTypes';
-
+import { sortArr } from '../../utils/array';
 import { getSelectedAccount, isReady } from '../../utils/general';
 import { findIdentity, findIdentityIndex } from '../../utils/identity';
 
@@ -159,7 +159,10 @@ class ActionPanel extends Component<Props, State> {
             />
           );
         }
-        const JSTransactions = transactions.toJS();
+        
+        const JSTransactions = transactions
+          .sort(sortArr({ sortOrder: 'desc', sortBy: 'timestamp' }))
+          .toJS();
         const itemsCount = 5;
         const pageCount = Math.ceil(JSTransactions.length / itemsCount);
 
@@ -220,9 +223,9 @@ class ActionPanel extends Component<Props, State> {
     const parentIndex = findIdentityIndex(jsIdentities, selectedParentHash) + 1;
     const isManagerAddress = selectedAccountHash === selectedParentHash;
     const balance = selectedAccount.get('balance');
-    const activeTab = selectedAccount.get('activeTab');
+    const activeTab = selectedAccount.get('activeTab') || TRANSACTIONS;
 
-    const storeTypes = selectedAccount.get('storeTypes');
+    const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
 
     const tabs = isManagerAddress
@@ -231,8 +234,8 @@ class ActionPanel extends Component<Props, State> {
     return (
       <Container>
         <BalanceBanner
-          storeTypes={storeTypes}
-          isReady={isReady(status, storeTypes)}
+          storeType={storeType}
+          isReady={isReady(status, storeType)}
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIdentity={parentIdentity}
@@ -246,7 +249,7 @@ class ActionPanel extends Component<Props, State> {
 
         <TabList>
           {tabs.map(tab => {
-            const ready = isReady(status, storeTypes, tab);
+            const ready = isReady(status, storeType, tab);
             return (
               <Tab
                 isActive={activeTab === tab}

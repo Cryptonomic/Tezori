@@ -37,7 +37,7 @@ type Props = {
   date: string
 };
 
-const TransactionsLabel = (props: Props) => {
+function TransactionsLabel(props: Props) {
   const { date } = props;
   return (
     <DateContainer>

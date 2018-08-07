@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { ms } from '../../styles/helpers';
-import TezosAddress from '../TezosAddress';
-import TezosAmount from '../TezosAmount';
-import TezosIcon from '../TezosIcon';
+import TezosAddress from '../TezosAddress/';
+import TezosAmount from '../TezosAmount/';
+import TezosIcon from '../TezosIcon/';
 import { openLinkToBlockExplorer } from '../../utils/general';
+import * as types  from '../../constants/TransactionTypes';
+import { READY }  from '../../constants/StatusTypes'
 
 const AmountContainer = styled.div`
   color: ${({ theme: { colors }, color }) => colors[color]};
@@ -92,7 +94,7 @@ const getIsAmount = amount => !!amount;
 
 const getStatus = (transaction, selectedAccountHash) => {
   const type = transaction.kind;
-  if (type === 'reveal') {
+  if ( type === types.REVEAL ) {
     return {
       icon: 'broadcast',
       preposition: 'of',
@@ -103,7 +105,7 @@ const getStatus = (transaction, selectedAccountHash) => {
     };
   }
 
-  if (type === 'activation') {
+  if ( type === types.ACTIVATION ) {
     return {
       icon: 'star',
       preposition: 'of',
@@ -114,7 +116,7 @@ const getStatus = (transaction, selectedAccountHash) => {
     };
   }
 
-  if (type === 'delegation') {
+  if ( type === types.DELEGATION ) {
     return {
       icon: 'change',
       preposition: 'to',
@@ -129,7 +131,7 @@ const getStatus = (transaction, selectedAccountHash) => {
   const isFee = getIsFee(transaction.fee);
   const isAmount = getIsAmount(transaction.amount);
 
-  if (type === 'origination' && isSameLocation) {
+  if ( type === types.ORIGINATION && isSameLocation ) {
     return {
       icon: 'send',
       preposition: '',
@@ -141,7 +143,7 @@ const getStatus = (transaction, selectedAccountHash) => {
     };
   }
 
-  if (type === 'origination' && !isSameLocation) {
+  if ( type === types.ORIGINATION && !isSameLocation ) {
     return {
       icon: 'receive',
       preposition: '',
@@ -152,7 +154,7 @@ const getStatus = (transaction, selectedAccountHash) => {
     };
   }
 
-  if (type === 'transaction' && isSameLocation) {
+  if ( type === types.TRANSACTION && isSameLocation ) {
     return {
       icon: 'send',
       preposition: 'to',
@@ -163,7 +165,7 @@ const getStatus = (transaction, selectedAccountHash) => {
     };
   }
 
-  if (type === 'transaction' && !isSameLocation) {
+  if ( type === types.TRANSACTION && !isSameLocation ) {
     return {
       icon: 'receive',
       preposition: 'from',
@@ -180,11 +182,12 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
     transaction.source === selectedAccountHash
       ? transaction.destination
       : transaction.source;
+  
   const type = transaction.kind;
-  if (type === 'reveal') {
+  if ( type === types.REVEAL ) {
     return <AddressText>this address</AddressText>;
   }
-  if (type === 'delegation') {
+  if ( type === types.DELEGATION ) {
     return (
       <TezosAddress
         address={transaction.delegate}
@@ -195,7 +198,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash) => {
     );
   }
   if (
-    type === 'origination' &&
+    type === types.ORIGINATION &&
     transaction.source === selectedParentHash &&
     selectedAccountHash !== selectedParentHash
   ) {
@@ -239,7 +242,11 @@ function Transaction(props: Props) {
     <TransactionContainer>
       <Header>
         <TransactionDate>
-          {timeFormatter(props.transaction.timestamp)}
+          {
+            transaction.status === READY
+              ? timeFormatter(transaction.timestamp)
+              : 'Pending...'
+          }
         </TransactionDate>
         <AmountContainer color={color}>
           {sign}

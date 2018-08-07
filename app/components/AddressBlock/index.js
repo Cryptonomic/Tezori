@@ -16,6 +16,7 @@ import { READY } from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
+import { sortArr } from '../../utils/array';
 
 const Container = styled.div`
   overflow: hidden;
@@ -186,14 +187,14 @@ class AddressBlock extends Component<Props, State> {
       'Delegation rewards will depend on your arrangement with the delegate.'
     ];
 
-    const storeTypes = accountBlock.get('storeTypes');
-    const ready = isReady(accountBlock.get('status'), storeTypes);
+    const storeType = accountBlock.get('storeType');
+    const ready = isReady(accountBlock.get('status'), storeType);
 
     return (
       <Container>
         <AddressLabel>
           <AccountTitle>{`Account ${accountIndex}`}</AccountTitle>
-          {ready || storeTypes === MNEMONIC ? (
+          {ready || storeType === MNEMONIC ? (
             <TezosAmount
               color="primary"
               size={ms(0)}
@@ -237,37 +238,43 @@ class AddressBlock extends Component<Props, State> {
             }}
           />
         </AddDelegateLabel>
-        {smartAddresses && smartAddresses.toArray().length
-          ? smartAddresses.map((smartAddress, index) => {
-              const smartAddressId = smartAddress.get('accountId');
-              const isSmartActive = smartAddressId === selectedAccountHash;
-              const smartAddressReady = isReady(smartAddress.get('status'));
+        {
+          smartAddresses && smartAddresses.toArray().length
+          ?
+            smartAddresses
+              .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
+              .map((smartAddress, index) => {
+                const smartAddressId = smartAddress.get('accountId');
+                const isSmartActive = smartAddressId === selectedAccountHash;
+                const smartAddressReady = isReady(smartAddress.get('status'));
 
-              return smartAddressReady ? (
-                <Address
-                  key={smartAddressId}
-                  index={index}
-                  isActive={isSmartActive}
-                  balance={smartAddress.get('balance')}
-                  onClick={() =>
+                return smartAddressReady ? (
+                  <Address
+                    key={smartAddressId}
+                    index={index}
+                    isActive={isSmartActive}
+                    balance={smartAddress.get('balance')}
+                    onClick={() =>
                     this.goToAccount(smartAddressId, publicKeyHash)
                   }
-                />
-              ) : (
-                <AddressStatus
-                  key={smartAddressId}
-                  isActive={isSmartActive}
-                  address={smartAddress}
-                  onClick={() =>
+                  />
+                ) : (
+                  <AddressStatus
+                    key={smartAddressId}
+                    isActive={isSmartActive}
+                    address={smartAddress}
+                    onClick={() =>
                     this.goToAccount(smartAddressId, publicKeyHash)
                   }
-                />
-              );
-            })
-          : !shouldHideSmartAddressesInfo && (
-          <NoSmartAddressesContainer>
-            <CloseIcon
-              style={{
+                  />
+                );
+              })
+          :
+            !shouldHideSmartAddressesInfo &&
+            (
+              <NoSmartAddressesContainer>
+                <CloseIcon
+                  style={{
                     position: 'absolute',
                     top: ms(0),
                     right: ms(0),
@@ -276,22 +283,23 @@ class AddressBlock extends Component<Props, State> {
                     height: ms(0),
                     cursor: 'pointer'
                   }}
-              onClick={this.closeNoSmartAddresses}
-            />
-            <NoSmartAddressesTitle>Delegation Tips</NoSmartAddressesTitle>
-            {this.renderNoSmartAddressesDescription(
+                  onClick={this.closeNoSmartAddresses}
+                />
+                <NoSmartAddressesTitle>Delegation Tips</NoSmartAddressesTitle>
+                {this.renderNoSmartAddressesDescription(
                   noSmartAddressesDescriptionContent
                 )}
-            <NoSmartAddressesButton
-              small
-              buttonTheme="secondary"
-              onClick={this.openDelegateModal}
-              disabled={!isManagerReady}
-            >
+                <NoSmartAddressesButton
+                  small
+                  buttonTheme="secondary"
+                  onClick={this.openDelegateModal}
+                  disabled={!isManagerReady}
+                >
                   Add a Delegate
-            </NoSmartAddressesButton>
-          </NoSmartAddressesContainer>
-            )}
+                </NoSmartAddressesButton>
+              </NoSmartAddressesContainer>
+            )
+        }
         <AddDelegateModal
           selectedParentHash={publicKeyHash}
           open={isDelegateModalOpen}

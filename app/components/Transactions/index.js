@@ -47,16 +47,19 @@ export default function Transactions(props: Props) {
   const renderDayTransactions = (day, transactions) => (
     <SectionContainer key={day}>
       <TransactionsLabel amount={0} date={day} />
-      {transactions.map(transaction => {
-        return (
-          <Transaction
-            key={transaction.operationId}
-            transaction={transaction}
-            selectedAccountHash={selectedAccountHash}
-            selectedParentHash={selectedParentHash}
-          />
-        );
-      })}
+      {
+        transactions
+          .map(( transaction ) => {
+            return (
+              <Transaction
+                key={`${transaction.operationGroupHash}`}
+                transaction={transaction}
+                selectedAccountHash={selectedAccountHash}
+                selectedParentHash={selectedParentHash}
+              />
+            );
+          })
+      }
     </SectionContainer>
   );
 

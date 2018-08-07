@@ -1,17 +1,8 @@
 import { fromJS } from 'immutable';
 import * as matchers from 'jest-immutable-matchers';
 
-import reducer from '../../../app/reduxContent/wallet/reducers';
+import reducer, { initialState } from '../../../app/reduxContent/wallet/reducers';
 import * as types from '../../../app/reduxContent/wallet/types';
-
-const initialState = {
-  identities: [],
-  isLoading: false,
-  walletFileName: '',
-  walletLocation: '',
-  password: '',
-  time: new Date()
-};
 
 const initState = fromJS(initialState);
 
@@ -76,18 +67,10 @@ describe('wallet reducers', () => {
   });
 
   it('should set the wallet from object', () => {
-    const newWallet = {
-      identities: [],
-      isLoading: false,
-      walletFileName: '',
-      walletLocation: '',
-      password: '',
-      time: new Date()
-    };
-    const expectedState = fromJS(newWallet);
+    const expectedState = fromJS(initialState);
     const action = {
       type: types.SET_WALLET,
-      wallet: newWallet
+      wallet: initialState
     };
     expect(reducer(initState, action)).toEqualImmutable(expectedState);
   });
@@ -168,28 +151,6 @@ describe('wallet reducers', () => {
     expect(reducer(initialStateWithIdentity, action)).toEqualImmutable(
       initialStateWithIdentity
     );
-  });
-
-  it('should add a new account identity', () => {
-    const pubKeyHash = Symbol('publicKeyHash');
-    const initialStateWithIdentity = fromJS({
-      ...initialState,
-      identities: [{ publicKeyHash: pubKeyHash, accounts: [] }]
-    });
-    const newAccount = Symbol('account');
-    const action = {
-      type: types.ADD_NEW_ACCOUNT,
-      publicKeyHash: pubKeyHash,
-      account: newAccount
-    };
-    const result = reducer(initialStateWithIdentity, action)
-      .get('identities')
-      .find(identity => {
-        return identity.get('publicKeyHash') === pubKeyHash;
-      })
-      .get('accounts');
-    expect(result).toBeImmutableList();
-    expect(result.includes(newAccount)).toBe(true);
   });
 
   it('should update fetched time', () => {

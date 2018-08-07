@@ -56,7 +56,7 @@ type Props = {
 function AccountStatus(props: Props) {
   const { isManager, address, theme } = props;
 
-  const storeTypes = address.get('storeTypes');
+  const storeType = address.get('storeType');
   const status = address.get('status');
   const operations = address.get('operations').toJS();
 
@@ -74,7 +74,7 @@ function AccountStatus(props: Props) {
   const typeText = isManager ? 'account' : 'address';
   switch (status) {
     case statuses.CREATED:
-      if (storeTypes === MNEMONIC) {
+      if (storeType === MNEMONIC) {
         icon = <Image alt="Creating account" src={transactionsEmptyState} />;
         title = 'Your account is ready to receive transactions!';
         description =
@@ -110,7 +110,7 @@ function AccountStatus(props: Props) {
         );
       }
 
-      if (storeTypes === MNEMONIC) {
+      if (storeType === MNEMONIC) {
         const transaction = address.get('transactions').toJS();
         const { amount } = transaction[0];
         description = `We have received your first transaction of ${formatAmount(
