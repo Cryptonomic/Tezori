@@ -1,21 +1,10 @@
 import { fromJS } from 'immutable';
-import { omit } from 'lodash';
 import * as matchers from 'jest-immutable-matchers';
 
-import nodes from '../../../app/reduxContent/nodes/reducers';
+import nodes, { initialState } from '../../../app/reduxContent/nodes/reducers';
 import * as actions from '../../../app/reduxContent/nodes/actions';
-import * as defaultWalletNodes from '../../../app/defaultWalletNodes.json';
 
-const baseDefaults = {
-  tezosSelectedNode: '',
-  conseilSelectedNode: '',
-  list: []
-};
-
-const initState = fromJS(Object.assign(
-  baseDefaults,
-  defaultWalletNodes && omit(defaultWalletNodes, ['default'])
-));
+const initState = fromJS(initialState);
 
 beforeEach(function () {
   jest.addMatchers(matchers);

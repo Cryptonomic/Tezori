@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import { fromJS } from 'immutable';
 import {
   SET_SELECTED,
@@ -18,12 +17,12 @@ const baseDefaults = {
   list: []
 };
 
-const initState = fromJS(
-  Object.assign(
-    baseDefaults,
-    defaultWalletNodes && omit(defaultWalletNodes, ['default'])
-  )
+export const initialState = Object.assign(
+  baseDefaults,
+  defaultWalletNodes && defaultWalletNodes
 );
+
+export const initState = fromJS(initialState);
 
 export default function nodes(state = initState, action) {
   switch (action.type) {

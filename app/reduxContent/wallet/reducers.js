@@ -13,7 +13,7 @@ import {
   LOGOUT
 } from './types';
 
-const initState = fromJS({
+export const initialState = {
   identities: [],
   isLoading: false,
   walletFileName: '',
@@ -30,7 +30,9 @@ const initState = fromJS({
     }
   },
   time: new Date()
-});
+};
+
+const initState = fromJS(initialState);
 
 export default function wallet(state = initState, action) {
   switch (action.type) {
