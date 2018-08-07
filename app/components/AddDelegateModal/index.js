@@ -24,7 +24,13 @@ import {
   fetchOriginationAverageFees
 } from '../../reduxContent/createDelegate/thunks';
 
+import {
+  setIsLoading
+} from '../../reduxContent/wallet/actions';
+
 type Props = {
+  isLoading: boolean,
+  setIsLoading: () => {},
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
@@ -73,8 +79,8 @@ const BalanceContainer = styled.div`
   flex: 1;
   position: relative;
   margin: 15px 0 0px 40px;
+`;
 
-`
 const BalanceArrow = styled.div`
   top: 50%;
   left: 4px;
@@ -85,19 +91,22 @@ const BalanceArrow = styled.div`
   width: 0;
   height: 0;
   position: absolute;
-`
+`;
+
 const BalanceContent = styled.div`
   padding: ${ms(1)} ${ms(1)} ${ms(1)} ${ms(4)};
   color: #123262;
   text-align: left;
   height: 100%;
   background-color: ${({ theme: { colors } }) => colors.gray1};
-`
+`;
+
 const GasInputContainer = styled.div`
   width: 100%;
   position: relative;
   height: 64px;
-`
+`;
+
 
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
@@ -119,6 +128,7 @@ const UseMax = styled.div`
 const TotalAmount = styled(TezosAmount)`
   margin-bottom: 22px;
 `;
+
 const BalanceAmount = styled(TezosAmount)`
 `;
 
@@ -127,22 +137,26 @@ const WarningIcon = styled(TezosIcon)`
   position: relative;
   top: 1px;
 `;
+
 const BalanceTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
   font-size: 14px;
   font-weight: 300;
 `;
+
 const ErrorContainer = styled.div`
   display: block;
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme: { colors } }) => colors.error1};
 `;
+
 const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
   top: 44px;
 `;
+
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
@@ -161,7 +175,6 @@ const TooltipContainer = styled.div`
 const utez = 1000000;
 
 const defaultState = {
-  loading: false,
   delegate: '',
   amount: '',
   fee: 100,
@@ -219,12 +232,11 @@ class AddDelegateModal extends Component<Props> {
     this.setState({ fee, total, balance });
   }
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
-  setLoading = (loading) =>  this.setState({ loading });
 
   createAccount = async () => {
-    const { createNewAccount, selectedParentHash } = this.props;
+    const { createNewAccount, selectedParentHash, setIsLoading } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
-    this.setLoading(true);
+    setIsLoading(true);
     if (
       await createNewAccount(
         delegate,
@@ -235,9 +247,8 @@ class AddDelegateModal extends Component<Props> {
       )
     ) {
       this.onCloseClick();
-    } else {
-      this.setLoading(false);
     }
+    setIsLoading(false);
   };
 
   renderGasToolTip = (gas) => {
@@ -288,9 +299,8 @@ class AddDelegateModal extends Component<Props> {
   }
 
   render() {
-    const { open, t } = this.props;
+    const { isLoading, open, t } = this.props;
     const {
-      loading,
       averageFees,
       delegate,
       amount,
@@ -301,7 +311,7 @@ class AddDelegateModal extends Component<Props> {
       total,
       balance
     } = this.state;
-    const isDisabled = loading || !delegate || !amount || !passPhrase || balance<1;
+    const isDisabled = isLoading || !delegate || !amount || !passPhrase || balance<1;
     const {
       isIssue,
       warningMessage,
@@ -432,7 +442,7 @@ class AddDelegateModal extends Component<Props> {
             Delegate
           </DelegateButton>
         </PasswordButtonContainer>
-        {loading && <Loader />}
+        {isLoading && <Loader />}
       </Dialog>
     );
   }
@@ -447,6 +457,7 @@ function mapStateToProps({ wallet }) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      setIsLoading,
       fetchOriginationAverageFees,
       createNewAccount
     },
