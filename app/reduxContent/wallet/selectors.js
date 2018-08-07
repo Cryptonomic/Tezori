@@ -12,6 +12,11 @@ export const getWalletIsLoading = createSelector(getWallet, wallet =>
   wallet.get('isLoading')
 );
 
+export const getNodesStatus = createSelector(
+  getWallet, 
+  wallet => wallet.get('nodesStatus')
+);
+
 export const getTotalBalance = createSelector(getWallet, wallet => {
   const identities = wallet.get('identities').toJS();
   const balances = identities.map(identity => identity.balance);
@@ -21,3 +26,4 @@ export const getTotalBalance = createSelector(getWallet, wallet => {
 export const getIdentities = createSelector(getWallet, wallet =>
   wallet.get('identities')
 );
+

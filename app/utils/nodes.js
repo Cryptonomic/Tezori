@@ -1,11 +1,24 @@
+import { remote } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
-const filename = path.join(__dirname, 'defaultWalletNodes.json');
+
+const fileName = 'defaultWalletNodes.json';
+let filePath = path.join(__dirname, '../extraResources/', fileName);
+if (process.env.NODE_ENV === 'production') {
+  filePath = path.join(remote.app.getAppPath(), '../extraResources/', fileName);
+}
+
+export function getWalletNodes() {
+  if (fs.existsSync(filePath)) {
+    return JSON.parse(fs.readFileSync(filePath));
+  }
+  return false;
+}
 
 export function setWalletNodes(nodes) {
-  if (fs.existsSync(filename)) {
-    fs.writeFileSync(filename, Buffer.from(JSON.stringify(nodes, null,  2)));
+  if (fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, Buffer.from(JSON.stringify(nodes, null,  2)));
   }
 }
 

@@ -129,7 +129,8 @@ const initialState = {
     low: 100,
     medium: 200,
     high: 400
-  }
+  },
+  isDelegateIssue: true
 };
 
 class Delegate extends Component<Props> {
@@ -148,7 +149,7 @@ class Delegate extends Component<Props> {
     this.setState({ ...initialState, averageFees, fee });
   };
   handlePasswordChange = (password) =>  this.setState({ password });
-  handleTempAddressChange = (_, tempAddress) =>  this.setState({ tempAddress });
+  handleTempAddressChange = (tempAddress) =>  this.setState({ tempAddress });
   handleFeeChange = (fee) =>  this.setState({ fee });
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
@@ -198,7 +199,7 @@ class Delegate extends Component<Props> {
 
   render() {
     const { address } = this.props;
-    const { isLoading, open, password, fee, averageFees, tempAddress, isShowedPwd } = this.state;
+    const { isLoading, open, password, fee, averageFees, tempAddress, isShowedPwd, isDelegateIssue } = this.state;
     const delegationTips = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
       'There is a fee for setting a delegate.',
@@ -259,6 +260,8 @@ class Delegate extends Component<Props> {
           isLoading={isLoading}
           isShowedPwd={isShowedPwd}
           onShowPwd={()=> this.setState({isShowedPwd: !isShowedPwd})}
+          isDelegateIssue={isDelegateIssue}
+          onDelegateIssue={(status)=> this.setState({isDelegateIssue: status})}
         />
       </Container>
     );

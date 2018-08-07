@@ -10,6 +10,7 @@ import { H4 } from '../Heading/';
 import AddressBlock from '../AddressBlock/';
 import Tooltip from '../Tooltip/';
 import { syncAccountOrIdentity } from '../../reduxContent/wallet/thunks';
+import { sortArr } from '../../utils/array';
 
 type Account = {
   accountId: string,
@@ -101,18 +102,21 @@ class Addresses extends Component<Props> {
             />
           </Tooltip>
         </AccountTitle>
-        {identities.map((accountBlock, index) => (
-          <AccountItem key={accountBlock.get('publicKeyHash')}>
-            <AddressBlock
-              accountBlock={accountBlock}
-              accountIndex={index + 1}
-              syncAccountOrIdentity={syncAccountOrIdentity}
-              selectedAccountHash={selectedAccountHash}
-              selectedParentHash={selectedParentHash}
-              history={history}
-            />
-          </AccountItem>
-        ))}
+        { identities
+          .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
+          .map((accountBlock, index) => (
+            <AccountItem key={accountBlock.get('publicKeyHash')}>
+              <AddressBlock
+                accountBlock={accountBlock}
+                accountIndex={index + 1}
+                syncAccountOrIdentity={syncAccountOrIdentity}
+                selectedAccountHash={selectedAccountHash}
+                selectedParentHash={selectedParentHash}
+                history={history}
+              />
+            </AccountItem>
+          ))
+        }
       </Container>
     );
   }

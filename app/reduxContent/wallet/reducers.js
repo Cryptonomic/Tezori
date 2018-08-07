@@ -6,21 +6,33 @@ import {
   SET_WALLET_LOCATION,
   SET_PASSWORD,
   SET_IDENTITIES,
+  SET_NODES_STATUS,
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
-  ADD_NEW_ACCOUNT,
   UPDATE_FETCHED_TIME,
   LOGOUT
 } from './types';
 
-const initState = fromJS({
+export const initialState = {
   identities: [],
   isLoading: false,
   walletFileName: '',
   walletLocation: '',
   password: '',
+  nodesStatus: {
+    tezos: {
+      responsive: true,
+      level: 0
+    },
+    conseil: {
+      responsive: true,
+      level: 0
+    }
+  },
   time: new Date()
-});
+};
+
+const initState = fromJS(initialState);
 
 export default function wallet(state = initState, action) {
   switch (action.type) {
@@ -36,6 +48,8 @@ export default function wallet(state = initState, action) {
       return state.set('password', action.password);
     case SET_IDENTITIES:
       return state.set('identities', fromJS(action.identities));
+    case SET_NODES_STATUS:
+      return state.set('nodesStatus', fromJS(action.nodesStatus));
     case ADD_NEW_IDENTITY: {
       const newIdentity = fromJS(action.identity);
 
@@ -55,21 +69,6 @@ export default function wallet(state = initState, action) {
           'identities',
           identities.set(indexFound, fromJS(action.identity))
         );
-      }
-      return state;
-    }
-    case ADD_NEW_ACCOUNT: {
-      const { publicKeyHash, account } = action;
-      const identities = state.get('identities');
-      const indexFound = identities.findIndex(
-        identity => publicKeyHash === identity.get('publicKeyHash')
-      );
-
-      if (indexFound > -1) {
-        let identity = identities.get(indexFound);
-        const accounts = identity.get('accounts');
-        identity = identity.set('accounts', accounts.push(fromJS(account)));
-        return state.set('identities', identities.set(indexFound, identity));
       }
       return state;
     }

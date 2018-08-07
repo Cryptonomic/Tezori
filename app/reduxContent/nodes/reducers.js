@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import { fromJS } from 'immutable';
 import {
   SET_SELECTED,
@@ -8,7 +7,9 @@ import {
   CLEAR_STATE
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
-import * as defaultWalletNodes from '../../defaultWalletNodes.json';
+import { getWalletNodes } from '../../utils/nodes';
+
+const defaultWalletNodes = getWalletNodes();
 
 const baseDefaults = {
   tezosSelectedNode: '',
@@ -16,12 +17,12 @@ const baseDefaults = {
   list: []
 };
 
-const initState = fromJS(
-  Object.assign(
-    baseDefaults,
-    defaultWalletNodes && omit(defaultWalletNodes, ['default'])
-  )
+export const initialState = Object.assign(
+  baseDefaults,
+  defaultWalletNodes && defaultWalletNodes
 );
+
+export const initState = fromJS(initialState);
 
 export default function nodes(state = initState, action) {
   switch (action.type) {

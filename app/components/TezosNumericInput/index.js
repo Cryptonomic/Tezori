@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { TextField } from 'material-ui';
 
-import TezosIcon from '../TezosIcon';
+import TezosIcon from '../TezosIcon/';
 
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
@@ -33,7 +33,7 @@ const validateInput = (event, handleChange, decimalSeparator) => {
     const splitedAmount = validatedAmount.split(separator);
     const fractional = splitedAmount[1].substring(0, 6);
     validatedAmount = `${splitedAmount[0]}${separator}${fractional}`;
-  };
+  }
 
   handleChange(validatedAmount);
 };

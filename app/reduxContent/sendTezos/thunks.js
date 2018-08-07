@@ -1,13 +1,21 @@
 import { TezosOperations } from 'conseiljs';
+import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { TEZOS } from '../../constants/NodesTypes';
 import { tezToUtez } from '../../utils/currancy';
 import { displayError } from '../../utils/formValidation';
+import { persistWalletState } from '../../utils/wallet';
+import { createTransaction } from '../../utils/transaction';
+import { TRANSACTION } from '../../constants/TransactionTypes';
+
 import {
   getSelectedKeyStore,
   fetchAverageFees,
   clearOperationId
 } from '../../utils/general';
+
+import { findAccountIndex } from '../../utils/account';
+import { findIdentity } from '../../utils/identity';
 
 import { getSelectedNode } from '../../utils/nodes';
 
@@ -76,12 +84,13 @@ export function sendTez(
     }
 
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    console.log('-debug: - kkkkk - url, apiKey', url, apiKey);
+    console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
+    const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
     const res = await sendTransactionOperation(
       url,
       keyStore,
       toAddress,
-      tezToUtez(Number(amount.replace(/,/g, '.'))),
+      parsedAmount,
       fee
     ).catch(err => {
       const errorObj = { name: err.message, ...err };
@@ -91,11 +100,68 @@ export function sendTez(
     });
 
     if (res) {
+      console.log('-debug: res', res);
+      const operationResult = res
+        && res.results
+        && res.results.contents
+        && res.results.contents[0]
+        && res.results.contents[0].metadata
+        && res.results.contents[0].metadata.operation_result;
+
+      if ( operationResult && operationResult.errors && operationResult.errors.length ) {
+        const error = 'Send operation failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+
+      const identity = findIdentity(identities, selectedParentHash);
+      const clearedOperationId = clearOperationId(res.operationGroupID);
+      const transaction = createTransaction({
+        amount: parsedAmount,
+        destination: toAddress,
+        kind: TRANSACTION,
+        source: keyStore.publicKeyHash,
+        operationGroupHash: clearedOperationId,
+        fee
+      });
+      
+      if ( selectedParentHash === selectedAccountHash ) {
+        identity.transactions.push(transaction);
+      } else {
+        const accountIndex = findAccountIndex(identity, selectedAccountHash);
+        if ( accountIndex > -1 ) {
+          identity.accounts[accountIndex].transactions.push(transaction);
+        }
+      }
+
+      dispatch(updateIdentity(identity));
+
+      let i = 0;
+      const l = identities.length;
+      for ( i; i < l; i += 1 ) {
+        const receivingIdentity = identities[i];
+        if ( receivingIdentity.publicKeyHash === toAddress ) {
+          receivingIdentity.transactions.push(transaction);
+          dispatch(updateIdentity(receivingIdentity));
+          break;
+        }
+
+        const accountIndex = findAccountIndex(receivingIdentity, toAddress);
+        if ( accountIndex > -1 ) {
+          receivingIdentity.accounts[accountIndex].transactions.push(transaction);
+          dispatch(updateIdentity(receivingIdentity));
+          break;
+        }
+      }
+
+      await persistWalletState(state().wallet.toJS());
+      
       dispatch(
         addMessage(
           `Success! You sent ${amount} tz.`,
           false,
-          clearOperationId(res.operationGroupID)
+          clearedOperationId
         )
       );
       return true;

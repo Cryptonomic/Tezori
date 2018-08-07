@@ -11,7 +11,7 @@ export const instance = i18n.use(Backend).init({
   debug: true,
   backend: {
     loadPath: () => {
-      const filename = `../locales/{{lng}}.json`;
+      const filename = `../extraResources/locales/{{lng}}.json`;
       if (process.env.NODE_ENV === 'production') {
         return path.join(remote.app.getAppPath(), filename);
       }
