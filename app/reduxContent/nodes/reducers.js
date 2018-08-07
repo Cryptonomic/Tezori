@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import { handleActions } from 'redux-actions';
 import {
   SET_SELECTED,
   ADD_NODE,
@@ -22,55 +23,49 @@ export const initialState = Object.assign(
   defaultWalletNodes && defaultWalletNodes
 );
 
-export const initState = fromJS(initialState);
+export default handleActions({
+  [ SET_SELECTED ]: (state, action) => {
+    return action.target === CONSEIL
+      ? state.set('conseilSelectedNode', action.selected)
+      : state.set('tezosSelectedNode', action.selected);
+  },
+  [ ADD_NODE ]: (state, action) => {
+    const newNode = action.node;
+    const list = state.get('list');
+    const indexFound = list.findIndex(item => {
+      return item.get('name') === newNode.name;
+    });
 
-export default function nodes(state = initState, action) {
-  switch (action.type) {
-    case SET_SELECTED: {
-      return action.target === CONSEIL
-        ? state.set('conseilSelectedNode', action.selected)
-        : state.set('tezosSelectedNode', action.selected);
+    if (indexFound === -1) {
+      return state.set('list', list.push(fromJS(newNode)));
     }
-    case ADD_NODE: {
-      const newNode = action.node;
-      const list = state.get('list');
-      const indexFound = list.findIndex(item => {
-        return item.get('name') === newNode.name;
-      });
+    return state;
+  },
+  [ REMOVE_NODE ]: (state, action) => {
+    const { name } = action;
+    const list = state.get('list');
+    const indexFound = list.findIndex(item => {
+      return item.get('name') === name;
+    });
 
-      if (indexFound === -1) {
-        return state.set('list', list.push(fromJS(newNode)));
-      }
-      return state;
+    if (indexFound >= -1) {
+      return state.set('list', list.splice(indexFound, 1));
     }
-    case REMOVE_NODE: {
-      const { name } = action;
-      const list = state.get('list');
-      const indexFound = list.findIndex(item => {
-        return item.get('name') === name;
-      });
+    return state;
+  },
+  [ UPDATE_NODE ]: (state, action) => {
+    const newNode = action.node;
+    const list = state.get('list');
+    const indexFound = list.findIndex(item => {
+      return item.get('name') === newNode.name;
+    });
 
-      if (indexFound >= -1) {
-        return state.set('list', list.splice(indexFound, 1));
-      }
-      return state;
+    if (indexFound >= -1) {
+      return state.set('list', list.set(indexFound, fromJS(newNode)));
     }
-    case UPDATE_NODE: {
-      const newNode = action.node;
-      const list = state.get('list');
-      const indexFound = list.findIndex(item => {
-        return item.get('name') === newNode.name;
-      });
-
-      if (indexFound >= -1) {
-        return state.set('list', list.set(indexFound, fromJS(newNode)));
-      }
-      return state;
-    }
-    case CLEAR_STATE: {
-      return initState;
-    }
-    default:
-      return state;
+    return state;
+  },
+  [ CLEAR_STATE ]: () => {
+    return fromJS(initialState);
   }
-}
+}, fromJS(initialState));

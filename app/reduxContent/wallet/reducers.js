@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import { handleActions } from 'redux-actions';
 import {
   SET_WALLET,
   SET_IS_LOADING,
@@ -32,51 +33,54 @@ export const initialState = {
   time: new Date()
 };
 
-const initState = fromJS(initialState);
+export default handleActions({
+  [ SET_WALLET ]: (state, action) => {
+    return fromJS({ ...state.toJS(), ...action.wallet });
+  },
+  [ SET_IS_LOADING ]: (state, action) => {
+    return state.set('isLoading', action.isLoading);
+  },
+  [ SET_WALLET_FILENAME ]: (state, action) => {
+    return state.set('walletFileName', action.walletFileName);
+  },
+  [ SET_WALLET_LOCATION ]: (state, action) => {
+    return state.set('walletLocation', action.walletLocation);
+  },
+  [ SET_PASSWORD ]: (state, action) => {
+    return state.set('password', action.password);
+  },
+  [ SET_IDENTITIES ]: (state, action) => {
+    return state.set('identities', fromJS(action.identities));
+  },
+  [ SET_NODES_STATUS ]: (state, action) => {
+    return state.set('nodesStatus', fromJS(action.nodesStatus));
+  },
+  [ ADD_NEW_IDENTITY ]: (state, action) => {
+    const newIdentity = fromJS(action.identity);
 
-export default function wallet(state = initState, action) {
-  switch (action.type) {
-    case SET_WALLET:
-      return fromJS({ ...state.toJS(), ...action.wallet });
-    case SET_IS_LOADING:
-      return state.set('isLoading', action.isLoading);
-    case SET_WALLET_FILENAME:
-      return state.set('walletFileName', action.walletFileName);
-    case SET_WALLET_LOCATION:
-      return state.set('walletLocation', action.walletLocation);
-    case SET_PASSWORD:
-      return state.set('password', action.password);
-    case SET_IDENTITIES:
-      return state.set('identities', fromJS(action.identities));
-    case SET_NODES_STATUS:
-      return state.set('nodesStatus', fromJS(action.nodesStatus));
-    case ADD_NEW_IDENTITY: {
-      const newIdentity = fromJS(action.identity);
+    return state.update('identities', identities =>
+      identities.push(newIdentity)
+    );
+  },
+  [ UPDATE_IDENTITY ]: (state, action) => {
+    const { publicKeyHash } = action.identity;
+    const identities = state.get('identities');
+    const indexFound = identities.findIndex(
+      identity => publicKeyHash === identity.get('publicKeyHash')
+    );
 
-      return state.update('identities', identities =>
-        identities.push(newIdentity)
+    if (indexFound > -1) {
+      return state.set(
+        'identities',
+        identities.set(indexFound, fromJS(action.identity))
       );
     }
-    case UPDATE_IDENTITY: {
-      const { publicKeyHash } = action.identity;
-      const identities = state.get('identities');
-      const indexFound = identities.findIndex(
-        identity => publicKeyHash === identity.get('publicKeyHash')
-      );
-
-      if (indexFound > -1) {
-        return state.set(
-          'identities',
-          identities.set(indexFound, fromJS(action.identity))
-        );
-      }
-      return state;
-    }
-    case UPDATE_FETCHED_TIME:
-      return state.set('time', action.time);
-    case LOGOUT:
-      return initState;
-    default:
-      return state;
+    return state;
+  },
+  [ UPDATE_FETCHED_TIME ]: (state, action) => {
+    return state.set('time', action.time);
+  },
+  [ LOGOUT ]: () => {
+    return fromJS(initialState);
   }
-}
+}, fromJS(initialState));
