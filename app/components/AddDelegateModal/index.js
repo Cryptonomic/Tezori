@@ -5,7 +5,7 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import TezosNumericInput from '../TezosNumericInput'
+import TezosNumericInput from '../TezosNumericInput/'
 import { wrapComponent } from '../../utils/i18n';
 
 import Tooltip from '../Tooltip/';
@@ -15,7 +15,7 @@ import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
-import PasswordInput from '../PasswordInput';
+import PasswordInput from '../PasswordInput/';
 import InputAddress from '../InputAddress/';
 import TezosAmount from '../TezosAmount/';
 
@@ -24,7 +24,13 @@ import {
   fetchOriginationAverageFees
 } from '../../reduxContent/createDelegate/thunks';
 
+import {
+  setIsLoading
+} from '../../reduxContent/wallet/actions';
+
 type Props = {
+  isLoading: boolean,
+  setIsLoading: () => {},
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
@@ -73,8 +79,8 @@ const BalanceContainer = styled.div`
   flex: 1;
   position: relative;
   margin: 15px 0 0px 40px;
+`;
 
-`
 const BalanceArrow = styled.div`
   top: 50%;
   left: 4px;
@@ -85,19 +91,22 @@ const BalanceArrow = styled.div`
   width: 0;
   height: 0;
   position: absolute;
-`
+`;
+
 const BalanceContent = styled.div`
   padding: ${ms(1)} ${ms(1)} ${ms(1)} ${ms(4)};
   color: #123262;
   text-align: left;
   height: 100%;
   background-color: ${({ theme: { colors } }) => colors.gray1};
-`
+`;
+
 const GasInputContainer = styled.div`
   width: 100%;
   position: relative;
   height: 64px;
-`
+`;
+
 
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
@@ -119,6 +128,7 @@ const UseMax = styled.div`
 const TotalAmount = styled(TezosAmount)`
   margin-bottom: 22px;
 `;
+
 const BalanceAmount = styled(TezosAmount)`
 `;
 
@@ -127,22 +137,26 @@ const WarningIcon = styled(TezosIcon)`
   position: relative;
   top: 1px;
 `;
+
 const BalanceTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
   font-size: 14px;
   font-weight: 300;
 `;
+
 const ErrorContainer = styled.div`
   display: block;
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme: { colors } }) => colors.error1};
 `;
+
 const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
   top: 44px;
 `;
+
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
@@ -161,7 +175,6 @@ const TooltipContainer = styled.div`
 const utez = 1000000;
 
 const defaultState = {
-  isLoading: false,
   delegate: '',
   amount: '',
   fee: 100,
@@ -220,12 +233,11 @@ class AddDelegateModal extends Component<Props> {
     this.setState({ fee, total, balance });
   }
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   createAccount = async () => {
-    const { createNewAccount, selectedParentHash } = this.props;
+    const { createNewAccount, selectedParentHash, setIsLoading } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
-    this.setIsLoading(true);
+    setIsLoading(true);
     if (
       await createNewAccount(
         delegate,
@@ -236,9 +248,8 @@ class AddDelegateModal extends Component<Props> {
       )
     ) {
       this.onCloseClick();
-    } else {
-      this.setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   renderGasToolTip = (gas) => {
@@ -289,9 +300,8 @@ class AddDelegateModal extends Component<Props> {
   }
 
   render() {
-    const { open, t } = this.props;
+    const { isLoading, open, t } = this.props;
     const {
-      isLoading,
       averageFees,
       delegate,
       amount,
@@ -340,7 +350,12 @@ class AddDelegateModal extends Component<Props> {
         <MainContainer>
           <AmountFeePassContainer>
             <AmountSendContainer>
-              <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.changeAmount} />
+              <TezosNumericInput
+                decimalSeparator={t('general.decimal_separator')}
+                labelText={t('general.amount')}
+                amount={this.state.amount}
+                handleAmountChange={this.changeAmount}
+              />
               <UseMax onClick={this.onUseMax}>Use Max</UseMax>
             </AmountSendContainer>
             <FeeContainer>
@@ -437,9 +452,16 @@ class AddDelegateModal extends Component<Props> {
   }
 }
 
+function mapStateToProps({ wallet }) {
+  return {
+    isLoading: wallet.get('isLoading')
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      setIsLoading,
       fetchOriginationAverageFees,
       createNewAccount
     },
@@ -447,4 +469,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(AddDelegateModal);
+export default compose(
+  wrapComponent,
+  connect(mapStateToProps, mapDispatchToProps)
+)(AddDelegateModal);

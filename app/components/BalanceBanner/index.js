@@ -15,7 +15,7 @@ import { findAccountIndex } from '../../utils/account';
 import { MNEMONIC } from '../../constants/StoreTypes';
 
 type Props = {
-  storeTypes?: string,
+  storeType?: string,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
@@ -107,7 +107,7 @@ const HelpIcon = styled(TezosIcon)`
 
 function BalanceBanner(props: Props) {
   const {
-    storeTypes,
+    storeType,
     isReady,
     balance,
     publicKeyHash,
@@ -159,7 +159,7 @@ function BalanceBanner(props: Props) {
             size={ms(1.7)}
           />
 
-          {isReady || storeTypes === MNEMONIC ? (
+          {isReady || storeType === MNEMONIC ? (
             <Amount
               color="white"
               size={ms(4.5)}

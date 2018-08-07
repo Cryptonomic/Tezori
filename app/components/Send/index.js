@@ -144,7 +144,12 @@ class Send extends Component<Props> {
   async componentWillMount() {
     const { fetchTransactionAverageFees, addressBalance } = this.props;
     const averageFees = await fetchTransactionAverageFees();
-    this.setState({ averageFees, fee: averageFees.low, total: averageFees.low, balance: addressBalance });
+    this.setState({
+      averageFees,
+      fee: averageFees.low,
+      total: averageFees.low,
+      balance: addressBalance
+    });
   }
 
   onUseMax = () => {
@@ -163,7 +168,13 @@ class Send extends Component<Props> {
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () => {
     const { averageFees } = this.state;
-    this.setState({ ...initialState, toAddress: '', averageFees, fee: averageFees.low, total: averageFees.low });
+    this.setState({
+      ...initialState,
+      toAddress: '',
+      averageFees,
+      fee: averageFees.low,
+      total: averageFees.low
+    });
   };
   handlePasswordChange = (password) =>  this.setState({ password });
   handleToAddressChange = (toAddress) =>  this.setState({ toAddress });
@@ -273,11 +284,22 @@ class Send extends Component<Props> {
 
     return (
       <SendContainer>
-        <InputAddress address={toAddress} labelText={t('general.address')} userAddress={this.props.selectedAccountHash} addressType="send" tooltip={false} changeDelegate={this.handleToAddressChange} />
+        <InputAddress
+          address={toAddress}
+          labelText={t('general.address')}
+          userAddress={this.props.selectedAccountHash}
+          addressType="send"
+          changeDelegate={this.handleToAddressChange}
+        />
         <MainContainer>
           <AmountContainer>
             <InputAmount>
-              <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.amount')} amount={this.state.amount}  handleAmountChange={this.handleAmountChange} />
+              <TezosNumericInput
+                decimalSeparator={t('general.decimal_separator')}
+                labelText={t('general.amount')}
+                amount={this.state.amount}
+                handleAmountChange={this.handleAmountChange}
+              />
               <UseMax onClick={this.onUseMax}>Use Max</UseMax>
             </InputAmount>
             <Fees

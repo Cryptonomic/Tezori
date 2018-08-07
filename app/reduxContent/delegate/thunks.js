@@ -6,6 +6,10 @@ import { getSelectedNode } from '../../utils/nodes';
 import { findIdentity } from '../../utils/identity';
 import { findAccountIndex } from '../../utils/account';
 import { TEZOS } from '../../constants/NodesTypes';
+import { persistWalletState } from '../../utils/wallet';
+import { createTransaction } from '../../utils/transaction';
+import { DELEGATION } from '../../constants/TransactionTypes';
+
 import {
   getSelectedKeyStore,
   fetchAverageFees,
@@ -78,19 +82,45 @@ export function delegate(
     });
 
     if (res) {
+      const operationResult = res
+        && res.results
+        && res.results.contents
+        && res.results.contents[0]
+        && res.results.contents[0].metadata
+        && res.results.contents[0].metadata.operation_result;
+
+      if ( operationResult && operationResult.errors && operationResult.errors.length ) {
+        const error = 'Delegation operation failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+
+      const clearedOperationId = clearOperationId(res.operationGroupID);
+      
       dispatch(
         addMessage(
           `Successfully started delegation update.`,
           false,
-          clearOperationId(res.operationGroupID)
+          clearedOperationId
         )
       );
 
       const identity = findIdentity(identities, selectedParentHash);
+      const delegateIdentity = findIdentity(identities, delegateValue);
       const foundIndex = findAccountIndex(identity, selectedAccountHash);
       const account = identity.accounts[foundIndex];
 
-      if (foundIndex > -1) {
+      const transaction = createTransaction({
+        delegate: delegateValue,
+        kind: DELEGATION,
+        source: keyStore.publicKeyHash,
+        operationGroupHash: clearedOperationId,
+        fee
+      });
+
+      if ( foundIndex > -1 ) {
+        account.transactions.push(transaction);
         identity.accounts[foundIndex] = {
           ...account,
           delegateValue: ''
@@ -99,6 +129,13 @@ export function delegate(
         dispatch(updateIdentity(identity));
       }
 
+      console.log('delegateIdentity', delegateIdentity);
+      if ( delegateIdentity ) {
+        delegateIdentity.transactions.push(transaction);
+        dispatch(updateIdentity(delegateIdentity));
+      }
+
+      await persistWalletState(state().wallet.toJS());
       return true;
     }
     return false;

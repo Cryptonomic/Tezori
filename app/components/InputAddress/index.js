@@ -52,7 +52,7 @@ const TextfieldTooltip = styled(Button)`
 type Props = {
   labelText: string,
   changeDelegate: () => {},
-  tooltip: boolean,
+  tooltip?: boolean,
   userAddress?: string,
   address?: string,
   addressType: 'send' | 'delegate',
