@@ -54,7 +54,6 @@ type Props = {
   changeDelegate: () => {},
   tooltip?: boolean,
   userAddress?: string,
-  address?: string,
   addressType: 'send' | 'delegate',
   t: () => {},
   onIssue?: () => {}
@@ -127,7 +126,6 @@ class InputAddress extends React.PureComponent<Props> {
         <TextField
           floatingLabelText={this.props.labelText}
           style={{ width: '100%' }}
-          value={this.props.address}
           onChange={(e) => this.validateAddress(e, this.props.changeDelegate, this.props.addressType)}
           errorText={this.state.error}
         />

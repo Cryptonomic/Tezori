@@ -340,7 +340,6 @@ class AddDelegateModal extends Component<Props> {
           onClick={this.onCloseClick}
         />
         <InputAddress
-          address={delegate}
           labelText={t('general.delegate_address')}
           addressType="delegate"
           tooltip
