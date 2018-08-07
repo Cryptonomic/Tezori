@@ -12,7 +12,7 @@ The wallet is built on [React](https://reactjs.org/) and [Electron](https://elec
 
 Active development happens on the develop branch with periodic merges to master.
 
-Add the file `app/defaultWalletNodes.json` with your Tezos and Conseil nodes:
+Add the file `extraResources/defaultWalletNodes.json` with your Tezos and Conseil nodes:
 
 ```json
 {
@@ -47,4 +47,3 @@ To run during development:
 To package for deployment:
 
 `npm run package-all`
-
