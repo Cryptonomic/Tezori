@@ -155,4 +155,8 @@ class InputAddress extends React.PureComponent<Props> {
     )
   }
 }
+
+InputAddress.defaultProps = {
+  onIssue: () => null
+}
 export default compose(wrapComponent)(InputAddress)

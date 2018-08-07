@@ -110,7 +110,9 @@ type Props = {
   onCloseClick: () => {},
   isLoading?: boolean,
   isShowedPwd: boolean,
-  onShowPwd: () => {}
+  onShowPwd: () => {},
+  isDelegateIssue: boolean,
+  onDelegateIssue: () => {}
 };
 
 const DelegateConfirmationModal = (props: Props) => {
@@ -128,9 +130,11 @@ const DelegateConfirmationModal = (props: Props) => {
     onCloseClick,
     isLoading,
     isShowedPwd,
-    onShowPwd
+    onShowPwd,
+    isDelegateIssue,
+    onDelegateIssue
   } = props;
-  const isDisabled = isLoading || !newAddress || !password;
+  const isDisabled = isLoading || !newAddress || !password || isDelegateIssue;
 
   return (
     <ModalDialog
@@ -163,6 +167,7 @@ const DelegateConfirmationModal = (props: Props) => {
           addressType="delegate"
           tooltip={false}
           changeDelegate={onAddressChange}
+          onIssue={onDelegateIssue}
         />
         <Fees
           styles={{ minWidth: 206, width: 'auto' }}
