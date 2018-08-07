@@ -285,7 +285,6 @@ class Send extends Component<Props> {
     return (
       <SendContainer>
         <InputAddress
-          address={toAddress}
           labelText={t('general.address')}
           userAddress={this.props.selectedAccountHash}
           addressType="send"

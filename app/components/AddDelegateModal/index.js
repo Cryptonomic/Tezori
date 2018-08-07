@@ -185,6 +185,7 @@ const defaultState = {
     medium: 200,
     high: 400
   },
+  isDelegateIssue: true,
   gas: 257000
 };
 
@@ -261,11 +262,11 @@ class AddDelegateModal extends Component<Props> {
 
   onCloseClick = () => {
     const { averageFees, gas } = this.state;
-    const { managerBalance } = this.props;
+    const { managerBalance, onCloseClick } = this.props;
     const fee = averageFees.low;
     const total = fee + gas;
     this.setState({...defaultState, total, balance: managerBalance - total});
-    this.props.onCloseClick();
+    onCloseClick();
   }
 
   getBalanceState = (balance, amount) => {
@@ -309,9 +310,10 @@ class AddDelegateModal extends Component<Props> {
       isShowedPwd,
       gas,
       total,
-      balance
+      balance,
+      isDelegateIssue
     } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !passPhrase || balance<1;
+    const isDisabled = isLoading || !delegate || !amount || !passPhrase || balance<1 || isDelegateIssue;
     const {
       isIssue,
       warningMessage,
@@ -342,6 +344,7 @@ class AddDelegateModal extends Component<Props> {
           addressType="delegate"
           tooltip
           changeDelegate={this.changeDelegate}
+          onIssue={(status)=> this.setState({isDelegateIssue: status})}
         />
         <MainContainer>
           <AmountFeePassContainer>
