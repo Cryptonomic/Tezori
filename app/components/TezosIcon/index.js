@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ms } from '../../styles/helpers';
 
 const Icon = styled.span`
   font-family: 'Tezos-icons' !important;
@@ -18,17 +17,17 @@ const Icon = styled.span`
 `;
 
 type Props = {
-  iconName: string,
+  iconName?: string,
   color: string,
-  size: any,
-  onClick?: Function
+  size?: string,
+  onClick?: () => {},
+  className?: string
 };
 
 const getIconByName = iconName => {
   const toUnicode = unicode => String.fromCharCode(parseInt(unicode, 16));
 
   switch (iconName) {
-
     case 'icon-new-window': {
       return toUnicode('e916');
     }
@@ -97,7 +96,7 @@ const getIconByName = iconName => {
       return toUnicode('e913');
     }
 
-    case 'change' : {
+    case 'change': {
       return toUnicode('e914');
     }
 
@@ -105,11 +104,11 @@ const getIconByName = iconName => {
       return toUnicode('e915');
     }
 
-    case 'new-window' : {
+    case 'new-window': {
       return toUnicode('e916');
     }
-    
-    case 'info' : {
+
+    case 'info': {
       return toUnicode('e917');
     }
 
@@ -119,19 +118,13 @@ const getIconByName = iconName => {
   }
 };
 
-const TezosIcon = (props: Prosp) => {
+const TezosIcon = (props: Props) => {
   const { iconName, size, color, className, onClick } = props;
   return (
     <Icon className={className} size={size} color={color} onClick={onClick}>
       {getIconByName(iconName)}
     </Icon>
   );
-};
-
-TezosIcon.defaultProps = {
-  size: ms(0),
-  color: 'primary',
-  iconName: 'tezos'
 };
 
 export default TezosIcon;

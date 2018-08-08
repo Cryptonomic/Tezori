@@ -67,7 +67,7 @@ const StyledButton = styled.button`
       padding: ${ms(-5)} ${ms(6)};
       font-size: ${ms(-1)};
     `}
-  
+
   ${({ disabled }) =>
     disabled &&
     css`
@@ -77,7 +77,7 @@ const StyledButton = styled.button`
         opacity: 0.5;
       }
     `}
-  
+
   ${({ buttonTheme }) => chooseTheme(buttonTheme)};
 `;
 
@@ -88,7 +88,7 @@ type Props = {
   buttonTheme: 'primary' | 'secondary' | 'plain',
   small?: boolean,
   type?: string,
-  onClick?: Function
+  onClick?: () => {}
 };
 
 function Button(props: Props) {

@@ -1,28 +1,27 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { TextField } from 'material-ui';
-import TezosIcon from "../TezosIcon"
 import Warning from 'material-ui/svg-icons/alert/warning';
 import styled from 'styled-components';
 import classnames from 'classnames';
-import { ms } from '../../styles/helpers'
-
+import { ms } from '../../styles/helpers';
+import TezosIcon from '../TezosIcon';
 
 const inputStyles = {
   underlineFocusStyle: {
-    borderColor: '#2c7df7',
+    borderColor: '#2c7df7'
   },
   underlineStyle: {
-    borderColor: '#d0d2d8',
+    borderColor: '#d0d2d8'
   },
   errorUnderlineStyle: {
-    borderColor: '#ea776c',
+    borderColor: '#ea776c'
   },
   floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)',
+    color: 'rgba(0, 0, 0, 0.38)'
   },
   floatingLabelFocusStyle: {
-    color: '#5571a7',
-  },
+    color: '#5571a7'
+  }
 };
 
 const StyledInputContainer = styled.div`
@@ -45,41 +44,41 @@ const StyledInputContainer = styled.div`
     width: 18px !important;
     height: 18px !important;
   }
-`
-
+`;
 
 const CheckIcon = styled(TezosIcon)`
   position: absolute;
   top: 42px;
   right: 5px;
-`
+`;
 
 const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
   if (!isShow) {
     return null;
   }
   if (isValid) {
-    return (<CheckIcon
-          iconName='checkmark2'
-          size={ms(0)}
-          color="check"
-        />);
+    return <CheckIcon iconName="checkmark2" size={ms(0)} color="check" />;
   }
-  return (<Warning className={classnames('no-valid-icon', 'valid-button')} />);
-}
+  return <Warning className={classnames('no-valid-icon', 'valid-button')} />;
+};
 
 type Props = {
   value: string,
   index: number,
-  checkValidation: Function,
-  onEnter: Function
+  checkValidation: () => {},
+  onEnter: () => {}
 };
 
 export default class InputValidComponent extends Component<Props> {
   props: Props;
-  state = { isInputVal: false,  isMatching: false, isMatched: false, errorText: ''};
+  state = {
+    isInputVal: false,
+    isMatching: false,
+    isMatched: false,
+    errorText: ''
+  };
 
-  getLabel = (index) => {
+  getLabel = index => {
     switch (index) {
       case 1:
         return '1st Word';
@@ -90,9 +89,9 @@ export default class InputValidComponent extends Component<Props> {
       default:
         return `${index}th Word`;
     }
-  }
+  };
 
-  changFunc = (val) => {
+  changFunc = val => {
     if (!this.state.isInputVal) {
       this.setState({ isInputVal: true });
     }
@@ -103,26 +102,31 @@ export default class InputValidComponent extends Component<Props> {
       if (val === this.props.value) {
         this.setState({ isMatched: true, isMatching: false, errorText: '' });
         isValid = true;
-      } else if (index < 0){
-        this.setState({ isMatched: false, isMatching: false, errorText: "Invalid word, please check again!" });
+      } else if (index < 0) {
+        this.setState({
+          isMatched: false,
+          isMatching: false,
+          errorText: 'Invalid word, please check again!'
+        });
       } else {
         this.setState({ isMatched: false, isMatching: true, errorText: '' });
       }
-
-
     } else {
-      this.setState({ isMatched: false, isMatching: false, errorText: "It's a typo! Please check again" });
+      this.setState({
+        isMatched: false,
+        isMatching: false,
+        errorText: "It's a typo! Please check again"
+      });
     }
 
     this.props.checkValidation(isValid);
-  }
-  keyHandler = (ev) => {
+  };
+  keyHandler = ev => {
     if (ev.key === 'Enter') {
       this.props.onEnter();
       ev.preventDefault();
     }
-  }
-
+  };
 
   render() {
     const label = this.getLabel(this.props.index);
@@ -135,11 +139,14 @@ export default class InputValidComponent extends Component<Props> {
           underlineStyle={inputStyles.underlineStyle}
           underlineFocusStyle={inputStyles.underlineFocusStyle}
           errorText={this.state.errorText}
-          errorStyle={{color: '#ea776c', borderColor: '#ea776c'}}
+          errorStyle={{ color: '#ea776c', borderColor: '#ea776c' }}
           onChange={(_, newVal) => this.changFunc(newVal)}
           onKeyPress={this.keyHandler}
         />
-        {validIcon(this.state.isInputVal && !this.state.isMatching, this.state.isMatched)}
+        {validIcon(
+          this.state.isInputVal && !this.state.isMatching,
+          this.state.isMatched
+        )}
       </StyledInputContainer>
     );
   }

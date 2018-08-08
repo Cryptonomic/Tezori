@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
 import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-import { ms } from '../../styles/helpers'
+import { ms } from '../../styles/helpers';
 import { H2 } from '../../components/Heading/';
 import PdfReader from '../../components/PdfReader/';
-import { termsService, privacyPolicy } from '../../config.json'
+import { termsService, privacyPolicy } from '../../config.json';
 
 type Props = {
   match?: object,
-  goBack: Function
+  goBack: () => {}
 };
 
 const BackToWallet = styled.div`
@@ -41,15 +41,13 @@ class LoginConditions extends Component<Props> {
 
     let title = 'Privacy Policy';
     let url = privacyPolicy;
-    if ( type === 'termsOfService' ) {
+    if (type === 'termsOfService') {
       title = 'Terms Of Service';
       url = termsService;
     }
     return (
       <Container>
-        <BackToWallet
-          onClick={goBack}
-        >
+        <BackToWallet onClick={goBack}>
           <BackCaret
             style={{
               fill: '#4486f0',
@@ -62,18 +60,21 @@ class LoginConditions extends Component<Props> {
           />
           <span>Back</span>
         </BackToWallet>
-        
-        <H2>{ title }</H2>
-        <PdfReader pdfUrl={ url } />
+
+        <H2>{title}</H2>
+        <PdfReader pdfUrl={url} />
       </Container>
     );
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    goBack: () => dispatch => dispatch(back())
-  }, dispatch );
+  return bindActionCreators(
+    {
+      goBack: () => dispatch => dispatch(back())
+    },
+    dispatch
+  );
 }
 
 export default connect(null, mapDispatchToProps)(LoginConditions);

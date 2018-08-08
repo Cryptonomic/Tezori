@@ -1,14 +1,17 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { TextField, Dialog, SelectField, MenuItem } from 'material-ui';
+import { Dialog, SelectField, MenuItem } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../../components/TezosIcon';
 import Button from './../Button/';
-import { H4, H2 } from './../Heading/';
+import { H2 } from './../Heading/';
+import { wrapComponent } from '../../utils/i18n';
+import TezosNumericInput from '../TezosNumericInput'
+
 
 import { formatAmount, tezToUtez } from '../../utils/currancy';
 
@@ -18,14 +21,15 @@ type Props = {
   high?: number,
   styles?: object,
   underlineStyle?: object,
-  fee?: any,
-  onChange?: Function
+  fee?: number,
+  onChange?: () => {},
+  t: () => {}
 };
 
 const StyledSaveButton = styled(Button)`
   margin-top: ${ms(4)};
-  padding-right: ${ms(9)} ;
-  padding-left: ${ms(9)} ;
+  padding-right: ${ms(9)};
+  padding-left: ${ms(9)};
 `;
 
 const StyledCloseIcon = styled(CloseIcon)`
@@ -37,17 +41,6 @@ const StyledCloseIcon = styled(CloseIcon)`
   right: 15px;
 `;
 
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 0px;
-  top: 40px;
-  display: block;
-`
-
-const FeeInput = styled.div`
-  position: relative;
-`;
-
 class Fee extends Component<Props> {
   props: Props;
   state = {
@@ -55,19 +48,28 @@ class Fee extends Component<Props> {
     custom: ''
   };
 
-  openConfirmation = () =>  this.setState({ open: true });
-  closeConfirmation = () =>  this.setState({ open: false });
-  handleCustomChange = (_, custom) =>  this.setState({ custom });
-  handleSetCustom = () =>  {
+  openConfirmation = () => this.setState({ open: true });
+  closeConfirmation = () => this.setState({ open: false });
+  handleCustomChange = (custom) => this.setState({ custom });
+  handleSetCustom = () => {
     const { custom } = this.state;
     const { onChange } = this.props;
-    onChange(tezToUtez(custom));
+    onChange(tezToUtez(custom.replace(/,/g,'.')));
     this.closeConfirmation();
   };
 
   render() {
     const { open, custom } = this.state;
-    const { low, medium, high, styles, fee, onChange, underlineStyle } = this.props;
+    const {
+      low,
+      medium,
+      high,
+      styles,
+      fee,
+      onChange,
+      underlineStyle,
+      t
+    } = this.props;
 
     return (
       <Fragment>
@@ -77,20 +79,54 @@ class Fee extends Component<Props> {
           style={styles}
           underlineStyle={underlineStyle}
           onChange={(_, index, fee) => {
-            if( fee !== 'custom' ) {
+            if (fee !== 'custom') {
               onChange(fee);
             }
           }}
         >
-          <MenuItem value={low} primaryText={<div>Low Fee: { formatAmount(low)} <TezosIcon color={'black'}/></div>} />
-          <MenuItem value={medium} primaryText={<div>Medium Fee: { formatAmount(medium)} <TezosIcon color={'black'}/></div>} />
-          <MenuItem value={high} primaryText={ <div>High Fee: { formatAmount(high)} <TezosIcon color={'black'}/></div>} />
-          {
-            custom
-              ? <MenuItem value={tezToUtez(custom)} primaryText={<div>Custom Fee: { formatAmount(tezToUtez(custom))} <TezosIcon color={'black'}/></div>} />
-              : null
-          }
-          <MenuItem value='custom' primaryText="Custom" onClick={this.openConfirmation} />
+          <MenuItem
+            value={low}
+            primaryText={
+              <div>
+                Low Fee: {formatAmount(low)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
+              </div>
+            }
+          />
+          <MenuItem
+            value={medium}
+            primaryText={
+              <div>
+                Medium Fee: {formatAmount(medium)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
+              </div>
+            }
+          />
+          <MenuItem
+            value={high}
+            primaryText={
+              <div>
+                High Fee: {formatAmount(high)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
+              </div>
+            }
+          />
+          {custom ? (
+            <MenuItem
+              value={tezToUtez(custom.replace(/,/g,'.'))}
+              primaryText={
+                <div>
+                  Custom Fee: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
+                  <TezosIcon color="black" iconName="tezos" />
+                </div>
+              }
+            />
+          ) : null}
+          <MenuItem
+            value="custom"
+            primaryText="Custom"
+            onClick={this.openConfirmation}
+          />
         </SelectField>
         <Dialog
           modal
@@ -100,21 +136,11 @@ class Fee extends Component<Props> {
         >
           <StyledCloseIcon
             style={{ fill: '#7190C6' }}
-            onClick={ this.closeConfirmation }
+            onClick={this.closeConfirmation}
           />
           <div>
             <H2>Enter Custom Amount</H2>
-            <FeeInput>
-              <TextField
-                floatingLabelText="Custom Fee"
-                style={{ width: '100%' }}
-                value={custom}
-                type="number"
-                onChange={this.handleCustomChange}
-              />
-              <TezosIconInput color='secondary' />
-            </FeeInput>
-
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
@@ -128,4 +154,4 @@ class Fee extends Component<Props> {
   }
 }
 
-export default connect()(Fee);
+export default compose(wrapComponent, connect())(Fee);

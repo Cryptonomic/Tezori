@@ -1,22 +1,24 @@
 import * as status from '../constants/StatusTypes';
-import { getTransactions, activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
-import { createAccount, getAccountsForIdentity, getSyncAccount } from './account';
+import { getSyncTransactions, syncTransactionsWithState } from './transaction';
+import { activateAndUpdateAccount, getSelectedKeyStore, getSelectedHash } from './general';
+import { createAccount, getAccountsForIdentity, getSyncAccount, syncAccountWithState } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
 import { FUNDRAISER } from '../constants/StoreTypes';
 
 export function createIdentity(identity) {
 
   return {
-    transactions: [],
     balance: 0,
     accounts: [],
     publicKeyHash: '', 
     publicKey: '',
     privateKey: '',
     operations: {},
-    storeTypes: FUNDRAISER,
+    order: null,
+    storeType: FUNDRAISER,
     activeTab: TRANSACTIONS,
     status: status.CREATED,
+    transactions: [],
     ...identity
   };
 }
@@ -60,6 +62,8 @@ export async function getSyncIdentity(identities, identity, nodes) {
       overrides.status = identity.accounts[foundIndex].status;
       overrides.operations = identity.accounts[foundIndex].operations;
       overrides.activeTab = identity.accounts[foundIndex].activeTab;
+      overrides.order = identity.accounts[foundIndex].order;
+      overrides.transactions = identity.accounts[foundIndex].transactions;
     }
     return createAccount({
         ...account,
@@ -79,7 +83,12 @@ export async function getSyncIdentity(identities, identity, nodes) {
   });
 
   accounts = accounts.concat(accountsToConcat);
-  identity.accounts = accounts;
+  
+  //  Adding order to accounts without it - in-case of import.
+  identity.accounts = accounts.map((account, accountIndex) => {
+    account.order = account.order || (accountIndex + 1);
+    return account;
+  });
   identity.accounts = await Promise.all(
     ( identity.accounts || []).map(async account => {
       if ( account.status !== status.READY ) {
@@ -96,25 +105,44 @@ export async function getSyncIdentity(identities, identity, nodes) {
         });
 
       } else if ( selectedAccountHash === account.accountId ) {
-        account.transactions = await getTransactions(selectedAccountHash, nodes)
-          .catch( e => {
-            console.log('-debug: Error in: else -> getSyncIdentity -> getTransactions for:' + selectedAccountHash);
-            console.error(e);
-            return account.transactions;
-          });
+        account.transactions = await getSyncTransactions(selectedAccountHash, nodes, account.transactions);
       }
       return account;
     })
   );
   
-  if ( publicKeyHash === selectedAccountHash) {
-    identity.transactions = await getTransactions(publicKeyHash, nodes)
-      .catch( e => {
-        console.log('-debug: Error in: getSyncIdentity -> getTransactions for:' + publicKeyHash);
-        console.error(e);
-        return identity.transactions;
-      });
+  if ( publicKeyHash === selectedAccountHash ) {
+    identity.transactions = await getSyncTransactions(publicKeyHash, nodes, identity.transactions);
   }
 
   return identity;
+}
+
+export function syncIdentityWithState(syncIdentity, stateIdentity) {
+  const newAccounts = stateIdentity.accounts
+    .filter(stateIdentityAccount => {
+      const syncIdentityAccountIndex = syncIdentity.accounts
+        .findIndex(syncIdentityAccount =>
+          syncIdentityAccount.accountId === stateIdentityAccount.accountId
+        );
+
+      if ( syncIdentityAccountIndex > -1 ) {
+        syncIdentity.accounts[syncIdentityAccountIndex] = syncAccountWithState(
+          syncIdentity.accounts[syncIdentityAccountIndex],
+          stateIdentityAccount
+        );
+        return false;
+      }
+
+      return true;
+    });
+
+  syncIdentity.activeTab = stateIdentity.activeTab;
+  syncIdentity.accounts = syncIdentity.accounts.concat(newAccounts);
+  syncIdentity.transactions = syncTransactionsWithState(
+    syncIdentity.transactions,
+    stateIdentity.transactions
+  );
+  
+  return syncIdentity;
 }

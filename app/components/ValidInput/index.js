@@ -1,24 +1,23 @@
-import React from 'react'
-import styled from 'styled-components'
-import { TextField } from 'material-ui'
-import TezosIcon from "../TezosIcon"
-import { ms } from '../../styles/helpers'
+import React from 'react';
+import styled from 'styled-components';
+import { TextField } from 'material-ui';
+import TezosIcon from '../TezosIcon';
+import { ms } from '../../styles/helpers';
 
 const Container = styled.div`
   min-height: 93px;
-`
+`;
 const Content = styled.div`
   width: 100%;
   position: relative;
   .input-text-field {
     width: 100% !important;
   }
-
-`
+`;
 const PasswordStrengthSuggestions = styled.div`
   height: 3.3rem;
   width: 24rem;
-`
+`;
 const Suggestion = styled.div`
   font-size: 12px;
   line-height: 18px;
@@ -27,21 +26,25 @@ const Suggestion = styled.div`
   span {
     font-weight: bold;
   }
-`
+`;
 const Error = styled.div`
   font-size: 12px;
   line-height: 18px;
   color: ${props => (props.color)};
 `
-const EyeIcon = styled(TezosIcon)`
+
+const ShowHidePwd = styled.div`
   position: absolute;
-  top: 38px;
   right: 10px;
+  top: 40px;
+  color: ${({ theme: { colors } }) => colors.accent };
+  font-size: 12px;
+  font-weight: 500;
 `
 const CheckIcon = styled(TezosIcon)`
   position: absolute;
   top: 42px;
-  right: 40px;
+  right: 45px;
 `
 
 type Props = {
@@ -51,52 +54,56 @@ type Props = {
   isShowed?: boolean,
   status?: boolean,
   score?: number,
-  changFunc: Function,
-  onShow: Function
+  changFunc: () => {},
+  onShow: () => {}
 };
 
 const inputStyles = {
   underlineFocusStyle: {
-    borderColor: '#2c7df7',
+    borderColor: '#2c7df7'
   },
   underlineStyle: {
-    borderColor: '#d0d2d8',
+    borderColor: '#d0d2d8'
   },
   errorUnderlineStyle: {
-    borderColor: '#ea776c',
+    borderColor: '#ea776c'
   },
   floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)',
+    color: 'rgba(0, 0, 0, 0.38)'
   },
   floatingLabelFocusStyle: {
-    color: '#5571a7',
-  },
+    color: '#5571a7'
+  }
 };
 
-const focusBorderColors = ['#2c7df7', '#ea776c', '#e69940', '#d3b53b', '#259c90'];
+const focusBorderColors = [
+  '#2c7df7',
+  '#ea776c',
+  '#e69940',
+  '#d3b53b',
+  '#259c90'
+];
 
 const InputValid = (props: Props) => {
   const borderColor = focusBorderColors[props.score];
   let width = '';
   if (props.score && !props.status) {
-    width = `${props.score*25}%`;
+    width = `${props.score * 25}%`;
   } else {
     width = `100%`;
   }
 
   return (
-    <Container
-      className={props.className}
-    >
+    <Container>
       <Content>
         <TextField
-          className='input-text-field'
+          className="input-text-field"
           floatingLabelText={props.label}
-          type={props.isShowed? 'text': 'password'}
+          type={props.isShowed ? 'text' : 'password'}
           floatingLabelStyle={inputStyles.floatingLabelStyle}
           floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
           underlineStyle={inputStyles.underlineStyle}
-          underlineFocusStyle={{borderColor, width}}
+          underlineFocusStyle={{ borderColor, width }}
           onChange={(_, newVal) => props.changFunc(newVal)}
         />
         {props.score===4 && <CheckIcon
@@ -105,21 +112,18 @@ const InputValid = (props: Props) => {
           color="check"
           onClick={props.onShow}
         />}
-
-        <EyeIcon
-          iconName={props.isShowed? 'view-hide': 'view-show'}
-          size={ms(2)}
-          color="secondary"
-          onClick={props.onShow}
-        />
+        <ShowHidePwd onClick={props.onShow} style={{cursor: 'pointer'}}>
+          {props.isShowed? 'Hide':'Show'}
+        </ShowHidePwd>
       </Content>
       <PasswordStrengthSuggestions>
         {!!props.error && <Error color={borderColor}>{props.error}</Error>}
-        {!!props.suggestion && <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />}
+        {!!props.suggestion && (
+          <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />
+        )}
       </PasswordStrengthSuggestions>
-
     </Container>
-  )
+  );
 };
 InputValid.defaultProps = {
   error: '',
@@ -127,6 +131,6 @@ InputValid.defaultProps = {
   score: 0,
   isShowed: false,
   status: false
-}
+};
 
-export default InputValid
+export default InputValid;

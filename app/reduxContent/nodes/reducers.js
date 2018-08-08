@@ -1,4 +1,5 @@
-import { omit } from 'lodash';
+import { fromJS } from 'immutable';
+import { handleActions } from 'redux-actions';
 import {
   SET_SELECTED,
   ADD_NODE,
@@ -6,9 +7,10 @@ import {
   UPDATE_NODE,
   CLEAR_STATE
 } from './types';
-import { fromJS } from 'immutable';
-import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
-import * as defaultWalletNodes from '../../defaultWalletNodes.json';
+import { CONSEIL } from '../../constants/NodesTypes';
+import { getWalletNodes } from '../../utils/nodes';
+
+const defaultWalletNodes = getWalletNodes();
 
 const baseDefaults = {
   tezosSelectedNode: '',
@@ -16,58 +18,54 @@ const baseDefaults = {
   list: []
 };
 
-const initState = fromJS(Object.assign(
+export const initialState = Object.assign(
   baseDefaults,
-  defaultWalletNodes && omit(defaultWalletNodes, ['default'])
-));
+  defaultWalletNodes && defaultWalletNodes
+);
 
-export default function nodes(state = initState, action) {
-  switch (action.type) {
-    case SET_SELECTED: {
-      return action.target === CONSEIL
-        ? state.set('conseilSelectedNode', action.selected)
-        : state.set('tezosSelectedNode',  action.selected);
-    }
-    case ADD_NODE: {
-      const newNode = action.node;
-      const list = state.get('list');
-      const indexFound = list.findIndex((item) => {
-        return item.get('name') === newNode.name;
-      });
+export default handleActions({
+  [ SET_SELECTED ]: (state, action) => {
+    return action.target === CONSEIL
+      ? state.set('conseilSelectedNode', action.selected)
+      : state.set('tezosSelectedNode', action.selected);
+  },
+  [ ADD_NODE ]: (state, action) => {
+    const newNode = action.node;
+    const list = state.get('list');
+    const indexFound = list.findIndex(item => {
+      return item.get('name') === newNode.name;
+    });
 
-      if (indexFound === -1) {
-        return state.set('list', list.push(fromJS(newNode)));
-      }
-      return state;
+    if (indexFound === -1) {
+      return state.set('list', list.push(fromJS(newNode)));
     }
-    case REMOVE_NODE: {
-      const name = action.name;
-      const list = state.get('list');
-      const indexFound = list.findIndex((item) => {
-        return item.get('name') === name;
-      });
+    return state;
+  },
+  [ REMOVE_NODE ]: (state, action) => {
+    const { name } = action;
+    const list = state.get('list');
+    const indexFound = list.findIndex(item => {
+      return item.get('name') === name;
+    });
 
-      if (indexFound >= -1) {
-        return state.set('list', list.splice(indexFound, 1));
-      }
-      return state;
+    if (indexFound >= -1) {
+      return state.set('list', list.splice(indexFound, 1));
     }
-    case UPDATE_NODE: {
-      const newNode = action.node;
-      const list = state.get('list');
-      const indexFound = list.findIndex((item) => {
-        return item.get('name') === newNode.name;
-      });
+    return state;
+  },
+  [ UPDATE_NODE ]: (state, action) => {
+    const newNode = action.node;
+    const list = state.get('list');
+    const indexFound = list.findIndex(item => {
+      return item.get('name') === newNode.name;
+    });
 
-      if (indexFound >= -1) {
-        return state.set('list', list.set(indexFound, fromJS(newNode)));
-      }
-      return state;
+    if (indexFound >= -1) {
+      return state.set('list', list.set(indexFound, fromJS(newNode)));
     }
-    case CLEAR_STATE: {
-      return initState;
-    }
-    default:
-      return state;
+    return state;
+  },
+  [ CLEAR_STATE ]: () => {
+    return fromJS(initialState);
   }
-}
+}, fromJS(initialState));

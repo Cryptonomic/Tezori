@@ -1,24 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { clipboard } from 'electron';
 import TezosIcon from '../TezosIcon';
 import CopyIcon from '../CopyIcon';
 import Tooltip from '../Tooltip';
-import { formatAmount } from "../../utils/currancy";
+import { formatAmount } from '../../utils/currancy';
 import { ms } from '../../styles/helpers';
 
-type Props = {
-  amount: number,
-  color: string,
-  iconName?: string,
-  size: any,
-  weight: string,
-  format: number,
-  content?: any,
-};
-
 const Amount = styled.span`
-  color: ${({ color, theme: { colors } }) => color ? colors[color] : colors.primary};
+  color: ${({ color, theme: { colors } }) =>
+    color ? colors[color] : colors.primary};
   font-size: ${({ size }) => size};
   font-weight: ${({
     weight = 'normal',
@@ -40,52 +30,71 @@ const Icon = styled(TezosIcon)`
   line-height: 1;
 `;
 
-const CopyImage = styled.img`
-  margin-left: ${ms(-4)};
-  with: ${ms(1)};
-  height: ${ms(1)};
-  cursor: pointer;
-  fill: ${ ({ theme: { colors } }) => colors.gray2 };
-`
 const CopyContent = styled.span`
   display: flex;
-  alignItems: center;
+  alignitems: center;
   font-size: ${ms(0)};
-`
-const Content = props => {
-  const { formatedBalance } = props
+`;
+
+type ContentProps = {
+  formatedBalance: string
+};
+
+const Content = (props: ContentProps) => {
+  const { formatedBalance } = props;
   return (
     <CopyContent>
       {formatedBalance}
-      <CopyIcon text={formatedBalance} color='primary' />
+      <CopyIcon text={formatedBalance} color="primary" />
     </CopyContent>
-  )
-}
+  );
+};
 
-const copyToClipboard = text => {
-  clipboard.writeText(text)
-}
+type Props = {
+  amount: number,
+  color: string,
+  iconName?: string,
+  size?: string,
+  weight: string,
+  format: number,
+  className?: string,
+  showTooltip?: boolean
+};
 
 const TezosAmount = (props: Props) => {
-  const { size, color, amount, iconName, weight, className, showTooltip ,format, content} = props;
-  const formatedBalance = `${formatAmount(amount)}`
+  const {
+    size,
+    color,
+    amount,
+    iconName,
+    weight,
+    className,
+    showTooltip,
+    format
+  } = props;
+  const formatedBalance = `${formatAmount(amount)}`;
   return showTooltip ? (
-    <Tooltip position="bottom" content={<Content formatedBalance={formatedBalance} />}>
+    <Tooltip
+      position="bottom"
+      content={<Content formatedBalance={formatedBalance} />}
+    >
       <Amount className={className} color={color} size={size} weight={weight}>
-        { format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}` }
-        {
-          iconName
-          && <Icon size={size} color={color} iconName={iconName}/>
-        }
+        {format === 6
+          ? formatAmount(amount)
+          : `~${formatAmount(amount, format)}`}
+        {iconName && <Icon size={size} color={color} iconName={iconName} />}
       </Amount>
     </Tooltip>
-    ) : (
-    <Amount className={className} color={color} size={size} weight={weight} format={format}>
-      { format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}` }
-      {
-        iconName
-          && <Icon size={size} color={color} iconName={iconName}/>
-      }
+  ) : (
+    <Amount
+      className={className}
+      color={color}
+      size={size}
+      weight={weight}
+      format={format}
+    >
+      {format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}`}
+      {iconName && <Icon size={size} color={color} iconName={iconName} />}
     </Amount>
   );
 };
@@ -96,7 +105,7 @@ TezosAmount.defaultProps = {
   size: ms(0),
   weight: 'bold',
   color: 'primary',
-  format: 6,
+  format: 6
 };
 
 export default TezosAmount;

@@ -1,52 +1,49 @@
-import React from 'react'
-import styled from 'styled-components'
-import moment from 'moment'
-import { ms } from '../../styles/helpers'
-import TezosAmount from '../TezosAmount'
+import React from 'react';
+import styled from 'styled-components';
+import moment from 'moment';
 
 const TodayYesterdayFormat = {
-  lastDay : '[Yesterday]',
-  sameDay : '[Today]'
-}
+  lastDay: '[Yesterday]',
+  sameDay: '[Today]'
+};
 
 const timestampFormatter = date => {
-  const time =  moment(date).isBetween(moment().subtract(2, 'days'), moment())
+  const time = moment(date).isBetween(moment().subtract(2, 'days'), moment())
     ? moment(date).calendar(null, TodayYesterdayFormat)
-    : moment(date).format('MMMM DD')
-    return time
-}
+    : moment(date).format('MMMM DD');
+  return time;
+};
 
 const DateContainer = styled.div`
-  background-color: ${ ({ theme: { colors } }) => colors.gray1 };
+  background-color: ${({ theme: { colors } }) => colors.gray1};
   height: 42px;
   display: flex;
   padding: 0 25px;
   align-items: center;
-  justify-content: space-between;  
-`
+  justify-content: space-between;
+`;
 
 const TransactionsDate = styled.div`
-  color: ${ ({ theme: { colors } }) => colors.secondary };
+  color: ${({ theme: { colors } }) => colors.secondary};
   line-height: 1.63;
-  font-weight: ${ ({ theme: { typo: { weights } } }) => weights.bold };
-`
-
-const Amount = styled.div`
-  justify-self: end;
-`
+  font-weight: ${({
+    theme: {
+      typo: { weights }
+    }
+  }) => weights.bold};
+`;
 
 type Props = {
-  date: string,
-  amount: number
+  date: string
 };
 
 function TransactionsLabel(props: Props) {
-  const { date, amount } = props
+  const { date } = props;
   return (
     <DateContainer>
       <TransactionsDate>{timestampFormatter(date)}</TransactionsDate>
       {/* <Amount>
-        <TezosAmount 
+        <TezosAmount
           color='secondary'
           size={ms(0)}
           amount={amount}
@@ -54,11 +51,7 @@ function TransactionsLabel(props: Props) {
         />
       </Amount> */}
     </DateContainer>
-  )
-}
+  );
+};
 
-TransactionsLabel.defaultProps = {
-  amount: 1231226868,
-}
-
-export default TransactionsLabel
+export default TransactionsLabel;

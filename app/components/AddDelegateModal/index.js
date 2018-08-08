@@ -1,102 +1,324 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField, SelectField, MenuItem } from 'material-ui';
+import { Dialog, TextField } from 'material-ui';
 import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import Tooltip from '../Tooltip';
+import TezosNumericInput from '../TezosNumericInput/'
+import { wrapComponent } from '../../utils/i18n';
+
+import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
-import TezosIcon from '../TezosIcon';
+import TezosIcon from '../TezosIcon/';
 
-import Button from '../Button';
-import Loader from '../Loader';
+import Button from '../Button/';
+import Loader from '../Loader/';
 import Fees from '../Fees/';
+import PasswordInput from '../PasswordInput/';
+import InputAddress from '../InputAddress/';
+import TezosAmount from '../TezosAmount/';
 
-import styles from './index.css';
 import {
   createNewAccount,
   fetchOriginationAverageFees
 } from '../../reduxContent/createDelegate/thunks';
 
+import {
+  setIsLoading
+} from '../../reduxContent/wallet/actions';
+
 type Props = {
+  isLoading: boolean,
+  setIsLoading: () => {},
   selectedParentHash: string,
-  createNewAccount: Function,
-  fetchOriginationAverageFees: Function,
+  createNewAccount: () => {},
+  fetchOriginationAverageFees: () => {},
   open: boolean,
-  onCloseClick: Function
+  onCloseClick: () => {},
+  t: () => {},
+  managerBalance: number
 };
+
+const AmountFeePassContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  justify-content: center;
+`;
+
+const AmountSendContainer = styled.div`
+  width: 100%;
+  position: relative;
+  height: 64px;
+`;
+
+const FeeContainer = styled.div`
+  width: 100%;
+  display: flex;
+  height: 64px;
+`;
+
+const PasswordButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 42px;
+`;
+
+const DelegateButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+`;
+const BalanceContainer = styled.div`
+  padding: 0 0px 0 20px;
+  flex: 1;
+  position: relative;
+  margin: 15px 0 0px 40px;
+`;
+
+const BalanceArrow = styled.div`
+  top: 50%;
+  left: 4px;
+  margin-top: -17px;
+  border-top: 17px solid transparent;
+  border-bottom: 17px solid transparent;
+  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};;
+  width: 0;
+  height: 0;
+  position: absolute;
+`;
+
+const BalanceContent = styled.div`
+  padding: ${ms(1)} ${ms(1)} ${ms(1)} ${ms(4)};
+  color: #123262;
+  text-align: left;
+  height: 100%;
+  background-color: ${({ theme: { colors } }) => colors.gray1};
+`;
+
+const GasInputContainer = styled.div`
+  width: 100%;
+  position: relative;
+  height: 64px;
+`;
+
+
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  left: 70px;
+  top: 43px;
+  display: block;
+`;
+
+const UseMax = styled.div`
+  position: absolute;
+  right: 23px;
+  top: 38px;
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
+  color: ${({ theme: { colors } }) => colors.accent};
+  cursor: pointer;
+`;
+const TotalAmount = styled(TezosAmount)`
+  margin-bottom: 22px;
+`;
+
+const BalanceAmount = styled(TezosAmount)`
+`;
+
+const WarningIcon = styled(TezosIcon)`
+  padding: 0 ${ms(-9)} 0 0;
+  position: relative;
+  top: 1px;
+`;
+
+const BalanceTitle = styled.div`
+  color: ${({ theme: { colors } }) => colors.gray5};
+  font-size: 14px;
+  font-weight: 300;
+`;
+
+const ErrorContainer = styled.div`
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme: { colors } }) => colors.error1};
+`;
+
+const TextfieldTooltip = styled(Button)`
+  position: absolute;
+  right: 10px;
+  top: 44px;
+`;
 
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
 
-const TezosIconInput = styled(TezosIcon)`
-  position: absolute;
-  right: 0px;
-  top: 40px;
-  display: block;
-`
+const TooltipContainer = styled.div`
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  max-width: 312px;
+  
+  .customArrow .rc-tooltip-arrow {
+    left: 66%;
+  }
+`;
+
+const utez = 1000000;
 
 const defaultState = {
-  isLoading: false,
   delegate: '',
-  amount: null,
+  amount: '',
   fee: 100,
   passPhrase: '',
+  isShowedPwd: false,
   averageFees: {
     low: 100,
     medium: 200,
-    high:400
-  }
+    high: 400
+  },
+  isDelegateIssue: true,
+  gas: 257000
 };
 
 class AddDelegateModal extends Component<Props> {
   props: Props;
   state = defaultState;
 
-  async componentDidUpdate(prevProps, prevState) {
-    const { open, fetchOriginationAverageFees } = this.props;
-    if ( open && open !== prevProps.open ) {
+  async componentDidUpdate(prevProps) {
+    const { open, fetchOriginationAverageFees, managerBalance } = this.props;
+    if (open && open !== prevProps.open) {
       const averageFees = await fetchOriginationAverageFees();
-      this.setState({ averageFees, fee: averageFees.low });
+      const fee = averageFees.low;
+      const total = fee + this.state.gas;
+      this.setState({ averageFees, fee, total, balance: managerBalance - total});// eslint-disable-line react/no-did-update-set-state
     }
   }
 
-  changeAmount = (_, amount) =>  this.setState({ amount });
-  changeDelegate = (_, delegate) => this.setState({ delegate });
-  changeFee = (fee) => this.setState({ fee });
-  updatePassPhrase = (_, passPhrase) => this.setState({ passPhrase });
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+  onUseMax = () => {
+    const { managerBalance } = this.props;
+    const { fee, gas } = this.state;
+    const max = managerBalance - fee - gas - 1;
+    const amount = (max/utez).toFixed(6);
+    const total = managerBalance - 1;
+    const balance = 1;
+    this.setState({ amount, total, balance });
+  }
 
-  renderToolTipComponent = () => {
+  changeDelegate = (delegate) => this.setState({ delegate });
+  changeAmount = (amount) => {
+    const { managerBalance } = this.props;
+    const { fee, gas } = this.state;
+    const newAmount = amount || '0';
+    const numAmount = parseFloat(newAmount) * utez;
+    const total = numAmount + fee + gas;
+    const balance = managerBalance - total;
+    this.setState({ amount, total, balance });
+  }
+  changeFee = (fee) => {
+    const { managerBalance } = this.props;
+    const { gas, amount } = this.state;
+    const newAmount = amount || '0';
+    const numAmount = parseFloat(newAmount) * utez;
+    const total = numAmount + fee + gas;
+    const balance = managerBalance - total;
+    this.setState({ fee, total, balance });
+  }
+  updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
+
+  createAccount = async () => {
+    const { createNewAccount, selectedParentHash, setIsLoading } = this.props;
+    const { delegate, amount, fee, passPhrase } = this.state;
+    setIsLoading(true);
+    if (
+      await createNewAccount(
+        delegate,
+        amount,
+        Math.floor(fee),
+        passPhrase,
+        selectedParentHash
+      )
+    ) {
+      this.onCloseClick();
+    }
+    setIsLoading(false);
+  };
+
+  renderGasToolTip = (gas) => {
     return (
-      <div className={styles.tooltipContainer}>
-        <div className={styles.tooltipTitle}>Setting a Delegate</div>
-        <div className={styles.tooltipContent1}>You can always change the delegate at a later time.</div>
-        <div className={styles.tooltipContent1}>There is a fee for changing the delegate.</div>
-        <div className={styles.tooltipContent2}>You can only delegate to the Manager Address. The Manager Address always starts with "tz1".</div>
-      </div>
+      <TooltipContainer>
+        {gas} tz is required by the network to create a delegate address
+      </TooltipContainer>
     );
   };
 
-  createAccount = async () =>  {
-    const { createNewAccount, selectedParentHash, onCloseClick } = this.props;
-    const { delegate, amount, fee, passPhrase } = this.state;
-    this.setIsLoading(true);
-    if ( await createNewAccount( delegate, amount, Math.floor(fee), passPhrase, selectedParentHash ) ) {
-      this.setState(defaultState);
-      onCloseClick();
-    } else {
-      this.setIsLoading(false);
+  onCloseClick = () => {
+    const { averageFees, gas } = this.state;
+    const { managerBalance, onCloseClick } = this.props;
+    const fee = averageFees.low;
+    const total = fee + gas;
+    this.setState({...defaultState, total, balance: managerBalance - total});
+    onCloseClick();
+  }
+
+  getBalanceState = (balance, amount) => {
+    if (balance < 0) {
+      return {
+        isIssue: true,
+        warningMessage: 'Total exceeds available funds',
+        balanceColor: 'error1'
+      };
     }
-  };
+    if (balance === 0 ) {
+      return {
+        isIssue: true,
+        warningMessage: 'Manager Addresses are not yet allowed to have less than 1 µtz',
+        balanceColor: 'error1'
+      };
+    }
+    
+    if (amount) {
+      return {
+        isIssue: false,
+        warningMessage: '',
+        balanceColor: 'gray3'
+      };
+    }
+    return {
+      isIssue: false,
+      warningMessage: '',
+      balanceColor: 'gray8'
+    };
+  }
 
   render() {
-    const { open, onCloseClick } = this.props;
-    const { isLoading, averageFees, delegate, amount, fee, passPhrase } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !passPhrase;
-
+    const { isLoading, open, t } = this.props;
+    const {
+      averageFees,
+      delegate,
+      amount,
+      fee,
+      passPhrase,
+      isShowedPwd,
+      gas,
+      total,
+      balance,
+      isDelegateIssue
+    } = this.state;
+    const isDisabled = isLoading || !delegate || !amount || !passPhrase || balance<1 || isDelegateIssue;
+    const {
+      isIssue,
+      warningMessage,
+      balanceColor
+    } = this.getBalanceState(balance, amount);
     return (
       <Dialog
         modal
@@ -106,83 +328,139 @@ class AddDelegateModal extends Component<Props> {
         titleStyle={{ padding: '50px 70px 0px' }}
       >
         <CloseIcon
-          className={styles.closeIcon}
-          style={{ fill: '#7190C6' }}
-          onClick={onCloseClick}
+          style={{
+            fill: '#7190C6',
+            cursor: 'pointer',
+            height: '20px',
+            width: '20px',
+            position: 'absolute',
+            top: '10px',
+            right: '15px',
+          }}
+          onClick={this.onCloseClick}
         />
-        <div className={styles.delegateContainer}>
-          <TextField
-            floatingLabelText="Delegate Address"
-            style={{ width: '100%' }}
-            onChange={this.changeDelegate}
-          />
-          <Tooltip
-            position="bottom"
-            content={this.renderToolTipComponent()}
-            align={{
-              offset: [70, 0],
-            }}
-            arrowPos={{
-              left: '70%'
-            }}
-          >
-            <Button buttonTheme="plain" className={styles.textfieldTooltip}>
-              <HelpIcon
-                iconName="help"
-                size={ms(0)}
-                color='secondary'
+        <InputAddress
+          labelText={t('general.delegate_address')}
+          addressType="delegate"
+          tooltip
+          changeDelegate={this.changeDelegate}
+          onIssue={(status)=> this.setState({isDelegateIssue: status})}
+        />
+        <MainContainer>
+          <AmountFeePassContainer>
+            <AmountSendContainer>
+              <TezosNumericInput
+                decimalSeparator={t('general.decimal_separator')}
+                labelText={t('general.amount')}
+                amount={this.state.amount}
+                handleAmountChange={this.changeAmount}
               />
-            </Button>
-          </Tooltip>
-        </div>
-        <div className={styles.amountAndFeeContainer}>
-          <div className={styles.amountSendContainer} style={{position:'relative'}}>
-            <TextField
-              floatingLabelText="Amount"
-              style={{ width: '100%' }}
-              onChange={this.changeAmount}
-              type="number"
-            />
-            <TezosIconInput color='secondary' />
-          </div>
-          <div className={styles.feeContainer}>
-            <Fees
-              style={{ width: '50%' }}
-              low={ averageFees.low }
-              medium={ averageFees.medium }
-              high={ averageFees.high }
-              fee={ fee }
-              onChange={this.changeFee}
-            />
-          </div>
-        </div>
-        <div className={styles.amountAndFeeContainer}>
-          <TextField
-            floatingLabelText="Wallet Password"
-            type="password"
-            style={{ width: '100%' }}
-            onChange={this.updatePassPhrase}
+              <UseMax onClick={this.onUseMax}>Use Max</UseMax>
+            </AmountSendContainer>
+            <FeeContainer>
+              <Fees
+                styles={{ width: '100%' }}
+                low={averageFees.low}
+                medium={averageFees.medium}
+                high={averageFees.high}
+                fee={fee}
+                onChange={this.changeFee}
+              />
+            </FeeContainer>
+            <GasInputContainer>
+              <TextField
+                disabled
+                floatingLabelText="Gas"
+                defaultValue="0.257000"
+                style={{ width: '100%', cursor: 'default' }}
+              />
+              <TezosIconInput color="gray5" iconName="tezos" />
+              <Tooltip
+                position="bottom"
+                content={this.renderGasToolTip(gas/utez)}
+                align={{
+                  offset: [70, 0]
+                }}
+                arrowPos={{
+                  left: '71%'
+                }}
+              >
+                <TextfieldTooltip
+                  buttonTheme="plain"
+                >
+                  <HelpIcon
+                    iconName="help"
+                    size={ms(0)}
+                    color='secondary'
+                  />
+                </TextfieldTooltip>
+              </Tooltip>
+            </GasInputContainer>
+          </AmountFeePassContainer>
+          <BalanceContainer>
+            <BalanceArrow />
+            <BalanceContent>
+              <BalanceTitle>Total</BalanceTitle>
+              <TotalAmount
+                weight='500'
+                color={amount?'gray3':'gray8'}
+                size={ms(0.65)}
+                amount={total}
+              />              
+              <BalanceTitle>Remaining Balance</BalanceTitle>
+              <BalanceAmount
+                weight='500'
+                color={balanceColor}
+                size={ms(-0.75)}
+                amount={balance}
+              />
+              {isIssue &&
+                <ErrorContainer>
+                  <WarningIcon
+                    iconName="warning"
+                    size={ms(-1)}
+                    color='error1'
+                  />
+                  {warningMessage}
+                </ErrorContainer>
+              }
+              
+            </BalanceContent>
+          </BalanceContainer>
+        </MainContainer>        
+
+        <PasswordButtonContainer>
+          <PasswordInput
+            label='Wallet Password'
+            isShowed={isShowedPwd}
+            changFunc={this.updatePassPhrase}
+            containerStyle={{width: '60%'}}
+            onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
           />
-        </div>
-        <div className={styles.passwordButtonContainer}>
-          <Button
+          <DelegateButton
             buttonTheme="primary"
-            disabled={isLoading || isDisabled}
-            className={styles.delegateButton}
+            disabled={isDisabled}
             onClick={this.createAccount}
           >
             Delegate
-          </Button>
-        </div>
+          </DelegateButton>
+        </PasswordButtonContainer>
         {isLoading && <Loader />}
       </Dialog>
     );
   }
 }
 
+function mapStateToProps({ wallet }) {
+  return {
+    isLoading: wallet.get('isLoading')
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      setIsLoading,
       fetchOriginationAverageFees,
       createNewAccount
     },
@@ -190,4 +468,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(AddDelegateModal);
+export default compose(
+  wrapComponent,
+  connect(mapStateToProps, mapDispatchToProps)
+)(AddDelegateModal);
