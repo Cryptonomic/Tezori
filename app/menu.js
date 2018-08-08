@@ -2,8 +2,6 @@
 import { app, Menu, shell, BrowserWindow } from 'electron';
 import config from './config.json';
 
-console.log('config', config);
-
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
 
@@ -47,9 +45,8 @@ export default class MenuBuilder {
   }
 
   buildDarwinTemplate() {
-    console.log('config.name', config.name);
     const subMenuAbout = {
-      label: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+      label: config.name,
       submenu: [
         {
           label: `About ${config.name}` ,
