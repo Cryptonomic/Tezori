@@ -1,5 +1,8 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
+import config from './config.json';
+
+console.log('config', config);
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -45,17 +48,17 @@ export default class MenuBuilder {
 
   buildDarwinTemplate() {
     const subMenuAbout = {
-      label: 'Electron',
+      label: config.name,
       submenu: [
         {
-          label: 'About Tezori',
+          label: `About ${config.name}` ,
           selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide Tezori',
+          label: `Hide ${config.name}`,
           accelerator: 'Command+H',
           selector: 'hide:'
         },
