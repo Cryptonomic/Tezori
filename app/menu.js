@@ -49,7 +49,7 @@ export default class MenuBuilder {
   buildDarwinTemplate() {
     console.log('config.name', config.name);
     const subMenuAbout = {
-      label: config.name,
+      label: 'aaaaaaaaaaaaaaaaaaaaaaaa',
       submenu: [
         {
           label: `About ${config.name}` ,
