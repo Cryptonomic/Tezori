@@ -14,9 +14,11 @@ import Loader from '../../components/Loader/';
 import Tooltip from '../../components/Tooltip/';
 import TezosIcon from '../../components/TezosIcon/';
 import RestoreBackup from '../../components/RestoreBackup';
+import TezosAmount from '../../components/TezosAmount/';
+import TezosAddress from '../../components/TezosAddress';
 
 import CreateAccountSlide from '../../components/CreateAccountSlide/';
-import { importAddress } from '../../reduxContent/wallet/thunks';
+import { importAddress, gotoHome } from '../../reduxContent/wallet/thunks';
 import { openLink } from '../../utils/general';
 
 const Container = styled.div`
@@ -58,11 +60,17 @@ const TooltipTitle = styled.p`
 const RowInputs = styled.div`
   display: grid;
   grid-column-gap: ${ms(1)};
-  grid-template-columns: 3fr 4fr;
+  grid-template-columns: 1fr 1fr;
 `;
 
 const ImportButton = styled(Button)`
-  margin: ${ms(6)} 0 0 0;
+  width: 194px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
 `;
 
 const StyledTooltip = styled(Tooltip)`
@@ -125,6 +133,7 @@ const Tab = styled.div`
 const AddAddressBodyContainer = styled.div`
   background-color: white;
   padding: 2rem;
+  position: relative;
 `;
 
 
@@ -136,7 +145,55 @@ const ShowHidePwd = styled.div`
   color: ${({ theme: { colors } }) => colors.accent };
   font-size: 12px;
   font-weight: 500;
-`
+`;
+
+const FooterContainer = styled.div`
+  height: 98px;
+  background-color: ${({ theme: { colors } }) => colors.gray1 };
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  bottom: -98px;
+  padding: 0 2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const FooterContent = styled.div`
+
+`;
+
+const RightTitle = styled.div`
+  font-size: 16px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.black2 };
+  line-height: 19px;
+
+`;
+
+const CheckButton = styled(Button)`
+  color: ${({ theme: { colors } }) => colors.accent };
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 10px;
+`;
+
+const ConfirmTitle = styled.div`
+  font-size: 12px;
+  color: ${({ theme: { colors } }) => colors.gray5 };
+  line-height: 14px;
+  margin-top: 4px;
+`;
+
+const BalanceContainer = styled.div`
+  display: flex;
+  line-height: 16px;
+  margin-top: 8px;
+`;
+const BalanceAmount = styled(TezosAmount)`
+  margin-left: 17px;
+`;
 
 const PasswordTooltip = () => {
   return (
@@ -172,18 +229,20 @@ const ActivationTooltip = () => {
   );
 };
 
-const PkhTooltip = () => {
-  return (
-    <TooltipContainer>
-      <TooltipTitle>Public key hash</TooltipTitle>
-      This is the public key hash as provided in the paper wallet.
-    </TooltipContainer>
-  );
-};
+// const PkhTooltip = () => {
+//   return (
+//     <TooltipContainer>
+//       <TooltipTitle>Public key hash</TooltipTitle>
+//       This is the public key hash as provided in the paper wallet.
+//     </TooltipContainer>
+//   );
+// };
 
 type Props = {
   importAddress: () => {},
-  isLoading: boolean
+  isLoading: boolean,
+  identities: array,
+  gotoHome: () => {}
 };
 
 class AddAddress extends Component<Props> {
@@ -196,7 +255,8 @@ class AddAddress extends Component<Props> {
     activationCode: '',
     username: '',
     passPhrase: '',
-    isShowedPwd: false
+    isShowedPwd: false,
+    isClickedPublic: false
   };
 
   renderTab = tabName => {
@@ -229,28 +289,78 @@ class AddAddress extends Component<Props> {
     );
   };
 
-  importAddress = () => {
+  onCheckAddress = () => {
     const {
       activeTab,
       seed,
+      activationCode,
       passPhrase,
-      pkh,
-      username,
-      activationCode
+      username
     } = this.state;
+    this.setState({isClickedPublic: true});
     this.props.importAddress(
       activeTab,
       seed,
-      pkh,
+      '',
       activationCode,
       username,
-      passPhrase
+      passPhrase,
+      true
     );
+  }
+
+  importAddress = (status) => {
+    if (status) {
+      this.props.gotoHome();
+    } else {
+      const {
+        activeTab,
+        seed,
+        passPhrase,
+        pkh,
+        username,
+        activationCode
+      } = this.state;
+      this.props.importAddress(
+        activeTab,
+        seed,
+        pkh,
+        activationCode,
+        username,
+        passPhrase
+      );
+    }    
   };
 
+  onChangeSeed = (seed) => {
+    this.setState({ seed, isClickedPublic: false });
+  }
+
+  onChangeEmail = (username) => {
+    this.setState({ username, isClickedPublic: false });
+  }
+
+  onChangePassword = (passPhrase) => {
+    this.setState({ passPhrase, isClickedPublic: false });
+  }
+
+  onChangeActivationCode = (activationCode) => {
+    this.setState({ activationCode, isClickedPublic: false });
+  }
+
+  getValue = (jsIdentities) => {
+    if (jsIdentities.length) {
+      return jsIdentities[0];
+    }
+    return {publicKeyHash: '', balance: 0};
+  }
+
   renderAddBody() {
-    const { activeTab, seed, passPhrase, pkh, username, activationCode, isShowedPwd } = this.state;
-    const { isLoading } = this.props;
+    const { activeTab, seed, passPhrase, username, activationCode, isShowedPwd, isClickedPublic } = this.state;
+    const { isLoading, identities } = this.props;
+    const jsIdentities = identities.toJS();
+    const {balance, publicKeyHash} = this.getValue(jsIdentities);
+    const isShowPublic = !publicKeyHash || !isClickedPublic;
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;
@@ -270,18 +380,30 @@ class AddAddress extends Component<Props> {
               floatingLabelText="15 Word Secret Key"
               style={{ width: '100%' }}
               value={seed}
-              onChange={(_, newSeed) => this.setState({ seed: newSeed })}
+              onChange={(_, newSeed) => this.onChangeSeed(newSeed)}
             />
             <RowInputs>
+              <InputWithTooltip>
+                <TextField
+                  floatingLabelText="Fundraiser Email Address"
+                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
+                  value={username}
+                  onChange={(_, newUsername) => this.onChangeEmail(newUsername)}
+                />
+
+                <StyledTooltip position="bottom" content={EmailTooltip}>
+                  <Button buttonTheme="plain">
+                    <HelpIcon iconName="help" size={ms(0)} color="secondary" />
+                  </Button>
+                </StyledTooltip>
+              </InputWithTooltip>
               <InputWithTooltip>
                 <TextField
                   floatingLabelText="Fundraiser Password"
                   type={isShowedPwd? 'text': 'password'}
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
                   value={passPhrase}
-                  onChange={(_, newPassPhrase) =>
-                    this.setState({ passPhrase: newPassPhrase })
-                  }
+                  onChange={(_, newPassPhrase) => this.onChangePassword(newPassPhrase)}
                 />
 
                 <ShowHidePwd onClick={()=> this.setState({isShowedPwd: !isShowedPwd})} style={{cursor: 'pointer'}}>
@@ -294,8 +416,23 @@ class AddAddress extends Component<Props> {
                   </Button>
                 </StyledTooltip>
               </InputWithTooltip>
+            </RowInputs>
 
+            <RowInputs>
               <InputWithTooltip>
+                <TextField
+                  floatingLabelText="Activation Code"
+                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
+                  value={activationCode}
+                  onChange={(_, newActivationCode) => this.onChangeActivationCode(newActivationCode)}
+                />
+                <StyledTooltip position="bottom" content={ActivationTooltip}>
+                  <Button buttonTheme="plain">
+                    <HelpIcon iconName="help" size={ms(0)} color="secondary" />
+                  </Button>
+                </StyledTooltip>
+              </InputWithTooltip>
+              {/* <InputWithTooltip>
                 <TextField
                   floatingLabelText="Public key hash"
                   style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
@@ -307,50 +444,49 @@ class AddAddress extends Component<Props> {
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>
                 </StyledTooltip>
-              </InputWithTooltip>
+              </InputWithTooltip> */}
             </RowInputs>
-
-            <RowInputs>
-              <InputWithTooltip>
-                <TextField
-                  floatingLabelText="Fundraiser Email Address"
-                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
-                  value={username}
-                  onChange={(_, newUsername) =>
-                    this.setState({ username: newUsername })
-                  }
-                />
-
-                <StyledTooltip position="bottom" content={EmailTooltip}>
-                  <Button buttonTheme="plain">
-                    <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-                  </Button>
-                </StyledTooltip>
-              </InputWithTooltip>
-
-              <InputWithTooltip>
-                <TextField
-                  floatingLabelText="Activation Code"
-                  style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
-                  value={activationCode}
-                  onChange={(_, newActivationCode) =>
-                    this.setState({ activationCode: newActivationCode })
-                  }
-                />
-                <StyledTooltip position="bottom" content={ActivationTooltip}>
-                  <Button buttonTheme="plain">
-                    <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-                  </Button>
-                </StyledTooltip>
-              </InputWithTooltip>
-            </RowInputs>
-            <ImportButton
-              buttonTheme="primary"
-              onClick={this.importAddress}
-              disabled={isLoading}
-            >
-              Import
-            </ImportButton>
+            <FooterContainer>
+              <FooterContent>
+                <RightTitle>Is this the right account?</RightTitle>
+                {isShowPublic && 
+                  <CheckButton
+                    buttonTheme="plain"
+                    onClick={this.onCheckAddress}
+                  >
+                    Check your public address and balance
+                  </CheckButton>
+                }
+                {!isShowPublic &&
+                  <BalanceContainer>
+                    <TezosAddress
+                      address={publicKeyHash}
+                      size="14px"
+                      color="primary"
+                      color2="gray3"
+                    />
+                    <BalanceAmount
+                      weight='500'
+                      color='index0'
+                      size='14px'
+                      amount={balance}
+                    /> 
+                  </BalanceContainer>
+                }
+                {!isShowPublic && !balance &&
+                  <ConfirmTitle>
+                    Not yours? Make sure you entered the correct information.
+                  </ConfirmTitle>
+                }
+              </FooterContent>
+              <ImportButton
+                buttonTheme="primary"
+                onClick={()=>this.importAddress(!!publicKeyHash)}
+                disabled={isLoading}
+              >
+                Import
+              </ImportButton>
+            </FooterContainer>            
           </Fragment>
         );
     }
@@ -374,14 +510,16 @@ class AddAddress extends Component<Props> {
 function mapStateToProps({ wallet, message }) {
   return {
     isLoading: wallet.get('isLoading'),
-    message: message.get('message')
+    message: message.get('message'),
+    identities: wallet.get('identities')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      importAddress
+      importAddress,
+      gotoHome
     },
     dispatch
   );

@@ -11,7 +11,8 @@ import {
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
   UPDATE_FETCHED_TIME,
-  LOGOUT
+  LOGOUT,
+  UPDATE_TEMP_IDENTITY
 } from './types';
 
 export const initialState = {
@@ -82,5 +83,18 @@ export default handleActions({
   },
   [ LOGOUT ]: () => {
     return fromJS(initialState);
+  },
+  [ UPDATE_TEMP_IDENTITY ]: (state, action) => {
+    const identities = state.get('identities');
+    if (identities.length > 0) {
+      return state.set(
+        'identities',
+        identities.set(0, fromJS(action.identity))
+      );
+    }
+
+    return state.update('identities', identities =>
+      identities.push(fromJS(action.identity))
+    );    
   }
 }, fromJS(initialState));
