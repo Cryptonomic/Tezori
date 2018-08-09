@@ -340,23 +340,10 @@ export function importAddress(
           break;
         case FUNDRAISER: {
           const newPassPhrase = username.trim() + passPhrase.trim();
-          if (isCheck) {            
-            identity = await unlockIdentityWithMnemonic(
-              seed,
-              newPassPhrase
-            );
-          } else {
-            identity = await unlockIdentityWithMnemonic(
-              seed,
-              newPassPhrase
-            );
-            // identity = await unlockFundraiserIdentity(
-            //   seed,
-            //   username.trim(),
-            //   passPhrase.trim(),
-            //   pkh.trim()
-            // );
-          }
+          identity = await unlockIdentityWithMnemonic(
+            seed,
+            newPassPhrase
+          );
           
           identity.storeType = storeTypes.FUNDRAISER;
           const conseilNode = getSelectedNode(nodes, CONSEIL);
