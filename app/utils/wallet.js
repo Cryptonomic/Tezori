@@ -38,10 +38,6 @@ function prepareToPersist(walletState) {
 }
 
 export function persistWalletState(walletState) {
-  if (fs.existsSync(walletStatePath)) {
-    fs.unlinkSync(walletStatePath);
-  }
-
   fs.writeFileSync(
     walletStatePath,
     Buffer.from(JSON.stringify(prepareToPersist(walletState)), 'binary')
