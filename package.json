@@ -4,7 +4,7 @@
   "version": "0.1.0b",
   "description": "A community wallet for Tezos",
   "scripts": {
-    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
+    "build": "npm run check-wallet-state && concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
     "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.main.prod.js --colors",
     "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.prod.js --colors",
@@ -16,6 +16,7 @@
     "lint-fix": "npm run --silent lint -- --fix; exit 0",
     "lint-styles": "stylelint app/*.css app/components/*.css --syntax scss",
     "lint-styles-fix": "stylefmt -r app/*.css app/components/*.css",
+    "check-wallet-state": "node -r babel-register internals/scripts/CheckWalletStateExist.js",
     "package": "npm run build && build --publish never",
     "package-debug": "cross-env DEBUG_PROD=true npm run package",
     "package-all": "npm run build && build -mwl",
