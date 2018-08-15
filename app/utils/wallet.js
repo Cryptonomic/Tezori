@@ -90,7 +90,11 @@ export async function loadPersistedState(walletPath, password) {
 
   let persistedState = null;
   if (fs.existsSync(walletStatePath)) {
-    persistedState = JSON.parse(fs.readFileSync(walletStatePath).toString('binary'));
+    try {
+      persistedState = JSON.parse(fs.readFileSync(walletStatePath).toString('binary'));
+    } catch(e) {
+      console.error(e);
+    }
   }
 
   return prepareToLoad(savedWallet, persistedState);
