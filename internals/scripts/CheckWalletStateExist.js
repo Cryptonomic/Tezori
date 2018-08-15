@@ -10,5 +10,8 @@ if (fs.existsSync(walletStatePath)) {
   fs.unlinkSync(walletStatePath);
 }
 
-fs.closeSync(fs.openSync(walletStatePath, 'w'));
+fs.writeFileSync(
+  walletStatePath,
+  Buffer.from(JSON.stringify({}), 'binary')
+);
 fs.chmodSync(walletStatePath, 511);
