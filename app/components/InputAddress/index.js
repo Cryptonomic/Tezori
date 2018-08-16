@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TextField } from 'material-ui';
 import { compose } from 'redux';
 
+import TextField from '../TextField';
 import { wrapComponent } from '../../utils/i18n';
 import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
@@ -41,12 +41,13 @@ const HelpIcon = styled(TezosIcon)`
 const DelegateContainer = styled.div`
   width: 100%;
   position: relative;
+  padding-top: 14px;
 `;
 
 const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
-  top: 44px;
+  top: 42px;
 `;
 
 type Props = {
@@ -84,9 +85,8 @@ class InputAddress extends React.PureComponent<Props> {
     );
   };
 
-  validateAddress = (event, changeDelegate, addressType = 'send') => {
+  validateAddress = (delegateText, changeDelegate, addressType = 'send') => {
     const {t, onIssue} = this.props;
-    const delegateText = event.target.value;
      
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
@@ -124,9 +124,8 @@ class InputAddress extends React.PureComponent<Props> {
     return (
       <DelegateContainer>
         <TextField
-          floatingLabelText={this.props.labelText}
-          style={{ width: '100%' }}
-          onChange={(e) => this.validateAddress(e, this.props.changeDelegate, this.props.addressType)}
+          label={this.props.labelText}
+          onChange={(value) => this.validateAddress(value, this.props.changeDelegate, this.props.addressType)}
           errorText={this.state.error}
         />
         {this.props.tooltip &&
@@ -137,7 +136,7 @@ class InputAddress extends React.PureComponent<Props> {
               offset: [70, 0]
             }}
             arrowPos={{
-              left: '70%'
+              left: '71%'
             }}
           >
             <TextfieldTooltip

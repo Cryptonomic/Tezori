@@ -55,7 +55,7 @@ const BalanceContainer = styled.div`
   padding: 0 0px 0 20px;
   flex: 1;
   position: relative;
-  margin: 15px 0 0px 40px;
+  margin: 0px 0 0px 40px;
 `;
 const BalanceArrow = styled.div`
   top: 50%;
@@ -79,7 +79,7 @@ const BalanceContent = styled.div`
 const UseMax = styled.div`
   position: absolute;
   right: 23px;
-  top: 38px;
+  top: 25px;
   font-size: 12px;
   font-weight: 500;
   display: block;

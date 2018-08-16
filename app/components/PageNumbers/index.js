@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import LeftIcon from 'material-ui/svg-icons/navigation/chevron-left';
-import RightIcon from 'material-ui/svg-icons/navigation/chevron-right';
+import LeftIcon from '@material-ui/icons/ChevronLeft';
+import RightIcon from '@material-ui/icons/ChevronRight';
 
 const Container = styled.div`
   margin-top: 20px;

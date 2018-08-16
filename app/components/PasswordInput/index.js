@@ -1,7 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { TextField } from 'material-ui'
-import { ms } from '../../styles/helpers'
+import React from 'react';
+import styled from 'styled-components';
+import TextField from '../TextField';
 
 const Container = styled.div`
   position: relative;
@@ -10,7 +9,7 @@ const Container = styled.div`
 const ShowHidePwd = styled.div`
   position: absolute;
   right: 10px;
-  top: 40px;
+  top: 26px;
   color: ${({ theme: { colors } }) => colors.accent };
   font-size: 12px;
   font-weight: 500;
@@ -20,19 +19,20 @@ type Props = {
   label: string,
   isShowed?: boolean,
   containerStyle?: object,
+  password: string,
   changFunc: () => {},
   onShow: () => {}
 };
 
 const PasswordInput = (props: Props) => {
-  const { label, isShowed, changFunc, onShow, containerStyle } = props;
+  const { label, password, isShowed, changFunc, onShow, containerStyle } = props;
   return (
     <Container style={containerStyle}>
       <TextField
-        floatingLabelText={label}
+        label={label}
         type={isShowed? 'text': 'password'}
-        style={{ width: '100%', padding: `0 ${ms(3)} 0 0` }}
-        onChange={(_, newVal) => changFunc(newVal)}
+        value={password}
+        onChange={(newVal) => changFunc(newVal)}
       />
       <ShowHidePwd style={{cursor: 'pointer'}} onClick={onShow}>
         {isShowed? 'Hide':'Show'}

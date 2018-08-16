@@ -3,10 +3,9 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import Modal from '../CustomModal';
+import TextField from '../TextField';
 import { ms } from '../../styles/helpers';
-import { H4 } from '../Heading/';
 import { CONSEIL } from '../../constants/NodesTypes';
 import TezosIcon from '../TezosIcon/';
 
@@ -21,17 +20,7 @@ type Props = {
   type: string
 };
 
-const StyledCloseIcon = styled(CloseIcon)`
-  cursor: pointer;
-  height: 20px;
-  width: 20px;
-  position: absolute;
-  top: 10px;
-  right: 15px;
-`;
-
 const StyledSaveButton = styled(Button)`
-  margin-top: ${ms(4)};
   padding-right: ${ms(9)};
   padding-left: ${ms(9)};
 `;
@@ -57,6 +46,10 @@ const FeedbackIcon = styled(TezosIcon)`
   position: absolute;
   top: 42px;
   right: 40px;
+`;
+
+const MainContainer = styled.div`
+  padding: 30px 76px 56px 76px;
 `;
 
 const defaultState = {
@@ -99,57 +92,50 @@ class AddNodeModal extends Component<Props> {
     const { type, isModalOpen } = this.props;
 
     const title = type === CONSEIL ? 'Conseil' : 'Tezos';
+    const title1 = `Set Up Your Custom ${title} Node`;
 
     return (
-      <Dialog
-        modal
+      <Modal
+        title={title1}
         open={isModalOpen}
-        bodyStyle={{ padding: '50px 80px' }}
-        titleStyle={{ padding: '50px 70px 0px' }}
+        onClose={this.handleClose}
       >
-        <StyledCloseIcon
-          style={{ fill: '#7190C6' }}
-          onClick={this.handleClose}
-        />
-        <H4>Set Up Your Custom {title} Node</H4>
+        <MainContainer>
+          <TextField
+            label="Node Name"
+            value={name}
+            onChange={this.handleNameChange}
+          />
 
-        <TextField
-          floatingLabelText="Node Name"
-          style={{ width: '100%' }}
-          value={name}
-          onChange={this.handleNameChange}
-        />
+          <TextField
+            label="Api Key"
+            value={apiKey}
+            onChange={this.handleApiKeyChange}
+          />
 
-        <TextField
-          floatingLabelText="Api Key"
-          style={{ width: '100%' }}
-          value={apiKey}
-          onChange={this.handleApiKeyChange}
-        />
+          <Container>
+            <Content>
+              <TextField
+                label="URL (e.g https://127.0.0.1:19731/)"
+                value={url}
+                onChange={this.handleUrlChange}
+              />
+              {error ? (
+                <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
+              ) : null}
+            </Content>
+            {error ? <Error> {error} </Error> : null}
+          </Container>
 
-        <Container>
-          <Content>
-            <TextField
-              style={{ width: '100%' }}
-              floatingLabelText="URL (e.g https://127.0.0.1:19731/)"
-              value={url}
-              onChange={this.handleUrlChange}
-            />
-            {error ? (
-              <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
-            ) : null}
-          </Content>
-          {error ? <Error> {error} </Error> : null}
-        </Container>
-
-        <StyledSaveButton
-          buttonTheme="primary"
-          onClick={this.handleAddNode}
-          disabled={!name || !url}
-        >
-          Save
-        </StyledSaveButton>
-      </Dialog>
+          <StyledSaveButton
+            buttonTheme="primary"
+            onClick={this.handleAddNode}
+            disabled={!name || !url}
+          >
+            Save
+          </StyledSaveButton>
+        </MainContainer>
+      </Modal>
     );
   }
 }

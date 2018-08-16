@@ -4,15 +4,15 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as goBackToWallet } from 'react-router-redux';
 import styled, { withTheme } from 'styled-components';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import Check from 'material-ui/svg-icons/navigation/check';
+import MenuItem from '@material-ui/core/MenuItem';
+import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
+import AddCircle from '@material-ui/icons/AddCircle';
+import Check from '@material-ui/icons/Check';
 import { ms } from '../../styles/helpers';
 import { H2, H4 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
+import CustomSelect from '../../components/CustomSelect';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
 import { setSelected, removeNode } from '../../reduxContent/nodes/thunks';
@@ -74,16 +74,7 @@ const Part = styled.div`
   margin-top: ${ms(2)};
 `;
 
-const AddCustomNode = styled(Row)`
-  margin: 0 -24px -16px;
-  padding: 5px 24px;
-  background-color: #f7f9fb;
-  color: ${({ theme: { colors } }) => colors.primary};
-  cursor: pointer;
-`;
-
 const SelectOption = styled(Row)`
-  margin: 0 -24px;
   padding: 10px 0px;
 `;
 
@@ -98,6 +89,7 @@ const OptionLabel = styled(Row)`
   align-items: flex-start;
   color: ${({ isActive, theme: { colors } }) =>
     isActive ? colors.blue1 : colors.primary};
+  margin-left: 5px;
 `;
 
 const NodeName = styled.div`
@@ -119,6 +111,17 @@ const NodeUrlSpan = styled(NodeUrl)`
   display: inline;
 `;
 
+const ItemWrapper = styled(MenuItem)`
+  &&& {
+    &[class*='selected'] {    
+      color: ${({ theme: { colors } }) => colors.primary };
+    }
+    width: 100%;
+    font-size: 16px;
+    font-weight: 300;
+  }  
+`;
+
 class SettingsPage extends Component<Props> {
   props: Props;
 
@@ -127,10 +130,27 @@ class SettingsPage extends Component<Props> {
     isModalOpen: false
   };
 
+  selectedItem = {
+    value: null,
+    url: null
+  }
+
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
   openAddNodeModal = type => this.setState({ type, isModalOpen: true });
   closeAddNodeModal = () => this.setState({ type: '', isModalOpen: false });
+
+  getNodeUrl = (nodes, selectedNode) => {
+    let url= '';
+    const findedNode = nodes.find((node) => {
+      const name = node.get('name');
+      return name === selectedNode;
+    });
+    if (findedNode) {
+      url = findedNode.get('url');
+    }
+    return url;
+  }
 
   renderNodes(nodes, selectedNode) {
     const { theme } = this.props;
@@ -158,13 +178,13 @@ class SettingsPage extends Component<Props> {
         </SelectOption>
       );
       return (
-        <MenuItem
-          style={{ marginTop: index === 0 ? '-16px ' : 0 }}
+        <ItemWrapper
           key={index}
           url={url}
           value={name}
-          primaryText={option}
-        />
+        >
+          {option}
+        </ItemWrapper>
       );
     });
   }
@@ -173,7 +193,6 @@ class SettingsPage extends Component<Props> {
     const {
       syncWallet,
       goBack,
-      theme,
       conseilSelectedNode,
       conseilNodes,
       tezosSelectedNode,
@@ -206,90 +225,76 @@ class SettingsPage extends Component<Props> {
           <H4>Choose a Different Node</H4>
           <RowForParts>
             <Part>
-              <SelectField
-                floatingLabelText="Conseil Nodes"
+              <CustomSelect
+                label="Conseil Nodes"
                 value={conseilSelectedNode}
-                onChange={(event, index, newValue) => {
+                onChange={(event) => {                  
+                  const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleConseilChange(newValue);
                     return true;
                   }
                   this.openAddNodeModal(CONSEIL);
                 }}
-                style={{ width: '100%', maxWidth: '100%', color: 'blue1' }}
-                iconStyle={{ fill: 'black' }}
-                selectionRenderer={(value, context) => {
+                renderValue={(value) => {
+                  const url = this.getNodeUrl(conseilNodes, value);
                   return (
                     <div>
                       <span>{value} </span>
-                      <NodeUrlSpan>({context.props.url})</NodeUrlSpan>
+                      <NodeUrlSpan>({url})</NodeUrlSpan>
                     </div>
                   );
                 }}
-                labelStyle={{ color: theme.colors.primary }}
               >
                 {this.renderNodes(conseilNodes, conseilSelectedNode)}
-                <MenuItem
-                  style={{ margin: '0' }}
-                  value="add-more"
-                  primaryText={
-                    <AddCustomNode>
-                      <AddCircle
-                        style={{
-                          fill: '#7B91C0',
-                          height: ms(1),
-                          width: ms(1),
-                          marginRight: '10px'
-                        }}
-                      />
-                      Add a Custom Node
-                    </AddCustomNode>
-                  }
-                />
-              </SelectField>
+                <ItemWrapper value='add-more'>                  
+                  <AddCircle
+                    style={{
+                      fill: '#7B91C0',
+                      height: ms(1),
+                      width: ms(1),
+                      marginRight: '10px'
+                    }}
+                  />
+                  Add a Custom Node
+                </ItemWrapper>
+              </CustomSelect>
             </Part>
             <Part>
-              <SelectField
-                floatingLabelText="Tezos Nodes"
+              <CustomSelect
+                label="Tezos Nodes"
                 value={tezosSelectedNode}
-                onChange={(event, index, newValue) => {
+                onChange={(event) => {
+                  const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleTezosChange(newValue);
                     return true;
                   }
                   this.openAddNodeModal(TEZOS);
                 }}
-                style={{ width: '100%', maxWidth: '100%', color: 'blue1' }}
-                labelStyle={{ color: theme.colors.primary }}
-                iconStyle={{ fill: 'black' }}
-                selectionRenderer={(value, context) => {
+                renderValue={(value) => {
+                  const url = this.getNodeUrl(tezosNodes, value);
                   return (
                     <div>
                       <span>{value} </span>
-                      <NodeUrlSpan>({context.props.url})</NodeUrlSpan>
+                      <NodeUrlSpan>({url})</NodeUrlSpan>
                     </div>
                   );
                 }}
               >
                 {this.renderNodes(tezosNodes, tezosSelectedNode)}
-                <MenuItem
-                  style={{ margin: '0px' }}
-                  value="add-more"
-                  primaryText={
-                    <AddCustomNode>
-                      <AddCircle
-                        style={{
-                          fill: '#7B91C0',
-                          height: ms(1),
-                          width: ms(1),
-                          marginRight: '10px'
-                        }}
-                      />
-                      Add a Custom Node
-                    </AddCustomNode>
-                  }
-                />
-              </SelectField>
+                <ItemWrapper value="add-more">
+                  <AddCircle
+                    style={{
+                      fill: '#7B91C0',
+                      height: ms(1),
+                      width: ms(1),
+                      marginRight: '10px'
+                    }}
+                  />
+                  Add a Custom Node
+                </ItemWrapper>
+              </CustomSelect>
             </Part>
           </RowForParts>
         </Content>

@@ -2,8 +2,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Snackbar } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
@@ -13,6 +13,9 @@ import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
   padding: 10px 0;
+  background-color: ${({ isError }) => isError? 'rgba(255, 0, 0, 0.9)':'rgba(37, 156, 144, 0.9)' };
+  width: 100%;
+  color: ${({ theme: { colors } }) => colors.white};
 `;
 const StyledCloseIcon = styled(CloseIcon)`
   cursor: pointer;
@@ -63,16 +66,24 @@ const HashTitle = styled.div`
   font-weight: 500;
 `;
 
+const SnackbarWrapper = styled(Snackbar)`
+  &&& {
+    height: auto;
+    min-width: 500px;
+  }
+`;
+
 type Props1 = {
   content: string,
   hash: string,
+  isError: boolean,
   openLink: () => {},
   onClose: () => {}
 };
 const MessageContent = (props: Props1) => {
-  const { content, hash, openLink, onClose } = props;
+  const { content, hash, openLink, onClose, isError } = props;
   return (
-    <MessageContainer>
+    <MessageContainer isError={isError}>
       <StyledCloseIcon onClick={onClose} />
       <MessageHeader>
         {!!hash && (
@@ -102,7 +113,6 @@ type Props = {
 
 class MessageBar extends React.Component<Props> {
   props: Props;
-
   openLink = url => {
     const { clearMessageState } = this.props;
     clearMessageState();
@@ -118,26 +128,24 @@ class MessageBar extends React.Component<Props> {
     return newHash;
   };
 
+
   render() {
     const { message, clearMessageState } = this.props;
     const messageText = message.get('message') || '';
     const hash = message.get('hash') || '';
-    const bodyStyle = message.get('isError')
-      ? { backgroundColor: 'rgba(255, 0, 0, 0.9)' }
-      : { backgroundColor: 'rgba(37, 156, 144, 0.9)' };
-    bodyStyle.height = 'auto';
-    bodyStyle.minWidth = '500px';
+    const isError = message.get('isError') || false;
 
     return (
-      <Snackbar
+      <SnackbarWrapper
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         open={!!messageText}
-        bodyStyle={bodyStyle}
         message={
           <MessageContent
             content={messageText}
             hash={this.changeHash(hash)}
             openLink={() => this.openLink(hash)}
             onClose={clearMessageState}
+            isError={isError}
           />
         }
       />

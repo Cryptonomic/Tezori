@@ -1,9 +1,7 @@
 // @flow
 import React from 'react';
-import { Dialog } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
-
 import styled from 'styled-components';
+import Modal from '../CustomModal';
 import Button from './../Button/';
 import TezosIcon from '../TezosIcon/';
 import { ms } from '../../styles/helpers';
@@ -13,32 +11,8 @@ import Loader from '../Loader';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
 
-const inputStyles = {
-  underlineFocusStyle: {
-    borderColor: '#2c7df7'
-  },
-  underlineStyle: {
-    borderColor: '#d0d2d8'
-  },
-  errorUnderlineStyle: {
-    borderColor: '#ea776c'
-  },
-  floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)'
-  },
-  floatingLabelFocusStyle: {
-    color: '#5571a7'
-  }
-};
-const ModalDialog = styled(Dialog)`
-  padding-top: 0px !important;
-  & > div > div > div > div {
-    max-height: none !important;
-  }
-`;
-
 const ModalContainer = styled.div`
-  padding: 0 98px 43px 98px;
+  padding: 43px 76px 0 76px;
 `;
 const DelegateTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
@@ -56,17 +30,17 @@ const AddressContainer = styled.div`
 `;
 
 const BottomContainer = styled.div`
-  width: 100%;
-  height: 98px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 98px;
-  background-color: ${({ theme: { colors } }) => colors.light};
+  align-items: flex-end;
+  margin-top: 42px;
+  padding: 0 76px 15px 76px;
+  background-color: ${({ theme: { colors } }) => colors.gray1};
 `;
 const DelegateButton = styled(Button)`
-  height: 50px;
   width: 194px;
+  height: 50px;
+  margin-bottom: 10px;
   padding: 0;
 `;
 
@@ -87,13 +61,6 @@ const InfoText = styled.div`
   letter-spacing: 0.7px;
   margin-left: 11px;
   line-height: 21px;
-`;
-const StyledCloseIcon = styled(CloseIcon)`
-  cursor: pointer;
-  position: absolute;
-  top: 47px;
-  right: 66px;
-  fill: #7190c6 !important;
 `;
 
 type Props = {
@@ -137,22 +104,12 @@ const DelegateConfirmationModal = (props: Props) => {
   const isDisabled = isLoading || !newAddress || !password || isDelegateIssue;
 
   return (
-    <ModalDialog
-      modal
+    <Modal
+      title='Change Delegate'
       open={open}
-      title="Change Delegate"
-      bodyStyle={{ padding: '0' }}
-      contentStyle={{ width: '671px', maxHeight: 'none' }}
-      titleStyle={{
-        padding: '43px 98px 21px 98px',
-        fontSize: '24px',
-        color: '#123262',
-        letterSpacing: '1px',
-        lineHeight: '42px'
-      }}
+      onClose={onCloseClick}
     >
       <ModalContainer>
-        <StyledCloseIcon onClick={onCloseClick} />
         <DelegateTitle>You are currently delegating to</DelegateTitle>
         <AddressContainer>
           <TezosAddress
@@ -170,8 +127,6 @@ const DelegateConfirmationModal = (props: Props) => {
           onIssue={onDelegateIssue}
         />
         <Fees
-          styles={{ minWidth: 206, width: 'auto' }}
-          underlineStyle={inputStyles.underlineStyle}
           low={averageFees.low}
           medium={averageFees.medium}
           high={averageFees.high}
@@ -193,7 +148,7 @@ const DelegateConfirmationModal = (props: Props) => {
           password={password}
           changFunc={handlePasswordChange}
           onShow={onShowPwd}
-          containerStyle={{marginTop: '-27px', width: '50%'}}
+          containerStyle={{width: '60%', marginTop: '10px'}}
         />
         <DelegateButton
           buttonTheme="primary"
@@ -205,7 +160,7 @@ const DelegateConfirmationModal = (props: Props) => {
         </DelegateButton>
       </BottomContainer>
       {isLoading && <Loader />}
-    </ModalDialog>
+    </Modal>
   );
 };
 DelegateConfirmationModal.defaultProps = {

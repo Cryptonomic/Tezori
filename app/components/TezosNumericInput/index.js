@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { TextField } from 'material-ui';
+import TextField from '../TextField';
 
 import TezosIcon from '../TezosIcon/';
 
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
   right: 0px;
-  top: 40px;
+  top: 26px;
   display: block;
 `;
 
@@ -15,9 +15,8 @@ const NumericInput = styled.div`
   position: relative;
 `;
 
-const validateInput = (event, handleChange, decimalSeparator) => {
+const validateInput = (amount, handleChange, decimalSeparator) => {
   const separator = decimalSeparator;
-  const amount = event.target.value;
   const preventSeparatorAtStart = new RegExp(`^[${separator}]`,"g");
   const allowOnlyNumbers = new RegExp(`[^0-9${separator}]`,"g");
   const allowOnlyOneSeparator = new RegExp(`\\${separator}`,"g");
@@ -49,10 +48,9 @@ const TezosNumericInput = (props: Props) =>
   (
     <NumericInput>
       <TextField
-        floatingLabelText={props.labelText}
-        style={{ width: '100%' }}
+        label={props.labelText}
         value={props.amount}
-        onChange={(e) => validateInput(e, props.handleAmountChange, props.decimalSeparator)}
+        onChange={(newVal) => validateInput(newVal, props.handleAmountChange, props.decimalSeparator)}
         type="text"
       />
       <TezosIconInput color="secondary" iconName="tezos" />
