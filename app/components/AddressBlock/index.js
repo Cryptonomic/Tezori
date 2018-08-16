@@ -178,9 +178,15 @@ class AddressBlock extends Component<Props, State> {
 
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
+    let smartBalance = 0;
     const { shouldHideSmartAddressesInfo } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts');
+    if (smartAddresses && smartAddresses.toArray().length) {
+      smartAddresses.forEach((address)=> {
+        smartBalance+=address.get('balance');
+      });
+    }
     const isManagerReady = accountBlock.get('status') === READY;
     const noSmartAddressesDescriptionContent = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
@@ -200,8 +206,7 @@ class AddressBlock extends Component<Props, State> {
             <TezosAmount
               color="primary"
               size={ms(0)}
-              amount={balance}
-              showTooltip
+              amount={balance+smartBalance}
               format={2}
             />
           ) : null}
