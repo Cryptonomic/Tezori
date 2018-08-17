@@ -82,7 +82,7 @@ const renderSuggestion = (props: Props1) => {
   return (
     <MenuItem
       {...itemProps}
-      key={suggestion.label}
+      key={suggestion.label+index}
       selected={isHighlighted}
       component="div"
       style={{
@@ -105,14 +105,11 @@ const ChipContent = (props: ChipProps) => {
   return <ChipContainer><span>{index+1}</span>{value}</ChipContainer>
 }
 
-const getSuggestions = (inputValue, selectedItems) => {
+const getSuggestions = (inputValue) => {
   if(inputValue.length<2) {
     return [];
   }
   return seedJson.filter(suggestion => {
-    if (selectedItems.indexOf(suggestion.label) > -1) {
-      return false;
-    }
     return suggestion.label.toLowerCase().startsWith(inputValue.toLowerCase());
   })
 }
@@ -160,10 +157,7 @@ class SeedInput extends Component<Props> {
   handleChange = item => {
     let { selectedItems } = this.props;
     const { onChangeItems } = this.props;
-
-    if (selectedItems.indexOf(item) === -1) {
-      selectedItems = [...selectedItems, item];
-    }
+    selectedItems = [...selectedItems, item];
     onChangeItems(selectedItems);
   };
 
@@ -194,7 +188,7 @@ class SeedInput extends Component<Props> {
 
                   return (
                     <ChipWrapper
-                      key={item}
+                      key={item+index}
                       tabIndex={-1}
                       label={<ChipContent value={item} index={index} />}
                       deleteIcon={<CloseIconWrapper />}
@@ -210,7 +204,7 @@ class SeedInput extends Component<Props> {
             })}
             {isOpen ? (
               <PaperWrapper square>
-                {getSuggestions(inputValue2, selectedItems).map((suggestion, index) =>
+                {getSuggestions(inputValue2).map((suggestion, index) =>
                   renderSuggestion({
                     suggestion,
                     index,
