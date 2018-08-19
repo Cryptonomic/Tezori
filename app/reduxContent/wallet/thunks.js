@@ -33,13 +33,19 @@ import {
   setNodesStatus,
   addNewIdentity,
   updateIdentity,
-  updateFetchedTime
+  updateFetchedTime,
+  updateTempIdentity
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
 
+// const {
+//   unlockFundraiserIdentity,
+//   unlockIdentityWithMnemonic,
+//   createWallet
+// } = TezosWallet;
+
 const {
-  unlockFundraiserIdentity,
   unlockIdentityWithMnemonic,
   createWallet
 } = TezosWallet;
@@ -299,13 +305,20 @@ export function syncAccountOrIdentity(selectedAccountHash, selectedParentHash) {
   };
 }
 
+export function gotoHome() {
+  return async (dispatch) => {
+    dispatch(push('/home'));
+  }
+}
+
 export function importAddress(
   activeTab,
   seed,
   pkh,
   activationCode,
   username,
-  passPhrase
+  passPhrase,
+  isCheck = false
 ) {
   return async (dispatch, state) => {
     const nodes = state().nodes.toJS();
@@ -326,12 +339,12 @@ export function importAddress(
           identity.storeType = storeTypes.MNEMONIC;
           break;
         case FUNDRAISER: {
-          identity = await unlockFundraiserIdentity(
+          const newPassPhrase = username.trim() + passPhrase.trim();
+          identity = await unlockIdentityWithMnemonic(
             seed,
-            username.trim(),
-            passPhrase.trim(),
-            pkh.trim()
+            newPassPhrase
           );
+          
           identity.storeType = storeTypes.FUNDRAISER;
           const conseilNode = getSelectedNode(nodes, CONSEIL);
 
@@ -400,8 +413,14 @@ export function importAddress(
         if (findIdentityIndex(jsIdentities, publicKeyHash) === -1) {
           delete identity.seed;
           identity.order = jsIdentities.length + 1;
+          
           identity = createIdentity(identity);
-          dispatch(addNewIdentity(identity));
+          if(isCheck) {
+            dispatch(updateTempIdentity(identity));
+          } else {
+            dispatch(addNewIdentity(identity));
+          }
+          
           identities = state()
             .wallet.get('identities')
             .toJS();
@@ -412,7 +431,9 @@ export function importAddress(
             password
           );
           await persistWalletState(state().wallet.toJS());
-          dispatch(push('/home'));
+          if(!isCheck) {
+            dispatch(push('/home'));
+          }          
           await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
         } else {
           dispatch(addMessage('Identity already exist', true));
