@@ -319,8 +319,8 @@ class Send extends Component<Props> {
                 color={amount?'gray3':'gray8'}
                 size={ms(0.65)}
                 amount={total}
-              />              
-              <BalanceTitle>Remaining Balance</BalanceTitle>
+              />
+              <BalanceTitle>{t('general.send.remainingBalance')}</BalanceTitle>
               <BalanceAmount
                 weight='500'
                 color={balanceColor}
@@ -347,7 +347,7 @@ class Send extends Component<Props> {
           buttonTheme="secondary"
           small
         >
-          Send
+          {t('general.send.send')}
         </SendButton>
         <SendConfirmationModal
           amount={amount}
