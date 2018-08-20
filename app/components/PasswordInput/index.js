@@ -9,7 +9,7 @@ const Container = styled.div`
 const ShowHidePwd = styled.div`
   position: absolute;
   right: 10px;
-  top: 26px;
+  top: 22px;
   color: ${({ theme: { colors } }) => colors.accent };
   font-size: 12px;
   font-weight: 500;
@@ -33,6 +33,7 @@ const PasswordInput = (props: Props) => {
         type={isShowed? 'text': 'password'}
         value={password}
         onChange={(newVal) => changFunc(newVal)}
+        right={42}
       />
       <ShowHidePwd style={{cursor: 'pointer'}} onClick={onShow}>
         {isShowed? 'Hide':'Show'}

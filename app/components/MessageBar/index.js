@@ -12,7 +12,7 @@ import { clearMessageState } from '../../reduxContent/message/actions';
 import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
-  padding: 10px 0;
+  padding: 25px 20px 30px 20px;
   background-color: ${({ isError }) => isError? 'rgba(255, 0, 0, 0.9)':'rgba(37, 156, 144, 0.9)' };
   width: 100%;
   color: ${({ theme: { colors } }) => colors.white};
@@ -45,7 +45,7 @@ const MessageFooter = styled.div`
   justify-content: center;
   align-items: baseline;
   line-height: 16px;
-  padding-bottom: 16px;
+  padding-top: 16px;
 `;
 const LinkContainer = styled.div`
   display: flex;
@@ -139,6 +139,7 @@ class MessageBar extends React.Component<Props> {
       <SnackbarWrapper
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         open={!!messageText}
+        onClose={clearMessageState}
         message={
           <MessageContent
             content={messageText}

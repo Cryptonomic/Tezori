@@ -4,8 +4,8 @@ export default createMuiTheme({
   overrides: {
     MuiSnackbarContent: {
       root: {
-        minWidth: '500px',
-        maxWidth: '1000px',
+        minWidth: '500px !important',
+        maxWidth: '1000px !important',
         width: '100%',
         padding: 0
       },

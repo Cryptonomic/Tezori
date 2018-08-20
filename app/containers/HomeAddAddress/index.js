@@ -30,7 +30,7 @@ const InputWithTooltip = styled.div`
 
   & button {
     position: absolute;
-    top: 45%;
+    top: 24px;
     right: ${ms(-2)};
   }
 `;
@@ -132,7 +132,7 @@ const AddAddressBodyContainer = styled.div`
 
 const ShowHidePwd = styled.div`
   position: absolute;
-  top: 44%;
+  top: 22px;
   right: ${ms(4)};
   color: ${({ theme: { colors } }) => colors.accent };
   font-size: 12px;
@@ -281,6 +281,7 @@ class AddAddress extends Component<Props> {
                   onChange={(newPassPhrase) =>
                     this.setState({ passPhrase: newPassPhrase })
                   }
+                  right={65}
                 />
 
                 <ShowHidePwd onClick={()=> this.setState({isShowedPwd: !isShowedPwd})} style={{cursor: 'pointer'}}>
@@ -299,6 +300,7 @@ class AddAddress extends Component<Props> {
                   label="Public key hash"
                   value={pkh}
                   onChange={(newPkh) => this.setState({ pkh: newPkh })}
+                  right={30}
                 />
                 <StyledTooltip position="bottom" content={PkhTooltip}>
                   <Button buttonTheme="plain">
@@ -314,6 +316,7 @@ class AddAddress extends Component<Props> {
                   label="Fundraiser Email Address"
                   value={username}
                   onChange={(newUsername) => this.setState({ username: newUsername })}
+                  right={30}
                 />
 
                 <StyledTooltip position="bottom" content={EmailTooltip}>
@@ -328,6 +331,7 @@ class AddAddress extends Component<Props> {
                   label="Activation Code"
                   value={activationCode}
                   onChange={(newActivationCode) => this.setState({ activationCode: newActivationCode })}
+                  right={30}
                 />
                 <StyledTooltip position="bottom" content={ActivationTooltip}>
                   <Button buttonTheme="plain">

@@ -9,14 +9,14 @@ import TezosIcon from '../TezosIcon';
 import PasswordInput from '../PasswordInput';
 
 const AmountContainer = styled.div`
-  marginbottom: ${ms(4)};
+  margin-bottom: ${ms(4)};
 `;
 
 const DataToSend = styled.span`
   border-bottom: 1px solid #7b91c0;
   color: ${({ theme: { colors } }) => colors.secondary};
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
   display: inline-block;
   font-weight: 300;
 `;

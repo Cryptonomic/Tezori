@@ -20,8 +20,9 @@ const InputWrapper = styled(Input)`
     color: ${({ disabled, theme: { colors } }) => disabled? colors.gray5 : colors.primary };
     font-size: 16px;
     font-weight: 300;
+    padding-right: ${({ right }) => right }px;
     &:before {
-      border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+      border-bottom: ${({ disabled}) => disabled? '1px dotted rgba(0, 0, 0, 0.32)' : '1px solid rgba(0, 0, 0, 0.12)' } ;
     }
     &:hover:before {
       border-bottom: solid 2px ${({error, theme: { colors } }) => error? colors.error1:colors.accent } !important;
@@ -53,6 +54,7 @@ type Props = {
   type?: string,
   errorText?: string,
   disabled?: boolean,
+  right?: number,
   onChange?: () => {}
 };
 
@@ -63,6 +65,7 @@ const TextField = (props: Props) => {
     onChange,
     errorText,
     disabled,
+    right,
     ...other
   } = props;
   return (
@@ -76,6 +79,7 @@ const TextField = (props: Props) => {
         onChange={(event) => onChange(event.target.value)}
         error={!!errorText}
         disabled={disabled}
+        right={right}
         {...other}
       />
       <ErrorText>
@@ -88,7 +92,8 @@ const TextField = (props: Props) => {
 TextField.defaultProps = {
   type: 'text',
   errorText: '',
-  disabled: false
+  disabled: false,
+  right: 0
 };
 
 export default TextField;

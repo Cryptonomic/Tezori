@@ -48,7 +48,7 @@ const InputAddressConainer = styled.div`
 const AmountFeePassContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 45%;
+  width: 43%;
   justify-content: center;
 `;
 
@@ -80,13 +80,13 @@ const DelegateButton = styled(Button)`
 
 const MainContainer = styled.div`
   display: flex;
-  padding: 0 76px;
+  padding: 20px 76px 0 76px;
 `;
 const BalanceContainer = styled.div`
   padding: 0 0px 0 20px;
   flex: 1;
   position: relative;
-  margin: 0 0 0px 40px;
+  margin: 0 0 0px 35px;
 `;
 
 const BalanceArrow = styled.div`
