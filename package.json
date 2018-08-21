@@ -215,6 +215,7 @@
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
+    "node-fetch":"^1.7.3",
     "polished": "^1.9.2",
     "qrcode": "^1.2.0",
     "rc-tooltip": "^3.7.2",

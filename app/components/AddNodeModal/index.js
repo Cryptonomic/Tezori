@@ -88,7 +88,7 @@ class AddNodeModal extends Component<Props> {
     }
   };
   render() {
-    const { name, apiKey, url, error } = this.state;
+    const { name, url, error } = this.state;
     const { type, isModalOpen } = this.props;
 
     const title = type === CONSEIL ? 'Conseil' : 'Tezos';
@@ -103,13 +103,11 @@ class AddNodeModal extends Component<Props> {
         <MainContainer>
           <TextField
             label="Node Name"
-            value={name}
             onChange={this.handleNameChange}
           />
 
           <TextField
             label="Api Key"
-            value={apiKey}
             onChange={this.handleApiKeyChange}
           />
 
@@ -117,7 +115,6 @@ class AddNodeModal extends Component<Props> {
             <Content>
               <TextField
                 label="URL (e.g https://127.0.0.1:19731/)"
-                value={url}
                 onChange={this.handleUrlChange}
               />
               {error ? (

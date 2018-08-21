@@ -119,6 +119,7 @@ const ItemWrapper = styled(MenuItem)`
     width: 100%;
     font-size: 16px;
     font-weight: 300;
+    background-color: ${({ type, theme: { colors } }) => type==="addmore"?colors.gray1: colors.white };
   }  
 `;
 
@@ -247,7 +248,7 @@ class SettingsPage extends Component<Props> {
                 }}
               >
                 {this.renderNodes(conseilNodes, conseilSelectedNode)}
-                <ItemWrapper value='add-more'>                  
+                <ItemWrapper value='add-more' type="addmore">                  
                   <AddCircle
                     style={{
                       fill: '#7B91C0',
@@ -283,7 +284,7 @@ class SettingsPage extends Component<Props> {
                 }}
               >
                 {this.renderNodes(tezosNodes, tezosSelectedNode)}
-                <ItemWrapper value="add-more">
+                <ItemWrapper value="add-more" type="addmore">
                   <AddCircle
                     style={{
                       fill: '#7B91C0',
