@@ -68,9 +68,9 @@ class AddNodeModal extends Component<Props> {
     this.setState(defaultState);
     closeAddNodeModal();
   };
-  handleNameChange = (_, name) => this.setState({ name });
-  handleApiKeyChange = (_, apiKey) => this.setState({ apiKey });
-  handleUrlChange = (_, url) => this.setState({ url });
+  handleNameChange = (name) => this.setState({ name });
+  handleApiKeyChange = (apiKey) => this.setState({ apiKey });
+  handleUrlChange = (url) => this.setState({ url });
   isValidUrl = () => {
     const { url } = this.state;
     return url.toLowerCase().indexOf('https://') === 0;
