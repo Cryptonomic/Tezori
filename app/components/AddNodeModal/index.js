@@ -35,17 +35,11 @@ const Content = styled.div`
     width: 100% !important;
   }
 `;
-const Error = styled.div`
-  height: 2rem;
-  width: 100%;
-  color: ${({ theme: { colors } }) => colors.error1};
-  font-size: ${ms(-2)};
-`;
 
 const FeedbackIcon = styled(TezosIcon)`
   position: absolute;
-  top: 42px;
-  right: 40px;
+  top: 30px;
+  right: 10px;
 `;
 
 const MainContainer = styled.div`
@@ -116,12 +110,12 @@ class AddNodeModal extends Component<Props> {
               <TextField
                 label="URL (e.g https://127.0.0.1:19731/)"
                 onChange={this.handleUrlChange}
+                errorText={error}
               />
               {error ? (
                 <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
               ) : null}
             </Content>
-            {error ? <Error> {error} </Error> : null}
           </Container>
 
           <StyledSaveButton
