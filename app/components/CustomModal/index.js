@@ -16,7 +16,8 @@ const ModalContainer = styled.div`
   outline: none;
   position: relative;
   padding-top: 53px;
-  width: 671px;
+  min-width: 671px;
+  max-width: 750px;
 `;
 
 const CloseIconWrapper = styled(CloseIcon)`
@@ -52,13 +53,14 @@ const CustomModal = (props: Props) => {
     title,
     open,
     children,
-    onClose
+    onClose,
+    ...other
   } = props;
   return (
     <ModalWrapper
-      open={open}
+      open={open}      
     >
-      <ModalContainer>
+      <ModalContainer {...other}>
         <CloseIconWrapper
           onClick={onClose}
         />

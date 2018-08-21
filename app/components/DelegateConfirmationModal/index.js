@@ -63,6 +63,14 @@ const InfoText = styled.div`
   line-height: 21px;
 `;
 
+const FeesContainer =styled.div`
+  margin-top: 19px;
+`;
+
+const InputAddressContainer =styled.div`
+  margin-top: 19px;
+`;
+
 type Props = {
   open?: boolean,
   address: string,
@@ -108,6 +116,7 @@ const DelegateConfirmationModal = (props: Props) => {
       title='Change Delegate'
       open={open}
       onClose={onCloseClick}
+      style={{width: '651px'}}
     >
       <ModalContainer>
         <DelegateTitle>You are currently delegating to</DelegateTitle>
@@ -119,20 +128,24 @@ const DelegateConfirmationModal = (props: Props) => {
             color2="index0"
           />
         </AddressContainer>
-        <InputAddress
-          labelText='Change Delegate to New Address' 
-          addressType="delegate"
-          tooltip={false}
-          changeDelegate={onAddressChange}
-          onIssue={onDelegateIssue}
-        />
-        <Fees
-          low={averageFees.low}
-          medium={averageFees.medium}
-          high={averageFees.high}
-          fee={fee}
-          onChange={handleFeeChange}
-        />
+        <InputAddressContainer>
+          <InputAddress
+            labelText='Change Delegate to New Address' 
+            addressType="delegate"
+            tooltip={false}
+            changeDelegate={onAddressChange}
+            onIssue={onDelegateIssue}
+          />
+        </InputAddressContainer>
+        <FeesContainer>
+          <Fees
+            low={averageFees.low}
+            medium={averageFees.medium}
+            high={averageFees.high}
+            fee={fee}
+            onChange={handleFeeChange}
+          />
+        </FeesContainer>
         <WarningContainer>
           <TezosIcon iconName="info" size={ms(5)} color="info" />
           <InfoText>
