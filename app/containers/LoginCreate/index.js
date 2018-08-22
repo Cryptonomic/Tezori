@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
@@ -16,10 +16,12 @@ import { login } from '../../reduxContent/wallet/thunks';
 import ValidInput from '../../components/ValidInput/';
 import createFileEmptyIcon from '../../../resources/createFileEmpty.svg';
 import TezosIcon from '../../components/TezosIcon/';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   login: () => {},
-  goBack: () => {}
+  goBack: () => {},
+  t: () => {}
 };
 
 const BackToWallet = styled.div`
@@ -261,7 +263,7 @@ class LoginCreate extends Component<Props> {
   };
 
   render() {
-    const { goBack } = this.props;
+    const { goBack, t } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled =
       isLoading ||
@@ -304,12 +306,12 @@ class LoginCreate extends Component<Props> {
                 marginTop: '4px'
               }}
             />
-            <span>Back</span>
+            <span>{t('general.back')}</span>
           </BackToWallet>
 
-          <WalletTitle>Create a new wallet</WalletTitle>
+          <WalletTitle>{t('login.create_wallet_title')}</WalletTitle>
           <WalletDescription>
-            Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
+            {t('login.create_wallet_description')}
           </WalletDescription>
           <FormContainer>
             <CreateFileSelector>
@@ -319,12 +321,12 @@ class LoginCreate extends Component<Props> {
                 onClick={this.saveFile}
                 small
               >
-                Create Wallet File
+                {t('login.create_new_wallet_btn')}
               </CreateFileButton>
             </CreateFileSelector>
             <PasswordsContainer>
               <ValidInput
-                label="Create Wallet Password"
+                label="{t('create_wallet_password_label')}"
                 isShowed={this.state.isPwdShowed}
                 error={this.state.pwdError}
                 suggestion={this.state.pwdSuggestion}
@@ -333,7 +335,7 @@ class LoginCreate extends Component<Props> {
                 onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
-                label="Confirm Wallet Password"
+                label="{t('confirm_wallet_password_label')}"
                 status
                 isShowed={this.state.isConfirmPwdShowed}
                 error={this.state.confirmPwdText}
@@ -349,7 +351,7 @@ class LoginCreate extends Component<Props> {
               onClick={() => this.login(CREATE)}
               disabled={isDisabled}
             >
-              Create Wallet
+              {t('login.create_wallet_btn')}
             </ActionButton>
           </ActionButtonContainer>
         </WalletContainers>
@@ -368,4 +370,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(LoginCreate);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(LoginCreate);

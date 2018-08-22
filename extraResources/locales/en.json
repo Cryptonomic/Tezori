@@ -5,6 +5,16 @@
     "decimal_separator": ".",
     "address": "Address",
     "delegate_address": "Delegate Address",
+    "back": "Back",
+    "import": "Import",
+    "send": {
+      "send": "Send",
+      "remainingBalance": "Remaining Balance"
+    },
+    "receive": {
+      "copyAddress": "Copy Address",
+      "copied": "Copied!"
+    },
     "errors": {
       "address_validation": {
         "send_address": "Addresses can only start TZ1, TZ2, TZ3 or KT1",
@@ -25,9 +35,16 @@
   },
   "login": {
     "create_new_wallet_btn": "Create New Wallet",
+    "create_wallet_btn": "Create Wallet",
     "open_exisiting_wallet_btn": "Open Existing Wallet",
     "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
     "create_named_wallet": "Create a {{name}} wallet",
-    "create_named_wallet_end": "first."
+    "create_named_wallet_end": "first.",
+    "create_wallet_password_label": "Create Wallet Password",
+    "confirm_wallet_password_label" : "Confirm Wallet Password",
+    "create_wallet_title": "Create a new wallet",
+    "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
+    "open_wallet_label": "Open an existing wallet",
+    "select_file_btn": "Select Wallet File"
   }
 }
