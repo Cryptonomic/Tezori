@@ -26,7 +26,7 @@ const WarningIcon = styled(Warning)`
     fill: ${({ theme: { colors } }) => colors.error1 };
     width: 18px;
     height: 18px;
-  }  
+  }
 `;
 
 const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
@@ -110,17 +110,6 @@ export default class InputValidComponent extends Component<Props> {
     const {errorText} = this.state;
     return (
       <StyledInputContainer>
-        {/* <TextField
-          floatingLabelText={label}
-          floatingLabelStyle={inputStyles.floatingLabelStyle}
-          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
-          underlineStyle={inputStyles.underlineStyle}
-          underlineFocusStyle={inputStyles.underlineFocusStyle}
-          errorText={this.state.errorText}
-          errorStyle={{ color: '#ea776c', borderColor: '#ea776c' }}
-          onChange={(_, newVal) => this.changFunc(newVal)}
-          onKeyPress={this.keyHandler}
-        /> */}
         <TextField
           label={label}
           onChange={(newVal) => this.changFunc(newVal)}

@@ -41,7 +41,7 @@ type Props = {
   managerBalance: number
 };
 
-const InputAddressConainer = styled.div`
+const InputAddressContainer = styled.div`
   padding: 0 76px;
 `;
 
@@ -173,7 +173,7 @@ const TooltipContainer = styled.div`
   color: #000;
   font-size: 14px;
   max-width: 312px;
-  
+
   .customArrow .rc-tooltip-arrow {
     left: 66%;
   }
@@ -298,7 +298,7 @@ class AddDelegateModal extends Component<Props> {
         balanceColor: 'error1'
       };
     }
-    
+
     if (amount) {
       return {
         isIssue: false,
@@ -339,7 +339,7 @@ class AddDelegateModal extends Component<Props> {
         open={open}
         onClose={this.onCloseClick}
       >
-        <InputAddressConainer>
+        <InputAddressContainer>
           <InputAddress
             labelText={t('general.delegate_address')}
             addressType="delegate"
@@ -347,7 +347,7 @@ class AddDelegateModal extends Component<Props> {
             changeDelegate={this.changeDelegate}
             onIssue={(status)=> this.setState({isDelegateIssue: status})}
           />
-        </InputAddressConainer>
+        </InputAddressContainer>
         <MainContainer>
           <AmountFeePassContainer>
             <AmountSendContainer>
@@ -406,7 +406,7 @@ class AddDelegateModal extends Component<Props> {
                 color={amount?'gray3':'gray8'}
                 size={ms(0.65)}
                 amount={total}
-              />              
+              />
               <BalanceTitle>Remaining Balance</BalanceTitle>
               <BalanceAmount
                 weight='500'
@@ -424,10 +424,10 @@ class AddDelegateModal extends Component<Props> {
                   {warningMessage}
                 </ErrorContainer>
               }
-              
+
             </BalanceContent>
           </BalanceContainer>
-        </MainContainer>        
+        </MainContainer>
 
         <PasswordButtonContainer>
           <PasswordInput
