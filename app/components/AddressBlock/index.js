@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 import { darken } from 'polished';
-import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import AddCircle from '@material-ui/icons/AddCircle';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
@@ -12,13 +12,14 @@ import Button from '../Button/';
 import TezosAmount from '../TezosAmount/';
 import Address from '../Address/';
 import AddressStatus from '../AddressStatus/';
-import { READY } from '../../constants/StatusTypes';
+import { READY, PENDING } from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
 import Tooltip from '../Tooltip';
 import NoFundTooltip from "../Tooltips/NoFundTooltip";
 import { sortArr } from '../../utils/array';
+
 
 const Container = styled.div`
   overflow: hidden;
@@ -178,9 +179,19 @@ class AddressBlock extends Component<Props, State> {
 
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
+    let smartBalance = 0;
     const { shouldHideSmartAddressesInfo } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts');
+    if (smartAddresses && smartAddresses.toArray().length) {
+      smartAddresses.forEach((address)=> {
+        const addressStatus = address.get('status');
+        if(addressStatus === READY || addressStatus === PENDING) {
+          smartBalance+=address.get('balance');
+        }        
+      });
+    }
+
     const isManagerReady = accountBlock.get('status') === READY;
     const noSmartAddressesDescriptionContent = [
       'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
@@ -200,8 +211,7 @@ class AddressBlock extends Component<Props, State> {
             <TezosAmount
               color="primary"
               size={ms(0)}
-              amount={balance}
-              showTooltip
+              amount={balance+smartBalance}
               format={2}
             />
           ) : null}

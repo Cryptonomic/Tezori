@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
-import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import { remote } from 'electron';
 import path from 'path';
 import zxcvbn from 'zxcvbn';
@@ -94,7 +94,7 @@ const WalletDescription = styled.div`
 
 const ActionButtonContainer = styled.div`
   width: 194px;
-  margin-top: 40px;
+  margin-top: 37px;
   display: flex;
   align-self: center;
 `;
@@ -111,9 +111,9 @@ const FormContainer = styled.div`
 `;
 
 const PasswordsContainer = styled.div`
- display: flex;
+  display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  justify-content: flex-end;
 `;
 
 const CreateFileEmptyIcon = styled.img`

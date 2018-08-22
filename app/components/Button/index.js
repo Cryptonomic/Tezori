@@ -61,6 +61,7 @@ const StyledButton = styled.button`
   display: inline-block;
   cursor: pointer;
   -webkit-app-region: no-drag;
+  outline: none;
   ${({ small }) =>
     small &&
     css`

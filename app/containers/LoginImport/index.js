@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
-import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import { remote } from 'electron';
 import path from 'path';
 
@@ -53,7 +53,7 @@ const ImportButtonContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 `;
 
 const WalletFileName = styled.span`
@@ -64,7 +64,7 @@ const WalletFileName = styled.span`
 
 const ActionButtonContainer = styled.div`
   width: 194px;
-  margin-top: 30px;
+  margin-top: 39px;
 `;
 
 const ActionButton = styled(Button)`

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components';
-import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import { ms } from '../../styles/helpers';
 
 const Back = styled.div`

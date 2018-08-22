@@ -1,8 +1,8 @@
 import React from 'react';
-import { Checkbox as MaterialCheckbox } from 'material-ui';
+import MaterialCheckbox from '@material-ui/core/Checkbox';
 import { withTheme } from 'styled-components';
-import CheckCircle from 'material-ui/svg-icons/action/check-circle';
-import Circle from 'material-ui/svg-icons/image/panorama-fish-eye';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import Circle from '@material-ui/icons/PanoramaFishEye';
 import theme from '../../styles/theme';
 
 type Props = {
@@ -25,11 +25,10 @@ const Checkbox = (props: Props) => {
   return (
     <MaterialCheckbox
       checked={isChecked}
-      onCheck={onCheck}
-      checkedIcon={<CheckCircle />}
-      uncheckedIcon={<Circle />}
+      onChange={onCheck}
       style={styles}
-      iconStyle={iconStyles}
+      checkedIcon={<CheckCircle style={iconStyles} />}
+      icon={<Circle style={iconStyles} />}
     />
   );
 };

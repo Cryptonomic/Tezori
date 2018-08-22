@@ -46,7 +46,7 @@ const Link = styled(Strong)`
 `;
 
 const Description = styled.span`
-  margin-left: -10px;
+  margin-left: 10px;
 `;
 
 const Tip = styled(Description)`

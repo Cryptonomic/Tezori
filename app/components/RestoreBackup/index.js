@@ -1,9 +1,9 @@
 import React, {Fragment, Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { TextField, Toggle } from 'material-ui';
+import Switch from '@material-ui/core/Switch';
 import styled from 'styled-components';
-import { ms } from '../../styles/helpers';
+import TextField  from '../TextField';
 import Button from '../Button';
 import SeedInput from './SeedInput';
 import PasswordInput from '../PasswordInput';
@@ -41,12 +41,30 @@ const RestoreTabItem = styled.div`
   background-color:  ${({ theme: { colors }, active }) => (active? colors.accent: 'rgba(148, 169, 209, 0.13)')};
   color: ${({ theme: { colors }, active }) => (active? colors.white: colors.index0) };
   flex: 1;
-`
-
-const ToggleWrapper = styled(Toggle)`
+`;
+const ToggleContainer = styled.div`
   max-width: 60%;
   margin-top: 35px;
-`
+  display: flex;
+  align-items: center;
+`;
+const ToggleLabel = styled.div`
+  font-size: 16px;
+  color: ${ ({ theme: { colors } }) => colors.black2 };
+  font-weight: 300;
+  
+`;
+const ToggleWrapper = styled(Switch)`
+  &&& {
+    & > span[class*='checked'] {    
+      color: ${({ theme: { colors } }) => colors.accent };
+      & + span {
+        background-color: ${({ theme: { colors } }) => colors.accent };
+      }
+    }
+  }
+  
+`;
 const RestoreFooter = styled.div`
   margin-top: auto;
   display: flex;
@@ -145,14 +163,14 @@ class RestoreBackup extends Component<Props> {
               onChangeInput={this.onChangeInput}
               onChangeItems={this.onChangeItems}
             />
-            <ToggleWrapper
-              label="This seed phrase is encrypted with a password"
-              labelPosition="left"
-              labelStyle={{fontSize: '16px', fontWeight: '300', color: '#4a4a4a'}}
-              thumbSwitchedStyle={{backgroundColor: '#2c7df7'}}
-              trackSwitchedStyle={{backgroundColor: 'rgba(44, 125, 247, 0.5)'}}
-              onToggle={()=> this.setState({isPassword: !isPassword})}
-            />
+            <ToggleContainer>
+              <ToggleLabel>
+                This seed phrase is encrypted with a password
+              </ToggleLabel>
+              <ToggleWrapper
+                onChange={()=> this.setState({isPassword: !isPassword})}
+              />
+            </ToggleContainer>
 
             {isPassword &&
               <PasswordInput
@@ -168,11 +186,9 @@ class RestoreBackup extends Component<Props> {
         }
         {type==='key' &&
           <TextField
-            floatingLabelText="Enter your private key"
-            type="text"
-            style={{ width: '100%', padding: `0 ${ms(3)} 0 0`, marginTop: '10px' }}
+            label="Enter your private key"
             value={key}
-            onChange={(_, newkey) => this.setState({ key: newkey })}
+            onChange={(newkey) => this.setState({ key: newkey })}
           />
 
         }

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { ms } from '../../styles/helpers';
 
 const Container = styled.div`

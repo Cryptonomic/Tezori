@@ -1,8 +1,8 @@
 import React, { Fragment, Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
-import ChevronLeftIcon from 'material-ui/svg-icons/navigation/chevron-left';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import styled from 'styled-components';
 import { generateNewMnemonic } from '../../utils/general';
 

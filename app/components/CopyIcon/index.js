@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { clipboard } from 'electron';
 import styled, { withTheme } from 'styled-components';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
+import ContentCopy from '@material-ui/icons/FileCopyOutlined';
 import { ms } from '../../styles/helpers';
 
 const CopyConfirmationTooltip = styled.div`

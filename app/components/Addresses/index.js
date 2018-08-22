@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import AddCircle from 'material-ui/svg-icons/content/add-circle';
+import AddCircle from '@material-ui/icons/AddCircle';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../../styles/helpers';
 
