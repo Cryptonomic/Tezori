@@ -160,9 +160,16 @@ class Send extends Component<Props> {
       balance = 0;
     }
     const max = addressBalance - fee - balance;
-    const amount = (max/utez).toFixed(6);
-    const total = addressBalance - balance;    
-    this.setState({ amount, total, balance });
+    if (max > 0) {
+      const amount = (max/utez).toFixed(6);
+      const total = addressBalance - balance;    
+      this.setState({ amount, total, balance });
+    } else {
+      const amount = '0';
+      const total = fee;
+      const balance = addressBalance - total;
+      this.setState({ amount, total, balance });
+    }
   }
 
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });

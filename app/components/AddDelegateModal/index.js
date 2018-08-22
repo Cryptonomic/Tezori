@@ -214,10 +214,17 @@ class AddDelegateModal extends Component<Props> {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
     const max = managerBalance - fee - gas - 1;
-    const amount = (max/utez).toFixed(6);
-    const total = managerBalance - 1;
-    const balance = 1;
-    this.setState({ amount, total, balance });
+    if (max > 0) {
+      const amount = (max/utez).toFixed(6);
+      const total = managerBalance - 1;
+      const balance = 1;
+      this.setState({ amount, total, balance });
+    } else {
+      const amount = '0';
+      const total = fee + gas;
+      const balance = managerBalance - total;
+      this.setState({ amount, total, balance });
+    }
   }
 
   changeDelegate = (delegate) => this.setState({ delegate });

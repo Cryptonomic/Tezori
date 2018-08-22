@@ -12,13 +12,14 @@ import Button from '../Button/';
 import TezosAmount from '../TezosAmount/';
 import Address from '../Address/';
 import AddressStatus from '../AddressStatus/';
-import { READY } from '../../constants/StatusTypes';
+import { READY, PENDING } from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
 import Tooltip from '../Tooltip';
 import NoFundTooltip from "../Tooltips/NoFundTooltip";
 import { sortArr } from '../../utils/array';
+
 
 const Container = styled.div`
   overflow: hidden;
@@ -184,7 +185,10 @@ class AddressBlock extends Component<Props, State> {
     const smartAddresses = accountBlock.get('accounts');
     if (smartAddresses && smartAddresses.toArray().length) {
       smartAddresses.forEach((address)=> {
-        smartBalance+=address.get('balance');
+        const addressStatus = address.get('status');
+        if(addressStatus === READY || addressStatus === PENDING) {
+          smartBalance+=address.get('balance');
+        }        
       });
     }
 
