@@ -16,7 +16,6 @@
       "fee": "Fee",
       "accounts": "Accounts"
     },
-    "custom_fee": "Custom Fee",
     "decimal_separator": ".",
     "address": "Address",
     "delegate_address": "Delegate Address",
@@ -48,6 +47,7 @@
   },
   "components": {
     "fees": {
+      "customFee": "Custom Fee",
       "enterCustomAmount": "Enter Custom Amount"
     },
     "accountStatus": {

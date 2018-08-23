@@ -115,7 +115,7 @@ class Fee extends Component<Props> {
           onClose={this.closeConfirmation}
         >
           <ModalContent>
-            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('components.fees.customFee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
