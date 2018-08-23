@@ -10,8 +10,8 @@
         "send_address": "Addresses can only start TZ1, TZ2, TZ3 or KT1",
         "delegate_address": "You can only delegate to TZ1, TZ2 or TZ3 addresses.",
         "length": "Addresses must be 36 characters long.",
-        "special_chars": " Addresses cannot contain any special characters.",
-        "send_funds": "You cant send funds to yourself."
+        "special_chars": "Addresses cannot contain any special characters.",
+        "send_funds": "You cannot send funds to yourself."
       }
     },
     "tooltips": {
