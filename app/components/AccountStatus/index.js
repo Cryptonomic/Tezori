@@ -101,7 +101,8 @@ function AccountStatus(props: Props) {
       break;
     case statuses.FOUND:
     case statuses.PENDING:
-      title = `Preparing your ${typeText}...`;
+      // title = `Preparing your ${typeText}...`;
+      title = t('components.accountStatus.title.pending', { typeText });
       if (operations[statuses.FOUND]) {
         info = (
           <Info
@@ -134,4 +135,4 @@ function AccountStatus(props: Props) {
   );
 }
 
-export default compose(wrapComponent, withTheme(AccountStatus));
+export default compose(wrapComponent, withTheme)(AccountStatus);

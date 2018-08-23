@@ -3,12 +3,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { compose } from 'redux';
+import { Trans } from 'react-i18next';
+
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
+
+
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -274,11 +278,19 @@ class LoginHome extends Component<Props> {
             isChecked={this.state.isAgreement}
             onCheck={this.updateStatusAgreement}
           />
-          <Description>
+          {/* <Description>
             I acknowledge that I have read and accepted the
             <Link onClick={this.openTermsService}> Terms of Service </Link>
             and
             <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
+          </Description> */}
+          <Description>
+            <Trans i18nKey="containers.loginHome.description">
+              I acknowledge that I have read and accepted the
+              <Link onClick={this.openTermsService}> Terms of Service </Link>
+              and
+              <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
+            </Trans>            
           </Description>
         </TermsAndPolicySection>
         <TermsModal

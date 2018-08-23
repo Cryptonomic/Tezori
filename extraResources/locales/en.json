@@ -51,7 +51,15 @@
       "enterCustomAmount": "Enter Custom Amount"
     },
     "accountStatus": {
-      "firstTransactionConfirmation": "We have received your first transaction of {{formattedAmount}} tez! Preparing your account now, this might take a while."
+      "firstTransactionConfirmation": "We have received your first transaction of {{formattedAmount}} tez! Preparing your account now, this might take a while.",
+      "title": {
+        "pending": "Preparing your {{typeText}}..."
+      }
+    }
+  },
+  "containers": {
+    "loginHome": {
+      "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>."
     }
   },
   "login": {
@@ -66,6 +74,6 @@
     "create_wallet_title": "Create a new wallet",
     "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
     "open_wallet_label": "Open an existing wallet",
-    "select_file_btn": "Select Wallet File",
+    "select_file_btn": "Select Wallet File"
   }
 }
