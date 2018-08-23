@@ -35,16 +35,16 @@
   },
   "containers": {
     "loginHome": {
-      "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>."
+      "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
+      "create_new_wallet_btn": "Create New Wallet",
+      "open_exisiting_wallet_btn": "Open Existing Wallet",
+      "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
+      "create_named_wallet": "Create a {{name}} wallet",
+      "create_named_wallet_end": "first."
     }
   },
   "login": {
-    "create_new_wallet_btn": "Create New Wallet",
     "create_wallet_btn": "Create Wallet",
-    "open_exisiting_wallet_btn": "Open Existing Wallet",
-    "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
-    "create_named_wallet": "Create a {{name}} wallet",
-    "create_named_wallet_end": "first.",
     "create_wallet_password_label": "Create Wallet Password",
     "confirm_wallet_password_label" : "Confirm Wallet Password",
     "create_wallet_title": "Create a new wallet",

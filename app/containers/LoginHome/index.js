@@ -147,7 +147,7 @@ const BgContainerImg = styled.img`
   z-index: 0;
   animation: fadeIn 3s forwards;
   animation-delay: 0.5s;
-  
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -169,7 +169,7 @@ const BgCircle = styled.img`
   opacity: 0;
   backface-visibility: hidden;
   animation: fadeInOut 2000ms ease-in-out infinite alternate;
-  
+
   @keyframes fadeInOut {
     0% {
       opacity: 0;
@@ -248,7 +248,7 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('create')}
                 disabled={!this.state.isAgreement}
               >
-                {t('login.create_new_wallet_btn')}
+                {t('containers.loginHome.create_new_wallet_btn')}
               </CreateWalletButton>
             </WalletContainers>
             <WalletContainers>
@@ -257,15 +257,15 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('import')}
                 disabled={!this.state.isAgreement}
               >
-                {t('login.open_exisiting_wallet_btn')}
+                {t('containers.loginHome.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
               <Tip>
-                <div>{t('login.want_to_import_fundraiser_paper_wallet')}</div>
+                <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
                   <Link onClick={() => this.goTo('create')}>
-                    <Strong>{t('login.create_named_wallet', { name })}</Strong>
+                    <Strong>{t('containers.loginHome.create_named_wallet', { name })}</Strong>
                   </Link>{' '}
-                  {t('login.create_named_wallet_end')}
+                  {t('containers.loginHome.create_named_wallet_end')}
                 </div>
               </Tip>
             </WalletContainers>
@@ -288,7 +288,7 @@ class LoginHome extends Component<Props> {
               <Link onClick={this.openTermsService}> Terms of Service </Link>
               and
               <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
-            </Trans>            
+            </Trans>
           </Description>
         </TermsAndPolicySection>
         <TermsModal
