@@ -19,7 +19,7 @@ render(
 );
 
 if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
+  module.hot.accept(() => {
     const NextRoot = require('./containers/Root'); // eslint-disable-line global-require
     render(
       <MuiThemeProvider muiTheme={muiTheme}>

@@ -1,11 +1,13 @@
 // @flow
 import React from 'react';
+import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
 
 import { limitLength } from '../../utils/strings';
 import { openLinkToBlockExplorer } from '../../utils/general';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   display: flex;
@@ -41,11 +43,12 @@ type Props = {
   firstIconName?: string,
   operationName?: string,
   operationId?: string,
-  lastIconName?: string
+  lastIconName?: string,
+  t: () => {}
 };
 
 function Info(props: Props) {
-  const { firstIconName, operationName, operationId, lastIconName } = props;
+  const { firstIconName, operationName, operationId, lastIconName, t } = props;
 
   return (
     <Container>
@@ -59,7 +62,7 @@ function Info(props: Props) {
           openLinkToBlockExplorer(operationId);
         }}
       >
-        Details
+        {t('general.nouns.details')}
       </Details>
       <InfoIcon
         size={ms(1)}
@@ -73,4 +76,4 @@ function Info(props: Props) {
   );
 }
 
-export default withTheme(Info);
+export default compose(wrapComponent, withTheme)(Info);

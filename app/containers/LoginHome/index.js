@@ -276,12 +276,6 @@ class LoginHome extends Component<Props> {
             isChecked={this.state.isAgreement}
             onCheck={this.updateStatusAgreement}
           />
-          {/* <Description>
-            I acknowledge that I have read and accepted the
-            <Link onClick={this.openTermsService}> Terms of Service </Link>
-            and
-            <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
-          </Description> */}
           <Description>
             <Trans i18nKey="containers.loginHome.description">
               I acknowledge that I have read and accepted the

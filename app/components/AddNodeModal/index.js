@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import Modal from '../CustomModal';
 import TextField from '../TextField';
@@ -11,13 +11,15 @@ import TezosIcon from '../TezosIcon/';
 
 import { addNode, setSelected } from '../../reduxContent/nodes/thunks';
 import Button from '../Button/';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   setSelected: () => {},
   addNode: () => {},
   closeAddNodeModal: () => {},
   isModalOpen: boolean,
-  type: string
+  type: string,
+  t: () => {}
 };
 
 const StyledSaveButton = styled(Button)`
@@ -71,22 +73,22 @@ class AddNodeModal extends Component<Props> {
   };
   handleAddNode = () => {
     const { name, apiKey, url } = this.state;
-    const { type, closeAddNodeModal, addNode, setSelected } = this.props;
+    const { type, closeAddNodeModal, addNode, setSelected, t } = this.props;
     if (this.isValidUrl()) {
       addNode({ name, apiKey, url, type });
       setSelected(name, type);
       closeAddNodeModal();
       this.setState(defaultState);
     } else {
-      this.setState({ error: "Node's protocol must be https" });
+      this.setState({ error: t('components.addNodeModal.error') });
     }
   };
   render() {
     const { name, url, error } = this.state;
-    const { type, isModalOpen } = this.props;
+    const { type, isModalOpen, t } = this.props;
 
-    const title = type === CONSEIL ? 'Conseil' : 'Tezos';
-    const title1 = `Set Up Your Custom ${title} Node`;
+    const title = t((type === CONSEIL ? 'general.nouns.conseil' : 'general.nouns.tezos'));
+    const title1 = t('components.addNodeModal.title', {title});
 
     return (
       <Modal
@@ -96,12 +98,12 @@ class AddNodeModal extends Component<Props> {
       >
         <MainContainer>
           <TextField
-            label="Node Name"
+            label={t('components.addNodeModal.labels.node_name')}
             onChange={this.handleNameChange}
           />
 
           <TextField
-            label="Api Key"
+            label={t('components.addNodeModal.labels.api_key')}
             onChange={this.handleApiKeyChange}
           />
 
@@ -123,7 +125,7 @@ class AddNodeModal extends Component<Props> {
             onClick={this.handleAddNode}
             disabled={!name || !url}
           >
-            Save
+            {t('general.verbs.save')}
           </StyledSaveButton>
         </MainContainer>
       </Modal>
@@ -135,4 +137,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ addNode, setSelected }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(AddNodeModal);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(AddNodeModal);

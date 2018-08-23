@@ -1,17 +1,33 @@
 {
   "general": {
-    "amount": "Amount",
-    "custom_fee": "Custom Fee",
-    "decimal_separator": ".",
-    "address": "Address",
-    "delegate_address": "Delegate Address",
-    "back": "Back",
-    "import": "Import",
-    "wallet_password": "Wallet Password",
-    "send": {
+    "verbs": {
       "send": "Send",
-      "remainingBalance": "Remaining Balance"
+      "copyAddress": "Copy Address",
+      "show": "Show",
+      "hide": "Hide",
+      "useMax": "Use Max",
+      "import": "Import",
+      "open": "Open",
+      "save": "Save"
     },
+    "nouns": {
+      "amount": "Amount", 
+      "wallet_password": "Wallet Password",
+      "total": "Total",
+      "fee": "Fee",
+      "accounts": "Accounts",
+      "custom_fee": "Custom Fee",
+      "address": "address",
+      "account": "account",
+      "delegate_address": "Delegate Address",
+      "remainingBalance": "Remaining Balance",
+      "gas": "Gas",
+      "details": "Details",
+      "conseil": "Conseil",
+      "tezos": "Tezos"
+    },    
+    "decimal_separator": ".",    
+    "back": "Back",
     "receive": {
       "copyAddress": "Copy Address",
       "copied": "Copied!"
@@ -32,6 +48,48 @@
         "content2": "There is a fee for changing the delegate.",
         "content3": "You can only delegate to the Manager Address. The Manager Address always starts with 'tz1'."
       }
+    }
+  },
+  "components": {
+    "addDelegateModal": {
+      "gasToolTip": "{{gas}} tz is required by the network to create a delegate address",
+      "warning1": "Total exceeds available funds",
+      "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
+      "addDelegateTitle": "Add a Delegate"
+    },
+    "actionPanel": {
+      "description": "It's pretty empty here. Get started<1> sending</1> and<3> receiving</3> tez from this address.",
+      "empty-title": "You have not made any transactions yet"
+    },
+    "addNodeModal": {
+      "error": "Node's protocol must be https",
+      "title": "Set Up Your Custom {{title}} Node",
+      "labels": {
+        "node_name": "Node Name",
+        "api_key": "Api Key"
+      }
+    },
+    "fees": {
+      "customFee": "Custom Fee",
+      "enterCustomAmount": "Enter Custom Amount"
+    },
+    "accountStatus": {
+      "creating_ccount": "Creating account",
+      "activation_operation_id": "activation operation id",
+      "origination_operation_id": "origination operation id",
+      "public_key_reveal_operation_id": "public key reveal operation id",      
+      "titles": {
+        "pending": "Preparing your {{typeText}}...",
+        "ready": "Your account is ready to receive transactions!",
+        "retrieving": "Retrieving your {{typeText}}..."
+      },
+      "descriptions": {
+        "mnemonic_first_transaction": "Your first transaction will commit your new address to the blockchain. This process may take some time until you are all set to send and delegate.",
+        "first_transaction_confirmation": "We have received your first transaction of {{formattedAmount}} tez! Preparing your account now, this might take a while."
+      }
+    },
+    "addresses": {
+      "supportToolTip": "Support for multiple accounts is coming soon."
     }
   },
   "containers": {
