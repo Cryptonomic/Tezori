@@ -33,6 +33,11 @@
       }
     }
   },
+  "containers": {
+    "loginHome": {
+      "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>."
+    }
+  },
   "login": {
     "create_new_wallet_btn": "Create New Wallet",
     "create_wallet_btn": "Create Wallet",
