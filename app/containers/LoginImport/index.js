@@ -155,7 +155,7 @@ class LoginImport extends Component<Props> {
             </WalletFileName>
           </ImportButtonContainer>
           <PasswordInput
-            label={t('general.nouns.wallet_password')}
+            label={t('general.nouns.walletPassword')}
             isShowed={isShowedPwd}
             password={password}
             changFunc={(newpassword) => this.setState({ password: newpassword })}

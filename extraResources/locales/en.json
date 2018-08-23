@@ -11,7 +11,7 @@
     },
     "nouns": {
       "amount": "Amount", 
-      "wallet_password": "Wallet Password",
+      "walletPassword": "Wallet Password",
       "total": "Total",
       "fee": "Fee",
       "accounts": "Accounts"
@@ -67,8 +67,5 @@
     "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
     "open_wallet_label": "Open an existing wallet",
     "select_file_btn": "Select Wallet File",
-    "labels": {
-      
-    }
   }
 }

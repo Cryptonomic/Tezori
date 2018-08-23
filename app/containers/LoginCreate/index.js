@@ -325,7 +325,7 @@ class LoginCreate extends Component<Props> {
             </CreateFileSelector>
             <PasswordsContainer>
               <ValidInput
-                label="{t('create_wallet_password_label')}"
+                label={t('login.create_wallet_password_label')}
                 isShowed={this.state.isPwdShowed}
                 error={this.state.pwdError}
                 suggestion={this.state.pwdSuggestion}
@@ -334,7 +334,7 @@ class LoginCreate extends Component<Props> {
                 onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
-                label="{t('confirm_wallet_password_label')}"
+                label={t('login.confirm_wallet_password_label')}
                 status
                 isShowed={this.state.isConfirmPwdShowed}
                 error={this.state.confirmPwdText}

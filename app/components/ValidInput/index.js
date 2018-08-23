@@ -1,10 +1,13 @@
 import React from 'react';
+import { compose } from 'redux';
 import styled from 'styled-components';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
+
 import TezosIcon from '../TezosIcon';
 import { ms } from '../../styles/helpers';
+import { wrapComponent } from '../../utils/i18n';
 
 const focusBorderColors = [
   '#2c7df7',
@@ -23,7 +26,7 @@ const Content = styled(FormControl)`
 
 const InputWrapper = styled(Input)`
   &&& {
-    &[class*='focused'] {    
+    &[class*='focused'] {
       &:before {
         border-bottom: solid 2px rgba(0, 0, 0, 0.22);
       }
@@ -95,11 +98,12 @@ type Props = {
   status?: boolean,
   score?: number,
   changFunc: () => {},
-  onShow: () => {}
+  onShow: () => {},
+  t: () => {}
 };
 
 const InputValid = (props: Props) => {
-  const {score, status} = props;
+  const {score, status, t} = props;
   const borderColor = focusBorderColors[score];
   let width = '';
   if (score && !status) {
@@ -129,7 +133,7 @@ const InputValid = (props: Props) => {
         onClick={props.onShow}
       />}
       <ShowHidePwd onClick={props.onShow} style={{cursor: 'pointer'}}>
-        {props.isShowed? 'Hide':'Show'}
+        {t((props.isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
       </ShowHidePwd>
       <PasswordStrengthSuggestions>
         {!!props.error && <Error color={borderColor}>{props.error}</Error>}
@@ -148,4 +152,4 @@ InputValid.defaultProps = {
   status: false
 };
 
-export default InputValid;
+export default compose(wrapComponent)(InputValid);
