@@ -41,14 +41,17 @@
       "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
       "create_named_wallet": "Create a {{name}} wallet",
       "create_named_wallet_end": "first."
+    },
+    "loginCreate": {
+      "create_wallet_btn": "Create Wallet",
+      "create_wallet_password_label": "Create Wallet Password",
+      "confirm_wallet_password_label" : "Confirm Wallet Password",
+      "create_new_wallet_btn": "Create New Wallet",
+      "create_wallet_title": "Create a new wallet",
+      "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set."
     }
   },
   "login": {
-    "create_wallet_btn": "Create Wallet",
-    "create_wallet_password_label": "Create Wallet Password",
-    "confirm_wallet_password_label" : "Confirm Wallet Password",
-    "create_wallet_title": "Create a new wallet",
-    "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
     "open_wallet_label": "Open an existing wallet",
     "select_file_btn": "Select Wallet File"
   }

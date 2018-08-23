@@ -309,9 +309,9 @@ class LoginCreate extends Component<Props> {
             <span>{t('general.back')}</span>
           </BackToWallet>
 
-          <WalletTitle>{t('login.create_wallet_title')}</WalletTitle>
+          <WalletTitle>{t('containers.loginCreate.create_wallet_title')}</WalletTitle>
           <WalletDescription>
-            {t('login.create_wallet_description')}
+            {t('containers.loginCreate.create_wallet_description')}
           </WalletDescription>
           <FormContainer>
             <CreateFileSelector>
@@ -321,12 +321,12 @@ class LoginCreate extends Component<Props> {
                 onClick={this.saveFile}
                 small
               >
-                {t('login.create_new_wallet_btn')}
+                {t('containers.loginCreate.create_new_wallet_btn')}
               </CreateFileButton>
             </CreateFileSelector>
             <PasswordsContainer>
               <ValidInput
-                label="{t('create_wallet_password_label')}"
+                label={t('containers.loginCreate.create_wallet_password_label')}
                 isShowed={this.state.isPwdShowed}
                 error={this.state.pwdError}
                 suggestion={this.state.pwdSuggestion}
@@ -335,7 +335,7 @@ class LoginCreate extends Component<Props> {
                 onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
-                label="{t('confirm_wallet_password_label')}"
+                label={t('containers.loginCreate.confirm_wallet_password_label')}
                 status
                 isShowed={this.state.isConfirmPwdShowed}
                 error={this.state.confirmPwdText}
@@ -351,7 +351,7 @@ class LoginCreate extends Component<Props> {
               onClick={() => this.login(CREATE)}
               disabled={isDisabled}
             >
-              {t('login.create_wallet_btn')}
+              {t('containers.loginCreate.create_wallet_btn')}
             </ActionButton>
           </ActionButtonContainer>
         </WalletContainers>
