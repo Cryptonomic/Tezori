@@ -306,7 +306,7 @@ class Send extends Component<Props> {
                 amount={this.state.amount}
                 handleAmountChange={this.handleAmountChange}
               />
-              <UseMax onClick={this.onUseMax}>Use Max</UseMax>
+              <UseMax onClick={this.onUseMax}>{t('general.verbs.useMax')}</UseMax>
             </InputAmount>
             <Fees
               styles={{ width: '100%' }}
@@ -320,7 +320,7 @@ class Send extends Component<Props> {
           <BalanceContainer>
             <BalanceArrow />
             <BalanceContent>
-              <BalanceTitle>Total</BalanceTitle>
+              <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
               <TotalAmount
                 weight='500'
                 color={amount?'gray3':'gray8'}
@@ -354,7 +354,7 @@ class Send extends Component<Props> {
           buttonTheme="secondary"
           small
         >
-          {t('general.send.send')}
+          {t('general.verbs.send')}
         </SendButton>
         <SendConfirmationModal
           amount={amount}

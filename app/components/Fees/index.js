@@ -83,7 +83,7 @@ class Fee extends Component<Props> {
     return (
       <Fragment>
         <CustomSelect
-          label='Fee'
+          label={t('general.nouns.fee')}
           value={fee}
           onChange={this.onFeeChange}
         >
@@ -110,7 +110,7 @@ class Fee extends Component<Props> {
           </ItemWrapper>
         </CustomSelect>
         <Modal
-          title='Enter Custom Amount'
+          title={t('components.fees.enterCustomAmount')}
           open={open}
           onClose={this.closeConfirmation}
         >

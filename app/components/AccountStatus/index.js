@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
@@ -9,6 +10,7 @@ import { H4 } from '../Heading/';
 import * as statuses from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { formatAmount } from '../../utils/currancy';
+import { wrapComponent } from '../../utils/i18n';
 import Info from './Info';
 
 const Container = styled.section`
@@ -50,11 +52,12 @@ const Description = styled.div`
 type Props = {
   isManager?: boolean,
   address?: object,
-  theme?: object
+  theme?: object,
+  t: () => {}
 };
 
 function AccountStatus(props: Props) {
-  const { isManager, address, theme } = props;
+  const { isManager, address, theme, t } = props;
 
   const storeType = address.get('storeType');
   const status = address.get('status');
@@ -113,10 +116,8 @@ function AccountStatus(props: Props) {
       if (storeType === MNEMONIC) {
         const transaction = address.get('transactions').toJS();
         const { amount } = transaction[0];
-        description = `We have received your first transaction of ${formatAmount(
-          amount,
-          2
-        )} tez! Preparing your account now, this might take a while.`;
+        const formattedAmount = formatAmount(amount, 2);
+        description = t('components.accountStatus.firstTransactionConfirmation', { formattedAmount });
       }
       break;
     default:
@@ -133,4 +134,4 @@ function AccountStatus(props: Props) {
   );
 }
 
-export default withTheme(AccountStatus);
+export default compose(wrapComponent, withTheme(AccountStatus));

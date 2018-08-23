@@ -1,6 +1,9 @@
 import React from 'react';
+import { compose } from 'redux';
 import styled from 'styled-components';
+
 import TextField from '../TextField';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   position: relative;
@@ -21,11 +24,12 @@ type Props = {
   containerStyle?: object,
   password: string,
   changFunc: () => {},
-  onShow: () => {}
+  onShow: () => {},
+  t: () => {}
 };
 
 const PasswordInput = (props: Props) => {
-  const { label, password, isShowed, changFunc, onShow, containerStyle } = props;
+  const { label, password, isShowed, changFunc, onShow, containerStyle, t } = props;
   return (
     <Container style={containerStyle}>
       <TextField
@@ -36,7 +40,7 @@ const PasswordInput = (props: Props) => {
         right={42}
       />
       <ShowHidePwd style={{cursor: 'pointer'}} onClick={onShow}>
-        {isShowed? 'Hide':'Show'}
+        {t((isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
       </ShowHidePwd>
     </Container>
   )
@@ -47,4 +51,4 @@ PasswordInput.defaultProps = {
   containerStyle: {}
 }
 
-export default PasswordInput
+export default compose(wrapComponent)(PasswordInput)

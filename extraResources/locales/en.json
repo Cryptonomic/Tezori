@@ -1,6 +1,21 @@
 {
   "general": {
-    "amount": "Amount",
+    "verbs": {
+      "send": "Send",
+      "copyAddress": "Copy Address",
+      "show": "Show",
+      "hide": "Hide",
+      "useMax": "Use Max",
+      "import": "Import",
+      "open": "Open"
+    },
+    "nouns": {
+      "amount": "Amount", 
+      "wallet_password": "Wallet Password",
+      "total": "Total",
+      "fee": "Fee",
+      "accounts": "Accounts"
+    },
     "custom_fee": "Custom Fee",
     "decimal_separator": ".",
     "address": "Address",
@@ -8,11 +23,9 @@
     "back": "Back",
     "import": "Import",
     "send": {
-      "send": "Send",
       "remainingBalance": "Remaining Balance"
     },
     "receive": {
-      "copyAddress": "Copy Address",
       "copied": "Copied!"
     },
     "errors": {
@@ -33,6 +46,14 @@
       }
     }
   },
+  "components": {
+    "fees": {
+      "enterCustomAmount": "Enter Custom Amount"
+    },
+    "accountStatus": {
+      "firstTransactionConfirmation": "We have received your first transaction of {{formattedAmount}} tez! Preparing your account now, this might take a while."
+    }
+  },
   "login": {
     "create_new_wallet_btn": "Create New Wallet",
     "create_wallet_btn": "Create Wallet",
@@ -45,6 +66,9 @@
     "create_wallet_title": "Create a new wallet",
     "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
     "open_wallet_label": "Open an existing wallet",
-    "select_file_btn": "Select Wallet File"
+    "select_file_btn": "Select Wallet File",
+    "labels": {
+      
+    }
   }
 }
