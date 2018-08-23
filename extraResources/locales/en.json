@@ -49,10 +49,10 @@
       "create_new_wallet_btn": "Create New Wallet",
       "create_wallet_title": "Create a new wallet",
       "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set."
+    },
+    "loginImport": {
+      "open_wallet_label": "Open an existing wallet",
+      "select_file_btn": "Select Wallet File"
     }
-  },
-  "login": {
-    "open_wallet_label": "Open an existing wallet",
-    "select_file_btn": "Select Wallet File"
   }
 }

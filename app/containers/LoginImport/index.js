@@ -144,11 +144,11 @@ class LoginImport extends Component<Props> {
           </BackToWallet>
 
           <WalletTitle>
-            {t('login.open_wallet_label')}
+            {t('containers.loginImport.open_wallet_label')}
           </WalletTitle>
           <ImportButtonContainer>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
-              {t('login.select_file_btn')}
+              {t('containers.loginImport.select_file_btn')}
             </Button>
             <WalletFileName>
               { walletFileName }
