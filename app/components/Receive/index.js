@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import { clipboard } from 'electron';
 import QRCode from 'qrcode';
 import styled from 'styled-components';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
 import { H4 } from '../Heading/';
@@ -133,10 +131,10 @@ class Receive extends Component<Props> {
         <HashContainer>
           <Hash>{address}</Hash>
           <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
-            {t('general.receive.copied')}
+            {t('components.copyIcon.copied')}
           </CopyConfirmationTooltip>
           <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
-            {t('general.receive.copyAddress')}
+            {t('general.verbs.copy_address')}
           </Button>
         </HashContainer>
       </ReceiveContainer>
@@ -144,4 +142,4 @@ class Receive extends Component<Props> {
   }
 }
 
-export default compose(wrapComponent, connect())(Receive)
+export default wrapComponent(Receive);

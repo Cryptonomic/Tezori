@@ -7,10 +7,12 @@ import Loader from '../Loader';
 import Button from '../Button';
 import TezosIcon from '../TezosIcon';
 import PasswordInput from '../PasswordInput';
+import { wrapComponent } from '../../utils/i18n';
 
 const AmountContainer = styled.div`
   margin-bottom: ${ms(4)};
   display: flex;
+  align-items: baseline;
 `;
 
 const DataToSend = styled.span`
@@ -18,7 +20,8 @@ const DataToSend = styled.span`
   color: ${({ theme: { colors } }) => colors.secondary};
   margin: 0;
   font-size: 19px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   font-weight: 300;
 `;
 
@@ -41,6 +44,7 @@ const ConfirmButton = styled(Button)`
   height: 50px;
   margin-bottom: 10px;
   font-weight: 300;
+  padding: 0;
 `;
 
 const ConfirmTitle = styled.div`
@@ -63,7 +67,8 @@ type Props = {
   onSend?: () => {},
   isLoading?: boolean,
   isShowedPwd?: boolean,
-  onShowPwd: () => {}
+  onShowPwd: () => {},
+  t: () => {}
 };
 
 const SendConfirmationModal = (props: Props) => {
@@ -77,31 +82,32 @@ const SendConfirmationModal = (props: Props) => {
     onCloseClick,
     onSend,
     isShowedPwd,
-    onShowPwd
+    onShowPwd,
+    t
   } = props;
 
   const isDisabled = isLoading || !password;
 
   return (
     <Modal
-      title='Send Confirmation'
+      title={t('components.sendConfirmationModal.send_confirmation')}
       open={open}
       onClose={onCloseClick}
     >
       <MainContainer>
-        <ConfirmTitle>Do you confirm that you want to send</ConfirmTitle>
+        <ConfirmTitle>{t('components.sendConfirmationModal.confirm_question')}</ConfirmTitle>
         <AmountContainer>
           <DataToSend>
             {amount}
             <TezosIcon color="secondary" iconName="tezos" />
           </DataToSend>
-          <Connector>to</Connector>
+          <Connector>{t('general.to')}</Connector>
           <DataToSend>{address}</DataToSend>
         </AmountContainer>
       </MainContainer>
       <PaswordContainer>
         <PasswordInput
-          label='Wallet Password'
+          label={t('general.nouns.wallet_password')}
           isShowed={isShowedPwd}
           password={password}
           changFunc={onPasswordChange}
@@ -113,12 +119,12 @@ const SendConfirmationModal = (props: Props) => {
           disabled={isDisabled}
           onClick={onSend}
         >
-          Confirm
+          {t('general.verbs.confirm')}
         </ConfirmButton>
       </PaswordContainer>
-      {isLoading && <Loader />}      
+      {isLoading && <Loader />}
     </Modal>
   );
 };
 
-export default SendConfirmationModal;
+export default wrapComponent(SendConfirmationModal);

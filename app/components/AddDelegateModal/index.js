@@ -356,7 +356,7 @@ class AddDelegateModal extends Component<Props> {
                 amount={amount}
                 handleAmountChange={this.changeAmount}
               />
-              <UseMax onClick={this.onUseMax}>{t('general.verbs.useMax')}</UseMax>
+              <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
             </AmountSendContainer>
             <FeeContainer>
               <Fees

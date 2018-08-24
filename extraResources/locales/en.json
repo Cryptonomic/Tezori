@@ -2,14 +2,16 @@
   "general": {
     "verbs": {
       "send": "Send",
-      "copyAddress": "Copy Address",
+      "copy_address": "Copy Address",
       "show": "Show",
       "hide": "Hide",
-      "useMax": "Use Max",
+      "use_max": "Use Max",
       "import": "Import",
       "open": "Open",
       "save": "Save",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "restore": "Restore",
+      "confirm": "Confirm"
     },
     "nouns": {
       "amount": "Amount", 
@@ -17,7 +19,6 @@
       "total": "Total",
       "fee": "Fee",
       "accounts": "Accounts",
-      "custom_fee": "Custom Fee",
       "address": "address",
       "account": "account",
       "label_account": "Account",
@@ -29,30 +30,10 @@
       "conseil": "Conseil",
       "tezos": "Tezos"
     },
-    "decimal_separator": ".",    
+    "decimal_separator": ".",
     "back": "Back",
     "next": "Next",
-    "receive": {
-      "copyAddress": "Copy Address",
-      "copied": "Copied!"
-    },
-    "errors": {
-      "address_validation": {
-        "send_address": "Addresses can only start TZ1, TZ2, TZ3 or KT1",
-        "delegate_address": "You can only delegate to TZ1, TZ2 or TZ3 addresses.",
-        "length": "Addresses must be 36 characters long.",
-        "special_chars": " Addresses cannot contain any special characters.",
-        "send_funds": "You cant send funds to yourself."
-      }
-    },
-    "tooltips": {
-      "delegate": {
-        "title": "Setting a Delegate",
-        "content1": "You can always change the delegate at a later time.",
-        "content2": "There is a fee for changing the delegate.",
-        "content3": "You can only delegate to the Manager Address. The Manager Address always starts with 'tz1'."
-      }
-    }
+    "to": "to"
   },
   "components": {
     "accountStatus": {
@@ -141,8 +122,58 @@
       "delegate_warning": "Your delegation change will not show up until the change is confirmed on the blockchain."
     },
     "fees": {
-      "customFee": "Custom Fee",
-      "enterCustomAmount": "Enter Custom Amount"
+      "low_fee": "Low Fee",
+      "medium_fee": "Medium Fee",
+      "high_fee": "High Fee",
+      "custom_fee": "Custom Fee",
+      "custom": "Custom",
+      "set_custom_fee": "Set Custom Fee",
+      "enter_custom_amount": "Enter Custom Amount"
+    },
+    "inputAddress": {
+      "setting_delegate": "Setting a Delegate",
+      "contents": {
+        "content1": "You can always change the delegate at a later time.",
+        "content2": "There is a fee for changing the delegate.",
+        "content3": "You can only delegate to the Manager Address. The Manager Address always starts with 'tz1'."
+      },
+      "errors": {
+        "send_address": "Addresses can only start TZ1, TZ2, TZ3 or KT1",
+        "delegate_address": "You can only delegate to TZ1, TZ2 or TZ3 addresses.",
+        "length": "Addresses must be 36 characters long.",
+        "special_chars": " Addresses cannot contain any special characters.",
+        "send_funds": "You cant send funds to yourself."        
+      }      
+    },
+    "messageBar": {
+      "operation_id": "OPERATION ID",
+      "view_block_explorer": "View on a block explorer"
+    },
+    "pdfReader": {
+      "loading": "Loading ..."
+    },
+    "restoreBackup": {
+      "restore_from": "Restore from ",
+      "seed_encrypted_label": "This seed phrase is encrypted with a password",
+      "seed_pharse_password": "Seed Pharse Password",
+      "enter_private_key": "Enter your private key",
+      "seed_pharse": "SEED PHRASE",
+      "private_key": "PRIVATE KEY"
+    },
+    "send": {
+      "warnings": {
+        "total_exceeds": "Total exceeds available funds",
+        "not_allowed": "Manager Addresses are not yet allowed to have less than 1 µtz"
+      }
+    },
+    "sendConfirmationModal": {
+      "send_confirmation": "Send Confirmation",
+      "confirm_question": "Do you confirm that you want to send"
+    },
+    "termsModal": {
+      "hi_there": "Hi there!",
+      "i_agree": "I agree",
+      "description": "Before we get started, please read and accept our<1> Terms of Service </1>and<3> Privacy Policy</3>."
     }
   },
   "containers": {

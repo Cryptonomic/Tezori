@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
+import { wrapComponent } from '../../utils/i18n';
 
 import { clearMessageState } from '../../reduxContent/message/actions';
 import { openLinkToBlockExplorer } from '../../utils/general';
@@ -78,10 +79,11 @@ type Props1 = {
   hash: string,
   isError: boolean,
   openLink: () => {},
-  onClose: () => {}
+  onClose: () => {},
+  t: () => {}
 };
 const MessageContent = (props: Props1) => {
-  const { content, hash, openLink, onClose, isError } = props;
+  const { content, hash, openLink, onClose, isError, t } = props;
   return (
     <MessageContainer isError={isError}>
       <StyledCloseIcon onClick={onClose} />
@@ -94,10 +96,10 @@ const MessageContent = (props: Props1) => {
       {/* {!!hash && <LinkButton onClick={openLink}>See it on chain</LinkButton>} */}
       {!!hash && (
         <MessageFooter>
-          <HashTitle>OPERATION ID:</HashTitle>
+          <HashTitle>{t('components.messageBar.operation_id')}:</HashTitle>
           <HashValue>{hash}</HashValue>
           <LinkContainer onClick={openLink}>
-            <LinkTitle>View on a block explorer</LinkTitle>
+            <LinkTitle>{t('components.messageBar.view_block_explorer')}</LinkTitle>
             <BroadIcon iconName="new-window" size={ms(0)} color="white" />
           </LinkContainer>
         </MessageFooter>
@@ -108,7 +110,8 @@ const MessageContent = (props: Props1) => {
 
 type Props = {
   clearMessageState: () => {},
-  message: object
+  message: object,
+  t: () => {}
 };
 
 class MessageBar extends React.Component<Props> {
@@ -130,7 +133,7 @@ class MessageBar extends React.Component<Props> {
 
 
   render() {
-    const { message, clearMessageState } = this.props;
+    const { message, clearMessageState, t } = this.props;
     const messageText = message.get('message') || '';
     const hash = message.get('hash') || '';
     const isError = message.get('isError') || false;
@@ -147,6 +150,7 @@ class MessageBar extends React.Component<Props> {
             openLink={() => this.openLink(hash)}
             onClose={clearMessageState}
             isError={isError}
+            t={t}
           />
         }
       />
@@ -168,4 +172,5 @@ function mapDispatchToProps(dispatch) {
     dispatch
   );
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MessageBar);
+
+export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(MessageBar);
