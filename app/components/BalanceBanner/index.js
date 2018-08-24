@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { lighten } from 'polished';
 import { ms } from '../../styles/helpers';
@@ -13,6 +14,7 @@ import Update from '../Update/';
 import ManagerAddressTooltip from '../Tooltips/ManagerAddressTooltip/';
 import { findAccountIndex } from '../../utils/account';
 import { MNEMONIC } from '../../constants/StoreTypes';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   storeType?: string,
@@ -25,7 +27,8 @@ type Props = {
   parentIndex?: number,
   parentIdentity?: object,
   delegatedAddress?: string,
-  time?: Date
+  time?: Date,
+  t: () => {}
 };
 
 const Container = styled.header`
@@ -117,15 +120,13 @@ function BalanceBanner(props: Props) {
     parentIdentity,
     isManagerAddress,
     time,
-    delegatedAddress
+    delegatedAddress,
+    t
   } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel =
-    !isManagerAddress && smartAddressIndex
-      ? `Delegated Address ${smartAddressIndex}`
-      : 'Manager Address';
+  const addressLabel = !isManagerAddress && smartAddressIndex ? t('components.address.delegated_address', {index: smartAddressIndex}) : t('components.address.manager_address');
 
-  const breadcrumbs = `Account ${parentIndex} > ${addressLabel}`;
+  const breadcrumbs = t('components.balanceBanner.breadcrumbs', {parentIndex, addressLabel});
 
   return (
     <Container>
@@ -172,7 +173,7 @@ function BalanceBanner(props: Props) {
         </AddressInfo>
         {delegatedAddress && (
           <DelegateContainer>
-            <Delegate>Delegated to </Delegate>
+            <Delegate>{t('components.balanceBanner.delegated_to')}</Delegate>
             <TezosAddress
               address={delegatedAddress}
               color="white"
@@ -191,4 +192,4 @@ BalanceBanner.defaultProps = {
   parentIndex: 0
 };
 
-export default withTheme(BalanceBanner);
+export default compose(wrapComponent, withTheme)(BalanceBanner);

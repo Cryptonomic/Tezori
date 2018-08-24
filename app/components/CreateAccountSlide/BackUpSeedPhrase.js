@@ -2,6 +2,7 @@ import React, { Fragment, Component } from 'react';
 import styled from 'styled-components';
 import InputValidComponent from './InputValidComponent';
 import Button from '../Button';
+import { wrapComponent } from '../../utils/i18n';
 
 const ActionButton = styled(Button)`
   margin-top: 26px;
@@ -11,10 +12,11 @@ const ActionButton = styled(Button)`
 
 type Props = {
   seed: string,
-  nextAccountSlide: () => {}
+  nextAccountSlide: () => {},
+  t: () => {}
 };
 
-export default class BackUpSeedPhrase extends Component<Props> {
+class BackUpSeedPhrase extends Component<Props> {
   props: Props;
   state = {
     isValid: false,
@@ -58,11 +60,11 @@ export default class BackUpSeedPhrase extends Component<Props> {
   };
 
   render() {
+    const { t, nextAccountSlide } = this.props;
     return (
       <Fragment>
         <div className="description">
-          In order to ensure that you wrote down up your seed phrase, please
-          type in the following four seed words.
+          {t('components.createAccountSlide.descriptions.description3')}
         </div>
         <div className="validFormContainer">
           {this.state.randomSeeds.length &&
@@ -83,11 +85,13 @@ export default class BackUpSeedPhrase extends Component<Props> {
         <ActionButton
           buttonTheme="primary"
           disabled={!this.state.isValid}
-          onClick={() => this.props.nextAccountSlide(2)}
+          onClick={() => nextAccountSlide(2)}
         >
-          Next
+          {t('general.next')}
         </ActionButton>
       </Fragment>
     );
   }
 }
+
+export default wrapComponent(BackUpSeedPhrase);

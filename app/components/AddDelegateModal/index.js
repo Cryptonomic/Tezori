@@ -268,7 +268,7 @@ class AddDelegateModal extends Component<Props> {
     const { t } = this.props;
     return (
       <TooltipContainer>
-        {t('components.addDelegateModal.gasToolTip', {gas})}
+        {t('components.addDelegateModal.gas_tool_tip', {gas})}
       </TooltipContainer>
     );
   };
@@ -334,7 +334,7 @@ class AddDelegateModal extends Component<Props> {
     } = this.getBalanceState(balance, amount, t);
     return (
       <Modal
-        title={t('components.addDelegateModal.addDelegateTitle')}
+        title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}
       >
@@ -406,7 +406,7 @@ class AddDelegateModal extends Component<Props> {
                 size={ms(0.65)}
                 amount={total}
               />
-              <BalanceTitle>{t('general.nouns.remainingBalance')}</BalanceTitle>
+              <BalanceTitle>{t('general.nouns.remaining_balance')}</BalanceTitle>
               <BalanceAmount
                 weight='500'
                 color={balanceColor}
@@ -430,7 +430,7 @@ class AddDelegateModal extends Component<Props> {
 
         <PasswordButtonContainer>
           <PasswordInput
-            label={t('general.nouns.walletPassword')}
+            label={t('general.nouns.wallet_password')}
             isShowed={isShowedPwd}
             password={passPhrase}
             changFunc={this.updatePassPhrase}
@@ -442,7 +442,7 @@ class AddDelegateModal extends Component<Props> {
             disabled={isDisabled}
             onClick={this.createAccount}
           >
-            Delegate
+            {t('general.verbs.delegate')}
           </DelegateButton>
         </PasswordButtonContainer>
         {isLoading && <Loader />}

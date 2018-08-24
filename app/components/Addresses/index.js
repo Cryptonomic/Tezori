@@ -89,7 +89,7 @@ class Addresses extends Component<Props> {
             position="bottom"
             content={
               <AccountsTooltip>
-                {t('components.addresses.supportToolTip')}
+                {t('components.addresses.support_tooltip')}
               </AccountsTooltip>
             }
           >

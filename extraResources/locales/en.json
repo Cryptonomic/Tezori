@@ -8,7 +8,8 @@
       "useMax": "Use Max",
       "import": "Import",
       "open": "Open",
-      "save": "Save"
+      "save": "Save",
+      "delegate": "Delegate"
     },
     "nouns": {
       "amount": "Amount", 
@@ -19,15 +20,18 @@
       "custom_fee": "Custom Fee",
       "address": "address",
       "account": "account",
+      "label_account": "Account",
+      "label_address": "Address",
       "delegate_address": "Delegate Address",
-      "remainingBalance": "Remaining Balance",
+      "remaining_balance": "Remaining Balance",
       "gas": "Gas",
       "details": "Details",
       "conseil": "Conseil",
       "tezos": "Tezos"
-    },    
+    },
     "decimal_separator": ".",    
     "back": "Back",
+    "next": "Next",
     "receive": {
       "copyAddress": "Copy Address",
       "copied": "Copied!"
@@ -51,28 +55,6 @@
     }
   },
   "components": {
-    "addDelegateModal": {
-      "gasToolTip": "{{gas}} tz is required by the network to create a delegate address",
-      "warning1": "Total exceeds available funds",
-      "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
-      "addDelegateTitle": "Add a Delegate"
-    },
-    "actionPanel": {
-      "description": "It's pretty empty here. Get started<1> sending</1> and<3> receiving</3> tez from this address.",
-      "empty-title": "You have not made any transactions yet"
-    },
-    "addNodeModal": {
-      "error": "Node's protocol must be https",
-      "title": "Set Up Your Custom {{title}} Node",
-      "labels": {
-        "node_name": "Node Name",
-        "api_key": "Api Key"
-      }
-    },
-    "fees": {
-      "customFee": "Custom Fee",
-      "enterCustomAmount": "Enter Custom Amount"
-    },
     "accountStatus": {
       "creating_ccount": "Creating account",
       "activation_operation_id": "activation operation id",
@@ -88,8 +70,79 @@
         "first_transaction_confirmation": "We have received your first transaction of {{formattedAmount}} tez! Preparing your account now, this might take a while."
       }
     },
+    "actionPanel": {
+      "description": "It's pretty empty here. Get started<1> sending</1> and<3> receiving</3> tez from this address.",
+      "empty-title": "You have not made any transactions yet"
+    },
+    "addDelegateModal": {
+      "gas_tool_tip": "{{gas}} tz is required by the network to create a delegate address",
+      "warning1": "Total exceeds available funds",
+      "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
+      "add_delegate_title": "Add a Delegate"
+    },
+    "addNodeModal": {
+      "error": "Node's protocol must be https",
+      "title": "Set Up Your Custom {{title}} Node",
+      "labels": {
+        "node_name": "Node Name",
+        "api_key": "Api Key"
+      }
+    },
+    "address": {
+      "manager_address": "Manager Address",
+      "delegated_address": "Delegated Address {{index}}"
+    },
+    "addressBlock": {
+      "descriptions": {
+        "description1": "Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.",
+        "description2": "There is a fee for setting a delegate.",
+        "description3": "It takes 7 cycles (~20 days) for your tez to start contributing to baking.",
+        "description4": "Delegation rewards will depend on your arrangement with the delegate."
+      },
+      "account_title": "Account {{index}}",
+      "not_ready_tooltip": "You account is not ready to delegate.",
+      "delegation_tips": "Delegation Tips"
+    },
     "addresses": {
-      "supportToolTip": "Support for multiple accounts is coming soon."
+      "support_tooltip": "Support for multiple accounts is coming soon."
+    },
+    "addressStatus": {
+      "your_account": "your account",
+      "new_address": "new address",
+      "retrieving_title": "Retrieving {{typeText}}...",
+      "preparing_title": "Preparing {{typeText}}..."
+    },
+    "balanceBanner": {
+      "breadcrumbs": "Account {{parentIndex}} > {{addressLabel}}",
+      "delegated_to": "Delegated to "
+    },
+    "copyIcon": {
+      "copied": "Copied!"
+    },
+    "createAccountSlide": {
+      "descriptions": {
+        "description1": "Write down your seed phrase on a piece of paper and keep it in a safe place. You will need your seed phrase to recover your account.",
+        "description2": "Make sure to keep your seed phrase in a safe place. If you forget your seed phrase, you will not be able to recover your account. We do not store your seed phrase and cannot help you recover it if you lose it.",
+        "description3": "In order to ensure that you wrote down up your seed phrase, please type in the following four seed words."
+      },
+      "generate_other_seed": "Generate Another Seed Pharse",
+      "create_account": "Create Account",
+      "seed_backup": "Your Tezos account seed is backed up!",
+      "back_to_seed": "Back to Seed Pharse"
+    },
+    "delegate": {
+      "delegate_settings": "Delegate Settings",
+      "current_delegate": "You are currently delegating to",
+      "change_delegate": "Change Delegate",
+      "delegate_warning": "Your delegate settings will not show up until confirmed on the blockchain."
+    },
+    "delegateConfirmationModal": {
+      "new_address_label": "Change Delegate to New Address",
+      "delegate_warning": "Your delegation change will not show up until the change is confirmed on the blockchain."
+    },
+    "fees": {
+      "customFee": "Custom Fee",
+      "enterCustomAmount": "Enter Custom Amount"
     }
   },
   "containers": {
