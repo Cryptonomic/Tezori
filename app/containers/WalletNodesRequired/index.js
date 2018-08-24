@@ -1,9 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { H3 } from '../../components/Heading/';
+import { wrapComponent } from '../../utils/i18n';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -58,17 +58,16 @@ class WalletNodesRequired extends Component<Props> {
   props: Props;
 
   render() {
+    const { t } = this.props;
     return (
       <SectionContainer>
         <DefaultContainer>
           <WalletContainers>
-            <H3>Node configuration is missing</H3>
+            <H3>{t("containers.walletNodesRequired.configuration_missing")}</H3>
             <p>
-              {
-                'Please close the wallet and edit "extraResources/defaultWalletNodes.json" and open the wallet again.'
-              }
+              {t("containers.walletNodesRequired.close_wallet_description")}
               <br />
-              {'defaultWalletNodes should look like:'}
+              {t("containers.walletNodesRequired.default_wallet_shape")}
             </p>
             <StyledPre>
               { preContent }
@@ -80,4 +79,4 @@ class WalletNodesRequired extends Component<Props> {
   }
 }
 
-export default connect()(WalletNodesRequired);
+export default wrapComponent(WalletNodesRequired);

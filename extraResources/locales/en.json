@@ -28,12 +28,15 @@
       "gas": "Gas",
       "details": "Details",
       "conseil": "Conseil",
-      "tezos": "Tezos"
+      "tezos": "Tezos",
+      "total_balence": "Total Balance"
     },
     "decimal_separator": ".",
     "back": "Back",
     "next": "Next",
-    "to": "to"
+    "to": "to",
+    "of": "of",
+    "from": "from"
   },
   "components": {
     "accountStatus": {
@@ -174,9 +177,48 @@
       "hi_there": "Hi there!",
       "i_agree": "I agree",
       "description": "Before we get started, please read and accept our<1> Terms of Service </1>and<3> Privacy Policy</3>."
+    },
+    "tooltips": {
+      "manager_tooltips_description": "The Manager Address is the primary address of your account and can be used to send and receive tez."
+    },
+    "transaction": {
+      "pending": "Pending...",
+      "burn": "Burn",
+      "public_key_reveal": "PUBLIC KEY REVEAL",
+      "activitation": "ACTIVATION",
+      "updated_delegate": "UPDATED DELEGATE",
+      "origination": "ORIGINATION",
+      "sent": "SENT",
+      "received": "RECEIVED",
+      "this_address": "this address",
+      "your_manager_address": "<0>your</0> Account 1 Manager Address"
+    },
+    "update": {
+      "last_updated": "Last updated {{date}}"
     }
   },
   "containers": {
+    "homeAddAddress": {
+      "add_account": "Add an Account",
+      "refer_pdf_title": "Please refer to the PDF document that you created during the Fundraiser.",
+      "secret_key_15": "15 Word Secret Key",
+      "fundraiser_password": "Fundraiser Password",
+      "public_key_hash": "Public key hash",
+      "fundraiser_email_address": "Fundraiser Email Address",
+      "activation_code": "Activation Code",
+      "tooltips": {
+        "password_tooltip": "This is the password that you used when generating a Tezos paper wallet to participate in the Fundraiser.",
+        "email_tooltip": "This is the email address that you used when generating a Tezos paper wallet to participate in the Fundraiser",
+        "activation_code_tooltip": "This is the activation code that you received after completing the KYC/AML process. An activation code corresponds to a public key hash and is required if you participated in the Fundraiser. You may complete the process at <1>verification.tezos.com</1> if you have not done so already.",
+        "public_key_hash_tooltip": "This is the public key hash as provided in the paper wallet."
+      }
+    },
+    "homeSettings": {
+      "back_to_wallet": "Back to Wallet",
+      "wallet_settings": "Wallet Settings",
+      "choose_different_node": "Choose a Different Node",
+      "add_custom_node": "Add a Custom Node"
+    },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
       "create_new_wallet_btn": "Create New Wallet",
@@ -191,11 +233,23 @@
       "confirm_wallet_password_label" : "Confirm Wallet Password",
       "create_new_wallet_btn": "Create New Wallet",
       "create_wallet_title": "Create a new wallet",
-      "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set."
+      "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
+      "crack_time_description": "It will take <span>{{time}}</span> to crack!",
+      "password_not_strong": "Your password is not strong enough.",
+      "add_another_word": " Add another word or two.",
+      "you_almost_there": "You are almost there!",
+      "you_got_it": "You got it!",
+      "password_dont_match": "Passwords don't Match!",
+      "password_match": "Passwords Match!"
     },
     "loginImport": {
       "open_wallet_label": "Open an existing wallet",
       "select_file_btn": "Select Wallet File"
+    },
+    "walletNodesRequired": {
+      "configuration_missing": "Node configuration is missing",
+      "close_wallet_description": "Please close the wallet and edit 'extraResources/defaultWalletNodes.json' and open the wallet again.",
+      "default_wallet_shape": "defaultWalletNodes should look like:"
     }
   }
 }

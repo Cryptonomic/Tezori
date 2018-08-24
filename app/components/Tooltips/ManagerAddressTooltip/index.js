@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ms } from '../../../styles/helpers';
+import { wrapComponent } from '../../../utils/i18n';
 
 const Container = styled.div`
   color: ${({ theme: { colors } }) => colors.primary};
@@ -16,14 +17,18 @@ const Title = styled.p`
   margin: 0 0 ${ms(-4)} 0;
 `;
 
-function ManagerAddressTooltip() {
+type Props = {
+  t: () => {}
+};
+
+function ManagerAddressTooltip(props: Props) {
+  const { t } = props;
   return (
     <Container>
-      <Title>Manager address</Title>
-      The Manager Address is the primary address of your account and can be used
-      to send and receive tez.
+      <Title>{t("components.address.manager_address")}</Title>
+      {t("components.tooltips.manager_tooltips_description")}
     </Container>
   );
 }
 
-export default ManagerAddressTooltip;
+export default wrapComponent(ManagerAddressTooltip);

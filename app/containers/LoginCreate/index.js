@@ -171,21 +171,20 @@ class LoginCreate extends Component<Props> {
 
   changePassword = password => {
     const { confirmPassword } = this.state;
+    const { t } = this.props;
     if (password) {
       const pwdStrength = zxcvbn(password);
       const score = pwdStrength.score || 1;
-      let crackTime = `It will take <span>${
-        pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second
-      }</span> to crack!`;
+      let crackTime = t("containers.loginCreate.crack_time_description", {time: pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second});
       let error = '';
       if (score < 3) {
-        error = 'Your password is not strong enough.';
-        crackTime += ' Add another word or two.';
+        error = t("containers.loginCreate.password_not_strong");
+        crackTime += t("containers.loginCreate.add_another_word");
       } else if (score === 3) {
-        error = 'You are almost there!';
-        crackTime += ' Add another word or two.';
+        error = t("containers.loginCreate.you_almost_there");
+        crackTime += t("containers.loginCreate.add_another_word");
       } else {
-        error = 'You got it!';
+        error = t("containers.loginCreate.you_got_it");
       }
 
       const isValid = score === 4;
@@ -210,19 +209,20 @@ class LoginCreate extends Component<Props> {
       this.setState({
         isPasswordMatched: false,
         confirmPwdScore: 1,
-        confirmPwdText: "Passwords don't Match!"
+        confirmPwdText: t("containers.loginCreate.password_dont_match")
       });
     } else if (confirmPassword && confirmPassword === password) {
       this.setState({
         isPasswordMatched: true,
         confirmPwdScore: 4,
-        confirmPwdText: 'Passwords Match!'
+        confirmPwdText: t("containers.loginCreate.password_match")
       });
     }
   };
 
   confirmPassword = confirmPassword => {
     const { password } = this.state;
+    const { t } = this.props;
     const indexVal = password.indexOf(confirmPassword);
     let score = 0;
     let isMatched = false;
@@ -230,7 +230,7 @@ class LoginCreate extends Component<Props> {
     if (password && password === confirmPassword) {
       score = 4;
       isMatched = true;
-      confirmStr = 'Passwords Match!';
+      confirmStr = t("containers.loginCreate.password_match");
     } else if (
       password !== confirmPassword &&
       indexVal < 0 &&
@@ -238,7 +238,7 @@ class LoginCreate extends Component<Props> {
     ) {
       score = 1;
       isMatched = false;
-      confirmStr = `Passwords don't Match!`;
+      confirmStr = t("containers.loginCreate.password_dont_match");
     }
     this.setState({
       isPasswordMatched: isMatched,

@@ -1,5 +1,4 @@
 import React from 'react';
-import { compose } from 'redux';
 import styled from 'styled-components';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
@@ -102,7 +101,7 @@ type Props = {
 };
 
 const InputValid = (props: Props) => {
-  const {score, status, t} = props;
+  const {label, error, suggestion,  score, status, isShowed, changFunc, onShow, t} = props;
   const borderColor = focusBorderColors[score];
   let width = '';
   if (score && !status) {
@@ -115,29 +114,29 @@ const InputValid = (props: Props) => {
     <Container>
       <Content>
         <LabelWrapper>
-          {props.label}
+          {label}
         </LabelWrapper>
         <InputWrapper
-          key={props.label}
-          type={props.isShowed ? 'text' : 'password'}
-          onChange={(event) => props.changFunc(event.target.value)}
+          key={label}
+          type={isShowed ? 'text' : 'password'}
+          onChange={(event) => changFunc(event.target.value)}
           width={width}
           score={score}
         />
       </Content>
-      {props.score===4 && <CheckIcon
+      {score===4 && <CheckIcon
         iconName='checkmark2'
         size={ms(0)}
         color="check"
-        onClick={props.onShow}
+        onClick={onShow}
       />}
-      <ShowHidePwd onClick={props.onShow} style={{cursor: 'pointer'}}>
-        {t((props.isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
+      <ShowHidePwd onClick={onShow} style={{cursor: 'pointer'}}>
+        {t((isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
       </ShowHidePwd>
       <PasswordStrengthSuggestions>
-        {!!props.error && <Error color={borderColor}>{props.error}</Error>}
-        {!!props.suggestion && (
-          <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />
+        {!!error && <Error color={borderColor}>{error}</Error>}
+        {!!suggestion && (
+          <Suggestion dangerouslySetInnerHTML={{ __html: suggestion }} />
         )}
       </PasswordStrengthSuggestions>
     </Container>
@@ -151,4 +150,4 @@ InputValid.defaultProps = {
   status: false
 };
 
-export default compose(wrapComponent)(InputValid);
+export default wrapComponent(InputValid);

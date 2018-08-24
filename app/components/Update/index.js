@@ -3,6 +3,7 @@ import moment from 'moment';
 import styled from 'styled-components';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { ms } from '../../styles/helpers';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   display: flex;
@@ -46,16 +47,17 @@ const SpinningRefreshIcon = styled(RefreshIcon)`
 type Props = {
   isReady?: boolean,
   onClick?: () => {},
-  time: Date
+  time: Date,
+  t: () => {}
 };
 
 class Update extends PureComponent<Props> {
   render() {
-    const { isReady, onClick, time } = this.props;
+    const { isReady, onClick, time, t } = this.props;
     const Refresh = isReady ? RefreshIcon : SpinningRefreshIcon;
     return (
       <Container>
-        <Text>{`Last updated ${moment(time).format('LT')}`}</Text>
+        <Text>{t("components.update.last_updated", {date: moment(time).format('LT')})}</Text>
         <Refresh
           style={{
             fill: 'white',
@@ -70,4 +72,4 @@ class Update extends PureComponent<Props> {
   }
 }
 
-export default Update;
+export default wrapComponent(Update);

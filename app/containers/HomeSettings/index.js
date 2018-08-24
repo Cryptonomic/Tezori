@@ -13,6 +13,7 @@ import { H2, H4 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 import CustomSelect from '../../components/CustomSelect';
+import { wrapComponent } from '../../utils/i18n';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
 import { setSelected, removeNode } from '../../reduxContent/nodes/thunks';
@@ -32,7 +33,8 @@ type Props = {
   syncWallet: () => {},
   setSelected: () => {},
   goBack: () => {},
-  theme: object
+  theme: object,
+  t: () => {}
 };
 
 const Row = styled.div`
@@ -197,7 +199,8 @@ class SettingsPage extends Component<Props> {
       conseilSelectedNode,
       conseilNodes,
       tezosSelectedNode,
-      tezosNodes
+      tezosNodes,
+      t
     } = this.props;
 
     const { type, isModalOpen } = this.state;
@@ -219,11 +222,11 @@ class SettingsPage extends Component<Props> {
               marginLeft: '-9px'
             }}
           />
-          <span>Back to Wallet</span>
+          <span>{t("containers.homeSettings.back_to_wallet")}</span>
         </BackToWallet>
-        <H2>Wallet Settings</H2>
+        <H2>{t("containers.homeSettings.wallet_settings")}</H2>
         <Content>
-          <H4>Choose a Different Node</H4>
+          <H4>{t("containers.homeSettings.choose_different_node")}</H4>
           <RowForParts>
             <Part>
               <CustomSelect
@@ -257,7 +260,7 @@ class SettingsPage extends Component<Props> {
                       marginRight: '10px'
                     }}
                   />
-                  Add a Custom Node
+                  {t("containers.homeSettings.add_custom_node")}
                 </ItemWrapper>
               </CustomSelect>
             </Part>
@@ -293,7 +296,7 @@ class SettingsPage extends Component<Props> {
                       marginRight: '10px'
                     }}
                   />
-                  Add a Custom Node
+                  {t("containers.homeSettings.add_custom_node")}
                 </ItemWrapper>
               </CustomSelect>
             </Part>
@@ -331,6 +334,6 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(withTheme, connect(mapStateToProps, mapDispatchToProps))(
+export default compose(wrapComponent, withTheme, connect(mapStateToProps, mapDispatchToProps))(
   SettingsPage
 );
