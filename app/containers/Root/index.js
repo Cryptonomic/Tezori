@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
-import { I18nextProvider } from 'react-i18next';
+
 import theme from '../../styles/theme';
 import Routes from '../../routes';
 import { createIl8nInstance } from '../../utils/i18n';
