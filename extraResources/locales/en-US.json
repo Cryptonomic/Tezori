@@ -248,7 +248,7 @@
     },
     "walletNodesRequired": {
       "configuration_missing": "Node configuration is missing",
-      "close_wallet_description": "Please close the wallet and edit 'extraResources/defaultWalletNodes.json' and open the wallet again.",
+      "close_wallet_description": "Please close the wallet and edit 'extraResources/walletSettings.json' and open the wallet again.",
       "default_wallet_shape": "defaultWalletNodes should look like:"
     }
   }
