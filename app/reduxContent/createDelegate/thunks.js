@@ -22,8 +22,8 @@ const { sendOriginationOperation } = TezosOperations;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
-    const averageFees = await fetchAverageFees(nodes, 'origination');
+    const settings = state().settings.toJS();
+    const averageFees = await fetchAverageFees(settings, 'origination');
     return averageFees;
   };
 }
@@ -36,7 +36,7 @@ export function createNewAccount(
   publicKeyHash
 ) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const walletPassword = state().wallet.get('password');
     const identities = state()
       .wallet.get('identities')
@@ -70,7 +70,7 @@ export function createNewAccount(
       publicKeyHash,
       publicKeyHash
     );
-    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+    const { url, apiKey } = getSelectedNode(settings, TEZOS);
     console.log('-debug: - iiiii - url, apiKey', url, apiKey);
     const newAccount = await sendOriginationOperation(
       url,

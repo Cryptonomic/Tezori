@@ -23,8 +23,8 @@ const { sendTransactionOperation } = TezosOperations;
 
 export function fetchTransactionAverageFees() {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
-    const averageFees = await fetchAverageFees(nodes, 'transaction');
+    const settings = state().settings.toJS();
+    const averageFees = await fetchAverageFees(settings, 'transaction');
     return averageFees;
   };
 }
@@ -60,7 +60,7 @@ export function sendTez(
   selectedParentHash
 ) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -83,7 +83,7 @@ export function sendTez(
       return false;
     }
 
-    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+    const { url, apiKey } = getSelectedNode(settings, TEZOS);
     console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
     const res = await sendTransactionOperation(

@@ -20,8 +20,8 @@ const { sendDelegationOperation } = TezosOperations;
 
 export function fetchDelegationAverageFees() {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
-    const averageFees = await fetchAverageFees(nodes, 'delegation');
+    const settings = state().settings.toJS();
+    const averageFees = await fetchAverageFees(settings, 'delegation');
     return averageFees;
   };
 }
@@ -51,7 +51,7 @@ export function delegate(
   selectedParentHash
 ) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -68,7 +68,7 @@ export function delegate(
       selectedAccountHash,
       selectedParentHash
     );
-    const { url } = getSelectedNode(nodes, TEZOS);
+    const { url } = getSelectedNode(settings, TEZOS);
     const res = await sendDelegationOperation(
       url,
       keyStore,

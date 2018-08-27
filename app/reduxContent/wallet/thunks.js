@@ -142,7 +142,7 @@ export function updateActiveTab(
 
 export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     let identities = state()
       .wallet.get('identities')
       .toJS();
@@ -154,7 +154,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
       syncAccount = await getSyncAccount(
         identities,
         syncAccount,
-        nodes,
+        settings,
         selectedAccountHash,
         selectedParentHash
       ).catch(e => {
@@ -181,7 +181,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
 
 export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -191,7 +191,7 @@ export function syncIdentity(publicKeyHash) {
     const syncIdentity = await getSyncIdentity(
       identities,
       stateIdentity,
-      nodes,
+      settings,
       selectedAccountHash
     ).catch(e => {
       console.log(`-debug: Error in: syncIdentity for:${publicKeyHash}`);
@@ -214,9 +214,9 @@ export function syncIdentity(publicKeyHash) {
 export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
 
-    const nodesStatus = await getNodesStatus(nodes);
+    const nodesStatus = await getNodesStatus(settings);
     dispatch(setNodesStatus(nodesStatus));
     const res = getNodesError(nodesStatus);
     console.log('-debug: res, nodesStatus', res, nodesStatus);
@@ -237,7 +237,7 @@ export function syncWallet() {
         const syncIdentity = await getSyncIdentity(
           stateIdentities,
           identity,
-          nodes
+          settings
         ).catch(e => {
           console.log(`-debug: Error in: syncIdentity for: ${publicKeyHash}`);
           console.error(e);
@@ -308,7 +308,7 @@ export function importAddress(
   passPhrase
 ) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const { wallet } = state();
     let identities = wallet.get('identities');
     const walletLocation = wallet.get('walletLocation');
@@ -333,7 +333,7 @@ export function importAddress(
             pkh.trim()
           );
           identity.storeType = storeTypes.FUNDRAISER;
-          const conseilNode = getSelectedNode(nodes, CONSEIL);
+          const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
             conseilNode.url,
@@ -342,7 +342,7 @@ export function importAddress(
           ).catch(() => false);
 
           if (!account) {
-            const tezosNode = getSelectedNode(nodes, TEZOS);
+            const tezosNode = getSelectedNode(settings, TEZOS);
             const activating = await sendIdentityActivationOperation(
               tezosNode.url,
               identity,
@@ -374,7 +374,7 @@ export function importAddress(
             1:  storeTypes.FUNDRAISER
           };
           identity.storeType = storeTypesMap[ identity.storeType ];
-          const conseilNode = getSelectedNode(nodes, CONSEIL);
+          const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
             conseilNode.url,

@@ -9,7 +9,7 @@ import { ms } from '../../styles/helpers';
 import { CONSEIL } from '../../constants/NodesTypes';
 import TezosIcon from '../TezosIcon/';
 
-import { addNode, setSelected } from '../../reduxContent/nodes/thunks';
+import { addNode, setSelected } from '../../reduxContent/settings/thunks';
 import Button from '../Button/';
 import { wrapComponent } from '../../utils/i18n';
 

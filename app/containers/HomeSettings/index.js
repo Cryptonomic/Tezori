@@ -12,18 +12,18 @@ import { ms } from '../../styles/helpers';
 import { H2, H4 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
-import CustomSelect from '../../components/CustomSelect';
+import CustomSelect from '../../components/CustomSelect/';
 import { wrapComponent } from '../../utils/i18n';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
-import { setSelected, removeNode } from '../../reduxContent/nodes/thunks';
+import { setSelected, removeNode } from '../../reduxContent/settings/thunks';
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes
-} from '../../reduxContent/nodes/selectors';
+} from '../../reduxContent/settings/selectors';
 
 type Props = {
   conseilSelectedNode: string,
