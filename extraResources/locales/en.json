@@ -11,7 +11,8 @@
       "save": "Save",
       "delegate": "Delegate",
       "restore": "Restore",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "receive": "Receive"
     },
     "nouns": {
       "amount": "Amount",
@@ -29,7 +30,8 @@
       "details": "Details",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Total Balance"
+      "total_balence": "Total Balance",
+      "transactions": "Transactions"
     },
     "decimal_separator": ".",
     "back": "Back",
@@ -211,7 +213,10 @@
         "email_tooltip": "This is the email address that you used when generating a Tezos paper wallet to participate in the Fundraiser",
         "activation_code_tooltip": "This is the activation code that you received after completing the KYC/AML process. An activation code corresponds to a public key hash and is required if you participated in the Fundraiser. You may complete the process at <1>verification.tezos.com</1> if you have not done so already.",
         "public_key_hash_tooltip": "This is the public key hash as provided in the paper wallet."
-      }
+      },
+      "import_fundraiser": "Import Fundraiser Wallet",
+      "create_new_account": "Create New Account",
+      "restore_backup": "Restore from Backup"
     },
     "homeSettings": {
       "back_to_wallet": "Back to Wallet",
@@ -225,7 +230,9 @@
       "open_exisiting_wallet_btn": "Open Existing Wallet",
       "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
       "create_named_wallet": "Create a {{name}} wallet",
-      "create_named_wallet_end": "first."
+      "create_named_wallet_end": "first.",
+      "tagline": "A community wallet for Tezos",
+      "app_name": "Tezori"
     },
     "loginCreate": {
       "create_wallet_btn": "Create Wallet",

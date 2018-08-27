@@ -216,7 +216,8 @@ class ActionPanel extends Component<Props, State> {
       selectedAccountHash,
       selectedParentHash,
       syncWallet,
-      time
+      time,
+      t
     } = this.props;
     const jsIdentities = identities.toJS();
     const selectedAccount = getSelectedAccount(
@@ -267,7 +268,7 @@ class ActionPanel extends Component<Props, State> {
                   }
                 }}
               >
-                <TabText isReady={ready}>{tab}</TabText>
+                <TabText isReady={ready}>{t(tab)}</TabText>
               </Tab>
             );
           })}
