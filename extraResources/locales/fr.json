@@ -1,0 +1,33 @@
+{
+  "general": {
+    "amount": "Montant",
+    "custom_fee": "Frais personnalisés",
+    "decimal_separator": ",",
+    "address": "Adresse",
+    "delegate_address": "Adresse de délégué",
+    "errors": {
+      "address_validation": {
+        "send_address": "Les adresses doivent commencer par TZ1, TZ2, TZ3 ou KT1",
+        "delegate_address": "Vous ne pouvez déléguer qu'à des adresses TZ1, TZ2 ou TZ3.",
+        "length": "Les adresses doivent comprendre 36 caractères.",
+        "special_chars": "Les adresses ne peuvent pas contenir de caractères spéciaux.",
+        "send_funds": "Vous ne pouvez pas vous envoyer des fonds à vous-même."
+      }
+    },
+    "tooltips": {
+      "delegate": {
+        "title": "Choisir en délégué",
+        "content1": "Vous pouvez changer de délégué à tout moment.",
+        "content2": "Changer de délégué entraine des frais.",
+        "content3": "Vous ne pouvez déléguer qu'à une adresse de manageur. Une telle adresse commence par 'tz1'."
+      }
+    }
+  },
+  "login": {
+    "create_new_wallet_btn": "Créer un nouveau portefeuille",
+    "open_exisiting_wallet_btn": "Ouvrir un portefeuille existant",
+    "want_to_import_fundraiser_paper_wallet": "Vous voulez importer votre portefeuille de levée de fond?",
+    "create_named_wallet": "Créer un portefeuille {{name}}",
+    "create_named_wallet_end": "pour commencer."
+  }
+}
