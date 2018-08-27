@@ -340,6 +340,7 @@ class AddressBlock extends Component<Props, State> {
           open={isDelegateModalOpen}
           onCloseClick={this.closeDelegateModal}
           managerBalance={balance}
+          t={t}
         />
       </Container>
     );

@@ -1,11 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import TextField from '../TextField';
-import TezosNumericInput from '../TezosNumericInput/'
-import { wrapComponent } from '../../utils/i18n';
+import TezosNumericInput from '../TezosNumericInput/';
 
 import Modal from '../CustomModal';
 import Tooltip from '../Tooltip/';
@@ -468,7 +467,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(
-  wrapComponent,
-  connect(mapStateToProps, mapDispatchToProps)
-)(AddDelegateModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);
