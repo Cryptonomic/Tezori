@@ -29,7 +29,7 @@ export function fetchDelegationAverageFees() {
 export function validateAddress(address) {
   return async dispatch => {
     const validations = [
-      { value: address, type: 'notEmpty', name: 'Address' },
+      { value: address, type: 'notEmpty', name: 'address' },
       { value: address, type: 'validAddress' }
     ];
 
@@ -58,7 +58,7 @@ export function delegate(
     const walletPassword = state().wallet.get('password');
 
     if (password !== walletPassword) {
-      const error = 'Incorrect password';
+      const error = "components.messageBar.messages.incorrect_password";
       dispatch(addMessage(error, true));
       return false;
     }
@@ -90,7 +90,7 @@ export function delegate(
         && res.results.contents[0].metadata.operation_result;
 
       if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = 'Delegation operation failed';
+        const error = "components.messageBar.messages.delegation_operation_failed";
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
@@ -100,7 +100,7 @@ export function delegate(
       
       dispatch(
         addMessage(
-          `Successfully started delegation update.`,
+          "components.messageBar.messages.success_delegation_update",
           false,
           clearedOperationId
         )

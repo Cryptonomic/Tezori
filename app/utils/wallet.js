@@ -81,7 +81,7 @@ function prepareToLoad(savedWallet, persistedState = {}) {
 export async function loadPersistedState(walletPath, password) {
   const savedWallet = await loadWallet(walletPath, password).catch(err => {
     const errorObj = {
-      name: 'Invalid wallet/password combination.',
+      name: "components.messageBar.messages.invalid_wallet_password",
       ...err
     };
     console.error(errorObj);

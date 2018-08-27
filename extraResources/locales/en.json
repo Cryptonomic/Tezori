@@ -152,7 +152,31 @@
     },
     "messageBar": {
       "operation_id": "OPERATION ID",
-      "view_block_explorer": "View on a block explorer"
+      "view_block_explorer": "View on a block explorer",
+      "messages": {
+        "amount_not_valid": "Amount is not valid.",
+        "address_begin": "Address must begin with tz1 or KT1.",
+        "must_upload": "Must upload a wallet.",
+        "err_not_valid": "[ERR] Not valid parameters.",
+        "amount_small": "Amount is too small.",
+        "amount_not_empty": "Amount must not be empty.",
+        "pass_not_empty": "Pass Phrase must not be empty.",
+        "address_not_empty": "Address must not be empty.",
+        "address_length_36": "Address must be exactly 36 characters.",
+        "pass_length_8": "Pass Phrase must be at least 8 characters.",
+        "incorrect_password": "Incorrect password",
+        "origination_operation_failed": "Origination operation failed",
+        "delegation_operation_failed": "Delegation operation failed",
+        "send_operation_failed": "Send operation failed",
+        "success_address_origination": "Successfully started address origination.",
+        "success_delegation_update": "Successfully started delegation update.",
+        "cant_sent_yourself": "You can't sent money to yourself.",
+        "success_account_activation": "Successfully started account activation.",
+        "identity_exist": "Identity already exist",
+        "success_sent": "Success! You sent {{localeParam}} tz.",
+        "invalid_wallet_password": "Invalid wallet/password combination.",
+        "account_not_exist": "The account does not exist."
+      }
     },
     "pdfReader": {
       "loading": "Loading ..."

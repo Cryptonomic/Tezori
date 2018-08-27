@@ -78,12 +78,13 @@ type Props1 = {
   content: string,
   hash: string,
   isError: boolean,
+  localeParam?: number | string | null,
   openLink: () => {},
   onClose: () => {},
   t: () => {}
 };
 const MessageContent = (props: Props1) => {
-  const { content, hash, openLink, onClose, isError, t } = props;
+  const { content, hash, openLink, onClose, isError, localeParam, t } = props;
   return (
     <MessageContainer isError={isError}>
       <StyledCloseIcon onClick={onClose} />
@@ -91,7 +92,7 @@ const MessageContent = (props: Props1) => {
         {!!hash && (
           <CheckIcon iconName="checkmark2" size={ms(0)} color="white" />
         )}
-        {content}
+        {t(content, {localeParam})}
       </MessageHeader>
       {/* {!!hash && <LinkButton onClick={openLink}>See it on chain</LinkButton>} */}
       {!!hash && (
@@ -137,6 +138,7 @@ class MessageBar extends React.Component<Props> {
     const messageText = message.get('message') || '';
     const hash = message.get('hash') || '';
     const isError = message.get('isError') || false;
+    const localeParam = message.get('localeParam');
 
     return (
       <SnackbarWrapper
@@ -150,6 +152,7 @@ class MessageBar extends React.Component<Props> {
             openLink={() => this.openLink(hash)}
             onClose={clearMessageState}
             isError={isError}
+            localeParam={localeParam}
             t={t}
           />
         }
