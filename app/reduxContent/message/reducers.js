@@ -6,7 +6,7 @@ const emptyMessage = fromJS({
   message: '',
   isError: false,
   hash: '',
-  localeParam: null
+  localeParam: 0
 });
 
 const initState = fromJS({
