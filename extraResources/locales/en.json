@@ -114,7 +114,11 @@
       "generate_other_seed": "Generate Another Seed Pharse",
       "create_account": "Create Account",
       "seed_backup": "Your Tezos account seed is backed up!",
-      "back_to_seed": "Back to Seed Pharse"
+      "back_to_seed": "Back to Seed Pharse",
+      "first_word": "1st Word",
+      "second_word": "2nd Word",
+      "third_word": "3rd Word",
+      "nth_word": "{{index}}th Word"
     },
     "delegate": {
       "delegate_settings": "Delegate Settings",

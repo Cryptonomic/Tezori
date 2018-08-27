@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import TextField from '../TextField';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon';
+import { wrapComponent } from '../../utils/i18n';
 
 const StyledInputContainer = styled.div`
   position: relative;
@@ -43,10 +44,11 @@ type Props = {
   value: string,
   index: number,
   checkValidation: () => {},
-  onEnter: () => {}
+  onEnter: () => {},
+  t: () => {}
 };
 
-export default class InputValidComponent extends Component<Props> {
+class InputValidComponent extends Component<Props> {
   props: Props;
   state = {
     isInputVal: false,
@@ -56,15 +58,16 @@ export default class InputValidComponent extends Component<Props> {
   };
 
   getLabel = index => {
+    const { t } = this.props;
     switch (index) {
       case 1:
-        return '1st Word';
+        return t('components.createAccountSlide.first_word');
       case 2:
-        return '2nd Word';
+        return t('components.createAccountSlide.second_word');
       case 3:
-        return '3rd Word';
+        return t('components.createAccountSlide.third_word');
       default:
-        return `${index}th Word`;
+        return t('components.createAccountSlide.nth_word', {index});
     }
   };
 
@@ -106,7 +109,8 @@ export default class InputValidComponent extends Component<Props> {
   };
 
   render() {
-    const label = this.getLabel(this.props.index);
+    const { index } = this.props;
+    const label = this.getLabel(index);
     const {errorText} = this.state;
     return (
       <StyledInputContainer>
@@ -124,3 +128,5 @@ export default class InputValidComponent extends Component<Props> {
     );
   }
 }
+
+export default wrapComponent(InputValidComponent);
