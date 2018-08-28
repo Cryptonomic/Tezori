@@ -4,25 +4,28 @@ import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as goBackToWallet } from 'react-router-redux';
 import styled, { withTheme } from 'styled-components';
+import i18n from 'i18next';
 import MenuItem from '@material-ui/core/MenuItem';
 import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import AddCircle from '@material-ui/icons/AddCircle';
 import Check from '@material-ui/icons/Check';
 import { ms } from '../../styles/helpers';
-import { H2, H4 } from '../../components/Heading/';
+import { H2 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 import CustomSelect from '../../components/CustomSelect/';
 import { wrapComponent } from '../../utils/i18n';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
-import { setSelected, removeNode } from '../../reduxContent/settings/thunks';
+import { setSelected, removeNode, setLocal } from '../../reduxContent/settings/thunks';
+import localsMap from '../../constants/LocalsMap';
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
-  getTezosNodes
+  getTezosNodes,
+  getLocal
 } from '../../reduxContent/settings/selectors';
 
 type Props = {
@@ -34,7 +37,9 @@ type Props = {
   setSelected: () => {},
   goBack: () => {},
   theme: object,
-  t: () => {}
+  t: () => {},
+  local: string,
+  setLocal: () => {}
 };
 
 const Row = styled.div`
@@ -128,6 +133,19 @@ const ItemWrapper = styled(MenuItem)`
 class SettingsPage extends Component<Props> {
   props: Props;
 
+  static renderOptions() {
+    return Object.keys(localsMap).map((key) => {
+      return (
+        <ItemWrapper
+          key={key}
+          value={key}
+        >
+          <div> { localsMap[key] } </div>
+        </ItemWrapper>
+      );
+    });
+  }
+
   state = {
     type: '',
     isModalOpen: false
@@ -200,7 +218,9 @@ class SettingsPage extends Component<Props> {
       conseilNodes,
       tezosSelectedNode,
       tezosNodes,
-      t
+      t,
+      setLocal,
+      local
     } = this.props;
 
     const { type, isModalOpen } = this.state;
@@ -226,13 +246,25 @@ class SettingsPage extends Component<Props> {
         </BackToWallet>
         <H2>{t("containers.homeSettings.wallet_settings")}</H2>
         <Content>
-          <H4>{t("containers.homeSettings.choose_different_node")}</H4>
           <RowForParts>
+            <Part>
+              <CustomSelect
+                label={t('general.nouns.language')}
+                value={local}
+                onChange={(event) => {
+                  const newValue = event.target.value;
+                  setLocal(newValue);
+                  i18n.changeLanguage(newValue);
+                }}
+              >
+                {SettingsPage.renderOptions()}
+              </CustomSelect>
+            </Part>
             <Part>
               <CustomSelect
                 label="Conseil Nodes"
                 value={conseilSelectedNode}
-                onChange={(event) => {                  
+                onChange={(event) => {
                   const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleConseilChange(newValue);
@@ -251,7 +283,7 @@ class SettingsPage extends Component<Props> {
                 }}
               >
                 {this.renderNodes(conseilNodes, conseilSelectedNode)}
-                <ItemWrapper value='add-more' type="addmore">                  
+                <ItemWrapper value='add-more' type="addmore">
                   <AddCircle
                     style={{
                       fill: '#7B91C0',
@@ -318,7 +350,8 @@ function mapStateToProps(state) {
     conseilSelectedNode: getConseilSelectedNode(state),
     conseilNodes: getConseilNodes(state),
     tezosSelectedNode: getTezosSelectedNode(state),
-    tezosNodes: getTezosNodes(state)
+    tezosNodes: getTezosNodes(state),
+    local: getLocal(state)
   };
 }
 
@@ -328,6 +361,7 @@ function mapDispatchToProps(dispatch) {
       syncWallet,
       setSelected,
       removeNode,
+      setLocal,
       goBack: () => dispatch => dispatch(goBackToWallet())
     },
     dispatch

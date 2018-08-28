@@ -29,7 +29,8 @@
       "details": "Details",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Total Balance"
+      "total_balence": "Total Balance",
+      "language": "Language"
     },
     "decimal_separator": ".",
     "back": "Back",
@@ -249,7 +250,7 @@
     "walletNodesRequired": {
       "configuration_missing": "Node configuration is missing",
       "close_wallet_description": "Please close the wallet and edit 'extraResources/walletSettings.json' and open the wallet again.",
-      "default_wallet_shape": "defaultWalletNodes should look like:"
+      "default_wallet_shape": "walletSettings.json should look like:"
     }
   }
 }
