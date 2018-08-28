@@ -4,11 +4,11 @@ export function getSelectedNode(settings, type) {
   const selected =  type === CONSEIL
     ? settings.conseilSelectedNode
     : settings.tezosSelectedNode;
-  return settings.list.find( node => node.type === type && node.name === selected );
+  return settings.nodesList.find( node => node.type === type && node.name === selected );
 }
 
 export function hasNodes(state) {
-  const list = state.settings.get('list').toJS();
+  const list = state.settings.get('nodesList').toJS();
   let i = 0;
   const l = list.length;
   let hasConseil = false;
