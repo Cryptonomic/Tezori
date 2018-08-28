@@ -1,5 +1,5 @@
 import React, {Fragment, Component} from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import Switch from '@material-ui/core/Switch';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import SeedInput from './SeedInput';
 import PasswordInput from '../PasswordInput';
 import { importAddress } from '../../reduxContent/wallet/thunks';
 import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
+import { wrapComponent } from '../../utils/i18n';
 
 const MainContainer = styled.div`
   position: relative;
@@ -80,15 +81,30 @@ const RestoreButton = styled(Button)`
 `
 type Props1 = {
   type: string,
-  changeFunc: () => {}
+  changeFunc: () => {},
+  t: () => {}
 };
 const RestoreTabs = (props: Props1) => {
-  const { type, changeFunc } = props;
+  const { type, changeFunc, t } = props;
   return (
     <RestoreTabContainer>
-      <RestoreTabItem active={type==='phrase'} onClick={() => changeFunc('phrase')}>SEED PHRASE</RestoreTabItem>
-      {/* <RestoreTabItem active={type==='key'} onClick={() => changeFunc('key')}>PRIVATE KEY</RestoreTabItem> */}
-      <RestoreTabItem active={type==='key'}>PRIVATE KEY</RestoreTabItem>
+      <RestoreTabItem
+        active={type==='phrase'}
+        onClick={() => changeFunc('phrase')}
+      >
+        {t('components.restoreBackup.seed_pharse')}
+      </RestoreTabItem>
+      {/* <RestoreTabItem
+        active={type==='key'}
+        onClick={() => changeFunc('key')}
+      >
+        {t('components.restoreBackup.private_key')}
+      </RestoreTabItem> */}
+      <RestoreTabItem
+        active={type==='key'}
+      >
+        {t('components.restoreBackup.private_key')}
+      </RestoreTabItem>
     </RestoreTabContainer>
   )
 }
@@ -96,7 +112,8 @@ const RestoreTabs = (props: Props1) => {
 
 
 type Props = {
-  importAddress?: () => {}
+  importAddress?: () => {},
+  t: () => {}
 };
 
 class RestoreBackup extends Component<Props> {
@@ -144,6 +161,7 @@ class RestoreBackup extends Component<Props> {
 
   render() {
     const { type, seeds, inputValue, password, isPassword, isShowedPwd, key } = this.state;
+    const { t } = this.props;
     let isdisabled = false;
     if (type === 'phrase') {
       isdisabled = (!seeds.length && !inputValue) ;
@@ -153,7 +171,8 @@ class RestoreBackup extends Component<Props> {
     return(
       <MainContainer>
         <RestoreHeader>
-          Restore from <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} />
+          {t('components.restoreBackup.restore_from')}
+          <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} t={t} />
         </RestoreHeader>
         {type==='phrase' &&
           <Fragment>
@@ -165,7 +184,7 @@ class RestoreBackup extends Component<Props> {
             />
             <ToggleContainer>
               <ToggleLabel>
-                This seed phrase is encrypted with a password
+                {t('components.restoreBackup.seed_encrypted_label')}
               </ToggleLabel>
               <ToggleWrapper
                 onChange={()=> this.setState({isPassword: !isPassword})}
@@ -174,7 +193,7 @@ class RestoreBackup extends Component<Props> {
 
             {isPassword &&
               <PasswordInput
-                label='Seed Pharse Password'
+                label={t('components.restoreBackup.seed_pharse_password')}
                 isShowed={isShowedPwd}
                 password={password}
                 changFunc={(newpassword) => this.setState({ password: newpassword })}
@@ -186,7 +205,7 @@ class RestoreBackup extends Component<Props> {
         }
         {type==='key' &&
           <TextField
-            label="Enter your private key"
+            label={t('components.restoreBackup.enter_private_key')}
             value={key}
             onChange={(newkey) => this.setState({ key: newkey })}
           />
@@ -198,7 +217,7 @@ class RestoreBackup extends Component<Props> {
             disabled={isdisabled}
             onClick={this.importAddress}
           >
-            Restore
+            {t('general.verbs.restore')}
           </RestoreButton>
         </RestoreFooter>
       </MainContainer>
@@ -217,4 +236,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(RestoreBackup);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(RestoreBackup);

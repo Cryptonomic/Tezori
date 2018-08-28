@@ -10,6 +10,7 @@ import Fees from '../Fees/';
 import Loader from '../Loader';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
+import { wrapComponent } from '../../utils/i18n';
 
 const ModalContainer = styled.div`
   padding: 43px 76px 0 76px;
@@ -87,7 +88,8 @@ type Props = {
   isShowedPwd: boolean,
   onShowPwd: () => {},
   isDelegateIssue: boolean,
-  onDelegateIssue: () => {}
+  onDelegateIssue: () => {},
+  t: () => {}
 };
 
 const DelegateConfirmationModal = (props: Props) => {
@@ -107,19 +109,20 @@ const DelegateConfirmationModal = (props: Props) => {
     isShowedPwd,
     onShowPwd,
     isDelegateIssue,
-    onDelegateIssue
+    onDelegateIssue,
+    t
   } = props;
   const isDisabled = isLoading || !newAddress || !password || isDelegateIssue;
 
   return (
     <Modal
-      title='Change Delegate'
+      title={t("components.delegate.change_delegate")}
       open={open}
       onClose={onCloseClick}
       style={{width: '651px'}}
     >
       <ModalContainer>
-        <DelegateTitle>You are currently delegating to</DelegateTitle>
+        <DelegateTitle>{t('components.delegate.current_delegate')}</DelegateTitle>
         <AddressContainer>
           <TezosAddress
             address={address}
@@ -130,7 +133,7 @@ const DelegateConfirmationModal = (props: Props) => {
         </AddressContainer>
         <InputAddressContainer>
           <InputAddress
-            labelText='Change Delegate to New Address' 
+            labelText={t('components.delegateConfirmationModal.new_address_label')}
             addressType="delegate"
             tooltip={false}
             changeDelegate={onAddressChange}
@@ -149,14 +152,13 @@ const DelegateConfirmationModal = (props: Props) => {
         <WarningContainer>
           <TezosIcon iconName="info" size={ms(5)} color="info" />
           <InfoText>
-            Your delegation change will not show up until the change is
-            confirmed on the blockchain.
+            {t('components.delegateConfirmationModal.delegate_warning')}
           </InfoText>
         </WarningContainer>
       </ModalContainer>
       <BottomContainer>
         <PasswordInput
-          label='Wallet Password'
+          label={t("general.nouns.wallet_password")}
           isShowed={isShowedPwd}
           password={password}
           changFunc={handlePasswordChange}
@@ -169,7 +171,7 @@ const DelegateConfirmationModal = (props: Props) => {
           small
           onClick={onDelegate}
         >
-          Change Delegate
+          {t('components.delegate.change_delegate')}
         </DelegateButton>
       </BottomContainer>
       {isLoading && <Loader />}
@@ -183,4 +185,4 @@ DelegateConfirmationModal.defaultProps = {
   password: '',
   isLoading: false
 };
-export default DelegateConfirmationModal;
+export default wrapComponent(DelegateConfirmationModal);

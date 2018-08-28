@@ -1,8 +1,16 @@
 import { fromJS } from 'immutable';
 import * as matchers from 'jest-immutable-matchers';
 
-import nodes, { initialState } from '../../../app/reduxContent/nodes/reducers';
-import * as actions from '../../../app/reduxContent/nodes/actions';
+jest.mock('electron', () => ({
+  remote: {
+    app: {
+      getLocale: () => []
+    }
+  }
+}))
+
+import nodes, { initialState } from '../../../app/reduxContent/settings/reducers';
+import * as actions from '../../../app/reduxContent/settings/actions';
 
 const initState = fromJS(initialState);
 
@@ -43,7 +51,7 @@ describe('nodes SET_SELECTED reducer', () => {
 describe('nodes ADD_NODE reducer', () => {
 
   test('should return state with new node', () => {
-    const expectedState = initState.update('list', list => list.push('testNode'))
+    const expectedState = initState.update('nodesList', nodesList => nodesList.push('testNode'))
     expect(nodes(undefined, actions.addNode('testNode'))).toEqualImmutable(expectedState);
   });
 
@@ -52,8 +60,8 @@ describe('nodes ADD_NODE reducer', () => {
 describe('nodes REMOVE_NODE reducer', () => {
 
   test('should remove Cryptonomic-Nautilus node', () => {
-    const expectedState = initState.update('list', list =>  
-    list.filter(item =>  item.get('name') !== 'Cryptonomic-Nautilus'
+    const expectedState = initState.update('nodesList', nodesList =>  
+    nodesList.filter(item =>  item.get('name') !== 'Cryptonomic-Nautilus'
   ))
     expect(nodes(undefined, actions.removeNode('Cryptonomic-Nautilus'))).toEqualImmutable(expectedState);
   });
@@ -63,7 +71,7 @@ describe('nodes REMOVE_NODE reducer', () => {
 describe('nodes UPDATE_NODE reducer', () => {
 
   test('should update last node', () => {
-    const expectedState = initState.update('list',  list => list.set(-1, 'testNode'))
+    const expectedState = initState.update('nodesList',  nodesList => nodesList.set(-1, 'testNode'))
     expect(nodes(undefined, actions.updateNode('testNode'))).toEqualImmutable(expectedState);
   });
 

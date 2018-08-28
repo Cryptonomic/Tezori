@@ -5,9 +5,11 @@ import { Document, Page } from 'react-pdf/dist/entry.noworker';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { ms } from '../../styles/helpers';
 import { fileToDataURL } from '../../utils/file';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
-  pdfUrl?: string
+  pdfUrl?: string,
+  t: () => {}
 };
 
 const Container = styled.div`
@@ -23,7 +25,7 @@ const initialState = {
   pdf: null
 };
 
-export default class Delegate extends Component<Props> {
+class PdfReader extends Component<Props> {
   props: Props;
   state = initialState;
 
@@ -48,11 +50,12 @@ export default class Delegate extends Component<Props> {
 
   render() {
     const { numPages, pdf, fetching } = this.state;
+    const { t } = this.props;
 
     return (
       <Container>
         {fetching ? (
-          <LoadingPdf>Loading ...</LoadingPdf>
+          <LoadingPdf>{t("components.pdfReader.loading")}</LoadingPdf>
         ) : (
           <Document file={pdf} onLoadSuccess={this.onDocumentLoadSuccess}>
             {Array.from(new Array(numPages), (el, index) => (
@@ -64,3 +67,5 @@ export default class Delegate extends Component<Props> {
     );
   }
 }
+
+export default wrapComponent(PdfReader);

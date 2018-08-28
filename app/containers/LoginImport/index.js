@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
@@ -13,10 +13,12 @@ import Loader from '../../components/Loader';
 import PasswordInput from '../../components/PasswordInput';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   login: () => {},
-  goBack: () => {}
+  goBack: () => {},
+  t: () => {}
 };
 
 const BackToWallet = styled.div`
@@ -118,7 +120,7 @@ class LoginImport extends Component<Props> {
   }
 
   render() {
-    const { goBack } = this.props;
+    const { goBack, t } = this.props;
     const { walletFileName, password, isLoading, isShowedPwd } = this.state;
     const isDisabled = isLoading || !walletFileName || !password;
 
@@ -138,22 +140,22 @@ class LoginImport extends Component<Props> {
                 marginLeft: '-9px'
               }}
             />
-            <span>Back</span>
+            <span>{t('general.back')}</span>
           </BackToWallet>
 
           <WalletTitle>
-            Open an existing wallet
+            {t('containers.loginImport.open_wallet_label')}
           </WalletTitle>
           <ImportButtonContainer>
             <Button buttonTheme="secondary" onClick={this.openFile} small>
-              Select Wallet File
+              {t('containers.loginImport.select_file_btn')}
             </Button>
             <WalletFileName>
               { walletFileName }
             </WalletFileName>
           </ImportButtonContainer>
           <PasswordInput
-            label='Wallet Password'
+            label={t('general.nouns.wallet_password')}
             isShowed={isShowedPwd}
             password={password}
             changFunc={(newpassword) => this.setState({ password: newpassword })}
@@ -165,7 +167,7 @@ class LoginImport extends Component<Props> {
               buttonTheme="primary"
               disabled={isDisabled}
             >
-              Import
+              {t('general.verbs.import')}
             </ActionButton>
           </ActionButtonContainer>
         </WalletContainers>
@@ -184,4 +186,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(LoginImport);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(LoginImport);

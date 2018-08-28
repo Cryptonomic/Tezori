@@ -79,48 +79,49 @@ class Fee extends Component<Props> {
       fee,
       t
     } = this.props;
+    const customFeeLabel = t('components.fees.custom_fee');
 
     return (
       <Fragment>
         <CustomSelect
-          label='Fee'
+          label={t('general.nouns.fee')}
           value={fee}
           onChange={this.onFeeChange}
         >
           <ItemWrapper value={low}>
-            Low Fee: {formatAmount(low)}{' '}
+            {t('components.fees.low_fee')}: {formatAmount(low)}{' '}
             <TezosIcon color="black" iconName="tezos" />
           </ItemWrapper>
           <ItemWrapper value={medium}>
-            Medium Fee: {formatAmount(medium)}{' '}
+            {t('components.fees.medium_fee')}: {formatAmount(medium)}{' '}
             <TezosIcon color="black" iconName="tezos" />
           </ItemWrapper>
           <ItemWrapper value={high}>
-            High Fee: {formatAmount(high)}{' '}
+            {t('components.fees.high_fee')}: {formatAmount(high)}{' '}
             <TezosIcon color="black" iconName="tezos" />
           </ItemWrapper>
           {custom ? (
             <ItemWrapper value={tezToUtez(custom.replace(/,/g,'.'))}>
-              Custom Fee: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
+              {customFeeLabel}: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
               <TezosIcon color="black" iconName="tezos" />
             </ItemWrapper>
           ) : null}
           <ItemWrapper value="custom">
-            Custom
+            {t('components.fees.custom')}
           </ItemWrapper>
         </CustomSelect>
         <Modal
-          title='Enter Custom Amount'
+          title={t('components.fees.enter_custom_amount')}
           open={open}
           onClose={this.closeConfirmation}
         >
           <ModalContent>
-            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={customFeeLabel} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
             >
-              Set Custom Fee
+              {t('components.fees.set_custom_fee')}
             </StyledSaveButton>
           </ModalContent>
         </Modal>

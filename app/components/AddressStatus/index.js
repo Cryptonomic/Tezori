@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { darken } from 'polished';
 import { ms } from '../../styles/helpers';
 import LoaderSpinner from '../LoaderSpinner/';
+import { wrapComponent } from '../../utils/i18n';
 
 import * as statuses from '../../constants/StatusTypes';
 
@@ -35,26 +36,23 @@ type Props = {
   isManager?: boolean,
   isActive?: boolean,
   address?: object,
-  onClick?: () => {}
+  onClick?: () => {},
+  t: () => {}
 };
 
-export default function AddressStatus(props: Props) {
-  const { isManager, isActive, address, onClick } = props;
+function AddressStatus(props: Props) {
+  const { isManager, isActive, address, onClick, t} = props;
 
   const status = address.get('status');
-
   let text = '';
+  const typeText = t((isManager ? 'components.addressStatus.your_account' : 'components.addressStatus.new_address'));
   switch (status) {
     case statuses.CREATED:
     case statuses.FOUND:
-      text = isManager
-        ? 'Retrieving your account...'
-        : 'Retrieving new address...';
+      text = t('components.addressStatus.retrieving_title', {typeText});
       break;
     case statuses.PENDING:
-      text = isManager
-        ? 'Preparing your account...'
-        : 'Preparing new address...';
+      text = t('components.addressStatus.preparing_title', {typeText});
       break;
     default:
       break;
@@ -73,3 +71,5 @@ export default function AddressStatus(props: Props) {
     </Container>
   );
 }
+
+export default wrapComponent(AddressStatus);

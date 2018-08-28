@@ -1,7 +1,9 @@
 import React from 'react';
+import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import { ms } from '../../styles/helpers';
+import { wrapComponent } from '../../utils/i18n';
 
 const Back = styled.div`
   display: flex;
@@ -12,11 +14,12 @@ const Back = styled.div`
 `;
 
 type Props = {
-  onClick: Function
+  onClick: () => {},
+  t: () => {}
 };
 
 const BackButton = (props: Props) => {
-  const { onClick } = props;
+  const { onClick, t } = props;
   return (
     <Back onClick={onClick}>
       <BackCaret
@@ -28,9 +31,9 @@ const BackButton = (props: Props) => {
           marginLeft: '-9px'
         }}
       />
-      <span>Back</span>
+      <span>{t("general.back")}</span>
     </Back>
   );
 };
 
-export default withTheme(BackButton);
+export default compose(wrapComponent, withTheme)(BackButton);

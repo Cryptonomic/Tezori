@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
+import { Trans } from 'react-i18next';
 import { H2 } from '../Heading';
 import Button from '../Button';
 import { ms } from '../../styles/helpers';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   background-color: ${({ theme: { colors } }) => colors.white};
@@ -61,11 +63,12 @@ const customStyles = {
 type Props = {
   isOpen: boolean,
   goTo: () => {},
-  agreeTermsAndPolicy: () => {}
+  agreeTermsAndPolicy: () => {},
+  t: () => {}
 };
 
 const TermsModal = (props: Props) => {
-  const { goTo, isOpen, agreeTermsAndPolicy } = props;
+  const { goTo, isOpen, agreeTermsAndPolicy, t } = props;
 
   const openTermsService = () => goTo('conditions/termsOfService');
   const openPrivacyPolicy = () => goTo('conditions/privacyPolicy');
@@ -73,19 +76,21 @@ const TermsModal = (props: Props) => {
   return (
     <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
       <Container>
-        <Title>Hi there!</Title>
+        <Title>{t("components.termsModal.hi_there")}</Title>
         <Description>
-          Before we get started, please read and accept our
-          <Link onClick={openTermsService}> Terms of Service </Link>
-          and
-          <Link onClick={openPrivacyPolicy}> Privacy Policy </Link>
+          <Trans i18nKey="components.termsModal.description">
+            Before we get started, please read and accept our
+            <Link onClick={openTermsService}> Terms of Service </Link>
+            and
+            <Link onClick={openPrivacyPolicy}> Privacy Policy</Link>
+          </Trans>
         </Description>
         <Button buttonTheme="primary" onClick={agreeTermsAndPolicy}>
-          I agree
+          {t("components.termsModal.i_agree")}
         </Button>
       </Container>
     </Modal>
   );
 };
 
-export default TermsModal;
+export default wrapComponent(TermsModal);
