@@ -45,10 +45,10 @@ export function createNewAccount(
     const amountInUtez = tezToUtez(parsedAmount);
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount' },
+      { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
       { value: amountInUtez, type: 'posNum', name: 'Amount' },
-      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase' },
+      { value: passPhrase, type: 'notEmpty', name: 'pass' },
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' }
     ];
 
@@ -59,7 +59,7 @@ export function createNewAccount(
     }
 
     if (passPhrase !== walletPassword) {
-      const error = 'Incorrect password';
+      const error = "components.messageBar.messages.incorrect_password";
       dispatch(addMessage(error, true));
       return false;
     }
@@ -96,7 +96,7 @@ export function createNewAccount(
         && newAccount.results.contents[0].metadata.operation_result;
 
       if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = 'Origination operation failed';
+        const error = "components.messageBar.messages.origination_operation_failed";
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
@@ -136,7 +136,7 @@ export function createNewAccount(
       // todo: add transaction
       dispatch(
         addMessage(
-          `Successfully started address origination.`,
+          "components.messageBar.messages.success_address_origination",
           false,
           operationId
         )

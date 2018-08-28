@@ -355,7 +355,7 @@ export function importAddress(
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
-                `Successfully started account activation.`,
+                "components.messageBar.messages.success_account_activation",
                 false,
                 operationId
               )
@@ -383,7 +383,7 @@ export function importAddress(
           ).catch(() => false);
           
           if (!account) {
-            const title = 'The account does not exist.';
+            const title = "components.messageBar.messages.account_not_exist";
             const err = new Error(title);
             err.name = title;
             throw err;
@@ -415,7 +415,7 @@ export function importAddress(
           dispatch(push('/home'));
           await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
         } else {
-          dispatch(addMessage('Identity already exist', true));
+          dispatch(addMessage("components.messageBar.messages.identity_exist", true));
         }
       }
     } catch (e) {

@@ -111,7 +111,7 @@ class Fee extends Component<Props> {
           </ItemWrapper>
         </CustomSelect>
         <Modal
-          title='Enter Custom Amount'
+          title={t('components.fees.enter_custom_amount')}
           open={open}
           onClose={this.closeConfirmation}
         >

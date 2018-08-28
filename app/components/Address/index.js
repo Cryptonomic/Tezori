@@ -71,7 +71,7 @@ function Address(props: Props) {
           color={isActive ? 'white' : 'secondary'}
         />
         {t('components.address.manager_address')}
-        <Tooltip position="bottom" content={ManagerAddressTooltip}>
+        <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
           <Button buttonTheme="plain">
             <HelpIcon
               iconName="help"

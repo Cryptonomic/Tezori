@@ -144,7 +144,7 @@ function BalanceBanner(props: Props) {
           {addressLabel}
 
           {isManagerAddress && (
-            <Tooltip position="bottom" content={ManagerAddressTooltip}>
+            <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
               <Button buttonTheme="plain">
                 <HelpIcon iconName="help" size={ms(0)} color="white" />
               </Button>
