@@ -9,6 +9,7 @@ import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
+import LanguageSelector from '../../components/LanguageSelector/';
 import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 
@@ -259,6 +260,7 @@ class LoginHome extends Component<Props> {
               >
                 {t('containers.loginHome.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
+              <LanguageSelector />
               <Tip>
                 <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
