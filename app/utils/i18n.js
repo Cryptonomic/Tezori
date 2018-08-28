@@ -7,7 +7,7 @@ import path from 'path';
 export function createIl8nInstance(local) {
   return i18n.use(Backend).init({
     lng: local,
-    fallbackLng: 'en',
+    fallbackLng: 'en-US',
     initImmediate: false,
     debug: true,
     backend: {
