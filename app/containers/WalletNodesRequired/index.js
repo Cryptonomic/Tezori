@@ -37,17 +37,17 @@ const preContent = `
   {
     "tezosSelectedNode": "tezosName",
     "conseilSelectedNode": "conseilName",
-    "list": [
+    "nodesList": [
       {
         "name": "tezosName",
         "type": "TEZOS",
-        "url": "https://127.0.0.1:19731/",
+        "url": "https://127.0.0.1:8732/",
         "apiKey": "apiKey"
       },
       {
         "name": "conseilName",
         "type": "CONSEIL",
-        "url": "https://127.0.0.1:19731/",
+        "url": "https://127.0.0.1:1337/",
         "apiKey": "apiKey"
       }
     ]
