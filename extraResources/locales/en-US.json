@@ -204,6 +204,10 @@
       "send_confirmation": "Send Confirmation",
       "confirm_question": "Do you confirm that you want to send"
     },
+    "settingController": {
+      "settings": "SETTINGS",
+      "logout": "LOG OUT"
+    },
     "termsModal": {
       "hi_there": "Hi there!",
       "i_agree": "I agree",
