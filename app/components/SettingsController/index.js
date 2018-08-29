@@ -1,55 +1,64 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import styled from 'styled-components';
 
+import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
-import settingsIcon from '../../../resources/settings.png';
-import logoutIcon from '../../../resources/logout.png';
+import { wrapComponent } from '../../utils/i18n';
 import { goHomeAndClearState } from '../../reduxContent/wallet/thunks';
+import { ms } from '../../styles/helpers';
 
 const Container = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const Icon = styled.img`
+const ButtonContainer = styled(Button)`
+  text-align: center;
+  width: 67px;
+  color: ${({ theme: { colors } }) => colors.primary};
+  opacity: 0.6;
+`;
+
+const ButtonText = styled.div`
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  line-height: 28px;
+`;
+const Icon = styled(TezosIcon)`
   cursor: pointer;
-`;
-
-const SettingsIcon = styled(Icon)`
-  height: 80px;
-`;
-
-const LogoutIcon = styled(Icon)`
-  height: 65px;
 `;
 
 const Separator = styled.div`
   border-right: 2px solid #a8b6d5;
-  margin-right: 8px;
-  height: 50px;
+  margin-top: -11px;
+  height: 40px;
 `;
 
 type Props = {
   goHomeAndClearState: () => {},
-  goSettings: () => {}
+  goSettings: () => {},
+  t: () => {}
 };
 
 class SettingsController extends Component<Props> {
   render() {
-    const { goHomeAndClearState, goSettings } = this.props;
+    const { goHomeAndClearState, goSettings, t } = this.props;
     return (
       <Container>
-        <Button onClick={goSettings} buttonTheme="plain">
-          <SettingsIcon alt="Settings" src={settingsIcon} />
-        </Button>
+        <ButtonContainer onClick={goSettings} buttonTheme="plain">
+          <Icon size={ms(2.2)} color="primary" iconName='settings' />
+          <ButtonText>{t('components.settingController.settings')}</ButtonText>
+        </ButtonContainer>
         <Separator />
-        <Button onClick={goHomeAndClearState} buttonTheme="plain">
-          <LogoutIcon alt="Logout" src={logoutIcon} />
-        </Button>
+        <ButtonContainer onClick={goHomeAndClearState} buttonTheme="plain">
+          <Icon size={ms(2.2)} color="primary" iconName='logout' />
+          <ButtonText>{t('components.settingController.logout')}</ButtonText>
+        </ButtonContainer>
       </Container>
     );
   }
@@ -65,4 +74,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(SettingsController);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(SettingsController);

@@ -72,6 +72,14 @@ const getIconByName = iconName => {
       return toUnicode('e909');
     }
 
+    case 'logout': {
+      return toUnicode('e90a');
+    }
+
+    case 'settings': {
+      return toUnicode('e90b');
+    }    
+
     case 'checkmark2': {
       return toUnicode('e90e');
     }
