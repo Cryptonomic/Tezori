@@ -172,7 +172,10 @@ class ActionPanel extends Component<Props, State> {
         const pageCount = Math.ceil(JSTransactions.length / itemsCount);
 
         const firstNumber = (this.state.currentPage - 1) * itemsCount;
-        const lastNumber = this.state.currentPage * itemsCount;
+        let lastNumber = this.state.currentPage * itemsCount;
+        if (lastNumber>JSTransactions.length) {
+          lastNumber = JSTransactions.length;
+        }
         const showedTransactions = JSTransactions.slice(
           firstNumber,
           lastNumber
@@ -199,7 +202,9 @@ class ActionPanel extends Component<Props, State> {
             {pageCount > 1 && (
               <PageNumbers
                 currentPage={this.state.currentPage}
-                numberOfPages={pageCount}
+                totalNumber={JSTransactions.length}
+                firstNumber={firstNumber}
+                lastNumber={lastNumber}
                 onClick={currentPage => this.setState({ currentPage })}
               />
             )}
