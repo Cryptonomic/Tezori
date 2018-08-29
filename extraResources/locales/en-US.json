@@ -62,7 +62,7 @@
       "empty-title": "You have not made any transactions yet"
     },
     "addDelegateModal": {
-      "gas_tool_tip": "{{gas}} tz is required by the network to create a delegate address",
+      "gas_tool_tip": "{{gas}} tz is required by the network to create a delegated address",
       "warning1": "Total exceeds available funds",
       "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
       "add_delegate_title": "Add a Delegate"
@@ -112,10 +112,10 @@
         "description2": "Make sure to keep your seed phrase in a safe place. If you forget your seed phrase, you will not be able to recover your account. We do not store your seed phrase and cannot help you recover it if you lose it.",
         "description3": "In order to ensure that you wrote down up your seed phrase, please type in the following four seed words."
       },
-      "generate_other_seed": "Generate Another Seed Pharse",
+      "generate_other_seed": "Generate Another Seed Phrase",
       "create_account": "Create Account",
       "seed_backup": "Your Tezos account seed is backed up!",
-      "back_to_seed": "Back to Seed Pharse",
+      "back_to_seed": "Back to Seed Phrase",
       "first_word": "1st Word",
       "second_word": "2nd Word",
       "third_word": "3rd Word",
@@ -145,14 +145,14 @@
       "contents": {
         "content1": "You can always change the delegate at a later time.",
         "content2": "There is a fee for changing the delegate.",
-        "content3": "You can only delegate to the Manager Address. The Manager Address always starts with 'tz1'."
+        "content3": "You can only delegate to the Manager Address. Manager Addresses always starts with TZ1, TZ2 or TZ3."
       },
       "errors": {
         "send_address": "Addresses can only start TZ1, TZ2, TZ3 or KT1",
         "delegate_address": "You can only delegate to TZ1, TZ2 or TZ3 addresses.",
         "length": "Addresses must be 36 characters long.",
         "special_chars": "Addresses cannot contain any special characters.",
-        "send_funds": "You cannot send funds to yourself."        
+        "send_funds": "You cannot send funds to yourself."
       }
     },
     "messageBar": {
@@ -175,7 +175,7 @@
         "send_operation_failed": "Send operation failed",
         "success_address_origination": "Successfully started address origination.",
         "success_delegation_update": "Successfully started delegation update.",
-        "cant_sent_yourself": "You can't sent money to yourself.",
+        "cant_sent_yourself": "You cannot send funds to yourself.",
         "success_account_activation": "Successfully started account activation.",
         "identity_exist": "Identity already exist",
         "success_sent": "Success! You sent {{localeParam}} tz.",
@@ -189,9 +189,9 @@
     "restoreBackup": {
       "restore_from": "Restore from ",
       "seed_encrypted_label": "This seed phrase is encrypted with a password",
-      "seed_pharse_password": "Seed Pharse Password",
+      "seed_phrase_password": "Seed Phrase Password",
       "enter_private_key": "Enter your private key",
-      "seed_pharse": "SEED PHRASE",
+      "seed_phrase": "SEED PHRASE",
       "private_key": "PRIVATE KEY"
     },
     "send": {
@@ -272,7 +272,7 @@
       "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
       "crack_time_description": "It will take <span>{{time}}</span> to crack!",
       "password_not_strong": "Your password is not strong enough.",
-      "add_another_word": " Add another word or two.",
+      "add_another_word": "Add another word or two.",
       "you_almost_there": "You are almost there!",
       "you_got_it": "You got it!",
       "password_dont_match": "Passwords don't Match!",
