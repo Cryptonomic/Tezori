@@ -1,9 +1,8 @@
 import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
-import { remote } from 'electron';
 import {
   SET_SELECTED,
-  SET_LOCAL,
+  SET_LOCALE,
   ADD_NODE,
   REMOVE_NODE,
   UPDATE_NODE,
@@ -11,11 +10,12 @@ import {
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
 import { getWalletSettings } from '../../utils/settings';
+import { getDefaultLocale } from '../../utils/i18n';
 
 const walletSettings = getWalletSettings();
 
 const baseDefaults = {
-  local: remote.app.getLocale(),// get electron local here
+  locale: getDefaultLocale(),// get electron local here
   tezosSelectedNode: '',
   conseilSelectedNode: '',
   nodesList: []
@@ -32,8 +32,8 @@ export default handleActions({
       ? state.set('conseilSelectedNode', action.selected)
       : state.set('tezosSelectedNode', action.selected);
   },
-  [ SET_LOCAL ]: (state, action) => {
-    return state.set('local', action.local);
+  [ SET_LOCALE ]: (state, action) => {
+    return state.set('locale', action.locale);
   },
   [ ADD_NODE ]: (state, action) => {
     const newNode = action.node;

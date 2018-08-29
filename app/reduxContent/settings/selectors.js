@@ -11,8 +11,8 @@ export const getTezosSelectedNode = createSelector(getSettings, settings =>
   settings.get('tezosSelectedNode')
 );
 
-export const getLocal = createSelector(getSettings, settings =>
-  settings.get('local')
+export const getLocale = createSelector(getSettings, settings =>
+  settings.get('locale')
 );
 
 export const getNodesList = createSelector(getSettings, settings =>
