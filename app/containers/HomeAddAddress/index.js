@@ -205,14 +205,14 @@ class AddAddress extends Component<Props> {
 
   renderTab = tabName => {
     const { activeTab } = this.state;
-
+    const { t } = this.props;
     return (
       <Tab
         key={tabName}
         isActive={tabName === activeTab}
         onClick={() => this.setState({ activeTab: tabName })}
       >
-        {tabName}
+        {t(tabName)}
       </Tab>
     );
   };

@@ -116,7 +116,7 @@ const DelegateConfirmationModal = (props: Props) => {
 
   return (
     <Modal
-      title='Change Delegate'
+      title={t("components.delegate.change_delegate")}
       open={open}
       onClose={onCloseClick}
       style={{width: '651px'}}

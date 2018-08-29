@@ -6,5 +6,6 @@ export const createMessage = actionCreator(
   ADD_MESSAGE,
   'message',
   'isError',
-  'hash'
+  'hash',
+  'localeParam'
 );

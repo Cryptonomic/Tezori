@@ -5,7 +5,8 @@ import { CLEAR_MESSAGE_STATE, ADD_MESSAGE } from './types';
 const emptyMessage = fromJS({
   message: '',
   isError: false,
-  hash: ''
+  hash: '',
+  localeParam: 0
 });
 
 const initState = fromJS({
@@ -20,7 +21,8 @@ export default function messages(state = initState, action) {
       const message = emptyMessage
         .set('message', action.message)
         .set('isError', action.isError)
-        .set('hash', action.hash);
+        .set('hash', action.hash)
+        .set('localeParam', action.localeParam);
       return state.set('message', message);
     }
     case LOGOUT:

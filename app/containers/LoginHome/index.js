@@ -240,7 +240,7 @@ class LoginHome extends Component<Props> {
         <DefaultContainer>
           <Section>
             <AppName>{name}</AppName>
-            <AppSubtitle>{tagline}</AppSubtitle>
+            <AppSubtitle>{t(tagline)}</AppSubtitle>
           </Section>
           <Section>
             <WalletContainers>

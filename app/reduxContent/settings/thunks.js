@@ -1,7 +1,7 @@
 import { setWalletSettings } from '../../utils/settings';
 import {
   setSelected as _setSelected,
-  setLocal as _setLocal,
+  setLocale as _setLocale,
   addNode as _addNode,
   removeNode as _removeNode,
   updateNode as _updateNode
@@ -16,9 +16,9 @@ export function setSelected(name, target) {
   };
 }
 
-export function setLocal(local) {
+export function setLocale(locale) {
   return (dispatch, state) => {
-    dispatch(_setLocal(local));
+    dispatch(_setLocale(locale));
     setWalletSettings(getSettings(state()).toJS());
   };
 }
