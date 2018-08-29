@@ -264,10 +264,11 @@ class LoginHome extends Component<Props> {
               <Tip>
                 <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
-                  <Link onClick={() => this.goTo('create')}>
-                    <Strong>{t('containers.loginHome.create_named_wallet', { name })}</Strong>
-                  </Link>{' '}
-                  {t('containers.loginHome.create_named_wallet_end')}
+                  <Trans i18nKey="containers.loginHome.create_named_wallet" name={name}>
+                    <Link onClick={() => this.goTo('create')}>
+                      <Strong>Create a {name} wallet</Strong>
+                    </Link> first.                    
+                  </Trans>
                 </div>
               </Tip>
             </WalletContainers>

@@ -258,8 +258,7 @@
       "create_new_wallet_btn": "Create New Wallet",
       "open_exisiting_wallet_btn": "Open Existing Wallet",
       "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
-      "create_named_wallet": "Create a {{name}} wallet",
-      "create_named_wallet_end": "first.",
+      "create_named_wallet": "<0><0>Create a <1>{{name}}</1> wallet</0></0> first.",
       "tagline": "A community wallet for Tezos",
       "app_name": "Tezori"
     },
