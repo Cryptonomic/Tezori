@@ -212,8 +212,8 @@ export function generateNewMnemonic() {
   return generateMnemonic();
 }
 
-export async function fetchAverageFees(nodes, operationKind) {
-  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
+export async function fetchAverageFees(settings, operationKind) {
+  const { url, apiKey } = getSelectedNode(settings, CONSEIL);
   const emptyFilter = getEmptyTezosFilter();
   const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
   return await getAverageFees(url, feeFilter, apiKey);

@@ -1,6 +1,6 @@
 import configureStore from 'redux-mock-store';
 
-import * as actions from '../../../app/reduxContent/nodes/actions';
+import * as actions from '../../../app/reduxContent/settings/actions';
 
 const mockStore = configureStore();
 const store = mockStore();

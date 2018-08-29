@@ -29,31 +29,31 @@ export default function hasError(value, validateType, name) {
   switch(validateType) {
     case 'validAmount':
       if ( !_.isFinite(value) ) {
-        return `Amount is not valid.`;
+        return "components.messageBar.messages.amount_not_valid";
       }
       break;
     case 'posNum':
       if ( value < 1 ) {
-        return `${name} is too small.`;
+        return "components.messageBar.messages.amount_small";
       }
       break;
     case 'validAddress':
       if ( value.length < 36 ) {
-        return hasLength(36, 'Address');
+        return "components.messageBar.messages.address_length_36";
       }
       
       if ( !RegExp('^tz1|^KT1').test(value)) {
-        return `Address must begin with tz1 or KT1.`;
+        return "components.messageBar.messages.address_begin";
       }
       break;
     case 'notEmpty':
       if ( !value ) {
-        return `${name} must not be empty.`;
+        return `components.messageBar.messages.${name}_not_empty`;
       }
       break;
     case 'locationFilled':
       if ( !value.length ) {
-        return 'Must upload a wallet.';
+        return "components.messageBar.messages.must_upload";
       }
       break;
     // case 'validJS':
@@ -65,12 +65,12 @@ export default function hasError(value, validateType, name) {
     //   break;
     case 'minLength8': 
       if ( value.length < 8 ) {
-        return minLength(8, name);
+        return "components.messageBar.messages.pass_length_8";
       }
       break;
     case 'samePassPhrase':
       if ( !(Array.isArray(value ) && value.length == 2) ) {
-        return '[ERR] Not valid parameters.';
+        return "components.messageBar.messages.err_not_valid";
       }
 
       if ( value[0] !== value[1] ) {

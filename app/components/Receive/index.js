@@ -6,9 +6,11 @@ import styled from 'styled-components';
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
 import { H4 } from '../Heading/';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
-  address: string
+  address: string,
+  t: () => {}
 };
 
 const CopyConfirmationTooltip = styled.div`
@@ -66,7 +68,7 @@ const QRCodeContainer = styled.canvas`
   }
 `;
 
-export default class Receive extends Component<Props> {
+class Receive extends Component<Props> {
   props: Props;
 
   state = {
@@ -121,7 +123,7 @@ export default class Receive extends Component<Props> {
   };
 
   render() {
-    const { address } = this.props;
+    const { address, t } = this.props;
 
     return (
       <ReceiveContainer>
@@ -129,13 +131,15 @@ export default class Receive extends Component<Props> {
         <HashContainer>
           <Hash>{address}</Hash>
           <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
-            Copied!
+            {t('components.copyIcon.copied')}
           </CopyConfirmationTooltip>
           <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
-            Copy Address
+            {t('general.verbs.copy_address')}
           </Button>
         </HashContainer>
       </ReceiveContainer>
     );
   }
 }
+
+export default wrapComponent(Receive);

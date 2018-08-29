@@ -23,8 +23,8 @@ const { sendTransactionOperation } = TezosOperations;
 
 export function fetchTransactionAverageFees() {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
-    const averageFees = await fetchAverageFees(nodes, 'transaction');
+    const settings = state().settings.toJS();
+    const averageFees = await fetchAverageFees(settings, 'transaction');
     return averageFees;
   };
 }
@@ -35,7 +35,7 @@ export function validateAmount(amount, toAddress) {
     const amountInUtez = tezToUtez(parseFloat(parsedAmount));
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount' },
+      { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
       { value: amountInUtez, type: 'posNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
@@ -60,7 +60,7 @@ export function sendTez(
   selectedParentHash
 ) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -72,18 +72,18 @@ export function sendTez(
     );
 
     if (password !== walletPassword) {
-      const error = 'Incorrect password';
+      const error = "components.messageBar.messages.incorrect_password";
       dispatch(addMessage(error, true));
       return false;
     }
 
     if (toAddress === selectedAccountHash) {
-      const error = 'You cant sent money to yourself.';
+      const error = "components.messageBar.messages.cant_sent_yourself";
       dispatch(addMessage(error, true));
       return false;
     }
 
-    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+    const { url, apiKey } = getSelectedNode(settings, TEZOS);
     console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
     const res = await sendTransactionOperation(
@@ -109,7 +109,7 @@ export function sendTez(
         && res.results.contents[0].metadata.operation_result;
 
       if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = 'Send operation failed';
+        const error = "components.messageBar.messages.send_operation_failed";
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
@@ -159,9 +159,10 @@ export function sendTez(
       
       dispatch(
         addMessage(
-          `Success! You sent ${amount} tz.`,
+          "components.messageBar.messages.success_sent",
           false,
-          clearedOperationId
+          clearedOperationId,
+          amount
         )
       );
       return true;

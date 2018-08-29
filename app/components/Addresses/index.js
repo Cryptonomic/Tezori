@@ -11,6 +11,7 @@ import AddressBlock from '../AddressBlock/';
 import Tooltip from '../Tooltip/';
 import { syncAccountOrIdentity } from '../../reduxContent/wallet/thunks';
 import { sortArr } from '../../utils/array';
+import { wrapComponent } from '../../utils/i18n';
 
 type Account = {
   accountId: string,
@@ -63,7 +64,8 @@ type Props = {
   selectedAccountHash: string,
   theme: object,
   history: object,
-  selectedParentHash: string
+  selectedParentHash: string,
+  t: () => {}
 };
 
 class Addresses extends Component<Props> {
@@ -76,17 +78,18 @@ class Addresses extends Component<Props> {
       selectedAccountHash,
       selectedParentHash,
       identities,
-      theme: { colors }
+      theme: { colors },
+      t
     } = this.props;
     return (
       <Container>
         <AccountTitle>
-          <H4>Accounts</H4>
+          <H4>{t('general.nouns.accounts')}</H4>
           <Tooltip
             position="bottom"
             content={
               <AccountsTooltip>
-                Support for multiple accounts is coming soon.
+                {t('components.addresses.support_tooltip')}
               </AccountsTooltip>
             }
           >
@@ -139,6 +142,6 @@ function mapDispatchToProps(dispatch: () => {}) {
   );
 }
 
-export default compose(withTheme, connect(mapStateToProps, mapDispatchToProps))(
+export default compose(withTheme, wrapComponent, connect(mapStateToProps, mapDispatchToProps))(
   Addresses
 );

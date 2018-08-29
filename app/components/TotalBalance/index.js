@@ -1,10 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosAmount from '../TezosAmount';
 import { getTotalBalance } from '../../reduxContent/wallet/selectors';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   display: flex;
@@ -24,15 +26,16 @@ const Amount = styled(TezosAmount)`
 `;
 
 type Props = {
-  totalBalance: number
+  totalBalance: number,
+  t: () => {}
 };
 
 class TotalBalance extends Component<Props> {
   render() {
-    const { totalBalance } = this.props;
+    const { totalBalance, t } = this.props;
     return (
       <Container>
-        <Text>Total Balance</Text>
+        <Text>{t("general.nouns.total_balence")}</Text>
         <Amount
           size={ms(3)}
           amount={totalBalance}
@@ -52,4 +55,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, null)(TotalBalance);
+export default compose(wrapComponent, connect(mapStateToProps, null))(TotalBalance);

@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { darken } from 'polished';
 import AddCircle from '@material-ui/icons/AddCircle';
@@ -19,6 +20,7 @@ import AddDelegateModal from '../AddDelegateModal/';
 import Tooltip from '../Tooltip';
 import NoFundTooltip from "../Tooltips/NoFundTooltip";
 import { sortArr } from '../../utils/array';
+import { wrapComponent } from '../../utils/i18n';
 
 
 const Container = styled.div`
@@ -118,7 +120,8 @@ type Props = {
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
   accountIndex: number,
-  theme: object
+  theme: object,
+  t: () => {}
 };
 
 type State = {
@@ -174,7 +177,8 @@ class AddressBlock extends Component<Props, State> {
       accountBlock,
       selectedAccountHash,
       accountIndex,
-      theme
+      theme,
+      t
     } = this.props;
 
     const publicKeyHash = accountBlock.get('publicKeyHash');
@@ -194,10 +198,10 @@ class AddressBlock extends Component<Props, State> {
 
     const isManagerReady = accountBlock.get('status') === READY;
     const noSmartAddressesDescriptionContent = [
-      'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
-      'There is a fee for setting a delegate.',
-      'It takes 7 cycles (~20 days) for your tez to start contributing to baking.',
-      'Delegation rewards will depend on your arrangement with the delegate.'
+      t('components.addressBlock.descriptions.description1'),
+      t('components.addressBlock.descriptions.description2'),
+      t('components.addressBlock.descriptions.description3'),
+      t('components.addressBlock.descriptions.description4')
     ];
 
     const storeType = accountBlock.get('storeType');
@@ -206,7 +210,9 @@ class AddressBlock extends Component<Props, State> {
     return (
       <Container>
         <AddressLabel>
-          <AccountTitle>{`Account ${accountIndex}`}</AccountTitle>
+          <AccountTitle>
+            {t('components.addressBlock.account_title', {index: accountIndex})}
+          </AccountTitle>
           {ready || storeType === MNEMONIC ? (
             <TezosAmount
               color="primary"
@@ -234,7 +240,7 @@ class AddressBlock extends Component<Props, State> {
         )}
 
         <AddDelegateLabel>
-          <DelegateTitle>Add a Delegate</DelegateTitle>
+          <DelegateTitle>{t('components.addDelegateModal.add_delegate_title')}</DelegateTitle>
           {isManagerReady && (
             <AddCircle
               style={{
@@ -251,7 +257,7 @@ class AddressBlock extends Component<Props, State> {
             <Tooltip
               position='bottom'
               offset='-24%'
-              content={<NoFundTooltip content="You account is not ready to delegate." />}
+              content={<NoFundTooltip content={t('components.addressBlock.not_ready_tooltip')} />}
             >
               <Button buttonTheme="plain">
                 <AddCircle
@@ -314,7 +320,7 @@ class AddressBlock extends Component<Props, State> {
                   }}
                   onClick={this.closeNoSmartAddresses}
                 />
-                <NoSmartAddressesTitle>Delegation Tips</NoSmartAddressesTitle>
+                <NoSmartAddressesTitle>{t('components.addressBlock.delegation_tips')}</NoSmartAddressesTitle>
                 {this.renderNoSmartAddressesDescription(
                   noSmartAddressesDescriptionContent
                 )}
@@ -324,7 +330,7 @@ class AddressBlock extends Component<Props, State> {
                   onClick={this.openDelegateModal}
                   disabled={!isManagerReady}
                 >
-                  Add a Delegate
+                  {t('components.addDelegateModal.add_delegate_title')}
                 </NoSmartAddressesButton>
               </NoSmartAddressesContainer>
             )
@@ -334,10 +340,11 @@ class AddressBlock extends Component<Props, State> {
           open={isDelegateModalOpen}
           onCloseClick={this.closeDelegateModal}
           managerBalance={balance}
+          t={t}
         />
       </Container>
     );
   }
 }
 
-export default withTheme(AddressBlock);
+export default compose(wrapComponent, withTheme)(AddressBlock);

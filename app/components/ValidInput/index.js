@@ -5,6 +5,7 @@ import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import TezosIcon from '../TezosIcon';
 import { ms } from '../../styles/helpers';
+import { wrapComponent } from '../../utils/i18n';
 
 const focusBorderColors = [
   '#2c7df7',
@@ -18,12 +19,12 @@ const Container = styled.div`
   position: relative;
 `;
 const Content = styled(FormControl)`
-  width: 100%;  
+  width: 100%;
 `;
 
 const InputWrapper = styled(Input)`
   &&& {
-    &[class*='focused'] {    
+    &[class*='focused'] {
       &:before {
         border-bottom: solid 2px rgba(0, 0, 0, 0.22);
       }
@@ -35,18 +36,18 @@ const InputWrapper = styled(Input)`
     color: ${({ theme: { colors } }) => colors.primary };
     font-size: 16px;
     font-weight: 300;
-    
+
     &:before {
       border-bottom: solid 1px rgba(0, 0, 0, 0.12);
     }
     &:hover:before {
       border-bottom: solid 2px rgba(0, 0, 0, 0.22) !important;
-    }    
+    }
   }
 }`;
 const LabelWrapper = styled(InputLabel)`
   &&& {
-    &[class*='focused'] {    
+    &[class*='focused'] {
       color: ${({ theme: { colors } }) => colors.gray3 };
     }
     color: rgba(0, 0, 0, 0.38);
@@ -95,11 +96,12 @@ type Props = {
   status?: boolean,
   score?: number,
   changFunc: () => {},
-  onShow: () => {}
+  onShow: () => {},
+  t: () => {}
 };
 
 const InputValid = (props: Props) => {
-  const {score, status} = props;
+  const {label, error, suggestion,  score, status, isShowed, changFunc, onShow, t} = props;
   const borderColor = focusBorderColors[score];
   let width = '';
   if (score && !status) {
@@ -112,29 +114,29 @@ const InputValid = (props: Props) => {
     <Container>
       <Content>
         <LabelWrapper>
-          {props.label}
+          {label}
         </LabelWrapper>
         <InputWrapper
-          key={props.label}
-          type={props.isShowed ? 'text' : 'password'}
-          onChange={(event) => props.changFunc(event.target.value)}
+          key={label}
+          type={isShowed ? 'text' : 'password'}
+          onChange={(event) => changFunc(event.target.value)}
           width={width}
           score={score}
-        />        
+        />
       </Content>
-      {props.score===4 && <CheckIcon
+      {score===4 && <CheckIcon
         iconName='checkmark2'
         size={ms(0)}
         color="check"
-        onClick={props.onShow}
+        onClick={onShow}
       />}
-      <ShowHidePwd onClick={props.onShow} style={{cursor: 'pointer'}}>
-        {props.isShowed? 'Hide':'Show'}
+      <ShowHidePwd onClick={onShow} style={{cursor: 'pointer'}}>
+        {t((isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
       </ShowHidePwd>
       <PasswordStrengthSuggestions>
-        {!!props.error && <Error color={borderColor}>{props.error}</Error>}
-        {!!props.suggestion && (
-          <Suggestion dangerouslySetInnerHTML={{ __html: props.suggestion }} />
+        {!!error && <Error color={borderColor}>{error}</Error>}
+        {!!suggestion && (
+          <Suggestion dangerouslySetInnerHTML={{ __html: suggestion }} />
         )}
       </PasswordStrengthSuggestions>
     </Container>
@@ -148,4 +150,4 @@ InputValid.defaultProps = {
   status: false
 };
 
-export default InputValid;
+export default wrapComponent(InputValid);

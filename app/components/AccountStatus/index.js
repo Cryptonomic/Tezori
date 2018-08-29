@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
@@ -9,6 +10,7 @@ import { H4 } from '../Heading/';
 import * as statuses from '../../constants/StatusTypes';
 import { MNEMONIC } from '../../constants/StoreTypes';
 import { formatAmount } from '../../utils/currancy';
+import { wrapComponent } from '../../utils/i18n';
 import Info from './Info';
 
 const Container = styled.section`
@@ -50,12 +52,12 @@ const Description = styled.div`
 type Props = {
   isManager?: boolean,
   address?: object,
-  theme?: object
+  theme?: object,
+  t: () => {}
 };
 
 function AccountStatus(props: Props) {
-  const { isManager, address, theme } = props;
-
+  const { isManager, address, theme, t } = props;
   const storeType = address.get('storeType');
   const status = address.get('status');
   const operations = address.get('operations').toJS();
@@ -71,20 +73,17 @@ function AccountStatus(props: Props) {
   let title = '';
   let description = '';
   let info = null;
-  const typeText = isManager ? 'account' : 'address';
+  const typeText = t((isManager ? 'general.nouns.account' : 'general.nouns.address'));
   switch (status) {
     case statuses.CREATED:
       if (storeType === MNEMONIC) {
-        icon = <Image alt="Creating account" src={transactionsEmptyState} />;
-        title = 'Your account is ready to receive transactions!';
-        description =
-          'Your first transaction will commit your new address to the blockchain. This process may take some time until you are all set to send and delegate.';
+        icon = <Image alt={t('components.accountStatus.creating_ccount')} src={transactionsEmptyState} />;
+        title = t('components.accountStatus.titles.ready');
+        description = t('components.accountStatus.descriptions.mnemonic_first_transaction');
       } else {
-        title = `Retrieving your ${typeText}...`;
+        title = t('components.accountStatus.titles.retrieving', { typeText });
         if (operations[statuses.CREATED]) {
-          const operationName = isManager
-            ? 'activation operation id'
-            : 'origination operation id';
+          const operationName = t((isManager ? 'components.accountStatus.activation_operation_id' : 'components.accountStatus.origination_operation_id'));
           info = (
             <Info
               firstIconName="icon-star"
@@ -98,12 +97,13 @@ function AccountStatus(props: Props) {
       break;
     case statuses.FOUND:
     case statuses.PENDING:
-      title = `Preparing your ${typeText}...`;
+      title = t('components.accountStatus.titles.pending', { typeText });
       if (operations[statuses.FOUND]) {
+        const operationName = t('components.accountStatus.public_key_reveal_operation_id');
         info = (
           <Info
             firstIconName="icon-broadcast"
-            operationName="public key reveal operation id"
+            operationName={operationName}
             operationId={operations[statuses.FOUND]}
             lastIconName="icon-new-window"
           />
@@ -113,10 +113,8 @@ function AccountStatus(props: Props) {
       if (storeType === MNEMONIC) {
         const transaction = address.get('transactions').toJS();
         const { amount } = transaction[0];
-        description = `We have received your first transaction of ${formatAmount(
-          amount,
-          2
-        )} tez! Preparing your account now, this might take a while.`;
+        const formattedAmount = formatAmount(amount, 2);
+        description = t('components.accountStatus.descriptions.first_transaction_confirmation', { formattedAmount });
       }
       break;
     default:
@@ -133,4 +131,4 @@ function AccountStatus(props: Props) {
   );
 }
 
-export default withTheme(AccountStatus);
+export default compose(wrapComponent, withTheme)(AccountStatus);

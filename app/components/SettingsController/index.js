@@ -55,13 +55,14 @@ class SettingsController extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
     {
       goHomeAndClearState,
       goSettings: () => dispatch => dispatch(push('/home/settings'))
     },
     dispatch
   );
+}
 
 export default connect(null, mapDispatchToProps)(SettingsController);

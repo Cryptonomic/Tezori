@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
@@ -8,6 +8,7 @@ import Button from './../Button/';
 import TezosIcon from './../TezosIcon/';
 import DelegateConfirmationModal from '../DelegateConfirmationModal';
 import TezosAddress from '../TezosAddress';
+import { wrapComponent } from '../../utils/i18n';
 
 import {
   validateAddress,
@@ -19,7 +20,8 @@ type Props = {
   selectedAccountHash?: string,
   selectedParentHash?: string,
   address?: string,
-  delegate?: () => {}
+  delegate?: () => {},
+  t: () => {}
 };
 
 const Container = styled.div`
@@ -198,22 +200,22 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address } = this.props;
+    const { address, t } = this.props;
     const { isLoading, open, password, fee, averageFees, tempAddress, isShowedPwd, isDelegateIssue } = this.state;
     const delegationTips = [
-      'Delegating tez is not the same as sending tez. Only baking rights are transferred when setting a delegate. The delegate that you set cannot spend your tez.',
-      'There is a fee for setting a delegate.',
-      'It takes 7 cycles (~20 days) for your tez to start contributing to baking.',
-      'Delegation rewards will depend on your arrangement with the delegate.'
+      t('components.addressBlock.descriptions.description1'),
+      t('components.addressBlock.descriptions.description2'),
+      t('components.addressBlock.descriptions.description3'),
+      t('components.addressBlock.descriptions.description4')
     ];
 
     return (
       <Container>
-        <Title>Delegate Settings</Title>
+        <Title>{t('components.delegate.delegate_settings')}</Title>
         <DelegateContainer>
           {address && (
             <DelegateInputContainer>
-              <SetADelegate>You are currently delegating to:</SetADelegate>
+              <SetADelegate>{t('components.delegate.current_delegate')}:</SetADelegate>
               <TezosAddress
                 address={address}
                 size="16px"
@@ -226,7 +228,7 @@ class Delegate extends Component<Props> {
                 buttonTheme="secondary"
                 small
               >
-                Change Delegate
+                {t('components.delegate.change_delegate')}
               </UpdateButton>
             </DelegateInputContainer>
           )}
@@ -234,13 +236,12 @@ class Delegate extends Component<Props> {
             <WarningContainer>
               <TezosIcon iconName="info" size={ms(5)} color="info" />
               <InfoText>
-                Your delegate settings will not show up until confirmed on the
-                blockchain.
+                {t('components.delegate.delegate_warning')}
               </InfoText>
             </WarningContainer>
           )}
           <DelegationTipsContainer>
-            <DelegationTitle>Delegation Tips</DelegationTitle>
+            <DelegationTitle>{t('components.addressBlock.delegation_tips')}</DelegationTitle>
             {this.renderDelegationTips(delegationTips)}
           </DelegationTipsContainer>
         </DelegateContainer>
@@ -279,4 +280,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(Delegate);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(Delegate);
