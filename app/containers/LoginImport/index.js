@@ -167,7 +167,7 @@ class LoginImport extends Component<Props> {
               buttonTheme="primary"
               disabled={isDisabled}
             >
-              {t('general.verbs.import')}
+              {t('general.verbs.open')}
             </ActionButton>
           </ActionButtonContainer>
         </WalletContainers>
