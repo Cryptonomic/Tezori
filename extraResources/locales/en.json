@@ -21,7 +21,8 @@
         "content2": "There is a fee for changing the delegate.",
         "content3": "You can only delegate to the Manager Address. The Manager Address always starts with 'tz1'."
       }
-    }
+    },
+    "of": "of"
   },
   "login": {
     "create_new_wallet_btn": "Create New Wallet",

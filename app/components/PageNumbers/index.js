@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   margin-top: 20px;
@@ -56,18 +57,19 @@ type Props = {
   totalNumber: number,
   firstNumber: number,
   lastNumber: number,
-  onClick: () => {}
+  onClick: () => {},
+  t: () => {}
 };
 
 const PageNumbers = ( props: Props) => {
 
-  const { currentPage, totalNumber, firstNumber, lastNumber, onClick } = props;
+  const { currentPage, totalNumber, firstNumber, lastNumber, onClick, t } = props;
 
   return (
     <Container>
       <NumberContainer>
         {firstNumber+1}-{lastNumber}
-        <PageOf>of</PageOf>
+        <PageOf>{t('general.of')}</PageOf>
         {totalNumber}
       </NumberContainer>
       <LeftButton
@@ -85,4 +87,4 @@ const PageNumbers = ( props: Props) => {
     </Container>
   );
 }
-export default PageNumbers;
+export default wrapComponent(PageNumbers);
