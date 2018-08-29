@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
-import { remote } from 'electron';
 import {
   SET_SELECTED,
   SET_LOCAL,
@@ -11,11 +10,12 @@ import {
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
 import { getWalletSettings } from '../../utils/settings';
+import { getDefaultLocal } from '../../utils/i18n';
 
 const walletSettings = getWalletSettings();
 
 const baseDefaults = {
-  local: remote.app.getLocale(),// get electron local here
+  local: getDefaultLocal(),// get electron local here
   tezosSelectedNode: '',
   conseilSelectedNode: '',
   nodesList: []

@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import Backend from 'i18next-sync-fs-backend';
 import { remote } from 'electron';
 import path from 'path';
+import localsMap, { defaultLanguage } from '../constants/LocalsMap';
 
 export function createIl8nInstance(local) {
   return i18n.use(Backend).init({
@@ -26,6 +27,19 @@ export function createIl8nInstance(local) {
   });
 }
 
-export const wrapComponent = Element => {
+export function wrapComponent(Element) {
   return translate()(Element);
-};
+}
+
+export function getDefaultLocal() {
+  const local = remote.app.getLocale();
+
+  const found = Object.keys(localsMap)
+    .find((key) => {
+      return key === local;
+    });
+
+  return found
+    ? local
+    : defaultLanguage;
+}
