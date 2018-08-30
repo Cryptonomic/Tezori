@@ -1,0 +1,294 @@
+{
+  "general": {
+    "verbs": {
+      "send":"Enviar",
+      "copy_address":"Copiar Dirección",
+      "show":"Mostrar",
+      "hide":"Ocultar",
+      "use_max":"Uso máximo",
+      "import":"Importar",
+      "open":"0",
+      "save":"Guardar",
+      "delegate":"Delegar",
+      "restore":"Restaurar",
+      "confirm":"Confirmar",
+      "receive":"Recibir"
+    },
+    "nouns": {
+      "amount":"Monto",
+      "wallet_password":"Contraseña de la billetera",
+      "total":"Total",
+      "fee":"Tasa",
+      "accounts":"Cuentas",
+      "address":"Dirección",
+      "account":"0",
+      "label_account":"0",
+      "label_address":"0",
+      "delegate_address":"Dirección del Baker",
+      "remaining_balance":"Saldo Restante",
+      "gas":"Gas",
+      "details":"Detalles",
+      "conseil":"Conseil",
+      "tezos":"Tezos",
+      "total_balence":"Balance total",
+      "language":"0",
+      "transactions":"Transacciones"
+    },
+    "decimal_separator":",",
+    "back":"Atrás",
+    "next":"Siguiente",
+    "to":"0",
+    "of":"0",
+    "from":"0"
+  },
+  "components": {
+    "accountStatus": {
+      "creating_ccount":"0",
+      "activation_operation_id":"número de la operación de activación",
+      "origination_operation_id":"número de la operación de creación",
+      "public_key_reveal_operation_id":"número de la operación de clave pública",
+      "titles": {
+        "pending":"Preparando tu {{typeText}}",
+        "ready":"0",
+        "retrieving":"Recuperando tu {{typeText}}"
+      },
+      "descriptions": {
+        "mnemonic_first_transaction":"Tu primera transacción va a grabar tu nueva dirección en la blockchain. Este proceso tardará un tiempo para que puedas enviar y delegar.",
+        "first_transaction_confirmation":"Hemos recibido tu primera transacción de {{formattedAmount}} tez! Estamos preparando tu cuenta, esto podría timar un tiempo."
+      }
+    },
+    "actionPanel": {
+      "description":"0",
+      "empty-title":"0"
+    },
+    "addDelegateModal": {
+      "gas_tool_tip":"La red necesita {{gas}} tz para crear una dirección delegada",
+      "warning1":"El total excede los fondos disponibles",
+      "warning2":"Las Direcciones Administrativas todavía no tienen permitido tener menos de  1 µtz",
+      "add_delegate_title":"Agregar un delegado"
+    },
+    "addNodeModal": {
+      "error":"0",
+      "title":"0",
+      "labels": {
+        "node_name":"Nombre del node",
+        "api_key":"Clave Api"
+      }
+    },
+    "address": {
+      "manager_address":"Dirección Administrativa",
+      "delegated_address":"0"
+    },
+    "addressBlock": {
+      "descriptions": {
+        "description1":"Delegar tez no es lo mismo que enviar tez. Sólo los derechos de baking se transfieren cuando se consigura un baker. El baker asignado no puede gastar tus tez.",
+        "description2":"Hay un cargo por configurar el baker",
+        "description3":"Se necesitan 7 ciclos (~20 días) para que tu tez empiece a contribuir al baking",
+        "description4":"Las recompensas de la delegación dependen de tu acuerdo con el baker"
+      },
+      "account_title":"0",
+      "not_ready_tooltip":"0",
+      "delegation_tips":"Tips de la Delegación"
+    },
+    "addresses": {
+      "support_tooltip":"Próximante habrá soporte para múltiples cuentas"
+    },
+    "addressStatus": {
+      "your_account":"0",
+      "new_address":"0",
+      "retrieving_title":"0",
+      "preparing_title":"0"
+    },
+    "balanceBanner": {
+      "breadcrumbs":"0",
+      "delegated_to":"Delegando a"
+    },
+    "copyIcon": {
+      "copied":"¡Copiado!"
+    },
+    "createAccountSlide": {
+      "descriptions": {
+        "description1":"Debes escribir tu frase semilla en un papel y guardarlo en un lugar seguro. Vas a necesitar la frase para recuperar tu cuenta.",
+        "description2":"Asegúrate de mantener tu frase semilla en un sitio seguro. Si olvidas tu frase, no vas a poder recuperar tu cuenta. Nosotros no almacenamos tu frase semilla y no te podemos ayudar a recuperarla si la pierdes.",
+        "description3":"Para asegurar que anotaste tu frase semilla, por favor escribe las siguientes cuatro palabras clave."
+      },
+      "generate_other_seed":"Generar otra frase semilla",
+      "create_account":"Crear Cuenta",
+      "seed_backup":"¡La semilla de tu cuenta Tezos está respaldada!",
+      "back_to_seed":"Volver a la frase semilla",
+      "first_word":"0",
+      "second_word":"0",
+      "third_word":"0",
+      "nth_word":"0"
+    },
+    "delegate": {
+      "delegate_settings":"Ajustes del Baker",
+      "current_delegate":"Actualmente estás delegando a",
+      "change_delegate":"Cambiar Baker",
+      "delegate_warning":"Los ajustes del baker no van a mostrarse hasta que estén confirmados en la blockchain."
+    },
+    "delegateConfirmationModal": {
+      "new_address_label":"Cambiar baker a una nueva dirección",
+      "delegate_warning":"Los cambios de delegación no van a mostrarse hasta que estén confirmados en la blockchain."
+    },
+    "fees": {
+      "low_fee":"Tasa mínima",
+      "medium_fee":"Tasa media",
+      "high_fee":"Tasa alta",
+      "custom_fee":"Tasa personalizada",
+      "custom":"Personalizar",
+      "set_custom_fee":"Confirmar monto personalizado",
+      "enter_custom_amount":"Ingresar monto personalizado"
+    },
+    "inputAddress": {
+      "setting_delegate":"Configurar un Baker",
+      "contents": {
+        "content1":"Después vas a poder cambiar el baker",
+        "content2":"Hay un cargo por cambiar el baker",
+        "content3":"Sólo puedes delegar a una Dirección Administradora. Las direcciones administradoras siempre empiezan con TZ1, TZ2 o TZ3."
+      },
+      "errors": {
+        "send_address":"Las direcciones sólo pueden empezar con TZ1, TZ2, TZ3 o KT1",
+        "delegate_address":"Sólo puedes delegar a direcciones TZ1, TZ2 o TZ3",
+        "length":"Las direcciones deben tener 36 caracteres",
+        "special_chars":"Las direcciones no deben contener caracteres especiales",
+        "send_funds":"No te puedes enviar fondos a ti mismo"
+      }
+    },
+    "messageBar": {
+      "operation_id":"Número de la operación",
+      "view_block_explorer":"Ver en un explorador de bloque",
+      "messages": {
+        "amount_not_valid":"El monto no es válido",
+        "address_begin":"La dirección debe comenzar con tz1 o KT1",
+        "must_upload":"Debe subir una billetera",
+        "err_not_valid":"Los parámetros no son válidos",
+        "amount_small":"0",
+        "amount_not_empty":"0",
+        "pass_not_empty":"0",
+        "address_not_empty":"0",
+        "address_length_36":"0",
+        "pass_length_8":"0",
+        "incorrect_password":"Contraseña incorrecta",
+        "origination_operation_failed":"Ha fallado la operación de creación fallida",
+        "delegation_operation_failed":"0",
+        "send_operation_failed":"Ha fallado la operación de envío",
+        "success_address_origination":"Exitosamente se inició la creación de la dirección",
+        "success_delegation_update":"Exitosamente se inició la actualización de la delegación",
+        "cant_sent_yourself":"No te puedes enviar fondos a ti mismo",
+        "success_account_activation":"Exitosamente se inició la activación de la cuenta",
+        "identity_exist":"La identidad ya existe",
+        "success_sent":"¡Éxito! Has enviado {{localeParam}} tz.",
+        "invalid_wallet_password":"Combinación billetera/contraseña inválida.",
+        "account_not_exist":"Esta cuenta no existe"
+      }
+    },
+    "pdfReader": {
+      "loading":"Cargando…"
+    },
+    "restoreBackup": {
+      "restore_from":"Restaurar de",
+      "seed_encrypted_label":"Esta frase semilla está encriptada con una contraseña",
+      "seed_phrase_password":"0",
+      "enter_private_key":"Ingresar tu clave privada",
+      "seed_phrase":"Frase semilla",
+      "private_key":"Clave privada"
+    },
+    "send": {
+      "warnings": {
+        "total_exceeds":"El total excede los fondos disponibles",
+        "not_allowed":"Las Direcciones Administrativas todavía no tienen permitido tener menos de  1 µtz"
+      }
+    },
+    "sendConfirmationModal": {
+      "send_confirmation":"0",
+      "confirm_question":"Confirmas que quieres enviar"
+    },
+    "settingController": {
+      "settings":"Ajustes",
+      "logout":"Cerrar sesión"
+    },
+    "termsModal": {
+      "hi_there":"0",
+      "i_agree":"Acepto",
+      "description":"0"
+    },
+    "tooltips": {
+      "manager_tooltips_description":"La Dirección Administrativa es la diección principal de tu cuenta y puede ser usada para enviar y recibir tez."
+    },
+    "transaction": {
+      "pending":"0",
+      "burn":"Quemar",
+      "public_key_reveal":"Revelar clave pública",
+      "activitation":"Activación",
+      "updated_delegate":"Baker actualizado",
+      "origination":"Origen",
+      "sent":"Enviar",
+      "received":"Recibido",
+      "this_address":"esta dirección",
+      "your_manager_address":"0"
+    },
+    "update": {
+      "last_updated":"0"
+    }
+  },
+  "containers": {
+    "homeAddAddress": {
+      "add_account":"Agregar cuenta",
+      "refer_pdf_title":"Por favor referir al documento PDF que creaste durante la recaudación de fondos",
+      "secret_key_15":"Clave secreta de 15 palabras",
+      "fundraiser_password":"Contraseña de la Recaudación de Fondos",
+      "public_key_hash":"Clave pública del hash",
+      "fundraiser_email_address":"Dirección de correo electrónico de la Recaudación de Fondos",
+      "activation_code":"Código de activación",
+      "tooltips": {
+        "password_tooltip":"Esta es la contraseña que usaste para generar una billetera de papel Tezos para participar en la recaudación de fondos",
+        "email_tooltip":"Esta es la dirección de correo electrónico que usaste para generar una billetera de papel Tezos para participar en la recaudación de fondos",
+        "activation_code_tooltip":"Este es el código de activación que recibiste después de completar el proceso KYC/AML.  Un código de activación corresponde a la clave pública del hash y es requerido si participaste en la recaudación de fondos. Puedes completar el proceso en <1>verification.tezos.com</1> si todavía no lo has hecho.",
+        "public_key_hash_tooltip":"Esta es la clave pública del hash según se encuentra en la billetera de papel."
+      },
+      "import_fundraiser":"0",
+      "create_new_account":"0",
+      "restore_backup":"0"
+    },
+    "homeSettings": {
+      "back_to_wallet":"Volver a la billetera",
+      "wallet_settings":"Ajustes de la billetera",
+      "choose_different_node":"Elegir un nodo distinto",
+      "add_custom_node":"Agregar un nodo personalizado"
+    },
+    "loginHome": {
+      "description":"0",
+      "create_new_wallet_btn":"Crear una nueva billetera",
+      "open_exisiting_wallet_btn":"Abrir billetera existente",
+      "want_to_import_fundraiser_paper_wallet":"¿Quieres importar tu billetera de papel de la recaudación de fondos?",
+      "create_named_wallet":"<0><0>Crear una billetera <1>{{name}}</1></0></0>primero",
+      "tagline":"0",
+      "app_name":"Tezori"
+    },
+    "loginCreate": {
+      "create_wallet_btn":"Crear billetera",
+      "create_wallet_password_label":"Crear la contraseña de la billetera",
+      "confirm_wallet_password_label":"Confirmar la contraseña de la billetera",
+      "create_new_wallet_btn":"0",
+      "create_wallet_title":"Crear una nueva billetera",
+      "create_wallet_description":"La información de tu billetera va a ser almacenada en tu computadora. Será encriptada con la contraseña que elijas.",
+      "crack_time_description":"0",
+      "password_not_strong":"0",
+      "add_another_word":"0",
+      "you_almost_there":"0",
+      "you_got_it":"0",
+      "password_dont_match":"0",
+      "password_match":"0"
+    },
+    "loginImport": {
+      "open_wallet_label":"Abrir una billetera existente",
+      "select_file_btn":"Seleccionar el archivo de la billetera"
+    },
+    "walletNodesRequired": {
+      "configuration_missing":"Falta la configuración del nodo",
+      "close_wallet_description":"Por favor cierra la billetera y edita 'extraResources/walletSettings.json' antes de volver a abrir la billetera",
+      "default_wallet_shape":"walletSettings.json debería verse así:"
+    }
+  }
+}
