@@ -7,7 +7,7 @@
       "hide":"Esconder",
       "use_max":"Usar Máx",
       "import":"Importar",
-      "open":"0",
+      "open":"Abrir",
       "save":"Salvar",
       "delegate":"Delegar",
       "restore":"Restaurar",
@@ -21,9 +21,9 @@
       "fee":"Taxa",
       "accounts":"Contas",
       "address":"Endereço",
-      "account":"0",
-      "label_account":"0",
-      "label_address":"0",
+      "account":"conta",
+      "label_account":"Conta",
+      "label_address":"Endereço",
       "delegate_address":"Endereço do Baker",
       "remaining_balance":"Saldo remanescente",
       "gas":"Gas",
@@ -31,25 +31,25 @@
       "conseil":"Conseil",
       "tezos":"Tezos",
       "total_balence":"Saldo Total",
-      "language":"0",
+      "language":"Idioma",
       "transactions":"Transações"
     },
     "decimal_separator":",",
     "back":"Anterior",
     "next":"Seguinte",
-    "to":"0",
-    "of":"0",
-    "from":"0"
+    "to":"para",
+    "of":"de",
+    "from":"de"
   },
   "components": {
     "accountStatus": {
-      "creating_ccount":"0",
+      "creating_ccount":"Criando conta",
       "activation_operation_id":"ID da operação de ativação",
       "origination_operation_id":"ID da operação de originação",
       "public_key_reveal_operation_id":"ID da operação de revelação da chave pública",
       "titles": {
         "pending":"Preparando sua {{typeText}}",
-        "ready":"0",
+        "ready":"Sua conta está pronta para receber transações!",
         "retrieving":"Recuperando sua {{typeText}}"
       },
       "descriptions": {
@@ -58,8 +58,8 @@
       }
     },
     "actionPanel": {
-      "description":"0",
-      "empty-title":"0"
+      "description":"Está bem vazio aqui. Comece a <1>enviar</1> e <3>receber</3> tezos à partir desse endereço.",
+      "empty-title":"Você ainda não fez nenhuma transação"
     },
     "addDelegateModal": {
       "gas_tool_tip":"É necessário {{gas}} tz  para que a rede crie um endereço delegado",
@@ -68,8 +68,8 @@
       "add_delegate_title":"Adicionar um Delegate"
     },
     "addNodeModal": {
-      "error":"0",
-      "title":"0",
+      "error":"O protocolo do node deve ser https",
+      "title":"Configure seu Node {{title}} customizado",
       "labels": {
         "node_name":"Nome do Node",
         "api_key":"Chave de Api"
@@ -77,7 +77,7 @@
     },
     "address": {
       "manager_address":"Endereço Manager",
-      "delegated_address":"0"
+      "delegated_address":"Endereço delegado {{index}}"
     },
     "addressBlock": {
       "descriptions": {
@@ -86,21 +86,21 @@
         "description3":"Leva 7 ciclos (~20 dias) para que seus tezos comecem a contribuir para o baking.",
         "description4":"Recompensas de delegação dependerão do seu acordo com o baker."
       },
-      "account_title":"0",
-      "not_ready_tooltip":"0",
+      "account_title":"Conta {{index}}",
+      "not_ready_tooltip":"Sua conta não está pronta para delegar.",
       "delegation_tips":"Dicas de Delegação"
     },
     "addresses": {
       "support_tooltip":"Suporte à múltiplas contas em breve"
     },
     "addressStatus": {
-      "your_account":"0",
-      "new_address":"0",
-      "retrieving_title":"0",
-      "preparing_title":"0"
+      "your_account":"sua conta",
+      "new_address":"novo endereço",
+      "retrieving_title":"Recuperando {{typeText}}…",
+      "preparing_title":"Preparando {{typeText}}…"
     },
     "balanceBanner": {
-      "breadcrumbs":"0",
+      "breadcrumbs":"Conta {{parentIndex}} > {{addressLabel}}",
       "delegated_to":"Delegado à"
     },
     "copyIcon": {
@@ -116,10 +116,10 @@
       "create_account":"Criar Conta",
       "seed_backup":"Backup da frase-senha da sua conta de Tezos realizado!",
       "back_to_seed":"Retornar à Frase-Senha",
-      "first_word":"0",
-      "second_word":"0",
-      "third_word":"0",
-      "nth_word":"0"
+      "first_word":"1ª Palava",
+      "second_word":"2ª Palavra",
+      "third_word":"3ª Palavra",
+      "nth_word":"{{index}}ª Palavra"
     },
     "delegate": {
       "delegate_settings":"Configurações de Baker",
@@ -163,15 +163,15 @@
         "address_begin":"Endereço deve iniciar com tz1 or KT1",
         "must_upload":"É necessário carregar uma carteira.",
         "err_not_valid":"Parâmetros inválidos.",
-        "amount_small":"0",
-        "amount_not_empty":"0",
-        "pass_not_empty":"0",
-        "address_not_empty":"0",
-        "address_length_36":"0",
-        "pass_length_8":"0",
+        "amount_small":"Quantia muito pequena",
+        "amount_not_empty":"Quantia deve ser informada.",
+        "pass_not_empty":"Frase-senha deve ser informada.",
+        "address_not_empty":"Endereço deve ser preenchido.",
+        "address_length_36":"Endereço precisa conter exatamente 36 caracteres.",
+        "pass_length_8":"Frase-senha deve ter pelo menos 8 caracteres.",
         "incorrect_password":"Senha Incorreta",
         "origination_operation_failed":"Operação de originação falhou",
-        "delegation_operation_failed":"0",
+        "delegation_operation_failed":"Operação de delegação falhou",
         "send_operation_failed":"Operação de envio falhou.",
         "success_address_origination":"Originação de endereço iniciada com sucesso.",
         "success_delegation_update":"Atualização de delegação iniciado com sucesso.",
@@ -189,7 +189,7 @@
     "restoreBackup": {
       "restore_from":"Restaurar de",
       "seed_encrypted_label":"Esta frase-senha está criptografada com uma senha",
-      "seed_phrase_password":"0",
+      "seed_phrase_password":"Senha das palavras-chave",
       "enter_private_key":"Digite sua chave privada",
       "seed_phrase":"Frase-senha",
       "private_key":"Chave Privada"
@@ -201,7 +201,7 @@
       }
     },
     "sendConfirmationModal": {
-      "send_confirmation":"0",
+      "send_confirmation":"Confirmação de Envio",
       "confirm_question":"Confirma que deseja enviar"
     },
     "settingController": {
@@ -209,15 +209,15 @@
       "logout":"Encerrar"
     },
     "termsModal": {
-      "hi_there":"0",
+      "hi_there":"Olá!",
       "i_agree":"Eu concordo",
-      "description":"0"
+      "description":"Antes de começarmos, favor ler e aceitar nosso <1>Termo de Serviço</1> e <3>Política de Privacidade</3>."
     },
     "tooltips": {
       "manager_tooltips_description":"O Endereço Manager é o endereço primário da sua conta e pode ser usado para enviar e receber tezos."
     },
     "transaction": {
-      "pending":"0",
+      "pending":"Pendente…",
       "burn":"Queimar",
       "public_key_reveal":"Revelação de Chave Pública",
       "activitation":"Ativação",
@@ -226,10 +226,10 @@
       "sent":"Enviado",
       "received":"Recebido",
       "this_address":"esse endereço",
-      "your_manager_address":"0"
+      "your_manager_address":"<0>seu</0> Endereço Manager da Conta 1"
     },
     "update": {
-      "last_updated":"0"
+      "last_updated":"Última atualização {{date}}"
     }
   },
   "containers": {
@@ -247,9 +247,9 @@
         "activation_code_tooltip":"Esse é o código de ativação que você recebeu após completar o processo de KYC/AML. O código de ativação está associado a um hash de chave pública e é necessário se você participou do fundraiser. Você pode completar o processe em <1>verification.tezos.com</1> caso ainda não o tenha feito.",
         "public_key_hash_tooltip":"Esse é o hash da chave pública, conforme consta na paper wallet."
       },
-      "import_fundraiser":"0",
-      "create_new_account":"0",
-      "restore_backup":"0"
+      "import_fundraiser":"Importar Wallet do Fundraiser",
+      "create_new_account":"Criar Nova Conta",
+      "restore_backup":"Restaurar à partir de Backup"
     },
     "homeSettings": {
       "back_to_wallet":"Voltar à carteira",
@@ -258,28 +258,28 @@
       "add_custom_node":"Adicionar um node específico"
     },
     "loginHome": {
-      "description":"0",
+      "description":"Eu confirmo que li e aceitei os <1>Termos de Serviço</1> e <3>Política de Privacidade</3>",
       "create_new_wallet_btn":"Criar Nova Carteira",
       "open_exisiting_wallet_btn":"Abrir Carteira Existente",
       "want_to_import_fundraiser_paper_wallet":"Deseja importar sua paper wallet do Fundraiser?",
       "create_named_wallet":"<0><0>Criar uma carteira <1>{{name}}</1></0></0> primeiro.",
-      "tagline":"0",
+      "tagline":"Uma carteira de Tezos da comunidade",
       "app_name":"Tezori"
     },
     "loginCreate": {
       "create_wallet_btn":"Criar Carteira",
       "create_wallet_password_label":"Criar Senha da Carteira",
       "confirm_wallet_password_label":"Confirmar Senha da Carteira",
-      "create_new_wallet_btn":"0",
+      "create_new_wallet_btn":"Criar Nova Wallet",
       "create_wallet_title":"Criar uma nova carteira",
       "create_wallet_description":"Suas informações de carteira serão gravadas no seu computador. Serão criptografadas com a senha que especificou.",
-      "crack_time_description":"0",
-      "password_not_strong":"0",
-      "add_another_word":"0",
-      "you_almost_there":"0",
-      "you_got_it":"0",
-      "password_dont_match":"0",
-      "password_match":"0"
+      "crack_time_description":"Levaria <span>{{time}}</span> para quebrá-la!",
+      "password_not_strong":"Sua senha não é forte o suficiente.",
+      "add_another_word":"Adicione mais uma ou duas palavras.",
+      "you_almost_there":"Você está quase lá!",
+      "you_got_it":"Você conseguiu!",
+      "password_dont_match":"As senhas não são iguais!",
+      "password_match":"As senhas são iguais!"
     },
     "loginImport": {
       "open_wallet_label":"Abrir uma carteira existente",
