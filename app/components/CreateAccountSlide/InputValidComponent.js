@@ -86,7 +86,7 @@ class InputValidComponent extends Component<Props> {
         this.setState({
           isMatched: false,
           isMatching: false,
-          errorText: 'Invalid word, please check again!'
+          errorText: 'components.createAccountSlide.errors.invalid_word'
         });
       } else {
         this.setState({ isMatched: false, isMatching: true, errorText: '' });
@@ -95,7 +95,7 @@ class InputValidComponent extends Component<Props> {
       this.setState({
         isMatched: false,
         isMatching: false,
-        errorText: "It's a typo! Please check again"
+        errorText: 'components.createAccountSlide.errors.typo_error'
       });
     }
 
@@ -109,7 +109,7 @@ class InputValidComponent extends Component<Props> {
   };
 
   render() {
-    const { index } = this.props;
+    const { index, t } = this.props;
     const label = this.getLabel(index);
     const {errorText} = this.state;
     return (
@@ -117,7 +117,7 @@ class InputValidComponent extends Component<Props> {
         <TextField
           label={label}
           onChange={(newVal) => this.changFunc(newVal)}
-          errorText={errorText}
+          errorText={t(errorText)}
           onKeyPress={this.keyHandler}
         />
         {validIcon(
