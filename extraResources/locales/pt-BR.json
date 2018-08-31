@@ -34,6 +34,9 @@
       "language":"Idioma",
       "transactions":"Transações"
     },
+    "errors": {
+      "no_hex_data": "The provided string doesn't look like hex data"
+    },
     "decimal_separator":",",
     "back":"Anterior",
     "next":"Seguinte",
@@ -119,7 +122,11 @@
       "first_word":"1ª Palava",
       "second_word":"2ª Palavra",
       "third_word":"3ª Palavra",
-      "nth_word":"{{index}}ª Palavra"
+      "nth_word":"{{index}}ª Palavra",
+      "errors": {
+        "invalid_word": "Palavra inválida, favor verificar novamente!",
+        "typo_error": "Palavra inválida, favor verificar novamente!"
+      }
     },
     "delegate": {
       "delegate_settings":"Configurações de Baker",
@@ -289,6 +296,13 @@
       "configuration_missing":"A configuração do node está faltando",
       "close_wallet_description":"Por favor, feche a carteira e edite 'extraResources/walletSettings.json' depois abra novamente a carteira.",
       "default_wallet_shape":"walletSettings.json deve parecer com:"
+    }
+  },
+  "nodes": {
+    "errors": {
+      "wrong_server": "Há um problema com os servidores especificados. Adie novas ações.",
+      "wrong_network": "Aparentemente o node de Tezos que você está usando está travado ou em uma rede errada. Adie novas ações.",
+      "not_synced": "Aparentemente o servidor Conseil não está sincronizado com a rede Tezos. Adie novas ações."
     }
   }
 }
