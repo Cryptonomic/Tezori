@@ -212,8 +212,8 @@
       "confirm_question":"Confirma que deseja enviar"
     },
     "settingController": {
-      "settings":"Configurações",
-      "logout":"Encerrar"
+      "settings":"CONFIGURAÇÕES",
+      "logout":"ENCERRAR"
     },
     "termsModal": {
       "hi_there":"Olá!",
