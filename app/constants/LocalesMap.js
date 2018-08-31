@@ -5,5 +5,6 @@ export default {
   'zh-TW': '漢語',
   'fr-FR': 'Français',
   'ko-KR': '한국어',
-  'pt-BR': "Português (Brasil)"
+  'pt-BR': "Português (Brasil)",
+  'es-ES': "Español"
 };
