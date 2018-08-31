@@ -42,33 +42,43 @@ const Separator = styled.div`
 type Props = {
   goHomeAndClearState: () => {},
   goSettings: () => {},
+  onlySettings?: boolean,
   t: () => {}
 };
 
 class SettingsController extends Component<Props> {
   render() {
-    const { goHomeAndClearState, goSettings, t } = this.props;
+    const { goHomeAndClearState, goSettings, onlySettings, t } = this.props;
     return (
       <Container>
-        <ButtonContainer onClick={goSettings} buttonTheme="plain">
+        <ButtonContainer onClick={()=>goSettings(onlySettings)} buttonTheme="plain">
           <Icon size={ms(2.2)} color="primary" iconName='settings' />
           <ButtonText>{t('components.settingController.settings')}</ButtonText>
         </ButtonContainer>
-        <Separator />
-        <ButtonContainer onClick={goHomeAndClearState} buttonTheme="plain">
-          <Icon size={ms(2.2)} color="primary" iconName='logout' />
-          <ButtonText>{t('components.settingController.logout')}</ButtonText>
-        </ButtonContainer>
+        {!onlySettings && <Separator />}
+        {!onlySettings && 
+          <ButtonContainer onClick={goHomeAndClearState} buttonTheme="plain">
+            <Icon size={ms(2.2)} color="primary" iconName='logout' />
+            <ButtonText>{t('components.settingController.logout')}</ButtonText>
+          </ButtonContainer>
+        }
       </Container>
     );
   }
 }
 
+SettingsController.defaultProps = {
+  onlySettings: false
+};
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       goHomeAndClearState,
-      goSettings: () => dispatch => dispatch(push('/home/settings'))
+      goSettings: (onlySettings) => dispatch => {
+        const url = onlySettings? '/login/settings': '/home/settings';
+        return dispatch(push(url));
+      }
     },
     dispatch
   );
