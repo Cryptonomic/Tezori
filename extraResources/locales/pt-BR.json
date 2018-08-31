@@ -37,7 +37,7 @@
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data"
     },
-    "decimal_separator":",",
+    "decimal_separator":".",
     "back":"Anterior",
     "next":"Seguinte",
     "to":"para",
