@@ -1,10 +1,12 @@
 /* eslint flowtype-errors/show-errors: 0 */
 import React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import styled from 'styled-components';
 import { getNodesStatus } from '../../reduxContent/wallet/selectors';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
+import { wrapComponent } from '../../utils/i18n';
 
 import { getNodesError } from '../../utils/general';
 
@@ -26,11 +28,12 @@ const WarningIcon = styled(TezosIcon)`
 `;
 
 type Props = {
-  nodesStatus: object
+  nodesStatus: object,
+  t: () => {}
 };
 
 function NodesStatus(props: Props) {
-  const { nodesStatus } = props;
+  const { nodesStatus, t } = props;
   const nodesErrorMessage = getNodesError(nodesStatus.toJS());
   
   return nodesErrorMessage
@@ -39,7 +42,7 @@ function NodesStatus(props: Props) {
       <Container>
         <WarningIcon color="white" iconName="warning" />
         <span>
-          { nodesErrorMessage }
+          { t(nodesErrorMessage) }
         </span>
       </Container>
     )
@@ -52,4 +55,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(NodesStatus);
+export default compose(wrapComponent, connect(mapStateToProps))(NodesStatus);

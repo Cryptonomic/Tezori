@@ -92,7 +92,7 @@ const RestoreTabs = (props: Props1) => {
         active={type==='phrase'}
         onClick={() => changeFunc('phrase')}
       >
-        {t('components.restoreBackup.seed_pharse')}
+        {t('components.restoreBackup.seed_phrase')}
       </RestoreTabItem>
       {/* <RestoreTabItem
         active={type==='key'}
@@ -193,7 +193,7 @@ class RestoreBackup extends Component<Props> {
 
             {isPassword &&
               <PasswordInput
-                label={t('components.restoreBackup.seed_pharse_password')}
+                label={t('components.restoreBackup.seed_phrase_password')}
                 isShowed={isShowedPwd}
                 password={password}
                 changFunc={(newpassword) => this.setState({ password: newpassword })}
