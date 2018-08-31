@@ -1,5 +1,5 @@
 /* eslint flowtype-errors/show-errors: 0 */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
@@ -43,17 +43,12 @@ class TopBar extends Component<Props> {
 
     return (
       <Container onlyLogo={onlyLogo}>
-        {onlyLogo ? (
+        <InfoContainer>
           <Logo />
-        ) : (
-          <Fragment>
-            <InfoContainer>
-              <Logo />
-              <Text>{walletName}</Text>
-            </InfoContainer>
-            <SettingsController />
-          </Fragment>
-        )}
+          <Text>{walletName}</Text>
+        </InfoContainer>
+        <SettingsController onlySettings={onlyLogo} />
+        
       </Container>
     );
   }
