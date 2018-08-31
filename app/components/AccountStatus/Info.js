@@ -25,7 +25,8 @@ const ActivationOperation = styled.div`
   color: ${({ theme: { colors } }) => colors.accent};
   text-transform: uppercase;
   margin-left: 5px;
-  margin-right: 5px;
+  margin-right: 5px;  
+  white-space: nowrap;
 `;
 
 const ActivationOperationId = styled.div`

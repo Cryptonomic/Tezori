@@ -51,6 +51,13 @@ const AddressesTitle = styled.div`
   line-height: 1.5;
 `;
 
+const AddressLabel = styled.div`
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+
 type Props = {
   isManager?: boolean,
   isActive?: boolean,
@@ -70,7 +77,7 @@ function Address(props: Props) {
           size={ms(0)}
           color={isActive ? 'white' : 'secondary'}
         />
-        {t('components.address.manager_address')}
+        <AddressLabel>{t('components.address.manager_address')}</AddressLabel>
         <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
           <Button buttonTheme="plain">
             <HelpIcon
