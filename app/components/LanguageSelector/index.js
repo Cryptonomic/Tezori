@@ -1,7 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators, compose } from 'redux';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import i18n from 'i18next';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,8 +7,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { wrapComponent } from '../../utils/i18n';
 import localesMap from '../../constants/LocalesMap';
 import CustomSelect from '../../components/CustomSelect/';
-import { setLocale } from '../../reduxContent/settings/thunks';
-import { getLocale } from '../../reduxContent/settings/selectors';
 
 const ItemWrapper = styled(MenuItem)`
   &&& {
@@ -68,21 +64,4 @@ class LanguageSelector extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    locale: getLocale(state)
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      setLocale
-    },
-    dispatch
-  );
-}
-
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(
-  LanguageSelector
-);
+export default wrapComponent(LanguageSelector);
