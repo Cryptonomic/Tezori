@@ -34,6 +34,9 @@
       "language":"Idioma",
       "transactions":"Transacciones"
     },
+    "errors": {
+      "no_hex_data": "The provided string doesn't look like hex data"
+    },
     "decimal_separator":",",
     "back":"Atrás",
     "next":"Siguiente",
@@ -119,7 +122,11 @@
       "first_word":"1era Palabra",
       "second_word":"2nda palabra",
       "third_word":"3era palabra",
-      "nth_word":"{{index}}ava palabra"
+      "nth_word":"{{index}}ava palabra",
+      "errors": {
+        "invalid_word": "Palabra inválida, por favor vuelve a intentarlo.",
+        "typo_error": "Palabra inválida, por favor vuelve a intentarlo."
+      }
     },
     "delegate": {
       "delegate_settings":"Ajustes del Baker",
@@ -289,6 +296,13 @@
       "configuration_missing":"Falta la configuración del nodo",
       "close_wallet_description":"Por favor cierra la billetera y edita 'extraResources/walletSettings.json' antes de volver a abrir la billetera",
       "default_wallet_shape":"walletSettings.json debería verse así:"
+    }
+  },
+  "nodes": {
+    "errors": {
+      "wrong_server": "Palabra inválida, por favor vuelve a intentarlo.",
+      "wrong_network": "Parece que el nodo Tezos que estás usando está congelado o en la red equivocada. Por favor retrasa acciones adicionales.",
+      "not_synced": "Para que el servidor Conseil no está sincronizado con la red Tezos. Por favor retrasa acciones adicionales."
     }
   }
 }

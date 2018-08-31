@@ -34,6 +34,9 @@
       "language": "Language",
       "transactions": "Transactions"
     },
+    "errors": {
+      "no_hex_data": "The provided string doesn't look like hex data"
+    },
     "decimal_separator": ".",
     "back": "Back",
     "next": "Next",
@@ -119,7 +122,11 @@
       "first_word": "1st Word",
       "second_word": "2nd Word",
       "third_word": "3rd Word",
-      "nth_word": "{{index}}th Word"
+      "nth_word": "{{index}}th Word",
+      "errors": {
+        "invalid_word": "Invalid word, please check again!",
+        "typo_error": "It's a typo! Please check again"
+      }
     },
     "delegate": {
       "delegate_settings": "Delegate Settings",
@@ -289,6 +296,13 @@
       "configuration_missing": "Node configuration is missing",
       "close_wallet_description": "Please close the wallet and edit 'extraResources/walletSettings.json' and open the wallet again.",
       "default_wallet_shape": "walletSettings.json should look like:"
+    }
+  },
+  "nodes": {
+    "errors": {
+      "wrong_server": "Something's wrong with our servers. Please delay further actions.",
+      "wrong_network": "It seems the Tezos node you are using is either stuck or on the wrong network. Please delay further actions.",
+      "not_synced": "It seems the Conseil server is not synced with the Tezos network. Please delay further actions."
     }
   }
 }
