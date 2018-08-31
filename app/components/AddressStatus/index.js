@@ -30,6 +30,9 @@ const Title = styled.span`
   opacity: ${({ isActive }) => {
     return isActive ? '0.70' : '1';
   }};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 type Props = {

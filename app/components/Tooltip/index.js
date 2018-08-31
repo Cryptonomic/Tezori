@@ -111,7 +111,8 @@ const StyledTooltip = styled(TooltipAdapter)`
     }
 
     &-placement-top &-arrow {
-      left: 50%;
+      left: ${props =>
+        props.arrowPos && props.arrowPos.left ? props.arrowPos.left : '50%'};
     }
 
     &-placement-topLeft &-arrow {

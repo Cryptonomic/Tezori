@@ -322,7 +322,7 @@ class AddAddress extends Component<Props> {
                   right={30}
                 />
 
-                <StyledTooltip position="bottom" content={()=>EmailTooltip(t)}>
+                <StyledTooltip position="top" arrowPos={{ left: '71%' }} content={()=>EmailTooltip(t)}>
                   <Button buttonTheme="plain">
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>
@@ -336,7 +336,7 @@ class AddAddress extends Component<Props> {
                   onChange={(newActivationCode) => this.setState({ activationCode: newActivationCode })}
                   right={30}
                 />
-                <StyledTooltip position="bottom" content={()=>ActivationTooltip(t)}>
+                <StyledTooltip position="top" arrowPos={{ left: '71%' }} content={()=>ActivationTooltip(t)}>
                   <Button buttonTheme="plain">
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>

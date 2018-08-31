@@ -212,8 +212,8 @@
       "confirm_question":"Confirmas que quieres enviar"
     },
     "settingController": {
-      "settings":"Ajustes",
-      "logout":"Cerrar sesión"
+      "settings":"AJUSTES",
+      "logout":"CERRAR SESIÓN"
     },
     "termsModal": {
       "hi_there":"¡Hola!",
@@ -242,19 +242,19 @@
   "containers": {
     "homeAddAddress": {
       "add_account":"Agregar cuenta",
-      "refer_pdf_title":"Por favor referir al documento PDF que creaste durante la recaudación de fondos",
+      "refer_pdf_title":"Por favor referir al documento PDF que creaste durante la Fundraiser",
       "secret_key_15":"Clave secreta de 15 palabras",
-      "fundraiser_password":"Contraseña de la Recaudación de Fondos",
+      "fundraiser_password":"Contraseña de Fundraiser",
       "public_key_hash":"Clave pública del hash",
-      "fundraiser_email_address":"Dirección de correo electrónico de la Recaudación de Fondos",
+      "fundraiser_email_address":"Correo electrónico de Fundraiser",
       "activation_code":"Código de activación",
       "tooltips": {
-        "password_tooltip":"Esta es la contraseña que usaste para generar una billetera de papel Tezos para participar en la recaudación de fondos",
-        "email_tooltip":"Esta es la dirección de correo electrónico que usaste para generar una billetera de papel Tezos para participar en la recaudación de fondos",
-        "activation_code_tooltip":"Este es el código de activación que recibiste después de completar el proceso KYC/AML.  Un código de activación corresponde a la clave pública del hash y es requerido si participaste en la recaudación de fondos. Puedes completar el proceso en <1>verification.tezos.com</1> si todavía no lo has hecho.",
+        "password_tooltip":"Esta es la contraseña que usaste para generar una billetera de papel Tezos para participar en la Fundraiser",
+        "email_tooltip":"Esta es la dirección de correo electrónico que usaste para generar una billetera de papel Tezos para participar en la Fundraiser",
+        "activation_code_tooltip":"Este es el código de activación que recibiste después de completar el proceso KYC/AML.  Un código de activación corresponde a la clave pública del hash y es requerido si participaste en la Fundraiser. Puedes completar el proceso en <1>verification.tezos.com</1> si todavía no lo has hecho.",
         "public_key_hash_tooltip":"Esta es la clave pública del hash según se encuentra en la billetera de papel."
       },
-      "import_fundraiser":"Importar billetera de la recaudación de fondos",
+      "import_fundraiser":"Importar billetera de Fundraiser",
       "create_new_account":"Crear nueva cuenta",
       "restore_backup":"Recuperar del Respaldo"
     },
@@ -268,7 +268,7 @@
       "description":"Yo reconozco que he leído y aceptado los<1> Términos del Servicio</1> y la<3> Política de Privacidad</3> ",
       "create_new_wallet_btn":"Crear una nueva billetera",
       "open_exisiting_wallet_btn":"Abrir billetera existente",
-      "want_to_import_fundraiser_paper_wallet":"¿Quieres importar tu billetera de papel de la recaudación de fondos?",
+      "want_to_import_fundraiser_paper_wallet":"¿Quieres importar tu billetera de papel de la Fundraiser?",
       "create_named_wallet":"<0><0>Crear una billetera <1>{{name}}</1></0></0>primero",
       "tagline":"Una billetera comunitaria para Tezos",
       "app_name":"Tezori"
