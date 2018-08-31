@@ -30,7 +30,8 @@ describe('action type ADD_MESSAGE', () => {
     message: {
       message: 'test',
       isError: true,
-      hash: 'hash'
+      hash: 'hash',
+      localeParam: 100
     }
   });
 
@@ -38,7 +39,8 @@ describe('action type ADD_MESSAGE', () => {
     type: 'ADD_MESSAGE',
     message: 'test',
     isError: true,
-    hash: 'hash'
+    hash: 'hash',
+    localeParam: 100
   };
 
   test('should return correct state', () => {

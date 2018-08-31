@@ -1,55 +1,33 @@
 import React, { Component } from 'react';
-import { TextField } from 'material-ui';
-import Warning from 'material-ui/svg-icons/alert/warning';
+import Warning from '@material-ui/icons/Warning';
 import styled from 'styled-components';
-import classnames from 'classnames';
+import TextField from '../TextField';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon';
-
-const inputStyles = {
-  underlineFocusStyle: {
-    borderColor: '#2c7df7'
-  },
-  underlineStyle: {
-    borderColor: '#d0d2d8'
-  },
-  errorUnderlineStyle: {
-    borderColor: '#ea776c'
-  },
-  floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)'
-  },
-  floatingLabelFocusStyle: {
-    color: '#5571a7'
-  }
-};
+import { wrapComponent } from '../../utils/i18n';
 
 const StyledInputContainer = styled.div`
   position: relative;
   height: 103px;
-  .valid-button {
-    position: absolute;
-    right: 12px;
-    top: 42px;
-  }
-  .valid-icon {
-    fill: none !important;
-    stroke-width: 2;
-    stroke: #259c90;
-    width: 18px !important;
-    height: 18px !important;
-  }
-  .no-valid-icon {
-    fill: #ea776c !important;
-    width: 18px !important;
-    height: 18px !important;
-  }
+  padding-top: 16px;
+  width: 45%;
 `;
 
 const CheckIcon = styled(TezosIcon)`
   position: absolute;
   top: 42px;
   right: 5px;
+`;
+
+const WarningIcon = styled(Warning)`
+  &&& {
+    position: absolute;
+    right: 12px;
+    top: 42px;
+    fill: ${({ theme: { colors } }) => colors.error1 };
+    width: 18px;
+    height: 18px;
+  }
 `;
 
 const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
@@ -59,17 +37,18 @@ const validIcon = (isShow: boolean = false, isValid: boolean = false) => {
   if (isValid) {
     return <CheckIcon iconName="checkmark2" size={ms(0)} color="check" />;
   }
-  return <Warning className={classnames('no-valid-icon', 'valid-button')} />;
+  return <WarningIcon />;
 };
 
 type Props = {
   value: string,
   index: number,
   checkValidation: () => {},
-  onEnter: () => {}
+  onEnter: () => {},
+  t: () => {}
 };
 
-export default class InputValidComponent extends Component<Props> {
+class InputValidComponent extends Component<Props> {
   props: Props;
   state = {
     isInputVal: false,
@@ -79,15 +58,16 @@ export default class InputValidComponent extends Component<Props> {
   };
 
   getLabel = index => {
+    const { t } = this.props;
     switch (index) {
       case 1:
-        return '1st Word';
+        return t('components.createAccountSlide.first_word');
       case 2:
-        return '2nd Word';
+        return t('components.createAccountSlide.second_word');
       case 3:
-        return '3rd Word';
+        return t('components.createAccountSlide.third_word');
       default:
-        return `${index}th Word`;
+        return t('components.createAccountSlide.nth_word', {index});
     }
   };
 
@@ -106,7 +86,7 @@ export default class InputValidComponent extends Component<Props> {
         this.setState({
           isMatched: false,
           isMatching: false,
-          errorText: 'Invalid word, please check again!'
+          errorText: 'components.createAccountSlide.errors.invalid_word'
         });
       } else {
         this.setState({ isMatched: false, isMatching: true, errorText: '' });
@@ -115,7 +95,7 @@ export default class InputValidComponent extends Component<Props> {
       this.setState({
         isMatched: false,
         isMatching: false,
-        errorText: "It's a typo! Please check again"
+        errorText: 'components.createAccountSlide.errors.typo_error'
       });
     }
 
@@ -129,18 +109,15 @@ export default class InputValidComponent extends Component<Props> {
   };
 
   render() {
-    const label = this.getLabel(this.props.index);
+    const { index, t } = this.props;
+    const label = this.getLabel(index);
+    const {errorText} = this.state;
     return (
       <StyledInputContainer>
         <TextField
-          floatingLabelText={label}
-          floatingLabelStyle={inputStyles.floatingLabelStyle}
-          floatingLabelFocusStyle={inputStyles.floatingLabelFocusStyle}
-          underlineStyle={inputStyles.underlineStyle}
-          underlineFocusStyle={inputStyles.underlineFocusStyle}
-          errorText={this.state.errorText}
-          errorStyle={{ color: '#ea776c', borderColor: '#ea776c' }}
-          onChange={(_, newVal) => this.changFunc(newVal)}
+          label={label}
+          onChange={(newVal) => this.changFunc(newVal)}
+          errorText={t(errorText)}
           onKeyPress={this.keyHandler}
         />
         {validIcon(
@@ -151,3 +128,5 @@ export default class InputValidComponent extends Component<Props> {
     );
   }
 }
+
+export default wrapComponent(InputValidComponent);

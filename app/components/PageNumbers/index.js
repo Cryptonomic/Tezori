@@ -1,126 +1,90 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import LeftIcon from 'material-ui/svg-icons/navigation/chevron-left';
-import RightIcon from 'material-ui/svg-icons/navigation/chevron-right';
+import styled from 'styled-components';
+import LeftIcon from '@material-ui/icons/ChevronLeft';
+import RightIcon from '@material-ui/icons/ChevronRight';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   margin-top: 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 45px;
+  justify-content: flex-end;
+  height: 40px;
   user-select: none;
 `;
 
 const PageNavButtons = styled.div`
-  background-color: #E3E7F1;
-  cursor: pointer;
+  background-color: ${({ theme: { colors } }) => colors.gray1 };
+  cursor: ${({ isactive }) => isactive? 'pointer' : 'not-allowed' };
+  pointer-events: ${({ isactive }) => isactive? 'auto' : 'none' };
+  color: ${({isactive,  theme: { colors } }) => isactive ? colors.primary : "rgba(18, 50, 98, 0.2)" };
   height: 100%;
 
   &:hover {
-    background-color: lightgray;
+    background-color: ${({ theme: { colors } }) => colors.gray7 };
     transition: background-color 0.2s;
   }
 `;
 
 const LeftButton = styled(PageNavButtons)`
-  padding: 10px 10px 10px 15px;
+  padding: 8px 3px 8px 8px;
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
-  margin-right: 3px;
+  margin-right: 1px;
 `;
 
 const RightButton = styled(PageNavButtons)`
-  padding: 10px 15px 10px 10px;
+  padding: 8px 8px 8px 3px;
   border-top-right-radius: 50%;
   border-bottom-right-radius: 50%;
-  margin-left: 3px;
+  margin-left: 1px;
 `;
-
-const PageNumber = styled.div`
-  height: 100%;
+const NumberContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 10px;
-  cursor: pointer;
-  ${({ activePage }) => {
-    if ( activePage ) {
-      return css`
-        background-color: lightgray;
-        font-weight: 600;
-      `;
-    }
-    return css`
-      background-color: #E3E7F1;
-      &:hover {
-        background-color: lightgray;
-        transition: background-color 0.2s;
-      }
-    `;
-  }};
+  color: ${({ theme: { colors } }) => colors.primary };
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 15px;
+`;
+const PageOf = styled.div`
+  font-weight: 300;
+  opacity: 0.78;
+  margin: 0 7px;
 `;
 
 type Props = {
   currentPage: number,
-  numberOfPages: number,
-  onClick: () => {}
+  totalNumber: number,
+  firstNumber: number,
+  lastNumber: number,
+  onClick: () => {},
+  t: () => {}
 };
 
-export default function PageNumbers({
-  currentPage,
-  numberOfPages,
-  onClick
-}: Props) {
-  function onPageClick(pageNum) {
-    return () => {
-      if (pageNum > 0 && pageNum <= numberOfPages) {
-        onClick(pageNum);
-      }
-    };
-  }
+const PageNumbers = ( props: Props) => {
 
-  function renderLeftButton() {
-    return (
-      <LeftButton
-        onClick={onPageClick(currentPage - 1)}
-      >
-        <LeftIcon />
-      </LeftButton>
-    );
-  }
-
-  function renderRightButton() {
-    return (
-      <RightButton
-        onClick={onPageClick(currentPage + 1)}
-      >
-        <RightIcon />
-      </RightButton>
-    );
-  }
-
-  function renderPageNumber(pageNum) {
-    return (
-      <PageNumber
-        activePage={pageNum === currentPage}
-        key={pageNum}
-        onClick={onPageClick(pageNum)}
-      >
-        {pageNum}
-      </PageNumber>
-    );
-  }
-
-  const pageArray = Array(numberOfPages)
-    .fill(0)
-    .map((_, index) => index + 1);
+  const { currentPage, totalNumber, firstNumber, lastNumber, onClick, t } = props;
 
   return (
     <Container>
-      {renderLeftButton()}
-      {pageArray.map(renderPageNumber)}
-      {renderRightButton()}
+      <NumberContainer>
+        {firstNumber+1}-{lastNumber}
+        <PageOf>{t('general.of')}</PageOf>
+        {totalNumber}
+      </NumberContainer>
+      <LeftButton
+        isactive={firstNumber!==0}
+        onClick={()=>onClick(currentPage - 1)}
+      >
+        <LeftIcon />
+      </LeftButton>
+      <RightButton
+        isactive={lastNumber<totalNumber}
+        onClick={()=>onClick(currentPage + 1)}
+      >
+        <RightIcon />
+      </RightButton>
     </Container>
   );
 }
+export default wrapComponent(PageNumbers);

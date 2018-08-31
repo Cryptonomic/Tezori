@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import { clipboard } from 'electron';
 import styled, { withTheme } from 'styled-components';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
+import ContentCopy from '@material-ui/icons/FileCopyOutlined';
 import { ms } from '../../styles/helpers';
+import { wrapComponent } from '../../utils/i18n';
 
 const CopyConfirmationTooltip = styled.div`
   position: absolute;
@@ -46,7 +48,8 @@ class CopyIcon extends Component<Props> {
       text,
       color,
       theme: { colors },
-      className
+      className,
+      t
     } = this.props;
     return (
       <Container>
@@ -62,7 +65,7 @@ class CopyIcon extends Component<Props> {
           className={className}
         />
         <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
-          Copied!
+          {t('components.copyIcon.copied')}
         </CopyConfirmationTooltip>
       </Container>
     );
@@ -73,4 +76,4 @@ CopyIcon.defaultProps = {
   color: 'white'
 };
 
-export default withTheme(CopyIcon);
+export default compose(wrapComponent, withTheme)(CopyIcon);

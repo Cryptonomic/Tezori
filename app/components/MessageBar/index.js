@@ -1,18 +1,22 @@
 // @flow
 import React from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Snackbar } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
+import { wrapComponent } from '../../utils/i18n';
 
 import { clearMessageState } from '../../reduxContent/message/actions';
 import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
-  padding: 10px 0;
+  padding: 25px 30px 30px 30px;
+  background-color: ${({ isError }) => isError? 'rgba(255, 0, 0, 0.9)':'rgba(37, 156, 144, 0.9)' };
+  width: 100%;
+  color: ${({ theme: { colors } }) => colors.white};
 `;
 const StyledCloseIcon = styled(CloseIcon)`
   cursor: pointer;
@@ -36,13 +40,14 @@ const MessageHeader = styled.div`
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 1.1px;
+  white-space: nowrap;
 `;
 const MessageFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: baseline;
   line-height: 16px;
-  padding-bottom: 16px;
+  padding-top: 16px;
 `;
 const LinkContainer = styled.div`
   display: flex;
@@ -63,30 +68,40 @@ const HashTitle = styled.div`
   font-weight: 500;
 `;
 
+const SnackbarWrapper = styled(Snackbar)`
+  &&& {
+    height: auto;
+    min-width: 500px;
+  }
+`;
+
 type Props1 = {
   content: string,
   hash: string,
+  isError: boolean,
+  localeParam?: number | string | null,
   openLink: () => {},
-  onClose: () => {}
+  onClose: () => {},
+  t: () => {}
 };
 const MessageContent = (props: Props1) => {
-  const { content, hash, openLink, onClose } = props;
+  const { content, hash, openLink, onClose, isError, localeParam, t } = props;
   return (
-    <MessageContainer>
+    <MessageContainer isError={isError}>
       <StyledCloseIcon onClick={onClose} />
       <MessageHeader>
         {!!hash && (
           <CheckIcon iconName="checkmark2" size={ms(0)} color="white" />
         )}
-        {content}
+        {t(content, {localeParam})}
       </MessageHeader>
       {/* {!!hash && <LinkButton onClick={openLink}>See it on chain</LinkButton>} */}
       {!!hash && (
         <MessageFooter>
-          <HashTitle>OPERATION ID:</HashTitle>
+          <HashTitle>{t('components.messageBar.operation_id')}:</HashTitle>
           <HashValue>{hash}</HashValue>
           <LinkContainer onClick={openLink}>
-            <LinkTitle>View on a block explorer</LinkTitle>
+            <LinkTitle>{t('components.messageBar.view_block_explorer')}</LinkTitle>
             <BroadIcon iconName="new-window" size={ms(0)} color="white" />
           </LinkContainer>
         </MessageFooter>
@@ -97,12 +112,12 @@ const MessageContent = (props: Props1) => {
 
 type Props = {
   clearMessageState: () => {},
-  message: object
+  message: object,
+  t: () => {}
 };
 
 class MessageBar extends React.Component<Props> {
   props: Props;
-
   openLink = url => {
     const { clearMessageState } = this.props;
     clearMessageState();
@@ -118,26 +133,28 @@ class MessageBar extends React.Component<Props> {
     return newHash;
   };
 
+
   render() {
-    const { message, clearMessageState } = this.props;
+    const { message, clearMessageState, t } = this.props;
     const messageText = message.get('message') || '';
     const hash = message.get('hash') || '';
-    const bodyStyle = message.get('isError')
-      ? { backgroundColor: 'rgba(255, 0, 0, 0.9)' }
-      : { backgroundColor: 'rgba(37, 156, 144, 0.9)' };
-    bodyStyle.height = 'auto';
-    bodyStyle.minWidth = '500px';
+    const isError = message.get('isError') || false;
+    const localeParam = message.get('localeParam');
 
     return (
-      <Snackbar
+      <SnackbarWrapper
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         open={!!messageText}
-        bodyStyle={bodyStyle}
+        onClose={clearMessageState}
         message={
           <MessageContent
             content={messageText}
             hash={this.changeHash(hash)}
             openLink={() => this.openLink(hash)}
             onClose={clearMessageState}
+            isError={isError}
+            localeParam={localeParam}
+            t={t}
           />
         }
       />
@@ -159,4 +176,5 @@ function mapDispatchToProps(dispatch) {
     dispatch
   );
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MessageBar);
+
+export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(MessageBar);

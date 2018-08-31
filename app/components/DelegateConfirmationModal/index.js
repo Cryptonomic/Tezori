@@ -1,9 +1,7 @@
 // @flow
 import React from 'react';
-import { Dialog } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
-
 import styled from 'styled-components';
+import Modal from '../CustomModal';
 import Button from './../Button/';
 import TezosIcon from '../TezosIcon/';
 import { ms } from '../../styles/helpers';
@@ -12,33 +10,10 @@ import Fees from '../Fees/';
 import Loader from '../Loader';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
-
-const inputStyles = {
-  underlineFocusStyle: {
-    borderColor: '#2c7df7'
-  },
-  underlineStyle: {
-    borderColor: '#d0d2d8'
-  },
-  errorUnderlineStyle: {
-    borderColor: '#ea776c'
-  },
-  floatingLabelStyle: {
-    color: 'rgba(0, 0, 0, 0.38)'
-  },
-  floatingLabelFocusStyle: {
-    color: '#5571a7'
-  }
-};
-const ModalDialog = styled(Dialog)`
-  padding-top: 0px !important;
-  & > div > div > div > div {
-    max-height: none !important;
-  }
-`;
+import { wrapComponent } from '../../utils/i18n';
 
 const ModalContainer = styled.div`
-  padding: 0 98px 43px 98px;
+  padding: 43px 76px 0 76px;
 `;
 const DelegateTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
@@ -56,17 +31,17 @@ const AddressContainer = styled.div`
 `;
 
 const BottomContainer = styled.div`
-  width: 100%;
-  height: 98px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 98px;
-  background-color: ${({ theme: { colors } }) => colors.light};
+  align-items: flex-end;
+  margin-top: 42px;
+  padding: 0 76px 15px 76px;
+  background-color: ${({ theme: { colors } }) => colors.gray1};
 `;
 const DelegateButton = styled(Button)`
-  height: 50px;
   width: 194px;
+  height: 50px;
+  margin-bottom: 10px;
   padding: 0;
 `;
 
@@ -88,12 +63,13 @@ const InfoText = styled.div`
   margin-left: 11px;
   line-height: 21px;
 `;
-const StyledCloseIcon = styled(CloseIcon)`
-  cursor: pointer;
-  position: absolute;
-  top: 47px;
-  right: 66px;
-  fill: #7190c6 !important;
+
+const FeesContainer =styled.div`
+  margin-top: 19px;
+`;
+
+const InputAddressContainer =styled.div`
+  margin-top: 19px;
 `;
 
 type Props = {
@@ -112,7 +88,8 @@ type Props = {
   isShowedPwd: boolean,
   onShowPwd: () => {},
   isDelegateIssue: boolean,
-  onDelegateIssue: () => {}
+  onDelegateIssue: () => {},
+  t: () => {}
 };
 
 const DelegateConfirmationModal = (props: Props) => {
@@ -132,28 +109,20 @@ const DelegateConfirmationModal = (props: Props) => {
     isShowedPwd,
     onShowPwd,
     isDelegateIssue,
-    onDelegateIssue
+    onDelegateIssue,
+    t
   } = props;
   const isDisabled = isLoading || !newAddress || !password || isDelegateIssue;
 
   return (
-    <ModalDialog
-      modal
+    <Modal
+      title={t("components.delegate.change_delegate")}
       open={open}
-      title="Change Delegate"
-      bodyStyle={{ padding: '0' }}
-      contentStyle={{ width: '671px', maxHeight: 'none' }}
-      titleStyle={{
-        padding: '43px 98px 21px 98px',
-        fontSize: '24px',
-        color: '#123262',
-        letterSpacing: '1px',
-        lineHeight: '42px'
-      }}
+      onClose={onCloseClick}
+      style={{width: '651px'}}
     >
       <ModalContainer>
-        <StyledCloseIcon onClick={onCloseClick} />
-        <DelegateTitle>You are currently delegating to</DelegateTitle>
+        <DelegateTitle>{t('components.delegate.current_delegate')}</DelegateTitle>
         <AddressContainer>
           <TezosAddress
             address={address}
@@ -162,38 +131,39 @@ const DelegateConfirmationModal = (props: Props) => {
             color2="index0"
           />
         </AddressContainer>
-        <InputAddress
-          labelText='Change Delegate to New Address' 
-          addressType="delegate"
-          tooltip={false}
-          changeDelegate={onAddressChange}
-          onIssue={onDelegateIssue}
-        />
-        <Fees
-          styles={{ minWidth: 206, width: 'auto' }}
-          underlineStyle={inputStyles.underlineStyle}
-          low={averageFees.low}
-          medium={averageFees.medium}
-          high={averageFees.high}
-          fee={fee}
-          onChange={handleFeeChange}
-        />
+        <InputAddressContainer>
+          <InputAddress
+            labelText={t('components.delegateConfirmationModal.new_address_label')}
+            addressType="delegate"
+            tooltip={false}
+            changeDelegate={onAddressChange}
+            onIssue={onDelegateIssue}
+          />
+        </InputAddressContainer>
+        <FeesContainer>
+          <Fees
+            low={averageFees.low}
+            medium={averageFees.medium}
+            high={averageFees.high}
+            fee={fee}
+            onChange={handleFeeChange}
+          />
+        </FeesContainer>
         <WarningContainer>
           <TezosIcon iconName="info" size={ms(5)} color="info" />
           <InfoText>
-            Your delegation change will not show up until the change is
-            confirmed on the blockchain.
+            {t('components.delegateConfirmationModal.delegate_warning')}
           </InfoText>
         </WarningContainer>
       </ModalContainer>
       <BottomContainer>
         <PasswordInput
-          label='Wallet Password'
+          label={t("general.nouns.wallet_password")}
           isShowed={isShowedPwd}
           password={password}
           changFunc={handlePasswordChange}
           onShow={onShowPwd}
-          containerStyle={{marginTop: '-27px', width: '50%'}}
+          containerStyle={{width: '60%', marginTop: '10px'}}
         />
         <DelegateButton
           buttonTheme="primary"
@@ -201,11 +171,11 @@ const DelegateConfirmationModal = (props: Props) => {
           small
           onClick={onDelegate}
         >
-          Change Delegate
+          {t('components.delegate.change_delegate')}
         </DelegateButton>
       </BottomContainer>
       {isLoading && <Loader />}
-    </ModalDialog>
+    </Modal>
   );
 };
 DelegateConfirmationModal.defaultProps = {
@@ -215,4 +185,4 @@ DelegateConfirmationModal.defaultProps = {
   password: '',
   isLoading: false
 };
-export default DelegateConfirmationModal;
+export default wrapComponent(DelegateConfirmationModal);

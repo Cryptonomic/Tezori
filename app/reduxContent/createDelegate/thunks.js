@@ -22,8 +22,8 @@ const { sendOriginationOperation } = TezosOperations;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
-    const averageFees = await fetchAverageFees(nodes, 'origination');
+    const settings = state().settings.toJS();
+    const averageFees = await fetchAverageFees(settings, 'origination');
     return averageFees;
   };
 }
@@ -36,7 +36,7 @@ export function createNewAccount(
   publicKeyHash
 ) {
   return async (dispatch, state) => {
-    const nodes = state().nodes.toJS();
+    const settings = state().settings.toJS();
     const walletPassword = state().wallet.get('password');
     const identities = state()
       .wallet.get('identities')
@@ -45,10 +45,10 @@ export function createNewAccount(
     const amountInUtez = tezToUtez(parsedAmount);
 
     const validations = [
-      { value: amount, type: 'notEmpty', name: 'Amount' },
+      { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
       { value: amountInUtez, type: 'posNum', name: 'Amount' },
-      { value: passPhrase, type: 'notEmpty', name: 'Pass Phrase' },
+      { value: passPhrase, type: 'notEmpty', name: 'pass' },
       { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' }
     ];
 
@@ -59,7 +59,7 @@ export function createNewAccount(
     }
 
     if (passPhrase !== walletPassword) {
-      const error = 'Incorrect password';
+      const error = "components.messageBar.messages.incorrect_password";
       dispatch(addMessage(error, true));
       return false;
     }
@@ -70,7 +70,7 @@ export function createNewAccount(
       publicKeyHash,
       publicKeyHash
     );
-    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+    const { url, apiKey } = getSelectedNode(settings, TEZOS);
     console.log('-debug: - iiiii - url, apiKey', url, apiKey);
     const newAccount = await sendOriginationOperation(
       url,
@@ -96,7 +96,7 @@ export function createNewAccount(
         && newAccount.results.contents[0].metadata.operation_result;
 
       if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = 'Origination operation failed';
+        const error = "components.messageBar.messages.origination_operation_failed";
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
@@ -136,7 +136,7 @@ export function createNewAccount(
       // todo: add transaction
       dispatch(
         addMessage(
-          `Successfully started address origination.`,
+          "components.messageBar.messages.success_address_origination",
           false,
           operationId
         )

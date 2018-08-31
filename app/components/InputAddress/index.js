@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TextField } from 'material-ui';
-import { compose } from 'redux';
 
+import TextField from '../TextField';
 import { wrapComponent } from '../../utils/i18n';
 import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
@@ -41,12 +40,13 @@ const HelpIcon = styled(TezosIcon)`
 const DelegateContainer = styled.div`
   width: 100%;
   position: relative;
+  padding-top: 14px;
 `;
 
 const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
-  top: 44px;
+  top: 42px;
 `;
 
 type Props = {
@@ -70,23 +70,22 @@ class InputAddress extends React.PureComponent<Props> {
     const {t} = this.props;
     return (
       <TooltipContainer>
-        <TooltipTitle>{t('general.tooltips.delegate.title')}</TooltipTitle>
+        <TooltipTitle>{t('components.inputAddress.setting_delegate')}</TooltipTitle>
         <TooltipContent1>
-          {t('general.tooltips.delegate.content1')}
+          {t('components.inputAddress.contents.content1')}
         </TooltipContent1>
         <TooltipContent1>
-          {t('general.tooltips.delegate.content2')}
+          {t('components.inputAddress.contents.content2')}
         </TooltipContent1>
         <TooltipContent2>
-          {t('general.tooltips.delegate.content3')}
+          {t('components.inputAddress.contents.content3')}
         </TooltipContent2>
       </TooltipContainer>
     );
   };
 
-  validateAddress = (event, changeDelegate, addressType = 'send') => {
+  validateAddress = (delegateText, changeDelegate, addressType = 'send') => {
     const {t, onIssue} = this.props;
-    const delegateText = event.target.value;
      
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
@@ -95,19 +94,19 @@ class InputAddress extends React.PureComponent<Props> {
 
     if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: addressType === 'send' ? t('general.errors.address_validation.send_address') :  t('general.errors.address_validation.delegate_address')
+        error: addressType === 'send' ? t('components.inputAddress.errors.send_address') :  t('components.inputAddress.errors.delegate_address')
       })
     } else if (!lengthRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: t('general.errors.address_validation.length')
+        error: t('components.inputAddress.errors.length')
       })
     } else if (excludeSpecialChars.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: t('general.errors.address_validation.special_chars')
+        error: t('components.inputAddress.errors.special_chars')
       })
     }  else if ((this.props.userAddress === delegateText) && delegateText !== '') {
       this.setState({
-        error:  t('general.errors.address_validation.send_funds')
+        error:  t('components.inputAddress.errors.send_funds')
       })
     } else {
       this.setState({
@@ -124,9 +123,8 @@ class InputAddress extends React.PureComponent<Props> {
     return (
       <DelegateContainer>
         <TextField
-          floatingLabelText={this.props.labelText}
-          style={{ width: '100%' }}
-          onChange={(e) => this.validateAddress(e, this.props.changeDelegate, this.props.addressType)}
+          label={this.props.labelText}
+          onChange={(value) => this.validateAddress(value, this.props.changeDelegate, this.props.addressType)}
           errorText={this.state.error}
         />
         {this.props.tooltip &&
@@ -137,7 +135,7 @@ class InputAddress extends React.PureComponent<Props> {
               offset: [70, 0]
             }}
             arrowPos={{
-              left: '70%'
+              left: '71%'
             }}
           >
             <TextfieldTooltip
@@ -159,4 +157,4 @@ class InputAddress extends React.PureComponent<Props> {
 InputAddress.defaultProps = {
   onIssue: () => null
 }
-export default compose(wrapComponent)(InputAddress)
+export default wrapComponent(InputAddress)

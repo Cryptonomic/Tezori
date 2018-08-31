@@ -3,10 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { compose } from 'redux';
+import { Trans } from 'react-i18next';
+
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
+import LanguageSelector from '../../components/LanguageSelector/';
 import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 
@@ -46,7 +49,7 @@ const Link = styled(Strong)`
 `;
 
 const Description = styled.span`
-  margin-left: -10px;
+  margin-left: 10px;
 `;
 
 const Tip = styled(Description)`
@@ -145,7 +148,7 @@ const BgContainerImg = styled.img`
   z-index: 0;
   animation: fadeIn 3s forwards;
   animation-delay: 0.5s;
-  
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -167,7 +170,7 @@ const BgCircle = styled.img`
   opacity: 0;
   backface-visibility: hidden;
   animation: fadeInOut 2000ms ease-in-out infinite alternate;
-  
+
   @keyframes fadeInOut {
     0% {
       opacity: 0;
@@ -237,7 +240,7 @@ class LoginHome extends Component<Props> {
         <DefaultContainer>
           <Section>
             <AppName>{name}</AppName>
-            <AppSubtitle>{tagline}</AppSubtitle>
+            <AppSubtitle>{t(tagline)}</AppSubtitle>
           </Section>
           <Section>
             <WalletContainers>
@@ -246,7 +249,7 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('create')}
                 disabled={!this.state.isAgreement}
               >
-                {t('login.create_new_wallet_btn')}
+                {t('containers.loginHome.create_new_wallet_btn')}
               </CreateWalletButton>
             </WalletContainers>
             <WalletContainers>
@@ -255,15 +258,17 @@ class LoginHome extends Component<Props> {
                 onClick={() => this.goTo('import')}
                 disabled={!this.state.isAgreement}
               >
-                {t('login.open_exisiting_wallet_btn')}
+                {t('containers.loginHome.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
+              <LanguageSelector />
               <Tip>
-                <div>{t('login.want_to_import_fundraiser_paper_wallet')}</div>
+                <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
-                  <Link onClick={() => this.goTo('create')}>
-                    <Strong>{t('login.create_named_wallet', { name })}</Strong>
-                  </Link>{' '}
-                  {t('login.create_named_wallet_end')}
+                  <Trans i18nKey="containers.loginHome.create_named_wallet" name={name}>
+                    <Link onClick={() => this.goTo('create')}>
+                      <Strong>Create a {name} wallet</Strong>
+                    </Link> first.                    
+                  </Trans>
                 </div>
               </Tip>
             </WalletContainers>
@@ -275,10 +280,12 @@ class LoginHome extends Component<Props> {
             onCheck={this.updateStatusAgreement}
           />
           <Description>
-            I acknowledge that I have read and accepted the
-            <Link onClick={this.openTermsService}> Terms of Service </Link>
-            and
-            <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
+            <Trans i18nKey="containers.loginHome.description">
+              I acknowledge that I have read and accepted the
+              <Link onClick={this.openTermsService}> Terms of Service </Link>
+              and
+              <Link onClick={this.openPrivacyPolicy}> Privacy Policy</Link>
+            </Trans>
           </Description>
         </TermsAndPolicySection>
         <TermsModal

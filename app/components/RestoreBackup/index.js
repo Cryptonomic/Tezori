@@ -1,14 +1,15 @@
 import React, {Fragment, Component} from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { TextField, Toggle } from 'material-ui';
+import Switch from '@material-ui/core/Switch';
 import styled from 'styled-components';
-import { ms } from '../../styles/helpers';
+import TextField  from '../TextField';
 import Button from '../Button';
 import SeedInput from './SeedInput';
 import PasswordInput from '../PasswordInput';
 import { importAddress } from '../../reduxContent/wallet/thunks';
 import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
+import { wrapComponent } from '../../utils/i18n';
 
 const MainContainer = styled.div`
   position: relative;
@@ -41,12 +42,30 @@ const RestoreTabItem = styled.div`
   background-color:  ${({ theme: { colors }, active }) => (active? colors.accent: 'rgba(148, 169, 209, 0.13)')};
   color: ${({ theme: { colors }, active }) => (active? colors.white: colors.index0) };
   flex: 1;
-`
-
-const ToggleWrapper = styled(Toggle)`
+`;
+const ToggleContainer = styled.div`
   max-width: 60%;
   margin-top: 35px;
-`
+  display: flex;
+  align-items: center;
+`;
+const ToggleLabel = styled.div`
+  font-size: 16px;
+  color: ${ ({ theme: { colors } }) => colors.black2 };
+  font-weight: 300;
+  
+`;
+const ToggleWrapper = styled(Switch)`
+  &&& {
+    & > span[class*='checked'] {    
+      color: ${({ theme: { colors } }) => colors.accent };
+      & + span {
+        background-color: ${({ theme: { colors } }) => colors.accent };
+      }
+    }
+  }
+  
+`;
 const RestoreFooter = styled.div`
   margin-top: auto;
   display: flex;
@@ -62,15 +81,30 @@ const RestoreButton = styled(Button)`
 `
 type Props1 = {
   type: string,
-  changeFunc: () => {}
+  changeFunc: () => {},
+  t: () => {}
 };
 const RestoreTabs = (props: Props1) => {
-  const { type, changeFunc } = props;
+  const { type, changeFunc, t } = props;
   return (
     <RestoreTabContainer>
-      <RestoreTabItem active={type==='phrase'} onClick={() => changeFunc('phrase')}>SEED PHRASE</RestoreTabItem>
-      {/* <RestoreTabItem active={type==='key'} onClick={() => changeFunc('key')}>PRIVATE KEY</RestoreTabItem> */}
-      <RestoreTabItem active={type==='key'}>PRIVATE KEY</RestoreTabItem>
+      <RestoreTabItem
+        active={type==='phrase'}
+        onClick={() => changeFunc('phrase')}
+      >
+        {t('components.restoreBackup.seed_phrase')}
+      </RestoreTabItem>
+      {/* <RestoreTabItem
+        active={type==='key'}
+        onClick={() => changeFunc('key')}
+      >
+        {t('components.restoreBackup.private_key')}
+      </RestoreTabItem> */}
+      <RestoreTabItem
+        active={type==='key'}
+      >
+        {t('components.restoreBackup.private_key')}
+      </RestoreTabItem>
     </RestoreTabContainer>
   )
 }
@@ -78,7 +112,8 @@ const RestoreTabs = (props: Props1) => {
 
 
 type Props = {
-  importAddress?: () => {}
+  importAddress?: () => {},
+  t: () => {}
 };
 
 class RestoreBackup extends Component<Props> {
@@ -126,6 +161,7 @@ class RestoreBackup extends Component<Props> {
 
   render() {
     const { type, seeds, inputValue, password, isPassword, isShowedPwd, key } = this.state;
+    const { t } = this.props;
     let isdisabled = false;
     if (type === 'phrase') {
       isdisabled = (!seeds.length && !inputValue) ;
@@ -135,7 +171,8 @@ class RestoreBackup extends Component<Props> {
     return(
       <MainContainer>
         <RestoreHeader>
-          Restore from <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} />
+          {t('components.restoreBackup.restore_from')}
+          <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} t={t} />
         </RestoreHeader>
         {type==='phrase' &&
           <Fragment>
@@ -145,18 +182,18 @@ class RestoreBackup extends Component<Props> {
               onChangeInput={this.onChangeInput}
               onChangeItems={this.onChangeItems}
             />
-            <ToggleWrapper
-              label="This seed phrase is encrypted with a password"
-              labelPosition="left"
-              labelStyle={{fontSize: '16px', fontWeight: '300', color: '#4a4a4a'}}
-              thumbSwitchedStyle={{backgroundColor: '#2c7df7'}}
-              trackSwitchedStyle={{backgroundColor: 'rgba(44, 125, 247, 0.5)'}}
-              onToggle={()=> this.setState({isPassword: !isPassword})}
-            />
+            <ToggleContainer>
+              <ToggleLabel>
+                {t('components.restoreBackup.seed_encrypted_label')}
+              </ToggleLabel>
+              <ToggleWrapper
+                onChange={()=> this.setState({isPassword: !isPassword})}
+              />
+            </ToggleContainer>
 
             {isPassword &&
               <PasswordInput
-                label='Seed Pharse Password'
+                label={t('components.restoreBackup.seed_phrase_password')}
                 isShowed={isShowedPwd}
                 password={password}
                 changFunc={(newpassword) => this.setState({ password: newpassword })}
@@ -168,11 +205,9 @@ class RestoreBackup extends Component<Props> {
         }
         {type==='key' &&
           <TextField
-            floatingLabelText="Enter your private key"
-            type="text"
-            style={{ width: '100%', padding: `0 ${ms(3)} 0 0`, marginTop: '10px' }}
+            label={t('components.restoreBackup.enter_private_key')}
             value={key}
-            onChange={(_, newkey) => this.setState({ key: newkey })}
+            onChange={(newkey) => this.setState({ key: newkey })}
           />
 
         }
@@ -182,7 +217,7 @@ class RestoreBackup extends Component<Props> {
             disabled={isdisabled}
             onClick={this.importAddress}
           >
-            Restore
+            {t('general.verbs.restore')}
           </RestoreButton>
         </RestoreFooter>
       </MainContainer>
@@ -201,4 +236,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(RestoreBackup);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(RestoreBackup);

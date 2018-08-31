@@ -1,10 +1,11 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 import { isEmpty } from 'lodash';
+import { Trans } from 'react-i18next';
 
 import Button from '../Button/';
 import BalanceBanner from '../BalanceBanner/';
@@ -30,6 +31,7 @@ import { getSelectedAccount, isReady } from '../../utils/general';
 import { findIdentity, findIdentityIndex } from '../../utils/identity';
 
 import { syncWallet, updateActiveTab } from '../../reduxContent/wallet/thunks';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.section`
   flex-grow: 1;
@@ -85,9 +87,11 @@ const Description = (props: DescriptionProps) => {
   const { onSendClick, onReceiveClick } = props;
   return (
     <DescriptionContainer>
-      {"It's pretty empty here. Get started"}
-      <Link onClick={onSendClick}> sending</Link> and
-      <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
+      <Trans i18nKey="components.actionPanel.description">
+        {"It's pretty empty here. Get started"}
+        <Link onClick={onSendClick}> sending</Link> and
+        <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
+      </Trans>
     </DescriptionContainer>
   );
 };
@@ -99,7 +103,8 @@ type Props = {
   syncWallet: () => {},
   selectedAccountHash: string,
   selectedParentHash: string,
-  time?: Date
+  time?: Date,
+  t: () => {}
 };
 
 type State = {
@@ -123,7 +128,7 @@ class ActionPanel extends Component<Props, State> {
   };
 
   renderSection = (selectedAccount, activeTab, balance) => {
-    const { selectedAccountHash, selectedParentHash } = this.props;
+    const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
 
@@ -167,7 +172,10 @@ class ActionPanel extends Component<Props, State> {
         const pageCount = Math.ceil(JSTransactions.length / itemsCount);
 
         const firstNumber = (this.state.currentPage - 1) * itemsCount;
-        const lastNumber = this.state.currentPage * itemsCount;
+        let lastNumber = this.state.currentPage * itemsCount;
+        if (lastNumber>JSTransactions.length) {
+          lastNumber = JSTransactions.length;
+        }
         const showedTransactions = JSTransactions.slice(
           firstNumber,
           lastNumber
@@ -176,7 +184,7 @@ class ActionPanel extends Component<Props, State> {
         return isEmpty(JSTransactions) ? (
           <EmptyState
             imageSrc={transactionsEmptyState}
-            title="You have not made any transactions yet"
+            title={t('components.actionPanel.empty-title')}
             description={
               <Description
                 onReceiveClick={() => this.handleLinkPress(RECEIVE)}
@@ -194,7 +202,9 @@ class ActionPanel extends Component<Props, State> {
             {pageCount > 1 && (
               <PageNumbers
                 currentPage={this.state.currentPage}
-                numberOfPages={pageCount}
+                totalNumber={JSTransactions.length}
+                firstNumber={firstNumber}
+                lastNumber={lastNumber}
                 onClick={currentPage => this.setState({ currentPage })}
               />
             )}
@@ -211,7 +221,8 @@ class ActionPanel extends Component<Props, State> {
       selectedAccountHash,
       selectedParentHash,
       syncWallet,
-      time
+      time,
+      t
     } = this.props;
     const jsIdentities = identities.toJS();
     const selectedAccount = getSelectedAccount(
@@ -262,7 +273,7 @@ class ActionPanel extends Component<Props, State> {
                   }
                 }}
               >
-                <TabText isReady={ready}>{tab}</TabText>
+                <TabText isReady={ready}>{t(tab)}</TabText>
               </Tab>
             );
           })}
@@ -292,4 +303,4 @@ function mapDispatchToProps(dispatch: () => {}) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActionPanel);
+export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(ActionPanel);

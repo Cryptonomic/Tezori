@@ -1,17 +1,15 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
-import TezosNumericInput from '../TezosNumericInput/'
-import { wrapComponent } from '../../utils/i18n';
+import TextField from '../TextField';
+import TezosNumericInput from '../TezosNumericInput/';
 
+import Modal from '../CustomModal';
 import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
-
 import Button from '../Button/';
 import Loader from '../Loader/';
 import Fees from '../Fees/';
@@ -40,17 +38,20 @@ type Props = {
   managerBalance: number
 };
 
+const InputAddressContainer = styled.div`
+  padding: 0 76px;
+`;
+
 const AmountFeePassContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 45%;
+  width: 43%;
   justify-content: center;
 `;
 
 const AmountSendContainer = styled.div`
   width: 100%;
   position: relative;
-  height: 64px;
 `;
 
 const FeeContainer = styled.div`
@@ -64,21 +65,25 @@ const PasswordButtonContainer = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   margin-top: 42px;
+  padding: 0 76px 15px 76px;
+  background-color: ${({ theme: { colors } }) => colors.gray1};
 `;
 
 const DelegateButton = styled(Button)`
   width: 194px;
   height: 50px;
+  margin-bottom: 10px;
 `;
 
 const MainContainer = styled.div`
   display: flex;
+  padding: 20px 76px 0 76px;
 `;
 const BalanceContainer = styled.div`
   padding: 0 0px 0 20px;
   flex: 1;
   position: relative;
-  margin: 15px 0 0px 40px;
+  margin: 0 0 0px 35px;
 `;
 
 const BalanceArrow = styled.div`
@@ -87,7 +92,7 @@ const BalanceArrow = styled.div`
   margin-top: -17px;
   border-top: 17px solid transparent;
   border-bottom: 17px solid transparent;
-  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};;
+  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};
   width: 0;
   height: 0;
   position: absolute;
@@ -104,21 +109,20 @@ const BalanceContent = styled.div`
 const GasInputContainer = styled.div`
   width: 100%;
   position: relative;
-  height: 64px;
 `;
 
 
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
   left: 70px;
-  top: 43px;
+  top: 25px;
   display: block;
 `;
 
 const UseMax = styled.div`
   position: absolute;
   right: 23px;
-  top: 38px;
+  top: 24px;
   font-size: 12px;
   font-weight: 500;
   display: block;
@@ -154,7 +158,7 @@ const ErrorContainer = styled.div`
 const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
-  top: 44px;
+  top: 27px;
 `;
 
 const HelpIcon = styled(TezosIcon)`
@@ -166,7 +170,7 @@ const TooltipContainer = styled.div`
   color: #000;
   font-size: 14px;
   max-width: 312px;
-  
+
   .customArrow .rc-tooltip-arrow {
     left: 66%;
   }
@@ -207,10 +211,17 @@ class AddDelegateModal extends Component<Props> {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
     const max = managerBalance - fee - gas - 1;
-    const amount = (max/utez).toFixed(6);
-    const total = managerBalance - 1;
-    const balance = 1;
-    this.setState({ amount, total, balance });
+    if (max > 0) {
+      const amount = (max/utez).toFixed(6);
+      const total = managerBalance - 1;
+      const balance = 1;
+      this.setState({ amount, total, balance });
+    } else {
+      const amount = '0';
+      const total = fee + gas;
+      const balance = managerBalance - total;
+      this.setState({ amount, total, balance });
+    }
   }
 
   changeDelegate = (delegate) => this.setState({ delegate });
@@ -253,9 +264,10 @@ class AddDelegateModal extends Component<Props> {
   };
 
   renderGasToolTip = (gas) => {
+    const { t } = this.props;
     return (
       <TooltipContainer>
-        {gas} tz is required by the network to create a delegate address
+        {t('components.addDelegateModal.gas_tool_tip', {gas})}
       </TooltipContainer>
     );
   };
@@ -269,22 +281,22 @@ class AddDelegateModal extends Component<Props> {
     onCloseClick();
   }
 
-  getBalanceState = (balance, amount) => {
+  getBalanceState = (balance, amount, t) => {
     if (balance < 0) {
       return {
         isIssue: true,
-        warningMessage: 'Total exceeds available funds',
+        warningMessage: t('components.addDelegateModal.warning1'),
         balanceColor: 'error1'
       };
     }
     if (balance === 0 ) {
       return {
         isIssue: true,
-        warningMessage: 'Manager Addresses are not yet allowed to have less than 1 µtz',
+        warningMessage: t('components.addDelegateModal.warning2'),
         balanceColor: 'error1'
       };
     }
-    
+
     if (amount) {
       return {
         isIssue: false,
@@ -318,48 +330,35 @@ class AddDelegateModal extends Component<Props> {
       isIssue,
       warningMessage,
       balanceColor
-    } = this.getBalanceState(balance, amount);
+    } = this.getBalanceState(balance, amount, t);
     return (
-      <Dialog
-        modal
+      <Modal
+        title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
-        title="Add a Delegate"
-        bodyStyle={{ padding: '5px 80px 50px 80px' }}
-        titleStyle={{ padding: '50px 70px 0px' }}
+        onClose={this.onCloseClick}
       >
-        <CloseIcon
-          style={{
-            fill: '#7190C6',
-            cursor: 'pointer',
-            height: '20px',
-            width: '20px',
-            position: 'absolute',
-            top: '10px',
-            right: '15px',
-          }}
-          onClick={this.onCloseClick}
-        />
-        <InputAddress
-          labelText={t('general.delegate_address')}
-          addressType="delegate"
-          tooltip
-          changeDelegate={this.changeDelegate}
-          onIssue={(status)=> this.setState({isDelegateIssue: status})}
-        />
+        <InputAddressContainer>
+          <InputAddress
+            labelText={t('general.nouns.delegate_address')}
+            addressType="delegate"
+            tooltip
+            changeDelegate={this.changeDelegate}
+            onIssue={(status)=> this.setState({isDelegateIssue: status})}
+          />
+        </InputAddressContainer>
         <MainContainer>
           <AmountFeePassContainer>
             <AmountSendContainer>
               <TezosNumericInput
                 decimalSeparator={t('general.decimal_separator')}
-                labelText={t('general.amount')}
-                amount={this.state.amount}
+                labelText={t('general.nouns.amount')}
+                amount={amount}
                 handleAmountChange={this.changeAmount}
               />
-              <UseMax onClick={this.onUseMax}>Use Max</UseMax>
+              <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
             </AmountSendContainer>
             <FeeContainer>
               <Fees
-                styles={{ width: '100%' }}
                 low={averageFees.low}
                 medium={averageFees.medium}
                 high={averageFees.high}
@@ -370,9 +369,8 @@ class AddDelegateModal extends Component<Props> {
             <GasInputContainer>
               <TextField
                 disabled
-                floatingLabelText="Gas"
+                label={t('general.nouns.gas')}
                 defaultValue="0.257000"
-                style={{ width: '100%', cursor: 'default' }}
               />
               <TezosIconInput color="gray5" iconName="tezos" />
               <Tooltip
@@ -400,14 +398,14 @@ class AddDelegateModal extends Component<Props> {
           <BalanceContainer>
             <BalanceArrow />
             <BalanceContent>
-              <BalanceTitle>Total</BalanceTitle>
+              <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
               <TotalAmount
                 weight='500'
                 color={amount?'gray3':'gray8'}
                 size={ms(0.65)}
                 amount={total}
-              />              
-              <BalanceTitle>Remaining Balance</BalanceTitle>
+              />
+              <BalanceTitle>{t('general.nouns.remaining_balance')}</BalanceTitle>
               <BalanceAmount
                 weight='500'
                 color={balanceColor}
@@ -424,17 +422,18 @@ class AddDelegateModal extends Component<Props> {
                   {warningMessage}
                 </ErrorContainer>
               }
-              
+
             </BalanceContent>
           </BalanceContainer>
-        </MainContainer>        
+        </MainContainer>
 
         <PasswordButtonContainer>
           <PasswordInput
-            label='Wallet Password'
+            label={t('general.nouns.wallet_password')}
             isShowed={isShowedPwd}
+            password={passPhrase}
             changFunc={this.updatePassPhrase}
-            containerStyle={{width: '60%'}}
+            containerStyle={{width: '60%', marginTop: '10px'}}
             onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
           />
           <DelegateButton
@@ -442,11 +441,11 @@ class AddDelegateModal extends Component<Props> {
             disabled={isDisabled}
             onClick={this.createAccount}
           >
-            Delegate
+            {t('general.verbs.delegate')}
           </DelegateButton>
         </PasswordButtonContainer>
         {isLoading && <Loader />}
-      </Dialog>
+      </Modal>
     );
   }
 }
@@ -468,7 +467,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(
-  wrapComponent,
-  connect(mapStateToProps, mapDispatchToProps)
-)(AddDelegateModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);

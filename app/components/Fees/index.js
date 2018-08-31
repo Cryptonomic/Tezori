@@ -1,17 +1,16 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { Dialog, SelectField, MenuItem } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../../components/TezosIcon';
 import Button from './../Button/';
-import { H2 } from './../Heading/';
 import { wrapComponent } from '../../utils/i18n';
-import TezosNumericInput from '../TezosNumericInput'
-
+import TezosNumericInput from '../TezosNumericInput';
+import Modal from '../CustomModal';
+import CustomSelect from '../CustomSelect';
 
 import { formatAmount, tezToUtez } from '../../utils/currancy';
 
@@ -19,8 +18,6 @@ type Props = {
   low?: number,
   medium?: number,
   high?: number,
-  styles?: object,
-  underlineStyle?: object,
   fee?: number,
   onChange?: () => {},
   t: () => {}
@@ -32,14 +29,20 @@ const StyledSaveButton = styled(Button)`
   padding-left: ${ms(9)};
 `;
 
-const StyledCloseIcon = styled(CloseIcon)`
-  cursor: pointer;
-  height: 20px;
-  width: 20px;
-  position: absolute;
-  top: 10px;
-  right: 15px;
+const ItemWrapper = styled(MenuItem)`
+  &&& {
+    &[class*='selected'] {    
+      color: ${({ theme: { colors } }) => colors.primary };
+    }
+    width: 100%;
+    font-size: 16px;
+    font-weight: 300;
+  }  
 `;
+
+const ModalContent = styled.div`
+  padding: 35px 76px 63px 76px;
+`
 
 class Fee extends Component<Props> {
   props: Props;
@@ -48,7 +51,6 @@ class Fee extends Component<Props> {
     custom: ''
   };
 
-  openConfirmation = () => this.setState({ open: true });
   closeConfirmation = () => this.setState({ open: false });
   handleCustomChange = (custom) => this.setState({ custom });
   handleSetCustom = () => {
@@ -58,97 +60,71 @@ class Fee extends Component<Props> {
     this.closeConfirmation();
   };
 
+  onFeeChange = event => {
+    const fee = event.target.value;
+    const {onChange} = this.props;
+    if (fee !== 'custom') {
+      onChange(fee);
+    } else {
+      this.setState({ open: true });
+    }
+  }
+
   render() {
     const { open, custom } = this.state;
     const {
       low,
       medium,
       high,
-      styles,
       fee,
-      onChange,
-      underlineStyle,
       t
     } = this.props;
+    const customFeeLabel = t('components.fees.custom_fee');
 
     return (
       <Fragment>
-        <SelectField
-          floatingLabelText="Fee"
+        <CustomSelect
+          label={t('general.nouns.fee')}
           value={fee}
-          style={styles}
-          underlineStyle={underlineStyle}
-          onChange={(_, index, fee) => {
-            if (fee !== 'custom') {
-              onChange(fee);
-            }
-          }}
+          onChange={this.onFeeChange}
         >
-          <MenuItem
-            value={low}
-            primaryText={
-              <div>
-                Low Fee: {formatAmount(low)}{' '}
-                <TezosIcon color="black" iconName="tezos" />
-              </div>
-            }
-          />
-          <MenuItem
-            value={medium}
-            primaryText={
-              <div>
-                Medium Fee: {formatAmount(medium)}{' '}
-                <TezosIcon color="black" iconName="tezos" />
-              </div>
-            }
-          />
-          <MenuItem
-            value={high}
-            primaryText={
-              <div>
-                High Fee: {formatAmount(high)}{' '}
-                <TezosIcon color="black" iconName="tezos" />
-              </div>
-            }
-          />
+          <ItemWrapper value={low}>
+            {t('components.fees.low_fee')}: {formatAmount(low)}{' '}
+            <TezosIcon color="black" iconName="tezos" />
+          </ItemWrapper>
+          <ItemWrapper value={medium}>
+            {t('components.fees.medium_fee')}: {formatAmount(medium)}{' '}
+            <TezosIcon color="black" iconName="tezos" />
+          </ItemWrapper>
+          <ItemWrapper value={high}>
+            {t('components.fees.high_fee')}: {formatAmount(high)}{' '}
+            <TezosIcon color="black" iconName="tezos" />
+          </ItemWrapper>
           {custom ? (
-            <MenuItem
-              value={tezToUtez(custom.replace(/,/g,'.'))}
-              primaryText={
-                <div>
-                  Custom Fee: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
-                  <TezosIcon color="black" iconName="tezos" />
-                </div>
-              }
-            />
+            <ItemWrapper value={tezToUtez(custom.replace(/,/g,'.'))}>
+              {customFeeLabel}: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
+              <TezosIcon color="black" iconName="tezos" />
+            </ItemWrapper>
           ) : null}
-          <MenuItem
-            value="custom"
-            primaryText="Custom"
-            onClick={this.openConfirmation}
-          />
-        </SelectField>
-        <Dialog
-          modal
+          <ItemWrapper value="custom">
+            {t('components.fees.custom')}
+          </ItemWrapper>
+        </CustomSelect>
+        <Modal
+          title={t('components.fees.enter_custom_amount')}
           open={open}
-          bodyStyle={{ padding: '50px 80px' }}
-          titleStyle={{ padding: '50px 70px 0px' }}
+          onClose={this.closeConfirmation}
         >
-          <StyledCloseIcon
-            style={{ fill: '#7190C6' }}
-            onClick={this.closeConfirmation}
-          />
-          <div>
-            <H2>Enter Custom Amount</H2>
-            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={t('general.custom_fee')} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
+          <ModalContent>
+            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={customFeeLabel} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
             >
-              Set Custom Fee
+              {t('components.fees.set_custom_fee')}
             </StyledSaveButton>
-          </div>
-        </Dialog>
+          </ModalContent>
+        </Modal>
       </Fragment>
     );
   }

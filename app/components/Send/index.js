@@ -55,7 +55,7 @@ const BalanceContainer = styled.div`
   padding: 0 0px 0 20px;
   flex: 1;
   position: relative;
-  margin: 15px 0 0px 40px;
+  margin: 0px 0 0px 40px;
 `;
 const BalanceArrow = styled.div`
   top: 50%;
@@ -79,7 +79,7 @@ const BalanceContent = styled.div`
 const UseMax = styled.div`
   position: absolute;
   right: 23px;
-  top: 38px;
+  top: 25px;
   font-size: 12px;
   font-weight: 500;
   display: block;
@@ -160,9 +160,16 @@ class Send extends Component<Props> {
       balance = 0;
     }
     const max = addressBalance - fee - balance;
-    const amount = (max/utez).toFixed(6);
-    const total = addressBalance - balance;    
-    this.setState({ amount, total, balance });
+    if (max > 0) {
+      const amount = (max/utez).toFixed(6);
+      const total = addressBalance - balance;
+      this.setState({ amount, total, balance });
+    } else {
+      const amount = '0';
+      const total = fee;
+      const balance = addressBalance - total;
+      this.setState({ amount, total, balance });
+    }
   }
 
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
@@ -229,21 +236,22 @@ class Send extends Component<Props> {
   };
 
   getBalanceState = (balance, amount, isManager) => {
+    const { t } = this.props;
     if (balance < 0) {
       return {
         isIssue: true,
-        warningMessage: 'Total exceeds available funds',
+        warningMessage: t('components.send.warnings.total_exceeds'),
         balanceColor: 'error1'
       };
     }
     if (isManager && balance === 0 ) {
       return {
         isIssue: true,
-        warningMessage: 'Manager Addresses are not yet allowed to have less than 1 µtz',
+        warningMessage: t('components.send.warnings.not_allowed'),
         balanceColor: 'error1'
       };
     }
-    
+
     if (amount) {
       return {
         isIssue: false,
@@ -285,7 +293,7 @@ class Send extends Component<Props> {
     return (
       <SendContainer>
         <InputAddress
-          labelText={t('general.address')}
+          labelText={t('general.nouns.label_address')}
           userAddress={this.props.selectedAccountHash}
           addressType="send"
           changeDelegate={this.handleToAddressChange}
@@ -295,11 +303,11 @@ class Send extends Component<Props> {
             <InputAmount>
               <TezosNumericInput
                 decimalSeparator={t('general.decimal_separator')}
-                labelText={t('general.amount')}
+                labelText={t('general.nouns.amount')}
                 amount={this.state.amount}
                 handleAmountChange={this.handleAmountChange}
               />
-              <UseMax onClick={this.onUseMax}>Use Max</UseMax>
+              <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
             </InputAmount>
             <Fees
               styles={{ width: '100%' }}
@@ -313,14 +321,14 @@ class Send extends Component<Props> {
           <BalanceContainer>
             <BalanceArrow />
             <BalanceContent>
-              <BalanceTitle>Total</BalanceTitle>
+              <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
               <TotalAmount
                 weight='500'
                 color={amount?'gray3':'gray8'}
                 size={ms(0.65)}
                 amount={total}
-              />              
-              <BalanceTitle>Remaining Balance</BalanceTitle>
+              />
+              <BalanceTitle>{t('general.nouns.remaining_balance')}</BalanceTitle>
               <BalanceAmount
                 weight='500'
                 color={balanceColor}
@@ -337,7 +345,7 @@ class Send extends Component<Props> {
                   {warningMessage}
                 </ErrorContainer>
               }
-              
+
             </BalanceContent>
           </BalanceContainer>
         </MainContainer>
@@ -347,7 +355,7 @@ class Send extends Component<Props> {
           buttonTheme="secondary"
           small
         >
-          Send
+          {t('general.verbs.send')}
         </SendButton>
         <SendConfirmationModal
           amount={amount}

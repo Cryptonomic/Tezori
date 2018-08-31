@@ -8,6 +8,7 @@ import Tooltip from './../Tooltip/';
 import Button from './../Button/';
 import TezosAmount from './../TezosAmount/';
 import ManagerAddressTooltip from './../Tooltips/ManagerAddressTooltip/';
+import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   border-bottom: 1px solid
@@ -50,16 +51,24 @@ const AddressesTitle = styled.div`
   line-height: 1.5;
 `;
 
+const AddressLabel = styled.div`
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+
 type Props = {
   isManager?: boolean,
   isActive?: boolean,
   balance?: number,
   index?: number,
-  onClick?: () => {}
+  onClick?: () => {},
+  t: () => {}
 };
 
-export default function Address(props: Props) {
-  const { isManager, isActive, balance, index, onClick } = props;
+function Address(props: Props) {
+  const { isManager, isActive, balance, index, onClick, t } = props;
   const firstLine = isManager ? (
     <AddressFirstLine isActive={isActive}>
       <AddressesTitle>
@@ -68,8 +77,8 @@ export default function Address(props: Props) {
           size={ms(0)}
           color={isActive ? 'white' : 'secondary'}
         />
-        Manager Address
-        <Tooltip position="bottom" content={ManagerAddressTooltip}>
+        <AddressLabel>{t('components.address.manager_address')}</AddressLabel>
+        <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
           <Button buttonTheme="plain">
             <HelpIcon
               iconName="help"
@@ -88,7 +97,7 @@ export default function Address(props: Props) {
           size={ms(0)}
           color={isActive ? 'white' : 'secondary'}
         />
-        {`Delegated Address ${index + 1}`}
+        {t("components.address.delegated_address", {index: index + 1})}
       </AddressesTitle>
     </AddressFirstLine>
   );
@@ -111,3 +120,5 @@ export default function Address(props: Props) {
     </Container>
   );
 }
+
+export default wrapComponent(Address);

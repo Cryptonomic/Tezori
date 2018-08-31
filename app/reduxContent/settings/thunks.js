@@ -1,37 +1,45 @@
-import { setWalletNodes } from '../../utils/nodes';
+import { setWalletSettings } from '../../utils/settings';
 import {
   setSelected as _setSelected,
+  setLocale as _setLocale,
   addNode as _addNode,
   removeNode as _removeNode,
   updateNode as _updateNode
 } from './actions';
 
-import { getNodes } from './selectors';
+import { getSettings } from './selectors';
 
 export function setSelected(name, target) {
   return (dispatch, state) => {
     dispatch(_setSelected(name, target));
-    setWalletNodes(getNodes(state()).toJS());
+    setWalletSettings(getSettings(state()).toJS());
+  };
+}
+
+export function setLocale(locale) {
+  return (dispatch, state) => {
+    dispatch(_setLocale(locale));
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
 
 export function addNode(node) {
   return (dispatch, state) => {
     dispatch(_addNode(node));
-    setWalletNodes(getNodes(state()).toJS());
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
 
 export function removeNode(name) {
   return (dispatch, state) => {
     dispatch(_removeNode(name));
-    setWalletNodes(getNodes(state()).toJS());
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
 
 export function updateNode(node) {
   return (dispatch, state) => {
     dispatch(_updateNode(node));
-    setWalletNodes(getNodes(state()).toJS());
+    setWalletSettings(getSettings(state()).toJS());
   };
 }

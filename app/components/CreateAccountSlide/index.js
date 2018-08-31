@@ -1,8 +1,8 @@
 import React, { Fragment, Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
-import ChevronLeftIcon from 'material-ui/svg-icons/navigation/chevron-left';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import styled from 'styled-components';
 import { generateNewMnemonic } from '../../utils/general';
 
@@ -10,6 +10,7 @@ import Button from '../Button';
 import BackUpSeedPhrase from './BackUpSeedPhrase';
 import { GENERATE_MNEMONIC } from '../../constants/AddAddressTypes';
 import { importAddress } from '../../reduxContent/wallet/thunks';
+import { wrapComponent } from '../../utils/i18n';
 
 const ActionButton = styled(Button)`
   width: 194px;
@@ -91,7 +92,8 @@ const SeedsContainer = styled.div`
 `;
 
 type Props = {
-  importAddress: () => {}
+  importAddress: () => {},
+  t: () => {}
 };
 
 class CreateAccountSlide extends Component<Props> {
@@ -126,11 +128,11 @@ class CreateAccountSlide extends Component<Props> {
 
   showSeedPhrase = () => {
     const seeds = this.setupSeedColumns(this.state.seed);
+    const { t } = this.props;
     return (
       <Fragment>
         <div className="description">
-          Write down your seed phrase on a piece of paper and keep it in a safe
-          place. You will need your seed phrase to recover your account.
+          {t('components.createAccountSlide.descriptions.description1')}
         </div>
         {seeds.length && (
           <SeedsContainer>
@@ -153,13 +155,13 @@ class CreateAccountSlide extends Component<Props> {
             className="refresh-icon"
             style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
           />
-          Generate Another Seed Pharse
+          {t('components.createAccountSlide.generate_other_seed')}
         </div>
         <ActionButton
           buttonTheme="primary"
           onClick={() => this.nextAccountSlide(1)}
         >
-          Next
+          {t('general.next')}
         </ActionButton>
       </Fragment>
     );
@@ -171,17 +173,16 @@ class CreateAccountSlide extends Component<Props> {
   };
 
   createAccount = () => {
+    const { t } = this.props;
     return (
       <Fragment>
-        <div className="title">Your Tezos account seed is backed up!</div>
+        <div className="title">{t('components.createAccountSlide.seed_backup')}</div>
         <div className="description">
-          Make sure to keep your seed phrase in a safe place. If you forget your
-          seed phrase, you will not be able to recover your account. We do not
-          store your seed phrase and cannot help you recover it if you lose it.
+          {t('components.createAccountSlide.descriptions.description2')}
         </div>
 
         <ActionButton buttonTheme="primary" onClick={this.importAddress}>
-          Create Account
+          {t('components.createAccountSlide.create_account')}
         </ActionButton>
       </Fragment>
     );
@@ -189,6 +190,7 @@ class CreateAccountSlide extends Component<Props> {
 
   render() {
     const { currentSlide, seed } = this.state;
+    const { t } = this.props;
     return (
       <CreateAccountSlideContainer>
         {!!currentSlide && (
@@ -197,7 +199,7 @@ class CreateAccountSlide extends Component<Props> {
               className="chevron-icon"
               style={{ fill: '#4486f0' }}
             />
-            Back to Seed Pharse
+            {t('components.createAccountSlide.back_to_seed')}
           </div>
         )}
         {currentSlide === 0 ? this.showSeedPhrase() : null}
@@ -222,4 +224,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(CreateAccountSlide);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(CreateAccountSlide);

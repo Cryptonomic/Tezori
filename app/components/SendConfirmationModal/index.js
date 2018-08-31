@@ -1,41 +1,60 @@
 // @flow
 import React from 'react';
-import { Dialog } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
-
-import { H5 } from '../Heading';
+import Modal from '../CustomModal';
 import Loader from '../Loader';
 import Button from '../Button';
 import TezosIcon from '../TezosIcon';
 import PasswordInput from '../PasswordInput';
+import { wrapComponent } from '../../utils/i18n';
 
 const AmountContainer = styled.div`
-  marginbottom: ${ms(4)};
+  margin-bottom: ${ms(4)};
+  display: flex;
+  align-items: baseline;
 `;
 
 const DataToSend = styled.span`
   border-bottom: 1px solid #7b91c0;
   color: ${({ theme: { colors } }) => colors.secondary};
   margin: 0;
-  font-size: 20px;
-  display: inline-block;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  font-weight: 300;
 `;
 
 const Connector = styled.span`
-  margin: 0 ${ms(0)};
+  margin: 0 ${ms(-1)};
+  font-weight: 300;
 `;
 
 const PaswordContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  margin-top: 42px;
+  padding: 0 76px 15px 76px;
+  background-color: ${({ theme: { colors } }) => colors.gray1};
 `;
 
-const Heading = styled(H5)`
+const ConfirmButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+  margin-bottom: 10px;
+  font-weight: 300;
+  padding: 0;
+`;
+
+const ConfirmTitle = styled.div`
+  font-size: 16px;
   margin-bottom: 20px;
-  color: ${({ theme: { colors } }) => colors.primary};
+  color: ${({ theme: { colors } }) => colors.gray0};
+`;
+
+const MainContainer = styled.div`
+  padding: 56px 76px 0 76px;
 `;
 
 type Props = {
@@ -48,7 +67,8 @@ type Props = {
   onSend?: () => {},
   isLoading?: boolean,
   isShowedPwd?: boolean,
-  onShowPwd: () => {}
+  onShowPwd: () => {},
+  t: () => {}
 };
 
 const SendConfirmationModal = (props: Props) => {
@@ -62,54 +82,49 @@ const SendConfirmationModal = (props: Props) => {
     onCloseClick,
     onSend,
     isShowedPwd,
-    onShowPwd
+    onShowPwd,
+    t
   } = props;
 
+  const isDisabled = isLoading || !password;
+
   return (
-    <Dialog
-      modal
+    <Modal
+      title={t('components.sendConfirmationModal.send_confirmation')}
       open={open}
-      title="Send Confirmation"
-      bodyStyle={{ padding: '50px' }}
-      titleStyle={{ padding: '50px 50px 0px' }}
+      onClose={onCloseClick}
     >
-      <CloseIcon
-        style={{
-          fill: '#7190C6',
-          cursor: 'pointer',
-          height: '20px',
-          width: '20px',
-          position: 'absolute',
-          top: '10px',
-          right: '15px'
-        }}
-        onClick={onCloseClick}
-      />
-      <Heading>Do you confirm that you want to send</Heading>
-      <AmountContainer>
-        <DataToSend>
-          {amount}
-          <TezosIcon color="secondary" iconName="tezos" />
-        </DataToSend>
-        <Connector>to</Connector>
-        <DataToSend>{address}</DataToSend>
-      </AmountContainer>
+      <MainContainer>
+        <ConfirmTitle>{t('components.sendConfirmationModal.confirm_question')}</ConfirmTitle>
+        <AmountContainer>
+          <DataToSend>
+            {amount}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </DataToSend>
+          <Connector>{t('general.to')}</Connector>
+          <DataToSend>{address}</DataToSend>
+        </AmountContainer>
+      </MainContainer>
       <PaswordContainer>
         <PasswordInput
-          label='Wallet Password'
+          label={t('general.nouns.wallet_password')}
           isShowed={isShowedPwd}
           password={password}
           changFunc={onPasswordChange}
           onShow={onShowPwd}
-          containerStyle={{width: '70%'}}
+          containerStyle={{width: '60%', marginTop: '10px'}}
         />
-        <Button buttonTheme="secondary" onClick={onSend} disabled={isLoading}>
-          Confirm
-        </Button>
+        <ConfirmButton
+          buttonTheme="primary"
+          disabled={isDisabled}
+          onClick={onSend}
+        >
+          {t('general.verbs.confirm')}
+        </ConfirmButton>
       </PaswordContainer>
       {isLoading && <Loader />}
-    </Dialog>
+    </Modal>
   );
 };
 
-export default SendConfirmationModal;
+export default wrapComponent(SendConfirmationModal);

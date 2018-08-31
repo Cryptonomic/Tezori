@@ -43,7 +43,7 @@ app/renderer.prod.js
 app/renderer.prod.js.map
 app/style.css
 app/style.css.map
-defaultWalletNodes.json
+walletSettings.json
 walletState
 dist
 dll

@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { goBack as back } from 'react-router-redux';
 import styled from 'styled-components';
-import BackCaret from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import { remote } from 'electron';
 import path from 'path';
 import zxcvbn from 'zxcvbn';
@@ -16,10 +16,12 @@ import { login } from '../../reduxContent/wallet/thunks';
 import ValidInput from '../../components/ValidInput/';
 import createFileEmptyIcon from '../../../resources/createFileEmpty.svg';
 import TezosIcon from '../../components/TezosIcon/';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   login: () => {},
-  goBack: () => {}
+  goBack: () => {},
+  t: () => {}
 };
 
 const BackToWallet = styled.div`
@@ -94,7 +96,7 @@ const WalletDescription = styled.div`
 
 const ActionButtonContainer = styled.div`
   width: 194px;
-  margin-top: 40px;
+  margin-top: 37px;
   display: flex;
   align-self: center;
 `;
@@ -111,9 +113,9 @@ const FormContainer = styled.div`
 `;
 
 const PasswordsContainer = styled.div`
- display: flex;
+  display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  justify-content: flex-end;
 `;
 
 const CreateFileEmptyIcon = styled.img`
@@ -169,28 +171,27 @@ class LoginCreate extends Component<Props> {
 
   changePassword = password => {
     const { confirmPassword } = this.state;
+    const { t } = this.props;
     if (password) {
       const pwdStrength = zxcvbn(password);
       const score = pwdStrength.score || 1;
-      let crackTime = `It will take <span>${
-        pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second
-      }</span> to crack!`;
+  //    let crackTime = t("containers.loginCreate.crack_time_description", {time: pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second});
       let error = '';
       if (score < 3) {
-        error = 'Your password is not strong enough.';
-        crackTime += ' Add another word or two.';
+        error = t("containers.loginCreate.password_not_strong");
+    //    crackTime += t("containers.loginCreate.add_another_word");
       } else if (score === 3) {
-        error = 'You are almost there!';
-        crackTime += ' Add another word or two.';
+        error = t("containers.loginCreate.you_almost_there");
+    //    crackTime += t("containers.loginCreate.add_another_word");
       } else {
-        error = 'You got it!';
+        error = t("containers.loginCreate.you_got_it");
       }
 
       const isValid = score === 4;
       this.setState({
         pwdScore: score,
         pwdError: error,
-        pwdSuggestion: crackTime,
+      //  pwdSuggestion: crackTime,
         isPasswordValidation: isValid,
         password
       });
@@ -208,19 +209,20 @@ class LoginCreate extends Component<Props> {
       this.setState({
         isPasswordMatched: false,
         confirmPwdScore: 1,
-        confirmPwdText: "Passwords don't Match!"
+        confirmPwdText: t("containers.loginCreate.password_dont_match")
       });
     } else if (confirmPassword && confirmPassword === password) {
       this.setState({
         isPasswordMatched: true,
         confirmPwdScore: 4,
-        confirmPwdText: 'Passwords Match!'
+        confirmPwdText: t("containers.loginCreate.password_match")
       });
     }
   };
 
   confirmPassword = confirmPassword => {
     const { password } = this.state;
+    const { t } = this.props;
     const indexVal = password.indexOf(confirmPassword);
     let score = 0;
     let isMatched = false;
@@ -228,7 +230,7 @@ class LoginCreate extends Component<Props> {
     if (password && password === confirmPassword) {
       score = 4;
       isMatched = true;
-      confirmStr = 'Passwords Match!';
+      confirmStr = t("containers.loginCreate.password_match");
     } else if (
       password !== confirmPassword &&
       indexVal < 0 &&
@@ -236,7 +238,7 @@ class LoginCreate extends Component<Props> {
     ) {
       score = 1;
       isMatched = false;
-      confirmStr = `Passwords don't Match!`;
+      confirmStr = t("containers.loginCreate.password_dont_match");
     }
     this.setState({
       isPasswordMatched: isMatched,
@@ -261,7 +263,7 @@ class LoginCreate extends Component<Props> {
   };
 
   render() {
-    const { goBack } = this.props;
+    const { goBack, t } = this.props;
     const { isLoading, walletFileName } = this.state;
     const isDisabled =
       isLoading ||
@@ -304,12 +306,12 @@ class LoginCreate extends Component<Props> {
                 marginTop: '4px'
               }}
             />
-            <span>Back</span>
+            <span>{t('general.back')}</span>
           </BackToWallet>
 
-          <WalletTitle>Create a new wallet</WalletTitle>
+          <WalletTitle>{t('containers.loginCreate.create_wallet_title')}</WalletTitle>
           <WalletDescription>
-            Your wallet information will be saved to your computer. It will be encrypted with a password that you set.
+            {t('containers.loginCreate.create_wallet_description')}
           </WalletDescription>
           <FormContainer>
             <CreateFileSelector>
@@ -319,12 +321,12 @@ class LoginCreate extends Component<Props> {
                 onClick={this.saveFile}
                 small
               >
-                Create Wallet File
+                {t('containers.loginCreate.create_new_wallet_btn')}
               </CreateFileButton>
             </CreateFileSelector>
             <PasswordsContainer>
               <ValidInput
-                label="Create Wallet Password"
+                label={t('containers.loginCreate.create_wallet_password_label')}
                 isShowed={this.state.isPwdShowed}
                 error={this.state.pwdError}
                 suggestion={this.state.pwdSuggestion}
@@ -333,7 +335,7 @@ class LoginCreate extends Component<Props> {
                 onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
-                label="Confirm Wallet Password"
+                label={t('containers.loginCreate.confirm_wallet_password_label')}
                 status
                 isShowed={this.state.isConfirmPwdShowed}
                 error={this.state.confirmPwdText}
@@ -349,7 +351,7 @@ class LoginCreate extends Component<Props> {
               onClick={() => this.login(CREATE)}
               disabled={isDisabled}
             >
-              Create Wallet
+              {t('containers.loginCreate.create_wallet_btn')}
             </ActionButton>
           </ActionButtonContainer>
         </WalletContainers>
@@ -368,4 +370,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(LoginCreate);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(LoginCreate);

@@ -65,15 +65,15 @@ export async function getNodesStatus(nodes) {
 
 export function getNodesError({ tezos, conseil }) {
   if ( !tezos.responsive || !conseil.responsive ) {
-    return 'Something\'s wrong with our servers. Please delay further actions.';
+    return 'nodes.errors.wrong_server';
   }
 
   if ( (conseil.level - tezos.level) > 5 ) {
-    return 'It seems the Tezos node you are using is either stuck or on the wrong network. Please delay further actions.';
+    return 'nodes.errors.wrong_network';
   }
 
   if ( (tezos.level - conseil.level) > 5 ) {
-    return 'It seems the Conseil server is not synced with the Tezos network. Please delay further actions.';
+    return 'nodes.errors.not_synced';
   }
   
   return false;
@@ -212,8 +212,8 @@ export function generateNewMnemonic() {
   return generateMnemonic();
 }
 
-export async function fetchAverageFees(nodes, operationKind) {
-  const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
+export async function fetchAverageFees(settings, operationKind) {
+  const { url, apiKey } = getSelectedNode(settings, CONSEIL);
   const emptyFilter = getEmptyTezosFilter();
   const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
   return await getAverageFees(url, feeFilter, apiKey);

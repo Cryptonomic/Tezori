@@ -1,37 +1,28 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Dialog, TextField } from 'material-ui';
-import CloseIcon from 'material-ui/svg-icons/navigation/close';
+import Modal from '../CustomModal';
+import TextField from '../TextField';
 import { ms } from '../../styles/helpers';
-import { H4 } from '../Heading/';
 import { CONSEIL } from '../../constants/NodesTypes';
 import TezosIcon from '../TezosIcon/';
 
-import { addNode, setSelected } from '../../reduxContent/nodes/thunks';
+import { addNode, setSelected } from '../../reduxContent/settings/thunks';
 import Button from '../Button/';
+import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   setSelected: () => {},
   addNode: () => {},
   closeAddNodeModal: () => {},
   isModalOpen: boolean,
-  type: string
+  type: string,
+  t: () => {}
 };
 
-const StyledCloseIcon = styled(CloseIcon)`
-  cursor: pointer;
-  height: 20px;
-  width: 20px;
-  position: absolute;
-  top: 10px;
-  right: 15px;
-`;
-
 const StyledSaveButton = styled(Button)`
-  margin-top: ${ms(4)};
   padding-right: ${ms(9)};
   padding-left: ${ms(9)};
 `;
@@ -46,17 +37,15 @@ const Content = styled.div`
     width: 100% !important;
   }
 `;
-const Error = styled.div`
-  height: 2rem;
-  width: 100%;
-  color: ${({ theme: { colors } }) => colors.error1};
-  font-size: ${ms(-2)};
-`;
 
 const FeedbackIcon = styled(TezosIcon)`
   position: absolute;
-  top: 42px;
-  right: 40px;
+  top: 30px;
+  right: 10px;
+`;
+
+const MainContainer = styled.div`
+  padding: 30px 76px 56px 76px;
 `;
 
 const defaultState = {
@@ -75,81 +64,71 @@ class AddNodeModal extends Component<Props> {
     this.setState(defaultState);
     closeAddNodeModal();
   };
-  handleNameChange = (_, name) => this.setState({ name });
-  handleApiKeyChange = (_, apiKey) => this.setState({ apiKey });
-  handleUrlChange = (_, url) => this.setState({ url });
+  handleNameChange = (name) => this.setState({ name });
+  handleApiKeyChange = (apiKey) => this.setState({ apiKey });
+  handleUrlChange = (url) => this.setState({ url });
   isValidUrl = () => {
     const { url } = this.state;
     return url.toLowerCase().indexOf('https://') === 0;
   };
   handleAddNode = () => {
     const { name, apiKey, url } = this.state;
-    const { type, closeAddNodeModal, addNode, setSelected } = this.props;
+    const { type, closeAddNodeModal, addNode, setSelected, t } = this.props;
     if (this.isValidUrl()) {
       addNode({ name, apiKey, url, type });
       setSelected(name, type);
       closeAddNodeModal();
       this.setState(defaultState);
     } else {
-      this.setState({ error: "Node's protocol must be https" });
+      this.setState({ error: t('components.addNodeModal.error') });
     }
   };
   render() {
-    const { name, apiKey, url, error } = this.state;
-    const { type, isModalOpen } = this.props;
+    const { name, url, error } = this.state;
+    const { type, isModalOpen, t } = this.props;
 
-    const title = type === CONSEIL ? 'Conseil' : 'Tezos';
+    const title = t((type === CONSEIL ? 'general.nouns.conseil' : 'general.nouns.tezos'));
+    const title1 = t('components.addNodeModal.title', {title});
 
     return (
-      <Dialog
-        modal
+      <Modal
+        title={title1}
         open={isModalOpen}
-        bodyStyle={{ padding: '50px 80px' }}
-        titleStyle={{ padding: '50px 70px 0px' }}
+        onClose={this.handleClose}
       >
-        <StyledCloseIcon
-          style={{ fill: '#7190C6' }}
-          onClick={this.handleClose}
-        />
-        <H4>Set Up Your Custom {title} Node</H4>
+        <MainContainer>
+          <TextField
+            label={t('components.addNodeModal.labels.node_name')}
+            onChange={this.handleNameChange}
+          />
 
-        <TextField
-          floatingLabelText="Node Name"
-          style={{ width: '100%' }}
-          value={name}
-          onChange={this.handleNameChange}
-        />
+          <TextField
+            label={t('components.addNodeModal.labels.api_key')}
+            onChange={this.handleApiKeyChange}
+          />
 
-        <TextField
-          floatingLabelText="Api Key"
-          style={{ width: '100%' }}
-          value={apiKey}
-          onChange={this.handleApiKeyChange}
-        />
+          <Container>
+            <Content>
+              <TextField
+                label="URL (e.g https://127.0.0.1:19731/)"
+                onChange={this.handleUrlChange}
+                errorText={error}
+              />
+              {error ? (
+                <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
+              ) : null}
+            </Content>
+          </Container>
 
-        <Container>
-          <Content>
-            <TextField
-              style={{ width: '100%' }}
-              floatingLabelText="URL (e.g https://127.0.0.1:19731/)"
-              value={url}
-              onChange={this.handleUrlChange}
-            />
-            {error ? (
-              <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
-            ) : null}
-          </Content>
-          {error ? <Error> {error} </Error> : null}
-        </Container>
-
-        <StyledSaveButton
-          buttonTheme="primary"
-          onClick={this.handleAddNode}
-          disabled={!name || !url}
-        >
-          Save
-        </StyledSaveButton>
-      </Dialog>
+          <StyledSaveButton
+            buttonTheme="primary"
+            onClick={this.handleAddNode}
+            disabled={!name || !url}
+          >
+            {t('general.verbs.save')}
+          </StyledSaveButton>
+        </MainContainer>
+      </Modal>
     );
   }
 }
@@ -158,4 +137,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ addNode, setSelected }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(AddNodeModal);
+export default compose(wrapComponent, connect(null, mapDispatchToProps))(AddNodeModal);
