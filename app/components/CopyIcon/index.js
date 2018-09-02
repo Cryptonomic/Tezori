@@ -8,8 +8,8 @@ import { wrapComponent } from '../../utils/i18n';
 
 const CopyConfirmationTooltip = styled.div`
   position: absolute;
-  top: -35px;
-  right: -55px;
+  bottom: 35px;
+  left: 35px;
   background: ${({ theme: { colors } }) => colors.white};
   color: ${({ theme: { colors } }) => colors.accent};
   font-size: ${ms(-1)};
@@ -19,6 +19,7 @@ const CopyConfirmationTooltip = styled.div`
   opacity: ${({ show }) => (show ? 1 : 0)};
   transition: opacity 0.4s;
   z-index: 1000;
+  white-space: nowrap;
 `;
 
 const Container = styled.div`
