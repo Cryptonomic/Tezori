@@ -35,7 +35,7 @@
       "transactions":"Transacciones"
     },
     "errors": {
-      "no_hex_data": "The provided string doesn't look like hex data"
+      "no_hex_data": "Algo está mal con los datos que ingresó"
     },
     "decimal_separator":".",
     "back":"Atrás",
