@@ -18,7 +18,8 @@ const Container = styled.div`
 
 const ButtonContainer = styled(Button)`
   text-align: center;
-  width: 90px;
+  min-width: 57px;
+  margin: 0 15px;
   color: ${({ theme: { colors } }) => colors.primary};
   opacity: 0.6;
 `;
