@@ -35,7 +35,7 @@
       "transactions":"트랜잭션"
     },
     "errors": {
-      "no_hex_data": "The provided string doesn't look like hex data"
+      "no_hex_data": "입력 한 데이터가 잘못되었습니다."
     },
     "decimal_separator":".",
     "back":"뒤로",

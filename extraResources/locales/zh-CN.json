@@ -35,7 +35,7 @@
       "transactions":"交易"
     },
     "errors": {
-      "no_hex_data": "The provided string doesn't look like hex data"
+      "no_hex_data": "您输入的数据有问题"
     },
     "decimal_separator":".",
     "back":"返回",
