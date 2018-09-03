@@ -8,7 +8,6 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 import Circle from '@material-ui/icons/PanoramaFishEye';
 import Button from '../Button';
 import languageLogoIcon from '../../../resources/imgs/Language_Selection_img.svg';
-// import { ms } from '../../styles/helpers';
 import { wrapComponent } from '../../utils/i18n';
 import theme from '../../styles/theme';
 import localesMap from '../../constants/LocalesMap';

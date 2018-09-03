@@ -243,7 +243,13 @@ class LoginHome extends Component<Props> {
     setLocale(selectedLanguage);
     i18n.changeLanguage(selectedLanguage);
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
-    this.setState({ isLanguageSelected: true });    
+    this.setState({ isLanguageSelected: !isLanguageSelected });    
+  }
+
+  goToLanguageSelect = () => {
+    const { isLanguageSelected } = this.state;
+    localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
+    this.setState({ isLanguageSelected: !isLanguageSelected });
   }
 
   goTo = route => {
@@ -320,6 +326,7 @@ class LoginHome extends Component<Props> {
           goTo={this.goTo}
           isOpen={!isAgreement && isLanguageSelected}
           agreeTermsAndPolicy={this.updateStatusAgreement}
+          onBack={this.goToLanguageSelect}
         />
         <Background>
           <BgContainerImg src={bgHero} />
