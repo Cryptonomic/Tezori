@@ -54,27 +54,34 @@ const BackToWallet = styled.div`
   align-items: center;
   color: #4486f0;
   cursor: pointer;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
 `;
 
 const Content = styled.div`
   background-color: ${({ theme: { colors } }) => colors.white};
-  padding: ${ms(3)} ${ms(3)};
-  margin: ${ms(3)} auto 0 auto;
+  padding: 50px 47px 63px 55px;
+  margin-top: 35px;
+`;
+
+const Content6 = styled(Content)`
+  margin-top: 6px;
+`;
+
+const ContentTitle = styled.div`
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 34px;
+  color: ${({ theme: { colors } }) => colors.primary};
+  letter-spacing: 1px;
+  margin-bottom: 32px;
 `;
 
 const RowForParts = styled(Row)`
-  margin: 0 -${ms(1)};
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Part = styled.div`
-  flex-grow: 1;
-  flex-shrink: 0;
-  width: 100%;
-  padding: 0 ${ms(1)};
-  margin-top: ${ms(2)};
+  width: 48%;
 `;
 
 const SelectOption = styled(Row)`
@@ -124,6 +131,12 @@ const ItemWrapper = styled(MenuItem)`
     font-weight: 300;
     background-color: ${({ type, theme: { colors } }) => type==="addmore"?colors.gray1: colors.white };
   }
+`;
+
+const SelectRenderWrapper = styled.div`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 class SettingsPage extends Component<Props> {
@@ -227,10 +240,8 @@ class SettingsPage extends Component<Props> {
         </BackToWallet>
         <H2>{t("containers.homeSettings.wallet_settings")}</H2>
         <Content>
+          <ContentTitle>{t("containers.homeSettings.choose_different_node")}</ContentTitle>
           <RowForParts>
-            <Part>
-              <LanguageSelector />
-            </Part>
             <Part>
               <CustomSelect
                 label="Conseil Nodes"
@@ -246,10 +257,10 @@ class SettingsPage extends Component<Props> {
                 renderValue={(value) => {
                   const url = this.getNodeUrl(conseilNodes, value);
                   return (
-                    <div>
+                    <SelectRenderWrapper>
                       <span>{value} </span>
                       <NodeUrlSpan>({url})</NodeUrlSpan>
-                    </div>
+                    </SelectRenderWrapper>
                   );
                 }}
               >
@@ -282,10 +293,10 @@ class SettingsPage extends Component<Props> {
                 renderValue={(value) => {
                   const url = this.getNodeUrl(tezosNodes, value);
                   return (
-                    <div>
+                    <SelectRenderWrapper>
                       <span>{value} </span>
                       <NodeUrlSpan>({url})</NodeUrlSpan>
-                    </div>
+                    </SelectRenderWrapper>
                   );
                 }}
               >
@@ -305,6 +316,14 @@ class SettingsPage extends Component<Props> {
             </Part>
           </RowForParts>
         </Content>
+        <Content6>
+          <ContentTitle>{t("containers.homeSettings.select_display_language")}</ContentTitle>
+          <RowForParts>
+            <Part>
+              <LanguageSelector />
+            </Part>
+          </RowForParts>
+        </Content6>
 
         <AddNodeModal
           isModalOpen={isModalOpen}

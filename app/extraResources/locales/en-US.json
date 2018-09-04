@@ -262,7 +262,8 @@
       "back_to_wallet": "Back to Wallet",
       "wallet_settings": "Wallet Settings",
       "choose_different_node": "Choose a Different Node",
-      "add_custom_node": "Add a Custom Node"
+      "add_custom_node": "Add a Custom Node",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",

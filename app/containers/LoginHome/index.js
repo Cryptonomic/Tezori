@@ -203,6 +203,10 @@ const BgCircle4 = styled(BgCircle)`
   animation-delay: 3200ms;
 `;
 
+const LanguageSelectorContainer = styled.div`
+  margin-top: 25px;
+`;
+
 
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 
@@ -260,7 +264,10 @@ class LoginHome extends Component<Props> {
               >
                 {t('containers.loginHome.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
-              <LanguageSelector />
+              <LanguageSelectorContainer>
+                <LanguageSelector />
+              </LanguageSelectorContainer>
+              
               <Tip>
                 <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>

@@ -25,7 +25,6 @@ const ItemWrapper = styled(MenuItem)`
 `;
 
 const Container = styled.div`
-  margin-top: 25px;
 `;
 
 type Props = {
