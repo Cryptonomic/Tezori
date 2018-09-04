@@ -1,6 +1,6 @@
 {
   "name": "Tezori",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "network": "zeronet",
   "blockExplorerHost": "http://zeronet.tzscan.io/",
   "logo": "tezosLogo.svg",
