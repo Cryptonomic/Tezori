@@ -13,7 +13,7 @@ import { clearMessageState } from '../../reduxContent/message/actions';
 import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
-  padding: 25px 20px 30px 20px;
+  padding: 25px 30px 30px 30px;
   background-color: ${({ isError }) => isError? 'rgba(255, 0, 0, 0.9)':'rgba(37, 156, 144, 0.9)' };
   width: 100%;
   color: ${({ theme: { colors } }) => colors.white};
@@ -40,6 +40,7 @@ const MessageHeader = styled.div`
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 1.1px;
+  white-space: nowrap;
 `;
 const MessageFooter = styled.div`
   display: flex;

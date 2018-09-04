@@ -11,6 +11,7 @@ import LoginHome from './../LoginHome/';
 import LoginImport from './../LoginImport/';
 import LoginCreate from './../LoginCreate/';
 import LoginConditions from './../LoginConditions/';
+import HomeSettings from './../HomeSettings/';
 
 type Props = {
   isLoading: boolean,
@@ -34,6 +35,7 @@ class LoginPage extends Component<Props> {
             path={`${match.path}/conditions/:type`}
             component={LoginConditions}
           />
+          <Route path={`${match.path}/settings`} component={HomeSettings} />
           <Route component={LoginHome} />
         </Switch>
         {isLoading && <Loader />}

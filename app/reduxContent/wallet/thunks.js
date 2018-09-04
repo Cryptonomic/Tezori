@@ -421,7 +421,11 @@ export function importAddress(
     } catch (e) {
       console.log(`-debug: Error in: importAddress for:${activeTab}`);
       console.error(e);
-      dispatch(addMessage(e.name, true));
+      if (e.name === "The provided string doesn't look like hex data") {
+        dispatch(addMessage("general.errors.no_hex_data", true));
+      } else {
+        dispatch(addMessage(e.name, true));
+      }
     }
 
     dispatch(setIsLoading(false));
