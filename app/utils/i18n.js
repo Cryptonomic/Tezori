@@ -13,9 +13,9 @@ export function createIl8nInstance(locale) {
     debug: true,
     backend: {
       loadPath: () => {
-        const filename = `../extraResources/locales/{{lng}}.json`;
+        const filename = `extraResources/locales/{{lng}}.json`;
         if (process.env.NODE_ENV === 'production') {
-          return path.join(remote.app.getAppPath(), filename);
+          return path.join(remote.app.getAppPath(), 'dist',filename);
         }
         return path.join(__dirname, filename);
       }
