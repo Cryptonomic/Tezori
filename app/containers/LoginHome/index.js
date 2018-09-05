@@ -235,13 +235,13 @@ class LoginHome extends Component<Props> {
 
   onChangeLanguage = (lang) => {
     this.setState({ selectedLanguage: lang });
+    const { setLocale } = this.props;
+    setLocale(lang);
+    i18n.changeLanguage(lang);
   }
 
   goToTermsModal  = () => {
-    const { selectedLanguage, isLanguageSelected } = this.state;
-    const { setLocale } = this.props;
-    setLocale(selectedLanguage);
-    i18n.changeLanguage(selectedLanguage);
+    const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
     this.setState({ isLanguageSelected: !isLanguageSelected });    
   }
