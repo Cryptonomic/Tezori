@@ -12,7 +12,8 @@
       "delegate":"Delegar",
       "restore":"Restaurar",
       "confirm":"Confirmar",
-      "receive":"Recibir"
+      "receive":"Recibir",
+      "continue": "Continuar"
     },
     "nouns": {
       "amount":"Monto",
@@ -162,6 +163,10 @@
         "send_funds":"No te puedes enviar fondos a ti mismo"
       }
     },
+    "languageSelectModal": {
+      "choose_language": "elige lengua",
+      "language_selection_description": "Puede cambiar su selección de idioma en la página de configuración."
+    },
     "messageBar": {
       "operation_id":"Número de la operación",
       "view_block_explorer":"Ver en un explorador de bloque",
@@ -217,6 +222,7 @@
     },
     "termsModal": {
       "hi_there":"¡Hola!",
+      "welcome_to": "Bienvenido a {{name}}",
       "i_agree":"Acepto",
       "description":"Antes de empezar, por favor lee y acepta nuestros<1>  Términos de Servicio</1>  y<3> Política de Privacidad</3>"
     },
