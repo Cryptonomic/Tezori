@@ -31,6 +31,7 @@ export const Theme = {
     gray9: '#b5c5e3',
     gray10: '#979797',
     gray11: '#d4ddf0',
+    gray12: '#c8c6c6',
 
     // font colors
     index0: '#94a9d1',

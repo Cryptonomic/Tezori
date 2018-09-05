@@ -9,7 +9,6 @@ import Circle from '@material-ui/icons/PanoramaFishEye';
 import Button from '../Button';
 import languageLogoIcon from '../../../resources/imgs/Language_Selection_img.svg';
 import { wrapComponent } from '../../utils/i18n';
-import theme from '../../styles/theme';
 import localesMap from '../../constants/LocalesMap';
 
 const Container = styled.div`
@@ -48,19 +47,45 @@ const LanguageLogo = styled.img`
   height: 155px;
 `;
 
+const GroupContainerWrapper = styled.div`
+  width: 287.7px;
+  height: 200px;
+  position: relative;
+`;
+
+const FadeOut = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 92%;
+  height: 30px;
+  pointer-events: none;
+  background-image: linear-gradient( rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50% );
+`;
+
 const RadioGroupContainer = styled(RadioGroup)`
   &&& {
-    width: 287.7px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     overflow: auto;
     display: block;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }    
+    &::-webkit-scrollbar-track {
+      background: ${({ theme: { colors } }) => colors.gray2};
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: ${({ theme: { colors } }) => colors.accent};
+      border-radius: 4px;
+    }
   }  
 `;
 
 const FormControlLabelWrapper = styled(FormControlLabel)`
   &&& {
     height: 40px;
-    width: 100%;
+    width: 92%;
     border-bottom: solid 1px ${({ theme: { colors } }) => colors.gray11};
     margin: 0px;    
     [class*='MuiFormControlLabel-label'] {
@@ -87,6 +112,22 @@ const ButtonContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const CheckedCircle = styled(CheckCircle)`
+  &&& {
+    fill: ${({ theme: { colors } }) => colors.accent};
+    width: 21px;
+    height: 21px;
+  }
+`;
+
+const NonCheckedCircle = styled(Circle)`
+  &&& {
+    fill: ${({ theme: { colors } }) => colors.gray12};
+    width: 21px;
+    height: 21px;
+  }
+`;
+
 const customStyles = {
   content: {
     alignItems: 'center',
@@ -102,12 +143,6 @@ const customStyles = {
   overlay: {
     backgroundColor: 'rgba(155, 155, 155, 0.68)'
   }
-};
-
-const iconStyles = {
-  fill: theme.colors.accent,
-  width: 21,
-  height: 21
 };
 
 type Props = {
@@ -128,28 +163,32 @@ const LanguageSelectModal = (props: Props) => {
         <Description>{t("components.languageSelectModal.language_selection_description")}</Description>
         <MainContainer>
           <LanguageLogo src={languageLogoIcon} />
-          <RadioGroupContainer
-            value={selectedLanguage}
-            onChange={(event)=>onLanguageChange(event.target.value)}
-          >
-            {
-              Object.keys(localesMap).map((key) => {
-                return (
-                  <FormControlLabelWrapper
-                    value={key}
-                    key={key}
-                    control={
-                      <CustomRadio                      
-                        icon={<Circle style={iconStyles} />}
-                        checkedIcon={<CheckCircle style={iconStyles} />}
-                      />
-                    }
-                    label={localesMap[key]}
-                  />
-                );
-              })
-            }
-          </RadioGroupContainer>          
+          <GroupContainerWrapper>
+            <RadioGroupContainer
+              value={selectedLanguage}
+              onChange={(event)=>onLanguageChange(event.target.value)}
+            >
+              {
+                Object.keys(localesMap).map((key) => {
+                  return (
+                    <FormControlLabelWrapper
+                      value={key}
+                      key={key}
+                      control={
+                        <CustomRadio                      
+                          icon={<NonCheckedCircle />}
+                          checkedIcon={<CheckedCircle />}
+                        />
+                      }
+                      label={localesMap[key]}
+                    />
+                  );
+                })
+              }
+            </RadioGroupContainer>
+            <FadeOut />
+          </GroupContainerWrapper>
+                  
         </MainContainer>
         <ButtonContainer>
           <Button buttonTheme="primary" onClick={onContinue}>
