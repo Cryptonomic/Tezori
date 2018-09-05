@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -55,10 +55,18 @@ const GroupContainerWrapper = styled.div`
 
 const FadeOut = styled.div`
   position: absolute;
-  bottom: 0;
   width: 92%;
   height: 30px;
   pointer-events: none;
+`;
+
+const FadeTop = styled(FadeOut)`
+  top: 0;
+  background-image: linear-gradient(to top, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%);
+`;
+
+const FadeBottom = styled(FadeOut)`
+  bottom: 0;
   background-image: linear-gradient( rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50% );
 `;
 
@@ -152,52 +160,84 @@ type Props = {
   selectedLanguage: string,
   t: () => {}
 };
+class LanguageSelectModal extends Component<Props> {
 
-const LanguageSelectModal = (props: Props) => {
-  const { isOpen, onLanguageChange, selectedLanguage, onContinue, t } = props;
+  state = {
+    isTopFade: false,
+    isBottomFade: false,
+    numberOfLocales: 0
+  };
 
-  return (
-    <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
-      <Container>
-        <Title>{t("components.languageSelectModal.choose_language")}</Title>
-        <Description>{t("components.languageSelectModal.language_selection_description")}</Description>
-        <MainContainer>
-          <LanguageLogo src={languageLogoIcon} />
-          <GroupContainerWrapper>
-            <RadioGroupContainer
-              value={selectedLanguage}
-              onChange={(event)=>onLanguageChange(event.target.value)}
-            >
-              {
-                Object.keys(localesMap).map((key) => {
-                  return (
-                    <FormControlLabelWrapper
-                      value={key}
-                      key={key}
-                      control={
-                        <CustomRadio                      
-                          icon={<NonCheckedCircle />}
-                          checkedIcon={<CheckedCircle />}
-                        />
-                      }
-                      label={localesMap[key]}
-                    />
-                  );
-                })
-              }
-            </RadioGroupContainer>
-            <FadeOut />
-          </GroupContainerWrapper>
-                  
-        </MainContainer>
-        <ButtonContainer>
-          <Button buttonTheme="primary" onClick={onContinue}>
-            {t("general.verbs.continue")}
-          </Button>
-        </ButtonContainer>        
-      </Container>
-    </Modal>
-  );
+  componentWillMount = () => {
+    const numberOfLocales = Object.keys(localesMap).length;
+    if (numberOfLocales < 6) {
+      this.setState({ isBottomFade: false, numberOfLocales });
+    } else {
+      this.setState({ isBottomFade: true, numberOfLocales });
+    }
+  }
+
+  onScrollChange = (event) => {
+    const { numberOfLocales } = this.state;
+    const pos = event.target.scrollTop;
+    const remainCount = numberOfLocales - 5;
+    if (pos === 0 ) {
+      this.setState({isTopFade : false, isBottomFade: true });
+    } else if (pos < remainCount*40) {
+      this.setState({isTopFade : true, isBottomFade: true });
+    } else {
+      this.setState({isTopFade : true, isBottomFade: false });
+    }
+  }
+
+  render() {
+    const { isOpen, onLanguageChange, selectedLanguage, onContinue, t } = this.props;
+    const { isTopFade, isBottomFade } = this.state;
+    return (
+      <Modal isOpen={isOpen} style={customStyles} ariaHideApp={false}>
+        <Container>
+          <Title>{t("components.languageSelectModal.choose_language")}</Title>
+          <Description>{t("components.languageSelectModal.language_selection_description")}</Description>
+          <MainContainer>
+            <LanguageLogo src={languageLogoIcon} />
+            <GroupContainerWrapper>
+              {isTopFade && <FadeTop />}
+              <RadioGroupContainer
+                value={selectedLanguage}
+                onChange={(event)=>onLanguageChange(event.target.value)}
+                onScroll={this.onScrollChange}
+              >
+                {
+                  Object.keys(localesMap).map((key) => {
+                    return (
+                      <FormControlLabelWrapper
+                        value={key}
+                        key={key}
+                        control={
+                          <CustomRadio                      
+                            icon={<NonCheckedCircle />}
+                            checkedIcon={<CheckedCircle />}
+                          />
+                        }
+                        label={localesMap[key]}
+                      />
+                    );
+                  })
+                }
+              </RadioGroupContainer>
+              {isBottomFade && <FadeBottom />}
+            </GroupContainerWrapper>
+                    
+          </MainContainer>
+          <ButtonContainer>
+            <Button buttonTheme="primary" onClick={onContinue}>
+              {t("general.verbs.continue")}
+            </Button>
+          </ButtonContainer>        
+        </Container>
+      </Modal>
+    );
+  }
 };
 
 export default wrapComponent(LanguageSelectModal);
