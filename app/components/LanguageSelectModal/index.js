@@ -183,7 +183,7 @@ class LanguageSelectModal extends Component<Props> {
     }
   }
 
-  setLanguageScrollRef = element => {
+  setLanguageScrollRef = (element) => {
     this.langScrollEl = element;
     if (this.langScrollEl) {
       const { selectedLanguage } = this.props;
