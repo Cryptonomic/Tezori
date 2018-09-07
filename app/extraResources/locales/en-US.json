@@ -12,7 +12,8 @@
       "delegate": "Delegate",
       "restore": "Restore",
       "confirm": "Confirm",
-      "receive": "Receive"
+      "receive": "Receive",
+      "continue": "Continue"
     },
     "nouns": {
       "amount": "Amount",
@@ -162,6 +163,10 @@
         "send_funds": "You cannot send funds to yourself."
       }
     },
+    "languageSelectModal": {
+      "choose_language": "Choose Language",
+      "language_selection_description": "You can always change your language selection in the settings."
+    },
     "messageBar": {
       "operation_id": "OPERATION ID",
       "view_block_explorer": "View on a block explorer",
@@ -217,8 +222,9 @@
     },
     "termsModal": {
       "hi_there": "Hi there!",
-      "i_agree": "I agree",
-      "description": "Before we get started, please read and accept our<1> Terms of Service </1>and<3> Privacy Policy</3>."
+      "welcome_to": "Welcome to {{name}}",
+      "i_agree": "I Agree",
+      "description": "Before we get started, please read our<1> Terms of Service </1>and<3> Privacy Policy</3>."
     },
     "tooltips": {
       "manager_tooltips_description": "The Manager Address is the primary address of your account and can be used to send and receive tez."
