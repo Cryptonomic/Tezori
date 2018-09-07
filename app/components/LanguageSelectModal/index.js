@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Modal from 'react-modal';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
+import RootRef from '@material-ui/core/RootRef';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Circle from '@material-ui/icons/PanoramaFishEye';
@@ -162,11 +163,16 @@ type Props = {
 };
 class LanguageSelectModal extends Component<Props> {
 
+  constructor(props) {
+    super(props);
+    this.langScrollEl = null;
+  }
+
   state = {
     isTopFade: false,
     isBottomFade: false,
     numberOfLocales: 0
-  };
+  };  
 
   componentWillMount = () => {
     const numberOfLocales = Object.keys(localesMap).length;
@@ -175,6 +181,17 @@ class LanguageSelectModal extends Component<Props> {
     } else {
       this.setState({ isBottomFade: true, numberOfLocales });
     }
+  }
+
+  setLanguageScrollRef = element => {
+    this.langScrollEl = element;
+    if (this.langScrollEl) {
+      const { selectedLanguage } = this.props;
+      const index = Object.keys(localesMap).indexOf(selectedLanguage);
+      if (index>4) {
+        this.langScrollEl.scrollTop = 40 * (index - 4);
+      }
+    }    
   }
 
   onScrollChange = (event) => {
@@ -202,29 +219,32 @@ class LanguageSelectModal extends Component<Props> {
             <LanguageLogo src={languageLogoIcon} />
             <GroupContainerWrapper>
               {isTopFade && <FadeTop />}
-              <RadioGroupContainer
-                value={selectedLanguage}
-                onChange={(event)=>onLanguageChange(event.target.value)}
-                onScroll={this.onScrollChange}
-              >
-                {
-                  Object.keys(localesMap).map((key) => {
-                    return (
-                      <FormControlLabelWrapper
-                        value={key}
-                        key={key}
-                        control={
-                          <CustomRadio                      
-                            icon={<NonCheckedCircle />}
-                            checkedIcon={<CheckedCircle />}
-                          />
-                        }
-                        label={localesMap[key]}
-                      />
-                    );
-                  })
-                }
-              </RadioGroupContainer>
+              <RootRef rootRef={this.setLanguageScrollRef}>
+                <RadioGroupContainer
+                  value={selectedLanguage}
+                  onChange={(event)=>onLanguageChange(event.target.value)}
+                  onScroll={this.onScrollChange}
+                >
+                  {
+                    Object.keys(localesMap).map((key) => {
+                      return (
+                        <FormControlLabelWrapper
+                          value={key}
+                          key={key}
+                          control={
+                            <CustomRadio                      
+                              icon={<NonCheckedCircle />}
+                              checkedIcon={<CheckedCircle />}
+                            />
+                          }
+                          label={localesMap[key]}
+                        />
+                      );
+                    })
+                  }
+                </RadioGroupContainer>
+              </RootRef>
+              
               {isBottomFade && <FadeBottom />}
             </GroupContainerWrapper>
                     
