@@ -63,8 +63,8 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1199,
+    height: 768,
     minHeight: 728,
     minWidth: 1024,
     title: `${name} - v${version}`
