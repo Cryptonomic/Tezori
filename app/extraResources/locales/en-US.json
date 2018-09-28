@@ -274,10 +274,15 @@
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
       "create_new_wallet_btn": "Create New Wallet",
       "open_exisiting_wallet_btn": "Open Existing Wallet",
-      "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
-      "create_named_wallet": "<0><0>Create a <1>{{name}}</1> wallet</0></0> first.",
+      "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper",
+      "create_named_wallet": "wallet? <1><0>Create a <1>{{name}}</1> wallet</0></1> first.",
       "tagline": "A community wallet for Tezos",
-      "app_name": "Tezori"
+      "app_name": "Tezori",
+      "keystore_wallet": "Keystore Wallet",
+      "ledger_wallet": "Ledger Wallet",
+      "connect_ledger": "Connect with Ledger",
+      "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
+      "download_it_here": "Download it here."
     },
     "loginCreate": {
       "create_wallet_btn": "Create Wallet",
