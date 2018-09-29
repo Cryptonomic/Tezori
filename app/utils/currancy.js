@@ -5,7 +5,7 @@ export function utezToTez(amount) {
 }
 
 export function tezToUtez(amount) {
-  return amount * utez;
+  return Math.floor(amount * utez);
 }
 
 export function formatAmount(amount, decimal: number = 6) {
