@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js';
 const utez = 1000000;
 
 export function utezToTez(amount) {
@@ -5,7 +6,8 @@ export function utezToTez(amount) {
 }
 
 export function tezToUtez(amount) {
-  return Math.floor(amount * utez);
+  const x = new BigNumber(amount);
+  return x.multipliedBy(utez).toNumber();
 }
 
 export function formatAmount(amount, decimal: number = 6) {
