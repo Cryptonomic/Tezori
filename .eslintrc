@@ -18,6 +18,7 @@
     "no-shadow": "off",
     "react/no-array-index-key": "off",
     "generator-star-spacing": "off",
+    "import/no-useless-path-segments": "off",
     "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": "off",
     "jsx-a11y/anchor-is-valid": "off",
@@ -30,6 +31,9 @@
     "promise/always-return": "error",
     "promise/catch-or-return": "error",
     "promise/no-native": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-wrap-multilines": "off",
     "react/sort-comp": [
       "error",
       {
