@@ -8,15 +8,15 @@ import webpack from 'webpack';
 import path from 'path';
 import merge from 'webpack-merge';
 import baseConfig from './webpack.config.base';
-import { dependencies } from '../package';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import { dependencies } from './package.json';
+import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('development');
 
-const dist = path.join(__dirname, '..', 'dll');
+const dist = path.resolve(process.cwd(), 'dll');
 
 export default merge.smart(baseConfig, {
-  context: path.join(__dirname, '..'),
+  context: process.cwd(),
 
   devtool: 'eval',
 
@@ -33,7 +33,7 @@ export default merge.smart(baseConfig, {
 
   entry: {
     renderer: Object.keys(dependencies || {}).filter(
-      dependency => dependency !== '@fortawesome/fontawesome-free'
+      dependency => dependency !== 'font-awesome'
     )
   },
 
@@ -66,9 +66,9 @@ export default merge.smart(baseConfig, {
     new webpack.LoaderOptionsPlugin({
       debug: true,
       options: {
-        context: path.join(__dirname, '..', 'app'),
+        context: path.resolve(process.cwd(), 'app'),
         output: {
-          path: path.join(__dirname, '..', 'dll')
+          path: path.resolve(process.cwd(), 'dll')
         }
       }
     })
