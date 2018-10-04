@@ -11,9 +11,11 @@
   },
   "scripts": {
     "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
-    "postinstall": "npm run electron-rebuild"
+    "postinstall": "yarn electron-rebuild"
   },
+  "license": "MIT",
   "dependencies": {
+    "conseiljs": "^0.1.28-z",
     "react-currency-input": "^1.3.6"
   }
 }
