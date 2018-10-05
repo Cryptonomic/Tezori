@@ -22,17 +22,12 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-multilib
             - g++-4.8
-            - g++-multilib
             - icnsutils
             - graphicsmagick
             - xz-utils
             - xorriso
             - rpm
-
-before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
 
 cache:
   yarn: true
