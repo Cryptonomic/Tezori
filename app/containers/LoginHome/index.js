@@ -168,12 +168,12 @@ const BgCircle = styled.img`
       opacity: 0;
       transform: translate3d(-50%, 0, 0);
     }
-      50% {
-        opacity: 1;
+    50% {
+      opacity: 1;
       transform: translate3d(-50%, 0, 0);
     }
-      100% {
-        opacity: 1;
+    100% {
+      opacity: 1;
       transform: translate3d(-50%, 0, 0);
     }
   }
@@ -253,7 +253,11 @@ class LoginHome extends Component<Props> {
     const isLanguageSelected = JSON.parse(languageStorage) || false;
     const agreement = localStorage.getItem(AGREEMENT_STORAGE);
     const isAgreement = JSON.parse(agreement) || false;
-    this.setState({ isAgreement, isLanguageSelected, selectedLanguage: locale });
+    this.setState({
+      isAgreement,
+      isLanguageSelected,
+      selectedLanguage: locale
+    });
   };
 
   updateStatusAgreement = () => {
@@ -262,39 +266,36 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  onChangeLanguage = (lang) => {
+  onChangeLanguage = lang => {
     this.setState({ selectedLanguage: lang });
     const { setLocale } = this.props;
     setLocale(lang);
     i18n.changeLanguage(lang);
-  }
+  };
 
-  goToTermsModal  = () => {
+  goToTermsModal = () => {
     const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
-    this.setState({ isLanguageSelected: !isLanguageSelected });    
-  }
+    this.setState({ isLanguageSelected: !isLanguageSelected });
+  };
 
   goToLanguageSelect = () => {
     const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
     this.setState({ isLanguageSelected: !isLanguageSelected });
-  }
+  };
 
   goTo = route => {
     const { match, history } = this.props;
     history.push(`${match.path}/${route}`);
   };
 
-  onLedgerConnect = () => {
+  onLedgerConnect = () => {};
 
-  }
-
-  onDownload = () => {
-
-  }
+  onDownload = () => {};
 
   openTermsService = () => this.goTo('conditions/termsOfService');
+
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
@@ -310,7 +311,9 @@ class LoginHome extends Component<Props> {
             <MainContainers>
               <CardContainer>
                 <CardImg src={keystoreImg} />
-                <CardTitle>{t('containers.loginHome.keystore_wallet')}</CardTitle>
+                <CardTitle>
+                  {t('containers.loginHome.keystore_wallet')}
+                </CardTitle>
                 <CreateWalletButton
                   buttonTheme="primary"
                   onClick={() => this.goTo('create')}
@@ -327,13 +330,21 @@ class LoginHome extends Component<Props> {
                 </UnlockWalletButton>
                 <Linebar />
                 <Tip>
-                  <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                   <div>
-                    <Trans i18nKey="containers.loginHome.create_named_wallet" name={name}>
-                      wallet? 
+                    {t(
+                      'containers.loginHome.want_to_import_fundraiser_paper_wallet'
+                    )}
+                  </div>
+                  <div>
+                    <Trans
+                      i18nKey="containers.loginHome.create_named_wallet"
+                      name={name}
+                    >
+                      wallet?
                       <Link onClick={() => this.goTo('create')}>
                         <Strong>Create a {name} wallet</Strong>
-                      </Link> first.                    
+                      </Link>{' '}
+                      first.
                     </Trans>
                   </div>
                 </Tip>
@@ -353,14 +364,14 @@ class LoginHome extends Component<Props> {
                   <div>{t('containers.loginHome.dont_have_ledger_wallet')}</div>
                   <div>
                     <Link onClick={() => this.onDownload()}>
-                      <Strong>{t('containers.loginHome.download_it_here')}</Strong>
+                      <Strong>
+                        {t('containers.loginHome.download_it_here')}
+                      </Strong>
                     </Link>
                   </div>
                 </Tip>
               </CardContainer>
-                            
             </MainContainers>
-            
           </Section>
         </DefaultContainer>
         <TermsAndPolicySection>
@@ -416,4 +427,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(LoginHome);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(LoginHome);
