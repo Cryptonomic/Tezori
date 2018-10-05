@@ -102,7 +102,7 @@
     "email": "info@cryptonomic.tech",
     "url": "https://github.com/Cryptonomic"
   },
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/Cryptonomic/Tezori/issues"
   },
