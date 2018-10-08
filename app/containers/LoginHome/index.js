@@ -15,6 +15,8 @@ import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
+import { connectLedger } from '../../reduxContent/wallet/thunks';
+import { getWalletIsLoading } from '../../reduxContent/wallet/selectors';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -24,6 +26,7 @@ import bgCircle04 from '../../../resources/bg-hero/bg-circle_04.png';
 
 import keystoreImg from '../../../resources/imgs/Keystore.svg';
 import ledgerImg from '../../../resources/imgs/Ledger.svg';
+import ledgerGif from '../../../resources/ledger-connect.gif';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -236,6 +239,19 @@ const Linebar = styled.div`
   margin-top: auto;
 `;
 
+const LedgerConnect = styled.div`
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: 0.7px;
+  font-weight: 300;
+  width: 288px;
+  text-align: left;
+  margin-top: 20px;
+`;
+const DescriptionBold = styled.span`
+  font-weight: 400;
+`;
+
 const LANGUAGE_STORAGE = 'isShowedSelecteLanguageScene';
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 class LoginHome extends Component<Props> {
@@ -290,7 +306,10 @@ class LoginHome extends Component<Props> {
     history.push(`${match.path}/${route}`);
   };
 
-  onLedgerConnect = () => {};
+  onLedgerConnect = async () => {
+    const { connectLedger } = this.props;
+    await connectLedger();
+  };
 
   onDownload = () => {};
 
@@ -299,8 +318,9 @@ class LoginHome extends Component<Props> {
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t } = this.props;
+    const { t, isLoading } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
+    const realLedgerImg = isLoading ? ledgerGif : ledgerImg;
     return (
       <SectionContainer>
         <DefaultContainer>
@@ -350,20 +370,32 @@ class LoginHome extends Component<Props> {
                 </Tip>
               </CardContainer>
               <CardContainer>
-                <CardImg src={ledgerImg} />
+                <CardImg src={realLedgerImg} />
+
                 <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
                 <CreateWalletButton
                   buttonTheme="primary"
-                  onClick={() => this.onLedgerConnect()}
-                  disabled={!isAgreement}
+                  onClick={this.onLedgerConnect}
+                  disabled={!isAgreement || isLoading}
                 >
-                  {t('containers.loginHome.connect_ledger')}
+                  {isLoading && t('containers.loginHome.connecting')}
+                  {!isLoading && t('containers.loginHome.connect_ledger')}
                 </CreateWalletButton>
+                {isLoading && (
+                  <LedgerConnect>
+                    <Trans i18nKey="containers.loginHome.connect_your_device">
+                      Please
+                      <DescriptionBold> connect your device</DescriptionBold>,
+                      <DescriptionBold> enter your pin</DescriptionBold>, and
+                      <DescriptionBold> open Tezos Wallet app</DescriptionBold>.
+                    </Trans>
+                  </LedgerConnect>
+                )}
                 <Linebar />
                 <Tip>
                   <div>{t('containers.loginHome.dont_have_ledger_wallet')}</div>
                   <div>
-                    <Link onClick={() => this.onDownload()}>
+                    <Link onClick={this.onDownload}>
                       <Strong>
                         {t('containers.loginHome.download_it_here')}
                       </Strong>
@@ -414,14 +446,16 @@ class LoginHome extends Component<Props> {
 
 function mapStateToProps(state) {
   return {
-    locale: getLocale(state)
+    locale: getLocale(state),
+    isLoading: getWalletIsLoading(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      setLocale
+      setLocale,
+      connectLedger
     },
     dispatch
   );
