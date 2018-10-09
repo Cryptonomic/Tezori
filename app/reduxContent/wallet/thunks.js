@@ -451,6 +451,7 @@ export function login(loginType, walletLocation, walletFileName, password) {
     dispatch(setIsLoading(true));
     const completeWalletPath = path.join(walletLocation, walletFileName);
     dispatch(addMessage('', true));
+    dispatch(setLedger(false));
     try {
       let wallet = {};
       if (loginType === CREATE) {
