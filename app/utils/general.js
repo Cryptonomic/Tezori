@@ -24,8 +24,8 @@ const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = Tezos
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 const { generateMnemonic } = TezosWallet;
 
-const derivationPathIndex = Math.floor(Math.random()).toString();
-const derivationPath = `44'/1729'/0'/0'/` + derivationPathIndex + `'`;
+// const derivationPathIndex = Math.floor(Math.random()).toString();
+const derivationPath = `44'/1729'/0'/0'/0'`;
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
@@ -78,7 +78,7 @@ export function getNodesError({ tezos, conseil }) {
   if ( (tezos.level - conseil.level) > 5 ) {
     return 'nodes.errors.not_synced';
   }
-  
+
   return false;
 }
 
@@ -136,7 +136,9 @@ export async function revealKey(nodes, keyStore, storeType) {
   if ( !keyRevealed ) {
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
     if (storeType === LEDGER) {
-      return await sendKeyRevealOperation(url, keyStore, 0, derivationPath);
+      const newKeyStore = keyStore;
+      newKeyStore.storeType = 2;
+      return await sendKeyRevealOperation(url, newKeyStore, 100, derivationPath);
     }
     return await sendKeyRevealOperation(url, keyStore, 0);
   }
@@ -157,7 +159,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     }
     return account;
   }
-  
+
   if ( account.status === status.INACTIVE ) {
     //  delete account
   }
