@@ -3,7 +3,11 @@ import { push } from 'react-router-redux';
 import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
-import { FUNDRAISER, GENERATE_MNEMONIC, RESTORE } from '../../constants/AddAddressTypes';
+import {
+  FUNDRAISER,
+  GENERATE_MNEMONIC,
+  RESTORE
+} from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
@@ -22,8 +26,17 @@ import {
   syncIdentityWithState
 } from '../../utils/identity';
 
-import { clearOperationId, getNodesStatus, getNodesError } from '../../utils/general';
-import { saveUpdatedWallet, loadPersistedState, persistWalletState } from '../../utils/wallet';
+import {
+  clearOperationId,
+  getNodesStatus,
+  getNodesError
+} from '../../utils/general';
+import {
+  saveUpdatedWallet,
+  loadPersistedState,
+  persistWalletState,
+  loadWalletFromLedger
+} from '../../utils/wallet';
 
 import {
   logout,
@@ -33,7 +46,8 @@ import {
   setNodesStatus,
   addNewIdentity,
   updateIdentity,
-  updateFetchedTime
+  updateFetchedTime,
+  setLedger
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
@@ -200,13 +214,15 @@ export function syncIdentity(publicKeyHash) {
     });
 
     stateIdentity = findIdentity(
-      state().wallet.get('identities').toJS(),
+      state()
+        .wallet.get('identities')
+        .toJS(),
       publicKeyHash
     );
 
-    dispatch(updateIdentity(
-      syncIdentityWithState(syncIdentity, stateIdentity)
-    ));
+    dispatch(
+      updateIdentity(syncIdentityWithState(syncIdentity, stateIdentity))
+    );
     await persistWalletState(state().wallet.toJS());
   };
 }
@@ -221,11 +237,10 @@ export function syncWallet() {
     const res = getNodesError(nodesStatus);
     console.log('-debug: res, nodesStatus', res, nodesStatus);
 
-    if ( getNodesError(nodesStatus) ) {
+    if (getNodesError(nodesStatus)) {
       dispatch(setIsLoading(false));
       return false;
     }
-
 
     let stateIdentities = state()
       .wallet.get('identities')
@@ -250,28 +265,25 @@ export function syncWallet() {
     stateIdentities = state()
       .wallet.get('identities')
       .toJS();
-    
-    const newIdentities = stateIdentities
-      .filter(stateIdentity => {
-        const syncIdentityIndex = syncIdentities
-          .findIndex(syncIdentity =>
-            stateIdentity.publicKeyHash === syncIdentity.publicKeyHash
-          );
 
-        if ( syncIdentityIndex > -1 ) {
-          syncIdentities[syncIdentityIndex] = syncIdentityWithState(
-            syncIdentities[syncIdentityIndex],
-            stateIdentity
-          );
-          return false;
-        }
-        
-        return true;
+    const newIdentities = stateIdentities.filter(stateIdentity => {
+      const syncIdentityIndex = syncIdentities.findIndex(
+        syncIdentity =>
+          stateIdentity.publicKeyHash === syncIdentity.publicKeyHash
+      );
+
+      if (syncIdentityIndex > -1) {
+        syncIdentities[syncIdentityIndex] = syncIdentityWithState(
+          syncIdentities[syncIdentityIndex],
+          stateIdentity
+        );
+        return false;
+      }
+
+      return true;
     });
-    
-    dispatch(setIdentities(
-      syncIdentities.concat(newIdentities)
-    ));
+
+    dispatch(setIdentities(syncIdentities.concat(newIdentities)));
     dispatch(updateFetchedTime(new Date()));
     await persistWalletState(state().wallet.toJS());
     dispatch(setIsLoading(false));
@@ -355,7 +367,7 @@ export function importAddress(
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
-                "components.messageBar.messages.success_account_activation",
+                'components.messageBar.messages.success_account_activation',
                 false,
                 operationId
               )
@@ -366,14 +378,13 @@ export function importAddress(
           }
           break;
         }
-        case RESTORE:
-        {
+        case RESTORE: {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           const storeTypesMap = {
-            0:  storeTypes.MNEMONIC,
-            1:  storeTypes.FUNDRAISER
+            0: storeTypes.MNEMONIC,
+            1: storeTypes.FUNDRAISER
           };
-          identity.storeType = storeTypesMap[ identity.storeType ];
+          identity.storeType = storeTypesMap[identity.storeType];
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
@@ -381,9 +392,9 @@ export function importAddress(
             identity.publicKeyHash,
             conseilNode.apiKey
           ).catch(() => false);
-          
+
           if (!account) {
-            const title = "components.messageBar.messages.account_not_exist";
+            const title = 'components.messageBar.messages.account_not_exist';
             const err = new Error(title);
             err.name = title;
             throw err;
@@ -415,14 +426,16 @@ export function importAddress(
           dispatch(push('/home'));
           await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
         } else {
-          dispatch(addMessage("components.messageBar.messages.identity_exist", true));
+          dispatch(
+            addMessage('components.messageBar.messages.identity_exist', true)
+          );
         }
       }
     } catch (e) {
       console.log(`-debug: Error in: importAddress for:${activeTab}`);
       console.error(e);
       if (e.name === "The provided string doesn't look like hex data") {
-        dispatch(addMessage("general.errors.no_hex_data", true));
+        dispatch(addMessage('general.errors.no_hex_data', true));
       } else {
         dispatch(addMessage(e.name, true));
       }
@@ -446,14 +459,13 @@ export function login(loginType, walletLocation, walletFileName, password) {
         wallet = await loadPersistedState(completeWalletPath, password);
       }
 
-      const identities = wallet.identities
-        .map((identity, identityIndex) => {
-          return createIdentity({
-            ...identity,
-            order: identity.order || (identityIndex + 1)
-          });
+      const identities = wallet.identities.map((identity, identityIndex) => {
+        return createIdentity({
+          ...identity,
+          order: identity.order || identityIndex + 1
         });
-      
+      });
+
       dispatch(
         setWallet(
           {
@@ -462,6 +474,42 @@ export function login(loginType, walletLocation, walletFileName, password) {
             walletLocation,
             walletFileName,
             password
+          },
+          'wallet'
+        )
+      );
+
+      dispatch(automaticAccountRefresh());
+      dispatch(push('/home'));
+      await dispatch(syncWallet());
+    } catch (e) {
+      console.error(e);
+      dispatch(addMessage(e.name, true));
+    }
+    dispatch(setIsLoading(false));
+  };
+}
+
+// todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
+export function connectLedger() {
+  return async dispatch => {
+    dispatch(setIsLoading(true));
+    dispatch(addMessage('', true));
+    dispatch(setLedger(true));
+    try {
+      const wallet = await loadWalletFromLedger();
+      const identities = wallet.identities.map((identity, identityIndex) => {
+        return createIdentity({
+          ...identity,
+          order: identity.order || identityIndex + 1
+        });
+      });
+
+      dispatch(
+        setWallet(
+          {
+            isLoading: true,
+            identities
           },
           'wallet'
         )

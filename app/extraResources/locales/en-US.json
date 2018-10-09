@@ -192,7 +192,8 @@
         "identity_exist": "Identity already exist",
         "success_sent": "Success! You sent {{localeParam}} tz.",
         "invalid_wallet_password": "Invalid wallet/password combination.",
-        "account_not_exist": "The account does not exist."
+        "account_not_exist": "The account does not exist.",
+        "ledger_not_connect": "Ledger was not connected."
       }
     },
     "pdfReader": {
@@ -282,12 +283,14 @@
       "ledger_wallet": "Ledger Wallet",
       "connect_ledger": "Connect with Ledger",
       "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
-      "download_it_here": "Download it here."
+      "download_it_here": "Download it here.",
+      "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
+      "connecting": "Connecting..."
     },
     "loginCreate": {
       "create_wallet_btn": "Create Wallet",
       "create_wallet_password_label": "Create Wallet Password",
-      "confirm_wallet_password_label" : "Confirm Wallet Password",
+      "confirm_wallet_password_label": "Confirm Wallet Password",
       "create_new_wallet_btn": "Create New Wallet",
       "create_wallet_title": "Create a new wallet",
       "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",

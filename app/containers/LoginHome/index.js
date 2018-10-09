@@ -15,6 +15,8 @@ import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
+import { connectLedger } from '../../reduxContent/wallet/thunks';
+import { getWalletIsLoading } from '../../reduxContent/wallet/selectors';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -24,6 +26,7 @@ import bgCircle04 from '../../../resources/bg-hero/bg-circle_04.png';
 
 import keystoreImg from '../../../resources/imgs/Keystore.svg';
 import ledgerImg from '../../../resources/imgs/Ledger.svg';
+import ledgerGif from '../../../resources/ledger-connect.gif';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -168,12 +171,12 @@ const BgCircle = styled.img`
       opacity: 0;
       transform: translate3d(-50%, 0, 0);
     }
-      50% {
-        opacity: 1;
+    50% {
+      opacity: 1;
       transform: translate3d(-50%, 0, 0);
     }
-      100% {
-        opacity: 1;
+    100% {
+      opacity: 1;
       transform: translate3d(-50%, 0, 0);
     }
   }
@@ -236,6 +239,19 @@ const Linebar = styled.div`
   margin-top: auto;
 `;
 
+const LedgerConnect = styled.div`
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: 0.7px;
+  font-weight: 300;
+  width: 288px;
+  text-align: left;
+  margin-top: 20px;
+`;
+const DescriptionBold = styled.span`
+  font-weight: 400;
+`;
+
 const LANGUAGE_STORAGE = 'isShowedSelecteLanguageScene';
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 class LoginHome extends Component<Props> {
@@ -253,7 +269,11 @@ class LoginHome extends Component<Props> {
     const isLanguageSelected = JSON.parse(languageStorage) || false;
     const agreement = localStorage.getItem(AGREEMENT_STORAGE);
     const isAgreement = JSON.parse(agreement) || false;
-    this.setState({ isAgreement, isLanguageSelected, selectedLanguage: locale });
+    this.setState({
+      isAgreement,
+      isLanguageSelected,
+      selectedLanguage: locale
+    });
   };
 
   updateStatusAgreement = () => {
@@ -262,44 +282,45 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  onChangeLanguage = (lang) => {
+  onChangeLanguage = lang => {
     this.setState({ selectedLanguage: lang });
     const { setLocale } = this.props;
     setLocale(lang);
     i18n.changeLanguage(lang);
-  }
+  };
 
-  goToTermsModal  = () => {
+  goToTermsModal = () => {
     const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
-    this.setState({ isLanguageSelected: !isLanguageSelected });    
-  }
+    this.setState({ isLanguageSelected: !isLanguageSelected });
+  };
 
   goToLanguageSelect = () => {
     const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
     this.setState({ isLanguageSelected: !isLanguageSelected });
-  }
+  };
 
   goTo = route => {
     const { match, history } = this.props;
     history.push(`${match.path}/${route}`);
   };
 
-  onLedgerConnect = () => {
+  onLedgerConnect = async () => {
+    const { connectLedger } = this.props;
+    await connectLedger();
+  };
 
-  }
-
-  onDownload = () => {
-
-  }
+  onDownload = () => {};
 
   openTermsService = () => this.goTo('conditions/termsOfService');
+
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t } = this.props;
+    const { t, isLoading } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
+    const realLedgerImg = isLoading ? ledgerGif : ledgerImg;
     return (
       <SectionContainer>
         <DefaultContainer>
@@ -310,7 +331,9 @@ class LoginHome extends Component<Props> {
             <MainContainers>
               <CardContainer>
                 <CardImg src={keystoreImg} />
-                <CardTitle>{t('containers.loginHome.keystore_wallet')}</CardTitle>
+                <CardTitle>
+                  {t('containers.loginHome.keystore_wallet')}
+                </CardTitle>
                 <CreateWalletButton
                   buttonTheme="primary"
                   onClick={() => this.goTo('create')}
@@ -327,40 +350,60 @@ class LoginHome extends Component<Props> {
                 </UnlockWalletButton>
                 <Linebar />
                 <Tip>
-                  <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                   <div>
-                    <Trans i18nKey="containers.loginHome.create_named_wallet" name={name}>
-                      wallet? 
+                    {t(
+                      'containers.loginHome.want_to_import_fundraiser_paper_wallet'
+                    )}
+                  </div>
+                  <div>
+                    <Trans
+                      i18nKey="containers.loginHome.create_named_wallet"
+                      name={name}
+                    >
+                      wallet?
                       <Link onClick={() => this.goTo('create')}>
                         <Strong>Create a {name} wallet</Strong>
-                      </Link> first.                    
+                      </Link>{' '}
+                      first.
                     </Trans>
                   </div>
                 </Tip>
               </CardContainer>
               <CardContainer>
-                <CardImg src={ledgerImg} />
+                <CardImg src={realLedgerImg} />
+
                 <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
                 <CreateWalletButton
                   buttonTheme="primary"
-                  onClick={() => this.onLedgerConnect()}
-                  disabled={!isAgreement}
+                  onClick={this.onLedgerConnect}
+                  disabled={!isAgreement || isLoading}
                 >
-                  {t('containers.loginHome.connect_ledger')}
+                  {isLoading && t('containers.loginHome.connecting')}
+                  {!isLoading && t('containers.loginHome.connect_ledger')}
                 </CreateWalletButton>
+                {isLoading && (
+                  <LedgerConnect>
+                    <Trans i18nKey="containers.loginHome.connect_your_device">
+                      Please
+                      <DescriptionBold> connect your device</DescriptionBold>,
+                      <DescriptionBold> enter your pin</DescriptionBold>, and
+                      <DescriptionBold> open Tezos Wallet app</DescriptionBold>.
+                    </Trans>
+                  </LedgerConnect>
+                )}
                 <Linebar />
                 <Tip>
                   <div>{t('containers.loginHome.dont_have_ledger_wallet')}</div>
                   <div>
-                    <Link onClick={() => this.onDownload()}>
-                      <Strong>{t('containers.loginHome.download_it_here')}</Strong>
+                    <Link onClick={this.onDownload}>
+                      <Strong>
+                        {t('containers.loginHome.download_it_here')}
+                      </Strong>
                     </Link>
                   </div>
                 </Tip>
               </CardContainer>
-                            
             </MainContainers>
-            
           </Section>
         </DefaultContainer>
         <TermsAndPolicySection>
@@ -403,17 +446,25 @@ class LoginHome extends Component<Props> {
 
 function mapStateToProps(state) {
   return {
-    locale: getLocale(state)
+    locale: getLocale(state),
+    isLoading: getWalletIsLoading(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      setLocale
+      setLocale,
+      connectLedger
     },
     dispatch
   );
 }
 
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(LoginHome);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(LoginHome);

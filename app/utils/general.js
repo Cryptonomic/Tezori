@@ -15,7 +15,7 @@ import { createTransaction } from './transaction';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { REVEAL } from '../constants/TransactionTypes';
-import { MNEMONIC } from '../constants/StoreTypes';
+import { MNEMONIC, LEDGER } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
@@ -23,6 +23,9 @@ import { blockExplorerHost } from '../config.json';
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 const { generateMnemonic } = TezosWallet;
+
+// const derivationPathIndex = Math.floor(Math.random()).toString();
+const derivationPath = `44'/1729'/0'/0'/0'`;
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
@@ -75,7 +78,7 @@ export function getNodesError({ tezos, conseil }) {
   if ( (tezos.level - conseil.level) > 5 ) {
     return 'nodes.errors.not_synced';
   }
-  
+
   return false;
 }
 
@@ -128,10 +131,15 @@ export async function isRevealed(nodes, keyStore) {
   return await isManagerKeyRevealedForAccount(url, keyStore);
 }
 
-export async function revealKey(nodes, keyStore) {
+export async function revealKey(nodes, keyStore, storeType) {
   const keyRevealed = await isRevealed(nodes, keyStore);
   if ( !keyRevealed ) {
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
+    if (storeType === LEDGER) {
+      const newKeyStore = keyStore;
+      newKeyStore.storeType = 2;
+      return await sendKeyRevealOperation(url, newKeyStore, 100, derivationPath);
+    }
     return await sendKeyRevealOperation(url, keyStore, 0);
   }
   return true;
@@ -151,7 +159,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
     }
     return account;
   }
-  
+
   if ( account.status === status.INACTIVE ) {
     //  delete account
   }
@@ -171,7 +179,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
 
   if ( account.status === status.FOUND ) {
     console.log( '-debug - nodes, keyStore', nodes, keyStore);
-    const revealed = await revealKey(nodes, keyStore).catch( (error) => {
+    const revealed = await revealKey(nodes, keyStore, account.storeType).catch( (error) => {
       console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
       console.error(error);
       return false;
