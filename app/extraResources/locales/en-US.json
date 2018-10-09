@@ -33,7 +33,9 @@
       "tezos": "Tezos",
       "total_balence": "Total Balance",
       "language": "Language",
-      "transactions": "Transactions"
+      "transactions": "Transactions",
+      "source": "Source",
+      "destination": "Destination"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data"
@@ -216,6 +218,11 @@
     "sendConfirmationModal": {
       "send_confirmation": "Send Confirmation",
       "confirm_question": "Do you confirm that you want to send"
+    },
+    "sendLedgerConfirmationModal": {
+      "confirm_transaction": "Confirm Transaction",
+      "send_description": "You are about to send out a transaction. Please carefully review the details on your device.",
+      "confirm_description": "If the all the details are correct, please<1> confirm </1>the transaction on your device."
     },
     "settingController": {
       "settings": "SETTINGS",

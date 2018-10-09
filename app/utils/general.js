@@ -20,12 +20,11 @@ import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
+import derivationPath from '../constants/DerivationPath';
+
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 const { generateMnemonic } = TezosWallet;
-
-// const derivationPathIndex = Math.floor(Math.random()).toString();
-const derivationPath = `44'/1729'/0'/0'/0'`;
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);

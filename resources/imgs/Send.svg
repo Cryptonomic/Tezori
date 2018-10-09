@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="49px" viewBox="0 0 50 49" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Send</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Send" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-12" transform="translate(-7.000000, -7.000000)">
+            <g id="Group-9">
+                <circle id="Oval-4" stroke="#EDF0F7" fill="#F7F9FB" transform="translate(31.500000, 31.500000) rotate(-22.000000) translate(-31.500000, -31.500000) " cx="31.5" cy="31.5" r="23.5"></circle>
+                <g id="Group-8" transform="translate(35.059143, 33.737927) rotate(-22.000000) translate(-35.059143, -33.737927) translate(16.059143, 14.737927)" stroke="#5571A7" stroke-dasharray="2">
+                    <path d="M17.507173,6.54951487 C11.6178962,12.5181606 10.9600101,11.5680275 11.1108305,20.3943875 C11.2559342,28.8861944 27.7060019,30.1651449 31.64886,24.3127203 C33.4209315,21.6824165 28.2754083,19.307021 26.9688069,20.1250637 C23.1556804,22.5124024 11.8837109,39.0514565 5.01618507,28.2934574" id="Path-2" transform="translate(18.516185, 19.222434) rotate(43.000000) translate(-18.516185, -19.222434) "></path>
+                </g>
+            </g>
+        </g>
+        <g id="Group-18" transform="translate(39.377247, 11.847473) rotate(67.000000) translate(-39.377247, -11.847473) translate(29.877247, 1.347473)" stroke="#5571A7">
+            <polygon id="Triangle" fill="#FFFFFF" points="9.5 0 19 21 9.5 17.5 0 21"></polygon>
+            <path d="M9.5,0.5 L9.5,17.5" id="Line-8" stroke-linecap="square"></path>
+        </g>
+    </g>
+</svg>
