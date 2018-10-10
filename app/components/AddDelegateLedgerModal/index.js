@@ -51,7 +51,7 @@ const ItemContainer = styled.div`
 const BottomContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 84px;
+  margin-top: 27px;
   height: 124px;
   padding: 0 76px;
   background-color: ${({ theme: { colors } }) => colors.gray1};
@@ -125,6 +125,7 @@ type Props = {
   amount: ?string,
   address?: string,
   source?: string,
+  manager?: string,
   open?: boolean,
   onCloseClick?: () => {},
   isLoading?: boolean,
@@ -132,11 +133,12 @@ type Props = {
   t: () => {}
 };
 
-const SendLedgerConfirmationModal = (props: Props) => {
+const AddDelegateLedgerModal = (props: Props) => {
   const {
     amount,
     address,
     source,
+    manager,
     open,
     isLoading,
     onCloseClick,
@@ -148,7 +150,9 @@ const SendLedgerConfirmationModal = (props: Props) => {
 
   return (
     <Modal
-      title={t('components.sendLedgerConfirmationModal.confirm_transaction')}
+      title={t(
+        'components.delegationLedgerConfirmationModal.confirm_delegate_title'
+      )}
       open={open}
       onClose={onCloseClick}
       style={{ width: '671px' }}
@@ -157,9 +161,35 @@ const SendLedgerConfirmationModal = (props: Props) => {
         <DescriptionContainer>
           <SendSvg src={sendImg} />
           <SendDes>
-            {t('components.sendLedgerConfirmationModal.send_description')}
+            {t('components.delegationLedgerConfirmationModal.add_description')}
           </SendDes>
         </DescriptionContainer>
+
+        <ItemContainer>
+          <ItemTitle>
+            {t('general.nouns.manager')}
+            <Tooltip
+              position="top"
+              arrowPos={{ left: '70%' }}
+              content={() =>
+                CustomTooltip(
+                  t('general.nouns.manager'),
+                  t('general.nouns.manager')
+                )
+              }
+            >
+              <Button buttonTheme="plain">
+                <HelpIcon iconName="help" size={ms(0)} color="secondary" />
+              </Button>
+            </Tooltip>
+          </ItemTitle>
+          <TezosAddress
+            address={manager}
+            size="16px"
+            weight={300}
+            color="primary"
+          />
+        </ItemContainer>
 
         <ItemContainer>
           <ItemTitle>
@@ -229,9 +259,9 @@ const SendLedgerConfirmationModal = (props: Props) => {
       </MainContainer>
       <BottomContainer>
         <ConfirmDes>
-          <Trans i18nKey="components.sendLedgerConfirmationModal.confirm_description">
+          <Trans i18nKey="components.delegationLedgerConfirmationModal.confirm_description">
             If the all the details are correct, please
-            <ConfirmSpan>confirm</ConfirmSpan> the transaction on your device.
+            <ConfirmSpan>confirm</ConfirmSpan> the origination on your device.
           </Trans>
         </ConfirmDes>
         <ConfirmImg src={confirmImg} />
@@ -241,4 +271,4 @@ const SendLedgerConfirmationModal = (props: Props) => {
   );
 };
 
-export default wrapComponent(SendLedgerConfirmationModal);
+export default wrapComponent(AddDelegateLedgerModal);

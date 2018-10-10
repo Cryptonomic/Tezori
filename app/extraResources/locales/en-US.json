@@ -35,7 +35,8 @@
       "language": "Language",
       "transactions": "Transactions",
       "source": "Source",
-      "destination": "Destination"
+      "destination": "Destination",
+      "manager": "Manager"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data"
@@ -140,6 +141,11 @@
     "delegateConfirmationModal": {
       "new_address_label": "Change Delegate to New Address",
       "delegate_warning": "Your delegation change will not show up until the change is confirmed on the blockchain."
+    },
+    "delegationLedgerConfirmationModal": {
+      "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
+      "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
+      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
     },
     "fees": {
       "low_fee": "Low Fee",

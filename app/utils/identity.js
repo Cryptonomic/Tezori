@@ -31,10 +31,10 @@ export function findIdentityIndex(identities, publicKeyHash) {
   return (identities || []).findIndex( identity => identity.publicKeyHash === publicKeyHash );
 }
 
-export async function getSyncIdentity(identities, identity, nodes) {
+export async function getSyncIdentity(identities, identity, nodes, isLedger = false) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore( identities, publicKeyHash, publicKeyHash );
-  identity = await activateAndUpdateAccount(identity, keyStore, nodes);
+  identity = await activateAndUpdateAccount(identity, keyStore, nodes, isLedger);
   const { selectedAccountHash } = getSelectedHash();
   /*
    *  we are taking state identity accounts overriding their state
@@ -97,7 +97,8 @@ export async function getSyncIdentity(identities, identity, nodes) {
           account,
           nodes,
           account.accountId,
-          publicKeyHash
+          publicKeyHash,
+          isLedger
         ).catch( e => {
           console.log('-debug: Error in: getSyncIdentity for:' + identity.publicKeyHash);
           console.error(e);
