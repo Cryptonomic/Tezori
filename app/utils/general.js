@@ -130,21 +130,21 @@ export async function isRevealed(nodes, keyStore) {
   return await isManagerKeyRevealedForAccount(url, keyStore);
 }
 
-export async function revealKey(nodes, keyStore, storeType) {
+export async function revealKey(nodes, keyStore, isLedger) {
   const keyRevealed = await isRevealed(nodes, keyStore);
   if ( !keyRevealed ) {
     const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    if (storeType === LEDGER) {
+    if (isLedger) {
       const newKeyStore = keyStore;
       newKeyStore.storeType = 2;
-      return await sendKeyRevealOperation(url, newKeyStore, 100, derivationPath);
+      return await sendKeyRevealOperation(url, newKeyStore, 0, derivationPath);
     }
     return await sendKeyRevealOperation(url, keyStore, 0);
   }
   return true;
 }
 
-export async function activateAndUpdateAccount(account, keyStore, nodes) {
+export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   if ( account.status === status.READY ) {
     const accountHash = account.publicKeyHash || account.accountId;
@@ -178,7 +178,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes) {
 
   if ( account.status === status.FOUND ) {
     console.log( '-debug - nodes, keyStore', nodes, keyStore);
-    const revealed = await revealKey(nodes, keyStore, account.storeType).catch( (error) => {
+    const revealed = await revealKey(nodes, keyStore, isLedger).catch( (error) => {
       console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
       console.error(error);
       return false;

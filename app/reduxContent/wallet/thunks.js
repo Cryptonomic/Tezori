@@ -31,6 +31,7 @@ import {
   getNodesStatus,
   getNodesError
 } from '../../utils/general';
+
 import {
   saveUpdatedWallet,
   loadPersistedState,
@@ -157,6 +158,7 @@ export function updateActiveTab(
 export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
     let identities = state()
       .wallet.get('identities')
       .toJS();
@@ -170,7 +172,8 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
         syncAccount,
         settings,
         selectedAccountHash,
-        selectedParentHash
+        selectedParentHash,
+        isLedger
       ).catch(e => {
         console.log(
           `-debug: Error in: syncAccount for:${identity.publicKeyHash}`
@@ -231,6 +234,7 @@ export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setIsLoading(true));
     const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
 
     const nodesStatus = await getNodesStatus(settings);
     dispatch(setNodesStatus(nodesStatus));
@@ -249,10 +253,12 @@ export function syncWallet() {
     const syncIdentities = await Promise.all(
       (stateIdentities || []).map(async identity => {
         const { publicKeyHash } = identity;
+
         const syncIdentity = await getSyncIdentity(
           stateIdentities,
           identity,
-          settings
+          settings,
+          isLedger
         ).catch(e => {
           console.log(`-debug: Error in: syncIdentity for: ${publicKeyHash}`);
           console.error(e);
