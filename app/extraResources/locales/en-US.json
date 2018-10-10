@@ -36,7 +36,8 @@
       "transactions": "Transactions",
       "source": "Source",
       "destination": "Destination",
-      "manager": "Manager"
+      "manager": "Manager",
+      "delegate": "Delegate"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data"
