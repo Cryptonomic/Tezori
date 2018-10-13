@@ -21,6 +21,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - libudev
             - g++-4.8
             - icnsutils
             - graphicsmagick
