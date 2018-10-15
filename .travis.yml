@@ -57,5 +57,5 @@ before_script:
 script:
   - node --version
   #- yarn lint
-  - yarn package-ci
+  - yarn package
   - yarn test

@@ -6,8 +6,6 @@ platform:
 environment:
   matrix:
     - nodejs_version: 8
-  GH_TOKEN:
-    secure: JQTogieeX60CDa5l+4NGvmE3do+t8iDPrrppjHYfGbx2vlGMvNUtPbJvnsqZ07tF
 
 cache:
   - '%LOCALAPPDATA%/Yarn'
@@ -33,7 +31,7 @@ install:
   - yarn
 
 test_script:
-  - yarn package-ci
+  - yarn package
   - yarn lint
   # - yarn flow
   - yarn test
