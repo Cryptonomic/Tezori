@@ -9,9 +9,6 @@ matrix:
       node_js:
         - node
         - 9
-      env:
-        - CXX=g++-4.8
-
     - os: linux
       services: docker
       language: node_js
