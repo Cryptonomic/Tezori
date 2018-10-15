@@ -8,19 +8,18 @@ matrix:
       language: node_js
       node_js:
         - node
-        - 9
+        - 8
     - os: linux
       services: docker
       language: node_js
       node_js:
         - node
-        - 9
+        - 8
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - libudev-dev
             - g++-4.8
             - icnsutils
             - graphicsmagick
