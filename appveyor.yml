@@ -31,7 +31,7 @@ install:
   - yarn
 
 test_script:
-  - yarn package
-  - yarn lint
+  # - yarn package
+  # - yarn lint
   # - yarn flow
-  - yarn test
+  # - yarn test
