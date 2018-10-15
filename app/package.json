@@ -15,9 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ledgerhq/hw-transport-node-hid": "^4.24.0",
     "conseiljs": "^0.1.29-z",
-    "node-pre-gyp": "^0.11.0",
     "react-currency-input": "^1.3.6"
   }
 }
