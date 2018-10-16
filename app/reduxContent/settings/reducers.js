@@ -6,7 +6,8 @@ import {
   ADD_NODE,
   REMOVE_NODE,
   UPDATE_NODE,
-  CLEAR_STATE
+  CLEAR_STATE,
+  HIDE_DELEGATE_TOOLTIP
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
 import { getWalletSettings } from '../../utils/settings';
@@ -18,7 +19,8 @@ const baseDefaults = {
   locale: getDefaultLocale(),// get electron local here
   tezosSelectedNode: '',
   conseilSelectedNode: '',
-  nodesList: []
+  nodesList: [],
+  delegateTooltip: false
 };
 
 export const initialState = Object.assign(
@@ -27,6 +29,11 @@ export const initialState = Object.assign(
 );
 
 export default handleActions({
+  [ HIDE_DELEGATE_TOOLTIP ]: (state, action) => {
+    return action.target === 'true'
+    ? state.set('delegateTooltip', true)
+    : state.set('delegateTooltip', false)
+  },
   [ SET_SELECTED ]: (state, action) => {
     return action.target === CONSEIL
       ? state.set('conseilSelectedNode', action.selected)
