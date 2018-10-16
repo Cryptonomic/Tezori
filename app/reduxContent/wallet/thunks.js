@@ -29,6 +29,7 @@ import {
   logout,
   setWallet,
   setIsLoading,
+  setWalletIsSyncing,
   setIdentities,
   setNodesStatus,
   addNewIdentity,
@@ -213,7 +214,7 @@ export function syncIdentity(publicKeyHash) {
 
 export function syncWallet() {
   return async (dispatch, state) => {
-    dispatch(setIsLoading(true));
+    dispatch(setWalletIsSyncing(true));
     const settings = state().settings.toJS();
 
     const nodesStatus = await getNodesStatus(settings);
@@ -222,7 +223,7 @@ export function syncWallet() {
     console.log('-debug: res, nodesStatus', res, nodesStatus);
 
     if ( getNodesError(nodesStatus) ) {
-      dispatch(setIsLoading(false));
+      dispatch(setWalletIsSyncing(false));
       return false;
     }
 
@@ -274,14 +275,14 @@ export function syncWallet() {
     ));
     dispatch(updateFetchedTime(new Date()));
     await persistWalletState(state().wallet.toJS());
-    dispatch(setIsLoading(false));
+    dispatch(setWalletIsSyncing(false));
   };
 }
 
 export function syncAccountOrIdentity(selectedAccountHash, selectedParentHash) {
   return async dispatch => {
     try {
-      dispatch(setIsLoading(true));
+      dispatch(setWalletIsSyncing(true));
       if (selectedAccountHash === selectedParentHash) {
         await dispatch(syncIdentity(selectedAccountHash));
       } else {
@@ -295,7 +296,7 @@ export function syncAccountOrIdentity(selectedAccountHash, selectedParentHash) {
       console.error(e);
       dispatch(addMessage(e.name, true));
     }
-    dispatch(setIsLoading(false));
+    dispatch(setWalletIsSyncing(false));
   };
 }
 
@@ -412,6 +413,7 @@ export function importAddress(
             password
           );
           await persistWalletState(state().wallet.toJS());
+          dispatch(setIsLoading(false));
           dispatch(push('/home'));
           await dispatch(syncAccountOrIdentity(publicKeyHash, publicKeyHash));
         } else {
@@ -426,9 +428,10 @@ export function importAddress(
       } else {
         dispatch(addMessage(e.name, true));
       }
-    }
 
-    dispatch(setIsLoading(false));
+      dispatch(setIsLoading(false));
+    }
+    
   };
 }
 
@@ -468,12 +471,14 @@ export function login(loginType, walletLocation, walletFileName, password) {
       );
 
       dispatch(automaticAccountRefresh());
+      dispatch(setIsLoading(false));
       dispatch(push('/home'));
       await dispatch(syncWallet());
     } catch (e) {
       console.error(e);
       dispatch(addMessage(e.name, true));
+      dispatch(setIsLoading(false));
     }
-    dispatch(setIsLoading(false));
+    
   };
 }
