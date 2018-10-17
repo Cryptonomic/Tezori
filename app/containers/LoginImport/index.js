@@ -89,6 +89,9 @@ class LoginImport extends Component<Props> {
   };
 
   openFile = () => {
+    if(this.state.walletLocation !== "" && this.state.walletFileName !== ""){
+      return
+    }
     remote.dialog.showOpenDialog(
       {
         properties: ['openFile'],
@@ -119,13 +122,19 @@ class LoginImport extends Component<Props> {
     this.setState({isShowed: !this.state.isShowed});
   }
 
+  onEnterPress = event => {
+    if(this.state.password !== "" && this.state.walletFileName !== "" && this.state.walletLocation !== "" && !this.state.isLoading && event.key === "Enter") {
+        this.login(IMPORT)
+    }
+  }
+
   render() {
     const { goBack, t } = this.props;
     const { walletFileName, password, isLoading, isShowedPwd } = this.state;
     const isDisabled = isLoading || !walletFileName || !password;
 
     return (
-      <CreateContainer>
+      <CreateContainer onKeyDown={this.onEnterPress}>
         {isLoading && <Loader />}
         <WalletContainers>
           <BackToWallet
@@ -147,7 +156,7 @@ class LoginImport extends Component<Props> {
             {t('containers.loginImport.open_wallet_label')}
           </WalletTitle>
           <ImportButtonContainer>
-            <Button buttonTheme="secondary" onClick={this.openFile} small>
+            <Button buttonTheme="secondary" onChange={this.onEnterPress} onClick={this.openFile} small>
               {t('containers.loginImport.select_file_btn')}
             </Button>
             <WalletFileName>
@@ -160,6 +169,7 @@ class LoginImport extends Component<Props> {
             password={password}
             changFunc={(newpassword) => this.setState({ password: newpassword })}
             onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
+            onChange={this.onEnterPress}
           />
           <ActionButtonContainer>
             <ActionButton
