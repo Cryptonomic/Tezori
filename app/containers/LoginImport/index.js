@@ -79,7 +79,6 @@ const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
 class LoginImport extends Component<Props> {
   props: Props;
-
   state = {
     isLoading: false,
     walletLocation: '',
@@ -88,8 +87,8 @@ class LoginImport extends Component<Props> {
     isShowedPwd: false
   };
 
-  openFile = () => {
-    if(this.state.walletLocation !== "" && this.state.walletFileName !== ""){
+  openFile = (event) => {
+    if(event.detail === 0) {
       return
     }
     remote.dialog.showOpenDialog(
@@ -122,7 +121,8 @@ class LoginImport extends Component<Props> {
     this.setState({isShowed: !this.state.isShowed});
   }
 
-  onEnterPress = event => {
+
+  onEnterPress = (event) => {
     if(this.state.password !== "" && this.state.walletFileName !== "" && this.state.walletLocation !== "" && !this.state.isLoading && event.key === "Enter") {
         this.login(IMPORT)
     }
@@ -156,7 +156,7 @@ class LoginImport extends Component<Props> {
             {t('containers.loginImport.open_wallet_label')}
           </WalletTitle>
           <ImportButtonContainer>
-            <Button buttonTheme="secondary" onChange={this.onEnterPress} onClick={this.openFile} small>
+            <Button buttonTheme="secondary" onClick={this.openFile} small>
               {t('containers.loginImport.select_file_btn')}
             </Button>
             <WalletFileName>
@@ -169,7 +169,6 @@ class LoginImport extends Component<Props> {
             password={password}
             changFunc={(newpassword) => this.setState({ password: newpassword })}
             onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
-            onChange={this.onEnterPress}
           />
           <ActionButtonContainer>
             <ActionButton
