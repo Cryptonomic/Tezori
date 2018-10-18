@@ -87,12 +87,19 @@ const SendConfirmationModal = (props: Props) => {
   } = props;
 
   const isDisabled = isLoading || !password;
+  // MUST BE TESTED
+  // onEnterPress = (event) => {
+  //   is(password !== '' && event.key === 'Enter') {
+  //     console.log('fuck yeah ayyy')
+  //   }
+  // }
 
   return (
     <Modal
       title={t('components.sendConfirmationModal.send_confirmation')}
       open={open}
       onClose={onCloseClick}
+      onKeyDown={this.onEnterPress}
     >
       <MainContainer>
         <ConfirmTitle>{t('components.sendConfirmationModal.confirm_question')}</ConfirmTitle>
