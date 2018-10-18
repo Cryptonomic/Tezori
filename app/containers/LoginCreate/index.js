@@ -158,7 +158,10 @@ class LoginCreate extends Component<Props> {
     confirmPwdText: ''
   };
 
-  saveFile = () => {
+  saveFile = (event) => {
+    if(event.detail === 0) {
+      return
+    }
     if(this.state.walletLocation && this.state.walletFileName) {
       return
     }
