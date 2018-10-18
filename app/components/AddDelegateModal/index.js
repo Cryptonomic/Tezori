@@ -452,7 +452,7 @@ class AddDelegateModal extends Component<Props> {
 
 function mapStateToProps({ wallet }) {
   return {
-    isLoading: wallet.get('isLoading')
+    isLoading: wallet.get('isLoading ')
   };
 }
 
