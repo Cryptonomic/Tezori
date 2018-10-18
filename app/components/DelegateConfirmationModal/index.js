@@ -73,6 +73,7 @@ const InputAddressContainer =styled.div`
 `;
 
 type Props = {
+  onEnterPress: () => {},
   open?: boolean,
   address: string,
   newAddress?: string,
@@ -94,6 +95,7 @@ type Props = {
 
 const DelegateConfirmationModal = (props: Props) => {
   const {
+    onEnterPress,
     open,
     address,
     newAddress,
@@ -120,6 +122,7 @@ const DelegateConfirmationModal = (props: Props) => {
       open={open}
       onClose={onCloseClick}
       style={{width: '651px'}}
+      onKeyDown={onEnterPress}
     >
       <ModalContainer>
         <DelegateTitle>{t('components.delegate.current_delegate')}</DelegateTitle>

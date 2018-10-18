@@ -311,6 +311,12 @@ class AddDelegateModal extends Component<Props> {
     };
   }
 
+  onEnterPress = (event) => {
+    if(this.state.delegate !== '' && this.state.amount !== '' && this.state.gas !== '' && this.state.password !== '' && event.key === 'Enter') {
+      this.createAccount();
+    }
+  }
+
   render() {
     const { isLoading, open, t } = this.props;
     const {
@@ -333,6 +339,7 @@ class AddDelegateModal extends Component<Props> {
     } = this.getBalanceState(balance, amount, t);
     return (
       <Modal
+        onKeyDown={this.onEnterPress}
         title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}
@@ -452,7 +459,7 @@ class AddDelegateModal extends Component<Props> {
 
 function mapStateToProps({ wallet }) {
   return {
-    isLoading: wallet.get('isLoading')
+    isLoading: wallet.get('isLoading ')
   };
 }
 

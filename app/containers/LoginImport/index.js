@@ -79,7 +79,6 @@ const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
 class LoginImport extends Component<Props> {
   props: Props;
-
   state = {
     isLoading: false,
     walletLocation: '',
@@ -88,7 +87,10 @@ class LoginImport extends Component<Props> {
     isShowedPwd: false
   };
 
-  openFile = () => {
+  openFile = (event) => {
+    if(event.detail === 0) {
+      return
+    }
     remote.dialog.showOpenDialog(
       {
         properties: ['openFile'],
@@ -119,13 +121,20 @@ class LoginImport extends Component<Props> {
     this.setState({isShowed: !this.state.isShowed});
   }
 
+
+  onEnterPress = (event) => {
+    if(this.state.password !== "" && this.state.walletFileName !== "" && this.state.walletLocation !== "" && !this.state.isLoading && event.key === "Enter") {
+        this.login(IMPORT)
+    }
+  }
+
   render() {
     const { goBack, t } = this.props;
     const { walletFileName, password, isLoading, isShowedPwd } = this.state;
     const isDisabled = isLoading || !walletFileName || !password;
 
     return (
-      <CreateContainer>
+      <CreateContainer onKeyDown={this.onEnterPress}>
         {isLoading && <Loader />}
         <WalletContainers>
           <BackToWallet
