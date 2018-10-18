@@ -58,6 +58,7 @@ const MainContainer = styled.div`
 `;
 
 type Props = {
+  onEnterPress: () => {},
   amount: ?string,
   password?: string,
   address?: string,
@@ -73,6 +74,7 @@ type Props = {
 
 const SendConfirmationModal = (props: Props) => {
   const {
+    onEnterPress,
     amount,
     address,
     open,
@@ -87,19 +89,14 @@ const SendConfirmationModal = (props: Props) => {
   } = props;
 
   const isDisabled = isLoading || !password;
-  // MUST BE TESTED
-  // onEnterPress = (event) => {
-  //   is(password !== '' && event.key === 'Enter') {
-  //     console.log('fuck yeah ayyy')
-  //   }
-  // }
+ 
 
   return (
     <Modal
       title={t('components.sendConfirmationModal.send_confirmation')}
       open={open}
       onClose={onCloseClick}
-      onKeyDown={this.onEnterPress}
+      onKeyDown={onEnterPress}
     >
       <MainContainer>
         <ConfirmTitle>{t('components.sendConfirmationModal.confirm_question')}</ConfirmTitle>

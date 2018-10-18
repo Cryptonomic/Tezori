@@ -310,12 +310,12 @@ class AddDelegateModal extends Component<Props> {
       balanceColor: 'gray8'
     };
   }
-  // MUST BE TESTED
-  // onEnterPress = (event) => {
-  //   if(this.state.delegate !== '' && this.state.amount !== '' && this.state.gas !== '' && this.state.password !== '' && event.key === 'Enter') {
-  //     this.createAccount();
-  //   }
-  // }
+
+  onEnterPress = (event) => {
+    if(this.state.delegate !== '' && this.state.amount !== '' && this.state.gas !== '' && this.state.password !== '' && event.key === 'Enter') {
+      this.createAccount();
+    }
+  }
 
   render() {
     const { isLoading, open, t } = this.props;

@@ -172,6 +172,12 @@ class Send extends Component<Props> {
     }
   }
 
+  onEnterPress = (event) => {
+    if(this.state.password !== '' && event.key === 'Enter') {
+      this.onSend();
+    }
+  }
+
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () => {
     const { averageFees } = this.state;
@@ -358,6 +364,7 @@ class Send extends Component<Props> {
           {t('general.verbs.send')}
         </SendButton>
         <SendConfirmationModal
+          onEnterPress={this.onEnterPress}
           amount={amount}
           password={password}
           address={toAddress}
