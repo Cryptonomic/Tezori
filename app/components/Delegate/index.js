@@ -180,6 +180,12 @@ class Delegate extends Component<Props> {
     }
   };
 
+  onEnterPress = (event) => {
+    if(this.state.tempAddress !== '' && this.state.password !== '' && event.key === 'Enter') {
+      this.onDelegate();
+    }
+  }
+
   renderDelegationTips = arr => {
     return (
       <DelegationTipsList>
@@ -247,6 +253,7 @@ class Delegate extends Component<Props> {
         </DelegateContainer>
 
         <DelegateConfirmationModal
+          onEnterPress={this.onEnterPress}
           open={open}
           address={address}
           newAddress={tempAddress}
