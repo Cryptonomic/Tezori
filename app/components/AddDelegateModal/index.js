@@ -311,8 +311,8 @@ class AddDelegateModal extends Component<Props> {
     };
   }
 
-  onEnterPress = (event) => {
-    if(this.state.delegate !== '' && this.state.amount !== '' && this.state.gas !== '' && this.state.password !== '' && event.key === 'Enter') {
+  onEnterPress = (keyVal, isDisabled) => {
+    if(keyVal === 'Enter' && !isDisabled) {
       this.createAccount();
     }
   }
@@ -339,7 +339,7 @@ class AddDelegateModal extends Component<Props> {
     } = this.getBalanceState(balance, amount, t);
     return (
       <Modal
-        onKeyDown={this.onEnterPress}
+        onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}
         title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}
