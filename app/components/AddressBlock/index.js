@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 import { darken } from 'polished';
 import AddCircle from '@material-ui/icons/AddCircle';
@@ -22,6 +23,8 @@ import NoFundTooltip from "../Tooltips/NoFundTooltip";
 import { sortArr } from '../../utils/array';
 import { wrapComponent } from '../../utils/i18n';
 
+import { hideDelegateTooltip } from '../../reduxContent/settings/thunks';
+import { getDelegateTooltip } from '../../reduxContent/settings/selectors';
 
 const Container = styled.div`
   overflow: hidden;
@@ -115,6 +118,8 @@ const NoSmartAddressesButton = styled(Button)`
 `;
 
 type Props = {
+  hideDelegateTooltip: () => {},
+  delegateTooltip: boolean,
   history: object,
   accountBlock: object, // TODO: type this
   syncAccountOrIdentity: () => {},
@@ -131,8 +136,7 @@ type State = {
 class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
-    shouldHideSmartAddressesInfo: false,
-    isDelegateModalOpen: false
+    isDelegateModalOpen: false,
   };
 
   openDelegateModal = () => this.setState({ isDelegateModalOpen: true });
@@ -144,12 +148,6 @@ class AddressBlock extends Component<Props, State> {
       `/home/addresses/${selectedAccountHash}/${selectedParentHash}`
     );
     syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
-  };
-
-  closeNoSmartAddresses = () => {
-    this.setState({
-      shouldHideSmartAddressesInfo: true
-    });
   };
 
   renderNoSmartAddressesDescription = arr => {
@@ -184,7 +182,6 @@ class AddressBlock extends Component<Props, State> {
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
     let smartBalance = 0;
-    const { shouldHideSmartAddressesInfo } = this.state;
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts');
     if (smartAddresses && smartAddresses.toArray().length) {
@@ -192,7 +189,7 @@ class AddressBlock extends Component<Props, State> {
         const addressStatus = address.get('status');
         if(addressStatus === READY || addressStatus === PENDING) {
           smartBalance+=address.get('balance');
-        }        
+        }
       });
     }
 
@@ -305,7 +302,7 @@ class AddressBlock extends Component<Props, State> {
                 );
               })
           :
-            !shouldHideSmartAddressesInfo &&
+            !this.props.delegateTooltip &&
             (
               <NoSmartAddressesContainer>
                 <CloseIcon
@@ -318,7 +315,7 @@ class AddressBlock extends Component<Props, State> {
                     height: ms(0),
                     cursor: 'pointer'
                   }}
-                  onClick={this.closeNoSmartAddresses}
+                  onClick={() => this.props.hideDelegateTooltip('true')}
                 />
                 <NoSmartAddressesTitle>{t('components.addressBlock.delegation_tips')}</NoSmartAddressesTitle>
                 {this.renderNoSmartAddressesDescription(
@@ -347,4 +344,20 @@ class AddressBlock extends Component<Props, State> {
   }
 }
 
-export default compose(wrapComponent, withTheme)(AddressBlock);
+function mapStateToProps(state) {
+  return {
+    delegateTooltip: getDelegateTooltip(state)
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      hideDelegateTooltip
+    },
+    dispatch
+  );
+}
+
+
+export default compose(wrapComponent, withTheme, connect(mapStateToProps, mapDispatchToProps))(AddressBlock);
