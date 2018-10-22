@@ -207,6 +207,7 @@ const BgCircle4 = styled(BgCircle)`
   animation-delay: 3200ms;
 `;
 
+
 const LANGUAGE_STORAGE = 'isShowedSelecteLanguageScene';
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 class LoginHome extends Component<Props> {
