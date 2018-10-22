@@ -270,8 +270,7 @@ class LoginCreate extends Component<Props> {
 
   onEnterPress = (keyVal, isDisabled) => {
     if(keyVal === 'Enter' && !isDisabled) {
-      // this.login(CREATE);
-      console.log('double checking')
+      this.login(CREATE);
     }
   }
 
