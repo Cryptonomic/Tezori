@@ -122,8 +122,8 @@ class LoginImport extends Component<Props> {
   }
 
 
-  onEnterPress = (event) => {
-    if(this.state.password !== "" && this.state.walletFileName !== "" && this.state.walletLocation !== "" && !this.state.isLoading && event.key === "Enter") {
+  onEnterPress = (keyVal, isDisabled) => {
+    if(keyVal === 'Enter' && !isDisabled) {
         this.login(IMPORT)
     }
   }
@@ -134,7 +134,7 @@ class LoginImport extends Component<Props> {
     const isDisabled = isLoading || !walletFileName || !password;
 
     return (
-      <CreateContainer onKeyDown={this.onEnterPress}>
+      <CreateContainer onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}>
         {isLoading && <Loader />}
         <WalletContainers>
           <BackToWallet
