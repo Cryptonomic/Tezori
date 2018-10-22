@@ -239,6 +239,16 @@ class SettingsPage extends Component<Props> {
           <span>{t("containers.homeSettings.back_to_wallet")}</span>
         </BackToWallet>
         <H2>{t("containers.homeSettings.wallet_settings")}</H2>
+
+        <Content6>
+          <ContentTitle>{t("containers.homeSettings.select_display_language")}</ContentTitle>
+          <RowForParts>
+            <Part>
+              <LanguageSelector />
+            </Part>
+          </RowForParts>
+        </Content6>
+
         <Content>
           <ContentTitle>{t("containers.homeSettings.choose_different_node")}</ContentTitle>
           <RowForParts>
@@ -316,14 +326,6 @@ class SettingsPage extends Component<Props> {
             </Part>
           </RowForParts>
         </Content>
-        <Content6>
-          <ContentTitle>{t("containers.homeSettings.select_display_language")}</ContentTitle>
-          <RowForParts>
-            <Part>
-              <LanguageSelector />
-            </Part>
-          </RowForParts>
-        </Content6>
 
         <AddNodeModal
           isModalOpen={isModalOpen}
