@@ -172,8 +172,8 @@ class Send extends Component<Props> {
     }
   }
 
-  onEnterPress = (event) => {
-    if(this.state.password !== '' && event.key === 'Enter') {
+  onEnterPress = (keyVal, isDisabled) => {
+    if(keyVal === 'Enter' && !isDisabled) {
       this.onSend();
     }
   }
@@ -364,7 +364,7 @@ class Send extends Component<Props> {
           {t('general.verbs.send')}
         </SendButton>
         <SendConfirmationModal
-          onEnterPress={this.onEnterPress}
+          onEnterPress={(event) => this.onEnterPress(event.key, isDisabled)}
           amount={amount}
           password={password}
           address={toAddress}
