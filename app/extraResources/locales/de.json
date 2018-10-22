@@ -37,7 +37,7 @@
     "errors": {
       "no_hex_data": "Die angegebene Zeichenfolge sieht nicht wie Hex-Daten aus"
     },
-    "decimal_separator": ",",
+    "decimal_separator": ".",
     "back": "Zurück",
     "next": "Weiter",
     "to": "zu",
