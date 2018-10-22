@@ -260,7 +260,8 @@
       "back_to_wallet":"지갑으로 돌아가기",
       "wallet_settings":"지갑 설정",
       "choose_different_node":"다른 노드 선택",
-      "add_custom_node":"사용자 정의 노드 추가"
+      "add_custom_node":"사용자 정의 노드 추가",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description":"본인은 <1>서비스 이용 약관</1> 및 <3>개인 정보 보호 정책</3>을 읽고 동의함을 인정합니다.",

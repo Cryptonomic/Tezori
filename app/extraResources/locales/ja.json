@@ -261,7 +261,8 @@
       "back_to_wallet":"ウォレットに戻る",
       "wallet_settings":"ウォレット設定",
       "choose_different_node":"別のノードを選択",
-      "add_custom_node":"カスタムノードを追加"
+      "add_custom_node":"カスタムノードを追加",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description":"<1>利用規約</1>と<3>プライバシーポリシー</3>を読み、承諾したことを認めます。",
