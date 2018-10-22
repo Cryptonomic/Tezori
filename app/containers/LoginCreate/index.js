@@ -268,8 +268,8 @@ class LoginCreate extends Component<Props> {
     }
   };
 
-  onEnterPress = (event) => {
-    if(event.key === 'Enter' && !this.state.isLoading && this.state.walletFileName && this.state.isPasswordValidation && this.state.isPasswordMatched) {
+  onEnterPress = (keyVal, isDisabled) => {
+    if(keyVal === "Enter" && !isDisabled) {
       this.login(CREATE);
     }
   }
@@ -303,7 +303,7 @@ class LoginCreate extends Component<Props> {
     }
 
     return (
-      <CreateContainer onKeyDown={this.onEnterPress}>
+      <CreateContainer onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}>
         {isLoading && <Loader />}
         <WalletContainers>
           <BackToWallet
