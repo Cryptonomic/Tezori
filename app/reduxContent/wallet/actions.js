@@ -9,7 +9,8 @@ import {
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
   UPDATE_FETCHED_TIME,
-  LOGOUT
+  LOGOUT,
+  WALLET_IS_SYNCING
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 
@@ -30,3 +31,4 @@ export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
 export const updateFetchedTime = actionCreator(UPDATE_FETCHED_TIME, 'time');
 export const logout = actionCreator(LOGOUT);
+export const setWalletIsSyncing = actionCreator(WALLET_IS_SYNCING, 'isWalletSyncing');

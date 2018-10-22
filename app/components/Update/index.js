@@ -46,6 +46,7 @@ const SpinningRefreshIcon = styled(RefreshIcon)`
 
 type Props = {
   isReady?: boolean,
+  isWalletSyncing?: boolean,
   onClick?: () => {},
   time: Date,
   t: () => {}
@@ -53,8 +54,8 @@ type Props = {
 
 class Update extends PureComponent<Props> {
   render() {
-    const { isReady, onClick, time, t } = this.props;
-    const Refresh = isReady ? RefreshIcon : SpinningRefreshIcon;
+    const { isReady, isWalletSyncing, onClick, time, t } = this.props;
+    const Refresh = (isReady && isWalletSyncing) ? SpinningRefreshIcon : RefreshIcon;
     return (
       <Container>
         <Text>{t("components.update.last_updated", {date: moment(time).format('LT')})}</Text>
