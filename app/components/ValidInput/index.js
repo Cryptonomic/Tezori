@@ -75,17 +75,19 @@ const Error = styled.div`
 `;
 
 const ShowHidePwd = styled.div`
-  position: absolute;
-  right: 10px;
-  top: 26px;
   color: ${({ theme: { colors } }) => colors.accent };
   font-size: 12px;
   font-weight: 500;
 `;
 const CheckIcon = styled(TezosIcon)`
+  margin-right: 3px;
+`;
+
+const CheckContainer = styled.div`
   position: absolute;
-  top: 28px;
-  right: 45px;
+  right: 10px;
+  top: 26px;
+  display: flex;
 `;
 
 type Props = {
@@ -124,15 +126,18 @@ const InputValid = (props: Props) => {
           score={score}
         />
       </Content>
-      {score===4 && <CheckIcon
-        iconName='checkmark2'
-        size={ms(0)}
-        color="check"
-        onClick={onShow}
-      />}
-      <ShowHidePwd onClick={onShow} style={{cursor: 'pointer'}}>
-        {t((isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
-      </ShowHidePwd>
+      <CheckContainer>
+        {score===4 && <CheckIcon
+          iconName='checkmark2'
+          size={ms(0)}
+          color="check"
+          onClick={onShow}
+        />}
+        <ShowHidePwd onClick={onShow} style={{cursor: 'pointer'}}>
+          {t((isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
+        </ShowHidePwd>
+      </CheckContainer>
+      
       <PasswordStrengthSuggestions>
         {!!error && <Error color={borderColor}>{error}</Error>}
         {!!suggestion && (
