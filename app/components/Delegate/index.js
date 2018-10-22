@@ -181,7 +181,8 @@ class Delegate extends Component<Props> {
   };
 
   onEnterPress = (event) => {
-    if(this.state.tempAddress !== '' && this.state.password !== '' && event.key === 'Enter') {
+    const { tempAddress, password } = this.state;
+    if(event.key === "Enter" && tempAddress !== "" && password !== "") {
       this.onDelegate();
     }
   }
