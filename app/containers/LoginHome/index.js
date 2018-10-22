@@ -2,16 +2,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { Trans } from 'react-i18next';
+import i18n from 'i18next';
 
 import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
+import LanguageSelectModal from '../../components/LanguageSelectModal';
 import LanguageSelector from '../../components/LanguageSelector/';
 import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
+import { setLocale } from '../../reduxContent/settings/thunks';
+import { getLocale } from '../../reduxContent/settings/selectors';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -203,24 +207,25 @@ const BgCircle4 = styled(BgCircle)`
   animation-delay: 3200ms;
 `;
 
-const LanguageSelectorContainer = styled.div`
-  margin-top: 25px;
-`;
 
-
+const LANGUAGE_STORAGE = 'isShowedSelecteLanguageScene';
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
-
 class LoginHome extends Component<Props> {
   props: Props;
 
   state = {
-    isAgreement: false
+    isAgreement: false,
+    isLanguageSelected: false,
+    selectedLanguage: 'en-US'
   };
 
   componentWillMount = () => {
+    const { locale } = this.props;
+    const languageStorage = localStorage.getItem(LANGUAGE_STORAGE);
+    const isLanguageSelected = JSON.parse(languageStorage) || false;
     const agreement = localStorage.getItem(AGREEMENT_STORAGE);
     const isAgreement = JSON.parse(agreement) || false;
-    this.setState({ isAgreement });
+    this.setState({ isAgreement, isLanguageSelected, selectedLanguage: locale });
   };
 
   updateStatusAgreement = () => {
@@ -228,6 +233,25 @@ class LoginHome extends Component<Props> {
     this.setState({ isAgreement: !isAgreement });
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
+
+  onChangeLanguage = (lang) => {
+    this.setState({ selectedLanguage: lang });
+    const { setLocale } = this.props;
+    setLocale(lang);
+    i18n.changeLanguage(lang);
+  }
+
+  goToTermsModal  = () => {
+    const { isLanguageSelected } = this.state;
+    localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
+    this.setState({ isLanguageSelected: !isLanguageSelected });    
+  }
+
+  goToLanguageSelect = () => {
+    const { isLanguageSelected } = this.state;
+    localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
+    this.setState({ isLanguageSelected: !isLanguageSelected });
+  }
 
   goTo = route => {
     const { match, history } = this.props;
@@ -238,7 +262,8 @@ class LoginHome extends Component<Props> {
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t } = this.props;
+    const { t, locale, setLocale } = this.props;
+    const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
     return (
       <SectionContainer>
         <DefaultContainer>
@@ -251,7 +276,7 @@ class LoginHome extends Component<Props> {
               <CreateWalletButton
                 buttonTheme="primary"
                 onClick={() => this.goTo('create')}
-                disabled={!this.state.isAgreement}
+                disabled={!isAgreement}
               >
                 {t('containers.loginHome.create_new_wallet_btn')}
               </CreateWalletButton>
@@ -260,14 +285,11 @@ class LoginHome extends Component<Props> {
               <UnlockWalletButton
                 buttonTheme="secondary"
                 onClick={() => this.goTo('import')}
-                disabled={!this.state.isAgreement}
+                disabled={!isAgreement}
               >
                 {t('containers.loginHome.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
-              <LanguageSelectorContainer>
-                <LanguageSelector />
-              </LanguageSelectorContainer>
-              
+              <LanguageSelector locale={locale} setLocale={setLocale} />
               <Tip>
                 <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
@@ -283,7 +305,7 @@ class LoginHome extends Component<Props> {
         </DefaultContainer>
         <TermsAndPolicySection>
           <Checkbox
-            isChecked={this.state.isAgreement}
+            isChecked={isAgreement}
             onCheck={this.updateStatusAgreement}
           />
           <Description>
@@ -295,10 +317,17 @@ class LoginHome extends Component<Props> {
             </Trans>
           </Description>
         </TermsAndPolicySection>
+        <LanguageSelectModal
+          isOpen={!isLanguageSelected}
+          onLanguageChange={this.onChangeLanguage}
+          selectedLanguage={selectedLanguage}
+          onContinue={this.goToTermsModal}
+        />
         <TermsModal
           goTo={this.goTo}
-          isOpen={!this.state.isAgreement}
+          isOpen={!isAgreement && isLanguageSelected}
           agreeTermsAndPolicy={this.updateStatusAgreement}
+          onBack={this.goToLanguageSelect}
         />
         <Background>
           <BgContainerImg src={bgHero} />
@@ -312,4 +341,19 @@ class LoginHome extends Component<Props> {
   }
 }
 
-export default compose(wrapComponent, connect())(LoginHome);
+function mapStateToProps(state) {
+  return {
+    locale: getLocale(state)
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      setLocale
+    },
+    dispatch
+  );
+}
+
+export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(LoginHome);

@@ -12,7 +12,8 @@
       "delegate":"Delegar",
       "restore":"Restaurar",
       "confirm":"Confirmar",
-      "receive":"Receber"
+      "receive":"Receber",
+      "continue": "Continuar"
     },
     "nouns": {
       "amount":"Quantia",
@@ -162,6 +163,10 @@
         "send_funds":"Não é possível enviar fundos para si mesmo."
       }
     },
+    "languageSelectModal": {
+      "choose_language": "Escolha o seu idioma",
+      "language_selection_description": "Você pode alterar sua seleção de idioma na página de configurações."
+    },
     "messageBar": {
       "operation_id":"ID da Operação",
       "view_block_explorer":"Ver no explorador de blocos",
@@ -217,6 +222,7 @@
     },
     "termsModal": {
       "hi_there":"Olá!",
+      "welcome_to": "Bem-vindo ao {{name}}",
       "i_agree":"Eu concordo",
       "description":"Antes de começarmos, favor ler e aceitar nosso <1>Termo de Serviço</1> e <3>Política de Privacidade</3>."
     },

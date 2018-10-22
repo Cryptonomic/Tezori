@@ -12,7 +12,8 @@
       "delegate":"デリゲート",
       "restore":"回復",
       "confirm":"確認",
-      "receive":"受け取る"
+      "receive":"受け取る",
+      "continue": "続ける"
     },
     "nouns": {
       "amount":"金額",
@@ -38,7 +39,8 @@
       "no_hex_data": "入力したデータに何か問題があります"
     },
     "decimal_separator":".",
-    "back":"戻る","next":"次へ",
+    "back":"戻る",
+    "next":"次へ",
     "to":"へ",
     "of":"の",
     "from":"から"
@@ -161,6 +163,10 @@
         "send_funds":"自分に資金を送ることはできません"
       }
     },
+    "languageSelectModal": {
+      "choose_language": "言語を選択",
+      "language_selection_description": "設定ページで言語の選択を変更することができます"
+    },
     "messageBar": {
       "operation_id":"操作 ID",
       "view_block_explorer":"ブロックエクスプローラーで表示",
@@ -216,6 +222,7 @@
     },
     "termsModal": {
       "hi_there":"こんにちは！",
+      "welcome_to": "{{name}}へようこそ",
       "i_agree":"同意します",
       "description":"開始する前に、当社の<1>利用規約</1>と<3>プライバシーポリシー</3>をお読みください。"
     },

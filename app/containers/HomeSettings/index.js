@@ -17,13 +17,15 @@ import LanguageSelector from '../../components/LanguageSelector/';
 import { wrapComponent } from '../../utils/i18n';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
-import { setSelected, removeNode } from '../../reduxContent/settings/thunks';
+import { setSelected, removeNode, setLocale } from '../../reduxContent/settings/thunks';
+
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes,
+  getLocale
 } from '../../reduxContent/settings/selectors';
 
 type Props = {
@@ -35,6 +37,8 @@ type Props = {
   setSelected: () => {},
   goBack: () => {},
   theme: object,
+  locale: string,
+  setLocale: () => {},
   t: () => {}
 };
 
@@ -214,6 +218,8 @@ class SettingsPage extends Component<Props> {
       conseilNodes,
       tezosSelectedNode,
       tezosNodes,
+      locale,
+      setLocale,
       t,
     } = this.props;
 
@@ -244,7 +250,7 @@ class SettingsPage extends Component<Props> {
           <ContentTitle>{t("containers.homeSettings.select_display_language")}</ContentTitle>
           <RowForParts>
             <Part>
-              <LanguageSelector />
+              <LanguageSelector locale={locale} setLocale={setLocale} />
             </Part>
           </RowForParts>
         </Content6>
@@ -342,7 +348,8 @@ function mapStateToProps(state) {
     conseilSelectedNode: getConseilSelectedNode(state),
     conseilNodes: getConseilNodes(state),
     tezosSelectedNode: getTezosSelectedNode(state),
-    tezosNodes: getTezosNodes(state)
+    tezosNodes: getTezosNodes(state),
+    locale: getLocale(state)
   };
 }
 
@@ -352,6 +359,7 @@ function mapDispatchToProps(dispatch) {
       syncWallet,
       setSelected,
       removeNode,
+      setLocale,
       goBack: () => dispatch => dispatch(goBackToWallet())
     },
     dispatch

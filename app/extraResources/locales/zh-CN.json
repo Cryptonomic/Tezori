@@ -12,7 +12,8 @@
       "delegate":"委托",
       "restore":"恢复",
       "confirm":"确认",
-      "receive":"接收"
+      "receive":"接收",
+      "continue": "继续"
     },
     "nouns": {
       "amount":"数额",
@@ -162,6 +163,10 @@
         "send_funds":"你不能发送资金给你自己。"
       }
     },
+    "languageSelectModal": {
+      "choose_language": "选择语言",
+      "language_selection_description": "您可以在设置页面中更改语言选择"
+    },
     "messageBar": {
       "operation_id":"操作号",
       "view_block_explorer":"在区块浏览器上查看",
@@ -217,6 +222,7 @@
     },
     "termsModal": {
       "hi_there":"你好！",
+      "welcome_to": "欢迎来到{{name}}",
       "i_agree":"我同意",
       "description":"在我们开始前，请阅读并接受我们的<1>服务条款 </1>和<3>隐私政策</3>。"
     },
