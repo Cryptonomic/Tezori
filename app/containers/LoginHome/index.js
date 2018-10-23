@@ -11,7 +11,6 @@ import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
-import LanguageSelector from '../../components/LanguageSelector/';
 import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
@@ -262,7 +261,7 @@ class LoginHome extends Component<Props> {
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t, locale, setLocale } = this.props;
+    const { t } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
     return (
       <SectionContainer>
@@ -289,7 +288,6 @@ class LoginHome extends Component<Props> {
               >
                 {t('containers.loginHome.open_exisiting_wallet_btn')}
               </UnlockWalletButton>
-              <LanguageSelector locale={locale} setLocale={setLocale} />
               <Tip>
                 <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
                 <div>
