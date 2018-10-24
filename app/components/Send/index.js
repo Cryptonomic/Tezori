@@ -196,7 +196,8 @@ class Send extends Component<Props> {
     const { addressBalance } = this.props;
     const { fee } = this.state;
     const newAmount = amount || '0';
-    const numAmount = parseFloat(newAmount) * utez;
+    const commaReplacedAmount = newAmount.replace(",", ".")
+    const numAmount = parseFloat(commaReplacedAmount) * utez;
     const total = numAmount + fee;
     const balance = addressBalance - total;
     this.setState({ amount, total, balance });
