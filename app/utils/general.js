@@ -232,6 +232,8 @@ export function isReady(addressStatus, storeType, tab) {
     (storeType === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
     ||
     (storeType === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
+    ||
+    (storeType === LEDGER && addressStatus === status.CREATED && tab !== SEND)
     ;
 }
 
