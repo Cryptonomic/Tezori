@@ -27,7 +27,6 @@ import {
 } from '../../reduxContent/wallet/actions';
 
 type Props = {
-  isLoading: boolean,
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
@@ -248,6 +247,7 @@ class AddDelegateModal extends Component<Props> {
   createAccount = async () => {
     const { createNewAccount, selectedParentHash } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
+    this.setState({ isLoading: true })
     if (
       await createNewAccount(
         delegate,
@@ -259,7 +259,7 @@ class AddDelegateModal extends Component<Props> {
     ) {
       this.onCloseClick();
     }
-    this.setIsLoading(false)
+    this.setState({ isLoading: false })
   };
 
   renderGasToolTip = (gas) => {
@@ -312,14 +312,14 @@ class AddDelegateModal extends Component<Props> {
 
   onEnterPress = (keyVal, isDisabled) => {
     if(keyVal === 'Enter' && !isDisabled) {
-      this.setIsLoading(true);
       this.createAccount();
     }
   }
 
   render() {
-    const { isLoading, open, t } = this.props;
+    const { open, t } = this.props;
     const {
+      isLoading,
       averageFees,
       delegate,
       amount,

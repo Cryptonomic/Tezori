@@ -172,6 +172,12 @@ class CreateAccountSlide extends Component<Props> {
     this.props.importAddress(GENERATE_MNEMONIC, seed);
   };
 
+  onEnterPress = (keyVal, currentSlide) => {
+    if(keyVal === 'Enter' && currentSlide) {
+      console.log('yes lawd')
+    }
+  }
+
   createAccount = () => {
     const { t } = this.props;
     return (
@@ -180,8 +186,7 @@ class CreateAccountSlide extends Component<Props> {
         <div className="description">
           {t('components.createAccountSlide.descriptions.description2')}
         </div>
-
-        <ActionButton buttonTheme="primary" onClick={this.importAddress}>
+        <ActionButton buttonTheme="primary" selected onClick={this.importAddress}>
           {t('components.createAccountSlide.create_account')}
         </ActionButton>
       </Fragment>
@@ -192,7 +197,7 @@ class CreateAccountSlide extends Component<Props> {
     const { currentSlide, seed } = this.state;
     const { t } = this.props;
     return (
-      <CreateAccountSlideContainer>
+      <CreateAccountSlideContainer onKeyDown={event => this.onEnterPress(event.key, currentSlide)}>
         {!!currentSlide && (
           <div className="back-part" onClick={() => this.nextAccountSlide(0)}>
             <ChevronLeftIcon
