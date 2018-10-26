@@ -118,7 +118,7 @@ class LoginImport extends Component<Props> {
 
   changePassword = (password) => {
     this.setState({ password });
-  }
+  };
 
   onShow = () => {
     this.setState({isShowed: !this.state.isShowed});
