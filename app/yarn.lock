@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@ledgerhq/hw-transport-node-hid@^4.22.0":
+"@ledgerhq/hw-transport-node-hid@^4.22.0", "@ledgerhq/hw-transport-node-hid@^4.24.0":
   version "4.24.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid/-/hw-transport-node-hid-4.24.0.tgz#8457969d66819e8f7f50d5dd96527ab26cd3787d"
   dependencies:

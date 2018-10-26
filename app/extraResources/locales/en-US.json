@@ -40,7 +40,8 @@
       "delegate": "Delegate"
     },
     "errors": {
-      "no_hex_data": "The provided string doesn't look like hex data"
+      "no_hex_data": "The provided string doesn't look like hex data",
+      "no_ledger_detected": "No Ledger detected! You are now in receive-only mode. You won't be able to send or delegate until you connect the Ledger associated with this account."
     },
     "decimal_separator": ".",
     "back": "Back",

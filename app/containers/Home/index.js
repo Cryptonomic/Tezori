@@ -2,11 +2,16 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router';
+import { bindActionCreators } from 'redux';
+import Transport from '@ledgerhq/hw-transport-node-hid';
 
 import {
   getIdentities,
-  getWalletIsLoading
+  getWalletIsLoading,
+  getIsLedger
 } from '../../reduxContent/wallet/selectors';
+import { goHomeAndClearState } from '../../reduxContent/wallet/thunks';
+import { addMessage } from '../../reduxContent/message/thunks';
 
 import Loader from '../../components/Loader/';
 import TopBar from '../../components/TopBar/';
@@ -19,11 +24,40 @@ import HomeSettings from './../HomeSettings/';
 type Props = {
   identities: List<Identity>,
   isLoading: boolean,
-  match: object
+  match: object,
+  goHomeAndClearState: () => {},
+  addMessage: () => {},
+  isLedger: boolean
 };
 
 class HomePage extends Component<Props> {
   props: Props;
+
+  constructor(props) {
+    super(props);
+    this.onDetectLedger();
+  }
+
+  onDetectLedger = async () => {
+    const { isLedger } = this.props;
+    Transport.listen({
+      next: e => {
+        if (e.type === 'remove' && isLedger) {
+          this.onLogout();
+        }
+      },
+      error: e => {
+        console.error(e);
+      },
+      complete: () => {}
+    });
+  };
+
+  onLogout = () => {
+    const { goHomeAndClearState, addMessage } = this.props;
+    goHomeAndClearState();
+    addMessage('general.errors.no_ledger_detected', true);
+  };
 
   render() {
     const { match, identities, isLoading } = this.props;
@@ -51,8 +85,22 @@ class HomePage extends Component<Props> {
 function mapStateToProps(state) {
   return {
     identities: getIdentities(state),
-    isLoading: getWalletIsLoading(state)
+    isLoading: getWalletIsLoading(state),
+    isLedger: getIsLedger(state)
   };
 }
 
-export default connect(mapStateToProps)(HomePage);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      goHomeAndClearState,
+      addMessage
+    },
+    dispatch
+  );
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomePage);
