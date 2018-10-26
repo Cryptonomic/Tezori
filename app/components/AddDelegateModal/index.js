@@ -28,7 +28,6 @@ import {
 
 type Props = {
   isLoading: boolean,
-  setIsLoading: () => {},
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
@@ -179,6 +178,7 @@ const TooltipContainer = styled.div`
 const utez = 1000000;
 
 const defaultState = {
+  isLoading: false,
   delegate: '',
   amount: '',
   fee: 100,
@@ -246,9 +246,8 @@ class AddDelegateModal extends Component<Props> {
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
 
   createAccount = async () => {
-    const { createNewAccount, selectedParentHash, setIsLoading } = this.props;
+    const { createNewAccount, selectedParentHash } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
-    setIsLoading(true);
     if (
       await createNewAccount(
         delegate,
@@ -260,7 +259,7 @@ class AddDelegateModal extends Component<Props> {
     ) {
       this.onCloseClick();
     }
-    setIsLoading(false);
+    this.setIsLoading(false)
   };
 
   renderGasToolTip = (gas) => {
@@ -313,6 +312,7 @@ class AddDelegateModal extends Component<Props> {
 
   onEnterPress = (keyVal, isDisabled) => {
     if(keyVal === 'Enter' && !isDisabled) {
+      this.setIsLoading(true);
       this.createAccount();
     }
   }

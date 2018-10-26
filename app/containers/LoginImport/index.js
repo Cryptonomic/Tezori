@@ -110,8 +110,8 @@ class LoginImport extends Component<Props> {
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
-    await login(loginType, walletLocation, walletFileName, password);
-    this.setIsLoading(false)
+    await login(loginType, walletLocation, walletFileName, password)
+          .then(this.setIsLoading(false))
   };
 
   setIsLoading = (isLoading) =>  this.setState({ isLoading });
