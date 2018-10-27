@@ -99,12 +99,18 @@ type Props = {
 class CreateAccountSlide extends Component<Props> {
   props: Props;
   state = {
+    isDisabled: false,
     seed: '',
     currentSlide: 0
   };
 
   componentDidMount() {
     this.updateMnemonic();
+    document.addEventListener('keydown', this.onEnterPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onEnterPress);
   }
 
   nextAccountSlide = currentSlide => this.setState({ currentSlide });
@@ -169,24 +175,30 @@ class CreateAccountSlide extends Component<Props> {
 
   importAddress = () => {
     const { seed } = this.state;
+    this.setState({ isDisabled: true })
     this.props.importAddress(GENERATE_MNEMONIC, seed);
   };
 
-  onEnterPress = (keyVal, currentSlide) => {
-    if(keyVal === 'Enter' && currentSlide) {
-      console.log('yes lawd')
+  onEnterPress = (event) => {
+    const { currentSlide } = this.state;
+    if(event.key === 'Enter' && currentSlide === 0) {
+      this.nextAccountSlide(1)
+    }
+    if(event.key === 'Enter' && currentSlide === 2) {
+      this.importAddress()
     }
   }
 
   createAccount = () => {
     const { t } = this.props;
+    const { isDisabled } = this.state;
     return (
       <Fragment>
         <div className="title">{t('components.createAccountSlide.seed_backup')}</div>
         <div className="description">
           {t('components.createAccountSlide.descriptions.description2')}
         </div>
-        <ActionButton buttonTheme="primary" selected onClick={this.importAddress}>
+        <ActionButton buttonTheme="primary" disabled={isDisabled} onClick={this.importAddress}>
           {t('components.createAccountSlide.create_account')}
         </ActionButton>
       </Fragment>
@@ -197,7 +209,7 @@ class CreateAccountSlide extends Component<Props> {
     const { currentSlide, seed } = this.state;
     const { t } = this.props;
     return (
-      <CreateAccountSlideContainer onKeyDown={event => this.onEnterPress(event.key, currentSlide)}>
+      <CreateAccountSlideContainer>
         {!!currentSlide && (
           <div className="back-part" onClick={() => this.nextAccountSlide(0)}>
             <ChevronLeftIcon
