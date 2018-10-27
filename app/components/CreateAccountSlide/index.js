@@ -176,7 +176,7 @@ class CreateAccountSlide extends Component<Props> {
   importAddress = () => {
     const { seed } = this.state;
     this.setState({ isDisabled: true })
-    this.props.importAddress(GENERATE_MNEMONIC, seed);
+    setTimeout(() => this.props.importAddress(GENERATE_MNEMONIC, seed), 1)
   };
 
   onEnterPress = (event) => {
