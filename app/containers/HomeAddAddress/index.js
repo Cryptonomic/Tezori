@@ -21,6 +21,8 @@ import { importAddress } from '../../reduxContent/wallet/thunks';
 import { openLink } from '../../utils/general';
 import { wrapComponent } from '../../utils/i18n';
 
+import SeedInput from '../../components/RestoreBackup/SeedInput'
+
 const Container = styled.div`
   width: 80%;
   margin: ${ms(1)} auto 0;
@@ -195,12 +197,13 @@ class AddAddress extends Component<Props> {
 
   state = {
     activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
-    seed: '',
+    inputValue: '',
     pkh: '',
     activationCode: '',
     username: '',
     passPhrase: '',
-    isShowedPwd: false
+    isShowedPwd: false,
+    seeds: [],
   };
 
   renderTab = tabName => {
@@ -237,15 +240,18 @@ class AddAddress extends Component<Props> {
   importAddress = () => {
     const {
       activeTab,
-      seed,
+      seeds,
       passPhrase,
       pkh,
       username,
       activationCode
     } = this.state;
+    const input = seeds.toString()
+    const words = input.replace(/["\s]/g, "")
+    const inputVal = words.replace(/,/g, " ")
     this.props.importAddress(
       activeTab,
-      seed,
+      inputVal,
       pkh,
       activationCode,
       username,
@@ -253,8 +259,27 @@ class AddAddress extends Component<Props> {
     );
   };
 
+  seedPhraseConvert = (inputValue) => {
+    const words = inputValue.replace(/["\s]/g, "")
+    const seedString = words.replace(/,/g, " ")
+    const seedWords = seedString.split(/\s+/)
+    this.setState({ seeds: seedWords })
+  }
+
+  onChangeInput = (val) => {
+    if(val.length > 15) {
+      this.seedPhraseConvert(val)
+      return
+    }
+    this.setState({inputValue: val});
+  }
+
+  onChangeItems = (items) => {
+    this.setState({seeds: items, inputValue: ''});
+  }
+
   renderAddBody() {
-    const { activeTab, seed, passPhrase, pkh, username, activationCode, isShowedPwd } = this.state;
+    const { activeTab, inputValue, passPhrase, pkh, username, activationCode, isShowedPwd, seeds } = this.state;
     const { isLoading, t } = this.props;
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
@@ -270,10 +295,11 @@ class AddAddress extends Component<Props> {
             <FormTitle>
               {t("containers.homeAddAddress.refer_pdf_title")}
             </FormTitle>
-            <TextField
-              label={t("containers.homeAddAddress.secret_key_15")}
-              value={seed}
-              onChange={(newSeed) => this.setState({ seed: newSeed })}
+            <SeedInput
+              selectedItems={seeds}
+              inputValue={inputValue}
+              onChangeInput={this.onChangeInput}
+              onChangeItems={this.onChangeItems}
             />
             <RowInputs>
               <InputWithTooltip>
