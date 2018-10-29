@@ -264,7 +264,7 @@ class AddAddress extends Component<Props> {
       const words = inputValue.replace(/["\s]/g, "")
       const seedString = words.replace(/,/g, " ")
       return seedString.split(/\s+/)
-    } else {
+    }
     return inputValue.split(/\s+/)
   }
 
@@ -272,8 +272,9 @@ class AddAddress extends Component<Props> {
     if(val.length > 15) {
       const seeds = this.seedPhraseConvert(val)
       this.setState({ seeds })
+    } else {
+      this.setState({inputValue: val});
     }
-    this.setState({inputValue: val});
   }
 
   onChangeItems = (items) => {
