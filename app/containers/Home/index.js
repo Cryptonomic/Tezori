@@ -12,6 +12,7 @@ import {
 } from '../../reduxContent/wallet/selectors';
 import { goHomeAndClearState } from '../../reduxContent/wallet/thunks';
 import { addMessage } from '../../reduxContent/message/thunks';
+import { initLedgerTransport } from '../../utils/wallet';
 
 import Loader from '../../components/Loader/';
 import TopBar from '../../components/TopBar/';
@@ -55,6 +56,7 @@ class HomePage extends Component<Props> {
 
   onLogout = () => {
     const { goHomeAndClearState, addMessage } = this.props;
+    initLedgerTransport();
     goHomeAndClearState();
     addMessage('general.errors.no_ledger_detected', true);
   };
