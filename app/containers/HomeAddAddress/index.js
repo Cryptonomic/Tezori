@@ -260,10 +260,15 @@ class AddAddress extends Component<Props> {
   };
 
   seedPhraseConvert = (inputValue) => {
-    const words = inputValue.replace(/["\s]/g, "")
-    const seedString = words.replace(/,/g, " ")
-    const seedWords = seedString.split(/\s+/)
-    this.setState({ seeds: seedWords })
+    if(inputValue.indexOf('"') > -1 || inputValue.indexOf(',') > -1) {
+      const words = inputValue.replace(/["\s]/g, "")
+      const seedString = words.replace(/,/g, " ")
+      const seedWords = seedString.split(/\s+/)
+      this.setState({ seeds: seedWords })
+    } else {
+    const seedlings = inputValue.split(/\s+/)
+    this.setState({ seeds: seedlings })
+    }
   }
 
   onChangeInput = (val) => {
