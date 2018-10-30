@@ -40,7 +40,8 @@
       "delegate": "Delegate"
     },
     "errors": {
-      "no_hex_data": "입력 한 데이터가 잘못되었습니다."
+      "no_hex_data": "입력 한 데이터가 잘못되었습니다.",
+      "no_ledger_detected": "Ledger disconnected"
     },
     "decimal_separator": ".",
     "back": "뒤로",

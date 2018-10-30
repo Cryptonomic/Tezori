@@ -40,7 +40,8 @@
       "delegate": "Delegate"
     },
     "errors": {
-      "no_hex_data": "Algo está errado com os dados que você digitou"
+      "no_hex_data": "Algo está errado com os dados que você digitou",
+      "no_ledger_detected": "Ledger disconnected"
     },
     "decimal_separator": ".",
     "back": "Anterior",

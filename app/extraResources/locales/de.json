@@ -40,7 +40,8 @@
       "delegate": "Delegate"
     },
     "errors": {
-      "no_hex_data": "Die angegebene Zeichenfolge sieht nicht wie Hex-Daten aus"
+      "no_hex_data": "Die angegebene Zeichenfolge sieht nicht wie Hex-Daten aus",
+      "no_ledger_detected": "Ledger disconnected"
     },
     "decimal_separator": ".",
     "back": "Zurück",

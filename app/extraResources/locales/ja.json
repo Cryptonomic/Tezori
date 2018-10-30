@@ -40,7 +40,8 @@
       "delegate": "Delegate"
     },
     "errors": {
-      "no_hex_data": "入力したデータに何か問題があります"
+      "no_hex_data": "入力したデータに何か問題があります",
+      "no_ledger_detected": "Ledger disconnected"
     },
     "decimal_separator": ".",
     "back": "戻る",
