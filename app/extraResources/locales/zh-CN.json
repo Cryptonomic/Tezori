@@ -203,7 +203,7 @@
         "success_sent": "成功！你发送了{{localeParam}} tz。",
         "invalid_wallet_password": "无效的钱包/密码组合。",
         "account_not_exist": "账户不存在。",
-        "ledger_not_connect": "Ledger was not connected."
+        "ledger_not_connect": "Connection refused by Ledger."
       }
     },
     "pdfReader": {

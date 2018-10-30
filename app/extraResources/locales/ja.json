@@ -203,7 +203,7 @@
         "success_sent": "うまく行きました！ {{localeParam}} tzを送りました。",
         "invalid_wallet_password": "無効なウォレット/パスワードの組み合わせ",
         "account_not_exist": "アカウントは存在しません。",
-        "ledger_not_connect": "Ledger was not connected."
+        "ledger_not_connect": "Connection refused by Ledger."
       }
     },
     "pdfReader": {

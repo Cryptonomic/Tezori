@@ -203,7 +203,7 @@
         "success_sent": "성공! {{localeParam}} tz을 전송했습니다.",
         "invalid_wallet_password": "지갑/암호 조합이 유효하지 않습니다.",
         "account_not_exist": "계정이 존재하지 않습니다.",
-        "ledger_not_connect": "Ledger was not connected."
+        "ledger_not_connect": "Connection refused by Ledger."
       }
     },
     "pdfReader": {

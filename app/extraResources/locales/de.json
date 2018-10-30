@@ -203,7 +203,7 @@
         "success_sent": "Erfolg! Sie haben {{localeParam}} tz gesendet.",
         "invalid_wallet_password": "Falsche Wallet/Passwort Kombination.",
         "account_not_exist": "Das Konto existiert nicht.",
-        "ledger_not_connect": "Ledger was not connected."
+        "ledger_not_connect": "Connection refused by Ledger."
       }
     },
     "pdfReader": {
