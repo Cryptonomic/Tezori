@@ -48,7 +48,8 @@ import {
   addNewIdentity,
   updateIdentity,
   updateFetchedTime,
-  setLedger
+  setLedger,
+  setIsLedgerConnecting
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
@@ -500,9 +501,10 @@ export function login(loginType, walletLocation, walletFileName, password) {
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function connectLedger() {
   return async dispatch => {
+    dispatch(setLedger(true));
+    dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
     dispatch(addMessage('', true));
-    dispatch(setLedger(true));
     try {
       const wallet = await loadWalletFromLedger();
       const identities = wallet.identities.map((identity, identityIndex) => {
@@ -530,5 +532,6 @@ export function connectLedger() {
       dispatch(addMessage(e.name, true));
     }
     dispatch(setIsLoading(false));
+    dispatch(setIsLedgerConnecting(false));
   };
 }
