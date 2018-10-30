@@ -14,7 +14,6 @@ import { findIdentity } from './identity';
 import { createTransaction } from './transaction';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
-import { REVEAL } from '../constants/TransactionTypes';
 import { MNEMONIC, LEDGER } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
@@ -23,7 +22,6 @@ import { blockExplorerHost } from '../config.json';
 import derivationPath from '../constants/DerivationPath';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
-const { isManagerKeyRevealedForAccount, sendKeyRevealOperation } = TezosOperations;
 const { generateMnemonic } = TezosWallet;
 
 export async function getNodesStatus(nodes) {
@@ -125,25 +123,6 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
   };
 }
 
-export async function isRevealed(nodes, keyStore) {
-  const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-  return await isManagerKeyRevealedForAccount(url, keyStore);
-}
-
-export async function revealKey(nodes, keyStore, isLedger) {
-  const keyRevealed = await isRevealed(nodes, keyStore);
-  if ( !keyRevealed ) {
-    const { url, apiKey } = getSelectedNode(nodes, TEZOS);
-    if (isLedger) {
-      const newKeyStore = keyStore;
-      newKeyStore.storeType = 2;
-      return await sendKeyRevealOperation(url, newKeyStore, 0, derivationPath);
-    }
-    return await sendKeyRevealOperation(url, keyStore, 0);
-  }
-  return true;
-}
-
 export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   if ( account.status === status.READY ) {
@@ -177,38 +156,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
   }
 
   if ( account.status === status.FOUND ) {
-    console.log( '-debug - nodes, keyStore', nodes, keyStore);
-    const revealed = await revealKey(nodes, keyStore, isLedger).catch( (error) => {
-      console.log('-debug: Error in: status.FOUND for:' + (account.publicKeyHash || account.accountId));
-      console.error(error);
-      return false;
-    });
-    if ( revealed ) {
-      account.status = status.PENDING;
-      if ( revealed.operationGroupID ) {
-        const operationGroupHash = clearOperationId(revealed.operationGroupID);
-        account.operations[status.FOUND] = operationGroupHash;
-        account.transactions.push(
-          createTransaction({
-            kind: REVEAL,
-            fee: 0,
-            operationGroupHash,
-            source: keyStore.publicKeyHash
-          })
-        );
-      }
-    }
-  }
-
-  if ( account.status === status.PENDING ) {
-    const response = await isRevealed(nodes, keyStore).catch( (error) => {
-      console.log('-debug: Error in: status.PENDING for:' + (account.publicKeyHash || account.accountId));
-      console.error(error);
-      return false;
-    });
-    if ( response ) {
       account.status = status.READY;
-    }
   }
 
   console.log('-debug: account.status ', account.status);
