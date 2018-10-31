@@ -229,7 +229,8 @@ class AddDelegateModal extends Component<Props> {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
     const newAmount = amount || '0';
-    const numAmount = parseFloat(newAmount) * utez;
+    const commaReplacedAmount = newAmount.replace(",", ".")
+    const numAmount = parseFloat(commaReplacedAmount) * utez;
     const total = numAmount + fee + gas;
     const balance = managerBalance - total;
     this.setState({ amount, total, balance });
