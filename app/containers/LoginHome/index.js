@@ -16,7 +16,10 @@ import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
 import { connectLedger } from '../../reduxContent/wallet/thunks';
-import { getWalletIsLoading } from '../../reduxContent/wallet/selectors';
+import {
+  getWalletIsLoading,
+  getIsLedgerConnecting
+} from '../../reduxContent/wallet/selectors';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
@@ -318,9 +321,9 @@ class LoginHome extends Component<Props> {
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t, isLoading } = this.props;
+    const { t, isLoading, isLedgerConnecting } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
-    const realLedgerImg = isLoading ? ledgerGif : ledgerImg;
+    const realLedgerImg = isLedgerConnecting ? ledgerGif : ledgerImg;
     return (
       <SectionContainer>
         <DefaultContainer>
@@ -378,10 +381,11 @@ class LoginHome extends Component<Props> {
                   onClick={this.onLedgerConnect}
                   disabled={!isAgreement || isLoading}
                 >
-                  {isLoading && t('containers.loginHome.connecting')}
-                  {!isLoading && t('containers.loginHome.connect_ledger')}
+                  {isLedgerConnecting && t('containers.loginHome.connecting')}
+                  {!isLedgerConnecting &&
+                    t('containers.loginHome.connect_ledger')}
                 </CreateWalletButton>
-                {isLoading && (
+                {isLedgerConnecting && (
                   <LedgerConnect>
                     <Trans i18nKey="containers.loginHome.connect_your_device">
                       Please
@@ -447,7 +451,8 @@ class LoginHome extends Component<Props> {
 function mapStateToProps(state) {
   return {
     locale: getLocale(state),
-    isLoading: getWalletIsLoading(state)
+    isLoading: getWalletIsLoading(state),
+    isLedgerConnecting: getIsLedgerConnecting(state)
   };
 }
 

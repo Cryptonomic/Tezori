@@ -29,3 +29,7 @@ export const getIdentities = createSelector(getWallet, wallet =>
 export const getIsLedger = createSelector(getWallet, wallet =>
   wallet.get('isLedger')
 );
+
+export const getIsLedgerConnecting = createSelector(getWallet, wallet =>
+  wallet.get('isLedgerConnecting')
+);

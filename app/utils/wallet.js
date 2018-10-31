@@ -126,3 +126,7 @@ export async function loadWalletFromLedger() {
 
   return prepareToLoad(ledgerWallet, persistedState);
 }
+
+export function initLedgerTransport() {
+  TezosHardwareWallet.initLedgerTransport();
+}
