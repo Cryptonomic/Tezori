@@ -159,10 +159,8 @@ class LoginCreate extends Component<Props> {
   };
 
   saveFile = (event) => {
-    if(event.detail === 0) {
-      return
-    }
-    if(this.state.walletLocation && this.state.walletFileName) {
+    const { walletLocation, walletFileName } = this.state;
+    if(event.detail === 0 && walletLocation && walletFileName) {
       return
     }
     remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
