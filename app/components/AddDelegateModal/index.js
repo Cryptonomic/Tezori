@@ -313,7 +313,7 @@ class AddDelegateModal extends Component<Props> {
   }
 
   onEnterPress = (event) => {
-    const { delegate, amount, gas, password } = this.state
+    const { delegate, amount, gas, password } = this.state;
     if(delegate !== ''  && amount !== '' && gas !== '' && password !== '' && event.key === 'Enter') {
       this.createAccount();
     }
