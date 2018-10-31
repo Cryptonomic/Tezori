@@ -39,27 +39,24 @@ export default function Transactions(props: Props) {
   }, {});
 
   const renderTransactions = () => {
-    return Object.keys(transactionsByDate).map(day =>
-      renderDayTransactions(day, transactionsByDate[day])
+    return Object.keys(transactionsByDate).map((day, index) =>
+      renderDayTransactions(day, transactionsByDate[day], index)
     );
   };
 
-  const renderDayTransactions = (day, transactions) => (
-    <SectionContainer key={day}>
+  const renderDayTransactions = (day, transactions, index) => (
+    <SectionContainer key={index}>
       <TransactionsLabel amount={0} date={day} />
-      {
-        transactions
-          .map(( transaction ) => {
-            return (
-              <Transaction
-                key={`${transaction.operationGroupHash}`}
-                transaction={transaction}
-                selectedAccountHash={selectedAccountHash}
-                selectedParentHash={selectedParentHash}
-              />
-            );
-          })
-      }
+      {transactions.map((transaction, index) => {
+        return (
+          <Transaction
+            key={index}
+            transaction={transaction}
+            selectedAccountHash={selectedAccountHash}
+            selectedParentHash={selectedParentHash}
+          />
+        );
+      })}
     </SectionContainer>
   );
 
