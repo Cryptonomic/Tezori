@@ -41,7 +41,7 @@
     },
     "errors": {
       "no_hex_data": "입력 한 데이터가 잘못되었습니다.",
-      "no_ledger_detected": "Ledger disconnected"
+      "no_ledger_detected": "Ledger 연결 해제"
     },
     "decimal_separator": ".",
     "back": "뒤로",
@@ -145,9 +145,9 @@
       "delegate_warning": "위임 변경은 블록체인에서 변경이 확인될 때까지 나타나지 않습니다."
     },
     "delegationLedgerConfirmationModal": {
-      "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
-      "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+      "confirm_delegate_title": "계정 1에 개시를 추가하는 걸 확인하세요",
+      "add_description": "개시를 추가하기 위한 시작 작업을 보내려고 합니다. 기기의 세부 정보를 자세히 검토하세요.",
+      "confirm_description": "모든 세부 사항이 올바르다면, 기기에서 개시를 <1>확인하세요</1>."
     },
     "fees": {
       "low_fee": "낮은 비용",
@@ -203,7 +203,7 @@
         "success_sent": "성공! {{localeParam}} tz을 전송했습니다.",
         "invalid_wallet_password": "지갑/암호 조합이 유효하지 않습니다.",
         "account_not_exist": "계정이 존재하지 않습니다.",
-        "ledger_not_connect": "Connection refused by Ledger."
+        "ledger_not_connect": "Ledger가 연결을 거부했습니다."
       }
     },
     "pdfReader": {
@@ -228,9 +228,9 @@
       "confirm_question": "(을)를 전송하길 원하십니까?"
     },
     "sendLedgerConfirmationModal": {
-      "confirm_transaction": "Confirm Transaction",
-      "send_description": "You are about to send out a transaction. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the transaction on your device."
+      "confirm_transaction": "거래 확인",
+      "send_description": "곧 트랜잭션을 보냅니다. 기기에서 세부 정보를 상세히 검토하세요.",
+      "confirm_description": "모든 세부 사항이 정확하다면, 기기에서 트랜잭션을 <1>확인하세요</1>."
     },
     "settingController": {
       "settings": "설정",
@@ -294,13 +294,13 @@
       "create_named_wallet": "<0><0>우선 <1>{{name}}</1> 지갑을 만드세요.</0></0>",
       "tagline": "Tezos를 위한 커뮤니티 지갑",
       "app_name": "Tezori",
-      "keystore_wallet": "Keystore Wallet",
-      "ledger_wallet": "Ledger Wallet",
-      "connect_ledger": "Connect with Ledger",
-      "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
-      "download_it_here": "Download it here.",
-      "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
-      "connecting": "Connecting..."
+      "keystore_wallet": "Keystore 지갑",
+      "ledger_wallet": "Ledger 지갑",
+      "connect_ledger": "Ledger 연결",
+      "dont_have_ledger_wallet": "Ledger Tezos 지갑 앱이 없나요?",
+      "download_it_here": "여기에서 다운로드하세요.",
+      "connect_your_device": "<1> 장치에 연결하세요</1>,<3> 핀을 입력하고</3>, <5> Tezos 지갑 앱을 여세요</5>.",
+      "connecting": "연결 중..."
     },
     "loginCreate": {
       "create_wallet_btn": "지갑 만들기",

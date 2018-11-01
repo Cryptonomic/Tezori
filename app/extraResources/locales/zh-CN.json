@@ -294,7 +294,7 @@
       "create_named_wallet": "<0><0>首先创建一个<1>{{name}}</1>钱包。</0></0>",
       "tagline": "为Tezos而生的社区钱包",
       "app_name": "Tezori",
-      "keystore_wallet": "加密私钥钱包",
+      "keystore_wallet": "Keystore 钱包",
       "ledger_wallet": "Ledger 钱包",
       "connect_ledger": "与 Ledger 连接",
       "dont_have_ledger_wallet": "没有 Ledger Tezos 钱包应用吗？",
