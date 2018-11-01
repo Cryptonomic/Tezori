@@ -41,7 +41,7 @@
     },
     "errors": {
       "no_hex_data": "入力したデータに何か問題があります",
-      "no_ledger_detected": "Ledger disconnected"
+      "no_ledger_detected": "Ledgerは切断されました"
     },
     "decimal_separator": ".",
     "back": "戻る",
@@ -145,9 +145,9 @@
       "delegate_warning": "変更がブロックチェーンで確認されるまで、デリゲーション変更は見えません。"
     },
     "delegationLedgerConfirmationModal": {
-      "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
-      "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+      "confirm_delegate_title": "アカウント1へのデリゲートの追加を確認",
+      "add_description": "デリゲート追加の発信操作をしようとしています。デバイスで慎重に詳細をレビューしてください。",
+      "confirm_description": "すべての詳細が正しければ、デバイスの発信を<1>確認</1>してください。"
     },
     "fees": {
       "low_fee": "低手数料",
@@ -203,7 +203,7 @@
         "success_sent": "うまく行きました！ {{localeParam}} tzを送りました。",
         "invalid_wallet_password": "無効なウォレット/パスワードの組み合わせ",
         "account_not_exist": "アカウントは存在しません。",
-        "ledger_not_connect": "Connection refused by Ledger."
+        "ledger_not_connect": "Ledgerに接続を拒否されました"
       }
     },
     "pdfReader": {
@@ -228,9 +228,9 @@
       "confirm_question": "を送金する確認をしますか"
     },
     "sendLedgerConfirmationModal": {
-      "confirm_transaction": "Confirm Transaction",
-      "send_description": "You are about to send out a transaction. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the transaction on your device."
+      "confirm_transaction": "取引を確認",
+      "send_description": "取引を発信しようとしています。",
+      "confirm_description": "すべての詳細が正しければ、デバイスの取引を<1>確認</1>してください。"
     },
     "settingController": {
       "settings": "設定",
@@ -296,11 +296,11 @@
       "app_name": "Tezori",
       "keystore_wallet": "Keystore Wallet",
       "ledger_wallet": "Ledger Wallet",
-      "connect_ledger": "Connect with Ledger",
-      "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
-      "download_it_here": "Download it here.",
-      "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
-      "connecting": "Connecting..."
+      "connect_ledger": "Connect with Ledgerと接続",
+      "dont_have_ledger_wallet": "Ledger Tezos ウォレットアプリを持っていませんか？",
+      "download_it_here": "ここからダウンロード",
+      "connect_your_device": "<1> デバイスを接続</1>して、<3>ピンを入力</3>、それから<5>Tezos Walletアプリを開きます</5>。",
+      "connecting": "接続中..."
     },
     "loginCreate": {
       "create_wallet_btn": "ウォレットを作成",
