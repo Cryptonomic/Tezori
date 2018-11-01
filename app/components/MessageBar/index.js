@@ -14,7 +14,8 @@ import { openLinkToBlockExplorer } from '../../utils/general';
 
 const MessageContainer = styled.div`
   padding: 25px 30px 30px 30px;
-  background-color: ${({ isError }) => isError? 'rgba(255, 0, 0, 0.9)':'rgba(37, 156, 144, 0.9)' };
+  background-color: ${({ isError }) =>
+    isError ? 'rgba(255, 0, 0, 0.9)' : 'rgba(37, 156, 144, 0.9)'};
   width: 100%;
   color: ${({ theme: { colors } }) => colors.white};
 `;
@@ -40,7 +41,7 @@ const MessageHeader = styled.div`
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 1.1px;
-  white-space: nowrap;
+  white-space: ${({ isWrap }) => (!isWrap ? 'normal' : 'nowrap')};
 `;
 const MessageFooter = styled.div`
   display: flex;
@@ -89,11 +90,11 @@ const MessageContent = (props: Props1) => {
   return (
     <MessageContainer isError={isError}>
       <StyledCloseIcon onClick={onClose} />
-      <MessageHeader>
+      <MessageHeader isWrap={content !== 'general.errors.no_ledger_detected'}>
         {!!hash && (
           <CheckIcon iconName="checkmark2" size={ms(0)} color="white" />
         )}
-        {t(content, {localeParam})}
+        {t(content, { localeParam })}
       </MessageHeader>
       {/* {!!hash && <LinkButton onClick={openLink}>See it on chain</LinkButton>} */}
       {!!hash && (
@@ -101,7 +102,9 @@ const MessageContent = (props: Props1) => {
           <HashTitle>{t('components.messageBar.operation_id')}:</HashTitle>
           <HashValue>{hash}</HashValue>
           <LinkContainer onClick={openLink}>
-            <LinkTitle>{t('components.messageBar.view_block_explorer')}</LinkTitle>
+            <LinkTitle>
+              {t('components.messageBar.view_block_explorer')}
+            </LinkTitle>
             <BroadIcon iconName="new-window" size={ms(0)} color="white" />
           </LinkContainer>
         </MessageFooter>
@@ -132,7 +135,6 @@ class MessageBar extends React.Component<Props> {
     }
     return newHash;
   };
-
 
   render() {
     const { message, clearMessageState, t } = this.props;
@@ -177,4 +179,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(MessageBar);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(MessageBar);

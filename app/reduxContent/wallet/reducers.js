@@ -12,7 +12,8 @@ import {
   UPDATE_IDENTITY,
   UPDATE_FETCHED_TIME,
   LOGOUT,
-  SET_LEDGER
+  SET_LEDGER,
+  SET_IS_LEDGER_CONNECTIONG
 } from './types';
 
 export const initialState = {
@@ -32,7 +33,8 @@ export const initialState = {
     }
   },
   time: new Date(),
-  isLedger: false
+  isLedger: false,
+  isLedgerConnecting: false
 };
 
 export default handleActions(
@@ -88,6 +90,9 @@ export default handleActions(
     },
     [SET_LEDGER]: (state, action) => {
       return state.set('isLedger', action.isLedger);
+    },
+    [SET_IS_LEDGER_CONNECTIONG]: (state, action) => {
+      return state.set('isLedgerConnecting', action.isLedgerConnecting);
     }
   },
   fromJS(initialState)

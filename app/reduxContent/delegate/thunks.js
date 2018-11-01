@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosOperations } from 'conseiljs-dev';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { displayError } from '../../utils/formValidation';
@@ -58,7 +58,7 @@ export function delegate(
     const walletPassword = state().wallet.get('password');
 
     if (password !== walletPassword) {
-      const error = "components.messageBar.messages.incorrect_password";
+      const error = 'components.messageBar.messages.incorrect_password';
       dispatch(addMessage(error, true));
       return false;
     }
@@ -82,25 +82,31 @@ export function delegate(
     });
 
     if (res) {
-      const operationResult = res
-        && res.results
-        && res.results.contents
-        && res.results.contents[0]
-        && res.results.contents[0].metadata
-        && res.results.contents[0].metadata.operation_result;
+      const operationResult =
+        res &&
+        res.results &&
+        res.results.contents &&
+        res.results.contents[0] &&
+        res.results.contents[0].metadata &&
+        res.results.contents[0].metadata.operation_result;
 
-      if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = "components.messageBar.messages.delegation_operation_failed";
+      if (
+        operationResult &&
+        operationResult.errors &&
+        operationResult.errors.length
+      ) {
+        const error =
+          'components.messageBar.messages.delegation_operation_failed';
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
       }
 
       const clearedOperationId = clearOperationId(res.operationGroupID);
-      
+
       dispatch(
         addMessage(
-          "components.messageBar.messages.success_delegation_update",
+          'components.messageBar.messages.success_delegation_update',
           false,
           clearedOperationId
         )
@@ -119,7 +125,7 @@ export function delegate(
         fee
       });
 
-      if ( foundIndex > -1 ) {
+      if (foundIndex > -1) {
         account.transactions.push(transaction);
         identity.accounts[foundIndex] = {
           ...account,
@@ -130,7 +136,7 @@ export function delegate(
       }
 
       console.log('delegateIdentity', delegateIdentity);
-      if ( delegateIdentity ) {
+      if (delegateIdentity) {
         delegateIdentity.transactions.push(transaction);
         dispatch(updateIdentity(delegateIdentity));
       }
