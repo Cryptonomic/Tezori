@@ -5,7 +5,7 @@ import {
   TezosNode,
   TezosOperations,
   TezosWallet
-} from 'conseiljs';
+} from 'conseiljs-dev';
 
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';

@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { remote } from 'electron';
 import { omit, pick } from 'lodash';
-import { TezosWallet, TezosHardwareWallet } from 'conseiljs';
+import { TezosWallet, TezosHardwareWallet } from 'conseiljs-dev';
 import { keys } from '@material-ui/core/styles/createBreakpoints';
 import { LEDGER } from '../constants/StoreTypes';
 const { saveWallet, loadWallet } = TezosWallet;
