@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosOperations } from 'conseiljs-dev';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
@@ -122,13 +122,33 @@ export function createNewAccount(
     }
 
     if (newAccount) {
-      const operationResult =
+      const operationResult1 =
         newAccount &&
         newAccount.results &&
         newAccount.results.contents &&
-        newAccount.results.contents[0] &&
-        newAccount.results.contents[0].metadata &&
-        newAccount.results.contents[0].metadata.operation_result;
+        newAccount.results.contents.length;
+      if (!operationResult1) {
+        const error =
+          'components.messageBar.messages.origination_operation_failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+      const newOperation = newAccount.results.contents.find(
+        content => content.kind === 'origination'
+      );
+
+      if (!newOperation) {
+        const error =
+          'components.messageBar.messages.origination_operation_failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+      const operationResult =
+        newOperation &&
+        newOperation.metadata &&
+        newOperation.metadata.operation_result;
 
       if (
         operationResult &&

@@ -3,7 +3,7 @@ import {
   TezosNode,
   TezosOperations,
   TezosWallet
-} from 'conseiljs';
+} from 'conseiljs-dev';
 
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
