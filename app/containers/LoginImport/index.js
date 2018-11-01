@@ -79,7 +79,6 @@ const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
 class LoginImport extends Component<Props> {
   props: Props;
-
   state = {
     isLoading: false,
     walletLocation: '',
@@ -88,7 +87,10 @@ class LoginImport extends Component<Props> {
     isShowedPwd: false
   };
 
-  openFile = () => {
+  openFile = (event) => {
+    if(event.detail === 0) {
+      return
+    }
     remote.dialog.showOpenDialog(
       {
         properties: ['openFile'],
@@ -108,15 +110,26 @@ class LoginImport extends Component<Props> {
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
-    await login(loginType, walletLocation, walletFileName, password);
+    await login(loginType, walletLocation, walletFileName, password)
+    await this.setIsLoading(false)
   };
+
+  setIsLoading = (isLoading) =>  this.setState({ isLoading });
 
   changePassword = (password) => {
     this.setState({ password });
-  }
+  };
 
   onShow = () => {
     this.setState({isShowed: !this.state.isShowed});
+  }
+
+
+  onEnterPress = (keyVal, isDisabled) => {
+    if(keyVal === 'Enter' && !isDisabled) {
+        this.setIsLoading(true)
+        this.login(IMPORT)
+    }
   }
 
   render() {
@@ -125,7 +138,7 @@ class LoginImport extends Component<Props> {
     const isDisabled = isLoading || !walletFileName || !password;
 
     return (
-      <CreateContainer>
+      <CreateContainer onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}>
         {isLoading && <Loader />}
         <WalletContainers>
           <BackToWallet

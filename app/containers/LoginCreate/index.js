@@ -158,7 +158,11 @@ class LoginCreate extends Component<Props> {
     confirmPwdText: ''
   };
 
-  saveFile = () => {
+  saveFile = (event) => {
+    const { walletLocation, walletFileName } = this.state;
+    if(event.detail === 0 && walletLocation && walletFileName) {
+      return
+    }
     remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
       if (filename) {
         this.setState({
@@ -251,7 +255,7 @@ class LoginCreate extends Component<Props> {
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
-    await login(loginType, walletLocation, walletFileName, password);
+    await login(loginType, walletLocation, walletFileName, password)
   };
 
   onPasswordShow = index => {
@@ -262,6 +266,19 @@ class LoginCreate extends Component<Props> {
     }
   };
 
+  setIsLoading = (isLoading) => {
+    this.setState({ isLoading });
+  }
+
+   onEnterPress = async (keyVal, isDisabled) => {
+    if(keyVal === 'Enter' && !isDisabled) {
+      await this.setIsLoading(true)
+      setTimeout(() => {
+        this.login(CREATE)
+      }, 5)
+    }
+  }
+
   render() {
     const { goBack, t } = this.props;
     const { isLoading, walletFileName } = this.state;
@@ -270,6 +287,7 @@ class LoginCreate extends Component<Props> {
       !this.state.isPasswordValidation ||
       !this.state.isPasswordMatched ||
       !walletFileName;
+
     let walletFileSection = (
       <CreateFileEmptyIcon src={createFileEmptyIcon} />
     );
@@ -290,7 +308,7 @@ class LoginCreate extends Component<Props> {
     }
 
     return (
-      <CreateContainer>
+      <CreateContainer onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}>
         {isLoading && <Loader />}
         <WalletContainers>
           <BackToWallet

@@ -27,8 +27,6 @@ import {
 } from '../../reduxContent/wallet/actions';
 
 type Props = {
-  isLoading: boolean,
-  setIsLoading: () => {},
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
@@ -179,6 +177,7 @@ const TooltipContainer = styled.div`
 const utez = 1000000;
 
 const defaultState = {
+  isLoading: false,
   delegate: '',
   amount: '',
   fee: 100,
@@ -247,9 +246,9 @@ class AddDelegateModal extends Component<Props> {
   updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
 
   createAccount = async () => {
-    const { createNewAccount, selectedParentHash, setIsLoading } = this.props;
+    const { createNewAccount, selectedParentHash } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
-    setIsLoading(true);
+    this.setState({ isLoading: true })
     if (
       await createNewAccount(
         delegate,
@@ -261,7 +260,7 @@ class AddDelegateModal extends Component<Props> {
     ) {
       this.onCloseClick();
     }
-    setIsLoading(false);
+    this.setState({ isLoading: false })
   };
 
   renderGasToolTip = (gas) => {
@@ -312,9 +311,16 @@ class AddDelegateModal extends Component<Props> {
     };
   }
 
+  onEnterPress = (keyVal, isDisabled) => {
+    if(keyVal === 'Enter' && !isDisabled) {
+      this.createAccount();
+    }
+  }
+
   render() {
-    const { isLoading, open, t } = this.props;
+    const { open, t } = this.props;
     const {
+      isLoading,
       averageFees,
       delegate,
       amount,
@@ -334,6 +340,7 @@ class AddDelegateModal extends Component<Props> {
     } = this.getBalanceState(balance, amount, t);
     return (
       <Modal
+        onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}
         title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}
@@ -453,7 +460,7 @@ class AddDelegateModal extends Component<Props> {
 
 function mapStateToProps({ wallet }) {
   return {
-    isLoading: wallet.get('isLoading')
+    isLoading: wallet.get('isLoading ')
   };
 }
 

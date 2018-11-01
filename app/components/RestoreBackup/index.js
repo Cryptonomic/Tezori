@@ -159,6 +159,12 @@ class RestoreBackup extends Component<Props> {
     this.setState({seeds: items, inputValue: ''});
   }
 
+  onEnterPress = (keyValue, isdisabled) => {
+    if(keyValue === 'Enter' && !isdisabled && this.state.seeds.length === 15) {
+      this.importAddress();
+    }
+  }
+
   render() {
     const { type, seeds, inputValue, password, isPassword, isShowedPwd, key } = this.state;
     const { t } = this.props;
@@ -169,7 +175,7 @@ class RestoreBackup extends Component<Props> {
       isdisabled = !key;
     }
     return(
-      <MainContainer>
+      <MainContainer onKeyDown={(event) => this.onEnterPress(event.key, isdisabled)}>
         <RestoreHeader>
           {t('components.restoreBackup.restore_from')}
           <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} t={t} />
