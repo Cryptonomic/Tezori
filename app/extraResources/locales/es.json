@@ -41,7 +41,7 @@
     },
     "errors": {
       "no_hex_data": "Algo está mal con los datos que ingresó",
-      "no_ledger_detected": "Ledger disconnected"
+      "no_ledger_detected": "Ledger desconectado"
     },
     "decimal_separator": ".",
     "back": "Atrás",
@@ -145,9 +145,9 @@
       "delegate_warning": "Los cambios de delegación no van a mostrarse hasta que estén confirmados en la blockchain."
     },
     "delegationLedgerConfirmationModal": {
-      "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
-      "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+      "confirm_delegate_title": "Confirma la Inclusión de un Delegado a la Cuenta 1",
+      "add_description": "Vas a enviar una operación de creación para agregar un delegado. Por favor, revisa cuidadosamente los detalles en tu aparato.",
+      "confirm_description": "Si todos los detalles son correctos, por favor <1> confirma </1> la creación en tu aparato."
     },
     "fees": {
       "low_fee": "Tasa mínima",
@@ -203,7 +203,7 @@
         "success_sent": "¡Éxito! Has enviado {{localeParam}} tz.",
         "invalid_wallet_password": "Combinación billetera/contraseña inválida.",
         "account_not_exist": "Esta cuenta no existe",
-        "ledger_not_connect": "Connection refused by Ledger."
+        "ledger_not_connect": "Conexión rechazada por el Ledger."
       }
     },
     "pdfReader": {
@@ -228,9 +228,9 @@
       "confirm_question": "Confirmas que quieres enviar"
     },
     "sendLedgerConfirmationModal": {
-      "confirm_transaction": "Confirm Transaction",
-      "send_description": "You are about to send out a transaction. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the transaction on your device."
+      "confirm_transaction": "Confirma la Transacción",
+      "send_description": "Vas a enviar una transacción. Por favor, revisa cuidadosamente los detalles en tu aparato.",
+      "confirm_description": "Si todos los detalles son correctos, por favor<1> confirma </1> la transacción en tu aparato."
     },
     "settingController": {
       "settings": "AJUSTES",
@@ -294,13 +294,13 @@
       "create_named_wallet": "<0><0>Crear una billetera <1>{{name}}</1></0></0>primero",
       "tagline": "Una billetera comunitaria para Tezos",
       "app_name": "Tezori",
-      "keystore_wallet": "Keystore Wallet",
-      "ledger_wallet": "Ledger Wallet",
-      "connect_ledger": "Connect with Ledger",
-      "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
-      "download_it_here": "Download it here.",
-      "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
-      "connecting": "Connecting..."
+      "keystore_wallet": "Keystore Monedero",
+      "ledger_wallet": "Ledger Monedero",
+      "connect_ledger": "Conectar con Ledger",
+      "dont_have_ledger_wallet": "¿No tienes la app monedero Ledger Tezos?",
+      "download_it_here": "Descarga la app aquí.",
+      "connect_your_device": "Por favor<1> conecta tu aparato</1>,<3> ingresa tu pin</3>, y<5> abre la app Tezos Wallet</5>.",
+      "connecting": "Conectando..."
     },
     "loginCreate": {
       "create_wallet_btn": "Crear billetera",
