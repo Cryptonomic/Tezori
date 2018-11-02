@@ -36,7 +36,8 @@ import {
   saveUpdatedWallet,
   loadPersistedState,
   persistWalletState,
-  loadWalletFromLedger
+  loadWalletFromLedger,
+  initLedgerTransport
 } from '../../utils/wallet';
 
 import {
@@ -505,6 +506,7 @@ export function connectLedger() {
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
     dispatch(addMessage('', true));
+    initLedgerTransport();
     try {
       const wallet = await loadWalletFromLedger();
       const identities = wallet.identities.map((identity, identityIndex) => {
