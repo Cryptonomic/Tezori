@@ -11,7 +11,8 @@ import {
   UPDATE_FETCHED_TIME,
   LOGOUT,
   SET_LEDGER,
-  SET_IS_LEDGER_CONNECTIONG
+  SET_IS_LEDGER_CONNECTIONG,
+  WALLET_IS_SYNCING
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 
@@ -36,4 +37,8 @@ export const setLedger = actionCreator(SET_LEDGER, 'isLedger');
 export const setIsLedgerConnecting = actionCreator(
   SET_IS_LEDGER_CONNECTIONG,
   'isLedgerConnecting'
+);
+export const setWalletIsSyncing = actionCreator(
+  WALLET_IS_SYNCING,
+  'isWalletSyncing'
 );

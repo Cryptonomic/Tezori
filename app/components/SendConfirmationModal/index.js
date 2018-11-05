@@ -58,6 +58,7 @@ const MainContainer = styled.div`
 `;
 
 type Props = {
+  onEnterPress: () => {},
   amount: ?string,
   password?: string,
   address?: string,
@@ -73,6 +74,7 @@ type Props = {
 
 const SendConfirmationModal = (props: Props) => {
   const {
+    onEnterPress,
     amount,
     address,
     open,
@@ -93,9 +95,12 @@ const SendConfirmationModal = (props: Props) => {
       title={t('components.sendConfirmationModal.send_confirmation')}
       open={open}
       onClose={onCloseClick}
+      onKeyDown={onEnterPress}
     >
       <MainContainer>
-        <ConfirmTitle>{t('components.sendConfirmationModal.confirm_question')}</ConfirmTitle>
+        <ConfirmTitle>
+          {t('components.sendConfirmationModal.confirm_question')}
+        </ConfirmTitle>
         <AmountContainer>
           <DataToSend>
             {amount}
@@ -112,7 +117,7 @@ const SendConfirmationModal = (props: Props) => {
           password={password}
           changFunc={onPasswordChange}
           onShow={onShowPwd}
-          containerStyle={{width: '60%', marginTop: '10px'}}
+          containerStyle={{ width: '60%', marginTop: '10px' }}
         />
         <ConfirmButton
           buttonTheme="primary"

@@ -100,6 +100,7 @@ type Props = {
   updateActiveTab: () => {},
   identities: array,
   isLoadingTransactions: boolean,
+  isWalletSyncing: boolean,
   syncWallet: () => {},
   selectedAccountHash: string,
   selectedParentHash: string,
@@ -164,7 +165,7 @@ class ActionPanel extends Component<Props, State> {
             />
           );
         }
-        
+
         const JSTransactions = transactions
           .sort(sortArr({ sortOrder: 'desc', sortBy: 'timestamp' }))
           .toJS();
@@ -173,7 +174,7 @@ class ActionPanel extends Component<Props, State> {
 
         const firstNumber = (this.state.currentPage - 1) * itemsCount;
         let lastNumber = this.state.currentPage * itemsCount;
-        if (lastNumber>JSTransactions.length) {
+        if (lastNumber > JSTransactions.length) {
           lastNumber = JSTransactions.length;
         }
         const showedTransactions = JSTransactions.slice(
@@ -222,7 +223,8 @@ class ActionPanel extends Component<Props, State> {
       selectedParentHash,
       syncWallet,
       time,
-      t
+      t,
+      isWalletSyncing
     } = this.props;
     const jsIdentities = identities.toJS();
     const selectedAccount = getSelectedAccount(
@@ -256,6 +258,7 @@ class ActionPanel extends Component<Props, State> {
           selectedParentHash={selectedParentHash}
           time={time}
           delegatedAddress={selectedAccount.get('delegateValue')}
+          isWalletSyncing={isWalletSyncing}
         />
 
         <TabList>
@@ -290,7 +293,8 @@ function mapStateToProps({ wallet }) {
   return {
     identities: wallet.get('identities'),
     isLoadingTransactions: wallet.get('isLoading'),
-    time: wallet.get('time')
+    time: wallet.get('time'),
+    isWalletSyncing: wallet.get('isWalletSyncing')
   };
 }
 function mapDispatchToProps(dispatch: () => {}) {
@@ -303,4 +307,10 @@ function mapDispatchToProps(dispatch: () => {}) {
   );
 }
 
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(ActionPanel);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ActionPanel);

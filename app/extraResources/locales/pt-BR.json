@@ -284,7 +284,8 @@
       "back_to_wallet": "Voltar à carteira",
       "wallet_settings": "Configurações da Carteira",
       "choose_different_node": "Selecionar outro node",
-      "add_custom_node": "Adicionar um node específico"
+      "add_custom_node": "Adicionar um node específico",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description": "Eu confirmo que li e aceitei os <1>Termos de Serviço</1> e <3>Política de Privacidade</3>",

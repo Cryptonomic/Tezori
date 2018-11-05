@@ -284,7 +284,8 @@
       "back_to_wallet": "Volver a la billetera",
       "wallet_settings": "Ajustes de la billetera",
       "choose_different_node": "Elegir un nodo distinto",
-      "add_custom_node": "Agregar un nodo personalizado"
+      "add_custom_node": "Agregar un nodo personalizado",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description": "Yo reconozco que he leído y aceptado los<1> Términos del Servicio</1> y la<3> Política de Privacidad</3> ",

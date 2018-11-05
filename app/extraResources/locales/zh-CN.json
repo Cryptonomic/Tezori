@@ -284,7 +284,8 @@
       "back_to_wallet": "返回到钱包",
       "wallet_settings": "钱包设置",
       "choose_different_node": "选择一个不同的节点",
-      "add_custom_node": "添加一个自定义节点"
+      "add_custom_node": "添加一个自定义节点",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description": "我承认我已经阅读过并接受<1>服务条款</1>和<3>隐私政策</3>。",

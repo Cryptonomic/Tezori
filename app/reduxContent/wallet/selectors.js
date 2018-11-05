@@ -12,6 +12,10 @@ export const getWalletIsLoading = createSelector(getWallet, wallet =>
   wallet.get('isLoading')
 );
 
+export const getWalletIsSyncing = createSelector(getWallet, wallet =>
+  wallet.get('isWalletSyncing')
+);
+
 export const getNodesStatus = createSelector(getWallet, wallet =>
   wallet.get('nodesStatus')
 );

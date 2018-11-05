@@ -99,12 +99,18 @@ type Props = {
 class CreateAccountSlide extends Component<Props> {
   props: Props;
   state = {
+    isDisabled: false,
     seed: '',
     currentSlide: 0
   };
 
   componentDidMount() {
     this.updateMnemonic();
+    document.addEventListener('keydown', this.onEnterPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onEnterPress);
   }
 
   nextAccountSlide = currentSlide => this.setState({ currentSlide });
@@ -169,19 +175,36 @@ class CreateAccountSlide extends Component<Props> {
 
   importAddress = () => {
     const { seed } = this.state;
-    this.props.importAddress(GENERATE_MNEMONIC, seed);
+    this.setState({ isDisabled: true });
+    setTimeout(() => this.props.importAddress(GENERATE_MNEMONIC, seed), 1);
+  };
+
+  onEnterPress = event => {
+    const { currentSlide } = this.state;
+    if (event.key === 'Enter' && currentSlide === 0) {
+      this.nextAccountSlide(1);
+    }
+    if (event.key === 'Enter' && currentSlide === 2) {
+      this.importAddress();
+    }
   };
 
   createAccount = () => {
     const { t } = this.props;
+    const { isDisabled } = this.state;
     return (
       <Fragment>
-        <div className="title">{t('components.createAccountSlide.seed_backup')}</div>
+        <div className="title">
+          {t('components.createAccountSlide.seed_backup')}
+        </div>
         <div className="description">
           {t('components.createAccountSlide.descriptions.description2')}
         </div>
-
-        <ActionButton buttonTheme="primary" onClick={this.importAddress}>
+        <ActionButton
+          buttonTheme="primary"
+          disabled={isDisabled}
+          onClick={this.importAddress}
+        >
           {t('components.createAccountSlide.create_account')}
         </ActionButton>
       </Fragment>
@@ -224,4 +247,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(CreateAccountSlide);
+export default compose(
+  wrapComponent,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(CreateAccountSlide);

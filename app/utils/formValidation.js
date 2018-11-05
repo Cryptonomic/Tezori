@@ -20,7 +20,7 @@ export function displayError(validations) {
   return false;
 }
 /**
- * 
+ *
  * @param value { string | string[] }
  * @param validateType { string }
  * @returns { false | string }
@@ -41,8 +41,8 @@ export default function hasError(value, validateType, name) {
       if ( value.length < 36 ) {
         return "components.messageBar.messages.address_length_36";
       }
-      
-      if ( !RegExp('^tz1|^KT1').test(value)) {
+
+      if ( !RegExp('^tz1|^tz2|^tz3|^KT1').test(value)) {
         return "components.messageBar.messages.address_begin";
       }
       break;
@@ -63,7 +63,7 @@ export default function hasError(value, validateType, name) {
     //       return 'Corrupt .tezwallet file';
     //   }
     //   break;
-    case 'minLength8': 
+    case 'minLength8':
       if ( value.length < 8 ) {
         return "components.messageBar.messages.pass_length_8";
       }

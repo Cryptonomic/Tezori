@@ -175,6 +175,12 @@ class Send extends Component<Props> {
     }
   };
 
+  onEnterPress = (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      this.onSend();
+    }
+  };
+
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () => {
     const { averageFees } = this.state;
@@ -193,7 +199,8 @@ class Send extends Component<Props> {
     const { addressBalance } = this.props;
     const { fee } = this.state;
     const newAmount = amount || '0';
-    const numAmount = parseFloat(newAmount) * utez;
+    const commaReplacedAmount = newAmount.replace(',', '.');
+    const numAmount = parseFloat(commaReplacedAmount) * utez;
     const total = numAmount + fee;
     const balance = addressBalance - total;
     this.setState({ amount, total, balance });
@@ -368,6 +375,7 @@ class Send extends Component<Props> {
         </SendButton>
         {!isLedger && (
           <SendConfirmationModal
+            onEnterPress={event => this.onEnterPress(event.key, isDisabled)}
             amount={amount}
             password={password}
             address={toAddress}

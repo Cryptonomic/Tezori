@@ -30,7 +30,6 @@ import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 type Props = {
   isLoading: boolean,
-  setIsLoading: () => {},
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
@@ -238,7 +237,8 @@ class AddDelegateModal extends Component<Props> {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
     const newAmount = amount || '0';
-    const numAmount = parseFloat(newAmount) * utez;
+    const commaReplacedAmount = newAmount.replace(',', '.');
+    const numAmount = parseFloat(commaReplacedAmount) * utez;
     const total = numAmount + fee + gas;
     const balance = managerBalance - total;
     this.setState({ amount, total, balance });
@@ -292,7 +292,6 @@ class AddDelegateModal extends Component<Props> {
     if (isCreated) {
       this.onCloseClick();
     }
-    setIsLoading(false);
   };
 
   renderGasToolTip = gas => {
@@ -346,6 +345,12 @@ class AddDelegateModal extends Component<Props> {
   openLedgerConfirmation = () => this.setState({ isOpenLedgerConfirm: true });
   closeLedgerConfirmation = () => this.setState({ isOpenLedgerConfirm: false });
 
+  onEnterPress = (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      this.createAccount();
+    }
+  };
+
   render() {
     const { isLoading, open, t, isLedger, selectedParentHash } = this.props;
     const {
@@ -377,6 +382,7 @@ class AddDelegateModal extends Component<Props> {
     );
     return (
       <Modal
+        onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
         title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}

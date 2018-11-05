@@ -45,7 +45,7 @@ const WalletContainers = styled.div`
 `;
 
 const WalletTitle = styled.h3`
-  color: #1A325F;
+  color: #1a325f;
   font-size: 36px;
   font-weight: 300;
   margin: 0 0 1.7rem 0;
@@ -79,7 +79,6 @@ const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
 class LoginImport extends Component<Props> {
   props: Props;
-
   state = {
     isLoading: false,
     walletLocation: '',
@@ -88,7 +87,10 @@ class LoginImport extends Component<Props> {
     isShowedPwd: false
   };
 
-  openFile = () => {
+  openFile = event => {
+    if (event.detail === 0) {
+      return;
+    }
     remote.dialog.showOpenDialog(
       {
         properties: ['openFile'],
@@ -109,15 +111,25 @@ class LoginImport extends Component<Props> {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
     await login(loginType, walletLocation, walletFileName, password);
+    await this.setIsLoading(false);
   };
 
-  changePassword = (password) => {
+  setIsLoading = isLoading => this.setState({ isLoading });
+
+  changePassword = password => {
     this.setState({ password });
-  }
+  };
 
   onShow = () => {
-    this.setState({isShowed: !this.state.isShowed});
-  }
+    this.setState({ isShowed: !this.state.isShowed });
+  };
+
+  onEnterPress = (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      this.setIsLoading(true);
+      this.login(IMPORT);
+    }
+  };
 
   render() {
     const { goBack, t } = this.props;
@@ -125,12 +137,12 @@ class LoginImport extends Component<Props> {
     const isDisabled = isLoading || !walletFileName || !password;
 
     return (
-      <CreateContainer>
+      <CreateContainer
+        onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
+      >
         {isLoading && <Loader />}
         <WalletContainers>
-          <BackToWallet
-            onClick={goBack}
-          >
+          <BackToWallet onClick={goBack}>
             <BackCaret
               style={{
                 fill: '#4486f0',
@@ -150,16 +162,14 @@ class LoginImport extends Component<Props> {
             <Button buttonTheme="secondary" onClick={this.openFile} small>
               {t('containers.loginImport.select_file_btn')}
             </Button>
-            <WalletFileName>
-              { walletFileName }
-            </WalletFileName>
+            <WalletFileName>{walletFileName}</WalletFileName>
           </ImportButtonContainer>
           <PasswordInput
             label={t('general.nouns.wallet_password')}
             isShowed={isShowedPwd}
             password={password}
-            changFunc={(newpassword) => this.setState({ password: newpassword })}
-            onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
+            changFunc={newpassword => this.setState({ password: newpassword })}
+            onShow={() => this.setState({ isShowedPwd: !isShowedPwd })}
           />
           <ActionButtonContainer>
             <ActionButton
@@ -186,4 +196,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(LoginImport);
+export default compose(
+  wrapComponent,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(LoginImport);

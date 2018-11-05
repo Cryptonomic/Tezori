@@ -13,12 +13,14 @@ import {
   UPDATE_FETCHED_TIME,
   LOGOUT,
   SET_LEDGER,
-  SET_IS_LEDGER_CONNECTIONG
+  SET_IS_LEDGER_CONNECTIONG,
+  WALLET_IS_SYNCING
 } from './types';
 
 export const initialState = {
   identities: [],
   isLoading: false,
+  isWalletSyncing: false,
   walletFileName: '',
   walletLocation: '',
   password: '',
@@ -44,6 +46,9 @@ export default handleActions(
     },
     [SET_IS_LOADING]: (state, action) => {
       return state.set('isLoading', action.isLoading);
+    },
+    [WALLET_IS_SYNCING]: (state, action) => {
+      return state.set('isWalletSyncing', action.isWalletSyncing);
     },
     [SET_WALLET_FILENAME]: (state, action) => {
       return state.set('walletFileName', action.walletFileName);
