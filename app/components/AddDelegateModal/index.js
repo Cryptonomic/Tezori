@@ -289,6 +289,7 @@ class AddDelegateModal extends Component<Props> {
       return false;
     });
     this.setState({ isOpenLedgerConfirm: false });
+    setIsLoading(false);
     if (isCreated) {
       this.onCloseClick();
     }
