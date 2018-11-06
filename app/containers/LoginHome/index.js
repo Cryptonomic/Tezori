@@ -28,8 +28,8 @@ import bgCircle03 from '../../../resources/bg-hero/bg-circle_03.png';
 import bgCircle04 from '../../../resources/bg-hero/bg-circle_04.png';
 
 import keystoreImg from '../../../resources/imgs/Keystore.svg';
-import ledgerImg from '../../../resources/imgs/Ledger.svg';
-import ledgerGif from '../../../resources/ledger-connect.gif';
+import ledgerUnconnectedImg from '../../../resources/ledger-unconnected.svg';
+import ledgerConnectedImg from '../../../resources/ledger-connect.svg';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -323,7 +323,9 @@ class LoginHome extends Component<Props> {
   render() {
     const { t, isLoading, isLedgerConnecting } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
-    const realLedgerImg = isLedgerConnecting ? ledgerGif : ledgerImg;
+    const realLedgerImg = isLedgerConnecting
+      ? ledgerConnectedImg
+      : ledgerUnconnectedImg;
     return (
       <SectionContainer>
         <DefaultContainer>
