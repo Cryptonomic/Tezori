@@ -37,11 +37,13 @@ const BottomContainer = styled.div`
   margin-top: 42px;
   padding: 0 76px 15px 76px;
   background-color: ${({ theme: { colors } }) => colors.gray1};
+  height: 100px;
 `;
 const DelegateButton = styled(Button)`
   width: 194px;
   height: 50px;
   margin-bottom: 10px;
+  margin-left: auto;
   padding: 0;
 `;
 
