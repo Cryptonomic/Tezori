@@ -6,9 +6,6 @@ import Modal from '../CustomModal';
 import Loader from '../Loader';
 import TezosAddress from '../TezosAddress';
 import TezosIcon from '../TezosIcon';
-import Tooltip from '../Tooltip';
-import Button from '../Button';
-import { ms } from '../../styles/helpers';
 import sendImg from '../../../resources/imgs/Send.svg';
 import confirmImg from '../../../resources/imgs/Confirm-Ledger.svg';
 import { wrapComponent } from '../../utils/i18n';
@@ -93,34 +90,6 @@ const ItemContent = styled.div`
   align-items: center;
 `;
 
-const HelpIcon = styled(TezosIcon)`
-  padding: 0 0 0 4px;
-  font-size: 0.8rem;
-  color: rgba(0, 0, 0, 0.38);
-`;
-
-const TooltipContainer = styled.div`
-  font-size: ${ms(-1)};
-  color: ${({ theme: { colors } }) => colors.primary};
-  max-width: ${ms(15.5)};
-  min-width: 150px;
-  font-weight: ${({ theme: { typo } }) => typo.weights.light};
-`;
-
-const TooltipTitle = styled.p`
-  font-weight: ${({ theme: { typo } }) => typo.weights.bold};
-  margin: 0 0 ${ms(-1)} 0;
-`;
-
-const CustomTooltip = (title, content) => {
-  return (
-    <TooltipContainer>
-      <TooltipTitle>{title}</TooltipTitle>
-      {content}
-    </TooltipContainer>
-  );
-};
-
 type Props = {
   amount: ?string,
   address?: string,
@@ -166,23 +135,7 @@ const AddDelegateLedgerModal = (props: Props) => {
         </DescriptionContainer>
 
         <ItemContainer>
-          <ItemTitle>
-            {t('general.nouns.source')}
-            <Tooltip
-              position="top"
-              arrowPos={{ left: '70%' }}
-              content={() =>
-                CustomTooltip(
-                  t('general.nouns.source'),
-                  t('general.nouns.source')
-                )
-              }
-            >
-              <Button buttonTheme="plain">
-                <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-              </Button>
-            </Tooltip>
-          </ItemTitle>
+          <ItemTitle>{t('general.nouns.source')}</ItemTitle>
           <TezosAddress
             address={manager}
             size="16px"
@@ -192,23 +145,7 @@ const AddDelegateLedgerModal = (props: Props) => {
         </ItemContainer>
 
         <ItemContainer>
-          <ItemTitle>
-            {t('general.nouns.manager')}
-            <Tooltip
-              position="top"
-              arrowPos={{ left: '70%' }}
-              content={() =>
-                CustomTooltip(
-                  t('general.nouns.manager'),
-                  t('general.nouns.manager')
-                )
-              }
-            >
-              <Button buttonTheme="plain">
-                <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-              </Button>
-            </Tooltip>
-          </ItemTitle>
+          <ItemTitle>{t('general.nouns.manager')}</ItemTitle>
           <TezosAddress
             address={source}
             size="16px"
@@ -234,21 +171,7 @@ const AddDelegateLedgerModal = (props: Props) => {
         </ItemContainer>
 
         <ItemContainer>
-          <ItemTitle>
-            {t('general.nouns.delegate')}
-            <Tooltip
-              position="top"
-              arrowPos={{ left: '70%' }}
-              content={CustomTooltip(
-                t('general.nouns.delegate'),
-                t('general.nouns.delegate')
-              )}
-            >
-              <Button buttonTheme="plain">
-                <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-              </Button>
-            </Tooltip>
-          </ItemTitle>
+          <ItemTitle>{t('general.nouns.delegate')}</ItemTitle>
           <TezosAddress
             address={address}
             size="16px"
