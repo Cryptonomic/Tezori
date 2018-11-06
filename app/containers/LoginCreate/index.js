@@ -79,7 +79,7 @@ const WalletContainers = styled.div`
 `;
 
 const WalletTitle = styled.h3`
-  color: #1A325F;
+  color: #1a325f;
   font-size: 36px;
   font-weight: 300;
   margin: 0 0 0.75rem 0;
@@ -135,7 +135,6 @@ const WalletFileSection = styled.div`
   margin-bottom: 1.125rem;
 `;
 
-
 const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 
 class LoginCreate extends Component<Props> {
@@ -158,10 +157,10 @@ class LoginCreate extends Component<Props> {
     confirmPwdText: ''
   };
 
-  saveFile = (event) => {
+  saveFile = event => {
     const { walletLocation, walletFileName } = this.state;
-    if(event.detail === 0 && walletLocation && walletFileName) {
-      return
+    if (event.detail === 0 && walletLocation && walletFileName) {
+      return;
     }
     remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
       if (filename) {
@@ -179,23 +178,23 @@ class LoginCreate extends Component<Props> {
     if (password) {
       const pwdStrength = zxcvbn(password);
       const score = pwdStrength.score || 1;
-  //    let crackTime = t("containers.loginCreate.crack_time_description", {time: pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second});
+      //    let crackTime = t("containers.loginCreate.crack_time_description", {time: pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second});
       let error = '';
       if (score < 3) {
-        error = t("containers.loginCreate.password_not_strong");
-    //    crackTime += t("containers.loginCreate.add_another_word");
+        error = t('containers.loginCreate.password_not_strong');
+        //    crackTime += t("containers.loginCreate.add_another_word");
       } else if (score === 3) {
-        error = t("containers.loginCreate.you_almost_there");
-    //    crackTime += t("containers.loginCreate.add_another_word");
+        error = t('containers.loginCreate.you_almost_there');
+        //    crackTime += t("containers.loginCreate.add_another_word");
       } else {
-        error = t("containers.loginCreate.you_got_it");
+        error = t('containers.loginCreate.you_got_it');
       }
 
       const isValid = score === 4;
       this.setState({
         pwdScore: score,
         pwdError: error,
-      //  pwdSuggestion: crackTime,
+        //  pwdSuggestion: crackTime,
         isPasswordValidation: isValid,
         password
       });
@@ -213,13 +212,13 @@ class LoginCreate extends Component<Props> {
       this.setState({
         isPasswordMatched: false,
         confirmPwdScore: 1,
-        confirmPwdText: t("containers.loginCreate.password_dont_match")
+        confirmPwdText: t('containers.loginCreate.password_dont_match')
       });
     } else if (confirmPassword && confirmPassword === password) {
       this.setState({
         isPasswordMatched: true,
         confirmPwdScore: 4,
-        confirmPwdText: t("containers.loginCreate.password_match")
+        confirmPwdText: t('containers.loginCreate.password_match')
       });
     }
   };
@@ -234,7 +233,7 @@ class LoginCreate extends Component<Props> {
     if (password && password === confirmPassword) {
       score = 4;
       isMatched = true;
-      confirmStr = t("containers.loginCreate.password_match");
+      confirmStr = t('containers.loginCreate.password_match');
     } else if (
       password !== confirmPassword &&
       indexVal < 0 &&
@@ -242,7 +241,7 @@ class LoginCreate extends Component<Props> {
     ) {
       score = 1;
       isMatched = false;
-      confirmStr = t("containers.loginCreate.password_dont_match");
+      confirmStr = t('containers.loginCreate.password_dont_match');
     }
     this.setState({
       isPasswordMatched: isMatched,
@@ -255,7 +254,7 @@ class LoginCreate extends Component<Props> {
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
-    await login(loginType, walletLocation, walletFileName, password)
+    await login(loginType, walletLocation, walletFileName, password);
   };
 
   onPasswordShow = index => {
@@ -266,18 +265,18 @@ class LoginCreate extends Component<Props> {
     }
   };
 
-  setIsLoading = (isLoading) => {
+  setIsLoading = isLoading => {
     this.setState({ isLoading });
-  }
+  };
 
-   onEnterPress = async (keyVal, isDisabled) => {
-    if(keyVal === 'Enter' && !isDisabled) {
-      await this.setIsLoading(true)
+  onEnterPress = async (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      await this.setIsLoading(true);
       setTimeout(() => {
-        this.login(CREATE)
-      }, 5)
+        this.login(CREATE);
+      }, 5);
     }
-  }
+  };
 
   render() {
     const { goBack, t } = this.props;
@@ -288,32 +287,24 @@ class LoginCreate extends Component<Props> {
       !this.state.isPasswordMatched ||
       !walletFileName;
 
-    let walletFileSection = (
-      <CreateFileEmptyIcon src={createFileEmptyIcon} />
-    );
+    let walletFileSection = <CreateFileEmptyIcon src={createFileEmptyIcon} />;
 
     if (walletFileName) {
       walletFileSection = (
         <WalletFileSection>
-          <CheckIcon
-            iconName="checkmark2"
-            size={ms(5)}
-            color="check"
-          />
-          <WalletFileName>
-            { walletFileName }
-          </WalletFileName>
+          <CheckIcon iconName="checkmark2" size={ms(5)} color="check" />
+          <WalletFileName>{walletFileName}</WalletFileName>
         </WalletFileSection>
       );
     }
 
     return (
-      <CreateContainer onKeyDown={(event) => this.onEnterPress(event.key, isDisabled)}>
+      <CreateContainer
+        onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
+      >
         {isLoading && <Loader />}
         <WalletContainers>
-          <BackToWallet
-            onClick={goBack}
-          >
+          <BackToWallet onClick={goBack}>
             <BackCaret
               style={{
                 fill: '#4486f0',
@@ -327,7 +318,9 @@ class LoginCreate extends Component<Props> {
             <span>{t('general.back')}</span>
           </BackToWallet>
 
-          <WalletTitle>{t('containers.loginCreate.create_wallet_title')}</WalletTitle>
+          <WalletTitle>
+            {t('containers.loginCreate.create_wallet_title')}
+          </WalletTitle>
           <WalletDescription>
             {t('containers.loginCreate.create_wallet_description')}
           </WalletDescription>
@@ -353,7 +346,9 @@ class LoginCreate extends Component<Props> {
                 onShow={() => this.onPasswordShow(0)}
               />
               <ValidInput
-                label={t('containers.loginCreate.confirm_wallet_password_label')}
+                label={t(
+                  'containers.loginCreate.confirm_wallet_password_label'
+                )}
                 status
                 isShowed={this.state.isConfirmPwdShowed}
                 error={this.state.confirmPwdText}
@@ -388,4 +383,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(LoginCreate);
+export default compose(
+  wrapComponent,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(LoginCreate);

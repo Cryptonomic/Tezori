@@ -11,16 +11,25 @@ import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
-import { name, tagline } from '../../config.json';
+import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
+import { connectLedger } from '../../reduxContent/wallet/thunks';
+import {
+  getWalletIsLoading,
+  getIsLedgerConnecting
+} from '../../reduxContent/wallet/selectors';
 
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
 import bgCircle02 from '../../../resources/bg-hero/bg-circle_02.png';
 import bgCircle03 from '../../../resources/bg-hero/bg-circle_03.png';
 import bgCircle04 from '../../../resources/bg-hero/bg-circle_04.png';
+
+import keystoreImg from '../../../resources/imgs/Keystore.svg';
+import ledgerImg from '../../../resources/imgs/Ledger.svg';
+import ledgerGif from '../../../resources/ledger-connect.gif';
 
 const SectionContainer = styled.div`
   display: flex;
@@ -40,6 +49,7 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 300;
+  margin-top: 90px;
 `;
 
 const Strong = styled.span`
@@ -55,12 +65,15 @@ const Description = styled.span`
   margin-left: 10px;
 `;
 
-const Tip = styled(Description)`
-  padding: ${ms(2)} 0 0 0;
-  text-align: center;
-  margin: 0 auto;
-  line-height: 1.31rem;
+const Tip = styled.div`
+  width: 288px;
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.5;
   font-weight: 300;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const AppName = styled.h1`
@@ -69,36 +82,26 @@ const AppName = styled.h1`
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 6rem;
+  font-size: 72px;
   font-weight: 300;
-  line-height: normal;
-  letter-spacing: 0.5rem;
+  line-height: 85px;
+  letter-spacing: 5px;
   margin: 0 auto;
   color: ${({ theme: { colors } }) => colors.primary};
 `;
 
-const AppSubtitle = styled.h2`
-  text-align: center;
-  width: 100%;
-  font-family: 'Roboto', san-serif;
-  font-style: normal;
-  font-stretch: normal;
-  font-size: 1.2rem;
-  font-weight: 300;
-  line-height: 1.2rem;
-  letter-spacing: 0.25rem;
-  margin: 0 auto 2.5rem;
-  color: ${({ theme: { colors } }) => colors.primary};
+const BaseButton = styled(Button)`
+  width: 288px;
+  height: 50px;
+  padding: 0;
 `;
 
-const CreateWalletButton = styled(Button)`
-  min-width: 22rem;
-  width: 100%;
+const CreateWalletButton = styled(BaseButton)`
+  margin-top: 37px;
 `;
 
-const UnlockWalletButton = styled(Button)`
-  min-width: 22rem;
-  width: 100%;
+const UnlockWalletButton = styled(BaseButton)`
+  margin-top: 21px;
   color: black;
   border-color: black;
   background-color: rgba(255, 255, 255, 0.2);
@@ -118,13 +121,6 @@ const DefaultContainer = styled.div`
   padding: 0px 50px;
 `;
 
-const WalletContainers = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 10px 30px;
-  justify-content: stretch;
-`;
-
 const Section = styled.section`
   display: flex;
   flex: 0 1 auto;
@@ -132,13 +128,12 @@ const Section = styled.section`
 `;
 
 const Background = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
 `;
 
 const BgContainerImg = styled.img`
@@ -179,12 +174,12 @@ const BgCircle = styled.img`
       opacity: 0;
       transform: translate3d(-50%, 0, 0);
     }
-      50% {
-        opacity: 1;
+    50% {
+      opacity: 1;
       transform: translate3d(-50%, 0, 0);
     }
-      100% {
-        opacity: 1;
+    100% {
+      opacity: 1;
       transform: translate3d(-50%, 0, 0);
     }
   }
@@ -206,6 +201,59 @@ const BgCircle4 = styled(BgCircle)`
   animation-delay: 3200ms;
 `;
 
+const MainContainers = styled.div`
+  display: flex;
+  margin-top: 64px;
+`;
+
+const CardContainer = styled.div`
+  width: 399px;
+  height: 575px;
+  border-radius: 5px;
+  background-color: ${({ theme: { colors } }) => colors.white};
+  box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
+  margin: 0 42px;
+  text-align: center;
+  padding: 38px 0 19px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const CardImg = styled.img`
+  width: 219px;
+  height: 219px;
+`;
+
+const CardTitle = styled.div`
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 28px;
+  margin-top: 27px;
+  color: ${({ theme: { colors } }) => colors.primary};
+  letter-spacing: 1.7px;
+`;
+
+const Linebar = styled.div`
+  width: 343px;
+  height: 1px;
+  background-color: ${({ theme: { colors } }) => colors.gray9};
+  opacity: 0.46;
+  margin-top: auto;
+`;
+
+const LedgerConnect = styled.div`
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: 0.7px;
+  font-weight: 300;
+  width: 288px;
+  text-align: left;
+  margin-top: 20px;
+`;
+const DescriptionBold = styled.span`
+  font-weight: 400;
+`;
 
 const LANGUAGE_STORAGE = 'isShowedSelecteLanguageScene';
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
@@ -224,7 +272,11 @@ class LoginHome extends Component<Props> {
     const isLanguageSelected = JSON.parse(languageStorage) || false;
     const agreement = localStorage.getItem(AGREEMENT_STORAGE);
     const isAgreement = JSON.parse(agreement) || false;
-    this.setState({ isAgreement, isLanguageSelected, selectedLanguage: locale });
+    this.setState({
+      isAgreement,
+      isLanguageSelected,
+      selectedLanguage: locale
+    });
   };
 
   updateStatusAgreement = () => {
@@ -233,72 +285,129 @@ class LoginHome extends Component<Props> {
     return localStorage.setItem(AGREEMENT_STORAGE, !isAgreement);
   };
 
-  onChangeLanguage = (lang) => {
+  onChangeLanguage = lang => {
     this.setState({ selectedLanguage: lang });
     const { setLocale } = this.props;
     setLocale(lang);
     i18n.changeLanguage(lang);
-  }
+  };
 
-  goToTermsModal  = () => {
+  goToTermsModal = () => {
     const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
-    this.setState({ isLanguageSelected: !isLanguageSelected });    
-  }
+    this.setState({ isLanguageSelected: !isLanguageSelected });
+  };
 
   goToLanguageSelect = () => {
     const { isLanguageSelected } = this.state;
     localStorage.setItem(LANGUAGE_STORAGE, !isLanguageSelected);
     this.setState({ isLanguageSelected: !isLanguageSelected });
-  }
+  };
 
   goTo = route => {
     const { match, history } = this.props;
     history.push(`${match.path}/${route}`);
   };
 
+  onLedgerConnect = async () => {
+    const { connectLedger } = this.props;
+    await connectLedger();
+  };
+
+  onDownload = () => {};
+
   openTermsService = () => this.goTo('conditions/termsOfService');
+
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t } = this.props;
+    const { t, isLoading, isLedgerConnecting } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
+    const realLedgerImg = isLedgerConnecting ? ledgerGif : ledgerImg;
     return (
       <SectionContainer>
         <DefaultContainer>
           <Section>
             <AppName>{name}</AppName>
-            <AppSubtitle>{t(tagline)}</AppSubtitle>
           </Section>
           <Section>
-            <WalletContainers>
-              <CreateWalletButton
-                buttonTheme="primary"
-                onClick={() => this.goTo('create')}
-                disabled={!isAgreement}
-              >
-                {t('containers.loginHome.create_new_wallet_btn')}
-              </CreateWalletButton>
-            </WalletContainers>
-            <WalletContainers>
-              <UnlockWalletButton
-                buttonTheme="secondary"
-                onClick={() => this.goTo('import')}
-                disabled={!isAgreement}
-              >
-                {t('containers.loginHome.open_exisiting_wallet_btn')}
-              </UnlockWalletButton>
-              <Tip>
-                <div>{t('containers.loginHome.want_to_import_fundraiser_paper_wallet')}</div>
-                <div>
-                  <Trans i18nKey="containers.loginHome.create_named_wallet" name={name}>
-                    <Link onClick={() => this.goTo('create')}>
-                      <Strong>Create a {name} wallet</Strong>
-                    </Link> first.                    
-                  </Trans>
-                </div>
-              </Tip>
-            </WalletContainers>
+            <MainContainers>
+              <CardContainer>
+                <CardImg src={keystoreImg} />
+                <CardTitle>
+                  {t('containers.loginHome.keystore_wallet')}
+                </CardTitle>
+                <CreateWalletButton
+                  buttonTheme="primary"
+                  onClick={() => this.goTo('create')}
+                  disabled={!isAgreement}
+                >
+                  {t('containers.loginHome.create_new_wallet_btn')}
+                </CreateWalletButton>
+                <UnlockWalletButton
+                  buttonTheme="secondary"
+                  onClick={() => this.goTo('import')}
+                  disabled={!isAgreement}
+                >
+                  {t('containers.loginHome.open_exisiting_wallet_btn')}
+                </UnlockWalletButton>
+                <Linebar />
+                <Tip>
+                  <div>
+                    {t(
+                      'containers.loginHome.want_to_import_fundraiser_paper_wallet'
+                    )}
+                  </div>
+                  <div>
+                    <Trans
+                      i18nKey="containers.loginHome.create_named_wallet"
+                      name={name}
+                    >
+                      wallet?
+                      <Link onClick={() => this.goTo('create')}>
+                        <Strong>Create a {name} wallet</Strong>
+                      </Link>{' '}
+                      first.
+                    </Trans>
+                  </div>
+                </Tip>
+              </CardContainer>
+              <CardContainer>
+                <CardImg src={realLedgerImg} />
+
+                <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
+                <CreateWalletButton
+                  buttonTheme="primary"
+                  onClick={this.onLedgerConnect}
+                  disabled={!isAgreement || isLoading}
+                >
+                  {isLedgerConnecting && t('containers.loginHome.connecting')}
+                  {!isLedgerConnecting &&
+                    t('containers.loginHome.connect_ledger')}
+                </CreateWalletButton>
+                {isLedgerConnecting && (
+                  <LedgerConnect>
+                    <Trans i18nKey="containers.loginHome.connect_your_device">
+                      Please
+                      <DescriptionBold> connect your device</DescriptionBold>,
+                      <DescriptionBold> enter your pin</DescriptionBold>, and
+                      <DescriptionBold> open Tezos Wallet app</DescriptionBold>.
+                    </Trans>
+                  </LedgerConnect>
+                )}
+                <Linebar />
+                <Tip>
+                  <div>{t('containers.loginHome.dont_have_ledger_wallet')}</div>
+                  <div>
+                    <Link onClick={this.onDownload}>
+                      <Strong>
+                        {t('containers.loginHome.download_it_here')}
+                      </Strong>
+                    </Link>
+                  </div>
+                </Tip>
+              </CardContainer>
+            </MainContainers>
           </Section>
         </DefaultContainer>
         <TermsAndPolicySection>
@@ -341,17 +450,26 @@ class LoginHome extends Component<Props> {
 
 function mapStateToProps(state) {
   return {
-    locale: getLocale(state)
+    locale: getLocale(state),
+    isLoading: getWalletIsLoading(state),
+    isLedgerConnecting: getIsLedgerConnecting(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      setLocale
+      setLocale,
+      connectLedger
     },
     dispatch
   );
 }
 
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(LoginHome);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(LoginHome);

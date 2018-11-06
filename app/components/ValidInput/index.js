@@ -29,11 +29,11 @@ const InputWrapper = styled(Input)`
         border-bottom: solid 2px rgba(0, 0, 0, 0.22);
       }
       &:after {
-        width: ${props=>props.width};
-        border-bottom-color: ${props=>focusBorderColors[props.score]};
+        width: ${props => props.width};
+        border-bottom-color: ${props => focusBorderColors[props.score]};
       }
     }
-    color: ${({ theme: { colors } }) => colors.primary };
+    color: ${({ theme: { colors } }) => colors.primary};
     font-size: 16px;
     font-weight: 300;
 
@@ -48,7 +48,7 @@ const InputWrapper = styled(Input)`
 const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {
-      color: ${({ theme: { colors } }) => colors.gray3 };
+      color: ${({ theme: { colors } }) => colors.gray3};
     }
     color: rgba(0, 0, 0, 0.38);
     font-size: 16px;
@@ -71,11 +71,11 @@ const Suggestion = styled.div`
 const Error = styled.div`
   font-size: 12px;
   line-height: 18px;
-  color: ${props => (props.color)};
+  color: ${props => props.color};
 `;
 
 const ShowHidePwd = styled.div`
-  color: ${({ theme: { colors } }) => colors.accent };
+  color: ${({ theme: { colors } }) => colors.accent};
   font-size: 12px;
   font-weight: 500;
 `;
@@ -103,7 +103,17 @@ type Props = {
 };
 
 const InputValid = (props: Props) => {
-  const {label, error, suggestion,  score, status, isShowed, changFunc, onShow, t} = props;
+  const {
+    label,
+    error,
+    suggestion,
+    score,
+    status,
+    isShowed,
+    changFunc,
+    onShow,
+    t
+  } = props;
   const borderColor = focusBorderColors[score];
   let width = '';
   if (score && !status) {
@@ -115,29 +125,29 @@ const InputValid = (props: Props) => {
   return (
     <Container>
       <Content>
-        <LabelWrapper>
-          {label}
-        </LabelWrapper>
+        <LabelWrapper>{label}</LabelWrapper>
         <InputWrapper
           key={label}
           type={isShowed ? 'text' : 'password'}
-          onChange={(event) => changFunc(event.target.value)}
+          onChange={event => changFunc(event.target.value)}
           width={width}
           score={score}
         />
       </Content>
       <CheckContainer>
-        {score===4 && <CheckIcon
-          iconName='checkmark2'
-          size={ms(0)}
-          color="check"
-          onClick={onShow}
-        />}
-        <ShowHidePwd onClick={onShow} style={{cursor: 'pointer'}}>
-          {t((isShowed ? 'general.verbs.hide' : 'general.verbs.show')) }
+        {score === 4 && (
+          <CheckIcon
+            iconName="checkmark2"
+            size={ms(0)}
+            color="check"
+            onClick={onShow}
+          />
+        )}
+        <ShowHidePwd onClick={onShow} style={{ cursor: 'pointer' }}>
+          {t(isShowed ? 'general.verbs.hide' : 'general.verbs.show')}
         </ShowHidePwd>
       </CheckContainer>
-      
+
       <PasswordStrengthSuggestions>
         {!!error && <Error color={borderColor}>{error}</Error>}
         {!!suggestion && (

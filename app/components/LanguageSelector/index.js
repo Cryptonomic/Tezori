@@ -11,18 +11,18 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { wrapComponent } from '../../utils/i18n';
 import localesMap from '../../constants/LocalesMap';
 
-
 const ItemWrapper = styled(MenuItem)`
   &&& {
     &[class*='selected'] {
-      color: ${({ theme: { colors } }) => colors.primary };
+      color: ${({ theme: { colors } }) => colors.primary};
     }
     width: 100%;
     height: 40px;
     box-sizing: border-box;
     font-size: 16px;
     font-weight: 300;
-    background-color: ${({ type, theme: { colors } }) => type==="addmore"?colors.gray1: colors.white };
+    background-color: ${({ type, theme: { colors } }) =>
+      type === 'addmore' ? colors.gray1 : colors.white};
   }
 `;
 
@@ -33,7 +33,7 @@ const SelectContainer = styled(FormControl)`
 const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {    
-      color: ${({ theme: { colors } }) => colors.gray3 };
+      color: ${({ theme: { colors } }) => colors.gray3};
     }
     color: rgba(0, 0, 0, 0.38);
     font-size: 16px;
@@ -52,7 +52,7 @@ const SelectWrapper = styled.div`
   margin-top: 16px;
   display: inline-flex;
   position: relative;
-  border-bottom: solid 1px rgba(0,0,0,0.12);
+  border-bottom: solid 1px rgba(0, 0, 0, 0.12);
   &:hover {
     border-bottom: solid 2px #2c7df7;
   }
@@ -107,16 +107,16 @@ const ScrollContainer = styled.div`
     display: block;
     &::-webkit-scrollbar {
       width: 4px;
-    }    
+    }
     &::-webkit-scrollbar-track {
       background: ${({ theme: { colors } }) => colors.gray2};
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: ${({ theme: { colors } }) => colors.accent};
       border-radius: 4px;
     }
-  }  
+  }
 `;
 
 const FadeOut = styled.div`
@@ -129,12 +129,19 @@ const FadeOut = styled.div`
 
 const FadeTop = styled(FadeOut)`
   top: 0;
-  background-image: linear-gradient(to top, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%);
+  background-image: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%
+  );
 `;
 
 const FadeBottom = styled(FadeOut)`
   bottom: 0;
-  background-image: linear-gradient( rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50% );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%
+  );
 `;
 
 type Props = {
@@ -144,7 +151,6 @@ type Props = {
 };
 
 class LanguageSelector extends Component<Props> {
-
   constructor() {
     super();
     this.domRef = React.createRef();
@@ -153,9 +159,9 @@ class LanguageSelector extends Component<Props> {
 
   state = {
     open: false,
-    isTopFade: false, 
+    isTopFade: false,
     isBottomFade: false
-  }
+  };
 
   componentWillMount = () => {
     const numberOfLocales = Object.keys(localesMap).length;
@@ -164,58 +170,57 @@ class LanguageSelector extends Component<Props> {
     } else {
       this.setState({ isBottomFade: true, numberOfLocales });
     }
-  }
+  };
 
   renderOptions(selectedLang) {
-    return Object.keys(localesMap).map((key) => {
+    return Object.keys(localesMap).map(key => {
       return (
         <ItemWrapper
           key={key}
           value={key}
           selected={selectedLang === key}
-          onClick={()=>this.onLanguageChange(key)}
+          onClick={() => this.onLanguageChange(key)}
         >
-          <div> { localesMap[key] } </div>
+          <div> {localesMap[key]} </div>
         </ItemWrapper>
       );
     });
   }
 
-  setLanguageScrollRef = (element) => {
+  setLanguageScrollRef = element => {
     this.langScrollEl = element;
     if (this.langScrollEl) {
       const { locale } = this.props;
       const index = Object.keys(localesMap).indexOf(locale);
-      if (index>4) {
+      if (index > 4) {
         this.langScrollEl.scrollTop = 40 * (index - 4);
       }
-    }    
-  }
+    }
+  };
 
-  onScrollChange = (event) => {
+  onScrollChange = event => {
     const { numberOfLocales } = this.state;
     const pos = event.target.scrollTop;
     const remainCount = numberOfLocales - 5;
-    if (pos === 0 ) {
-      this.setState({isTopFade : false, isBottomFade: true });
-    } else if (pos < remainCount*40) {
-      this.setState({isTopFade : true, isBottomFade: true });
+    if (pos === 0) {
+      this.setState({ isTopFade: false, isBottomFade: true });
+    } else if (pos < remainCount * 40) {
+      this.setState({ isTopFade: true, isBottomFade: true });
     } else {
-      this.setState({isTopFade : true, isBottomFade: false });
+      this.setState({ isTopFade: true, isBottomFade: false });
     }
-  }
+  };
 
   handleClose = () => {
-    this.setState({open: false});
-  }
+    this.setState({ open: false });
+  };
 
-  onLanguageChange = (key) => {
+  onLanguageChange = key => {
     const { setLocale } = this.props;
     setLocale(key);
     i18n.changeLanguage(key);
     this.handleClose();
-
-  }
+  };
 
   render() {
     const { locale, t } = this.props;
@@ -225,30 +230,30 @@ class LanguageSelector extends Component<Props> {
         <LabelWrapper>{t('general.nouns.language')}</LabelWrapper>
         <RootRef rootRef={this.domRef}>
           <SelectWrapper
-            onClick={()=> {
-              const {open} = this.state;
-              this.setState({open: !open});
+            onClick={() => {
+              const { open } = this.state;
+              this.setState({ open: !open });
             }}
           >
             <SelectContent>{localesMap[locale]}</SelectContent>
             <SelectIcon />
-          </SelectWrapper>        
+          </SelectWrapper>
         </RootRef>
-        
+
         <Popover
           open={open}
           anchorEl={this.domRef.current}
           anchorOrigin={{
             vertical: 'center',
-            horizontal: 'left',
+            horizontal: 'left'
           }}
           transformOrigin={{
             vertical: 'center',
-            horizontal: 'left',
+            horizontal: 'left'
           }}
           PaperProps={{
             style: {
-              width: this.domRef.current?this.domRef.current.clientWidth: 300
+              width: this.domRef.current ? this.domRef.current.clientWidth : 300
             }
           }}
           onClose={this.handleClose}
@@ -256,13 +261,11 @@ class LanguageSelector extends Component<Props> {
           <GroupContainerWrapper>
             {isTopFade && <FadeTop />}
             <RootRef rootRef={this.setLanguageScrollRef}>
-              <ScrollContainer
-                onScroll={this.onScrollChange}
-              >
+              <ScrollContainer onScroll={this.onScrollChange}>
                 {this.renderOptions(locale)}
               </ScrollContainer>
             </RootRef>
-            
+
             {isBottomFade && <FadeBottom />}
           </GroupContainerWrapper>
         </Popover>

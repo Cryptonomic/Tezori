@@ -17,8 +17,11 @@ import LanguageSelector from '../../components/LanguageSelector/';
 import { wrapComponent } from '../../utils/i18n';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
-import { setSelected, removeNode, setLocale } from '../../reduxContent/settings/thunks';
-
+import {
+  setSelected,
+  removeNode,
+  setLocale
+} from '../../reduxContent/settings/thunks';
 
 import {
   getConseilSelectedNode,
@@ -37,9 +40,9 @@ type Props = {
   setSelected: () => {},
   goBack: () => {},
   theme: object,
+  t: () => {},
   locale: string,
-  setLocale: () => {},
-  t: () => {}
+  setLocale: () => {}
 };
 
 const Row = styled.div`
@@ -128,12 +131,13 @@ const NodeUrlSpan = styled(NodeUrl)`
 const ItemWrapper = styled(MenuItem)`
   &&& {
     &[class*='selected'] {
-      color: ${({ theme: { colors } }) => colors.primary };
+      color: ${({ theme: { colors } }) => colors.primary};
     }
     width: 100%;
     font-size: 16px;
     font-weight: 300;
-    background-color: ${({ type, theme: { colors } }) => type==="addmore"?colors.gray1: colors.white };
+    background-color: ${({ type, theme: { colors } }) =>
+      type === 'addmore' ? colors.gray1 : colors.white};
   }
 `;
 
@@ -154,16 +158,19 @@ class SettingsPage extends Component<Props> {
   selectedItem = {
     value: null,
     url: null
-  }
+  };
 
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
+
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
+
   openAddNodeModal = type => this.setState({ type, isModalOpen: true });
+
   closeAddNodeModal = () => this.setState({ type: '', isModalOpen: false });
 
   getNodeUrl = (nodes, selectedNode) => {
-    let url= '';
-    const findedNode = nodes.find((node) => {
+    let url = '';
+    const findedNode = nodes.find(node => {
       const name = node.get('name');
       return name === selectedNode;
     });
@@ -171,7 +178,7 @@ class SettingsPage extends Component<Props> {
       url = findedNode.get('url');
     }
     return url;
-  }
+  };
 
   renderNodes(nodes, selectedNode) {
     const { theme } = this.props;
@@ -199,11 +206,7 @@ class SettingsPage extends Component<Props> {
         </SelectOption>
       );
       return (
-        <ItemWrapper
-          key={index}
-          url={url}
-          value={name}
-        >
+        <ItemWrapper key={index} url={url} value={name}>
           {option}
         </ItemWrapper>
       );
@@ -220,7 +223,7 @@ class SettingsPage extends Component<Props> {
       tezosNodes,
       locale,
       setLocale,
-      t,
+      t
     } = this.props;
 
     const { type, isModalOpen } = this.state;
@@ -242,12 +245,14 @@ class SettingsPage extends Component<Props> {
               marginLeft: '-9px'
             }}
           />
-          <span>{t("containers.homeSettings.back_to_wallet")}</span>
+          <span>{t('containers.homeSettings.back_to_wallet')}</span>
         </BackToWallet>
-        <H2>{t("containers.homeSettings.wallet_settings")}</H2>
+        <H2>{t('containers.homeSettings.wallet_settings')}</H2>
 
         <Content6>
-          <ContentTitle>{t("containers.homeSettings.select_display_language")}</ContentTitle>
+          <ContentTitle>
+            {t('containers.homeSettings.select_display_language')}
+          </ContentTitle>
           <RowForParts>
             <Part>
               <LanguageSelector locale={locale} setLocale={setLocale} />
@@ -256,13 +261,15 @@ class SettingsPage extends Component<Props> {
         </Content6>
 
         <Content>
-          <ContentTitle>{t("containers.homeSettings.choose_different_node")}</ContentTitle>
+          <ContentTitle>
+            {t('containers.homeSettings.choose_different_node')}
+          </ContentTitle>
           <RowForParts>
             <Part>
               <CustomSelect
                 label="Conseil Nodes"
                 value={conseilSelectedNode}
-                onChange={(event) => {
+                onChange={event => {
                   const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleConseilChange(newValue);
@@ -270,7 +277,7 @@ class SettingsPage extends Component<Props> {
                   }
                   this.openAddNodeModal(CONSEIL);
                 }}
-                renderValue={(value) => {
+                renderValue={value => {
                   const url = this.getNodeUrl(conseilNodes, value);
                   return (
                     <SelectRenderWrapper>
@@ -281,7 +288,7 @@ class SettingsPage extends Component<Props> {
                 }}
               >
                 {this.renderNodes(conseilNodes, conseilSelectedNode)}
-                <ItemWrapper value='add-more' type="addmore">
+                <ItemWrapper value="add-more" type="addmore">
                   <AddCircle
                     style={{
                       fill: '#7B91C0',
@@ -290,7 +297,7 @@ class SettingsPage extends Component<Props> {
                       marginRight: '10px'
                     }}
                   />
-                  {t("containers.homeSettings.add_custom_node")}
+                  {t('containers.homeSettings.add_custom_node')}
                 </ItemWrapper>
               </CustomSelect>
             </Part>
@@ -298,7 +305,7 @@ class SettingsPage extends Component<Props> {
               <CustomSelect
                 label="Tezos Nodes"
                 value={tezosSelectedNode}
-                onChange={(event) => {
+                onChange={event => {
                   const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleTezosChange(newValue);
@@ -306,7 +313,7 @@ class SettingsPage extends Component<Props> {
                   }
                   this.openAddNodeModal(TEZOS);
                 }}
-                renderValue={(value) => {
+                renderValue={value => {
                   const url = this.getNodeUrl(tezosNodes, value);
                   return (
                     <SelectRenderWrapper>
@@ -326,7 +333,7 @@ class SettingsPage extends Component<Props> {
                       marginRight: '10px'
                     }}
                   />
-                  {t("containers.homeSettings.add_custom_node")}
+                  {t('containers.homeSettings.add_custom_node')}
                 </ItemWrapper>
               </CustomSelect>
             </Part>
@@ -366,6 +373,11 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, withTheme, connect(mapStateToProps, mapDispatchToProps))(
-  SettingsPage
-);
+export default compose(
+  wrapComponent,
+  withTheme,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(SettingsPage);

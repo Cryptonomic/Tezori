@@ -4,7 +4,7 @@ import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 export const getSettings = state => state.settings;
 
 export const getDelegateTooltip = createSelector(getSettings, settings =>
-	settings.get('delegateTooltip')
+  settings.get('delegateTooltip')
 );
 
 export const getConseilSelectedNode = createSelector(getSettings, settings =>

@@ -19,7 +19,7 @@ import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
 import Tooltip from '../Tooltip';
-import NoFundTooltip from "../Tooltips/NoFundTooltip";
+import NoFundTooltip from '../Tooltips/NoFundTooltip';
 import { sortArr } from '../../utils/array';
 import { wrapComponent } from '../../utils/i18n';
 
@@ -136,7 +136,7 @@ type State = {
 class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
-    isDelegateModalOpen: false,
+    isDelegateModalOpen: false
   };
 
   openDelegateModal = () => this.setState({ isDelegateModalOpen: true });
@@ -185,10 +185,10 @@ class AddressBlock extends Component<Props, State> {
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts');
     if (smartAddresses && smartAddresses.toArray().length) {
-      smartAddresses.forEach((address)=> {
+      smartAddresses.forEach(address => {
         const addressStatus = address.get('status');
-        if(addressStatus === READY || addressStatus === PENDING) {
-          smartBalance+=address.get('balance');
+        if (addressStatus === READY || addressStatus === PENDING) {
+          smartBalance += address.get('balance');
         }
       });
     }
@@ -208,13 +208,15 @@ class AddressBlock extends Component<Props, State> {
       <Container>
         <AddressLabel>
           <AccountTitle>
-            {t('components.addressBlock.account_title', {index: accountIndex})}
+            {t('components.addressBlock.account_title', {
+              index: accountIndex
+            })}
           </AccountTitle>
           {ready || storeType === MNEMONIC ? (
             <TezosAmount
               color="primary"
               size={ms(0)}
-              amount={balance+smartBalance}
+              amount={balance + smartBalance}
               format={2}
             />
           ) : null}
@@ -237,7 +239,9 @@ class AddressBlock extends Component<Props, State> {
         )}
 
         <AddDelegateLabel>
-          <DelegateTitle>{t('components.addDelegateModal.add_delegate_title')}</DelegateTitle>
+          <DelegateTitle>
+            {t('components.addDelegateModal.add_delegate_title')}
+          </DelegateTitle>
           {isManagerReady && (
             <AddCircle
               style={{
@@ -248,13 +252,16 @@ class AddressBlock extends Component<Props, State> {
               }}
               onClick={this.openDelegateModal}
             />
-
           )}
           {!isManagerReady && (
             <Tooltip
-              position='bottom'
-              offset='-24%'
-              content={<NoFundTooltip content={t('components.addressBlock.not_ready_tooltip')} />}
+              position="bottom"
+              offset="-24%"
+              content={
+                <NoFundTooltip
+                  content={t('components.addressBlock.not_ready_tooltip')}
+                />
+              }
             >
               <Button buttonTheme="plain">
                 <AddCircle
@@ -270,10 +277,8 @@ class AddressBlock extends Component<Props, State> {
             </Tooltip>
           )}
         </AddDelegateLabel>
-        {
-          smartAddresses && smartAddresses.toArray().length
-          ?
-            smartAddresses
+        {smartAddresses && smartAddresses.toArray().length
+          ? smartAddresses
               .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
               .map((smartAddress, index) => {
                 const smartAddressId = smartAddress.get('accountId');
@@ -287,8 +292,8 @@ class AddressBlock extends Component<Props, State> {
                     isActive={isSmartActive}
                     balance={smartAddress.get('balance')}
                     onClick={() =>
-                    this.goToAccount(smartAddressId, publicKeyHash)
-                  }
+                      this.goToAccount(smartAddressId, publicKeyHash)
+                    }
                   />
                 ) : (
                   <AddressStatus
@@ -296,14 +301,12 @@ class AddressBlock extends Component<Props, State> {
                     isActive={isSmartActive}
                     address={smartAddress}
                     onClick={() =>
-                    this.goToAccount(smartAddressId, publicKeyHash)
-                  }
+                      this.goToAccount(smartAddressId, publicKeyHash)
+                    }
                   />
                 );
               })
-          :
-            !this.props.delegateTooltip &&
-            (
+          : !this.props.delegateTooltip && (
               <NoSmartAddressesContainer>
                 <CloseIcon
                   style={{
@@ -317,7 +320,9 @@ class AddressBlock extends Component<Props, State> {
                   }}
                   onClick={() => this.props.hideDelegateTooltip('true')}
                 />
-                <NoSmartAddressesTitle>{t('components.addressBlock.delegation_tips')}</NoSmartAddressesTitle>
+                <NoSmartAddressesTitle>
+                  {t('components.addressBlock.delegation_tips')}
+                </NoSmartAddressesTitle>
                 {this.renderNoSmartAddressesDescription(
                   noSmartAddressesDescriptionContent
                 )}
@@ -330,8 +335,7 @@ class AddressBlock extends Component<Props, State> {
                   {t('components.addDelegateModal.add_delegate_title')}
                 </NoSmartAddressesButton>
               </NoSmartAddressesContainer>
-            )
-        }
+            )}
         <AddDelegateModal
           selectedParentHash={publicKeyHash}
           open={isDelegateModalOpen}
@@ -359,5 +363,11 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-
-export default compose(wrapComponent, withTheme, connect(mapStateToProps, mapDispatchToProps))(AddressBlock);
+export default compose(
+  wrapComponent,
+  withTheme,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(AddressBlock);

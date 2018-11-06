@@ -9,7 +9,10 @@ import {
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 
-export const hideDelegateTooltip = actionCreator(HIDE_DELEGATE_TOOLTIP, 'target')
+export const hideDelegateTooltip = actionCreator(
+  HIDE_DELEGATE_TOOLTIP,
+  'target'
+);
 export const setSelected = actionCreator(SET_SELECTED, 'selected', 'target');
 export const setLocale = actionCreator(SET_LOCALE, 'locale');
 export const addNode = actionCreator(ADD_NODE, 'node');

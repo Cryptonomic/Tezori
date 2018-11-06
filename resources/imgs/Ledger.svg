@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="224px" height="220px" viewBox="0 0 224 220" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Ledger</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M109.5,218 C169.97518,218 219,169.199038 219,109 C219,48.8009623 169.97518,0 109.5,0 C103.491041,0 97.5951293,0.481806421 91.8491265,1.40872726 C39.7663883,9.81049397 0,54.7824835 0,109 C0,169.199038 49.0248199,218 109.5,218 Z" id="path-1"></path>
+        <filter x="-2.7%" y="-2.8%" width="105.5%" height="105.5%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.858823529   0 0 0 0 0.905882353   0 0 0 0 0.988235294  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#F4F6FD" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="66.9587311%" x2="-19.1326685%" y2="91.6027377%" id="linearGradient-5">
+            <stop stop-color="#F5F7FD" offset="0%"></stop>
+            <stop stop-color="#D7E2FA" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#EEF3FD" offset="0%"></stop>
+            <stop stop-color="#D8E3FB" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Ledger" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-39-Copy-5" transform="translate(3.000000, 1.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Mask">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                <use fill="#DCE2F2" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Group-39-Copy" mask="url(#mask-2)">
+                <g transform="translate(113.000000, 224.500000) rotate(90.000000) translate(-113.000000, -224.500000) translate(-69.500000, 191.500000)" id="Group-7">
+                    <g transform="translate(0.000000, 0.000000)">
+                        <g id="Group-6" stroke="#5571A7">
+                            <g id="Group-4">
+                                <path d="M133.786476,0.75 L108.666959,0.75 L108.666959,2.91662807 L49.6112476,2.91662807 L49.6112476,0.75 L24.491731,0.75 L24.491731,2.91662807 L0.75,2.91662807 L0.75,64.2488421 L176.953259,64.2488421 L176.953259,2.91662807 L133.786476,2.91662807 L133.786476,0.75 Z" id="Combined-Shape" stroke-width="1.5" fill="#FFFFFF"></path>
+                                <rect id="Rectangle-10" stroke-width="0.5" fill="url(#linearGradient-4)" x="33.3445341" y="19.7496526" width="91.5891385" height="27.6661649"></rect>
+                            </g>
+                            <g id="Group-5" transform="translate(148.205957, 2.166628)">
+                                <g id="Group-2" fill="url(#linearGradient-5)" stroke-width="0.5">
+                                    <circle id="Oval-7" cx="31.5" cy="31.5" r="31.5"></circle>
+                                </g>
+                                <ellipse id="Oval-8" stroke-width="1.5" fill="url(#linearGradient-6)" cx="29.8570254" cy="31.416107" rx="16.8764367" ry="16.9441292"></ellipse>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -89,7 +89,6 @@ const SendConfirmationModal = (props: Props) => {
   } = props;
 
   const isDisabled = isLoading || !password;
- 
 
   return (
     <Modal
@@ -99,7 +98,9 @@ const SendConfirmationModal = (props: Props) => {
       onKeyDown={onEnterPress}
     >
       <MainContainer>
-        <ConfirmTitle>{t('components.sendConfirmationModal.confirm_question')}</ConfirmTitle>
+        <ConfirmTitle>
+          {t('components.sendConfirmationModal.confirm_question')}
+        </ConfirmTitle>
         <AmountContainer>
           <DataToSend>
             {amount}
@@ -116,7 +117,7 @@ const SendConfirmationModal = (props: Props) => {
           password={password}
           changFunc={onPasswordChange}
           onShow={onShowPwd}
-          containerStyle={{width: '60%', marginTop: '10px'}}
+          containerStyle={{ width: '60%', marginTop: '10px' }}
         />
         <ConfirmButton
           buttonTheme="primary"

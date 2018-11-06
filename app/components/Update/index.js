@@ -55,10 +55,15 @@ type Props = {
 class Update extends PureComponent<Props> {
   render() {
     const { isReady, isWalletSyncing, onClick, time, t } = this.props;
-    const Refresh = (isReady && isWalletSyncing) ? SpinningRefreshIcon : RefreshIcon;
+    const Refresh =
+      isReady && isWalletSyncing ? SpinningRefreshIcon : RefreshIcon;
     return (
       <Container>
-        <Text>{t("components.update.last_updated", {date: moment(time).format('LT')})}</Text>
+        <Text>
+          {t('components.update.last_updated', {
+            date: moment(time).format('LT')
+          })}
+        </Text>
         <Refresh
           style={{
             fill: 'white',

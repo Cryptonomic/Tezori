@@ -64,11 +64,11 @@ const InfoText = styled.div`
   line-height: 21px;
 `;
 
-const FeesContainer =styled.div`
+const FeesContainer = styled.div`
   margin-top: 19px;
 `;
 
-const InputAddressContainer =styled.div`
+const InputAddressContainer = styled.div`
   margin-top: 19px;
 `;
 
@@ -118,14 +118,16 @@ const DelegateConfirmationModal = (props: Props) => {
 
   return (
     <Modal
-      title={t("components.delegate.change_delegate")}
+      title={t('components.delegate.change_delegate')}
       open={open}
       onClose={onCloseClick}
-      style={{width: '651px'}}
+      style={{ width: '651px' }}
       onKeyDown={onEnterPress}
     >
       <ModalContainer>
-        <DelegateTitle>{t('components.delegate.current_delegate')}</DelegateTitle>
+        <DelegateTitle>
+          {t('components.delegate.current_delegate')}
+        </DelegateTitle>
         <AddressContainer>
           <TezosAddress
             address={address}
@@ -136,7 +138,9 @@ const DelegateConfirmationModal = (props: Props) => {
         </AddressContainer>
         <InputAddressContainer>
           <InputAddress
-            labelText={t('components.delegateConfirmationModal.new_address_label')}
+            labelText={t(
+              'components.delegateConfirmationModal.new_address_label'
+            )}
             addressType="delegate"
             tooltip={false}
             changeDelegate={onAddressChange}
@@ -161,12 +165,12 @@ const DelegateConfirmationModal = (props: Props) => {
       </ModalContainer>
       <BottomContainer>
         <PasswordInput
-          label={t("general.nouns.wallet_password")}
+          label={t('general.nouns.wallet_password')}
           isShowed={isShowedPwd}
           password={password}
           changFunc={handlePasswordChange}
           onShow={onShowPwd}
-          containerStyle={{width: '60%', marginTop: '10px'}}
+          containerStyle={{ width: '60%', marginTop: '10px' }}
         />
         <DelegateButton
           buttonTheme="primary"

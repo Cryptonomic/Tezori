@@ -5,7 +5,7 @@ import App from './containers/App/';
 import Home from './containers/Home/';
 import Login from './containers/Login/';
 import WalletNodesRequired from './containers/WalletNodesRequired/';
-import { isLoggedIn } from './utils/login';
+import { isLoggedIn, isSetLedger } from './utils/login';
 import { hasNodes } from './utils/nodes';
 
 export default store => (
@@ -19,7 +19,7 @@ export default store => (
             return <Redirect to="/walletNodesRequired" />;
           }
 
-          if (!isLoggedIn(state)) {
+          if (!isLoggedIn(state) && !isSetLedger(state)) {
             return <Redirect to="/login" />;
           }
 

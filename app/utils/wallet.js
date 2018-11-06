@@ -2,8 +2,11 @@ import path from 'path';
 import fs from 'fs';
 import { remote } from 'electron';
 import { omit, pick } from 'lodash';
-import { TezosWallet } from 'conseiljs';
+import { TezosWallet, TezosHardwareWallet } from 'conseiljs-dev';
+import { keys } from '@material-ui/core/styles/createBreakpoints';
+import { LEDGER } from '../constants/StoreTypes';
 const { saveWallet, loadWallet } = TezosWallet;
+
 
 const fileName = 'walletState';
 let walletStatePath = path.join(__dirname, 'extraResources/', fileName);
@@ -98,4 +101,32 @@ export async function loadPersistedState(walletPath, password) {
   }
 
   return prepareToLoad(savedWallet, persistedState);
+}
+
+export async function loadWalletFromLedger() {
+  const identity = await TezosHardwareWallet.unlockAddress(0, `44'/1729'/0'/0'/0'`).catch(err => {
+    const errorObj = {
+      name: "components.messageBar.messages.ledger_not_connect"
+    };
+    console.error(errorObj);
+    throw errorObj;
+  });
+  identity.storeType = LEDGER;
+  let ledgerWallet = {"identities": []};
+  ledgerWallet.identities.push(identity);
+
+  let persistedState = null;
+  if (fs.existsSync(walletStatePath)) {
+    try {
+      persistedState = JSON.parse(fs.readFileSync(walletStatePath).toString('binary'));
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  return prepareToLoad(ledgerWallet, persistedState);
+}
+
+export function initLedgerTransport() {
+  TezosHardwareWallet.initLedgerTransport();
 }

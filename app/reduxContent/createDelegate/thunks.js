@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosOperations } from 'conseiljs-dev';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
@@ -11,6 +11,7 @@ import { CREATED } from '../../constants/StatusTypes';
 import { persistWalletState } from '../../utils/wallet';
 import { createTransaction } from '../../utils/transaction';
 import { ORIGINATION } from '../../constants/TransactionTypes';
+import derivationPth from '../../constants/DerivationPath';
 
 import {
   getSelectedKeyStore,
@@ -37,6 +38,7 @@ export function createNewAccount(
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
     const walletPassword = state().wallet.get('password');
     const identities = state()
       .wallet.get('identities')
@@ -44,13 +46,23 @@ export function createNewAccount(
     const parsedAmount = Number(amount.replace(/,/g, '.'));
     const amountInUtez = tezToUtez(parsedAmount);
 
-    const validations = [
-      { value: amount, type: 'notEmpty', name: 'amount' },
-      { value: parsedAmount, type: 'validAmount' },
-      { value: amountInUtez, type: 'posNum', name: 'Amount' },
-      { value: passPhrase, type: 'notEmpty', name: 'pass' },
-      { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' }
-    ];
+    let validations = [];
+
+    if (isLedger) {
+      validations = [
+        { value: amount, type: 'notEmpty', name: 'amount' },
+        { value: parsedAmount, type: 'validAmount' },
+        { value: amountInUtez, type: 'posNum', name: 'Amount' }
+      ];
+    } else {
+      validations = [
+        { value: amount, type: 'notEmpty', name: 'amount' },
+        { value: parsedAmount, type: 'validAmount' },
+        { value: amountInUtez, type: 'posNum', name: 'Amount' },
+        { value: passPhrase, type: 'notEmpty', name: 'pass' },
+        { value: passPhrase, type: 'minLength8', name: 'Pass Phrase' }
+      ];
+    }
 
     const error = displayError(validations);
     if (error) {
@@ -58,8 +70,8 @@ export function createNewAccount(
       return false;
     }
 
-    if (passPhrase !== walletPassword) {
-      const error = "components.messageBar.messages.incorrect_password";
+    if (passPhrase !== walletPassword && !isLedger) {
+      const error = 'components.messageBar.messages.incorrect_password';
       dispatch(addMessage(error, true));
       return false;
     }
@@ -72,31 +84,79 @@ export function createNewAccount(
     );
     const { url, apiKey } = getSelectedNode(settings, TEZOS);
     console.log('-debug: - iiiii - url, apiKey', url, apiKey);
-    const newAccount = await sendOriginationOperation(
-      url,
-      keyStore,
-      amountInUtez,
-      delegate,
-      true,
-      true,
-      fee
-    ).catch(err => {
-      const errorObj = { name: err.message, ...err };
-      console.error(errorObj);
-      dispatch(addMessage(errorObj.name, true));
-      return false;
-    });
+
+    let newAccount;
+    if (isLedger) {
+      const newKeyStore = keyStore;
+      newKeyStore.storeType = 2;
+      newAccount = await sendOriginationOperation(
+        url,
+        newKeyStore,
+        amountInUtez,
+        delegate,
+        true,
+        true,
+        fee,
+        derivationPth
+      ).catch(err => {
+        const errorObj = { name: err.message, ...err };
+        console.error(errorObj);
+        dispatch(addMessage(errorObj.name, true));
+        return false;
+      });
+    } else {
+      newAccount = await sendOriginationOperation(
+        url,
+        keyStore,
+        amountInUtez,
+        delegate,
+        true,
+        true,
+        fee
+      ).catch(err => {
+        const errorObj = { name: err.message, ...err };
+        console.error(errorObj);
+        dispatch(addMessage(errorObj.name, true));
+        return false;
+      });
+    }
 
     if (newAccount) {
-      const operationResult = newAccount
-        && newAccount.results
-        && newAccount.results.contents
-        && newAccount.results.contents[0]
-        && newAccount.results.contents[0].metadata
-        && newAccount.results.contents[0].metadata.operation_result;
+      const operationResult1 =
+        newAccount &&
+        newAccount.results &&
+        newAccount.results.contents &&
+        newAccount.results.contents.length;
+      if (!operationResult1) {
+        const error =
+          'components.messageBar.messages.origination_operation_failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+      const newOperation = newAccount.results.contents.find(
+        content => content.kind === 'origination'
+      );
 
-      if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = "components.messageBar.messages.origination_operation_failed";
+      if (!newOperation) {
+        const error =
+          'components.messageBar.messages.origination_operation_failed';
+        console.error(error);
+        dispatch(addMessage(error, true));
+        return false;
+      }
+      const operationResult =
+        newOperation &&
+        newOperation.metadata &&
+        newOperation.metadata.operation_result;
+
+      if (
+        operationResult &&
+        operationResult.errors &&
+        operationResult.errors.length
+      ) {
+        const error =
+          'components.messageBar.messages.origination_operation_failed';
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
@@ -115,7 +175,7 @@ export function createNewAccount(
             operations: {
               [CREATED]: operationId
             },
-            order: ( identity.accounts.length || 0 ) + 1
+            order: (identity.accounts.length || 0) + 1
           },
           identity
         )
@@ -136,7 +196,7 @@ export function createNewAccount(
       // todo: add transaction
       dispatch(
         addMessage(
-          "components.messageBar.messages.success_address_origination",
+          'components.messageBar.messages.success_address_origination',
           false,
           operationId
         )

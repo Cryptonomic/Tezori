@@ -126,15 +126,26 @@ function BalanceBanner(props: Props) {
     isWalletSyncing
   } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel = !isManagerAddress && smartAddressIndex ? t('components.address.delegated_address', {index: smartAddressIndex}) : t('components.address.manager_address');
+  const addressLabel =
+    !isManagerAddress && smartAddressIndex
+      ? t('components.address.delegated_address', { index: smartAddressIndex })
+      : t('components.address.manager_address');
 
-  const breadcrumbs = t('components.balanceBanner.breadcrumbs', {parentIndex, addressLabel});
+  const breadcrumbs = t('components.balanceBanner.breadcrumbs', {
+    parentIndex,
+    addressLabel
+  });
 
   return (
     <Container>
       <TopRow isReady={isReady}>
         <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
-        <Update onClick={onRefreshClick} time={time} isReady={isReady} isWalletSyncing={isWalletSyncing} />
+        <Update
+          onClick={onRefreshClick}
+          time={time}
+          isReady={isReady}
+          isWalletSyncing={isWalletSyncing}
+        />
       </TopRow>
       <BottomRow isReady={isReady}>
         <AddressTitle>
@@ -195,4 +206,7 @@ BalanceBanner.defaultProps = {
   isWalletSyncing: false
 };
 
-export default compose(wrapComponent, withTheme)(BalanceBanner);
+export default compose(
+  wrapComponent,
+  withTheme
+)(BalanceBanner);

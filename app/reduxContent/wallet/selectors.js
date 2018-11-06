@@ -16,9 +16,8 @@ export const getWalletIsSyncing = createSelector(getWallet, wallet =>
   wallet.get('isWalletSyncing')
 );
 
-export const getNodesStatus = createSelector(
-  getWallet, 
-  wallet => wallet.get('nodesStatus')
+export const getNodesStatus = createSelector(getWallet, wallet =>
+  wallet.get('nodesStatus')
 );
 
 export const getTotalBalance = createSelector(getWallet, wallet => {
@@ -31,3 +30,10 @@ export const getIdentities = createSelector(getWallet, wallet =>
   wallet.get('identities')
 );
 
+export const getIsLedger = createSelector(getWallet, wallet =>
+  wallet.get('isLedger')
+);
+
+export const getIsLedgerConnecting = createSelector(getWallet, wallet =>
+  wallet.get('isLedgerConnecting')
+);

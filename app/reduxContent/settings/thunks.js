@@ -13,8 +13,8 @@ import { getSettings } from './selectors';
 export function hideDelegateTooltip(boolean) {
   return (dispatch, state) => {
     dispatch(_hideDelegateTooltip(boolean));
-    setWalletSettings(getSettings(state()).toJS())
-  }
+    setWalletSettings(getSettings(state()).toJS());
+  };
 }
 
 export function setSelected(name, target) {

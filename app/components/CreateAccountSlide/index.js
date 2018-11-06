@@ -175,30 +175,36 @@ class CreateAccountSlide extends Component<Props> {
 
   importAddress = () => {
     const { seed } = this.state;
-    this.setState({ isDisabled: true })
-    setTimeout(() => this.props.importAddress(GENERATE_MNEMONIC, seed), 1)
+    this.setState({ isDisabled: true });
+    setTimeout(() => this.props.importAddress(GENERATE_MNEMONIC, seed), 1);
   };
 
-  onEnterPress = (event) => {
+  onEnterPress = event => {
     const { currentSlide } = this.state;
-    if(event.key === 'Enter' && currentSlide === 0) {
-      this.nextAccountSlide(1)
+    if (event.key === 'Enter' && currentSlide === 0) {
+      this.nextAccountSlide(1);
     }
-    if(event.key === 'Enter' && currentSlide === 2) {
-      this.importAddress()
+    if (event.key === 'Enter' && currentSlide === 2) {
+      this.importAddress();
     }
-  }
+  };
 
   createAccount = () => {
     const { t } = this.props;
     const { isDisabled } = this.state;
     return (
       <Fragment>
-        <div className="title">{t('components.createAccountSlide.seed_backup')}</div>
+        <div className="title">
+          {t('components.createAccountSlide.seed_backup')}
+        </div>
         <div className="description">
           {t('components.createAccountSlide.descriptions.description2')}
         </div>
-        <ActionButton buttonTheme="primary" disabled={isDisabled} onClick={this.importAddress}>
+        <ActionButton
+          buttonTheme="primary"
+          disabled={isDisabled}
+          onClick={this.importAddress}
+        >
           {t('components.createAccountSlide.create_account')}
         </ActionButton>
       </Fragment>
@@ -241,4 +247,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(CreateAccountSlide);
+export default compose(
+  wrapComponent,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(CreateAccountSlide);
