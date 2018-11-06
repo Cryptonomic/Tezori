@@ -144,6 +144,10 @@
       "new_address_label": "Change Delegate to New Address",
       "delegate_warning": "Your delegation change will not show up until the change is confirmed on the blockchain."
     },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Confirm Changing Delegate",
+      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+    },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
       "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",

@@ -9,6 +9,8 @@ import TezosIcon from './../TezosIcon/';
 import DelegateConfirmationModal from '../DelegateConfirmationModal';
 import TezosAddress from '../TezosAddress';
 import { wrapComponent } from '../../utils/i18n';
+import DelegateLedgerConfirmationModal from '../DelegateLedgerConfirmationModal';
+import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 import {
   validateAddress,
@@ -21,6 +23,7 @@ type Props = {
   selectedParentHash?: string,
   address?: string,
   delegate?: () => {},
+  isLedger: boolean,
   t: () => {}
 };
 
@@ -132,7 +135,8 @@ const initialState = {
     medium: 200,
     high: 400
   },
-  isDelegateIssue: true
+  isDelegateIssue: true,
+  isOpenLedgerConfirm: false
 };
 
 class Delegate extends Component<Props> {
@@ -144,6 +148,9 @@ class Delegate extends Component<Props> {
     const averageFees = await fetchDelegationAverageFees();
     this.setState({ averageFees, fee: averageFees.low });
   }
+
+  onOpenLedgerConfirmation = status =>
+    this.setState({ isOpenLedgerConfirm: status });
 
   openConfirmation = () => this.setState({ open: true });
   closeConfirmation = () => {
@@ -163,20 +170,30 @@ class Delegate extends Component<Props> {
 
   onDelegate = async () => {
     const { password, fee, tempAddress } = this.state;
-    const { delegate, selectedAccountHash, selectedParentHash } = this.props;
+    const {
+      delegate,
+      selectedAccountHash,
+      selectedParentHash,
+      isLedger
+    } = this.props;
     this.setIsLoading(true);
-    if (
-      await delegate(
-        tempAddress,
-        Math.floor(fee),
-        password,
-        selectedAccountHash,
-        selectedParentHash
-      )
-    ) {
+    if (isLedger) {
+      this.onOpenLedgerConfirmation(true);
+    }
+    const isDelegated = await delegate(
+      tempAddress,
+      Math.floor(fee),
+      password,
+      selectedAccountHash,
+      selectedParentHash
+    ).catch(err => {
+      console.error(err);
+      return false;
+    });
+    this.onOpenLedgerConfirmation(false);
+    this.setIsLoading(false);
+    if (isDelegated) {
       this.closeConfirmation();
-    } else {
-      this.setIsLoading(false);
     }
   };
 
@@ -207,7 +224,7 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address, t } = this.props;
+    const { address, isLedger, t } = this.props;
     const {
       isLoading,
       open,
@@ -216,7 +233,8 @@ class Delegate extends Component<Props> {
       averageFees,
       tempAddress,
       isShowedPwd,
-      isDelegateIssue
+      isDelegateIssue,
+      isOpenLedgerConfirm
     } = this.state;
     const delegationTips = [
       t('components.addressBlock.descriptions.description1'),
@@ -278,14 +296,32 @@ class Delegate extends Component<Props> {
           onDelegate={this.onDelegate}
           onCloseClick={this.closeConfirmation}
           isLoading={isLoading}
+          isLedger={isLedger}
           isShowedPwd={isShowedPwd}
           onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           isDelegateIssue={isDelegateIssue}
           onDelegateIssue={status => this.setState({ isDelegateIssue: status })}
         />
+        {isLedger &&
+          isOpenLedgerConfirm && (
+            <DelegateLedgerConfirmationModal
+              fee={fee}
+              address={tempAddress}
+              source={address}
+              open={isOpenLedgerConfirm}
+              onCloseClick={() => this.onOpenLedgerConfirmation(false)}
+              isLoading={isLoading}
+            />
+          )}
       </Container>
     );
   }
+}
+
+function mapStateToProps(state) {
+  return {
+    isLedger: getIsLedger(state)
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -302,7 +338,7 @@ function mapDispatchToProps(dispatch) {
 export default compose(
   wrapComponent,
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )
 )(Delegate);
