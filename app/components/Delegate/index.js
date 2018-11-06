@@ -224,7 +224,7 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address, isLedger, t } = this.props;
+    const { address, isLedger, selectedAccountHash, t } = this.props;
     const {
       isLoading,
       open,
@@ -307,7 +307,7 @@ class Delegate extends Component<Props> {
             <DelegateLedgerConfirmationModal
               fee={fee}
               address={tempAddress}
-              source={address}
+              source={selectedAccountHash}
               open={isOpenLedgerConfirm}
               onCloseClick={() => this.onOpenLedgerConfirmation(false)}
               isLoading={isLoading}
