@@ -1,6 +1,6 @@
 {
-  "name": "Galleon",
-  "version": "0.3.0",
+  "name": "Tezori",
+  "version": "0.4.0",
   "network": "zeronet",
   "blockExplorerHost": "http://zeronet.tzscan.io/",
   "logo": "tezosLogo.svg",
