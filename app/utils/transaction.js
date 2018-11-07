@@ -3,7 +3,7 @@ import {
   TezosNode,
   TezosOperations,
   TezosWallet
-} from 'conseiljs-staging';
+} from 'conseiljs';
 
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
@@ -21,11 +21,11 @@ export function createTransaction(transaction) {
   if (typeof newTransaction.fee === 'string') {
     newTransaction.fee = Number(newTransaction.fee);
   }
-  
+
   if (typeof newTransaction.amount === 'string') {
     newTransaction.amount = Number(newTransaction.amount);
   }
-  
+
   return {
     amount: null,
     balance: null,
@@ -86,6 +86,6 @@ export async function getSyncTransactions(accountHash, nodes, stateTransactions)
         status: status.READY
       })
     );
-  
+
   return syncTransactionsWithState(newTransactions, stateTransactions);
 }
