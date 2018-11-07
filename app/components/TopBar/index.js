@@ -48,7 +48,6 @@ class TopBar extends Component<Props> {
           <Text>{walletName}</Text>
         </InfoContainer>
         <SettingsController onlySettings={onlyLogo} />
-        
       </Container>
     );
   }
@@ -64,4 +63,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(withRouter, connect(mapStateToProps, null))(TopBar);
+export default compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    null
+  )
+)(TopBar);

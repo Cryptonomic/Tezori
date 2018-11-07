@@ -37,7 +37,8 @@
       "source": "Source",
       "destination": "Destination",
       "manager": "Manager",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "ledger_name": "Ledger Nano S"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
