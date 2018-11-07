@@ -17,13 +17,18 @@ import LanguageSelector from '../../components/LanguageSelector/';
 import { wrapComponent } from '../../utils/i18n';
 
 import { syncWallet } from '../../reduxContent/wallet/thunks';
-import { setSelected, removeNode } from '../../reduxContent/settings/thunks';
+import {
+  setSelected,
+  removeNode,
+  setLocale
+} from '../../reduxContent/settings/thunks';
 
 import {
   getConseilSelectedNode,
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes,
+  getLocale
 } from '../../reduxContent/settings/selectors';
 
 type Props = {
@@ -35,7 +40,9 @@ type Props = {
   setSelected: () => {},
   goBack: () => {},
   theme: object,
-  t: () => {}
+  t: () => {},
+  locale: string,
+  setLocale: () => {}
 };
 
 const Row = styled.div`
@@ -54,27 +61,34 @@ const BackToWallet = styled.div`
   align-items: center;
   color: #4486f0;
   cursor: pointer;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
 `;
 
 const Content = styled.div`
   background-color: ${({ theme: { colors } }) => colors.white};
-  padding: ${ms(3)} ${ms(3)};
-  margin: ${ms(3)} auto 0 auto;
+  padding: 50px 47px 63px 55px;
+  margin-top: 35px;
+`;
+
+const Content6 = styled(Content)`
+  margin-top: 6px;
+`;
+
+const ContentTitle = styled.div`
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 34px;
+  color: ${({ theme: { colors } }) => colors.primary};
+  letter-spacing: 1px;
+  margin-bottom: 32px;
 `;
 
 const RowForParts = styled(Row)`
-  margin: 0 -${ms(1)};
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Part = styled.div`
-  flex-grow: 1;
-  flex-shrink: 0;
-  width: 100%;
-  padding: 0 ${ms(1)};
-  margin-top: ${ms(2)};
+  width: 48%;
 `;
 
 const SelectOption = styled(Row)`
@@ -117,13 +131,20 @@ const NodeUrlSpan = styled(NodeUrl)`
 const ItemWrapper = styled(MenuItem)`
   &&& {
     &[class*='selected'] {
-      color: ${({ theme: { colors } }) => colors.primary };
+      color: ${({ theme: { colors } }) => colors.primary};
     }
     width: 100%;
     font-size: 16px;
     font-weight: 300;
-    background-color: ${({ type, theme: { colors } }) => type==="addmore"?colors.gray1: colors.white };
+    background-color: ${({ type, theme: { colors } }) =>
+      type === 'addmore' ? colors.gray1 : colors.white};
   }
+`;
+
+const SelectRenderWrapper = styled.div`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 class SettingsPage extends Component<Props> {
@@ -137,16 +158,19 @@ class SettingsPage extends Component<Props> {
   selectedItem = {
     value: null,
     url: null
-  }
+  };
 
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
+
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
+
   openAddNodeModal = type => this.setState({ type, isModalOpen: true });
+
   closeAddNodeModal = () => this.setState({ type: '', isModalOpen: false });
 
   getNodeUrl = (nodes, selectedNode) => {
-    let url= '';
-    const findedNode = nodes.find((node) => {
+    let url = '';
+    const findedNode = nodes.find(node => {
       const name = node.get('name');
       return name === selectedNode;
     });
@@ -154,7 +178,7 @@ class SettingsPage extends Component<Props> {
       url = findedNode.get('url');
     }
     return url;
-  }
+  };
 
   renderNodes(nodes, selectedNode) {
     const { theme } = this.props;
@@ -182,11 +206,7 @@ class SettingsPage extends Component<Props> {
         </SelectOption>
       );
       return (
-        <ItemWrapper
-          key={index}
-          url={url}
-          value={name}
-        >
+        <ItemWrapper key={index} url={url} value={name}>
           {option}
         </ItemWrapper>
       );
@@ -201,7 +221,9 @@ class SettingsPage extends Component<Props> {
       conseilNodes,
       tezosSelectedNode,
       tezosNodes,
-      t,
+      locale,
+      setLocale,
+      t
     } = this.props;
 
     const { type, isModalOpen } = this.state;
@@ -223,19 +245,31 @@ class SettingsPage extends Component<Props> {
               marginLeft: '-9px'
             }}
           />
-          <span>{t("containers.homeSettings.back_to_wallet")}</span>
+          <span>{t('containers.homeSettings.back_to_wallet')}</span>
         </BackToWallet>
-        <H2>{t("containers.homeSettings.wallet_settings")}</H2>
-        <Content>
+        <H2>{t('containers.homeSettings.wallet_settings')}</H2>
+
+        <Content6>
+          <ContentTitle>
+            {t('containers.homeSettings.select_display_language')}
+          </ContentTitle>
           <RowForParts>
             <Part>
-              <LanguageSelector />
+              <LanguageSelector locale={locale} setLocale={setLocale} />
             </Part>
+          </RowForParts>
+        </Content6>
+
+        <Content>
+          <ContentTitle>
+            {t('containers.homeSettings.choose_different_node')}
+          </ContentTitle>
+          <RowForParts>
             <Part>
               <CustomSelect
                 label="Conseil Nodes"
                 value={conseilSelectedNode}
-                onChange={(event) => {
+                onChange={event => {
                   const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleConseilChange(newValue);
@@ -243,18 +277,18 @@ class SettingsPage extends Component<Props> {
                   }
                   this.openAddNodeModal(CONSEIL);
                 }}
-                renderValue={(value) => {
+                renderValue={value => {
                   const url = this.getNodeUrl(conseilNodes, value);
                   return (
-                    <div>
+                    <SelectRenderWrapper>
                       <span>{value} </span>
                       <NodeUrlSpan>({url})</NodeUrlSpan>
-                    </div>
+                    </SelectRenderWrapper>
                   );
                 }}
               >
                 {this.renderNodes(conseilNodes, conseilSelectedNode)}
-                <ItemWrapper value='add-more' type="addmore">
+                <ItemWrapper value="add-more" type="addmore">
                   <AddCircle
                     style={{
                       fill: '#7B91C0',
@@ -263,7 +297,7 @@ class SettingsPage extends Component<Props> {
                       marginRight: '10px'
                     }}
                   />
-                  {t("containers.homeSettings.add_custom_node")}
+                  {t('containers.homeSettings.add_custom_node')}
                 </ItemWrapper>
               </CustomSelect>
             </Part>
@@ -271,7 +305,7 @@ class SettingsPage extends Component<Props> {
               <CustomSelect
                 label="Tezos Nodes"
                 value={tezosSelectedNode}
-                onChange={(event) => {
+                onChange={event => {
                   const newValue = event.target.value;
                   if (newValue !== 'add-more') {
                     this.handleTezosChange(newValue);
@@ -279,13 +313,13 @@ class SettingsPage extends Component<Props> {
                   }
                   this.openAddNodeModal(TEZOS);
                 }}
-                renderValue={(value) => {
+                renderValue={value => {
                   const url = this.getNodeUrl(tezosNodes, value);
                   return (
-                    <div>
+                    <SelectRenderWrapper>
                       <span>{value} </span>
                       <NodeUrlSpan>({url})</NodeUrlSpan>
-                    </div>
+                    </SelectRenderWrapper>
                   );
                 }}
               >
@@ -299,7 +333,7 @@ class SettingsPage extends Component<Props> {
                       marginRight: '10px'
                     }}
                   />
-                  {t("containers.homeSettings.add_custom_node")}
+                  {t('containers.homeSettings.add_custom_node')}
                 </ItemWrapper>
               </CustomSelect>
             </Part>
@@ -321,7 +355,8 @@ function mapStateToProps(state) {
     conseilSelectedNode: getConseilSelectedNode(state),
     conseilNodes: getConseilNodes(state),
     tezosSelectedNode: getTezosSelectedNode(state),
-    tezosNodes: getTezosNodes(state)
+    tezosNodes: getTezosNodes(state),
+    locale: getLocale(state)
   };
 }
 
@@ -331,12 +366,18 @@ function mapDispatchToProps(dispatch) {
       syncWallet,
       setSelected,
       removeNode,
+      setLocale,
       goBack: () => dispatch => dispatch(goBackToWallet())
     },
     dispatch
   );
 }
 
-export default compose(wrapComponent, withTheme, connect(mapStateToProps, mapDispatchToProps))(
-  SettingsPage
-);
+export default compose(
+  wrapComponent,
+  withTheme,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(SettingsPage);

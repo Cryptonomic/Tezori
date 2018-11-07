@@ -17,25 +17,27 @@ import PasswordInput from '../PasswordInput/';
 import InputAddress from '../InputAddress/';
 import TezosAmount from '../TezosAmount/';
 
+import AddDelegateLedgerModal from '../AddDelegateLedgerModal';
+
 import {
   createNewAccount,
   fetchOriginationAverageFees
 } from '../../reduxContent/createDelegate/thunks';
 
-import {
-  setIsLoading
-} from '../../reduxContent/wallet/actions';
+import { setIsLoading } from '../../reduxContent/wallet/actions';
+
+import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 type Props = {
   isLoading: boolean,
-  setIsLoading: () => {},
   selectedParentHash: string,
   createNewAccount: () => {},
   fetchOriginationAverageFees: () => {},
   open: boolean,
   onCloseClick: () => {},
   t: () => {},
-  managerBalance: number
+  managerBalance: number,
+  isLedger: boolean
 };
 
 const InputAddressContainer = styled.div`
@@ -67,12 +69,14 @@ const PasswordButtonContainer = styled.div`
   margin-top: 42px;
   padding: 0 76px 15px 76px;
   background-color: ${({ theme: { colors } }) => colors.gray1};
+  height: 100px;
 `;
 
 const DelegateButton = styled(Button)`
   width: 194px;
   height: 50px;
   margin-bottom: 10px;
+  margin-left: auto;
 `;
 
 const MainContainer = styled.div`
@@ -111,7 +115,6 @@ const GasInputContainer = styled.div`
   position: relative;
 `;
 
-
 const TezosIconInput = styled(TezosIcon)`
   position: absolute;
   left: 70px;
@@ -133,8 +136,7 @@ const TotalAmount = styled(TezosAmount)`
   margin-bottom: 22px;
 `;
 
-const BalanceAmount = styled(TezosAmount)`
-`;
+const BalanceAmount = styled(TezosAmount)``;
 
 const WarningIcon = styled(TezosIcon)`
   padding: 0 ${ms(-9)} 0 0;
@@ -190,7 +192,8 @@ const defaultState = {
     high: 400
   },
   isDelegateIssue: true,
-  gas: 257000
+  gas: 257000,
+  isOpenLedgerConfirm: false
 };
 
 class AddDelegateModal extends Component<Props> {
@@ -203,7 +206,12 @@ class AddDelegateModal extends Component<Props> {
       const averageFees = await fetchOriginationAverageFees();
       const fee = averageFees.low;
       const total = fee + this.state.gas;
-      this.setState({ averageFees, fee, total, balance: managerBalance - total});// eslint-disable-line react/no-did-update-set-state
+      this.setState({
+        averageFees,
+        fee,
+        total,
+        balance: managerBalance - total
+      }); // eslint-disable-line react/no-did-update-set-state
     }
   }
 
@@ -212,7 +220,7 @@ class AddDelegateModal extends Component<Props> {
     const { fee, gas } = this.state;
     const max = managerBalance - fee - gas - 1;
     if (max > 0) {
-      const amount = (max/utez).toFixed(6);
+      const amount = (max / utez).toFixed(6);
       const total = managerBalance - 1;
       const balance = 1;
       this.setState({ amount, total, balance });
@@ -222,19 +230,20 @@ class AddDelegateModal extends Component<Props> {
       const balance = managerBalance - total;
       this.setState({ amount, total, balance });
     }
-  }
+  };
 
-  changeDelegate = (delegate) => this.setState({ delegate });
-  changeAmount = (amount) => {
+  changeDelegate = delegate => this.setState({ delegate });
+  changeAmount = amount => {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
     const newAmount = amount || '0';
-    const numAmount = parseFloat(newAmount) * utez;
+    const commaReplacedAmount = newAmount.replace(',', '.');
+    const numAmount = parseFloat(commaReplacedAmount) * utez;
     const total = numAmount + fee + gas;
     const balance = managerBalance - total;
     this.setState({ amount, total, balance });
-  }
-  changeFee = (fee) => {
+  };
+  changeFee = fee => {
     const { managerBalance } = this.props;
     const { gas, amount } = this.state;
     const newAmount = amount || '0';
@@ -242,32 +251,55 @@ class AddDelegateModal extends Component<Props> {
     const total = numAmount + fee + gas;
     const balance = managerBalance - total;
     this.setState({ fee, total, balance });
-  }
-  updatePassPhrase = (passPhrase) => this.setState({ passPhrase });
+  };
+  updatePassPhrase = passPhrase => this.setState({ passPhrase });
 
   createAccount = async () => {
-    const { createNewAccount, selectedParentHash, setIsLoading } = this.props;
+    const {
+      createNewAccount,
+      selectedParentHash,
+      setIsLoading,
+      isLedger
+    } = this.props;
     const { delegate, amount, fee, passPhrase } = this.state;
     setIsLoading(true);
-    if (
-      await createNewAccount(
-        delegate,
-        amount,
-        Math.floor(fee),
-        passPhrase,
-        selectedParentHash
-      )
-    ) {
+    if (isLedger) {
+      this.openLedgerConfirmation();
+    }
+    // if (
+    //   await createNewAccount(
+    //     delegate,
+    //     amount,
+    //     Math.floor(fee),
+    //     passPhrase,
+    //     selectedParentHash
+    //   )
+    // ) {
+    //   this.onCloseClick();
+    // }
+
+    const isCreated = await createNewAccount(
+      delegate,
+      amount,
+      Math.floor(fee),
+      passPhrase,
+      selectedParentHash
+    ).catch(err => {
+      console.error(err);
+      return false;
+    });
+    this.setState({ isOpenLedgerConfirm: false });
+    setIsLoading(false);
+    if (isCreated) {
       this.onCloseClick();
     }
-    setIsLoading(false);
   };
 
-  renderGasToolTip = (gas) => {
+  renderGasToolTip = gas => {
     const { t } = this.props;
     return (
       <TooltipContainer>
-        {t('components.addDelegateModal.gas_tool_tip', {gas})}
+        {t('components.addDelegateModal.gas_tool_tip', { gas })}
       </TooltipContainer>
     );
   };
@@ -277,9 +309,9 @@ class AddDelegateModal extends Component<Props> {
     const { managerBalance, onCloseClick } = this.props;
     const fee = averageFees.low;
     const total = fee + gas;
-    this.setState({...defaultState, total, balance: managerBalance - total});
+    this.setState({ ...defaultState, total, balance: managerBalance - total });
     onCloseClick();
-  }
+  };
 
   getBalanceState = (balance, amount, t) => {
     if (balance < 0) {
@@ -289,7 +321,7 @@ class AddDelegateModal extends Component<Props> {
         balanceColor: 'error1'
       };
     }
-    if (balance === 0 ) {
+    if (balance === 0) {
       return {
         isIssue: true,
         warningMessage: t('components.addDelegateModal.warning2'),
@@ -309,10 +341,19 @@ class AddDelegateModal extends Component<Props> {
       warningMessage: '',
       balanceColor: 'gray8'
     };
-  }
+  };
+
+  openLedgerConfirmation = () => this.setState({ isOpenLedgerConfirm: true });
+  closeLedgerConfirmation = () => this.setState({ isOpenLedgerConfirm: false });
+
+  onEnterPress = (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      this.createAccount();
+    }
+  };
 
   render() {
-    const { isLoading, open, t } = this.props;
+    const { isLoading, open, t, isLedger, selectedParentHash } = this.props;
     const {
       averageFees,
       delegate,
@@ -323,16 +364,26 @@ class AddDelegateModal extends Component<Props> {
       gas,
       total,
       balance,
-      isDelegateIssue
+      isDelegateIssue,
+      isOpenLedgerConfirm
     } = this.state;
-    const isDisabled = isLoading || !delegate || !amount || !passPhrase || balance<1 || isDelegateIssue;
-    const {
-      isIssue,
-      warningMessage,
-      balanceColor
-    } = this.getBalanceState(balance, amount, t);
+
+    console.log(selectedParentHash, isOpenLedgerConfirm);
+    const isDisabled =
+      isLoading ||
+      !delegate ||
+      !amount ||
+      (!passPhrase && !isLedger) ||
+      balance < 1 ||
+      isDelegateIssue;
+    const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
+      balance,
+      amount,
+      t
+    );
     return (
       <Modal
+        onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
         title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}
@@ -343,7 +394,7 @@ class AddDelegateModal extends Component<Props> {
             addressType="delegate"
             tooltip
             changeDelegate={this.changeDelegate}
-            onIssue={(status)=> this.setState({isDelegateIssue: status})}
+            onIssue={status => this.setState({ isDelegateIssue: status })}
           />
         </InputAddressContainer>
         <MainContainer>
@@ -355,7 +406,9 @@ class AddDelegateModal extends Component<Props> {
                 amount={amount}
                 handleAmountChange={this.changeAmount}
               />
-              <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
+              <UseMax onClick={this.onUseMax}>
+                {t('general.verbs.use_max')}
+              </UseMax>
             </AmountSendContainer>
             <FeeContainer>
               <Fees
@@ -375,7 +428,7 @@ class AddDelegateModal extends Component<Props> {
               <TezosIconInput color="gray5" iconName="tezos" />
               <Tooltip
                 position="bottom"
-                content={this.renderGasToolTip(gas/utez)}
+                content={this.renderGasToolTip(gas / utez)}
                 align={{
                   offset: [70, 0]
                 }}
@@ -383,14 +436,8 @@ class AddDelegateModal extends Component<Props> {
                   left: '71%'
                 }}
               >
-                <TextfieldTooltip
-                  buttonTheme="plain"
-                >
-                  <HelpIcon
-                    iconName="help"
-                    size={ms(0)}
-                    color='secondary'
-                  />
+                <TextfieldTooltip buttonTheme="plain">
+                  <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                 </TextfieldTooltip>
               </Tooltip>
             </GasInputContainer>
@@ -400,42 +447,45 @@ class AddDelegateModal extends Component<Props> {
             <BalanceContent>
               <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
               <TotalAmount
-                weight='500'
-                color={amount?'gray3':'gray8'}
+                weight="500"
+                color={amount ? 'gray3' : 'gray8'}
                 size={ms(0.65)}
                 amount={total}
               />
-              <BalanceTitle>{t('general.nouns.remaining_balance')}</BalanceTitle>
+              <BalanceTitle>
+                {t('general.nouns.remaining_balance')}
+              </BalanceTitle>
               <BalanceAmount
-                weight='500'
+                weight="500"
                 color={balanceColor}
                 size={ms(-0.75)}
                 amount={balance}
               />
-              {isIssue &&
+              {isIssue && (
                 <ErrorContainer>
                   <WarningIcon
                     iconName="warning"
                     size={ms(-1)}
-                    color='error1'
+                    color="error1"
                   />
                   {warningMessage}
                 </ErrorContainer>
-              }
-
+              )}
             </BalanceContent>
           </BalanceContainer>
         </MainContainer>
 
         <PasswordButtonContainer>
-          <PasswordInput
-            label={t('general.nouns.wallet_password')}
-            isShowed={isShowedPwd}
-            password={passPhrase}
-            changFunc={this.updatePassPhrase}
-            containerStyle={{width: '60%', marginTop: '10px'}}
-            onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
-          />
+          {!isLedger && (
+            <PasswordInput
+              label={t('general.nouns.wallet_password')}
+              isShowed={isShowedPwd}
+              password={passPhrase}
+              changFunc={this.updatePassPhrase}
+              containerStyle={{ width: '60%', marginTop: '10px' }}
+              onShow={() => this.setState({ isShowedPwd: !isShowedPwd })}
+            />
+          )}
           <DelegateButton
             buttonTheme="primary"
             disabled={isDisabled}
@@ -445,14 +495,28 @@ class AddDelegateModal extends Component<Props> {
           </DelegateButton>
         </PasswordButtonContainer>
         {isLoading && <Loader />}
+        {isLedger &&
+          isOpenLedgerConfirm && (
+            <AddDelegateLedgerModal
+              amount={amount}
+              fee={fee}
+              address={delegate}
+              source={selectedParentHash}
+              manager={selectedParentHash}
+              open={isOpenLedgerConfirm}
+              onCloseClick={this.closeLedgerConfirmation}
+              isLoading={isLoading}
+            />
+          )}
       </Modal>
     );
   }
 }
 
-function mapStateToProps({ wallet }) {
+function mapStateToProps(state) {
   return {
-    isLoading: wallet.get('isLoading')
+    isLoading: state.wallet.get('isLoading'),
+    isLedger: getIsLedger(state)
   };
 }
 
@@ -467,4 +531,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddDelegateModal);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddDelegateModal);

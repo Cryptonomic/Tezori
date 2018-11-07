@@ -2,7 +2,6 @@ import React from 'react';
 import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
-import { ms } from '../../styles/helpers';
 import { wrapComponent } from '../../utils/i18n';
 
 const Back = styled.div`
@@ -10,7 +9,6 @@ const Back = styled.div`
   align-items: center;
   color: ${({ theme: { colors } }) => colors.blue3};
   cursor: pointer;
-  margin: 0 0 ${ms(2)} 0;
 `;
 
 type Props = {
@@ -25,10 +23,7 @@ const BackButton = (props: Props) => {
       <BackCaret
         style={{
           fill: '#4486f0',
-          height: '28px',
-          width: '28px',
-          marginRight: '5px',
-          marginLeft: '-9px'
+          marginRight: '8px'
         }}
       />
       <span>{t("general.back")}</span>

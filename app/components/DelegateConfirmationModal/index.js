@@ -37,11 +37,13 @@ const BottomContainer = styled.div`
   margin-top: 42px;
   padding: 0 76px 15px 76px;
   background-color: ${({ theme: { colors } }) => colors.gray1};
+  height: 100px;
 `;
 const DelegateButton = styled(Button)`
   width: 194px;
   height: 50px;
   margin-bottom: 10px;
+  margin-left: auto;
   padding: 0;
 `;
 
@@ -64,15 +66,16 @@ const InfoText = styled.div`
   line-height: 21px;
 `;
 
-const FeesContainer =styled.div`
+const FeesContainer = styled.div`
   margin-top: 19px;
 `;
 
-const InputAddressContainer =styled.div`
+const InputAddressContainer = styled.div`
   margin-top: 19px;
 `;
 
 type Props = {
+  onEnterPress: () => {},
   open?: boolean,
   address: string,
   newAddress?: string,
@@ -89,11 +92,13 @@ type Props = {
   onShowPwd: () => {},
   isDelegateIssue: boolean,
   onDelegateIssue: () => {},
+  isLedger: boolean,
   t: () => {}
 };
 
 const DelegateConfirmationModal = (props: Props) => {
   const {
+    onEnterPress,
     open,
     address,
     newAddress,
@@ -110,19 +115,24 @@ const DelegateConfirmationModal = (props: Props) => {
     onShowPwd,
     isDelegateIssue,
     onDelegateIssue,
+    isLedger,
     t
   } = props;
-  const isDisabled = isLoading || !newAddress || !password || isDelegateIssue;
+  const isDisabled =
+    isLoading || !newAddress || (!password && !isLedger) || isDelegateIssue;
 
   return (
     <Modal
-      title={t("components.delegate.change_delegate")}
+      title={t('components.delegate.change_delegate')}
       open={open}
       onClose={onCloseClick}
-      style={{width: '651px'}}
+      style={{ width: '651px' }}
+      onKeyDown={onEnterPress}
     >
       <ModalContainer>
-        <DelegateTitle>{t('components.delegate.current_delegate')}</DelegateTitle>
+        <DelegateTitle>
+          {t('components.delegate.current_delegate')}
+        </DelegateTitle>
         <AddressContainer>
           <TezosAddress
             address={address}
@@ -133,7 +143,9 @@ const DelegateConfirmationModal = (props: Props) => {
         </AddressContainer>
         <InputAddressContainer>
           <InputAddress
-            labelText={t('components.delegateConfirmationModal.new_address_label')}
+            labelText={t(
+              'components.delegateConfirmationModal.new_address_label'
+            )}
             addressType="delegate"
             tooltip={false}
             changeDelegate={onAddressChange}
@@ -157,14 +169,16 @@ const DelegateConfirmationModal = (props: Props) => {
         </WarningContainer>
       </ModalContainer>
       <BottomContainer>
-        <PasswordInput
-          label={t("general.nouns.wallet_password")}
-          isShowed={isShowedPwd}
-          password={password}
-          changFunc={handlePasswordChange}
-          onShow={onShowPwd}
-          containerStyle={{width: '60%', marginTop: '10px'}}
-        />
+        {!isLedger && (
+          <PasswordInput
+            label={t('general.nouns.wallet_password')}
+            isShowed={isShowedPwd}
+            password={password}
+            changFunc={handlePasswordChange}
+            onShow={onShowPwd}
+            containerStyle={{ width: '60%', marginTop: '10px' }}
+          />
+        )}
         <DelegateButton
           buttonTheme="primary"
           disabled={isDisabled}

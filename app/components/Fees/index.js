@@ -31,18 +31,18 @@ const StyledSaveButton = styled(Button)`
 
 const ItemWrapper = styled(MenuItem)`
   &&& {
-    &[class*='selected'] {    
-      color: ${({ theme: { colors } }) => colors.primary };
+    &[class*='selected'] {
+      color: ${({ theme: { colors } }) => colors.primary};
     }
     width: 100%;
     font-size: 16px;
     font-weight: 300;
-  }  
+  }
 `;
 
 const ModalContent = styled.div`
   padding: 35px 76px 63px 76px;
-`
+`;
 
 class Fee extends Component<Props> {
   props: Props;
@@ -52,33 +52,27 @@ class Fee extends Component<Props> {
   };
 
   closeConfirmation = () => this.setState({ open: false });
-  handleCustomChange = (custom) => this.setState({ custom });
+  handleCustomChange = custom => this.setState({ custom });
   handleSetCustom = () => {
     const { custom } = this.state;
     const { onChange } = this.props;
-    onChange(tezToUtez(custom.replace(/,/g,'.')));
+    onChange(tezToUtez(custom.replace(/,/g, '.')));
     this.closeConfirmation();
   };
 
   onFeeChange = event => {
     const fee = event.target.value;
-    const {onChange} = this.props;
+    const { onChange } = this.props;
     if (fee !== 'custom') {
       onChange(fee);
     } else {
       this.setState({ open: true });
     }
-  }
+  };
 
   render() {
     const { open, custom } = this.state;
-    const {
-      low,
-      medium,
-      high,
-      fee,
-      t
-    } = this.props;
+    const { low, medium, high, fee, t } = this.props;
     const customFeeLabel = t('components.fees.custom_fee');
 
     return (
@@ -101,8 +95,9 @@ class Fee extends Component<Props> {
             <TezosIcon color="black" iconName="tezos" />
           </ItemWrapper>
           {custom ? (
-            <ItemWrapper value={tezToUtez(custom.replace(/,/g,'.'))}>
-              {customFeeLabel}: {formatAmount(tezToUtez(custom.replace(/,/g,'.')))}{' '}
+            <ItemWrapper value={tezToUtez(custom.replace(/,/g, '.'))}>
+              {customFeeLabel}:{' '}
+              {formatAmount(tezToUtez(custom.replace(/,/g, '.')))}{' '}
               <TezosIcon color="black" iconName="tezos" />
             </ItemWrapper>
           ) : null}
@@ -116,7 +111,12 @@ class Fee extends Component<Props> {
           onClose={this.closeConfirmation}
         >
           <ModalContent>
-            <TezosNumericInput decimalSeparator={t('general.decimal_separator')} labelText={customFeeLabel} amount={this.state.custom}  handleAmountChange={this.handleCustomChange} />
+            <TezosNumericInput
+              decimalSeparator={t('general.decimal_separator')}
+              labelText={customFeeLabel}
+              amount={this.state.custom}
+              handleAmountChange={this.handleCustomChange}
+            />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
@@ -130,4 +130,7 @@ class Fee extends Component<Props> {
   }
 }
 
-export default compose(wrapComponent, connect())(Fee);
+export default compose(
+  wrapComponent,
+  connect()
+)(Fee);

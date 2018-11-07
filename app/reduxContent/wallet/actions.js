@@ -9,7 +9,10 @@ import {
   ADD_NEW_IDENTITY,
   UPDATE_IDENTITY,
   UPDATE_FETCHED_TIME,
-  LOGOUT
+  LOGOUT,
+  SET_LEDGER,
+  SET_IS_LEDGER_CONNECTIONG,
+  WALLET_IS_SYNCING
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 
@@ -30,3 +33,12 @@ export const addNewIdentity = actionCreator(ADD_NEW_IDENTITY, 'identity');
 export const updateIdentity = actionCreator(UPDATE_IDENTITY, 'identity');
 export const updateFetchedTime = actionCreator(UPDATE_FETCHED_TIME, 'time');
 export const logout = actionCreator(LOGOUT);
+export const setLedger = actionCreator(SET_LEDGER, 'isLedger');
+export const setIsLedgerConnecting = actionCreator(
+  SET_IS_LEDGER_CONNECTIONG,
+  'isLedgerConnecting'
+);
+export const setWalletIsSyncing = actionCreator(
+  WALLET_IS_SYNCING,
+  'isWalletSyncing'
+);

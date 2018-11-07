@@ -28,7 +28,8 @@ type Props = {
   parentIdentity?: object,
   delegatedAddress?: string,
   time?: Date,
-  t: () => {}
+  t: () => {},
+  isWalletSyncing?: boolean
 };
 
 const Container = styled.header`
@@ -121,18 +122,30 @@ function BalanceBanner(props: Props) {
     isManagerAddress,
     time,
     delegatedAddress,
-    t
+    t,
+    isWalletSyncing
   } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel = !isManagerAddress && smartAddressIndex ? t('components.address.delegated_address', {index: smartAddressIndex}) : t('components.address.manager_address');
+  const addressLabel =
+    !isManagerAddress && smartAddressIndex
+      ? t('components.address.delegated_address', { index: smartAddressIndex })
+      : t('components.address.manager_address');
 
-  const breadcrumbs = t('components.balanceBanner.breadcrumbs', {parentIndex, addressLabel});
+  const breadcrumbs = t('components.balanceBanner.breadcrumbs', {
+    parentIndex,
+    addressLabel
+  });
 
   return (
     <Container>
       <TopRow isReady={isReady}>
         <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
-        <Update onClick={onRefreshClick} time={time} isReady={isReady} />
+        <Update
+          onClick={onRefreshClick}
+          time={time}
+          isReady={isReady}
+          isWalletSyncing={isWalletSyncing}
+        />
       </TopRow>
       <BottomRow isReady={isReady}>
         <AddressTitle>
@@ -189,7 +202,11 @@ function BalanceBanner(props: Props) {
 
 BalanceBanner.defaultProps = {
   parentIdentity: null,
-  parentIndex: 0
+  parentIndex: 0,
+  isWalletSyncing: false
 };
 
-export default compose(wrapComponent, withTheme)(BalanceBanner);
+export default compose(
+  wrapComponent,
+  withTheme
+)(BalanceBanner);

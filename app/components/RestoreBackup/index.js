@@ -1,9 +1,9 @@
-import React, {Fragment, Component} from 'react';
+import React, { Fragment, Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import Switch from '@material-ui/core/Switch';
 import styled from 'styled-components';
-import TextField  from '../TextField';
+import TextField from '../TextField';
 import Button from '../Button';
 import SeedInput from './SeedInput';
 import PasswordInput from '../PasswordInput';
@@ -17,15 +17,14 @@ const MainContainer = styled.div`
   padding: 0 10px;
   display: flex;
   flex-direction: column;
-`
+`;
 const RestoreHeader = styled.div`
   font-size: 18px;
   font-weight: 300;
   display: flex;
   margin-bottom: 30px;
-  color: ${({ theme: { colors } }) => colors.gray0 };
-
-`
+  color: ${({ theme: { colors } }) => colors.gray0};
+`;
 const RestoreTabContainer = styled.div`
   display: flex;
   border-radius: 35px;
@@ -36,11 +35,13 @@ const RestoreTabContainer = styled.div`
   overflow: hidden;
   margin-left: 10px;
   font-weight: 500;
-`
+`;
 
 const RestoreTabItem = styled.div`
-  background-color:  ${({ theme: { colors }, active }) => (active? colors.accent: 'rgba(148, 169, 209, 0.13)')};
-  color: ${({ theme: { colors }, active }) => (active? colors.white: colors.index0) };
+  background-color: ${({ theme: { colors }, active }) =>
+    active ? colors.accent : 'rgba(148, 169, 209, 0.13)'};
+  color: ${({ theme: { colors }, active }) =>
+    active ? colors.white : colors.index0};
   flex: 1;
 `;
 const ToggleContainer = styled.div`
@@ -51,34 +52,32 @@ const ToggleContainer = styled.div`
 `;
 const ToggleLabel = styled.div`
   font-size: 16px;
-  color: ${ ({ theme: { colors } }) => colors.black2 };
+  color: ${({ theme: { colors } }) => colors.black2};
   font-weight: 300;
-  
 `;
 const ToggleWrapper = styled(Switch)`
   &&& {
-    & > span[class*='checked'] {    
-      color: ${({ theme: { colors } }) => colors.accent };
+    & > span[class*='checked'] {
+      color: ${({ theme: { colors } }) => colors.accent};
       & + span {
-        background-color: ${({ theme: { colors } }) => colors.accent };
+        background-color: ${({ theme: { colors } }) => colors.accent};
       }
     }
   }
-  
 `;
 const RestoreFooter = styled.div`
   margin-top: auto;
   display: flex;
   justify-content: flex-end;
   padding-top: 50px;
-`
+`;
 const RestoreButton = styled(Button)`
   width: 194px;
   height: 50px;
   text-align: center;
   line-height: 50px;
   padding: 0 !important;
-`
+`;
 type Props1 = {
   type: string,
   changeFunc: () => {},
@@ -89,7 +88,7 @@ const RestoreTabs = (props: Props1) => {
   return (
     <RestoreTabContainer>
       <RestoreTabItem
-        active={type==='phrase'}
+        active={type === 'phrase'}
         onClick={() => changeFunc('phrase')}
       >
         {t('components.restoreBackup.seed_phrase')}
@@ -100,16 +99,12 @@ const RestoreTabs = (props: Props1) => {
       >
         {t('components.restoreBackup.private_key')}
       </RestoreTabItem> */}
-      <RestoreTabItem
-        active={type==='key'}
-      >
+      <RestoreTabItem active={type === 'key'}>
         {t('components.restoreBackup.private_key')}
       </RestoreTabItem>
     </RestoreTabContainer>
-  )
-}
-
-
+  );
+};
 
 type Props = {
   importAddress?: () => {},
@@ -132,7 +127,7 @@ class RestoreBackup extends Component<Props> {
     const { seeds, inputValue, password } = this.state;
     let str = '';
     if (seeds.length) {
-      seeds.forEach((item, index)=> {
+      seeds.forEach((item, index) => {
         if (index) {
           str += ` ${item}`;
         } else {
@@ -148,33 +143,60 @@ class RestoreBackup extends Component<Props> {
         str = inputValue;
       }
     }
-    this.props.importAddress(ADD_ADDRESS_TYPES.RESTORE, str, '', '', '', password);
+    this.props.importAddress(
+      ADD_ADDRESS_TYPES.RESTORE,
+      str,
+      '',
+      '',
+      '',
+      password
+    );
   };
 
-  onChangeInput = (val) => {
-    this.setState({inputValue: val});
-  }
+  onChangeInput = val => {
+    this.setState({ inputValue: val });
+  };
 
-  onChangeItems = (items) => {
-    this.setState({seeds: items, inputValue: ''});
-  }
+  onChangeItems = items => {
+    this.setState({ seeds: items, inputValue: '' });
+  };
+
+  onEnterPress = (keyValue, isdisabled) => {
+    if (keyValue === 'Enter' && !isdisabled && this.state.seeds.length === 15) {
+      this.importAddress();
+    }
+  };
 
   render() {
-    const { type, seeds, inputValue, password, isPassword, isShowedPwd, key } = this.state;
+    const {
+      type,
+      seeds,
+      inputValue,
+      password,
+      isPassword,
+      isShowedPwd,
+      key
+    } = this.state;
     const { t } = this.props;
     let isdisabled = false;
     if (type === 'phrase') {
-      isdisabled = (!seeds.length && !inputValue) ;
+      isdisabled = !seeds.length && !inputValue;
     } else {
       isdisabled = !key;
     }
-    return(
-      <MainContainer>
+    return (
+      <MainContainer
+        onKeyDown={event => this.onEnterPress(event.key, isdisabled)}
+      >
         <RestoreHeader>
           {t('components.restoreBackup.restore_from')}
-          <RestoreTabs type={type} changeFunc={(type)=> this.setState({type})} t={t} />
+          <RestoreTabs
+            type={type}
+            changeFunc={type => this.setState({ type })}
+            t={t}
+          />
         </RestoreHeader>
-        {type==='phrase' &&
+        {type === 'phrase' && (
           <Fragment>
             <SeedInput
               selectedItems={seeds}
@@ -187,30 +209,31 @@ class RestoreBackup extends Component<Props> {
                 {t('components.restoreBackup.seed_encrypted_label')}
               </ToggleLabel>
               <ToggleWrapper
-                onChange={()=> this.setState({isPassword: !isPassword})}
+                onChange={() => this.setState({ isPassword: !isPassword })}
               />
             </ToggleContainer>
 
-            {isPassword &&
+            {isPassword && (
               <PasswordInput
                 label={t('components.restoreBackup.seed_phrase_password')}
                 isShowed={isShowedPwd}
                 password={password}
-                changFunc={(newpassword) => this.setState({ password: newpassword })}
-                onShow={()=> this.setState({isShowedPwd: !isShowedPwd})}
-                containerStyle={{width: '60%'}}
+                changFunc={newpassword =>
+                  this.setState({ password: newpassword })
+                }
+                onShow={() => this.setState({ isShowedPwd: !isShowedPwd })}
+                containerStyle={{ width: '60%' }}
               />
-            }
+            )}
           </Fragment>
-        }
-        {type==='key' &&
+        )}
+        {type === 'key' && (
           <TextField
             label={t('components.restoreBackup.enter_private_key')}
             value={key}
-            onChange={(newkey) => this.setState({ key: newkey })}
+            onChange={newkey => this.setState({ key: newkey })}
           />
-
-        }
+        )}
         <RestoreFooter>
           <RestoreButton
             buttonTheme="primary"
@@ -225,8 +248,6 @@ class RestoreBackup extends Component<Props> {
   }
 }
 
-
-
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
@@ -236,4 +257,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(RestoreBackup);
+export default compose(
+  wrapComponent,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(RestoreBackup);

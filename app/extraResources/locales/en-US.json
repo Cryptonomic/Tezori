@@ -12,7 +12,8 @@
       "delegate": "Delegate",
       "restore": "Restore",
       "confirm": "Confirm",
-      "receive": "Receive"
+      "receive": "Receive",
+      "continue": "Continue"
     },
     "nouns": {
       "amount": "Amount",
@@ -32,10 +33,16 @@
       "tezos": "Tezos",
       "total_balence": "Total Balance",
       "language": "Language",
-      "transactions": "Transactions"
+      "transactions": "Transactions",
+      "source": "Source",
+      "destination": "Destination",
+      "manager": "Manager",
+      "delegate": "Delegate",
+      "ledger_name": "Ledger Nano S"
     },
     "errors": {
-      "no_hex_data": "The provided string doesn't look like hex data"
+      "no_hex_data": "The provided string doesn't look like hex data",
+      "no_ledger_detected": "Ledger disconnected"
     },
     "decimal_separator": ".",
     "back": "Back",
@@ -138,6 +145,15 @@
       "new_address_label": "Change Delegate to New Address",
       "delegate_warning": "Your delegation change will not show up until the change is confirmed on the blockchain."
     },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Confirm Changing Delegate",
+      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+    },
+    "delegationLedgerConfirmationModal": {
+      "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
+      "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
+      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+    },
     "fees": {
       "low_fee": "Low Fee",
       "medium_fee": "Medium Fee",
@@ -161,6 +177,10 @@
         "special_chars": "Addresses cannot contain any special characters.",
         "send_funds": "You cannot send funds to yourself."
       }
+    },
+    "languageSelectModal": {
+      "choose_language": "Choose Language",
+      "language_selection_description": "You can always change your language selection in the settings."
     },
     "messageBar": {
       "operation_id": "OPERATION ID",
@@ -187,7 +207,8 @@
         "identity_exist": "Identity already exist",
         "success_sent": "Success! You sent {{localeParam}} tz.",
         "invalid_wallet_password": "Invalid wallet/password combination.",
-        "account_not_exist": "The account does not exist."
+        "account_not_exist": "The account does not exist.",
+        "ledger_not_connect": "Connection refused by Ledger."
       }
     },
     "pdfReader": {
@@ -211,14 +232,20 @@
       "send_confirmation": "Send Confirmation",
       "confirm_question": "Do you confirm that you want to send"
     },
+    "sendLedgerConfirmationModal": {
+      "confirm_transaction": "Confirm Transaction",
+      "send_description": "You are about to send out a transaction. Please carefully review the details on your device.",
+      "confirm_description": "If the all the details are correct, please<1> confirm </1>the transaction on your device."
+    },
     "settingController": {
       "settings": "SETTINGS",
       "logout": "LOG OUT"
     },
     "termsModal": {
       "hi_there": "Hi there!",
-      "i_agree": "I agree",
-      "description": "Before we get started, please read and accept our<1> Terms of Service </1>and<3> Privacy Policy</3>."
+      "welcome_to": "Welcome to {{name}}",
+      "i_agree": "I Agree",
+      "description": "Before we get started, please read our<1> Terms of Service </1>and<3> Privacy Policy</3>."
     },
     "tooltips": {
       "manager_tooltips_description": "The Manager Address is the primary address of your account and can be used to send and receive tez."
@@ -262,21 +289,29 @@
       "back_to_wallet": "Back to Wallet",
       "wallet_settings": "Wallet Settings",
       "choose_different_node": "Choose a Different Node",
-      "add_custom_node": "Add a Custom Node"
+      "add_custom_node": "Add a Custom Node",
+      "select_display_language": "Select Display Language"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
       "create_new_wallet_btn": "Create New Wallet",
       "open_exisiting_wallet_btn": "Open Existing Wallet",
-      "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper wallet?",
-      "create_named_wallet": "<0><0>Create a <1>{{name}}</1> wallet</0></0> first.",
+      "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper",
+      "create_named_wallet": "wallet? <1><0>Create a <1>{{name}}</1> wallet</0></1> first.",
       "tagline": "A community wallet for Tezos",
-      "app_name": "Tezori"
+      "app_name": "Tezori",
+      "keystore_wallet": "Keystore Wallet",
+      "ledger_wallet": "Ledger Wallet",
+      "connect_ledger": "Connect with Ledger",
+      "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
+      "download_it_here": "Download it here.",
+      "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
+      "connecting": "Connecting..."
     },
     "loginCreate": {
       "create_wallet_btn": "Create Wallet",
       "create_wallet_password_label": "Create Wallet Password",
-      "confirm_wallet_password_label" : "Confirm Wallet Password",
+      "confirm_wallet_password_label": "Confirm Wallet Password",
       "create_new_wallet_btn": "Create New Wallet",
       "create_wallet_title": "Create a new wallet",
       "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",

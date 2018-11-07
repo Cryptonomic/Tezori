@@ -1,4 +1,4 @@
-import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs';
+import { TezosWallet, TezosConseilQuery, TezosOperations  } from 'conseiljs-staging';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { TRANSACTIONS } from '../constants/TabConstants';
@@ -52,9 +52,9 @@ export async function getAccountsForIdentity(nodes, id) {
   return accounts.filter(account => account.accountId !== id);
 }
 
-export async function getSyncAccount( identities, account, nodes, accountHash, parentHash ) {
+export async function getSyncAccount( identities, account, nodes, accountHash, parentHash, isLedger = false ) {
   const keyStore = getSelectedKeyStore( identities, accountHash, parentHash );
-  account =  await activateAndUpdateAccount( account, keyStore, nodes ).catch( e => {
+  account =  await activateAndUpdateAccount( account, keyStore, nodes, isLedger ).catch( e => {
     console.log('-debug: Error in: getSyncAccount for:' + accountHash);
     console.error(e);
     return account;

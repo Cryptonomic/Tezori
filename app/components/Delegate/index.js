@@ -9,6 +9,8 @@ import TezosIcon from './../TezosIcon/';
 import DelegateConfirmationModal from '../DelegateConfirmationModal';
 import TezosAddress from '../TezosAddress';
 import { wrapComponent } from '../../utils/i18n';
+import DelegateLedgerConfirmationModal from '../DelegateLedgerConfirmationModal';
+import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 import {
   validateAddress,
@@ -21,6 +23,7 @@ type Props = {
   selectedParentHash?: string,
   address?: string,
   delegate?: () => {},
+  isLedger: boolean,
   t: () => {}
 };
 
@@ -132,7 +135,8 @@ const initialState = {
     medium: 200,
     high: 400
   },
-  isDelegateIssue: true
+  isDelegateIssue: true,
+  isOpenLedgerConfirm: false
 };
 
 class Delegate extends Component<Props> {
@@ -145,15 +149,18 @@ class Delegate extends Component<Props> {
     this.setState({ averageFees, fee: averageFees.low });
   }
 
+  onOpenLedgerConfirmation = status =>
+    this.setState({ isOpenLedgerConfirm: status });
+
   openConfirmation = () => this.setState({ open: true });
   closeConfirmation = () => {
     const { averageFees, fee } = this.state;
     this.setState({ ...initialState, averageFees, fee });
   };
-  handlePasswordChange = (password) =>  this.setState({ password });
-  handleTempAddressChange = (tempAddress) =>  this.setState({ tempAddress });
-  handleFeeChange = (fee) =>  this.setState({ fee });
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+  handlePasswordChange = password => this.setState({ password });
+  handleTempAddressChange = tempAddress => this.setState({ tempAddress });
+  handleFeeChange = fee => this.setState({ fee });
+  setIsLoading = isLoading => this.setState({ isLoading });
 
   getAddress = () => {
     const { tempAddress } = this.state;
@@ -163,20 +170,37 @@ class Delegate extends Component<Props> {
 
   onDelegate = async () => {
     const { password, fee, tempAddress } = this.state;
-    const { delegate, selectedAccountHash, selectedParentHash } = this.props;
+    const {
+      delegate,
+      selectedAccountHash,
+      selectedParentHash,
+      isLedger
+    } = this.props;
     this.setIsLoading(true);
-    if (
-      await delegate(
-        tempAddress,
-        Math.floor(fee),
-        password,
-        selectedAccountHash,
-        selectedParentHash
-      )
-    ) {
+    if (isLedger) {
+      this.onOpenLedgerConfirmation(true);
+    }
+    const isDelegated = await delegate(
+      tempAddress,
+      Math.floor(fee),
+      password,
+      selectedAccountHash,
+      selectedParentHash
+    ).catch(err => {
+      console.error(err);
+      return false;
+    });
+    this.onOpenLedgerConfirmation(false);
+    this.setIsLoading(false);
+    if (isDelegated) {
       this.closeConfirmation();
-    } else {
-      this.setIsLoading(false);
+    }
+  };
+
+  onEnterPress = event => {
+    const { tempAddress, password } = this.state;
+    if (event.key === 'Enter' && tempAddress !== '' && password !== '') {
+      this.onDelegate();
     }
   };
 
@@ -200,8 +224,18 @@ class Delegate extends Component<Props> {
   };
 
   render() {
-    const { address, t } = this.props;
-    const { isLoading, open, password, fee, averageFees, tempAddress, isShowedPwd, isDelegateIssue } = this.state;
+    const { address, isLedger, selectedAccountHash, t } = this.props;
+    const {
+      isLoading,
+      open,
+      password,
+      fee,
+      averageFees,
+      tempAddress,
+      isShowedPwd,
+      isDelegateIssue,
+      isOpenLedgerConfirm
+    } = this.state;
     const delegationTips = [
       t('components.addressBlock.descriptions.description1'),
       t('components.addressBlock.descriptions.description2'),
@@ -215,7 +249,9 @@ class Delegate extends Component<Props> {
         <DelegateContainer>
           {address && (
             <DelegateInputContainer>
-              <SetADelegate>{t('components.delegate.current_delegate')}:</SetADelegate>
+              <SetADelegate>
+                {t('components.delegate.current_delegate')}:
+              </SetADelegate>
               <TezosAddress
                 address={address}
                 size="16px"
@@ -235,18 +271,19 @@ class Delegate extends Component<Props> {
           {!address && (
             <WarningContainer>
               <TezosIcon iconName="info" size={ms(5)} color="info" />
-              <InfoText>
-                {t('components.delegate.delegate_warning')}
-              </InfoText>
+              <InfoText>{t('components.delegate.delegate_warning')}</InfoText>
             </WarningContainer>
           )}
           <DelegationTipsContainer>
-            <DelegationTitle>{t('components.addressBlock.delegation_tips')}</DelegationTitle>
+            <DelegationTitle>
+              {t('components.addressBlock.delegation_tips')}
+            </DelegationTitle>
             {this.renderDelegationTips(delegationTips)}
           </DelegationTipsContainer>
         </DelegateContainer>
 
         <DelegateConfirmationModal
+          onEnterPress={this.onEnterPress}
           open={open}
           address={address}
           newAddress={tempAddress}
@@ -259,14 +296,32 @@ class Delegate extends Component<Props> {
           onDelegate={this.onDelegate}
           onCloseClick={this.closeConfirmation}
           isLoading={isLoading}
+          isLedger={isLedger}
           isShowedPwd={isShowedPwd}
-          onShowPwd={()=> this.setState({isShowedPwd: !isShowedPwd})}
+          onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           isDelegateIssue={isDelegateIssue}
-          onDelegateIssue={(status)=> this.setState({isDelegateIssue: status})}
+          onDelegateIssue={status => this.setState({ isDelegateIssue: status })}
         />
+        {isLedger &&
+          isOpenLedgerConfirm && (
+            <DelegateLedgerConfirmationModal
+              fee={fee}
+              address={tempAddress}
+              source={selectedAccountHash}
+              open={isOpenLedgerConfirm}
+              onCloseClick={() => this.onOpenLedgerConfirmation(false)}
+              isLoading={isLoading}
+            />
+          )}
       </Container>
     );
   }
+}
+
+function mapStateToProps(state) {
+  return {
+    isLedger: getIsLedger(state)
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -280,4 +335,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(Delegate);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(Delegate);

@@ -1,0 +1,343 @@
+{
+  "general": {
+    "verbs": {
+      "send": "Envoyer",
+      "copy_address": "Copier l`Adresse",
+      "show": "Afficher",
+      "hide": "Cacher",
+      "use_max": "Sélectionner le Max",
+      "import": "Importer",
+      "open": "Ouvrir",
+      "save": "Enregistrer",
+      "delegate": "Déléguer",
+      "restore": "Restaurer",
+      "confirm": "Confirmer",
+      "receive": "Recevoir",
+      "continue": "Continuer"
+    },
+    "nouns": {
+      "amount": "Montant",
+      "wallet_password": "Mot de passe du Wallet",
+      "total": "Total",
+      "fee": "Commission",
+      "accounts": "Comptes",
+      "address": "adresse",
+      "account": "compte",
+      "label_account": "Compte",
+      "label_address": "Adresse",
+      "delegate_address": "Adresse de délégation",
+      "remaining_balance": "Balance Restante",
+      "gas": "Gas",
+      "details": "Détails",
+      "conseil": "Conseil",
+      "tezos": "Tezos",
+      "total_balence": "Balance Totale",
+      "language": "Langue",
+      "transactions": "Transactions",
+      "source": "Source",
+      "destination": "Destination",
+      "manager": "Manager",
+      "delegate": "Délégué",
+      "ledger_name": "Ledger Nano S"
+    },
+    "errors": {
+      "no_hex_data": "La string fournie ne ressemble pas à de l’hex data",
+      "no_ledger_detected": "Ledger déconnecté"
+    },
+    "decimal_separator": ".",
+    "back": "Retour",
+    "next": "Suivant",
+    "to": "à",
+    "of": "de",
+    "from": "de"
+  },
+  "components": {
+    "accountStatus": {
+      "creating_ccount": "Compte en cours de création",
+      "activation_operation_id": "activation de l’id de l`opération",
+      "origination_operation_id": "origination de l’id de l`opération",
+      "public_key_reveal_operation_id": "clé public de l’id de l`opération révélé",
+      "titles": {
+        "pending": " {{typeText}}...en cours de préparation",
+        "ready": "Votre compte est prêt à recevoir des transactions !",
+        "retrieving": " {{typeText}}...en cours de recherche"
+      },
+      "descriptions": {
+        "mnemonic_first_transaction": "Votre première transaction validera votre nouvelle adresse à la Blockchain. Cela peut prendre un certain temps avant que vous soyez prêt à envoyer et à déléguer.",
+        "first_transaction_confirmation": "Nous avons recu votre première transaction de {{formattedAmount}} tez! Compte en préparation, cela pourrait prendre un certain temps."
+      }
+    },
+    "actionPanel": {
+      "description": "C`est assez vide ici. Commencez par <1> envoyer et <3> recevoir tez de cette adresse",
+      "empty-title": "Vous n`avez pas encore fait de transactions"
+    },
+    "addDelegateModal": {
+      "gas_tool_tip": "{{gas}} tz sont requis par le réseau afin de créer une adresse de délégation",
+      "warning1": "Le Total dépasse le montant des fonds disponibles",
+      "warning2": "Les adresses de management ne sont pas encore autorisées à avoir moins de 1 µtz",
+      "add_delegate_title": "Ajouter un délégué"
+    },
+    "addNodeModal": {
+      "error": "Le protocole du Noeud doit être en https",
+      "title": "Paramétrer votre Noeud {{title}} Customisé",
+      "labels": {
+        "node_name": "Nom du Noeud",
+        "api_key": "Clé Api"
+      }
+    },
+    "address": {
+      "manager_address": "Adresse de management",
+      "delegated_address": "Adresse déléguée {{index}}"
+    },
+    "addressBlock": {
+      "descriptions": {
+        "description1": "Déléguer vos tez n`est pas la meme chose que d`envoyer vos tez. Seuls les droits de baking sont transférés quand un délégué est paramétré. Le délégué paramétré ne peut pas dépenser vos tez.",
+        "description2": "Il y a une commission à paramétrer un délégué.",
+        "description3": "Il faut 7 cycles (~20 jours) pour que vos tez commencent à contribuer au baking.",
+        "description4": "La récompense de délégation dépendra de votre arrangement avec le délégué."
+      },
+      "account_title": "Compte {{index}}",
+      "not_ready_tooltip": "Votre compte n`est pas prêt à déléguer.",
+      "delegation_tips": "Conseils pour déléguer"
+    },
+    "addresses": {
+      "support_tooltip": "Le support pour plusieurs comptes sera bientôt mise en place."
+    },
+    "addressStatus": {
+      "your_account": "votre compte",
+      "new_address": "nouvelle adresse",
+      "retrieving_title": "{{typeText}}...en cours de recherche",
+      "preparing_title": "{{typeText}}...en préparation"
+    },
+    "balanceBanner": {
+      "breadcrumbs": "Compte {{parentIndex}} > {{addressLabel}}",
+      "delegated_to": "Déléguer à"
+    },
+    "copyIcon": {
+      "copied": "Copié!"
+    },
+    "createAccountSlide": {
+      "descriptions": {
+        "description1": "Ecrivez votre phrase de recovery sur un papier et gardez là dans un endroit sûr. Vous aurez besoin de votre phrase de recovery pour retrouver votre compte.",
+        "description2": "Gardez bien votre phrase de recovery dans un endroit sûr. Si vous oubliez votre phrase de recovery, vous ne pourrez plus accéder à votre compte. Nous ne conservons pas votre phrase de recovery et ne pouvons pas vous aider à la récupérer si vous la perdez. ",
+        "description3": "Afin de vous assurer que vous avez bien écrit votre phrase de recovery, merci de taper les quatre mots de recovery suivant."
+      },
+      "generate_other_seed": "Générer une autre phrase de recovery",
+      "create_account": " Créer un Compte",
+      "seed_backup": "Votre compte Tezos de recovery est sauvegardé !",
+      "back_to_seed": "Retour à votre Phrase de Recovery",
+      "first_word": "1er Mot",
+      "second_word": "2ème Mot",
+      "third_word": "3ème Mot",
+      "nth_word": "{{index}}ème  Mot",
+      "errors": {
+        "invalid_word": "Mot invalide, merci de vérifier à nouveau",
+        "typo_error": "C`est une erreur de frappe ! Merci de vérifier à nouveau"
+      }
+    },
+    "delegate": {
+      "delegate_settings": "Paramètres du délégué",
+      "current_delegate": "Vous déléguez actuellement à",
+      "change_delegate": "Changer de délégué",
+      "delegate_warning": "Votre délégué n`apparaîtra pas tant qu`il n`est pas confirmé sur la blockchain."
+    },
+    "delegateConfirmationModal": {
+      "new_address_label": "Changer l`adresse du délégué",
+      "delegate_warning": "Votre changement de délégation n`apparaîtra pas tant qu`il n`est pas confirmé sur la blockchain."
+    },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Confirm Changing Delegate",
+      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+    },
+    "delegationLedgerConfirmationModal": {
+      "confirm_delegate_title": "Confirmer l`ajout d`un délégué au compte 1",
+      "add_description": "Vous êtes sur le point d`envoyer une opération d`origination pour ajouter un délégué. Merci de revoir attentivement les détails sur votre appareil.",
+      "confirm_description": "Si tous les détails sont corrects, merci <1> de confirmer l`origination sur votre appareil."
+    },
+    "fees": {
+      "low_fee": "Commission Faible",
+      "medium_fee": "Commission Moyenne",
+      "high_fee": "Commission Elevée",
+      "custom_fee": "Commission Customisée",
+      "custom": "Customiser",
+      "set_custom_fee": "Paramétrer une Commission Customisée",
+      "enter_custom_amount": "Entrer votre montant customisé"
+    },
+    "inputAddress": {
+      "setting_delegate": "Paramétrer un délégué",
+      "contents": {
+        "content1": "Vous pouvez toujours changer de délégué plus tard.",
+        "content2": "Il y a une commission pour changer de délégué.",
+        "content3": "Vous pouvez seulement déléguer à l`Adresse de management. Les Adresses de management commencent toujours par TZ1, TZ2 or TZ3."
+      },
+      "errors": {
+        "send_address": "Les Adresses ne peuvent que commencer par TZ1, TZ2, TZ3 ou KT1",
+        "delegate_address": "Vous pouvez seulement déléguer à des adresses TZ1, TZ2 or TZ3.",
+        "length": "Les Adresses doivent comporter 36 caractères.",
+        "special_chars": "Les Adresses ne peuvent pas comporter de caractères spéciaux.",
+        "send_funds": "Vous ne pouvez pas envoyer de fonds à vous-mêmes."
+      }
+    },
+    "languageSelectModal": {
+      "choose_language": "Choississez votre langue",
+      "language_selection_description": "Vous pouvez toujours changer la langue séléctionnée dans les paramètres."
+    },
+    "messageBar": {
+      "operation_id": "OPERATION ID",
+      "view_block_explorer": "Consulter sur un block explorer",
+      "messages": {
+        "amount_not_valid": "Montant non valide.",
+        "address_begin": "L`Adresse doit commencer par tz1 ou KT1.",
+        "must_upload": "Vous devez uploader un wallet.",
+        "err_not_valid": "[ERR] Paramètres non valides.",
+        "amount_small": "Montant trop petit.",
+        "amount_not_empty": "Le montant ne peut pas être nul.",
+        "pass_not_empty": "La Phrase de Passe ne peut être vide.",
+        "address_not_empty": "L`adresse ne peut être vide.",
+        "address_length_36": "L`adresse doit faire exactement 36 caractères de long.",
+        "pass_length_8": "La Phrase de Passe doit faire au moins 8 caractères de long.",
+        "incorrect_password": "Mode de passe incorrect",
+        "origination_operation_failed": "L`opération d’origination a échoué",
+        "delegation_operation_failed": "L`opération de délégation a échoué",
+        "send_operation_failed": "L`opération d`envoi a échoué",
+        "success_address_origination": "L`origination de l`adresse a commencé avec succès.",
+        "success_delegation_update": "Le changement de délégation a commencé avec succès.",
+        "cant_sent_yourself": "Vous ne pouvez pas vous envoyer de fonds a vous-mêmes.",
+        "success_account_activation": "L`activation de compte a commencé avec succès.",
+        "identity_exist": "Cette identité existe déjà",
+        "success_sent": "Succès ! Vous avez envoyé {{localeParam}} tz.",
+        "invalid_wallet_password": "Combinaison wallet/mot de passe invalide.",
+        "account_not_exist": "Le compte n`existe pas.",
+        "ledger_not_connect": "Connexion refusée par le Ledger."
+      }
+    },
+    "pdfReader": {
+      "loading": "En cours de chargement..."
+    },
+    "restoreBackup": {
+      "restore_from": "Restaurer de",
+      "seed_encrypted_label": "La phrase de recovery est cryptée avec un mot de passe",
+      "seed_phrase_password": "Mot de passe de la phrase de recovery",
+      "enter_private_key": "Entrez votre clé privée",
+      "seed_phrase": "PHRASE DE RECOVERY",
+      "private_key": "CLE PRIVEE"
+    },
+    "send": {
+      "warnings": {
+        "total_exceeds": "Le Total dépasse les fonds disponibles",
+        "not_allowed": "Les addresses de management ne sont pas encore autorisées à avoir moins de 1 µtz"
+      }
+    },
+    "sendConfirmationModal": {
+      "send_confirmation": "Confirmation d`envoi",
+      "confirm_question": "Confirmez-vous que vous voulez effectuer un envoi"
+    },
+    "sendLedgerConfirmationModal": {
+      "confirm_transaction": "Confirmez la transaction",
+      "send_description": "Vous êtes sur le point d`envoyer une transaction. Merci de revoir attentivement les détails sur votre appareil.",
+      "confirm_description": "Si tous les détails sont corrects, merci <1> de confirmer la transaction sur votre appareil."
+    },
+    "settingController": {
+      "settings": "PARAMETRES",
+      "logout": "FIN DE SESSION"
+    },
+    "termsModal": {
+      "hi_there": "Salut !",
+      "welcome_to": "Bienvenue {{name}}",
+      "i_agree": "J`accepte",
+      "description": "Avant de commencer, veuillez lire nos <1> conditions d'utilisation et la <3> politique de confidentialité"
+    },
+    "tooltips": {
+      "manager_tooltips_description": "L'adresse de management est l'adresse principale de votre compte et peut être utilisée pour envoyer et recevoir des tez."
+    },
+    "transaction": {
+      "pending": "En cours…",
+      "burn": "Burn",
+      "public_key_reveal": "CLE PUBLIC REVELEE",
+      "activitation": "ACTIVATION",
+      "updated_delegate": "DELEGUE CHANGE",
+      "origination": "ORIGINATION",
+      "sent": "ENVOYE",
+      "received": "RECU",
+      "this_address": "cette adresse",
+      "your_manager_address": "<0>L`Adresse de management de votre Compte 1"
+    },
+    "update": {
+      "last_updated": "Dernière modification {{date}}"
+    }
+  },
+  "containers": {
+    "homeAddAddress": {
+      "add_account": "Ajouter un Compte",
+      "refer_pdf_title": "Veuillez vous reporter au document PDF que vous avez créé lors de la levée de fonds.",
+      "secret_key_15": "Clé secrète de 15 mots",
+      "fundraiser_password": "Mot de passe de la levée de fonds",
+      "public_key_hash": "Clé de hashage publique",
+      "fundraiser_email_address": "Adresse Email de la levée de fonds",
+      "activation_code": "Code d`activation",
+      "tooltips": {
+        "password_tooltip": "C’est le mot de passe que vous avez utilisé pour générer un wallet Tezos en papier afin de participer à la levée de fonds.",
+        "email_tooltip": "Il s'agit de l'email que vous avez utilisée lors de la génération d'un wallet Tezos papier pour participer à la levée de fonds",
+        "activation_code_tooltip": "Il s'agit du code d'activation que vous avez reçu après avoir terminé le processus KYC / AML. Un code d'activation correspond à une  clé de hachage publique et est requis si vous avez participé à la levée de fonds. Vous pouvez effectuer le processus à l'adresse <1> verification.tezos.com si vous ne l'avez pas déjà fait. ",
+        "public_key_hash_tooltip": "Il s'agit de la clé de hachage publique telle qu'elle est fournie dans le wallet papier."
+      },
+      "import_fundraiser": "Importer le wallet de la levée de fonds",
+      "create_new_account": "Créer un nouveau Compte",
+      "restore_backup": "Restaurer votre sauvegarde"
+    },
+    "homeSettings": {
+      "back_to_wallet": "Retour au wallet",
+      "wallet_settings": "Paramètres du wallet",
+      "choose_different_node": "Choisir un noeud différent",
+      "add_custom_node": "Ajouter un noeud customisé",
+      "select_display_language": "Langue"
+    },
+    "loginHome": {
+      "description": "Je reconnais avoir lu et accepté les <1> Conditions d'utilisation et <3> Politique de confidentialité. ",
+      "create_new_wallet_btn": "Créer un nouveau wallet",
+      "open_exisiting_wallet_btn": "Ouvrir un wallet existant",
+      "want_to_import_fundraiser_paper_wallet": "Vous voulez importez votre papier de levée de fonds",
+      "create_named_wallet": "wallet? <1><0>Créer un <1>{{name}} wallet en premier.",
+      "tagline": "Un wallet communautaire pour Tezos",
+      "app_name": "Tezori",
+      "keystore_wallet": "Keystore Wallet",
+      "ledger_wallet": "Ledger Wallet",
+      "connect_ledger": "Se connecter au Ledger",
+      "dont_have_ledger_wallet": "Vous n`avez pas l`application Ledger Tezos wallet?",
+      "download_it_here": "Télécharger la ici.",
+      "connect_your_device": "Merci<1> de connecter votre appareil,<3> entrer votre pin, et<5>ouvrer votre application Tezos Wallet.",
+      "connecting": "En cours de connexion…"
+    },
+    "loginCreate": {
+      "create_wallet_btn": "Créer un Wallet",
+      "create_wallet_password_label": "Créer un mot de passe pour votre Wallet",
+      "confirm_wallet_password_label": "Confirmer votre mot de passe de Wallet",
+      "create_new_wallet_btn": "Créer un nouveau Wallet",
+      "create_wallet_title": "Créer un nouveau Wallet",
+      "create_wallet_description": "Les informations de votre wallet seront sauvegardées sur votre ordinateur. Elles seront cryptées avec un mot de passe que vous aurez défini.",
+      "crack_time_description": "Ca prendra {{time}} à hacker!",
+      "password_not_strong": "Votre mot de passe n'est pas assez fort.",
+      "add_another_word": "Ajouter un mot différent ou deux.",
+      "you_almost_there": "Vous y êtes presque !",
+      "you_got_it": "C’est bon !",
+      "password_dont_match": "Les mots de passe ne matchent pas !",
+      "password_match": "Les mots de passe matchent !"
+    },
+    "loginImport": {
+      "open_wallet_label": "Ouvrir un wallet existant",
+      "select_file_btn": "Sélectionner un fichier de Wallet"
+    },
+    "walletNodesRequired": {
+      "configuration_missing": "Le noeud n`est pas configuré",
+      "close_wallet_description": "Fermez le wallet, éditez 'extraResources/walletSettings.json' et ouvrez le wallet à nouveau.",
+      "default_wallet_shape": "walletSettings.json devrait ressembler à"
+    }
+  },
+  "nodes": {
+    "errors": {
+      "wrong_server": "Quelque chose ne va pas avec nos serveurs. Merci de retarder toute autre action.",
+      "wrong_network": "Il semblerait que le noeud Tezos que vous utilisez est soit bloqué soit sur le mauvais réseau. Merci de retarder toute autre action.",
+      "not_synced": "Il semblerait que le serveur Conseil n`est pas synchronisé avec le réseau Tezos. Merci de retarder toute autre action."
+    }
+  }
+}

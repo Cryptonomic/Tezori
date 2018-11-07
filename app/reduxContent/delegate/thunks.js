@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosOperations } from 'conseiljs-staging';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { displayError } from '../../utils/formValidation';
@@ -15,6 +15,7 @@ import {
   fetchAverageFees,
   clearOperationId
 } from '../../utils/general';
+import derivationPth from '../../constants/DerivationPath';
 
 const { sendDelegationOperation } = TezosOperations;
 
@@ -52,13 +53,14 @@ export function delegate(
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
     const identities = state()
       .wallet.get('identities')
       .toJS();
     const walletPassword = state().wallet.get('password');
 
-    if (password !== walletPassword) {
-      const error = "components.messageBar.messages.incorrect_password";
+    if (password !== walletPassword && !isLedger) {
+      const error = 'components.messageBar.messages.incorrect_password';
       dispatch(addMessage(error, true));
       return false;
     }
@@ -69,38 +71,62 @@ export function delegate(
       selectedParentHash
     );
     const { url } = getSelectedNode(settings, TEZOS);
-    const res = await sendDelegationOperation(
-      url,
-      keyStore,
-      delegateValue,
-      fee
-    ).catch(err => {
-      const errorObj = { name: err.message, ...err };
-      console.error(errorObj);
-      dispatch(addMessage(errorObj.name, true));
-      return false;
-    });
+    let res;
+    if (isLedger) {
+      const newKeyStore = keyStore;
+      newKeyStore.storeType = 2;
+      res = await sendDelegationOperation(
+        url,
+        keyStore,
+        delegateValue,
+        fee,
+        derivationPth
+      ).catch(err => {
+        const errorObj = { name: err.message, ...err };
+        console.error(errorObj);
+        dispatch(addMessage(errorObj.name, true));
+        return false;
+      });
+    } else {
+      res = await sendDelegationOperation(
+        url,
+        keyStore,
+        delegateValue,
+        fee
+      ).catch(err => {
+        const errorObj = { name: err.message, ...err };
+        console.error(errorObj);
+        dispatch(addMessage(errorObj.name, true));
+        return false;
+      });
+    }
 
     if (res) {
-      const operationResult = res
-        && res.results
-        && res.results.contents
-        && res.results.contents[0]
-        && res.results.contents[0].metadata
-        && res.results.contents[0].metadata.operation_result;
+      const operationResult =
+        res &&
+        res.results &&
+        res.results.contents &&
+        res.results.contents[0] &&
+        res.results.contents[0].metadata &&
+        res.results.contents[0].metadata.operation_result;
 
-      if ( operationResult && operationResult.errors && operationResult.errors.length ) {
-        const error = "components.messageBar.messages.delegation_operation_failed";
+      if (
+        operationResult &&
+        operationResult.errors &&
+        operationResult.errors.length
+      ) {
+        const error =
+          'components.messageBar.messages.delegation_operation_failed';
         console.error(error);
         dispatch(addMessage(error, true));
         return false;
       }
 
       const clearedOperationId = clearOperationId(res.operationGroupID);
-      
+
       dispatch(
         addMessage(
-          "components.messageBar.messages.success_delegation_update",
+          'components.messageBar.messages.success_delegation_update',
           false,
           clearedOperationId
         )
@@ -119,7 +145,7 @@ export function delegate(
         fee
       });
 
-      if ( foundIndex > -1 ) {
+      if (foundIndex > -1) {
         account.transactions.push(transaction);
         identity.accounts[foundIndex] = {
           ...account,
@@ -130,7 +156,7 @@ export function delegate(
       }
 
       console.log('delegateIdentity', delegateIdentity);
-      if ( delegateIdentity ) {
+      if (delegateIdentity) {
         delegateIdentity.transactions.push(transaction);
         dispatch(updateIdentity(delegateIdentity));
       }

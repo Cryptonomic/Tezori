@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
 import SendConfirmationModal from '../SendConfirmationModal';
+import SendLedgerConfirmationModal from '../SendLedgerConfirmationModal';
 import { wrapComponent } from '../../utils/i18n';
 import InputAddress from '../InputAddress';
 import TezosNumericInput from '../TezosNumericInput';
@@ -18,6 +19,8 @@ import {
   sendTez,
   fetchTransactionAverageFees
 } from '../../reduxContent/sendTezos/thunks';
+
+import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 import Fees from '../Fees/';
 
@@ -63,7 +66,7 @@ const BalanceArrow = styled.div`
   margin-top: -17px;
   border-top: 17px solid transparent;
   border-bottom: 17px solid transparent;
-  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};;
+  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};
   width: 0;
   height: 0;
   position: absolute;
@@ -89,8 +92,7 @@ const UseMax = styled.div`
 const TotalAmount = styled(TezosAmount)`
   margin-bottom: 22px;
 `;
-const BalanceAmount = styled(TezosAmount)`
-`;
+const BalanceAmount = styled(TezosAmount)``;
 
 const WarningIcon = styled(TezosIcon)`
   padding: 0 ${ms(-9)} 0 0;
@@ -119,7 +121,8 @@ type Props = {
   validateAmount?: () => {},
   t: () => {},
   addressBalance: number,
-  isManager: boolean
+  isManager: boolean,
+  isLedger: boolean
 };
 
 const initialState = {
@@ -161,7 +164,7 @@ class Send extends Component<Props> {
     }
     const max = addressBalance - fee - balance;
     if (max > 0) {
-      const amount = (max/utez).toFixed(6);
+      const amount = (max / utez).toFixed(6);
       const total = addressBalance - balance;
       this.setState({ amount, total, balance });
     } else {
@@ -170,7 +173,13 @@ class Send extends Component<Props> {
       const balance = addressBalance - total;
       this.setState({ amount, total, balance });
     }
-  }
+  };
+
+  onEnterPress = (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      this.onSend();
+    }
+  };
 
   openConfirmation = () => this.setState({ isConfirmationModalOpen: true });
   closeConfirmation = () => {
@@ -183,19 +192,20 @@ class Send extends Component<Props> {
       total: averageFees.low
     });
   };
-  handlePasswordChange = (password) =>  this.setState({ password });
-  handleToAddressChange = (toAddress) =>  this.setState({ toAddress });
-  handleAmountChange = (amount) =>  this.setState({ amount });
-  handleAmountChange = (amount) => {
+  handlePasswordChange = password => this.setState({ password });
+  handleToAddressChange = toAddress => this.setState({ toAddress });
+  handleAmountChange = amount => this.setState({ amount });
+  handleAmountChange = amount => {
     const { addressBalance } = this.props;
     const { fee } = this.state;
     const newAmount = amount || '0';
-    const numAmount = parseFloat(newAmount) * utez;
+    const commaReplacedAmount = newAmount.replace(',', '.');
+    const numAmount = parseFloat(commaReplacedAmount) * utez;
     const total = numAmount + fee;
     const balance = addressBalance - total;
     this.setState({ amount, total, balance });
   };
-  handleFeeChange = (fee) => {
+  handleFeeChange = fee => {
     const { addressBalance } = this.props;
     const { amount } = this.state;
     const newAmount = amount || '0';
@@ -205,13 +215,16 @@ class Send extends Component<Props> {
     this.setState({ fee, total, balance });
   };
 
-  setIsLoading = (isLoading) =>  this.setState({ isLoading });
+  setIsLoading = isLoading => this.setState({ isLoading });
 
   validateAmount = async () => {
     const { amount, toAddress } = this.state;
-    const { validateAmount } = this.props;
+    const { validateAmount, isLedger } = this.props;
     if (await validateAmount(amount, toAddress)) {
       this.openConfirmation();
+      if (isLedger) {
+        this.onSend();
+      }
     }
   };
 
@@ -219,20 +232,19 @@ class Send extends Component<Props> {
     const { password, toAddress, amount, fee } = this.state;
     const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
     this.setIsLoading(true);
-    if (
-      await sendTez(
-        password,
-        toAddress,
-        amount,
-        Math.floor(fee),
-        selectedAccountHash,
-        selectedParentHash
-      )
-    ) {
-      this.closeConfirmation();
-    } else {
-      this.setIsLoading(false);
-    }
+    await sendTez(
+      password,
+      toAddress,
+      amount,
+      Math.floor(fee),
+      selectedAccountHash,
+      selectedParentHash
+    ).catch(err => {
+      console.log(err);
+      return false;
+    });
+    this.closeConfirmation();
+    this.setIsLoading(false);
   };
 
   getBalanceState = (balance, amount, isManager) => {
@@ -244,7 +256,7 @@ class Send extends Component<Props> {
         balanceColor: 'error1'
       };
     }
-    if (isManager && balance === 0 ) {
+    if (isManager && balance === 0) {
       return {
         isIssue: true,
         warningMessage: t('components.send.warnings.not_allowed'),
@@ -264,10 +276,10 @@ class Send extends Component<Props> {
       warningMessage: '',
       balanceColor: 'gray8'
     };
-  }
+  };
 
   render() {
-    const { isReady, t, isManager } = this.props;
+    const { isReady, t, isManager, isLedger, selectedAccountHash } = this.props;
 
     const {
       isLoading,
@@ -282,13 +294,14 @@ class Send extends Component<Props> {
       balance
     } = this.state;
 
-    const {
-      isIssue,
-      warningMessage,
-      balanceColor
-    } = this.getBalanceState(balance, amount, isManager);
+    const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
+      balance,
+      amount,
+      isManager
+    );
 
-    const isDisabled = !isReady || isIssue || isLoading || !amount || !toAddress;
+    const isDisabled =
+      !isReady || isIssue || isLoading || !amount || !toAddress;
 
     return (
       <SendContainer>
@@ -307,7 +320,9 @@ class Send extends Component<Props> {
                 amount={this.state.amount}
                 handleAmountChange={this.handleAmountChange}
               />
-              <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
+              <UseMax onClick={this.onUseMax}>
+                {t('general.verbs.use_max')}
+              </UseMax>
             </InputAmount>
             <Fees
               styles={{ width: '100%' }}
@@ -323,29 +338,30 @@ class Send extends Component<Props> {
             <BalanceContent>
               <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
               <TotalAmount
-                weight='500'
-                color={amount?'gray3':'gray8'}
+                weight="500"
+                color={amount ? 'gray3' : 'gray8'}
                 size={ms(0.65)}
                 amount={total}
               />
-              <BalanceTitle>{t('general.nouns.remaining_balance')}</BalanceTitle>
+              <BalanceTitle>
+                {t('general.nouns.remaining_balance')}
+              </BalanceTitle>
               <BalanceAmount
-                weight='500'
+                weight="500"
                 color={balanceColor}
                 size={ms(-0.75)}
                 amount={balance}
               />
-              {isIssue &&
+              {isIssue && (
                 <ErrorContainer>
                   <WarningIcon
                     iconName="warning"
                     size={ms(-1)}
-                    color='error1'
+                    color="error1"
                   />
                   {warningMessage}
                 </ErrorContainer>
-              }
-
+              )}
             </BalanceContent>
           </BalanceContainer>
         </MainContainer>
@@ -357,21 +373,42 @@ class Send extends Component<Props> {
         >
           {t('general.verbs.send')}
         </SendButton>
-        <SendConfirmationModal
-          amount={amount}
-          password={password}
-          address={toAddress}
-          open={isConfirmationModalOpen}
-          onCloseClick={this.closeConfirmation}
-          onPasswordChange={this.handlePasswordChange}
-          onSend={this.onSend}
-          isLoading={isLoading}
-          isShowedPwd={isShowedPwd}
-          onShowPwd={()=> this.setState({isShowedPwd: !isShowedPwd})}
-        />
+        {!isLedger && (
+          <SendConfirmationModal
+            onEnterPress={event => this.onEnterPress(event.key, isDisabled)}
+            amount={amount}
+            password={password}
+            address={toAddress}
+            open={isConfirmationModalOpen}
+            onCloseClick={this.closeConfirmation}
+            onPasswordChange={this.handlePasswordChange}
+            onSend={this.onSend}
+            isLoading={isLoading}
+            isShowedPwd={isShowedPwd}
+            onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
+          />
+        )}
+
+        {isLedger && (
+          <SendLedgerConfirmationModal
+            amount={amount}
+            fee={fee}
+            address={toAddress}
+            source={selectedAccountHash}
+            open={isConfirmationModalOpen}
+            onCloseClick={this.closeConfirmation}
+            isLoading={isLoading}
+          />
+        )}
       </SendContainer>
     );
   }
+}
+
+function mapStateToProps(state) {
+  return {
+    isLedger: getIsLedger(state)
+  };
 }
 
 const mapDispatchToProps = dispatch =>
@@ -384,4 +421,10 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default compose(wrapComponent, connect(null, mapDispatchToProps))(Send);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(Send);
