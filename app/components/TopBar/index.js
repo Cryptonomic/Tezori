@@ -4,14 +4,10 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  getWalletName,
-  getIsLedger
-} from '../../reduxContent/wallet/selectors';
+import { getWalletName } from '../../reduxContent/wallet/selectors';
 import SettingsController from '../SettingsController/';
 import { ms } from '../../styles/helpers';
 import Logo from './../Logo';
-import { wrapComponent } from '../../utils/i18n';
 
 const Container = styled.div`
   display: flex;
@@ -38,23 +34,18 @@ const Text = styled.span`
 
 type Props = {
   onlyLogo: boolean | void,
-  walletName: string,
-  isLedger: boolean,
-  t: () => {}
+  walletName: string
 };
 
 class TopBar extends Component<Props> {
   render() {
-    const { onlyLogo, walletName, isLedger, t } = this.props;
-    const displayWalletName = isLedger
-      ? t('general.nouns.ledger_name')
-      : walletName;
+    const { onlyLogo, walletName } = this.props;
 
     return (
       <Container onlyLogo={onlyLogo}>
         <InfoContainer>
           <Logo />
-          <Text>{displayWalletName}</Text>
+          <Text>{walletName}</Text>
         </InfoContainer>
         <SettingsController onlySettings={onlyLogo} />
       </Container>
@@ -68,14 +59,12 @@ TopBar.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    walletName: getWalletName(state),
-    isLedger: getIsLedger(state)
+    walletName: getWalletName(state)
   };
 };
 
 export default compose(
   withRouter,
-  wrapComponent,
   connect(
     mapStateToProps,
     null
