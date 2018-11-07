@@ -11,7 +11,7 @@ import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
-import { name } from '../../config.json';
+import { name, tagline } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
@@ -89,6 +89,20 @@ const AppName = styled.h1`
   line-height: 85px;
   letter-spacing: 5px;
   margin: 0 auto;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
+const AppSubtitle = styled.h2`
+  text-align: center;
+  width: 100%;
+  font-family: 'Roboto', san-serif;
+  font-style: normal;
+  font-stretch: normal;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.2rem;
+  letter-spacing: 0.25rem;
+  margin: 0 auto 2.5rem;
   color: ${({ theme: { colors } }) => colors.primary};
 `;
 
@@ -337,6 +351,7 @@ class LoginHome extends Component<Props> {
         <DefaultContainer>
           <Section>
             <AppName>{name}</AppName>
+            <AppSubtitle>{t(tagline)}</AppSubtitle>
           </Section>
           <Section>
             <MainContainers>
