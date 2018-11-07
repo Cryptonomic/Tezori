@@ -37,7 +37,8 @@
       "source": "Source",
       "destination": "Destination",
       "manager": "Manager",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "ledger_name": "Ledger Nano S"
     },
     "errors": {
       "no_hex_data": "Algo está errado com os dados que você digitou",
@@ -143,6 +144,10 @@
     "delegateConfirmationModal": {
       "new_address_label": "Alterar Baker para novo endereço",
       "delegate_warning": "Sua alteração de delegação não aparecerá até que a mudança tenha sido confirmada na blockchain."
+    },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Confirm Changing Delegate",
+      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirme a adição de um Delegate à conta 1",
@@ -285,7 +290,7 @@
       "wallet_settings": "Configurações da Carteira",
       "choose_different_node": "Selecionar outro node",
       "add_custom_node": "Adicionar um node específico",
-      "select_display_language": "Select Display Language"
+      "select_display_language": "Idioma"
     },
     "loginHome": {
       "description": "Eu confirmo que li e aceitei os <1>Termos de Serviço</1> e <3>Política de Privacidade</3>",

@@ -37,7 +37,8 @@
       "source": "Source",
       "destination": "Destination",
       "manager": "Manager",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "ledger_name": "Ledger Nano S"
     },
     "errors": {
       "no_hex_data": "입력 한 데이터가 잘못되었습니다.",
@@ -143,6 +144,10 @@
     "delegateConfirmationModal": {
       "new_address_label": "새로운 주소로 베이커를 변경하세요",
       "delegate_warning": "위임 변경은 블록체인에서 변경이 확인될 때까지 나타나지 않습니다."
+    },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Confirm Changing Delegate",
+      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "계정 1에 개시를 추가하는 걸 확인하세요",
@@ -285,7 +290,7 @@
       "wallet_settings": "지갑 설정",
       "choose_different_node": "다른 노드 선택",
       "add_custom_node": "사용자 정의 노드 추가",
-      "select_display_language": "Select Display Language"
+      "select_display_language": "언어"
     },
     "loginHome": {
       "description": "본인은 <1>서비스 이용 약관</1> 및 <3>개인 정보 보호 정책</3>을 읽고 동의함을 인정합니다.",

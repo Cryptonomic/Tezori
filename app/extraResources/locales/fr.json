@@ -37,7 +37,8 @@
       "source": "Source",
       "destination": "Destination",
       "manager": "Manager",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "ledger_name": "Ledger Nano S"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -143,6 +144,10 @@
     "delegateConfirmationModal": {
       "new_address_label": "Change Delegate to New Address",
       "delegate_warning": "Your delegation change will not show up until the change is confirmed on the blockchain."
+    },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Confirm Changing Delegate",
+      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
@@ -284,7 +289,8 @@
       "back_to_wallet": "Back to Wallet",
       "wallet_settings": "Wallet Settings",
       "choose_different_node": "Choose a Different Node",
-      "add_custom_node": "Add a Custom Node"
+      "add_custom_node": "Add a Custom Node",
+      "select_display_language": "Language"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
