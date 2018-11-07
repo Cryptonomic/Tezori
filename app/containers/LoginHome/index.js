@@ -21,6 +21,8 @@ import {
   getIsLedgerConnecting
 } from '../../reduxContent/wallet/selectors';
 
+import { openLink } from '../../utils/general';
+
 import bgHero from '../../../resources/bg-hero/bg-hero.jpg';
 import bgCircle01 from '../../../resources/bg-hero/bg-circle_01.png';
 import bgCircle02 from '../../../resources/bg-hero/bg-circle_02.png';
@@ -314,7 +316,11 @@ class LoginHome extends Component<Props> {
     await connectLedger();
   };
 
-  onDownload = () => {};
+  onDownload = () => {
+    const url =
+      'https://github.com/Cryptonomic/Deployments/wiki/Galleon:-Tutorials';
+    openLink(url);
+  };
 
   openTermsService = () => this.goTo('conditions/termsOfService');
 
