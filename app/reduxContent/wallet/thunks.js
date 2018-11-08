@@ -1,10 +1,6 @@
 import path from 'path';
 import { push } from 'react-router-redux';
-import {
-  TezosWallet,
-  TezosConseilQuery,
-  TezosOperations
-} from 'conseiljs-staging';
+import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import {
