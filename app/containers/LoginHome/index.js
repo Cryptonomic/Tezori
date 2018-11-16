@@ -39,19 +39,22 @@ const SectionContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  margin-top: -25px;
 `;
 
 const TermsAndPolicySection = styled.div`
   display: flex;
   width: 80%;
-  padding: ${ms(2)} 0 ${ms(4)} 0;
+  padding: ${ms(2)} 0 0 0;
   border-top-width: 1px;
   border-top-color: ${({ theme: { colors } }) => colors.index1};
   border-top-style: solid;
   justify-content: center;
   align-items: center;
   font-weight: 300;
-  margin-top: 90px;
+  margin-top: 1%;
 `;
 
 const Strong = styled.span`
@@ -84,9 +87,9 @@ const AppName = styled.h1`
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 72px;
+  font-size: 4.5vw;
   font-weight: 300;
-  line-height: 85px;
+  line-height: 50px;
   letter-spacing: 5px;
   margin: 0 auto;
   color: ${({ theme: { colors } }) => colors.primary};
@@ -98,26 +101,26 @@ const AppSubtitle = styled.h2`
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 1.2rem;
+  font-size: 1.5vw;
   font-weight: 300;
   line-height: 1.2rem;
   letter-spacing: 0.25rem;
-  margin: 0 auto 2.5rem;
+  margin: 0.5rem auto 1.89rem;
   color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const BaseButton = styled(Button)`
-  width: 288px;
-  height: 50px;
+  width: 284px;
+  height: 40px;
   padding: 0;
 `;
 
 const CreateWalletButton = styled(BaseButton)`
-  margin-top: 37px;
+  margin-top: 22px;
 `;
 
 const UnlockWalletButton = styled(BaseButton)`
-  margin-top: 21px;
+  margin-top: 15px;
   color: black;
   border-color: black;
   background-color: rgba(255, 255, 255, 0.2);
@@ -219,33 +222,32 @@ const BgCircle4 = styled(BgCircle)`
 
 const MainContainers = styled.div`
   display: flex;
-  margin-top: 64px;
 `;
 
 const CardContainer = styled.div`
   width: 399px;
-  height: 575px;
+  height: 425px;
   border-radius: 5px;
   background-color: ${({ theme: { colors } }) => colors.white};
   box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
   margin: 0 42px;
   text-align: center;
-  padding: 38px 0 19px 0;
+  padding: 20px 0 14px 0;
   display: flex;
   align-items: center;
   flex-direction: column;
 `;
 
 const CardImg = styled.img`
-  width: 219px;
-  height: 219px;
+  width: 38%;
+  height: 38%;
 `;
 
 const CardTitle = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 300;
-  line-height: 28px;
-  margin-top: 27px;
+  line-height: 20px;
+  margin-top: 22px;
   color: ${({ theme: { colors } }) => colors.primary};
   letter-spacing: 1.7px;
 `;
