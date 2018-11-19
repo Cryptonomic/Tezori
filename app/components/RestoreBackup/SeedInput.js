@@ -11,6 +11,18 @@ import CloseIcon from '@material-ui/icons/Close';
 import { ms } from '../../styles/helpers';
 import seedJson from './seed.json';
 
+const InvalidChipWrapper = styled(Chip)`
+  &&& {
+    font-size: 14px;
+    color: ${({ theme: { colors } }) => colors.primary};
+    background-color: #f6d6d6;
+    margin: ${ms(-5)} ${ms(-5)} ${ms(-5)} 0;
+    border: solid 1px rgba(181, 197, 227, 0.35);
+    height: 24px;
+    font-weight: 300;
+  }
+`;
+
 const ChipWrapper = styled(Chip)`
   &&& {
     font-size: 14px;
@@ -204,8 +216,24 @@ class SeedInput extends Component<Props> {
               classes,
               InputProps: getInputProps({
                 startAdornment: selectedItems.map((item, index) => {
+                  const itemIndex = seedJson
+                    .map(items => {
+                      return items.label.toLowerCase();
+                    })
+                    .indexOf(item);
+                  if (itemIndex > -1) {
+                    return (
+                      <ChipWrapper
+                        key={item + index}
+                        tabIndex={-1}
+                        label={<ChipContent value={item} index={index} />}
+                        deleteIcon={<CloseIconWrapper />}
+                        onDelete={this.handleDelete(item)}
+                      />
+                    );
+                  }
                   return (
-                    <ChipWrapper
+                    <InvalidChipWrapper
                       key={item + index}
                       tabIndex={-1}
                       label={<ChipContent value={item} index={index} />}
