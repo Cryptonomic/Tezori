@@ -199,6 +199,7 @@ class RestoreBackup extends Component<Props> {
         {type === 'phrase' && (
           <Fragment>
             <SeedInput
+              label={t('components.restoreBackup.fundraiser_password')}
               selectedItems={seeds}
               inputValue={inputValue}
               onChangeInput={this.onChangeInput}
@@ -215,7 +216,6 @@ class RestoreBackup extends Component<Props> {
 
             {isPassword && (
               <PasswordInput
-                label={t('components.restoreBackup.seed_phrase_password')}
                 isShowed={isShowedPwd}
                 password={password}
                 changFunc={newpassword =>
