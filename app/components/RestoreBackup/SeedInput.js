@@ -166,7 +166,8 @@ class SeedInput extends Component<Props> {
       const newItems = selectedItems.slice(0, selectedItems.length - 1);
       onChangeItems(newItems);
     } else if (keycode(event) === 'space' && inputValue.length > 0) {
-      const newItems = [...selectedItems, inputValue];
+      const newInputValue = inputValue.trim();
+      const newItems = [...selectedItems, newInputValue];
       onChangeItems(newItems);
     }
   };
@@ -176,7 +177,7 @@ class SeedInput extends Component<Props> {
     if (selectedItems.length > 14) {
       return;
     }
-    const newValue = event.target.value;
+    const newValue = event.target.value.trim();
     onChangeInput(newValue);
   };
 
