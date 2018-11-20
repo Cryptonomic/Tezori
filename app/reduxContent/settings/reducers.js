@@ -16,7 +16,7 @@ import { getDefaultLocale } from '../../utils/i18n';
 const walletSettings = getWalletSettings();
 
 const baseDefaults = {
-  locale: getDefaultLocale(), // get electron local here
+  locale: getDefaultLocale(), // get electron locale here
   tezosSelectedNode: '',
   conseilSelectedNode: '',
   nodesList: [],
