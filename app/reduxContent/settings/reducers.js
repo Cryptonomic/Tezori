@@ -6,6 +6,9 @@ import {
   ADD_NODE,
   REMOVE_NODE,
   UPDATE_NODE,
+  ADD_PATH,
+  REMOVE_PATH,
+  UPDATE_PATH,
   CLEAR_STATE,
   HIDE_DELEGATE_TOOLTIP
 } from './types';
@@ -20,7 +23,9 @@ const baseDefaults = {
   tezosSelectedNode: '',
   conseilSelectedNode: '',
   nodesList: [],
-  delegateTooltip: false
+  delegateTooltip: false,
+  selectedPath: '',
+  pathsList: []
 };
 
 export const initialState = Object.assign(
@@ -78,6 +83,46 @@ export default handleActions(
         return state.set(
           'nodesList',
           nodesList.set(indexFound, fromJS(newNode))
+        );
+      }
+      return state;
+    },
+    [ADD_PATH]: (state, action) => {
+      const newPath = action.path;
+      const pathsList = state.get('pathsList');
+      const indexFound = pathsList.findIndex(item => {
+        return item.get('label') === newPath.label;
+      });
+
+      if (indexFound === -1) {
+        return state.set('pathsList', pathsList.push(fromJS(newPath)));
+      }
+
+      return state;
+    },
+    [REMOVE_PATH]: (state, action) => {
+      const { label } = action;
+      const pathsList = state.get('pathsList');
+      const indexFound = pathsList.findIndex(item => {
+        return item.get('label') === label;
+      });
+
+      if (indexFound >= -1) {
+        return state.set('pathsList', pathsList.splice(indexFound, 1));
+      }
+      return state;
+    },
+    [UPDATE_PATH]: (state, action) => {
+      const newPath = action.path;
+      const pathsList = state.get('pathsList');
+      const indexFound = pathsList.findIndex(item => {
+        return item.get('label') === newPath.label;
+      });
+
+      if (indexFound >= -1) {
+        return state.set(
+          'pathsList',
+          pathsList.set(indexFound, fromJS(newPath))
         );
       }
       return state;

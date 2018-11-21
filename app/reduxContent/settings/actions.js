@@ -4,6 +4,9 @@ import {
   ADD_NODE,
   REMOVE_NODE,
   UPDATE_NODE,
+  ADD_PATH,
+  REMOVE_PATH,
+  UPDATE_PATH,
   CLEAR_STATE,
   HIDE_DELEGATE_TOOLTIP
 } from './types';
@@ -18,4 +21,7 @@ export const setLocale = actionCreator(SET_LOCALE, 'locale');
 export const addNode = actionCreator(ADD_NODE, 'node');
 export const removeNode = actionCreator(REMOVE_NODE, 'name');
 export const updateNode = actionCreator(UPDATE_NODE, 'node');
+export const addPath = actionCreator(ADD_PATH, 'path');
+export const removePath = actionCreator(REMOVE_PATH, 'label');
+export const updatePath = actionCreator(UPDATE_PATH, 'path');
 export const clearState = actionCreator(CLEAR_STATE);

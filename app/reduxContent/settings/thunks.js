@@ -5,6 +5,9 @@ import {
   addNode as _addNode,
   removeNode as _removeNode,
   updateNode as _updateNode,
+  addPath as _addPath,
+  removePath as _removePath,
+  updatePath as _updatePath,
   hideDelegateTooltip as _hideDelegateTooltip
 } from './actions';
 
@@ -48,6 +51,27 @@ export function removeNode(name) {
 export function updateNode(node) {
   return (dispatch, state) => {
     dispatch(_updateNode(node));
+    setWalletSettings(getSettings(state()).toJS());
+  };
+}
+
+export function addPath(path) {
+  return (dispatch, state) => {
+    dispatch(_addPath(path));
+    setWalletSettings(getSettings(state()).toJS());
+  };
+}
+
+export function removePath(label) {
+  return (dispatch, state) => {
+    dispatch(_removePath(label));
+    setWalletSettings(getSettings(state()).toJS());
+  };
+}
+
+export function updatePath(path) {
+  return (dispatch, state) => {
+    dispatch(_updatePath(path));
     setWalletSettings(getSettings(state()).toJS());
   };
 }
