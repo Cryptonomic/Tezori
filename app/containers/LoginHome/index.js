@@ -41,7 +41,7 @@ const SectionContainer = styled.div`
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: -10%;
+  margin-top: -100px;
 `;
 
 const TermsAndPolicySection = styled.div`
@@ -51,7 +51,6 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 300;
-  margin-top: 1%;
 `;
 
 const Strong = styled.span`
