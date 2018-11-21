@@ -82,7 +82,7 @@
       "title": "建立你的自定义{{title}} Node",
       "labels": {
         "node_name": "Node名",
-        "api_key": "Api密钥"
+        "api_key": "API密钥"
       }
     },
     "address": {

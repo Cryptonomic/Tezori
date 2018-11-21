@@ -82,7 +82,7 @@
       "title": "Configure seu Node {{title}} customizado",
       "labels": {
         "node_name": "Nome do Node",
-        "api_key": "Chave de Api"
+        "api_key": "Chave de API"
       }
     },
     "address": {

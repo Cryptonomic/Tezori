@@ -82,7 +82,7 @@
       "title": "カスタム {{title}} Nodeを設定します",
       "labels": {
         "node_name": "Node名",
-        "api_key": "Apiキー"
+        "api_key": "APIキー"
       }
     },
     "address": {
