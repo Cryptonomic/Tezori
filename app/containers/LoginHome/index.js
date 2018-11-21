@@ -51,6 +51,7 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 300;
+  margin-top: 6px;
 `;
 
 const Strong = styled.span`
