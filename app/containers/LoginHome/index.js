@@ -41,7 +41,7 @@ const SectionContainer = styled.div`
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: -105px;
+  margin-top: -100px;
 `;
 
 const TermsAndPolicySection = styled.div`
@@ -87,6 +87,7 @@ const AppName = styled.h1`
   font-weight: 300;
   line-height: 50px;
   letter-spacing: 5px;
+  margin-bottom: 3%;
   color: ${({ theme: { colors } }) => colors.primary};
 `;
 
