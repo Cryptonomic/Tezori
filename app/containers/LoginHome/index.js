@@ -207,7 +207,7 @@ const BgCircle4 = styled(BgCircle)`
 
 const CardContainer = styled.div`
   width: 35%;
-  height: 511px;
+  height: 71vh;
   border-radius: 5px;
   background-color: ${({ theme: { colors } }) => colors.white};
   box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
