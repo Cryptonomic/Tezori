@@ -1,5 +1,6 @@
 export const SET_SELECTED = 'SET_SELECTED';
 export const SET_LOCALE = 'SET_LOCALE';
+export const SET_PATH = 'SET_PATH';
 export const ADD_NODE = 'ADD_NODE';
 export const REMOVE_NODE = 'REMOVE_NODE';
 export const UPDATE_NODE = 'UPDATE_NODE';

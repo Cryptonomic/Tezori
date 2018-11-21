@@ -6,19 +6,17 @@ import { connect } from 'react-redux';
 import Modal from '../CustomModal';
 import TextField from '../TextField';
 import { ms } from '../../styles/helpers';
-import { CONSEIL } from '../../constants/NodesTypes';
 import TezosIcon from '../TezosIcon/';
 
-import { addNode, setSelected } from '../../reduxContent/settings/thunks';
+import { addPath, setPath } from '../../reduxContent/settings/thunks';
 import Button from '../Button/';
 import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
-  setSelected: () => {},
-  addNode: () => {},
-  closeAddNodeModal: () => {},
-  isNodeModalOpen: boolean,
-  type: string,
+  setPath: () => {},
+  addPath: () => {},
+  closeAddPathModal: () => {},
+  isPathModalOpen: boolean,
   t: () => {}
 };
 
@@ -49,31 +47,34 @@ const MainContainer = styled.div`
 `;
 
 const defaultState = {
-  name: '',
-  apiKey: '',
-  url: '',
+  label: '',
+  derivation: '',
   error: ''
 };
 
-class AddNodeModal extends Component<Props> {
+class AddPathModal extends Component<Props> {
   props: Props;
   state = defaultState;
 
   handleClose = () => {
-    const { closeAddNodeModal } = this.props;
+    const { closeAddPathModal } = this.props;
     this.setState(defaultState);
-    closeAddNodeModal();
+    closeAddPathModal();
   };
-  handleNameChange = name => this.setState({ name });
-  handleApiKeyChange = apiKey => this.setState({ apiKey });
-  handleUrlChange = url => this.setState({ url });
-  isValidUrl = () => {
-    const { url } = this.state;
-    return url.toLowerCase().indexOf('https://') === 0;
-  };
-  handleAddNode = () => {
-    const { name, apiKey, url } = this.state;
-    const { type, closeAddNodeModal, addNode, setSelected, t } = this.props;
+  handleLabelChange = label => this.setState({ label });
+  handlePathChange = derivation => this.setState({ derivation });
+  /*
+    TO-DO: isValidPath
+    isValidUrl = () => {
+      const { url } = this.state;
+      return url.toLowerCase().indexOf('https://') === 0;
+    };
+  */
+  handleAddPath = () => {
+    const { label, derivation } = this.state;
+    const { closeAddPathModal, addPath, setPath } = this.props;
+    /*
+    TO-DO: isValidPath
     if (this.isValidUrl()) {
       addNode({ name, apiKey, url, type });
       setSelected(name, type);
@@ -82,34 +83,33 @@ class AddNodeModal extends Component<Props> {
     } else {
       this.setState({ error: t('components.addNodeModal.error') });
     }
+
+  */
+    addPath({ label, derivation });
+    setPath(label);
+    closeAddPathModal();
+    this.setState(defaultState);
   };
   render() {
-    const { name, url, error } = this.state;
-    const { type, isNodeModalOpen, t } = this.props;
+    const { label, derivation, error } = this.state;
+    const { isPathModalOpen, t } = this.props;
 
-    const title = t(
-      type === CONSEIL ? 'general.nouns.conseil' : 'general.nouns.tezos'
-    );
-    const title1 = t('components.addNodeModal.title', { title });
+    const title = t('general.nouns.derivation_path');
+    const title1 = t('components.addPathModal.title', { title });
 
     return (
-      <Modal title={title1} open={isNodeModalOpen} onClose={this.handleClose}>
+      <Modal title={title1} open={isPathModalOpen} onClose={this.handleClose}>
         <MainContainer>
           <TextField
-            label={t('components.addNodeModal.labels.node_name')}
-            onChange={this.handleNameChange}
-          />
-
-          <TextField
-            label={t('components.addNodeModal.labels.api_key')}
-            onChange={this.handleApiKeyChange}
+            label={t('components.addPathModal.path_label')}
+            onChange={this.handleLabelChange}
           />
 
           <Container>
             <Content>
               <TextField
-                label="URL (e.g https://127.0.0.1:19731/)"
-                onChange={this.handleUrlChange}
+                label="Derivation Path (e.g 44'/1729'/0'/0'/1')"
+                onChange={this.handlePathChange}
                 errorText={error}
               />
               {error ? (
@@ -120,8 +120,8 @@ class AddNodeModal extends Component<Props> {
 
           <StyledSaveButton
             buttonTheme="primary"
-            onClick={this.handleAddNode}
-            disabled={!name || !url}
+            onClick={this.handleAddPath}
+            disabled={!label || !derivation}
           >
             {t('general.verbs.save')}
           </StyledSaveButton>
@@ -132,7 +132,7 @@ class AddNodeModal extends Component<Props> {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addNode, setSelected }, dispatch);
+  return bindActionCreators({ addPath, setPath }, dispatch);
 }
 
 export default compose(
@@ -141,4 +141,4 @@ export default compose(
     null,
     mapDispatchToProps
   )
-)(AddNodeModal);
+)(AddPathModal);

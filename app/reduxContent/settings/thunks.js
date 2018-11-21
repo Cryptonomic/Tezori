@@ -2,6 +2,7 @@ import { setWalletSettings } from '../../utils/settings';
 import {
   setSelected as _setSelected,
   setLocale as _setLocale,
+  setPath as _setPath,
   addNode as _addNode,
   removeNode as _removeNode,
   updateNode as _updateNode,
@@ -30,6 +31,13 @@ export function setSelected(name, target) {
 export function setLocale(locale) {
   return (dispatch, state) => {
     dispatch(_setLocale(locale));
+    setWalletSettings(getSettings(state()).toJS());
+  };
+}
+
+export function setPath(selected) {
+  return (dispatch, state) => {
+    dispatch(_setPath(selected));
     setWalletSettings(getSettings(state()).toJS());
   };
 }

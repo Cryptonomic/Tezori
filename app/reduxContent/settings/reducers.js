@@ -3,6 +3,7 @@ import { handleActions } from 'redux-actions';
 import {
   SET_SELECTED,
   SET_LOCALE,
+  SET_PATH,
   ADD_NODE,
   REMOVE_NODE,
   UPDATE_NODE,
@@ -47,6 +48,9 @@ export default handleActions(
     },
     [SET_LOCALE]: (state, action) => {
       return state.set('locale', action.locale);
+    },
+    [SET_PATH]: (state, action) => {
+      return state.set('selectedPath', action.selected);
     },
     [ADD_NODE]: (state, action) => {
       const newNode = action.node;
