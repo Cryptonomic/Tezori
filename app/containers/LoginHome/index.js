@@ -11,7 +11,7 @@ import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
-import { name, tagline } from '../../config.json';
+import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
@@ -41,16 +41,13 @@ const SectionContainer = styled.div`
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: -25px;
+  margin-top: -10%;
 `;
 
 const TermsAndPolicySection = styled.div`
   display: flex;
   width: 80%;
   padding: ${ms(2)} 0 0 0;
-  border-top-width: 1px;
-  border-top-color: ${({ theme: { colors } }) => colors.index1};
-  border-top-style: solid;
   justify-content: center;
   align-items: center;
   font-weight: 300;
@@ -91,36 +88,21 @@ const AppName = styled.h1`
   font-weight: 300;
   line-height: 50px;
   letter-spacing: 5px;
-  margin: 0 auto;
-  color: ${({ theme: { colors } }) => colors.primary};
-`;
-
-const AppSubtitle = styled.h2`
-  text-align: center;
-  width: 100%;
-  font-family: 'Roboto', san-serif;
-  font-style: normal;
-  font-stretch: normal;
-  font-size: 1.5vw;
-  font-weight: 300;
-  line-height: 1.2rem;
-  letter-spacing: 0.25rem;
-  margin: 0.5rem auto 1.89rem;
   color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 const BaseButton = styled(Button)`
-  width: 284px;
-  height: 40px;
+  width: 74%;
+  height: 9.5%;
   padding: 0;
 `;
 
 const CreateWalletButton = styled(BaseButton)`
-  margin-top: 22px;
+  margin-top: 8%;
 `;
 
 const UnlockWalletButton = styled(BaseButton)`
-  margin-top: 15px;
+  margin-top: 5%;
   color: black;
   border-color: black;
   background-color: rgba(255, 255, 255, 0.2);
@@ -134,16 +116,19 @@ const UnlockWalletButton = styled(BaseButton)`
 const DefaultContainer = styled.div`
   justify-content: center;
   display: flex;
-  flex-grow: 1;
+  flex: 1;
   flex-direction: column;
+  width: 100%;
   height: 100%;
-  padding: 0px 50px;
+  padding: 0px 0px;
 `;
 
 const Section = styled.section`
   display: flex;
-  flex: 0 1 auto;
-  flex-direction: column;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+  justify-content: center;
 `;
 
 const Background = styled.div`
@@ -220,17 +205,13 @@ const BgCircle4 = styled(BgCircle)`
   animation-delay: 3200ms;
 `;
 
-const MainContainers = styled.div`
-  display: flex;
-`;
-
 const CardContainer = styled.div`
-  width: 399px;
-  height: 425px;
+  width: 35%;
+  height: 511px;
   border-radius: 5px;
   background-color: ${({ theme: { colors } }) => colors.white};
   box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
-  margin: 0 42px;
+  margin: 0 3%;
   text-align: center;
   padding: 20px 0 14px 0;
   display: flex;
@@ -239,21 +220,21 @@ const CardContainer = styled.div`
 `;
 
 const CardImg = styled.img`
-  width: 38%;
-  height: 38%;
+  width: 55%;
+  height: 41%;
 `;
 
 const CardTitle = styled.div`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 300;
   line-height: 20px;
-  margin-top: 22px;
+  margin-top: 5%;
   color: ${({ theme: { colors } }) => colors.primary};
   letter-spacing: 1.7px;
 `;
 
 const Linebar = styled.div`
-  width: 343px;
+  width: 87%;
   height: 1px;
   background-color: ${({ theme: { colors } }) => colors.gray9};
   opacity: 0.46;
@@ -353,86 +334,81 @@ class LoginHome extends Component<Props> {
         <DefaultContainer>
           <Section>
             <AppName>{name}</AppName>
-            <AppSubtitle>{t(tagline)}</AppSubtitle>
           </Section>
           <Section>
-            <MainContainers>
-              <CardContainer>
-                <CardImg src={keystoreImg} />
-                <CardTitle>
-                  {t('containers.loginHome.keystore_wallet')}
-                </CardTitle>
-                <CreateWalletButton
-                  buttonTheme="primary"
-                  onClick={() => this.goTo('create')}
-                  disabled={!isAgreement}
-                >
-                  {t('containers.loginHome.create_new_wallet_btn')}
-                </CreateWalletButton>
-                <UnlockWalletButton
-                  buttonTheme="secondary"
-                  onClick={() => this.goTo('import')}
-                  disabled={!isAgreement}
-                >
-                  {t('containers.loginHome.open_exisiting_wallet_btn')}
-                </UnlockWalletButton>
-                <Linebar />
-                <Tip>
-                  <div>
-                    {t(
-                      'containers.loginHome.want_to_import_fundraiser_paper_wallet'
-                    )}
-                  </div>
-                  <div>
-                    <Trans
-                      i18nKey="containers.loginHome.create_named_wallet"
-                      name={name}
-                    >
-                      wallet?
-                      <Link onClick={() => this.goTo('create')}>
-                        <Strong>Create a {name} wallet</Strong>
-                      </Link>{' '}
-                      first.
-                    </Trans>
-                  </div>
-                </Tip>
-              </CardContainer>
-              <CardContainer>
-                <CardImg src={realLedgerImg} />
+            <CardContainer>
+              <CardImg src={keystoreImg} />
+              <CardTitle>{t('containers.loginHome.keystore_wallet')}</CardTitle>
+              <CreateWalletButton
+                buttonTheme="primary"
+                onClick={() => this.goTo('create')}
+                disabled={!isAgreement}
+              >
+                {t('containers.loginHome.create_new_wallet_btn')}
+              </CreateWalletButton>
+              <UnlockWalletButton
+                buttonTheme="secondary"
+                onClick={() => this.goTo('import')}
+                disabled={!isAgreement}
+              >
+                {t('containers.loginHome.open_exisiting_wallet_btn')}
+              </UnlockWalletButton>
+              <Linebar />
+              <Tip>
+                <div>
+                  {t(
+                    'containers.loginHome.want_to_import_fundraiser_paper_wallet'
+                  )}
+                </div>
+                <div>
+                  <Trans
+                    i18nKey="containers.loginHome.create_named_wallet"
+                    name={name}
+                  >
+                    wallet?
+                    <Link onClick={() => this.goTo('create')}>
+                      <Strong>Create a {name} wallet</Strong>
+                    </Link>{' '}
+                    first.
+                  </Trans>
+                </div>
+              </Tip>
+            </CardContainer>
+            <CardContainer>
+              <CardImg src={realLedgerImg} />
 
-                <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
-                <CreateWalletButton
-                  buttonTheme="primary"
-                  onClick={this.onLedgerConnect}
-                  disabled={!isAgreement || isLoading}
-                >
-                  {isLedgerConnecting && t('containers.loginHome.connecting')}
-                  {!isLedgerConnecting &&
-                    t('containers.loginHome.connect_ledger')}
-                </CreateWalletButton>
-                {isLedgerConnecting && (
-                  <LedgerConnect>
-                    <Trans i18nKey="containers.loginHome.connect_your_device">
-                      Please
-                      <DescriptionBold> connect your device</DescriptionBold>,
-                      <DescriptionBold> enter your pin</DescriptionBold>, and
-                      <DescriptionBold> open Tezos Wallet app</DescriptionBold>.
-                    </Trans>
-                  </LedgerConnect>
-                )}
-                <Linebar />
-                <Tip>
-                  <div>{t('containers.loginHome.dont_have_ledger_wallet')}</div>
-                  <div>
-                    <Link onClick={this.onDownload}>
-                      <Strong>
-                        {t('containers.loginHome.download_it_here')}
-                      </Strong>
-                    </Link>
-                  </div>
-                </Tip>
-              </CardContainer>
-            </MainContainers>
+              <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
+              <CreateWalletButton
+                buttonTheme="primary"
+                onClick={this.onLedgerConnect}
+                disabled={!isAgreement || isLoading}
+              >
+                {isLedgerConnecting && t('containers.loginHome.connecting')}
+                {!isLedgerConnecting &&
+                  t('containers.loginHome.connect_ledger')}
+              </CreateWalletButton>
+              {isLedgerConnecting && (
+                <LedgerConnect>
+                  <Trans i18nKey="containers.loginHome.connect_your_device">
+                    Please
+                    <DescriptionBold> connect your device</DescriptionBold>,
+                    <DescriptionBold> enter your pin</DescriptionBold>, and
+                    <DescriptionBold> open Tezos Wallet app</DescriptionBold>.
+                  </Trans>
+                </LedgerConnect>
+              )}
+              <Linebar />
+              <Tip>
+                <div>{t('containers.loginHome.dont_have_ledger_wallet')}</div>
+                <div>
+                  <Link onClick={this.onDownload}>
+                    <Strong>
+                      {t('containers.loginHome.download_it_here')}
+                    </Strong>
+                  </Link>
+                </div>
+              </Tip>
+            </CardContainer>
           </Section>
         </DefaultContainer>
         <TermsAndPolicySection>
