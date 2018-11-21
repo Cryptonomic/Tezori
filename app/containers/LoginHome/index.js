@@ -41,7 +41,8 @@ const SectionContainer = styled.div`
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: -100px;
+  margin-top: -160px;
+  padding-bottom: 5px;
 `;
 
 const TermsAndPolicySection = styled.div`
@@ -51,7 +52,9 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 300;
-  margin-top: 6px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
 `;
 
 const Strong = styled.span`
@@ -82,14 +85,15 @@ const Tip = styled.div`
 const AppName = styled.h1`
   text-align: center;
   width: 100%;
+  margin-top: 50px;
+  margin-bottom: -15px;
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 4.5vw;
+  font-size: 40px;
   font-weight: 300;
   line-height: 50px;
   letter-spacing: 5px;
-  margin-bottom: 3%;
   color: ${({ theme: { colors } }) => colors.primary};
 `;
 
@@ -123,6 +127,14 @@ const DefaultContainer = styled.div`
   width: 100%;
   height: 100%;
   padding: 0px 0px;
+`;
+
+const NameSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  justify-content: center;
 `;
 
 const Section = styled.section`
@@ -208,8 +220,8 @@ const BgCircle4 = styled(BgCircle)`
 `;
 
 const CardContainer = styled.div`
-  width: 35%;
-  height: 71vh;
+  width: 380px;
+  height: 500px;
   border-radius: 5px;
   background-color: ${({ theme: { colors } }) => colors.white};
   box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
@@ -334,9 +346,9 @@ class LoginHome extends Component<Props> {
     return (
       <SectionContainer>
         <DefaultContainer>
-          <Section>
+          <NameSection>
             <AppName>{name}</AppName>
-          </Section>
+          </NameSection>
           <Section>
             <CardContainer>
               <CardImg src={keystoreImg} />
