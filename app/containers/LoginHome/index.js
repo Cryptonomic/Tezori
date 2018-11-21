@@ -210,7 +210,7 @@ const CardContainer = styled.div`
   border-radius: 5px;
   background-color: ${({ theme: { colors } }) => colors.white};
   box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
-  margin: 0 3%;
+  margin: 0 4%;
   text-align: center;
   padding: 20px 0 14px 0;
   display: flex;
