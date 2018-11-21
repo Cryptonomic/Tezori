@@ -67,8 +67,9 @@ const Description = styled.span`
 `;
 
 const Tip = styled.div`
-  width: 288px;
-  margin-top: 15px;
+  width: 76%;
+  justify-content: center;
+  margin-top: 2%;
   font-size: 14px;
   line-height: 1.5;
   font-weight: 300;
