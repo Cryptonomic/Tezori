@@ -46,7 +46,6 @@ const SectionContainer = styled.div`
 const TermsAndPolicySection = styled.div`
   display: flex;
   width: 80%;
-  padding: 10px 0 0 0;
   justify-content: center;
   align-items: center;
   font-weight: 300;
