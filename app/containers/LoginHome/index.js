@@ -6,7 +6,6 @@ import { bindActionCreators, compose } from 'redux';
 import { Trans } from 'react-i18next';
 import i18n from 'i18next';
 
-import { ms } from '../../styles/helpers';
 import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
@@ -42,13 +41,12 @@ const SectionContainer = styled.div`
   overflow-y: hidden;
   overflow-x: hidden;
   margin-top: -160px;
-  padding-bottom: 5px;
 `;
 
 const TermsAndPolicySection = styled.div`
   display: flex;
   width: 80%;
-  padding: ${ms(2)} 0 0 0;
+  padding: 10px 0 0 0;
   justify-content: center;
   align-items: center;
   font-weight: 300;
@@ -85,12 +83,12 @@ const Tip = styled.div`
 const AppName = styled.h1`
   text-align: center;
   width: 100%;
-  margin-top: 50px;
+  margin-top: 6%;
   margin-bottom: -15px;
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 40px;
+  font-size: 4vw;
   font-weight: 300;
   line-height: 50px;
   letter-spacing: 5px;
@@ -221,16 +219,17 @@ const BgCircle4 = styled(BgCircle)`
 
 const CardContainer = styled.div`
   width: 380px;
-  height: 500px;
+  height: 530px;
   border-radius: 5px;
   background-color: ${({ theme: { colors } }) => colors.white};
   box-shadow: 0 2px 4px 0 ${({ theme: { colors } }) => colors.gray13};
-  margin: 0 4%;
+  margin: 0 3.5%;
   text-align: center;
   padding: 20px 0 14px 0;
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-top: 15px;
 `;
 
 const CardImg = styled.img`
