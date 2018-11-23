@@ -462,8 +462,8 @@ export function importAddress(
 export function login(loginType, walletLocation, walletFileName, password) {
   return async dispatch => {
     const completeWalletPath = path.join(walletLocation, walletFileName);
-    await dispatch(addMessage('', true));
-    await dispatch(setLedger(false));
+    dispatch(addMessage('', true));
+    dispatch(setLedger(false));
     try {
       let wallet = {};
       if (loginType === CREATE) {
