@@ -254,7 +254,10 @@ class LoginCreate extends Component<Props> {
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
-    await login(loginType, walletLocation, walletFileName, password);
+    await this.setIsLoading(true);
+    await setTimeout(() => {
+      login(loginType, walletLocation, walletFileName, password);
+    }, 5);
   };
 
   onPasswordShow = index => {
@@ -271,10 +274,7 @@ class LoginCreate extends Component<Props> {
 
   onEnterPress = async (keyVal, isDisabled) => {
     if (keyVal === 'Enter' && !isDisabled) {
-      await this.setIsLoading(true);
-      setTimeout(() => {
-        this.login(CREATE);
-      }, 5);
+      await this.login(CREATE);
     }
   };
 

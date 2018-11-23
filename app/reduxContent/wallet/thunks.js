@@ -461,7 +461,6 @@ export function importAddress(
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function login(loginType, walletLocation, walletFileName, password) {
   return async dispatch => {
-    dispatch(setIsLoading(true));
     const completeWalletPath = path.join(walletLocation, walletFileName);
     dispatch(addMessage('', true));
     dispatch(setLedger(false));
@@ -483,7 +482,6 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(
         setWallet(
           {
-            isLoading: true,
             identities,
             walletLocation,
             walletFileName,
