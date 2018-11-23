@@ -107,10 +107,13 @@ class LoginImport extends Component<Props> {
     );
   };
 
-  login = loginType => {
+  login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
     const { login } = this.props;
-    login(loginType, walletLocation, walletFileName, password);
+    await this.setIsLoading(true);
+    await setTimeout(() => {
+      login(loginType, walletLocation, walletFileName, password);
+    }, 5);
   };
 
   setIsLoading = isLoading => this.setState({ isLoading });
@@ -123,10 +126,9 @@ class LoginImport extends Component<Props> {
     this.setState({ isShowed: !this.state.isShowed });
   };
 
-  onEnterPress = async (keyVal, isDisabled) => {
+  onEnterPress = (keyVal, isDisabled) => {
     if (keyVal === 'Enter' && !isDisabled) {
-      await this.setIsLoading(true);
-      await this.login(IMPORT);
+      this.login(IMPORT);
     }
   };
 

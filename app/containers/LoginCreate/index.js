@@ -272,9 +272,9 @@ class LoginCreate extends Component<Props> {
     this.setState({ isLoading });
   };
 
-  onEnterPress = async (keyVal, isDisabled) => {
+  onEnterPress = (keyVal, isDisabled) => {
     if (keyVal === 'Enter' && !isDisabled) {
-      await this.login(CREATE);
+      this.login(CREATE);
     }
   };
 
