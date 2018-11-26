@@ -248,6 +248,7 @@ class SeedInput extends Component<Props> {
                       })
                     : undefined,
                 onKeyDown: this.handleKeyDown,
+                onChange: this.handleInputChange,
                 id: 'integration-downshift-multiple'
               })
             })}
