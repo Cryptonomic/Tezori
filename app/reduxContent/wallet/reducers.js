@@ -14,7 +14,8 @@ import {
   LOGOUT,
   SET_LEDGER,
   SET_IS_LEDGER_CONNECTIONG,
-  WALLET_IS_SYNCING
+  WALLET_IS_SYNCING,
+  SET_IS_HOME
 } from './types';
 
 export const initialState = {
@@ -36,7 +37,30 @@ export const initialState = {
   },
   time: new Date(),
   isLedger: false,
-  isLedgerConnecting: false
+  isLedgerConnecting: false,
+  isHome: false
+};
+
+const logOutState = {
+  identities: [],
+  isLoading: false,
+  isWalletSyncing: false,
+  walletFileName: '',
+  walletLocation: '',
+  password: '',
+  nodesStatus: {
+    tezos: {
+      responsive: true,
+      level: 0
+    },
+    conseil: {
+      responsive: true,
+      level: 0
+    }
+  },
+  time: new Date(),
+  isLedger: false,
+  isHome: false
 };
 
 export default handleActions(
@@ -90,14 +114,17 @@ export default handleActions(
     [UPDATE_FETCHED_TIME]: (state, action) => {
       return state.set('time', action.time);
     },
-    [LOGOUT]: () => {
-      return fromJS(initialState);
+    [LOGOUT]: state => {
+      return fromJS({ ...state.toJS(), ...logOutState });
     },
     [SET_LEDGER]: (state, action) => {
       return state.set('isLedger', action.isLedger);
     },
     [SET_IS_LEDGER_CONNECTIONG]: (state, action) => {
       return state.set('isLedgerConnecting', action.isLedgerConnecting);
+    },
+    [SET_IS_HOME]: (state, action) => {
+      return state.set('isHome', action.isHome);
     }
   },
   fromJS(initialState)

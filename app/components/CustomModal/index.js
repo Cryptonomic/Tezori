@@ -22,7 +22,7 @@ const ModalContainer = styled.div`
 
 const CloseIconWrapper = styled(CloseIcon)`
   &&& {
-    fill: #7190C6;
+    fill: #7190c6;
     cursor: pointer;
     height: 20px;
     width: 20px;
@@ -42,28 +42,18 @@ const ModalTitle = styled.div`
 `;
 
 type Props = {
-  title: string,
+  title: string | React.Element,
   open: boolean,
   children?: React.Element,
   onClose: () => {}
 };
 
 const CustomModal = (props: Props) => {
-  const {
-    title,
-    open,
-    children,
-    onClose,
-    ...other
-  } = props;
+  const { title, open, children, onClose, ...other } = props;
   return (
-    <ModalWrapper
-      open={open}      
-    >
+    <ModalWrapper open={open}>
       <ModalContainer {...other}>
-        <CloseIconWrapper
-          onClick={onClose}
-        />
+        <CloseIconWrapper onClick={onClose} />
         <ModalTitle>{title}</ModalTitle>
         {children}
       </ModalContainer>

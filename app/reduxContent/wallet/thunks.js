@@ -3,7 +3,8 @@ import { push } from 'react-router-redux';
 import {
   TezosWallet,
   TezosConseilQuery,
-  TezosOperations
+  TezosOperations,
+  TezosHardwareWallet
 } from 'conseiljs-staging';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
@@ -40,7 +41,9 @@ import {
   saveUpdatedWallet,
   loadPersistedState,
   persistWalletState,
-  loadWalletFromLedger
+  loadWalletFromLedger,
+  getDevices,
+  getPublicKey
 } from '../../utils/wallet';
 
 import {
@@ -54,7 +57,8 @@ import {
   updateIdentity,
   updateFetchedTime,
   setLedger,
-  setIsLedgerConnecting
+  setIsLedgerConnecting,
+  setIsHome
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
@@ -69,12 +73,15 @@ const { getAccount } = TezosConseilQuery;
 
 const { sendIdentityActivationOperation } = TezosOperations;
 let currentAccountRefreshInterval = null;
+let currentLedgerRefreshInterval = null;
 
 export function goHomeAndClearState() {
   return dispatch => {
     dispatch(logout());
     clearAutomaticAccountRefresh();
+    clearAutomaticLedgerRefresh();
     dispatch(push('/'));
+    TezosHardwareWallet.setIssue();
   };
 }
 
@@ -98,6 +105,24 @@ export function automaticAccountRefresh() {
 
 export function clearAutomaticAccountRefresh() {
   clearInterval(currentAccountRefreshInterval);
+}
+
+export function automaticLedgerRefresh() {
+  return dispatch => {
+    const REFRESH_INTERVAL = 500;
+
+    if (currentLedgerRefreshInterval) {
+      clearAutomaticLedgerRefresh();
+    }
+
+    currentLedgerRefreshInterval = setInterval(() => {
+      dispatch(syncLedger());
+    }, REFRESH_INTERVAL);
+  };
+}
+
+export function clearAutomaticLedgerRefresh() {
+  clearInterval(currentLedgerRefreshInterval);
 }
 
 export function updateAccountActiveTab(
@@ -512,35 +537,68 @@ export function connectLedger() {
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
     dispatch(addMessage('', true));
-    try {
-      const wallet = await loadWalletFromLedger();
-      const identities = wallet.identities.map((identity, identityIndex) => {
-        return createIdentity({
-          ...identity,
-          order: identity.order || identityIndex + 1
-        });
-      });
+    dispatch(automaticLedgerRefresh());
+  };
+}
 
-      dispatch(
-        setWallet(
-          {
-            isLoading: true,
-            identities,
-            walletLocation: '',
-            walletFileName: 'Ledger Nano S'
-          },
-          'wallet'
-        )
-      );
-
-      dispatch(automaticAccountRefresh());
-      dispatch(push('/home'));
-      await dispatch(syncWallet());
-    } catch (e) {
-      console.error(e);
-      dispatch(addMessage(e.name, true));
+export function syncLedger() {
+  return async (dispatch, state) => {
+    const isLedgerConnecting = state().wallet.get('isLedgerConnecting');
+    const isHome = state().wallet.get('isHome');
+    const isLedger = state().wallet.get('isLedger');
+    const devices = await getDevices();
+    if (isLedger && isHome && !devices.length) {
+      dispatch(goHomeAndClearState());
+      dispatch(setIsLoading(false));
+      return;
     }
-    dispatch(setIsLoading(false));
-    dispatch(setIsLedgerConnecting(false));
+
+    if (isHome && devices.length) {
+      const pkh = await getPublicKey(devices[0]);
+      if (!pkh) {
+        dispatch(goHomeAndClearState());
+      }
+    }
+
+    if (isLedgerConnecting && devices.length) {
+      const pkh = await getPublicKey(devices[0]);
+      if (pkh) {
+        try {
+          const wallet = await loadWalletFromLedger();
+          const identities = wallet.identities.map(
+            (identity, identityIndex) => {
+              return createIdentity({
+                ...identity,
+                order: identity.order || identityIndex + 1
+              });
+            }
+          );
+
+          dispatch(
+            setWallet(
+              {
+                isLoading: true,
+                identities,
+                walletLocation: '',
+                walletFileName: 'Ledger Nano S'
+              },
+              'wallet'
+            )
+          );
+
+          dispatch(automaticAccountRefresh());
+          dispatch(push('/home'));
+          dispatch(setIsLedgerConnecting(false));
+          dispatch(setIsHome(true));
+          await dispatch(syncWallet());
+        } catch (e) {
+          console.error(e);
+          TezosHardwareWallet.setIssue();
+          dispatch(addMessage(e.name, true));
+          dispatch(setIsLedgerConnecting(false));
+        }
+        dispatch(setIsLoading(false));
+      }
+    }
   };
 }

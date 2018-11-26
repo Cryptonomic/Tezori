@@ -10,6 +10,7 @@ import Button from '../../components/Button/';
 import Checkbox from '../../components/Checkbox/';
 import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
+import ConnectingLedgerModal from '../../components/ConnectingLedgerModal';
 import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
@@ -335,6 +336,8 @@ class LoginHome extends Component<Props> {
 
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
+  onCloseConnectingModal = () => {};
+
   render() {
     const { t, isLoading, isLedgerConnecting } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
@@ -427,6 +430,7 @@ class LoginHome extends Component<Props> {
           <Checkbox
             isChecked={isAgreement}
             onCheck={this.updateStatusAgreement}
+            isLoading={isLoading}
           />
           <Description>
             <Trans i18nKey="containers.loginHome.description">
@@ -448,6 +452,10 @@ class LoginHome extends Component<Props> {
           isOpen={!isAgreement && isLanguageSelected}
           agreeTermsAndPolicy={this.updateStatusAgreement}
           onBack={this.goToLanguageSelect}
+        />
+        <ConnectingLedgerModal
+          open={isLedgerConnecting}
+          onCloseClick={this.onCloseConnectingModal}
         />
         <Background>
           <BgContainerImg src={bgHero} />
