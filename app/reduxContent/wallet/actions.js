@@ -12,7 +12,8 @@ import {
   LOGOUT,
   SET_LEDGER,
   SET_IS_LEDGER_CONNECTIONG,
-  WALLET_IS_SYNCING
+  WALLET_IS_SYNCING,
+  SET_IS_HOME
 } from './types';
 import actionCreator from '../../utils/reduxHelpers';
 
@@ -42,3 +43,5 @@ export const setWalletIsSyncing = actionCreator(
   WALLET_IS_SYNCING,
   'isWalletSyncing'
 );
+
+export const setIsHome = actionCreator(SET_IS_HOME, 'isHome');

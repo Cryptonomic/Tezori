@@ -37,3 +37,7 @@ export const getIsLedger = createSelector(getWallet, wallet =>
 export const getIsLedgerConnecting = createSelector(getWallet, wallet =>
   wallet.get('isLedgerConnecting')
 );
+
+export const getIsHome = createSelector(getWallet, wallet =>
+  wallet.get('isHome')
+);

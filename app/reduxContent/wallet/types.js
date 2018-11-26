@@ -12,3 +12,4 @@ export const LOGOUT = 'LOGOUT';
 export const SET_LEDGER = 'SET_LEDGER';
 export const SET_IS_LEDGER_CONNECTIONG = 'SET_IS_LEDGER_CONNECTIONG';
 export const WALLET_IS_SYNCING = 'WALLET_IS_SYNCING';
+export const SET_IS_HOME = 'SET_IS_HOME';

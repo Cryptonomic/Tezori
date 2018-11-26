@@ -1170,9 +1170,9 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-"conseiljs-staging@https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#staging":
+"conseiljs-staging@https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#staging-dev":
   version "0.1.0"
-  resolved "https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#619b84deb9c4f74d82e80f863dea2c9a0013948b"
+  resolved "https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#d3f729471b57ab224bdd4200b870517fdb977170"
   dependencies:
     "@ledgerhq/hw-transport" "4.21.0"
     "@ledgerhq/hw-transport-node-hid" "^4.22.0"
@@ -1186,6 +1186,7 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     https "^1.0.0"
     libsodium-wrappers "^0.5.4"
     libsodium-wrappers-sumo "^0.5.4"
+    node-hid "^0.7.4"
     tsconfig-paths-webpack-plugin "^3.2.0"
     zxcvbn "^4.4.2"
 
@@ -2520,6 +2521,10 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+napi-build-utils@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/napi-build-utils/-/napi-build-utils-1.0.1.tgz#1381a0f92c39d66bf19852e7873432fc2123e508"
+
 needle@^2.2.1:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.4.tgz#51931bff82533b1928b7d1d69e01f1b00ffd2a4e"
@@ -2552,6 +2557,14 @@ node-hid@^0.7.2:
     bindings "^1.3.0"
     nan "^2.10.0"
     prebuild-install "^4.0.0"
+
+node-hid@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/node-hid/-/node-hid-0.7.4.tgz#2db109acee654b56bf518ffb3fd92cf9cd0647c1"
+  dependencies:
+    bindings "^1.3.0"
+    nan "^2.10.0"
+    prebuild-install "^5.2.1"
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"
@@ -2791,6 +2804,27 @@ prebuild-install@^4.0.0:
     os-homedir "^1.0.1"
     pump "^2.0.1"
     rc "^1.1.6"
+    simple-get "^2.7.0"
+    tar-fs "^1.13.0"
+    tunnel-agent "^0.6.0"
+    which-pm-runs "^1.0.0"
+
+prebuild-install@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-5.2.1.tgz#87ba8cf17c65360a75eefeb3519e87973bf9791d"
+  dependencies:
+    detect-libc "^1.0.3"
+    expand-template "^1.0.2"
+    github-from-package "0.0.0"
+    minimist "^1.2.0"
+    mkdirp "^0.5.1"
+    napi-build-utils "^1.0.1"
+    node-abi "^2.2.0"
+    noop-logger "^0.1.1"
+    npmlog "^4.0.1"
+    os-homedir "^1.0.1"
+    pump "^2.0.1"
+    rc "^1.2.7"
     simple-get "^2.7.0"
     tar-fs "^1.13.0"
     tunnel-agent "^0.6.0"

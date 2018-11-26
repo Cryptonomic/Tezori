@@ -130,3 +130,15 @@ export async function loadWalletFromLedger(derivationPath) {
 export function initLedgerTransport() {
   TezosHardwareWallet.initLedgerTransport();
 }
+
+export async function getDevices() {
+  const devices = await TezosHardwareWallet.getDevices();
+  return devices;
+}
+
+export async function getPublicKey(device) {
+  const pubkey = await TezosHardwareWallet.getTezosPublicKey(`44'/1729'/0'/0'/0'`, device).catch((err) => {
+    return null;
+  });
+  return pubkey;
+}

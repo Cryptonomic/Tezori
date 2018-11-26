@@ -122,6 +122,14 @@
     "copyIcon": {
       "copied": "Copied!"
     },
+    "connectingLedgerModal": {
+      "connecting_ledger": "Connecting to Ledger…",
+      "to_access_ledger": "To access your Ledger wallet please complete the following steps:",
+      "connect_your_device": "Connect your device",
+      "enter_pin": "Enter PIN",
+      "open_wallet": "Open Tezos Wallet App.<1> (Don’t have the app?<1>Get it here.</1>)</1>",
+      "provide_key": "Provide your public key to connect Galleon to your account."
+    },
     "createAccountSlide": {
       "descriptions": {
         "description1": "Write down your seed phrase on a piece of paper and keep it in a safe place. You will need your seed phrase to recover your account.",
