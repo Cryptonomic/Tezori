@@ -3,11 +3,15 @@ import styled from 'styled-components';
 import keycode from 'keycode';
 import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+
 import { ms } from '../../styles/helpers';
 import seedJson from './seed.json';
 
@@ -60,22 +64,60 @@ const CloseIconWrapper = styled(CloseIcon)`
   }
 `;
 
-const renderInput = inputProps => {
-  const { InputProps, classes, ref, ...other } = inputProps;
+const Container = styled(FormControl)`
+  width: 100%;
+  pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
+`;
 
-  return (
-    <TextField
-      InputProps={{
-        inputRef: ref,
-        classes: {
-          root: classes.inputRoot
-        },
-        ...InputProps
-      }}
-      {...other}
-    />
-  );
+const InputWrapper = styled(Input)`
+  &&& {
+    &[class*='focused'] {    
+      &:after {
+        border-bottom-color: ${({ error, theme: { colors } }) =>
+          error ? colors.error1 : colors.accent};
+      }
+    }
+    color: ${({ disabled, theme: { colors } }) =>
+      disabled ? colors.gray5 : colors.primary};
+    font-size: 16px;
+    font-weight: 300;
+    padding-right: ${({ right }) => right}px;
+    &:before {
+      border-bottom: ${({ disabled }) =>
+        disabled
+          ? '1px dotted rgba(0, 0, 0, 0.32)'
+          : '1px solid rgba(0, 0, 0, 0.12)'} ;
+    }
+    &:hover:before {
+      border-bottom: solid 2px ${({ error, theme: { colors } }) =>
+        error ? colors.error1 : colors.accent} !important;
+    }    
+  }
+}`;
+const LabelWrapper = styled(InputLabel)`
+  &&& {
+    &[class*='focused'] {    
+      color: ${({ theme: { colors } }) => colors.gray3};
+    }
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 16px;
+  }
+}`;
+
+const ErrorText = styled(FormHelperText)`
+  &&& {
+    color: ${({ theme: { colors } }) => colors.error1};
+    font-size: 12px;
+    margin-top: 5px;
+    line-height: 18px;
+    height: 18px;
+  }
+}`;
+
+const renderInput = () => {
+  return <InputWrapper id="integration-downshift-multiple" />;
 };
+
 type Props1 = {
   highlightedIndex: number | null,
   index: number | null,
@@ -204,7 +246,6 @@ class SeedInput extends Component<Props> {
         defaultHighlightedIndex={0}
       >
         {({
-          getInputProps,
           getItemProps,
           isOpen,
           inputValue: inputValue2,
@@ -212,10 +253,11 @@ class SeedInput extends Component<Props> {
           highlightedIndex
         }) => (
           <div className={classes.container}>
-            {renderInput({
-              fullWidth: true,
-              classes,
-              InputProps: getInputProps({
+            <Container>
+              <LabelWrapper>15 Word Secret Key</LabelWrapper>
+              {renderInput({
+                onChange: this.handleInputChange,
+                onKeyDown: this.handleKeyDown,
                 startAdornment: selectedItems.map((item, index) => {
                   const itemIndex = seedJson
                     .map(items => {
@@ -242,26 +284,23 @@ class SeedInput extends Component<Props> {
                       onDelete={this.handleDelete(item)}
                     />
                   );
-                }),
-                onChange: this.handleInputChange,
-                onKeyDown: this.handleKeyDown,
-                label: 'Enter your 15 word seed phrase',
-                id: 'integration-downshift-multiple'
-              })
-            })}
-            {isOpen ? (
-              <PaperWrapper square>
-                {getSuggestions(inputValue2).map((suggestion, index) =>
-                  renderSuggestion({
-                    suggestion,
-                    index,
-                    itemProps: getItemProps({ item: suggestion.label }),
-                    highlightedIndex,
-                    selectedItem: selectedItem2
-                  })
-                )}
-              </PaperWrapper>
-            ) : null}
+                })
+              })}
+              {isOpen ? (
+                <PaperWrapper square>
+                  {getSuggestions(inputValue2).map((suggestion, index) =>
+                    renderSuggestion({
+                      suggestion,
+                      index,
+                      itemProps: getItemProps({ item: suggestion.label }),
+                      highlightedIndex,
+                      selectedItem: selectedItem2
+                    })
+                  )}
+                </PaperWrapper>
+              ) : null}
+              <ErrorText />
+            </Container>
           </div>
         )}
       </Downshift>
