@@ -66,6 +66,11 @@ const renderInput = inputProps => {
   return (
     <TextField
       label="15 Word Secret Key"
+      InputLabelProps={{
+        classes: {
+          root: classes.labelRoot
+        }
+      }}
       InputProps={{
         inputRef: ref,
         classes: {
@@ -77,6 +82,31 @@ const renderInput = inputProps => {
     />
   );
 };
+
+const styles = () => ({
+  container: {
+    position: 'relative'
+  },
+  inputRoot: {
+    color: `${({ disabled, theme: { colors } }) =>
+      disabled ? colors.gray5 : colors.primary}`,
+    fontSize: '16px',
+    fontWeight: 300,
+    flexWrap: 'wrap',
+    paddingRight: `${({ right }) => right}px`,
+    '&:before': {
+      borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
+    },
+    '&&&&:hover:before': {
+      borderBottom: 'solid 2px #2c7df7'
+    }
+  },
+  labelRoot: {
+    color: 'rgba(0, 0, 0, 0.38)',
+    fontSize: '16px'
+  }
+});
+
 type Props1 = {
   highlightedIndex: number | null,
   index: number | null,
@@ -135,16 +165,6 @@ const getSuggestions = inputValue => {
     return suggestion.label.toLowerCase().startsWith(inputValue.toLowerCase());
   });
 };
-
-const styles = () => ({
-  container: {
-    position: 'relative'
-  },
-  inputRoot: {
-    flexWrap: 'wrap',
-    color: '#123262'
-  }
-});
 
 type Props = {
   selectedItems: array,
