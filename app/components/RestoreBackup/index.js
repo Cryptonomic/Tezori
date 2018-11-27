@@ -120,7 +120,8 @@ class RestoreBackup extends Component<Props> {
     password: '',
     isPassword: false,
     isShowedPwd: false,
-    key: ''
+    key: '',
+    error: false
   };
 
   importAddress = () => {
@@ -157,6 +158,10 @@ class RestoreBackup extends Component<Props> {
     this.setState({ inputValue: val });
   };
 
+  triggerError = () => {
+    this.setState({ error: true });
+  };
+
   onChangeItems = items => {
     this.setState({ seeds: items, inputValue: '' });
   };
@@ -175,7 +180,8 @@ class RestoreBackup extends Component<Props> {
       password,
       isPassword,
       isShowedPwd,
-      key
+      key,
+      error
     } = this.state;
     const { t } = this.props;
     let isdisabled = false;
@@ -199,6 +205,8 @@ class RestoreBackup extends Component<Props> {
         {type === 'phrase' && (
           <Fragment>
             <SeedInput
+              triggerError={this.triggerError}
+              error={error}
               label={t('components.restoreBackup.fundraiser_password')}
               selectedItems={seeds}
               inputValue={inputValue}

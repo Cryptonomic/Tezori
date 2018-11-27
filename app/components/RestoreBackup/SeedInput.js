@@ -61,7 +61,7 @@ const CloseIconWrapper = styled(CloseIcon)`
 `;
 
 const renderInput = inputProps => {
-  const { InputProps, classes, ref, ...other } = inputProps;
+  const { InputProps, classes, ref, error, ...other } = inputProps;
 
   return (
     <TextField
@@ -175,23 +175,39 @@ type Props = {
   inputValue: string,
   classes?: object,
   onChangeInput: () => {},
-  onChangeItems: () => {}
+  onChangeItems: () => {},
+  // triggerError?: () => {},
+  error?: boolean
 };
 
 class SeedInput extends Component<Props> {
   componentDidMount() {}
 
   handleKeyDown = event => {
-    const { inputValue, selectedItems, onChangeItems } = this.props;
+    const {
+      inputValue,
+      selectedItems,
+      onChangeItems
+      // triggerError
+    } = this.props;
     if (
-      selectedItems.length &&
-      !inputValue.length &&
-      keycode(event) === 'backspace'
+      (selectedItems.length &&
+        !inputValue.length &&
+        keycode(event) === 'backspace') ||
+      (selectedItems.length && !inputValue.length && keycode(event) === 'enter')
     ) {
       const newItems = selectedItems.slice(0, selectedItems.length - 1);
       onChangeItems(newItems);
     } else if (keycode(event) === 'space' && inputValue.length > 0) {
       const newInputValue = inputValue.trim();
+      const results = seedJson.filter(suggestion => {
+        return suggestion.label.toLowerCase() === newInputValue;
+      });
+      if (results.length === 0) {
+        console.log('triggeredddd');
+        // triggerError()
+        // set state of error to TRUE
+      }
       const newItems = [...selectedItems, newInputValue];
       onChangeItems(newItems);
     }
@@ -220,9 +236,10 @@ class SeedInput extends Component<Props> {
   };
 
   render() {
-    const { classes, inputValue, selectedItems } = this.props;
+    const { classes, inputValue, selectedItems, error } = this.props;
     return (
       <Downshift
+        error={error}
         inputValue={inputValue}
         onChange={this.handleChange}
         selectedItem={selectedItems}
@@ -241,6 +258,7 @@ class SeedInput extends Component<Props> {
               fullWidth: true,
               classes,
               InputProps: getInputProps({
+                error,
                 startAdornment:
                   selectedItems.length > 0 && Array.isArray(selectedItems)
                     ? selectedItems.map((item, index) => {
