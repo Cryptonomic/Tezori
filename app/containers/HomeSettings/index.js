@@ -11,6 +11,7 @@ import Check from '@material-ui/icons/Check';
 import { ms } from '../../styles/helpers';
 import { H2 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
+import AddPathModal from '../../components/AddPathModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 import CustomSelect from '../../components/CustomSelect/';
 import LanguageSelector from '../../components/LanguageSelector/';
@@ -20,7 +21,8 @@ import { syncWallet } from '../../reduxContent/wallet/thunks';
 import {
   setSelected,
   removeNode,
-  setLocale
+  setLocale,
+  setPath
 } from '../../reduxContent/settings/thunks';
 
 import {
@@ -28,6 +30,8 @@ import {
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes,
+  getSelectedPath,
+  getPathsList,
   getLocale
 } from '../../reduxContent/settings/selectors';
 
@@ -36,8 +40,11 @@ type Props = {
   conseilNodes: array,
   tezosSelectedNode: string,
   tezosNodes: array,
+  selectedPath: string,
+  pathsList: array,
   syncWallet: () => {},
   setSelected: () => {},
+  setPath: () => {},
   goBack: () => {},
   theme: object,
   t: () => {},
@@ -152,7 +159,8 @@ class SettingsPage extends Component<Props> {
 
   state = {
     type: '',
-    isModalOpen: false
+    isNodeModalOpen: false,
+    isPathModalOpen: false
   };
 
   selectedItem = {
@@ -164,9 +172,15 @@ class SettingsPage extends Component<Props> {
 
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
 
-  openAddNodeModal = type => this.setState({ type, isModalOpen: true });
+  handlePathChange = newValue => this.props.setPath(newValue);
 
-  closeAddNodeModal = () => this.setState({ type: '', isModalOpen: false });
+  openAddNodeModal = type => this.setState({ type, isNodeModalOpen: true });
+
+  closeAddNodeModal = () => this.setState({ type: '', isNodeModalOpen: false });
+
+  openAddPathModal = () => this.setState({ isPathModalOpen: true });
+
+  closeAddPathModal = () => this.setState({ isPathModalOpen: false });
 
   getNodeUrl = (nodes, selectedNode) => {
     let url = '';
@@ -180,7 +194,19 @@ class SettingsPage extends Component<Props> {
     return url;
   };
 
-  renderNodes(nodes, selectedNode) {
+  getPath = (pathsList, selectedPath) => {
+    let path = '';
+    const foundPath = pathsList.find(path => {
+      const label = path.get('label');
+      return label === selectedPath;
+    });
+    if (foundPath) {
+      path = foundPath.get('derivation');
+    }
+    return path;
+  };
+
+  renderNodes = (nodes, selectedNode) => {
     const { theme } = this.props;
     return nodes.map((node, index) => {
       const name = node.get('name');
@@ -211,7 +237,40 @@ class SettingsPage extends Component<Props> {
         </ItemWrapper>
       );
     });
-  }
+  };
+
+  renderPaths = (paths, selectedPath) => {
+    const { theme } = this.props;
+    return paths.map((path, index) => {
+      const label = path.get('label');
+      const derivation = path.get('derivation');
+      const selected = selectedPath === label;
+      const option = (
+        <SelectOption>
+          {selected && (
+            <OptionStatus>
+              <Check
+                style={{
+                  fill: theme.colors.blue1,
+                  height: ms(1.5),
+                  width: ms(1.5)
+                }}
+              />
+            </OptionStatus>
+          )}
+          <OptionLabel isActive={selected}>
+            <NodeName>{label}</NodeName>
+            <NodeUrl>{derivation}</NodeUrl>
+          </OptionLabel>
+        </SelectOption>
+      );
+      return (
+        <ItemWrapper key={index} url={derivation} value={label}>
+          {option}
+        </ItemWrapper>
+      );
+    });
+  };
 
   render() {
     const {
@@ -221,12 +280,14 @@ class SettingsPage extends Component<Props> {
       conseilNodes,
       tezosSelectedNode,
       tezosNodes,
+      selectedPath,
+      pathsList,
       locale,
       setLocale,
       t
     } = this.props;
 
-    const { type, isModalOpen } = this.state;
+    const { type, isNodeModalOpen, isPathModalOpen } = this.state;
 
     return (
       <Container>
@@ -247,7 +308,7 @@ class SettingsPage extends Component<Props> {
           />
           <span>{t('containers.homeSettings.back_to_wallet')}</span>
         </BackToWallet>
-        <H2>{t('containers.homeSettings.wallet_settings')}</H2>
+        <H2>{t('containers.homeSettings.general_settings')}</H2>
 
         <Content6>
           <ContentTitle>
@@ -341,9 +402,62 @@ class SettingsPage extends Component<Props> {
         </Content>
 
         <AddNodeModal
-          isModalOpen={isModalOpen}
+          isNodeModalOpen={isNodeModalOpen}
           type={type}
           closeAddNodeModal={this.closeAddNodeModal}
+        />
+
+        <H2 style={{ marginTop: '30px' }}>
+          {t('containers.homeSettings.hardware_settings')}
+        </H2>
+
+        <Content6>
+          <ContentTitle>
+            {t('containers.homeSettings.choose_derivation_path')}
+          </ContentTitle>
+          <RowForParts>
+            <Part>
+              <CustomSelect
+                label="Derivation Path"
+                value={selectedPath}
+                onChange={event => {
+                  const newValue = event.target.value;
+                  if (newValue !== 'add-more') {
+                    this.handlePathChange(newValue);
+                    return true;
+                  }
+                  this.openAddPathModal();
+                }}
+                renderValue={value => {
+                  const path = this.getPath(pathsList, selectedPath);
+                  return (
+                    <SelectRenderWrapper>
+                      <span>{value} </span>
+                      <NodeUrlSpan>({path})</NodeUrlSpan>
+                    </SelectRenderWrapper>
+                  );
+                }}
+              >
+                {this.renderPaths(pathsList, selectedPath)}
+                <ItemWrapper value="add-more" type="addmore">
+                  <AddCircle
+                    style={{
+                      fill: '#7B91C0',
+                      height: ms(1),
+                      width: ms(1),
+                      marginRight: '10px'
+                    }}
+                  />
+                  {t('containers.homeSettings.add_derivation_path')}
+                </ItemWrapper>
+              </CustomSelect>
+            </Part>
+          </RowForParts>
+        </Content6>
+
+        <AddPathModal
+          isPathModalOpen={isPathModalOpen}
+          closeAddPathModal={this.closeAddPathModal}
         />
       </Container>
     );
@@ -356,6 +470,8 @@ function mapStateToProps(state) {
     conseilNodes: getConseilNodes(state),
     tezosSelectedNode: getTezosSelectedNode(state),
     tezosNodes: getTezosNodes(state),
+    selectedPath: getSelectedPath(state),
+    pathsList: getPathsList(state),
     locale: getLocale(state)
   };
 }
@@ -367,6 +483,7 @@ function mapDispatchToProps(dispatch) {
       setSelected,
       removeNode,
       setLocale,
+      setPath,
       goBack: () => dispatch => dispatch(goBackToWallet())
     },
     dispatch

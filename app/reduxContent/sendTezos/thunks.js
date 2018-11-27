@@ -18,8 +18,7 @@ import { findAccountIndex } from '../../utils/account';
 import { findIdentity } from '../../utils/identity';
 
 import { getSelectedNode } from '../../utils/nodes';
-
-import derivationPth from '../../constants/DerivationPath';
+import { getCurrentPath } from '../../utils/paths';
 
 const { sendTransactionOperation } = TezosOperations;
 
@@ -93,6 +92,7 @@ export function sendTez(
     let res;
     if (isLedger) {
       const newKeyStore = keyStore;
+      const { derivation } = getCurrentPath(settings);
       newKeyStore.storeType = 2;
       res = await sendTransactionOperation(
         url,
@@ -100,7 +100,7 @@ export function sendTez(
         toAddress,
         parsedAmount,
         fee,
-        derivationPth
+        derivation
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);
