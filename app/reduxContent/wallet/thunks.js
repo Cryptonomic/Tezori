@@ -604,3 +604,12 @@ export function syncLedger() {
     }
   };
 }
+
+export function onCloseLedgerSync() {
+  return async dispatch => {
+    dispatch(setIsLedgerConnecting(false));
+    dispatch(setIsLoading(false));
+    clearAutomaticLedgerRefresh();
+    TezosHardwareWallet.setIssue();
+  };
+}

@@ -49,12 +49,13 @@ const Link = styled.span`
 type Props = {
   open?: boolean,
   onCloseClick?: () => {},
+  onDownload?: () => {},
   isLoading?: boolean,
   t: () => {}
 };
 
 const ConnectingLedgerModal = (props: Props) => {
-  const { open, isLoading, onCloseClick, t } = props;
+  const { open, isLoading, onCloseClick, onDownload, t } = props;
 
   return (
     <Modal
@@ -82,7 +83,7 @@ const ConnectingLedgerModal = (props: Props) => {
             Open Tezos Wallet App.
             <NotApp>
               (Don’t have the app?
-              <Link>Get it here.</Link>)
+              <Link onClick={onDownload}>Get it here.</Link>)
             </NotApp>
           </Trans>
         </ListItem>
