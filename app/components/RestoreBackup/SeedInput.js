@@ -74,7 +74,8 @@ const renderInput = inputProps => {
       InputProps={{
         inputRef: ref,
         classes: {
-          root: classes.inputRoot
+          root: classes.inputRoot,
+          focused: classes.inputFocus
         },
         ...InputProps
       }}
@@ -100,6 +101,9 @@ const styles = () => ({
     '&&&&:hover:before': {
       borderBottom: 'solid 2px #2c7df7'
     }
+  },
+  inputFocus: {
+    '&&&&:after': { borderBottom: 'solid 2px #2c7df7' }
   },
   labelRoot: {
     color: 'rgba(0, 0, 0, 0.38)',
