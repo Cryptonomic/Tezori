@@ -297,7 +297,7 @@
       "create_new_wallet_btn": "Erstelle neues Wallet",
       "open_exisiting_wallet_btn": "Öffne existierendes Wallet",
       "want_to_import_fundraiser_paper_wallet": "Wollen Sie ein Papierwallet aus dem Fundraiser importieren?",
-      "create_named_wallet": "Wallet? <1><0>Erstelle <1>{{name}}</1> zuerst ein</0></1> neues Wallet."
+      "create_named_wallet": "Wallet? <1><0>Erstelle <1>{{name}}</1> zuerst ein</0></1> neues Wallet.",
       "tagline": "Ein Community Wallet für Tezos",
       "app_name": "Tezori",
       "keystore_wallet": "Keystore Wallet",
