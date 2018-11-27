@@ -38,7 +38,8 @@
       "destination": "Destination",
       "manager": "Manager",
       "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "Derivation Path"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -82,8 +83,13 @@
       "title": "Set Up Your Custom {{title}} Node",
       "labels": {
         "node_name": "Node Name",
-        "api_key": "Api Key"
+        "api_key": "API Key"
       }
+    },
+    "addPathModal": {
+      "error": "Derivation Path must start with 44'/1729'/",
+      "title": "Set Up Your Custom {{title}}",
+      "path_label": "Path Label"
     },
     "address": {
       "manager_address": "Manager Address",
@@ -287,10 +293,13 @@
     },
     "homeSettings": {
       "back_to_wallet": "Back to Wallet",
-      "wallet_settings": "Wallet Settings",
+      "general_settings": "General Settings",
       "choose_different_node": "Choose a Different Node",
       "add_custom_node": "Add a Custom Node",
-      "select_display_language": "Select Display Language"
+      "select_display_language": "Select Display Language",
+      "hardware_settings": "Hardware Wallet Settings",
+      "choose_derivation_path": "Choose Derivation Path",
+      "add_derivation_path": "Add a Derivation Path"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",

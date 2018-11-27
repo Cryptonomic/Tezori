@@ -82,7 +82,7 @@
       "title": "Richten Sie eine benutzerdefinierte Node ein {{title}}",
       "labels": {
         "node_name": "Node Name",
-        "api_key": "Api Schlüssel"
+        "api_key": "API Schlüssel"
       }
     },
     "address": {

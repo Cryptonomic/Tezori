@@ -1,34 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import { clipboard } from 'electron';
 import QRCode from 'qrcode';
 import styled from 'styled-components';
-import Button from '../Button/';
 import { ms } from '../../styles/helpers';
-import { H4 } from '../Heading/';
+import TezosAddress from '../TezosAddress';
 import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
-  address: string,
-  t: () => {}
+  address: string
 };
-
-const CopyConfirmationTooltip = styled.div`
-  background: ${({ theme: { colors } }) => colors.accent};
-  color: ${({ theme: { colors } }) => colors.white};
-  position: absolute;
-  font-size: ${ms(-1)};
-  border-radius: ${ms(0)};
-  padding: ${ms(-4)};
-  top: 34px;
-  left: 160px;
-  opacity: ${({ show }) => (show ? 1 : 0)};
-  transition: opacity 0.4s;
-
-  @media (max-width: 1200px) {
-    left: 310px;
-  }
-`;
 
 const HashContainer = styled.div`
   display: flex;
@@ -40,10 +20,6 @@ const HashContainer = styled.div`
   @media (max-width: 1200px) {
     align-items: center;
   }
-`;
-
-const Hash = styled(H4)`
-  margin: 0 0 ${ms(2)} 0;
 `;
 
 const ReceiveContainer = styled.div`
@@ -71,9 +47,7 @@ const QRCodeContainer = styled.canvas`
 class Receive extends Component<Props> {
   props: Props;
 
-  state = {
-    showCopyConfirmation: false
-  };
+  state = {};
 
   componentDidMount() {
     this.renderQRCode();
@@ -102,40 +76,21 @@ class Receive extends Component<Props> {
   }
 
   canvasRef = React.createRef();
-  copyToClipboard = () => {
-    try {
-      clipboard.writeText(this.props.address);
-      this.setState(
-        {
-          showCopyConfirmation: true
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({
-              showCopyConfirmation: false
-            });
-          }, 2500);
-        }
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   render() {
-    const { address, t } = this.props;
+    const { address } = this.props;
 
     return (
       <ReceiveContainer>
         <QRCodeContainer innerRef={this.canvasRef} />
         <HashContainer>
-          <Hash>{address}</Hash>
-          <CopyConfirmationTooltip show={this.state.showCopyConfirmation}>
-            {t('components.copyIcon.copied')}
-          </CopyConfirmationTooltip>
-          <Button onClick={this.copyToClipboard} buttonTheme="secondary" small>
-            {t('general.verbs.copy_address')}
-          </Button>
+          <TezosAddress
+            address={address}
+            size="16px"
+            weight={300}
+            color="primary"
+            text={address}
+          />
         </HashContainer>
       </ReceiveContainer>
     );

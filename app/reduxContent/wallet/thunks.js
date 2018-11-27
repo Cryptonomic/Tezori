@@ -54,6 +54,7 @@ import {
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
+import { getCurrentPath } from '../../utils/paths';
 
 const {
   unlockFundraiserIdentity,
@@ -501,13 +502,16 @@ export function login(loginType, walletLocation, walletFileName, password) {
 
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function connectLedger() {
-  return async dispatch => {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const { derivation } = await getCurrentPath(settings);
+    console.log('UMUR DEBUG: ', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
     dispatch(addMessage('', true));
     try {
-      const wallet = await loadWalletFromLedger();
+      const wallet = await loadWalletFromLedger(derivation);
       const identities = wallet.identities.map((identity, identityIndex) => {
         return createIdentity({
           ...identity,
