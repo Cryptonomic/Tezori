@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs-staging';
+import { TezosOperations } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { TEZOS } from '../../constants/NodesTypes';

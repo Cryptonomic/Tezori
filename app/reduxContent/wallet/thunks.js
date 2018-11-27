@@ -1,10 +1,6 @@
 import path from 'path';
 import { push } from 'react-router-redux';
-import {
-  TezosWallet,
-  TezosConseilQuery,
-  TezosOperations
-} from 'conseiljs-staging';
+import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import {
@@ -462,7 +458,6 @@ export function importAddress(
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function login(loginType, walletLocation, walletFileName, password) {
   return async dispatch => {
-    dispatch(setIsLoading(true));
     const completeWalletPath = path.join(walletLocation, walletFileName);
     dispatch(addMessage('', true));
     dispatch(setLedger(false));
@@ -484,7 +479,6 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(
         setWallet(
           {
-            isLoading: true,
             identities,
             walletLocation,
             walletFileName,
@@ -500,8 +494,8 @@ export function login(loginType, walletLocation, walletFileName, password) {
       await dispatch(syncWallet());
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
+      dispatch(addMessage(e.name, true));
     }
   };
 }
