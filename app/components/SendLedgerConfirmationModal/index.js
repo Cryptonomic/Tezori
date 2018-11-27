@@ -131,6 +131,22 @@ const SendLedgerConfirmationModal = (props: Props) => {
         </DescriptionContainer>
 
         <ItemContainer>
+          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
+          <ItemContent>
+            {amount}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
+          <ItemContent>
+            {calcFee}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
           <ItemTitle>{t('general.nouns.source')}</ItemTitle>
           <TezosAddress
             address={source}
@@ -148,22 +164,6 @@ const SendLedgerConfirmationModal = (props: Props) => {
             weight={300}
             color="primary"
           />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
-          <ItemContent>
-            {calcFee}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
-          <ItemContent>
-            {amount}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>

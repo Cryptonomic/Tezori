@@ -125,6 +125,14 @@ const DelegateLedgerConfirmationModal = (props: Props) => {
         </DescriptionContainer>
 
         <ItemContainer>
+          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
+          <ItemContent>
+            {calcFee}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
           <ItemTitle>{t('general.nouns.source')}</ItemTitle>
           <TezosAddress
             address={source}
@@ -142,14 +150,6 @@ const DelegateLedgerConfirmationModal = (props: Props) => {
             weight={300}
             color="primary"
           />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
-          <ItemContent>
-            {calcFee}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>
