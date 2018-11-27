@@ -6,8 +6,5 @@ export function getCurrentPath(settings) {
 export function hasPaths(state) {
   const list = state.settings.get('pathsList').toJS();
   const l = list.length;
-  if (l > 0){
-    return true;
-  }
-  return false;
+  return l > 0;
 }

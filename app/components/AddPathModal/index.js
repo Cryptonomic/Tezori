@@ -112,9 +112,9 @@ class AddPathModal extends Component<Props> {
                 onChange={this.handlePathChange}
                 errorText={error}
               />
-              {error ? (
+              {error && (
                 <FeedbackIcon iconName="warning" size={ms(0)} color="error1" />
-              ) : null}
+              )}
             </Content>
           </Container>
 

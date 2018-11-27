@@ -206,7 +206,7 @@ class SettingsPage extends Component<Props> {
     return path;
   };
 
-  renderNodes(nodes, selectedNode) {
+  renderNodes = (nodes, selectedNode) => {
     const { theme } = this.props;
     return nodes.map((node, index) => {
       const name = node.get('name');
@@ -237,9 +237,9 @@ class SettingsPage extends Component<Props> {
         </ItemWrapper>
       );
     });
-  }
+  };
 
-  renderPaths(paths, selectedPath) {
+  renderPaths = (paths, selectedPath) => {
     const { theme } = this.props;
     return paths.map((path, index) => {
       const label = path.get('label');
@@ -247,8 +247,8 @@ class SettingsPage extends Component<Props> {
       const selected = selectedPath === label;
       const option = (
         <SelectOption>
-          <OptionStatus>
-            {selected ? (
+          {selected && (
+            <OptionStatus>
               <Check
                 style={{
                   fill: theme.colors.blue1,
@@ -256,8 +256,8 @@ class SettingsPage extends Component<Props> {
                   width: ms(1.5)
                 }}
               />
-            ) : null}
-          </OptionStatus>
+            </OptionStatus>
+          )}
           <OptionLabel isActive={selected}>
             <NodeName>{label}</NodeName>
             <NodeUrl>{derivation}</NodeUrl>
@@ -270,7 +270,7 @@ class SettingsPage extends Component<Props> {
         </ItemWrapper>
       );
     });
-  }
+  };
 
   render() {
     const {

@@ -94,9 +94,10 @@ export default handleActions(
     [ADD_PATH]: (state, action) => {
       const newPath = action.path;
       const pathsList = state.get('pathsList');
-      const indexFound = pathsList.findIndex(item => {
-        return item.get('label') === newPath.label;
-      });
+
+      const indexFound = pathsList.findIndex(
+        item => item.get('label') === newPath.label
+      );
 
       if (indexFound === -1) {
         return state.set('pathsList', pathsList.push(fromJS(newPath)));
@@ -111,7 +112,7 @@ export default handleActions(
         return item.get('label') === label;
       });
 
-      if (indexFound >= -1) {
+      if (indexFound > -1) {
         return state.set('pathsList', pathsList.splice(indexFound, 1));
       }
       return state;
@@ -119,11 +120,11 @@ export default handleActions(
     [UPDATE_PATH]: (state, action) => {
       const newPath = action.path;
       const pathsList = state.get('pathsList');
-      const indexFound = pathsList.findIndex(item => {
-        return item.get('label') === newPath.label;
-      });
+      const indexFound = pathsList.findIndex(
+        item => item.get('label') === newPath.label
+      );
 
-      if (indexFound >= -1) {
+      if (indexFound > -1) {
         return state.set(
           'pathsList',
           pathsList.set(indexFound, fromJS(newPath))
