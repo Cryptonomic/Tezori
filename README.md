@@ -31,6 +31,13 @@ Add the file `extraResources/defaultWalletNodes.json` with your Tezos and Consei
       "url": "https://myconseilnode.com/",
       "apiKey": "anotherapikey"
     }
+  ],
+  "selectedPath": "Default",
+  "pathsList": [
+    {
+      "label": "Default",
+      "derivation": "44'/1729'/0'/0'/0'"
+    }
   ]
 }
 
