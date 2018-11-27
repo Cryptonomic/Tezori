@@ -15,7 +15,10 @@ import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
 import { getLocale } from '../../reduxContent/settings/selectors';
-import { connectLedger } from '../../reduxContent/wallet/thunks';
+import {
+  connectLedger,
+  onCloseLedgerSync
+} from '../../reduxContent/wallet/thunks';
 import {
   getWalletIsLoading,
   getIsLedgerConnecting
@@ -336,7 +339,10 @@ class LoginHome extends Component<Props> {
 
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
-  onCloseConnectingModal = () => {};
+  onCloseConnectingModal = () => {
+    const { onCloseLedgerSync } = this.props;
+    onCloseLedgerSync();
+  };
 
   render() {
     const { t, isLoading, isLedgerConnecting } = this.props;
@@ -456,6 +462,7 @@ class LoginHome extends Component<Props> {
         <ConnectingLedgerModal
           open={isLedgerConnecting}
           onCloseClick={this.onCloseConnectingModal}
+          onDownload={this.onDownload}
         />
         <Background>
           <BgContainerImg src={bgHero} />
@@ -481,7 +488,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       setLocale,
-      connectLedger
+      connectLedger,
+      onCloseLedgerSync
     },
     dispatch
   );
