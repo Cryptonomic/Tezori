@@ -7,6 +7,7 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
@@ -58,7 +59,15 @@ export default merge.smart(baseConfig, {
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false
-    })
+    }),
+
+    new CopyWebpackPlugin(
+      [{
+        from: 'app/extraResources/',
+        to: 'extraResources',
+        toType: 'dir'
+      }], {}
+    )
   ],
 
   /**
