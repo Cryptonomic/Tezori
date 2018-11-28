@@ -8,8 +8,20 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
+import Warning from '@material-ui/icons/Warning';
 import { ms } from '../../styles/helpers';
 import seedJson from './seed.json';
+
+const WarningIcon = styled(Warning)`
+  &&& {
+    position: absolute;
+    right: 12px;
+    top: 42px;
+    fill: ${({ theme: { colors } }) => colors.error1};
+    width: 18px;
+    height: 18px;
+  }
+`;
 
 const InvalidChipWrapper = styled(Chip)`
   &&& {
@@ -271,6 +283,7 @@ class SeedInput extends Component<Props> {
               }),
               InputProps: getInputProps({
                 error,
+                endAdornment: error ? <WarningIcon /> : '',
                 startAdornment:
                   selectedItems.length > 0 && Array.isArray(selectedItems)
                     ? selectedItems.map((item, index) => {
