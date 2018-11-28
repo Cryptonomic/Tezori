@@ -313,6 +313,13 @@ class AddAddress extends Component<Props> {
   };
 
   onChangeItems = items => {
+    const seedWords = seedJson.map(words => {
+      return words.label.toLowerCase();
+    });
+    const badWords = items.filter(element => seedWords.indexOf(element) === -1);
+    if (badWords.length === 0) {
+      this.triggerError(false, '');
+    }
     this.setState({ seeds: items, inputValue: '' });
   };
 

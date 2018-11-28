@@ -263,6 +263,9 @@ class SeedInput extends Component<Props> {
               fullWidth: true,
               classes,
               helperText: errorText,
+              FormHelperTextProps: getInputProps({
+                error
+              }),
               InputProps: getInputProps({
                 error,
                 startAdornment:
