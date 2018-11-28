@@ -293,7 +293,7 @@ class AddAddress extends Component<Props> {
         element => seedWords.indexOf(element) === -1
       );
       if (seeds.length > 15) {
-        console.log('throw length error');
+        seeds.length = 15;
         this.triggerError(
           true,
           'Seed phrases must contain no more than 15 words.'
@@ -304,7 +304,6 @@ class AddAddress extends Component<Props> {
           true,
           'Detected invalid word(s). Please double check.'
         );
-        this.setState({ seeds });
       }
       this.setState({ seeds });
     } else {
