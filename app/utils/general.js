@@ -5,7 +5,7 @@ import {
   TezosNode,
   TezosOperations,
   TezosWallet
-} from 'conseiljs-staging';
+} from 'conseiljs';
 
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
@@ -18,8 +18,6 @@ import { MNEMONIC, LEDGER } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
-
-import derivationPath from '../constants/DerivationPath';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { generateMnemonic } = TezosWallet;

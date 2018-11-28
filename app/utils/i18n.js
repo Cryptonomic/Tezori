@@ -32,14 +32,14 @@ export function wrapComponent(Element) {
 }
 
 export function getDefaultLocale() {
-  const locale = remote.app.getLocale();
+  try {
+    const locale = remote.app.getLocale();
+    const language = locale.substring(0, 2);
 
-  const found = Object.keys(localesMap)
-    .find((key) => {
-      return key === locale;
-    });
+    let found = Object.keys(localesMap).find((key) => { return (key === locale || key === langage); });
 
-  return found
-    ? locale
-    : defaultLanguage;
+    return found ? locale : defaultLanguage;
+  } catch (err) {
+    return defaultLanguage;
+  }
 }

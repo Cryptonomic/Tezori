@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { remote } from 'electron';
 import { omit, pick } from 'lodash';
-import { TezosWallet, TezosHardwareWallet } from 'conseiljs-staging';
+import { TezosWallet, TezosHardwareWallet } from 'conseiljs';
 import { keys } from '@material-ui/core/styles/createBreakpoints';
 import { LEDGER } from '../constants/StoreTypes';
 const { saveWallet, loadWallet } = TezosWallet;
@@ -103,8 +103,8 @@ export async function loadPersistedState(walletPath, password) {
   return prepareToLoad(savedWallet, persistedState);
 }
 
-export async function loadWalletFromLedger() {
-  const identity = await TezosHardwareWallet.unlockAddress(0, `44'/1729'/0'/0'/0'`).catch(err => {
+export async function loadWalletFromLedger(derivationPath) {
+  const identity = await TezosHardwareWallet.unlockAddress(0, derivationPath).catch(err => {
     const errorObj = {
       name: "components.messageBar.messages.ledger_not_connect"
     };
