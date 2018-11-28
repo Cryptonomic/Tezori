@@ -82,7 +82,7 @@
       "title": "Richten Sie eine benutzerdefinierte Node ein {{title}}",
       "labels": {
         "node_name": "Node Name",
-        "api_key": "API Schlüssel"
+        "api_key": "Api Schlüssel"
       }
     },
     "address": {
@@ -297,7 +297,7 @@
       "create_new_wallet_btn": "Erstelle neues Wallet",
       "open_exisiting_wallet_btn": "Öffne existierendes Wallet",
       "want_to_import_fundraiser_paper_wallet": "Wollen Sie ein Papierwallet aus dem Fundraiser importieren?",
-      "create_named_wallet": "<0><0>Erstelle ein <1>{{name}}</1> Wallet</0></0> erstes.",
+      "create_named_wallet": "Wallet? <1><0>Erstelle <1>{{name}}</1> zuerst ein</0></1> neues Wallet.",
       "tagline": "Ein Community Wallet für Tezos",
       "app_name": "Tezori",
       "keystore_wallet": "Keystore Wallet",
@@ -305,7 +305,7 @@
       "connect_ledger": "Verbinde mit Ledger",
       "dont_have_ledger_wallet": "Sie haben keine Ledger Tezos Wallet App?",
       "download_it_here": "Hier herunterladen.",
-      "connect_your_device": "Bitte<1> verbinden Sie Ihr Gerät mit</1>,<3> Geben Sie Ihren PIN ein</3>, und<5> öffnen Sie die Tezos Wallet app</5>.",
+      "connect_your_device": "Bitte<1> verbinden Sie Ihr Gerät mit dem PC</1>,<3> Geben Sie Ihren PIN ein</3>, und<5> öffnen Sie die Tezos Wallet App</5>.",
       "connecting": "Verbinde..."
     },
     "loginCreate": {
