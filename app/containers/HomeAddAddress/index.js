@@ -212,7 +212,8 @@ class AddAddress extends Component<Props> {
     passPhrase: '',
     isShowedPwd: false,
     seeds: [],
-    error: false
+    error: false,
+    errorText: ''
   };
 
   renderTab = tabName => {
@@ -277,8 +278,9 @@ class AddAddress extends Component<Props> {
     return inputValue.split(/\s+/);
   };
 
-  triggerError = error => {
+  triggerError = (error, errorText) => {
     this.setState({ error });
+    this.setState({ errorText });
   };
 
   onChangeInput = val => {
@@ -292,10 +294,16 @@ class AddAddress extends Component<Props> {
       );
       if (seeds.length > 15) {
         console.log('throw length error');
-        // this.triggerLengthError(true);
+        this.triggerError(
+          true,
+          'Seed phrases must contain no more than 15 words.'
+        );
       } else if (badWords.length > 0) {
         console.log('throw bad word errror');
-        // this.triggerBadWordError(true)
+        this.triggerError(
+          true,
+          'Detected invalid word(s). Please double check.'
+        );
         this.setState({ seeds });
       }
       this.setState({ seeds });
@@ -318,7 +326,8 @@ class AddAddress extends Component<Props> {
       activationCode,
       isShowedPwd,
       seeds,
-      error
+      error,
+      errorText
     } = this.state;
     const { isLoading, t } = this.props;
     switch (activeTab) {
@@ -334,6 +343,8 @@ class AddAddress extends Component<Props> {
               {t('containers.homeAddAddress.refer_pdf_title')}
             </FormTitle>
             <SeedInput
+              triggerError={this.triggerError}
+              errorText={errorText}
               error={error}
               selectedItems={seeds}
               inputValue={inputValue}

@@ -65,6 +65,7 @@ const renderInput = inputProps => {
 
   return (
     <TextField
+      helperText
       label="15 Word Secret Key"
       InputLabelProps={{
         classes: {
@@ -176,8 +177,9 @@ type Props = {
   classes?: object,
   onChangeInput: () => {},
   onChangeItems: () => {},
-  // triggerError?: () => {},
-  error?: boolean
+  triggerError: () => {},
+  error: boolean,
+  errorText: string
 };
 
 class SeedInput extends Component<Props> {
@@ -187,8 +189,8 @@ class SeedInput extends Component<Props> {
     const {
       inputValue,
       selectedItems,
-      onChangeItems
-      // triggerError
+      onChangeItems,
+      triggerError
     } = this.props;
     if (
       selectedItems.length &&
@@ -207,7 +209,7 @@ class SeedInput extends Component<Props> {
       });
       if (results.length === 0) {
         console.log('triggeredddd');
-        // triggerError()
+        triggerError(true, 'You have entered an invalid word(s).');
         // word is not in seeds so error state should show
         // set state of error to TRUE
       }
@@ -239,7 +241,7 @@ class SeedInput extends Component<Props> {
   };
 
   render() {
-    const { classes, inputValue, selectedItems, error } = this.props;
+    const { classes, inputValue, selectedItems, error, errorText } = this.props;
     return (
       <Downshift
         error={error}
@@ -260,6 +262,7 @@ class SeedInput extends Component<Props> {
             {renderInput({
               fullWidth: true,
               classes,
+              helperText: errorText,
               InputProps: getInputProps({
                 error,
                 startAdornment:
