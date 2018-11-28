@@ -65,7 +65,6 @@ const renderInput = inputProps => {
 
   return (
     <TextField
-      errorStyle={{ borderBottom: 'red' }}
       helperText
       label="15 Word Secret Key"
       InputLabelProps={{
@@ -105,7 +104,10 @@ const styles = () => ({
     }
   },
   inputFocus: {
-    '&&&&:after': { borderBottom: 'solid 2px #2c7df7' }
+    '&&&&:after': {
+      borderBottom: `${({ error }) =>
+        error ? 'solid 2px red' : 'solid 2px #2c7df7'}`
+    }
   },
   labelRoot: {
     color: 'rgba(0, 0, 0, 0.38)',
