@@ -22,6 +22,7 @@ import { openLink } from '../../utils/general';
 import { wrapComponent } from '../../utils/i18n';
 
 import SeedInput from '../../components/RestoreBackup/SeedInput';
+import seedJson from '../../components/RestoreBackup/seed.json';
 
 const Container = styled.div`
   width: 80%;
@@ -210,7 +211,8 @@ class AddAddress extends Component<Props> {
     username: '',
     passPhrase: '',
     isShowedPwd: false,
-    seeds: []
+    seeds: [],
+    error: false
   };
 
   renderTab = tabName => {
@@ -265,7 +267,7 @@ class AddAddress extends Component<Props> {
       passPhrase
     );
   };
-
+  // zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebraa
   seedPhraseConvert = inputValue => {
     if (inputValue.indexOf('"') > -1 || inputValue.indexOf(',') > -1) {
       const words = inputValue.replace(/["\s]/g, '');
@@ -275,9 +277,27 @@ class AddAddress extends Component<Props> {
     return inputValue.split(/\s+/);
   };
 
+  triggerError = error => {
+    this.setState({ error });
+  };
+
   onChangeInput = val => {
     if (val.length > 15) {
+      const seedWords = seedJson.map(words => {
+        return words.label.toLowerCase();
+      });
       const seeds = this.seedPhraseConvert(val);
+      const badWords = seeds.filter(
+        element => seedWords.indexOf(element) === -1
+      );
+      if (seeds.length > 15) {
+        console.log('throw length error');
+        // this.triggerLengthError(true);
+      } else if (badWords.length > 0) {
+        console.log('throw bad word errror');
+        // this.triggerBadWordError(true)
+        this.setState({ seeds });
+      }
       this.setState({ seeds });
     } else {
       this.setState({ inputValue: val });
@@ -297,7 +317,8 @@ class AddAddress extends Component<Props> {
       username,
       activationCode,
       isShowedPwd,
-      seeds
+      seeds,
+      error
     } = this.state;
     const { isLoading, t } = this.props;
     switch (activeTab) {
@@ -313,6 +334,7 @@ class AddAddress extends Component<Props> {
               {t('containers.homeAddAddress.refer_pdf_title')}
             </FormTitle>
             <SeedInput
+              error={error}
               selectedItems={seeds}
               inputValue={inputValue}
               onChangeInput={this.onChangeInput}

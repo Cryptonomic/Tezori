@@ -191,14 +191,16 @@ class SeedInput extends Component<Props> {
       // triggerError
     } = this.props;
     if (
-      (selectedItems.length &&
-        !inputValue.length &&
-        keycode(event) === 'backspace') ||
-      (selectedItems.length && !inputValue.length && keycode(event) === 'enter')
+      selectedItems.length &&
+      !inputValue.length &&
+      keycode(event) === 'backspace'
     ) {
       const newItems = selectedItems.slice(0, selectedItems.length - 1);
       onChangeItems(newItems);
-    } else if (keycode(event) === 'space' && inputValue.length > 0) {
+    } else if (
+      (keycode(event) === 'space' && inputValue.length > 0) ||
+      (keycode(event) === 'enter' && inputValue.length > 0)
+    ) {
       const newInputValue = inputValue.trim();
       const results = seedJson.filter(suggestion => {
         return suggestion.label.toLowerCase() === newInputValue;
@@ -206,6 +208,7 @@ class SeedInput extends Component<Props> {
       if (results.length === 0) {
         console.log('triggeredddd');
         // triggerError()
+        // word is not in seeds so error state should show
         // set state of error to TRUE
       }
       const newItems = [...selectedItems, newInputValue];
