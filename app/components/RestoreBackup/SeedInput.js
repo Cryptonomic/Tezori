@@ -65,6 +65,7 @@ const renderInput = inputProps => {
 
   return (
     <TextField
+      errorStyle={{ borderBottom: 'red' }}
       helperText
       label="15 Word Secret Key"
       InputLabelProps={{
