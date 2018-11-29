@@ -180,7 +180,6 @@ class RestoreBackup extends Component<Props> {
         element => seedWords.indexOf(element) === -1
       );
       if (seeds.length > 15) {
-        seeds.length = 15;
         this.triggerError(
           true,
           'Seed phrases must contain no more than 15 words.'
