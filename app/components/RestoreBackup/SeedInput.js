@@ -272,7 +272,7 @@ class SeedInput extends Component<Props> {
                             return items.label.toLowerCase();
                           })
                           .indexOf(item);
-                        if (itemIndex > -1) {
+                        if (itemIndex > -1 && index <= 14) {
                           return (
                             <ChipWrapper
                               key={item + index}
