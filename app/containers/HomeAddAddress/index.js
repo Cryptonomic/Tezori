@@ -268,7 +268,7 @@ class AddAddress extends Component<Props> {
       passPhrase
     );
   };
-  // zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebra zebraa
+
   seedPhraseConvert = inputValue => {
     if (inputValue.indexOf('"') > -1 || inputValue.indexOf(',') > -1) {
       const words = inputValue.replace(/["\s]/g, '');
@@ -299,7 +299,6 @@ class AddAddress extends Component<Props> {
           'Seed phrases must contain no more than 15 words.'
         );
       } else if (badWords.length > 0) {
-        console.log('throw bad word errror');
         this.triggerError(
           true,
           'Detected invalid word(s). Please double check.'

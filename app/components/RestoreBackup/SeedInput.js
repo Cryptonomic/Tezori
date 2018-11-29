@@ -244,8 +244,6 @@ class SeedInput extends Component<Props> {
         inputValue={inputValue}
         onChange={this.handleChange}
         selectedItem={selectedItems}
-        defaultHighlightedIndex={0}
-        shrink
       >
         {({
           getInputProps,
