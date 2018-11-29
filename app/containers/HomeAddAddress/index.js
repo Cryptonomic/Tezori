@@ -335,7 +335,13 @@ class AddAddress extends Component<Props> {
       error,
       errorText
     } = this.state;
-    const { isLoading, t } = this.props;
+    const { t } = this.props;
+    const isDisabled =
+      error ||
+      errorText !== '' ||
+      passPhrase === '' ||
+      activationCode === '' ||
+      pkh === '';
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;
@@ -448,7 +454,7 @@ class AddAddress extends Component<Props> {
             <ImportButton
               buttonTheme="primary"
               onClick={this.importAddress}
-              disabled={isLoading}
+              disabled={isDisabled}
             >
               {t('general.verbs.import')}
             </ImportButton>

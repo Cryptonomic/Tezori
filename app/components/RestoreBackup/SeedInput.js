@@ -88,7 +88,8 @@ const renderInput = inputProps => {
         inputRef: ref,
         classes: {
           root: classes.inputRoot,
-          focused: classes.inputFocus
+          focused: classes.inputFocus,
+          error: classes.inputError
         },
         ...InputProps
       }}
@@ -117,9 +118,11 @@ const styles = () => ({
   },
   inputFocus: {
     '&&&&:after': {
-      borderBottom: `${({ error }) =>
-        error ? 'solid 2px red' : 'solid 2px #2c7df7'}`
+      borderBottom: 'solid 2px #2c7df7'
     }
+  },
+  inputError: {
+    '&&&&:after': { borderBottom: `solid 2px red` }
   },
   labelRoot: {
     color: 'rgba(0, 0, 0, 0.38)',
