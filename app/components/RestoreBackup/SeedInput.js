@@ -195,7 +195,6 @@ type Props = {
   classes?: object,
   onChangeInput: () => {},
   onChangeItems: () => {},
-  triggerError: () => {},
   error: boolean,
   errorText: string
 };
@@ -204,34 +203,13 @@ class SeedInput extends Component<Props> {
   componentDidMount() {}
 
   handleKeyDown = event => {
-    const {
-      inputValue,
-      selectedItems,
-      onChangeItems,
-      triggerError
-    } = this.props;
+    const { inputValue, selectedItems, onChangeItems } = this.props;
     if (
       selectedItems.length &&
       !inputValue.length &&
       keycode(event) === 'backspace'
     ) {
       const newItems = selectedItems.slice(0, selectedItems.length - 1);
-      onChangeItems(newItems);
-    } else if (
-      (keycode(event) === 'space' && inputValue.length > 0) ||
-      (keycode(event) === 'enter' && inputValue.length > 0)
-    ) {
-      const newInputValue = inputValue.trim();
-      const results = seedJson.filter(suggestion => {
-        return suggestion.label.toLowerCase() === newInputValue;
-      });
-      if (results.length === 0) {
-        console.log('triggeredddd');
-        triggerError(true, 'You have entered an invalid word(s).');
-        // word is not in seeds so error state should show
-        // set state of error to TRUE
-      }
-      const newItems = [...selectedItems, newInputValue];
       onChangeItems(newItems);
     }
   };
@@ -267,6 +245,7 @@ class SeedInput extends Component<Props> {
         onChange={this.handleChange}
         selectedItem={selectedItems}
         defaultHighlightedIndex={0}
+        shrink
       >
         {({
           getInputProps,
