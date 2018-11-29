@@ -192,6 +192,7 @@ class RestoreBackup extends Component<Props> {
       }
       this.setState({ seeds });
     } else {
+      val.trim();
       this.setState({ inputValue: val });
     }
   };
@@ -204,7 +205,7 @@ class RestoreBackup extends Component<Props> {
     if (badWords.length === 0) {
       this.triggerError(false, '');
     }
-    this.setState({ seeds: items, inputValue: '' });
+    this.setState({ seeds: items, inputValue: ' ' });
   };
 
   onEnterPress = (keyValue, isdisabled) => {

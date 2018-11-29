@@ -219,13 +219,14 @@ class SeedInput extends Component<Props> {
     if (selectedItems.length > 14) {
       return;
     }
-    const newValue = event.target.value.trim();
+    const newValue = event.target.value;
     onChangeInput(newValue);
   };
 
   handleChange = item => {
     let { selectedItems } = this.props;
     const { onChangeItems } = this.props;
+    item.trim();
     selectedItems = [...selectedItems, item];
     onChangeItems(selectedItems);
   };
@@ -261,6 +262,9 @@ class SeedInput extends Component<Props> {
               FormHelperTextProps: getInputProps({
                 error
               }),
+              InputLabelProps: {
+                shrink: true
+              },
               InputProps: getInputProps({
                 error,
                 endAdornment: error ? <WarningIcon /> : '',
