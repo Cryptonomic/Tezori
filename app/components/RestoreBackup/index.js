@@ -10,6 +10,7 @@ import PasswordInput from '../PasswordInput';
 import { importAddress } from '../../reduxContent/wallet/thunks';
 import * as ADD_ADDRESS_TYPES from '../../constants/AddAddressTypes';
 import { wrapComponent } from '../../utils/i18n';
+import seedJson from './seed.json';
 
 const MainContainer = styled.div`
   position: relative;
@@ -121,7 +122,8 @@ class RestoreBackup extends Component<Props> {
     isPassword: false,
     isShowedPwd: false,
     key: '',
-    error: false
+    error: false,
+    errorText: ''
   };
 
   importAddress = () => {
@@ -154,15 +156,55 @@ class RestoreBackup extends Component<Props> {
     );
   };
 
-  onChangeInput = val => {
-    this.setState({ inputValue: val });
+  seedPhraseConvert = inputValue => {
+    if (inputValue.indexOf('"') > -1 || inputValue.indexOf(',') > -1) {
+      const words = inputValue.replace(/["\s]/g, '');
+      const seedString = words.replace(/,/g, ' ');
+      return seedString.split(/\s+/);
+    }
+    return inputValue.split(/\s+/);
   };
 
-  triggerError = () => {
-    this.setState({ error: true });
+  triggerError = (error, errorText) => {
+    this.setState({ error });
+    this.setState({ errorText });
+  };
+
+  onChangeInput = val => {
+    if (val.length > 15) {
+      const seedWords = seedJson.map(words => {
+        return words.label.toLowerCase();
+      });
+      const seeds = this.seedPhraseConvert(val);
+      const badWords = seeds.filter(
+        element => seedWords.indexOf(element) === -1
+      );
+      if (seeds.length > 15) {
+        seeds.length = 15;
+        this.triggerError(
+          true,
+          'Seed phrases must contain no more than 15 words.'
+        );
+      } else if (badWords.length > 0) {
+        this.triggerError(
+          true,
+          'Detected invalid word(s). Please double check.'
+        );
+      }
+      this.setState({ seeds });
+    } else {
+      this.setState({ inputValue: val });
+    }
   };
 
   onChangeItems = items => {
+    const seedWords = seedJson.map(words => {
+      return words.label.toLowerCase();
+    });
+    const badWords = items.filter(element => seedWords.indexOf(element) === -1);
+    if (badWords.length === 0) {
+      this.triggerError(false, '');
+    }
     this.setState({ seeds: items, inputValue: '' });
   };
 
@@ -181,7 +223,8 @@ class RestoreBackup extends Component<Props> {
       isPassword,
       isShowedPwd,
       key,
-      error
+      error,
+      errorText
     } = this.state;
     const { t } = this.props;
     let isdisabled = false;
@@ -206,6 +249,7 @@ class RestoreBackup extends Component<Props> {
           <Fragment>
             <SeedInput
               triggerError={this.triggerError}
+              errorText={errorText}
               error={error}
               label={t('components.restoreBackup.fundraiser_password')}
               selectedItems={seeds}
