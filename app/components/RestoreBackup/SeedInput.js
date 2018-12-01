@@ -79,11 +79,6 @@ const renderInput = inputProps => {
     <TextField
       helperText
       label="15 Word Secret Key"
-      // InputLabelProps={{
-      //   classes: {
-      //     root: classes.labelRoot
-      //   }
-      // }}
       InputProps={{
         inputRef: ref,
         classes: {
