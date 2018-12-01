@@ -348,7 +348,8 @@ class AddAddress extends Component<Props> {
       errorText !== '' ||
       passPhrase === '' ||
       activationCode === '' ||
-      pkh === '';
+      pkh === '' ||
+      seeds.length < 15;
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;

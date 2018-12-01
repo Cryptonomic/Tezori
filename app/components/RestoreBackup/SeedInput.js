@@ -78,12 +78,7 @@ const renderInput = inputProps => {
   return (
     <TextField
       helperText
-      label="15 Word Secret Key"
-      InputLabelProps={{
-        classes: {
-          root: classes.labelRoot
-        }
-      }}
+      placeholder="15 Word Secret Key"
       InputProps={{
         inputRef: ref,
         classes: {
@@ -101,6 +96,19 @@ const renderInput = inputProps => {
 const styles = () => ({
   container: {
     position: 'relative'
+  },
+  hiddenPlaceholder: {
+    '&::placeholder': {
+      color: 'transparent'
+    }
+  },
+  inputPlaceholder: {
+    '&::placeholder': {
+      color: '#000000',
+      opacity: '0.38',
+      fontSize: '16px',
+      fontWeight: 500
+    }
   },
   inputRoot: {
     color: `${({ disabled, theme: { colors } }) =>
@@ -123,10 +131,6 @@ const styles = () => ({
   },
   inputError: {
     '&&&&:after': { borderBottom: `solid 2px red` }
-  },
-  labelRoot: {
-    color: 'rgba(0, 0, 0, 0.38)',
-    fontSize: '16px'
   }
 });
 
@@ -262,8 +266,11 @@ class SeedInput extends Component<Props> {
               FormHelperTextProps: getInputProps({
                 error
               }),
-              InputLabelProps: {
-                shrink: true
+              inputProps: {
+                className:
+                  selectedItems.length === 0
+                    ? classes.inputPlaceholder
+                    : classes.hiddenPlaceholder
               },
               InputProps: getInputProps({
                 error,
