@@ -79,11 +79,11 @@ const renderInput = inputProps => {
     <TextField
       helperText
       label="15 Word Secret Key"
-      InputLabelProps={{
-        classes: {
-          root: classes.labelRoot
-        }
-      }}
+      // InputLabelProps={{
+      //   classes: {
+      //     root: classes.labelRoot
+      //   }
+      // }}
       InputProps={{
         inputRef: ref,
         classes: {
@@ -127,6 +127,9 @@ const styles = () => ({
   labelRoot: {
     color: 'rgba(0, 0, 0, 0.38)',
     fontSize: '16px'
+  },
+  labelRootHidden: {
+    color: 'transparent'
   }
 });
 
@@ -261,6 +264,12 @@ class SeedInput extends Component<Props> {
               FormHelperTextProps: getInputProps({
                 error
               }),
+              InputLabelProps: {
+                className:
+                  selectedItems.length === 0
+                    ? classes.labelRoot
+                    : classes.labelRootHidden
+              },
               InputProps: getInputProps({
                 error,
                 endAdornment: error ? <WarningIcon /> : '',

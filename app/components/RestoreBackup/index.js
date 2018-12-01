@@ -228,7 +228,7 @@ class RestoreBackup extends Component<Props> {
     const { t } = this.props;
     let isdisabled = false;
     if (type === 'phrase') {
-      isdisabled = !seeds.length && !inputValue;
+      isdisabled = seeds.length !== 15 && !inputValue;
     } else {
       isdisabled = !key;
     }
