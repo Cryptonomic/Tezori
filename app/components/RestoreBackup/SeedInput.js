@@ -97,6 +97,19 @@ const styles = () => ({
   container: {
     position: 'relative'
   },
+  hiddenPlaceholder: {
+    '&::placeholder': {
+      color: 'transparent'
+    }
+  },
+  inputPlaceholder: {
+    '&::placeholder': {
+      color: '#000000',
+      opacity: '0.38',
+      fontSize: '16px',
+      fontWeight: 500
+    }
+  },
   inputRoot: {
     color: `${({ disabled, theme: { colors } }) =>
       disabled ? colors.gray5 : colors.primary}`,
@@ -217,13 +230,14 @@ class SeedInput extends Component<Props> {
     if (selectedItems.length > 14) {
       return;
     }
-    const newValue = event.target.value.trim();
+    const newValue = event.target.value;
     onChangeInput(newValue);
   };
 
   handleChange = item => {
     let { selectedItems } = this.props;
     const { onChangeItems } = this.props;
+    item.trim();
     selectedItems = [...selectedItems, item];
     onChangeItems(selectedItems);
   };
