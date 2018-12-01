@@ -315,13 +315,11 @@ class AddAddress extends Component<Props> {
     });
     const badWords = items.filter(element => seedWords.indexOf(element) === -1);
     if (items.length > 15) {
-      this.triggerError(false, '');
       this.triggerError(
         true,
         'Seed phrases must contain no more than 15 words.'
       );
     } else if (badWords.length > 0) {
-      this.triggerError(false, '');
       this.triggerError(true, 'Detected invalid word(s). Please double check.');
     } else if (badWords.length === 0 && items.length <= 15) {
       this.triggerError(false, '');
