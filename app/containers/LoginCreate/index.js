@@ -163,14 +163,31 @@ class LoginCreate extends Component<Props> {
     if (event.detail === 0 && walletLocation && walletFileName) {
       return;
     }
-    remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
-      if (filename) {
-        this.setState({
-          walletLocation: path.dirname(filename),
-          walletFileName: path.basename(filename)
-        });
-      }
+    const mainApp = remote.getCurrentWindow();
+    const mainSize = mainApp.getBounds();
+    const child = new remote.BrowserWindow({
+      x: mainSize.x,
+      y: mainSize.y,
+      width: mainSize.width,
+      height: mainSize.height,
+      movable: false,
+      fullscreenable: false,
+      transparent: true,
+      frame: false
     });
+    remote.dialog.showSaveDialog(
+      child,
+      { filters: dialogFilters },
+      filename => {
+        if (filename) {
+          this.setState({
+            walletLocation: path.dirname(filename),
+            walletFileName: path.basename(filename)
+          });
+        }
+        child.close();
+      }
+    );
   };
 
   changePassword = password => {
