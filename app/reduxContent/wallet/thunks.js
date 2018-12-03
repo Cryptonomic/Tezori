@@ -75,6 +75,7 @@ const { getAccount } = TezosConseilQuery;
 const { sendIdentityActivationOperation } = TezosOperations;
 let currentAccountRefreshInterval = null;
 let currentLedgerRefreshInterval = null;
+let countOfLedgerIssue = 0;
 
 export function goHomeAndClearState() {
   return dispatch => {
@@ -531,10 +532,7 @@ export function login(loginType, walletLocation, walletFileName, password) {
 
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function connectLedger() {
-  return async (dispatch, state) => {
-    const settings = state().settings.toJS();
-    const { derivation } = await getCurrentPath(settings);
-    console.log('UMUR DEBUG: ', derivation);
+  return async dispatch => {
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
@@ -548,25 +546,32 @@ export function syncLedger() {
     const isLedgerConnecting = state().wallet.get('isLedgerConnecting');
     const isHome = state().wallet.get('isHome');
     const isLedger = state().wallet.get('isLedger');
+    const settings = state().settings.toJS();
+    const { derivation } = await getCurrentPath(settings);
     const devices = await getDevices();
     if (isLedger && isHome && !devices.length) {
+      console.log('1111111');
       dispatch(goHomeAndClearState());
       dispatch(setIsLoading(false));
       return;
     }
 
     if (isHome && devices.length) {
-      const pkh = await getPublicKey(devices[0]);
-      if (!pkh) {
+      const pkh = await getPublicKey(devices[0], derivation);
+      if (!pkh && countOfLedgerIssue > 2) {
+        console.log('222222', pkh);
+        countOfLedgerIssue = 0;
         dispatch(goHomeAndClearState());
+      } else {
+        countOfLedgerIssue += 1;
       }
     }
 
     if (isLedgerConnecting && devices.length) {
-      const pkh = await getPublicKey(devices[0]);
+      const pkh = await getPublicKey(devices[0], derivation);
       if (pkh) {
         try {
-          const wallet = await loadWalletFromLedger();
+          const wallet = await loadWalletFromLedger(derivation);
           const identities = wallet.identities.map(
             (identity, identityIndex) => {
               return createIdentity({
@@ -594,7 +599,7 @@ export function syncLedger() {
           dispatch(setIsHome(true));
           await dispatch(syncWallet());
         } catch (e) {
-          console.error(e);
+          console.error('33333', e);
           TezosHardwareWallet.setIssue();
           dispatch(addMessage(e.name, true));
           dispatch(setIsLedgerConnecting(false));

@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { remote } from 'electron';
 import { omit, pick } from 'lodash';
-import { TezosWallet, TezosHardwareWallet } from 'conseiljs';
+import { TezosWallet, TezosHardwareWallet } from 'conseiljs-staging';
 import { keys } from '@material-ui/core/styles/createBreakpoints';
 import { LEDGER } from '../constants/StoreTypes';
 const { saveWallet, loadWallet } = TezosWallet;
@@ -136,8 +136,8 @@ export async function getDevices() {
   return devices;
 }
 
-export async function getPublicKey(device) {
-  const pubkey = await TezosHardwareWallet.getTezosPublicKey(`44'/1729'/0'/0'/0'`, device).catch((err) => {
+export async function getPublicKey(device, derivation) {
+  const pubkey = await TezosHardwareWallet.getTezosPublicKey(derivation, device).catch((err) => {
     return null;
   });
   return pubkey;
