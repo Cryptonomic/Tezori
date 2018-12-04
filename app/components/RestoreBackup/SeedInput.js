@@ -229,7 +229,6 @@ class SeedInput extends Component<Props> {
   handleDelete = (item, index) => () => {
     const { onChangeItems, selectedItems } = this.props;
     selectedItems.splice(index, 1);
-    console.log(selectedItems);
     onChangeItems(selectedItems);
   };
 
