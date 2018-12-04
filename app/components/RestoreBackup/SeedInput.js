@@ -226,9 +226,10 @@ class SeedInput extends Component<Props> {
     onChangeItems(selectedItems);
   };
 
-  handleDelete = item => () => {
+  handleDelete = (item, index) => () => {
     const { onChangeItems, selectedItems } = this.props;
-    selectedItems.splice(selectedItems.indexOf(item), 1);
+    selectedItems.splice(index, 1);
+    console.log(selectedItems);
     onChangeItems(selectedItems);
   };
 
@@ -284,7 +285,7 @@ class SeedInput extends Component<Props> {
                               tabIndex={-1}
                               label={<ChipContent value={item} index={index} />}
                               deleteIcon={<CloseIconWrapper />}
-                              onDelete={this.handleDelete(item)}
+                              onDelete={this.handleDelete(item, index)}
                             />
                           );
                         }
@@ -294,7 +295,7 @@ class SeedInput extends Component<Props> {
                             tabIndex={-1}
                             label={<ChipContent value={item} index={index} />}
                             deleteIcon={<CloseIconWrapper />}
-                            onDelete={this.handleDelete(item)}
+                            onDelete={this.handleDelete(item, index)}
                           />
                         );
                       })
