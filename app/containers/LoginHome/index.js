@@ -13,7 +13,7 @@ import LanguageSelectModal from '../../components/LanguageSelectModal';
 import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
 import { setLocale } from '../../reduxContent/settings/thunks';
-import { getLocale } from '../../reduxContent/settings/selectors';
+import { getLocale, getUsingPath } from '../../reduxContent/settings/selectors';
 import { connectLedger } from '../../reduxContent/wallet/thunks';
 import {
   getWalletIsLoading,
@@ -266,6 +266,15 @@ const DescriptionBold = styled.span`
   font-weight: 400;
 `;
 
+const SelectedPath = styled.div`
+  margin-top: 2%;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.6px;
+  text-align: center;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
 const LANGUAGE_STORAGE = 'isShowedSelecteLanguageScene';
 const AGREEMENT_STORAGE = 'isTezosTermsAndPolicyAgreementAccepted';
 class LoginHome extends Component<Props> {
@@ -336,7 +345,7 @@ class LoginHome extends Component<Props> {
   openPrivacyPolicy = () => this.goTo('conditions/privacyPolicy');
 
   render() {
-    const { t, isLoading, isLedgerConnecting } = this.props;
+    const { t, isLoading, isLedgerConnecting, usingPath } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
     const realLedgerImg = isLedgerConnecting
       ? ledgerConnectedImg
@@ -399,6 +408,11 @@ class LoginHome extends Component<Props> {
                 {!isLedgerConnecting &&
                   t('containers.loginHome.connect_ledger')}
               </CreateWalletButton>
+              {usingPath && (
+                <SelectedPath>
+                  {t('containers.loginHome.selectedPath')} {usingPath}
+                </SelectedPath>
+              )}
               {isLedgerConnecting && (
                 <LedgerConnect>
                   <Trans i18nKey="containers.loginHome.connect_your_device">
@@ -465,7 +479,8 @@ function mapStateToProps(state) {
   return {
     locale: getLocale(state),
     isLoading: getWalletIsLoading(state),
-    isLedgerConnecting: getIsLedgerConnecting(state)
+    isLedgerConnecting: getIsLedgerConnecting(state),
+    usingPath: getUsingPath(state)
   };
 }
 

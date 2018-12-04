@@ -19,14 +19,23 @@ import { getDefaultLocale } from '../../utils/i18n';
 
 const walletSettings = getWalletSettings();
 
+let selectedPath = localStorage.getItem('selectedPath');
+if (!selectedPath) selectedPath = '';
+let pathsList = localStorage.getItem('pathsList');
+if (!pathsList) {
+  pathsList = [];
+} else {
+  pathsList = JSON.parse(pathsList);
+}
+
 const baseDefaults = {
   locale: getDefaultLocale(), // get electron locale here
   tezosSelectedNode: '',
   conseilSelectedNode: '',
   nodesList: [],
   delegateTooltip: false,
-  selectedPath: '',
-  pathsList: []
+  selectedPath,
+  pathsList
 };
 
 export const initialState = Object.assign(

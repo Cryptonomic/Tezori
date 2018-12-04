@@ -36,9 +36,9 @@ export function setLocale(locale) {
 }
 
 export function setPath(selected) {
-  return (dispatch, state) => {
+  return dispatch => {
     dispatch(_setPath(selected));
-    setWalletSettings(getSettings(state()).toJS());
+    localStorage.setItem('selectedPath', selected);
   };
 }
 
@@ -66,20 +66,29 @@ export function updateNode(node) {
 export function addPath(path) {
   return (dispatch, state) => {
     dispatch(_addPath(path));
-    setWalletSettings(getSettings(state()).toJS());
+    localStorage.setItem(
+      'pathsList',
+      JSON.stringify(getSettings(state()).toJS().pathsList)
+    );
   };
 }
 
 export function removePath(label) {
   return (dispatch, state) => {
     dispatch(_removePath(label));
-    setWalletSettings(getSettings(state()).toJS());
+    localStorage.setItem(
+      'pathsList',
+      JSON.stringify(getSettings(state()).toJS().pathsList)
+    );
   };
 }
 
 export function updatePath(path) {
   return (dispatch, state) => {
     dispatch(_updatePath(path));
-    setWalletSettings(getSettings(state()).toJS());
+    localStorage.setItem(
+      'pathsList',
+      JSON.stringify(getSettings(state()).toJS().pathsList)
+    );
   };
 }

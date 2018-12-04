@@ -315,7 +315,8 @@
       "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
       "download_it_here": "Download it here.",
       "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
-      "connecting": "Connecting..."
+      "connecting": "Connecting...",
+      "selectedPath": "Selected Path: "
     },
     "loginCreate": {
       "create_wallet_btn": "Create Wallet",
