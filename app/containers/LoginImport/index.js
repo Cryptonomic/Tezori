@@ -92,20 +92,10 @@ class LoginImport extends Component<Props> {
     if (event.detail === 0) {
       return;
     }
-    const mainApp = remote.getCurrentWindow();
-    const mainSize = mainApp.getBounds();
-    const child = new remote.BrowserWindow({
-      x: mainSize.x,
-      y: mainSize.y,
-      width: mainSize.width,
-      height: mainSize.height,
-      movable: false,
-      fullscreenable: false,
-      transparent: true,
-      frame: false
-    });
+
+    const currentWindow = remote.getCurrentWindow();
     remote.dialog.showOpenDialog(
-      child,
+      currentWindow,
       {
         properties: ['openFile'],
         filters: dialogFilters
@@ -117,7 +107,6 @@ class LoginImport extends Component<Props> {
             walletFileName: path.basename(filePaths[0])
           });
         }
-        child.close();
       }
     );
   };
