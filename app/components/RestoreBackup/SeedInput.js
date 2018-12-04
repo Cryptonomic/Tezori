@@ -8,20 +8,8 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import CloseIcon from '@material-ui/icons/Close';
-import Warning from '@material-ui/icons/Warning';
 import { ms } from '../../styles/helpers';
 import seedJson from './seed.json';
-
-const WarningIcon = styled(Warning)`
-  &&& {
-    position: absolute;
-    right: 12px;
-    top: 42px;
-    fill: ${({ theme: { colors } }) => colors.error1};
-    width: 18px;
-    height: 18px;
-  }
-`;
 
 const InvalidChipWrapper = styled(Chip)`
   &&& {
@@ -78,7 +66,7 @@ const renderInput = inputProps => {
   return (
     <TextField
       helperText
-      label="15 Word Secret Key"
+      placeholder="15 Word Secret Key"
       InputProps={{
         inputRef: ref,
         classes: {
@@ -108,6 +96,9 @@ const styles = () => ({
       opacity: '0.38',
       fontSize: '16px',
       fontWeight: 500
+    },
+    '&:focus::placeholder': {
+      color: 'transparent'
     }
   },
   inputRoot: {
@@ -131,13 +122,6 @@ const styles = () => ({
   },
   inputError: {
     '&&&&:after': { borderBottom: `solid 2px red` }
-  },
-  labelRoot: {
-    color: 'rgba(0, 0, 0, 0.38)',
-    fontSize: '16px'
-  },
-  labelRootHidden: {
-    color: 'transparent'
   }
 });
 
@@ -252,6 +236,7 @@ class SeedInput extends Component<Props> {
     const { classes, inputValue, selectedItems, error, errorText } = this.props;
     return (
       <Downshift
+        defaultHighlightedIndex={0}
         error={error}
         inputValue={inputValue}
         onChange={this.handleChange}
@@ -273,15 +258,17 @@ class SeedInput extends Component<Props> {
               FormHelperTextProps: getInputProps({
                 error
               }),
-              InputLabelProps: {
+              inputProps: getInputProps({
+                onKeyDown: this.handleKeyDown,
+                onChange: this.handleInputChange,
+                value: inputValue,
                 className:
                   selectedItems.length === 0
-                    ? classes.labelRoot
-                    : classes.labelRootHidden
-              },
+                    ? classes.inputPlaceholder
+                    : classes.hiddenPlaceholder
+              }),
               InputProps: getInputProps({
                 error,
-                endAdornment: error ? <WarningIcon /> : '',
                 startAdornment:
                   selectedItems.length > 0 && Array.isArray(selectedItems)
                     ? selectedItems.map((item, index) => {
@@ -312,8 +299,6 @@ class SeedInput extends Component<Props> {
                         );
                       })
                     : undefined,
-                onKeyDown: this.handleKeyDown,
-                onChange: this.handleInputChange,
                 id: 'integration-downshift-multiple'
               })
             })}

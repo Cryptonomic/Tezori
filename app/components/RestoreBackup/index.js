@@ -162,7 +162,7 @@ class RestoreBackup extends Component<Props> {
       const seedString = words.replace(/,/g, ' ');
       return seedString.split(/\s+/);
     }
-    return inputValue.split(/\s+/);
+    return inputValue.trim().split(/\s+/);
   };
 
   triggerError = (error, errorText) => {
@@ -274,6 +274,7 @@ class RestoreBackup extends Component<Props> {
 
             {isPassword && (
               <PasswordInput
+                label={t('components.restoreBackup.seed_phrase_password')}
                 isShowed={isShowedPwd}
                 password={password}
                 changFunc={newpassword =>

@@ -275,7 +275,8 @@ class AddAddress extends Component<Props> {
       const seedString = words.replace(/,/g, ' ');
       return seedString.split(/\s+/);
     }
-    return inputValue.split(/\s+/);
+    console.log(inputValue);
+    return inputValue.trim().split(/\s+/);
   };
 
   triggerError = (error, errorText) => {
