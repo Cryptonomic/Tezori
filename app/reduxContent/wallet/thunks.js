@@ -76,6 +76,7 @@ const { sendIdentityActivationOperation } = TezosOperations;
 let currentAccountRefreshInterval = null;
 let currentLedgerRefreshInterval = null;
 let countOfLedgerIssue = 0;
+let countOfLedgerIssue1 = 0;
 
 export function goHomeAndClearState() {
   return dispatch => {
@@ -83,7 +84,6 @@ export function goHomeAndClearState() {
     clearAutomaticAccountRefresh();
     clearAutomaticLedgerRefresh();
     dispatch(push('/'));
-    TezosHardwareWallet.setIssue();
   };
 }
 
@@ -550,7 +550,7 @@ export function syncLedger() {
     const { derivation } = await getCurrentPath(settings);
     const devices = await getDevices();
     if (isLedger && isHome && !devices.length) {
-      console.log('1111111');
+      TezosHardwareWallet.setIssue();
       dispatch(goHomeAndClearState());
       dispatch(setIsLoading(false));
       return;
@@ -559,8 +559,8 @@ export function syncLedger() {
     if (isHome && devices.length) {
       const pkh = await getPublicKey(devices[0], derivation);
       if (!pkh && countOfLedgerIssue > 2) {
-        console.log('222222', pkh);
         countOfLedgerIssue = 0;
+        TezosHardwareWallet.setIssue();
         dispatch(goHomeAndClearState());
       } else {
         countOfLedgerIssue += 1;
@@ -605,6 +605,11 @@ export function syncLedger() {
           dispatch(setIsLedgerConnecting(false));
         }
         dispatch(setIsLoading(false));
+      } else if (countOfLedgerIssue1 > 2) {
+        TezosHardwareWallet.setIssue();
+        countOfLedgerIssue1 = 0;
+      } else {
+        countOfLedgerIssue1 += 1;
       }
     }
   };
