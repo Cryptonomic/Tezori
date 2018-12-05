@@ -66,7 +66,7 @@ const renderInput = inputProps => {
   return (
     <TextField
       helperText
-      placeholder="15 Word Secret Key"
+      // placeholder="15 Word Secret Key"
       InputProps={{
         inputRef: ref,
         classes: {
@@ -191,7 +191,8 @@ type Props = {
   onChangeInput: () => {},
   onChangeItems: () => {},
   error: boolean,
-  errorText: string
+  errorText: string,
+  placeholder: string
 };
 
 class SeedInput extends Component<Props> {
@@ -233,9 +234,17 @@ class SeedInput extends Component<Props> {
   };
 
   render() {
-    const { classes, inputValue, selectedItems, error, errorText } = this.props;
+    const {
+      classes,
+      inputValue,
+      selectedItems,
+      error,
+      errorText,
+      placeholder
+    } = this.props;
     return (
       <Downshift
+        placeholder
         defaultHighlightedIndex={0}
         error={error}
         inputValue={inputValue}
@@ -259,6 +268,7 @@ class SeedInput extends Component<Props> {
                 error
               }),
               inputProps: getInputProps({
+                placeholder,
                 onKeyDown: this.handleKeyDown,
                 onChange: this.handleInputChange,
                 value: inputValue,

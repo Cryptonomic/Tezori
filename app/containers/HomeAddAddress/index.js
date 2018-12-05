@@ -294,9 +294,15 @@ class AddAddress extends Component<Props> {
         element => seedWords.indexOf(element) === -1
       );
       if (seeds.length > 15) {
-        this.triggerError(true, t());
+        this.triggerError(
+          true,
+          t('containers.homeAddAddress.errors.invalid_length')
+        );
       } else if (badWords.length > 0) {
-        this.triggerError(true, t('errors.seed_invalid_words'));
+        this.triggerError(
+          true,
+          t('containers.homeAddAddress.errors.invalid_words')
+        );
       }
       this.setState({ seeds });
     } else {
@@ -311,9 +317,15 @@ class AddAddress extends Component<Props> {
     });
     const badWords = items.filter(element => seedWords.indexOf(element) === -1);
     if (items.length > 15) {
-      this.triggerError(true, t('errors.seed_invalid_length'));
+      this.triggerError(
+        true,
+        t('containers.homeAddAddress.errors.invalid_length')
+      );
     } else if (badWords.length > 0) {
-      this.triggerError(true, t('errors.seed_invalid_words'));
+      this.triggerError(
+        true,
+        t('containers.homeAddAddress.errors.invalid_words')
+      );
     } else if (badWords.length === 0 && items.length <= 15) {
       this.triggerError(false, '');
     }
@@ -354,6 +366,7 @@ class AddAddress extends Component<Props> {
               {t('containers.homeAddAddress.refer_pdf_title')}
             </FormTitle>
             <SeedInput
+              placeholder={t('containers.homeAddAddress.secret_key_15')}
               triggerError={this.triggerError}
               errorText={errorText}
               error={error}

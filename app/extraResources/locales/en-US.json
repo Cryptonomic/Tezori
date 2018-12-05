@@ -226,7 +226,12 @@
       "seed_phrase_password": "Seed Phrase Password",
       "enter_private_key": "Enter your private key",
       "seed_phrase": "SEED PHRASE",
-      "private_key": "PRIVATE KEY"
+      "private_key": "PRIVATE KEY",
+      "secret_key_15": "15 Word Secret Key",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "send": {
       "warnings": {
@@ -289,7 +294,11 @@
       },
       "import_fundraiser": "Import Fundraiser Wallet",
       "create_new_account": "Create New Account",
-      "restore_backup": "Restore from Backup"
+      "restore_backup": "Restore from Backup",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "Back to Wallet",
