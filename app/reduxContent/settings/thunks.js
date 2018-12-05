@@ -36,9 +36,10 @@ export function setLocale(locale) {
 }
 
 export function setPath(selected) {
-  return dispatch => {
+  return (dispatch, state) => {
     dispatch(_setPath(selected));
     localStorage.setItem('selectedPath', selected);
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
 
