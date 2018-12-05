@@ -171,6 +171,7 @@ class RestoreBackup extends Component<Props> {
   };
 
   onChangeInput = val => {
+    const { t } = this.props;
     if (val.length > 15) {
       const seedWords = seedJson.map(words => {
         return words.label.toLowerCase();
@@ -180,15 +181,9 @@ class RestoreBackup extends Component<Props> {
         element => seedWords.indexOf(element) === -1
       );
       if (seeds.length > 15) {
-        this.triggerError(
-          true,
-          'Seed phrases must contain no more than 15 words.'
-        );
+        this.triggerError(true, t('errors.seed_invalid_length'));
       } else if (badWords.length > 0) {
-        this.triggerError(
-          true,
-          'Detected invalid word(s). Please double check.'
-        );
+        this.triggerError(true, t('errors.seed_invalid_words'));
       }
       this.setState({ seeds });
     } else {
@@ -197,17 +192,15 @@ class RestoreBackup extends Component<Props> {
   };
 
   onChangeItems = items => {
+    const { t } = this.props;
     const seedWords = seedJson.map(words => {
       return words.label.toLowerCase();
     });
     const badWords = items.filter(element => seedWords.indexOf(element) === -1);
     if (items.length > 15) {
-      this.triggerError(
-        true,
-        'Seed phrases must contain no more than 15 words.'
-      );
+      this.triggerError(true, t('errors.seed_invalid_length'));
     } else if (badWords.length > 0) {
-      this.triggerError(true, 'Detected invalid word(s). Please double check.');
+      this.triggerError(true, t('errors.seed_invalid_words'));
     } else if (badWords.length === 0 && items.length <= 15) {
       this.triggerError(false, '');
     }
