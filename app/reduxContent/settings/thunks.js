@@ -70,6 +70,7 @@ export function addPath(path) {
       'pathsList',
       JSON.stringify(getSettings(state()).toJS().pathsList)
     );
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
 
@@ -80,6 +81,7 @@ export function removePath(label) {
       'pathsList',
       JSON.stringify(getSettings(state()).toJS().pathsList)
     );
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
 
@@ -90,5 +92,6 @@ export function updatePath(path) {
       'pathsList',
       JSON.stringify(getSettings(state()).toJS().pathsList)
     );
+    setWalletSettings(getSettings(state()).toJS());
   };
 }
