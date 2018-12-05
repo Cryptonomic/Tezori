@@ -45,17 +45,21 @@ export const getSelectedPath = createSelector(
 
 export const getPathsList = createSelector(
   getSettings,
-  settings => settings.get('pathsList').toJS()
+  settings => settings.get('pathsList')
 );
 
 export const getUsingPath = createSelector(
   getPathsList,
   getSelectedPath,
   (pathsList, selectedPath) => {
-    const findedItem = pathsList.find(item => item.label === selectedPath);
-    if (findedItem) {
-      return findedItem.derivation;
+    let path = '';
+    const foundPath = pathsList.find(path => {
+      const label = path.get('label');
+      return label === selectedPath;
+    });
+    if (foundPath) {
+      path = foundPath.get('derivation');
     }
-    return '';
+    return path;
   }
 );
