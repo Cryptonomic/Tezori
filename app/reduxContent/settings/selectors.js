@@ -48,7 +48,7 @@ export const getPathsList = createSelector(
   settings => settings.get('pathsList')
 );
 
-export const getUsingPath = createSelector(
+export const getActivePath = createSelector(
   getPathsList,
   getSelectedPath,
   (pathsList, selectedPath) => {
