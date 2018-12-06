@@ -179,6 +179,11 @@ const AddDelegateLedgerModal = (props: Props) => {
             color="primary"
           />
         </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
+          <ItemContent>{'277'}</ItemContent>
+        </ItemContainer>
       </MainContainer>
       <BottomContainer>
         <ConfirmDes>

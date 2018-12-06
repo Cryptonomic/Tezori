@@ -165,6 +165,11 @@ const SendLedgerConfirmationModal = (props: Props) => {
             color="primary"
           />
         </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
+          <ItemContent>{'300'}</ItemContent>
+        </ItemContainer>
       </MainContainer>
       <BottomContainer>
         <ConfirmDes>

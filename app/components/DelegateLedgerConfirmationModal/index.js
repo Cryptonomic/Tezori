@@ -151,6 +151,11 @@ const DelegateLedgerConfirmationModal = (props: Props) => {
             color="primary"
           />
         </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
+          <ItemContent>{'0'}</ItemContent>
+        </ItemContainer>
       </MainContainer>
       <BottomContainer>
         <ConfirmDes>
