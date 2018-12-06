@@ -24,9 +24,12 @@ import {
   fetchOriginationAverageFees
 } from '../../reduxContent/createDelegate/thunks';
 
+import { getIsReveal } from '../../reduxContent/wallet/thunks';
+
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
+import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 
 type Props = {
   isLoading: boolean,
@@ -36,8 +39,9 @@ type Props = {
   open: boolean,
   onCloseClick: () => {},
   t: () => {},
-  managerBalance: number,
-  isLedger: boolean
+  managerBalance: ?number,
+  isLedger: boolean,
+  getIsReveal: () => {}
 };
 
 const InputAddressContainer = styled.div`
@@ -201,9 +205,23 @@ class AddDelegateModal extends Component<Props> {
   state = defaultState;
 
   async componentDidUpdate(prevProps) {
-    const { open, fetchOriginationAverageFees, managerBalance } = this.props;
+    const {
+      open,
+      fetchOriginationAverageFees,
+      managerBalance,
+      getIsReveal,
+      selectedParentHash
+    } = this.props;
     if (open && open !== prevProps.open) {
       const averageFees = await fetchOriginationAverageFees();
+      const isRevealed = await getIsReveal(
+        selectedParentHash,
+        selectedParentHash
+      );
+      const miniLowFee = isRevealed ? OPERATIONFEE : REVEALOPERATIONFEE;
+      if (averageFees.low < miniLowFee) {
+        averageFees.low = miniLowFee;
+      }
       const fee = averageFees.low;
       const total = fee + this.state.gas;
       this.setState({
@@ -495,19 +513,18 @@ class AddDelegateModal extends Component<Props> {
           </DelegateButton>
         </PasswordButtonContainer>
         {isLoading && <Loader />}
-        {isLedger &&
-          isOpenLedgerConfirm && (
-            <AddDelegateLedgerModal
-              amount={amount}
-              fee={fee}
-              address={delegate}
-              source={selectedParentHash}
-              manager={selectedParentHash}
-              open={isOpenLedgerConfirm}
-              onCloseClick={this.closeLedgerConfirmation}
-              isLoading={isLoading}
-            />
-          )}
+        {isLedger && isOpenLedgerConfirm && (
+          <AddDelegateLedgerModal
+            amount={amount}
+            fee={fee}
+            address={delegate}
+            source={selectedParentHash}
+            manager={selectedParentHash}
+            open={isOpenLedgerConfirm}
+            onCloseClick={this.closeLedgerConfirmation}
+            isLoading={isLoading}
+          />
+        )}
       </Modal>
     );
   }
@@ -525,7 +542,8 @@ function mapDispatchToProps(dispatch) {
     {
       setIsLoading,
       fetchOriginationAverageFees,
-      createNewAccount
+      createNewAccount,
+      getIsReveal
     },
     dispatch
   );

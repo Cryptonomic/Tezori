@@ -78,7 +78,7 @@ export function delegate(
       newKeyStore.storeType = 2;
       res = await sendDelegationOperation(
         url,
-        keyStore,
+        newKeyStore,
         delegateValue,
         fee,
         derivation
