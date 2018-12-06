@@ -29,7 +29,8 @@ import {
 import {
   clearOperationId,
   getNodesStatus,
-  getNodesError
+  getNodesError,
+  getSelectedKeyStore
 } from '../../utils/general';
 
 import {
@@ -540,5 +541,30 @@ export function connectLedger() {
     }
     dispatch(setIsLoading(false));
     dispatch(setIsLedgerConnecting(false));
+  };
+}
+
+export function getIsReveal(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    const identities = state()
+      .wallet.get('identities')
+      .toJS();
+    const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
+    const keyStore = getSelectedKeyStore(
+      identities,
+      selectedAccountHash,
+      selectedParentHash
+    );
+    if (isLedger) {
+      keyStore.storeType = 2;
+    }
+    const { url } = getSelectedNode(settings, TEZOS);
+
+    const isReveal = await TezosOperations.isManagerKeyRevealedForAccount(
+      url,
+      keyStore
+    );
+    return isReveal;
   };
 }

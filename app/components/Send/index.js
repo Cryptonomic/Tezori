@@ -23,6 +23,8 @@ import {
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 import Fees from '../Fees/';
+import { getIsReveal } from '../../reduxContent/wallet/thunks';
+import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 
 const SendContainer = styled.div`
   display: flex;
@@ -145,8 +147,22 @@ class Send extends Component<Props> {
   state = initialState;
 
   async componentWillMount() {
-    const { fetchTransactionAverageFees, addressBalance } = this.props;
+    const {
+      fetchTransactionAverageFees,
+      addressBalance,
+      getIsReveal,
+      selectedAccountHash,
+      selectedParentHash
+    } = this.props;
     const averageFees = await fetchTransactionAverageFees();
+    const isRevealed = await getIsReveal(
+      selectedAccountHash,
+      selectedParentHash
+    );
+    const miniLowFee = isRevealed ? OPERATIONFEE : REVEALOPERATIONFEE;
+    if (averageFees.low < miniLowFee) {
+      averageFees.low = miniLowFee;
+    }
     this.setState({
       averageFees,
       fee: averageFees.low,
@@ -416,7 +432,8 @@ const mapDispatchToProps = dispatch =>
     {
       fetchTransactionAverageFees,
       sendTez,
-      validateAmount
+      validateAmount,
+      getIsReveal
     },
     dispatch
   );

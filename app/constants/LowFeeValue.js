@@ -1,0 +1,2 @@
+export const OPERATIONFEE = 1420; // 0.001420
+export const REVEALOPERATIONFEE = 2720; // 0.002720

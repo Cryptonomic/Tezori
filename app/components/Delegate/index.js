@@ -11,6 +11,8 @@ import TezosAddress from '../TezosAddress';
 import { wrapComponent } from '../../utils/i18n';
 import DelegateLedgerConfirmationModal from '../DelegateLedgerConfirmationModal';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
+import { getIsReveal } from '../../reduxContent/wallet/thunks';
+import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 
 import {
   validateAddress,
@@ -144,8 +146,21 @@ class Delegate extends Component<Props> {
   state = initialState;
 
   async componentWillMount() {
-    const { fetchDelegationAverageFees } = this.props;
+    const {
+      fetchDelegationAverageFees,
+      getIsReveal,
+      selectedAccountHash,
+      selectedParentHash
+    } = this.props;
     const averageFees = await fetchDelegationAverageFees();
+    const isRevealed = await getIsReveal(
+      selectedAccountHash,
+      selectedParentHash
+    );
+    const miniLowFee = isRevealed ? OPERATIONFEE : REVEALOPERATIONFEE;
+    if (averageFees.low < miniLowFee) {
+      averageFees.low = miniLowFee;
+    }
     this.setState({ averageFees, fee: averageFees.low });
   }
 
@@ -302,17 +317,16 @@ class Delegate extends Component<Props> {
           isDelegateIssue={isDelegateIssue}
           onDelegateIssue={status => this.setState({ isDelegateIssue: status })}
         />
-        {isLedger &&
-          isOpenLedgerConfirm && (
-            <DelegateLedgerConfirmationModal
-              fee={fee}
-              address={tempAddress}
-              source={selectedAccountHash}
-              open={isOpenLedgerConfirm}
-              onCloseClick={() => this.onOpenLedgerConfirmation(false)}
-              isLoading={isLoading}
-            />
-          )}
+        {isLedger && isOpenLedgerConfirm && (
+          <DelegateLedgerConfirmationModal
+            fee={fee}
+            address={tempAddress}
+            source={selectedAccountHash}
+            open={isOpenLedgerConfirm}
+            onCloseClick={() => this.onOpenLedgerConfirmation(false)}
+            isLoading={isLoading}
+          />
+        )}
       </Container>
     );
   }
@@ -329,7 +343,8 @@ function mapDispatchToProps(dispatch) {
     {
       fetchDelegationAverageFees,
       validateAddress,
-      delegate
+      delegate,
+      getIsReveal
     },
     dispatch
   );
