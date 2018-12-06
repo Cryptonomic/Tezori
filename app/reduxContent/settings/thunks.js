@@ -38,7 +38,6 @@ export function setLocale(locale) {
 export function setPath(selected) {
   return (dispatch, state) => {
     dispatch(_setPath(selected));
-    localStorage.setItem('selectedPath', selected);
     setWalletSettings(getSettings(state()).toJS());
   };
 }
@@ -67,10 +66,6 @@ export function updateNode(node) {
 export function addPath(path) {
   return (dispatch, state) => {
     dispatch(_addPath(path));
-    localStorage.setItem(
-      'pathsList',
-      JSON.stringify(getSettings(state()).toJS().pathsList)
-    );
     setWalletSettings(getSettings(state()).toJS());
   };
 }
@@ -78,10 +73,6 @@ export function addPath(path) {
 export function removePath(label) {
   return (dispatch, state) => {
     dispatch(_removePath(label));
-    localStorage.setItem(
-      'pathsList',
-      JSON.stringify(getSettings(state()).toJS().pathsList)
-    );
     setWalletSettings(getSettings(state()).toJS());
   };
 }
@@ -89,10 +80,6 @@ export function removePath(label) {
 export function updatePath(path) {
   return (dispatch, state) => {
     dispatch(_updatePath(path));
-    localStorage.setItem(
-      'pathsList',
-      JSON.stringify(getSettings(state()).toJS().pathsList)
-    );
     setWalletSettings(getSettings(state()).toJS());
   };
 }
