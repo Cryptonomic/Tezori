@@ -13,6 +13,7 @@ import Button from '../../components/Button/';
 import Loader from '../../components/Loader/';
 import { CREATE } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
+import { setIsLoading } from '../../reduxContent/wallet/actions';
 import ValidInput from '../../components/ValidInput/';
 import createFileEmptyIcon from '../../../resources/createFileEmpty.svg';
 import TezosIcon from '../../components/TezosIcon/';
@@ -21,7 +22,8 @@ import { wrapComponent } from '../../utils/i18n';
 type Props = {
   login: () => {},
   goBack: () => {},
-  t: () => {}
+  t: () => {},
+  isLoading: boolean
 };
 
 const BackToWallet = styled.div`
@@ -141,7 +143,6 @@ class LoginCreate extends Component<Props> {
   props: Props;
 
   state = {
-    isLoading: false,
     walletLocation: false,
     walletFileName: false,
     password: '',
@@ -162,14 +163,20 @@ class LoginCreate extends Component<Props> {
     if (event.detail === 0 && walletLocation && walletFileName) {
       return;
     }
-    remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
-      if (filename) {
-        this.setState({
-          walletLocation: path.dirname(filename),
-          walletFileName: path.basename(filename)
-        });
+
+    const currentWindow = remote.getCurrentWindow();
+    remote.dialog.showSaveDialog(
+      currentWindow,
+      { filters: dialogFilters },
+      filename => {
+        if (filename) {
+          this.setState({
+            walletLocation: path.dirname(filename),
+            walletFileName: path.basename(filename)
+          });
+        }
       }
-    });
+    );
   };
 
   changePassword = password => {
@@ -178,14 +185,11 @@ class LoginCreate extends Component<Props> {
     if (password) {
       const pwdStrength = zxcvbn(password);
       const score = pwdStrength.score || 1;
-      //    let crackTime = t("containers.loginCreate.crack_time_description", {time: pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second});
       let error = '';
       if (score < 3) {
         error = t('containers.loginCreate.password_not_strong');
-        //    crackTime += t("containers.loginCreate.add_another_word");
       } else if (score === 3) {
         error = t('containers.loginCreate.you_almost_there');
-        //    crackTime += t("containers.loginCreate.add_another_word");
       } else {
         error = t('containers.loginCreate.you_got_it');
       }
@@ -194,7 +198,6 @@ class LoginCreate extends Component<Props> {
       this.setState({
         pwdScore: score,
         pwdError: error,
-        //  pwdSuggestion: crackTime,
         isPasswordValidation: isValid,
         password
       });
@@ -253,8 +256,11 @@ class LoginCreate extends Component<Props> {
 
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
-    const { login } = this.props;
-    await login(loginType, walletLocation, walletFileName, password);
+    const { login, setIsLoading } = this.props;
+    await setIsLoading(true);
+    await setTimeout(() => {
+      login(loginType, walletLocation, walletFileName, password);
+    }, 1);
   };
 
   onPasswordShow = index => {
@@ -265,22 +271,15 @@ class LoginCreate extends Component<Props> {
     }
   };
 
-  setIsLoading = isLoading => {
-    this.setState({ isLoading });
-  };
-
-  onEnterPress = async (keyVal, isDisabled) => {
+  onEnterPress = (keyVal, isDisabled) => {
     if (keyVal === 'Enter' && !isDisabled) {
-      await this.setIsLoading(true);
-      setTimeout(() => {
-        this.login(CREATE);
-      }, 5);
+      this.login(CREATE);
     }
   };
 
   render() {
-    const { goBack, t } = this.props;
-    const { isLoading, walletFileName } = this.state;
+    const { goBack, t, isLoading } = this.props;
+    const { walletFileName } = this.state;
     const isDisabled =
       isLoading ||
       !this.state.isPasswordValidation ||
@@ -372,10 +371,15 @@ class LoginCreate extends Component<Props> {
     );
   }
 }
-
+function mapStateToProps({ wallet }) {
+  return {
+    isLoading: wallet.get('isLoading')
+  };
+}
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      setIsLoading,
       login,
       goBack: () => dispatch => dispatch(back())
     },
@@ -386,7 +390,7 @@ function mapDispatchToProps(dispatch) {
 export default compose(
   wrapComponent,
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )
 )(LoginCreate);

@@ -19,8 +19,6 @@ import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
-import derivationPath from '../constants/DerivationPath';
-
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
 const { generateMnemonic } = TezosWallet;
 

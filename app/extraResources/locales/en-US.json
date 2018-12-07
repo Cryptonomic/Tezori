@@ -39,6 +39,7 @@
       "manager": "Manager",
       "delegate": "Delegate",
       "ledger_name": "Ledger Nano S",
+      "derivation_path": "Derivation Path",
       "storage": "Storage"
     },
     "errors": {
@@ -85,6 +86,11 @@
         "node_name": "Node Name",
         "api_key": "API Key"
       }
+    },
+    "addPathModal": {
+      "error": "Derivation Path must start with 44'/1729'/",
+      "title": "Set Up Your Custom {{title}}",
+      "path_label": "Path Label"
     },
     "address": {
       "manager_address": "Manager Address",
@@ -288,10 +294,13 @@
     },
     "homeSettings": {
       "back_to_wallet": "Back to Wallet",
-      "wallet_settings": "Wallet Settings",
+      "general_settings": "General Settings",
       "choose_different_node": "Choose a Different Node",
       "add_custom_node": "Add a Custom Node",
-      "select_display_language": "Select Display Language"
+      "select_display_language": "Select Display Language",
+      "hardware_settings": "Hardware Wallet Settings",
+      "choose_derivation_path": "Choose Derivation Path",
+      "add_derivation_path": "Add a Derivation Path"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
@@ -307,7 +316,8 @@
       "dont_have_ledger_wallet": "Don't have the Ledger Tezos wallet app?",
       "download_it_here": "Download it here.",
       "connect_your_device": "Please<1> connect your device</1>,<3> enter your pin</3>, and<5> open Tezos Wallet app</5>.",
-      "connecting": "Connecting..."
+      "connecting": "Connecting...",
+      "selectedPath": "Selected Path: "
     },
     "loginCreate": {
       "create_wallet_btn": "Create Wallet",

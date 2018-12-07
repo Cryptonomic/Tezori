@@ -13,12 +13,14 @@ import Loader from '../../components/Loader';
 import PasswordInput from '../../components/PasswordInput';
 import { IMPORT } from '../../constants/CreationTypes';
 import { login } from '../../reduxContent/wallet/thunks';
+import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { wrapComponent } from '../../utils/i18n';
 
 type Props = {
   login: () => {},
   goBack: () => {},
-  t: () => {}
+  t: () => {},
+  isLoading: boolean
 };
 
 const BackToWallet = styled.div`
@@ -80,7 +82,6 @@ const dialogFilters = [{ name: 'Tezos Wallet', extensions: ['tezwallet'] }];
 class LoginImport extends Component<Props> {
   props: Props;
   state = {
-    isLoading: false,
     walletLocation: '',
     walletFileName: '',
     password: '',
@@ -91,7 +92,10 @@ class LoginImport extends Component<Props> {
     if (event.detail === 0) {
       return;
     }
+
+    const currentWindow = remote.getCurrentWindow();
     remote.dialog.showOpenDialog(
+      currentWindow,
       {
         properties: ['openFile'],
         filters: dialogFilters
@@ -109,12 +113,10 @@ class LoginImport extends Component<Props> {
 
   login = async loginType => {
     const { walletLocation, walletFileName, password } = this.state;
-    const { login } = this.props;
+    const { login, setIsLoading } = this.props;
+    await setIsLoading(true);
     await login(loginType, walletLocation, walletFileName, password);
-    await this.setIsLoading(false);
   };
-
-  setIsLoading = isLoading => this.setState({ isLoading });
 
   changePassword = password => {
     this.setState({ password });
@@ -126,14 +128,13 @@ class LoginImport extends Component<Props> {
 
   onEnterPress = (keyVal, isDisabled) => {
     if (keyVal === 'Enter' && !isDisabled) {
-      this.setIsLoading(true);
       this.login(IMPORT);
     }
   };
 
   render() {
-    const { goBack, t } = this.props;
-    const { walletFileName, password, isLoading, isShowedPwd } = this.state;
+    const { goBack, t, isLoading } = this.props;
+    const { walletFileName, password, isShowedPwd } = this.state;
     const isDisabled = isLoading || !walletFileName || !password;
 
     return (
@@ -185,10 +186,15 @@ class LoginImport extends Component<Props> {
     );
   }
 }
-
+function mapStateToProps({ wallet }) {
+  return {
+    isLoading: wallet.get('isLoading')
+  };
+}
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      setIsLoading,
       login,
       goBack: () => dispatch => dispatch(back())
     },
@@ -199,7 +205,7 @@ function mapDispatchToProps(dispatch) {
 export default compose(
   wrapComponent,
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )
 )(LoginImport);

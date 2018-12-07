@@ -29,7 +29,8 @@ import {
 import {
   clearOperationId,
   getNodesStatus,
-  getNodesError
+  getNodesError,
+  getSelectedKeyStore
 } from '../../utils/general';
 
 import {
@@ -54,6 +55,7 @@ import {
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
+import { getCurrentPath } from '../../utils/paths';
 
 const {
   unlockFundraiserIdentity,
@@ -457,7 +459,6 @@ export function importAddress(
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function login(loginType, walletLocation, walletFileName, password) {
   return async dispatch => {
-    dispatch(setIsLoading(true));
     const completeWalletPath = path.join(walletLocation, walletFileName);
     dispatch(addMessage('', true));
     dispatch(setLedger(false));
@@ -479,7 +480,6 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(
         setWallet(
           {
-            isLoading: true,
             identities,
             walletLocation,
             walletFileName,
@@ -495,21 +495,24 @@ export function login(loginType, walletLocation, walletFileName, password) {
       await dispatch(syncWallet());
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
+      dispatch(addMessage(e.name, true));
     }
   };
 }
 
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function connectLedger() {
-  return async dispatch => {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const { derivation } = await getCurrentPath(settings);
+    console.log('UMUR DEBUG: ', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
     dispatch(addMessage('', true));
     try {
-      const wallet = await loadWalletFromLedger();
+      const wallet = await loadWalletFromLedger(derivation);
       const identities = wallet.identities.map((identity, identityIndex) => {
         return createIdentity({
           ...identity,
@@ -523,7 +526,7 @@ export function connectLedger() {
             isLoading: true,
             identities,
             walletLocation: '',
-            walletFileName: 'Ledger Nano S'
+            walletFileName: `Ledger Nano S - ${derivation}`
           },
           'wallet'
         )
@@ -538,5 +541,30 @@ export function connectLedger() {
     }
     dispatch(setIsLoading(false));
     dispatch(setIsLedgerConnecting(false));
+  };
+}
+
+export function getIsReveal(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    const identities = state()
+      .wallet.get('identities')
+      .toJS();
+    const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
+    const keyStore = getSelectedKeyStore(
+      identities,
+      selectedAccountHash,
+      selectedParentHash
+    );
+    if (isLedger) {
+      keyStore.storeType = 2;
+    }
+    const { url } = getSelectedNode(settings, TEZOS);
+
+    const isReveal = await TezosOperations.isManagerKeyRevealedForAccount(
+      url,
+      keyStore
+    );
+    return isReveal;
   };
 }
