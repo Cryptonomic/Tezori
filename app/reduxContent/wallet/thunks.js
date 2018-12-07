@@ -568,3 +568,16 @@ export function getIsReveal(selectedAccountHash, selectedParentHash) {
     return isReveal;
   };
 }
+
+export function getIsImplicitAndEmpty(recipientHash) {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const { url } = getSelectedNode(settings, TEZOS);
+
+    const isImplicitAndEmpty = await TezosOperations.isImplicitAndEmpty(
+      url,
+      recipientHash
+    );
+    return isImplicitAndEmpty;
+  };
+}
