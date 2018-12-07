@@ -526,7 +526,7 @@ export function connectLedger() {
             isLoading: true,
             identities,
             walletLocation: '',
-            walletFileName: 'Ledger Nano S'
+            walletFileName: `Ledger Nano S - ${derivation}`
           },
           'wallet'
         )
