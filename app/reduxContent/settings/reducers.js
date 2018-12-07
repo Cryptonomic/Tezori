@@ -14,18 +14,16 @@ import {
   HIDE_DELEGATE_TOOLTIP
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
-import { getWalletSettings } from '../../utils/settings';
+import {
+  getWalletSettings,
+  getWalletSettingsFromStorage
+} from '../../utils/settings';
 import { getDefaultLocale } from '../../utils/i18n';
 
-const walletSettings = getWalletSettings();
-
-let selectedPath = localStorage.getItem('selectedPath');
-if (!selectedPath) selectedPath = '';
-let pathsList = localStorage.getItem('pathsList');
-if (!pathsList) {
-  pathsList = [];
-} else {
-  pathsList = JSON.parse(pathsList);
+let walletSettings = getWalletSettings();
+const walletSettings1 = getWalletSettingsFromStorage();
+if (walletSettings1) {
+  walletSettings = JSON.parse(walletSettings1);
 }
 
 const baseDefaults = {
@@ -34,8 +32,8 @@ const baseDefaults = {
   conseilSelectedNode: '',
   nodesList: [],
   delegateTooltip: false,
-  selectedPath,
-  pathsList
+  selectedPath: '',
+  pathsList: []
 };
 
 export const initialState = Object.assign(

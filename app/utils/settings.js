@@ -15,8 +15,10 @@ export function getWalletSettings() {
   return false;
 }
 
+export function getWalletSettingsFromStorage() {
+  return localStorage.getItem('settings');
+}
+
 export function setWalletSettings(nodes) {
-  if (fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, Buffer.from(JSON.stringify(nodes, null,  2)));
-  }
+  localStorage.setItem('settings', JSON.stringify(nodes));
 }
