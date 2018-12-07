@@ -14,17 +14,10 @@ import {
   HIDE_DELEGATE_TOOLTIP
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
-import {
-  getWalletSettings,
-  getWalletSettingsFromStorage
-} from '../../utils/settings';
+import { getWalletSettings } from '../../utils/settings';
 import { getDefaultLocale } from '../../utils/i18n';
 
-let walletSettings = getWalletSettings();
-const walletSettings1 = getWalletSettingsFromStorage();
-if (walletSettings1) {
-  walletSettings = JSON.parse(walletSettings1);
-}
+const walletSettings = getWalletSettings();
 
 const baseDefaults = {
   locale: getDefaultLocale(), // get electron locale here

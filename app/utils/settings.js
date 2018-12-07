@@ -9,14 +9,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export function getWalletSettings() {
+  const settings = localStorage.getItem('settings');
+  if (settings) {
+    return JSON.parse(settings);
+  }
   if (fs.existsSync(filePath)) {
     return JSON.parse(fs.readFileSync(filePath));
   }
-  return false;
-}
-
-export function getWalletSettingsFromStorage() {
-  return localStorage.getItem('settings');
+  return {};
 }
 
 export function setWalletSettings(nodes) {
