@@ -186,20 +186,20 @@ export function createNewAccount(
       console.log('IDENTITY', identity);
       console.log('IDENTITY ACCOUNTS', identity.accounts);
       // find identity.account with accountID === newAccountHash
-      const delegatedAddress = identity.accounts.filter(
+      const delegatedAddressee = identity.accounts.filter(
         account => account.accountId === newAccountHash
       );
-      console.log(delegatedAddress);
-      delegatedAddress[0].transactions.push(
+      delegatedAddressee[0].transactions.push(
         createTransaction({
-          balance: amountInUtez,
+          amount: amountInUtez,
           delegate,
           kind: ORIGINATION,
           operationGroupHash: operationId,
-          source: keyStore.publicKeyHash
+          source: keyStore.publicKeyHash,
+          status: 'Ready'
         })
       );
-      // push transaction into transactions array
+      dispatch(updateIdentity(identity));
       identity.transactions.push(
         createTransaction({
           delegate,
