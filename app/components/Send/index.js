@@ -206,7 +206,6 @@ type Props = {
   validateAmount?: () => {},
   t: () => {},
   addressBalance: number,
-  isManager: boolean,
   isLedger: boolean
 };
 
@@ -295,9 +294,13 @@ class Send extends Component<Props> {
   };
   handlePasswordChange = password => this.setState({ password });
   handleToAddressChange = async toAddress => {
-    const { getIsImplicitAndEmpty } = this.props;
+    const { getIsImplicitAndEmpty, addressBalance } = this.props;
+    const { total } = this.state;
     const isDisplayedBurn = await getIsImplicitAndEmpty(toAddress);
-    this.setState({ toAddress, isDisplayedBurn });
+    const burnFee = isDisplayedBurn ? 2720 : 0;
+    const newTotal = total + burnFee;
+    const balance = addressBalance - total;
+    this.setState({ toAddress, isDisplayedBurn, total: newTotal, balance });
   };
   handleAmountChange = amount => this.setState({ amount });
   handleAmountChange = amount => {
@@ -353,19 +356,12 @@ class Send extends Component<Props> {
     this.setIsLoading(false);
   };
 
-  getBalanceState = (balance, amount, isManager) => {
+  getBalanceState = (balance, amount) => {
     const { t } = this.props;
     if (balance < 0) {
       return {
         isIssue: true,
         warningMessage: t('components.send.warnings.total_exceeds'),
-        balanceColor: 'error1'
-      };
-    }
-    if (isManager && balance === 0) {
-      return {
-        isIssue: true,
-        warningMessage: t('components.send.warnings.not_allowed'),
         balanceColor: 'error1'
       };
     }
@@ -418,7 +414,7 @@ class Send extends Component<Props> {
   };
 
   render() {
-    const { isReady, t, isManager, isLedger, selectedAccountHash } = this.props;
+    const { isReady, t, isLedger, selectedAccountHash } = this.props;
 
     const {
       isLoading,
@@ -437,8 +433,7 @@ class Send extends Component<Props> {
 
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
       balance,
-      amount,
-      isManager
+      amount
     );
 
     const isDisabled =
