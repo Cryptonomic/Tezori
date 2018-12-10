@@ -556,6 +556,7 @@ class Send extends Component<Props> {
             onSend={this.onSend}
             isLoading={isLoading}
             isShowedPwd={isShowedPwd}
+            isDisplayedBurn={isDisplayedBurn}
             onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           />
         )}

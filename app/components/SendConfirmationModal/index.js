@@ -65,7 +65,7 @@ const ItemContent = styled.div`
 const BottomContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 84px;
+  margin-top: 24px;
   height: 98px;
   padding: 0 76px;
   background-color: ${({ theme: { colors } }) => colors.gray1};
@@ -93,6 +93,7 @@ type Props = {
   onShowPwd: () => {},
   source?: string,
   fee: number,
+  isDisplayedBurn?: boolean,
   t: () => {}
 };
 
@@ -111,6 +112,7 @@ const SendConfirmationModal = (props: Props) => {
     onShowPwd,
     source,
     fee,
+    isDisplayedBurn,
     t
   } = props;
 
@@ -149,6 +151,16 @@ const SendConfirmationModal = (props: Props) => {
             <TezosIcon color="secondary" iconName="tezos" />
           </ItemContent>
         </ItemContainer>
+
+        {isDisplayedBurn && (
+          <ItemContainer>
+            <ItemTitle>{t('general.nouns.burn')}</ItemTitle>
+            <ItemContent>
+              0.257
+              <TezosIcon color="secondary" iconName="tezos" />
+            </ItemContent>
+          </ItemContainer>
+        )}
 
         <ItemContainer>
           <ItemTitle>{t('general.nouns.source')}</ItemTitle>
