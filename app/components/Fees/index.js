@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../../components/TezosIcon';
@@ -42,6 +43,19 @@ const ItemWrapper = styled(MenuItem)`
 
 const ModalContent = styled.div`
   padding: 35px 76px 63px 76px;
+`;
+
+const MiniFeeTitle = styled.div`
+  position: relative;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.black};
+  margin: -30px 0 20px 0;
+`;
+
+const BoldSpan = styled.span`
+  font-weight: 500;
 `;
 
 class Fee extends Component<Props> {
@@ -111,6 +125,16 @@ class Fee extends Component<Props> {
           onClose={this.closeConfirmation}
         >
           <ModalContent>
+            <MiniFeeTitle>
+              <Trans
+                i18nKey="components.fees.required_minium_fee"
+                fee={formatAmount(low)}
+              >
+                Please keep in mind that the minimum required fee for this
+                transaction is
+                <BoldSpan>{formatAmount(low)} XTZ</BoldSpan>.
+              </Trans>
+            </MiniFeeTitle>
             <TezosNumericInput
               decimalSeparator={t('general.decimal_separator')}
               labelText={customFeeLabel}

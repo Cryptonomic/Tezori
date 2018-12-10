@@ -168,7 +168,7 @@ const SendLedgerConfirmationModal = (props: Props) => {
 
         <ItemContainer>
           <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
-          <ItemContent>{'300'}</ItemContent>
+          <ItemContent>300</ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>
