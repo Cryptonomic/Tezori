@@ -1,14 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Trans } from 'react-i18next';
 import moment from 'moment';
 import { ms } from '../../styles/helpers';
 import TezosAddress from '../TezosAddress/';
 import TezosAmount from '../TezosAmount/';
 import TezosIcon from '../TezosIcon/';
 import { openLinkToBlockExplorer } from '../../utils/general';
-import * as types  from '../../constants/TransactionTypes';
-import { READY }  from '../../constants/StatusTypes';
+import * as types from '../../constants/TransactionTypes';
+import { READY } from '../../constants/StatusTypes';
 import { wrapComponent } from '../../utils/i18n';
 
 const AmountContainer = styled.div`
@@ -96,33 +95,33 @@ const getIsAmount = amount => !!amount;
 
 const getStatus = (transaction, selectedAccountHash, t) => {
   const type = transaction.kind;
-  if ( type === types.REVEAL ) {
+  if (type === types.REVEAL) {
     return {
       icon: 'broadcast',
-      preposition: t("general.of"),
-      state: t("components.transaction.public_key_reveal"),
+      preposition: t('general.of'),
+      state: t('components.transaction.public_key_reveal'),
       isFee: false,
       color: 'gray8',
       sign: ''
     };
   }
 
-  if ( type === types.ACTIVATION ) {
+  if (type === types.ACTIVATION) {
     return {
       icon: 'star',
-      preposition: t("general.of"),
-      state: t("components.transaction.activitation"),
+      preposition: t('general.of'),
+      state: t('components.transaction.activitation'),
       isFee: false,
       color: 'gray8',
       sign: ''
     };
   }
 
-  if ( type === types.DELEGATION ) {
+  if (type === types.DELEGATION) {
     return {
       icon: 'change',
-      preposition: t("general.to"),
-      state: t("components.transaction.updated_delegate"),
+      preposition: t('general.to'),
+      state: t('components.transaction.updated_delegate'),
       isFee: true,
       color: 'gray8',
       sign: ''
@@ -133,11 +132,11 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   const isFee = getIsFee(transaction.fee);
   const isAmount = getIsAmount(transaction.amount);
 
-  if ( type === types.ORIGINATION && isSameLocation ) {
+  if (type === types.ORIGINATION && isSameLocation) {
     return {
       icon: 'send',
       preposition: '',
-      state: t("components.transaction.origination"),
+      state: t('components.transaction.origination'),
       isFee,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : '',
@@ -145,33 +144,33 @@ const getStatus = (transaction, selectedAccountHash, t) => {
     };
   }
 
-  if ( type === types.ORIGINATION && !isSameLocation ) {
+  if (type === types.ORIGINATION && !isSameLocation) {
     return {
       icon: 'receive',
       preposition: '',
-      state: t("components.transaction.origination"),
+      state: t('components.transaction.origination'),
       isFee,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''
     };
   }
 
-  if ( type === types.TRANSACTION && isSameLocation ) {
+  if (type === types.TRANSACTION && isSameLocation) {
     return {
       icon: 'send',
-      preposition: t("general.to"),
-      state: t("components.transaction.sent"),
+      preposition: t('general.to'),
+      state: t('components.transaction.sent'),
       isFee,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : ''
     };
   }
 
-  if ( type === types.TRANSACTION && !isSameLocation ) {
+  if (type === types.TRANSACTION && !isSameLocation) {
     return {
       icon: 'receive',
-      preposition: t("general.from"),
-      state: t("components.transaction.received"),
+      preposition: t('general.from'),
+      state: t('components.transaction.received'),
       isFee: false,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''
@@ -179,23 +178,30 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 };
 
-const getAddress = (transaction, selectedAccountHash, selectedParentHash, t) => {
+const getAddress = (
+  transaction,
+  selectedAccountHash,
+  selectedParentHash,
+  t
+) => {
   const address =
     transaction.source === selectedAccountHash
       ? transaction.destination
       : transaction.source;
-  
+
   const type = transaction.kind;
-  if ( type === types.REVEAL ) {
-    return <AddressText>{t("components.transaction.this_address")}</AddressText>;
+  if (type === types.REVEAL) {
+    return (
+      <AddressText>{t('components.transaction.this_address')}</AddressText>
+    );
   }
-  if ( type === types.DELEGATION ) {
+  if (type === types.DELEGATION) {
     return (
       <TezosAddress
         address={transaction.delegate}
-        size='14px'
-        weight='200'
-        color='black2'
+        size="14px"
+        weight="200"
+        color="black2"
       />
     );
   }
@@ -204,13 +210,7 @@ const getAddress = (transaction, selectedAccountHash, selectedParentHash, t) => 
     transaction.source === selectedParentHash &&
     selectedAccountHash !== selectedParentHash
   ) {
-    return (
-      <AddressText>
-        <Trans i18nKey="components.transaction.your_manager_address">
-          <span>your</span>Account 1 Manager Address
-        </Trans>
-      </AddressText>
-    );
+    return null;
   }
 
   if (!address) {
@@ -230,6 +230,7 @@ type Props = {
 
 function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash, t } = props;
+  console.log(transaction.status, ' STATUS CHANGED!');
   const fee = Number.parseInt(transaction.fee, 10);
   const { icon, preposition, state, isFee, color, sign, isBurn } = getStatus(
     transaction,
@@ -248,11 +249,9 @@ function Transaction(props: Props) {
     <TransactionContainer>
       <Header>
         <TransactionDate>
-          {
-            transaction.status === READY
-              ? timeFormatter(transaction.timestamp)
-              : t("components.transaction.pending")
-          }
+          {transaction.status === READY
+            ? timeFormatter(transaction.timestamp)
+            : t('components.transaction.pending')}
         </TransactionDate>
         <AmountContainer color={color}>
           {sign}
@@ -276,14 +275,19 @@ function Transaction(props: Props) {
         </ContentDiv>
         {isBurn && (
           <Fee>
-            <span>{t("components.transaction.burn")}: </span>
-            <TezosAmount color="gray5" size={ms(-2)} amount={257000} format={6} />
+            <span>{t('components.transaction.burn')}: </span>
+            <TezosAmount
+              color="gray5"
+              size={ms(-2)}
+              amount={257000}
+              format={6}
+            />
           </Fee>
         )}
         {isBurn && isFee && <Linebar />}
         {isFee && (
           <Fee>
-            <span>{t("general.nouns.fee")}: </span>
+            <span>{t('general.nouns.fee')}: </span>
             <TezosAmount color="gray5" size={ms(-2)} amount={fee} format={6} />
           </Fee>
         )}

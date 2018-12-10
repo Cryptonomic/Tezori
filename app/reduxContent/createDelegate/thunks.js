@@ -166,7 +166,7 @@ export function createNewAccount(
 
       const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
-
+      console.log(newAccount);
       identity.accounts.push(
         createAccount(
           {
@@ -183,9 +183,16 @@ export function createNewAccount(
         )
       );
 
-      console.log('IDENTITY', identity);
-      console.log('IDENTITY ACCOUNTS', identity.accounts);
-      // find identity.account with accountID === newAccountHash
+      identity.transactions.push(
+        createTransaction({
+          delegate,
+          kind: ORIGINATION,
+          operationGroupHash: operationId,
+          source: keyStore.publicKeyHash,
+          fee
+        })
+      );
+
       const delegatedAddressee = identity.accounts.filter(
         account => account.accountId === newAccountHash
       );
@@ -195,18 +202,7 @@ export function createNewAccount(
           delegate,
           kind: ORIGINATION,
           operationGroupHash: operationId,
-          source: keyStore.publicKeyHash,
-          status: 'Ready'
-        })
-      );
-      dispatch(updateIdentity(identity));
-      identity.transactions.push(
-        createTransaction({
-          delegate,
-          kind: ORIGINATION,
-          operationGroupHash: operationId,
-          source: keyStore.publicKeyHash,
-          fee
+          destination: keyStore.publicKeyHash
         })
       );
 
