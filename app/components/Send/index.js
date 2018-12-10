@@ -257,11 +257,8 @@ class Send extends Component<Props> {
 
   onUseMax = () => {
     const { addressBalance } = this.props;
-    const { fee, isDisplayedFeeTooltip } = this.state;
-    let burnFee = 0;
-    if (isDisplayedFeeTooltip) {
-      burnFee = 2720;
-    }
+    const { fee, isDisplayedBurn } = this.state;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
     const max = addressBalance - fee - burnFee;
     if (max > 0) {
       const amount = (max / utez).toFixed(6);
@@ -295,18 +292,19 @@ class Send extends Component<Props> {
   handlePasswordChange = password => this.setState({ password });
   handleToAddressChange = async toAddress => {
     const { getIsImplicitAndEmpty, addressBalance } = this.props;
-    const { total } = this.state;
+    const { amount, fee } = this.state;
     const isDisplayedBurn = await getIsImplicitAndEmpty(toAddress);
-    const burnFee = isDisplayedBurn ? 2720 : 0;
-    const newTotal = total + burnFee;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
+    const newAmount = amount || '0';
+    const numAmount = parseFloat(newAmount) * utez;
+    const total = numAmount + fee + burnFee;
     const balance = addressBalance - total;
-    this.setState({ toAddress, isDisplayedBurn, total: newTotal, balance });
+    this.setState({ toAddress, isDisplayedBurn, total, balance });
   };
-  handleAmountChange = amount => this.setState({ amount });
   handleAmountChange = amount => {
     const { addressBalance } = this.props;
     const { fee, isDisplayedBurn } = this.state;
-    const burnFee = isDisplayedBurn ? 2720 : 0;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const commaReplacedAmount = newAmount.replace(',', '.');
     const numAmount = parseFloat(commaReplacedAmount) * utez;
@@ -316,10 +314,11 @@ class Send extends Component<Props> {
   };
   handleFeeChange = fee => {
     const { addressBalance } = this.props;
-    const { amount } = this.state;
+    const { amount, isDisplayedBurn } = this.state;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const numAmount = parseFloat(newAmount) * utez;
-    const total = numAmount + fee;
+    const total = numAmount + fee + burnFee;
     const balance = addressBalance - total;
     this.setState({ fee, total, balance });
   };
