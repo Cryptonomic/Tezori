@@ -20,6 +20,7 @@ type Props = {
   medium?: number,
   high?: number,
   fee?: number,
+  miniFee?: number,
   onChange?: () => {},
   t: () => {}
 };
@@ -58,15 +59,43 @@ const BoldSpan = styled.span`
   font-weight: 500;
 `;
 
+const ErrorContainer = styled.div`
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme: { colors } }) => colors.error1};
+`;
+
+const WarningIcon = styled(TezosIcon)`
+  padding: 0 ${ms(-9)} 0 0;
+  position: relative;
+  top: 1px;
+`;
+
 class Fee extends Component<Props> {
   props: Props;
   state = {
     open: false,
-    custom: ''
+    custom: '',
+    error: ''
+  };
+
+  renderError = () => {
+    const { t } = this.props;
+    return (
+      <ErrorContainer>
+        <WarningIcon iconName="warning" size={ms(-1)} color="error1" />
+        {t('components.fees.minimum_fee_error')}
+      </ErrorContainer>
+    );
   };
 
   closeConfirmation = () => this.setState({ open: false });
-  handleCustomChange = custom => this.setState({ custom });
+  handleCustomChange = custom => {
+    const { miniFee } = this.props;
+    const error = custom < formatAmount(miniFee) ? this.renderError() : '';
+    this.setState({ custom, error });
+  };
   handleSetCustom = () => {
     const { custom } = this.state;
     const { onChange } = this.props;
@@ -85,8 +114,8 @@ class Fee extends Component<Props> {
   };
 
   render() {
-    const { open, custom } = this.state;
-    const { low, medium, high, fee, t } = this.props;
+    const { open, custom, error } = this.state;
+    const { low, medium, high, fee, miniFee, t } = this.props;
     const customFeeLabel = t('components.fees.custom_fee');
 
     return (
@@ -128,11 +157,11 @@ class Fee extends Component<Props> {
             <MiniFeeTitle>
               <Trans
                 i18nKey="components.fees.required_minium_fee"
-                fee={formatAmount(low)}
+                fee={formatAmount(miniFee)}
               >
                 Please keep in mind that the minimum required fee for this
                 transaction is
-                <BoldSpan>{formatAmount(low)} XTZ</BoldSpan>.
+                <BoldSpan>{formatAmount(miniFee)} XTZ</BoldSpan>.
               </Trans>
             </MiniFeeTitle>
             <TezosNumericInput
@@ -140,10 +169,12 @@ class Fee extends Component<Props> {
               labelText={customFeeLabel}
               amount={this.state.custom}
               handleAmountChange={this.handleCustomChange}
+              errorText={error}
             />
             <StyledSaveButton
               buttonTheme="primary"
               onClick={this.handleSetCustom}
+              disabled={!!error}
             >
               {t('components.fees.set_custom_fee')}
             </StyledSaveButton>

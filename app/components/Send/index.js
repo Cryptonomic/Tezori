@@ -123,23 +123,6 @@ const SendButton = styled(Button)`
 const InputAmount = styled.div`
   position: relative;
   width: 100%;
-  &&& {
-    [class*='TextField__InputWrapper'] {
-      &:after {
-        border-bottom-color: ${({ error, theme: { colors } }) =>
-          error ? colors.error1 : colors.accent} !important;
-      }
-      &:before {
-        border-bottom-color: ${({ error, theme: { colors } }) =>
-          error ? colors.error1 : colors.accent} !important;
-      }
-      &:hover:before {
-        border-bottom: solid 2px
-          ${({ error, theme: { colors } }) =>
-            error ? colors.error1 : colors.accent} !important;
-      }
-    }
-  }
 `;
 
 const FeeContainer = styled.div`
@@ -179,9 +162,6 @@ const BalanceTitle = styled.div`
   font-weight: 300;
 `;
 const ErrorContainer = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: 0;
   display: block;
   font-size: 12px;
   font-weight: 500;
@@ -216,6 +196,7 @@ const initialState = {
   toAddress: '',
   amount: '',
   fee: 100,
+  miniFee: 0,
   isShowedPwd: false,
   isDisplayedBurn: false,
   isDisplayedFeeTooltip: false,
@@ -251,7 +232,8 @@ class Send extends Component<Props> {
       fee: averageFees.low,
       total: averageFees.low,
       balance: addressBalance,
-      isDisplayedFeeTooltip: !isRevealed
+      isDisplayedFeeTooltip: !isRevealed,
+      miniFee: miniLowFee
     });
   }
 
@@ -395,6 +377,15 @@ class Send extends Component<Props> {
     );
   };
 
+  renderError = warningMessage => {
+    return (
+      <ErrorContainer>
+        <WarningIcon iconName="warning" size={ms(-1)} color="error1" />
+        {warningMessage}
+      </ErrorContainer>
+    );
+  };
+
   renderFeeToolTip = () => {
     const { t } = this.props;
     return (
@@ -427,13 +418,16 @@ class Send extends Component<Props> {
       total,
       balance,
       isDisplayedBurn,
-      isDisplayedFeeTooltip
+      isDisplayedFeeTooltip,
+      miniFee
     } = this.state;
 
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
       balance,
       amount
     );
+
+    const error = isIssue ? this.renderError(warningMessage) : '';
 
     const isDisabled =
       !isReady || isIssue || isLoading || !amount || !toAddress;
@@ -447,20 +441,15 @@ class Send extends Component<Props> {
           addressType="send"
           changeDelegate={this.handleToAddressChange}
         />
-        <InputAmount error={isIssue}>
+        <InputAmount>
           <TezosNumericInput
             decimalSeparator={t('general.decimal_separator')}
             labelText={t('general.nouns.amount')}
             amount={this.state.amount}
             handleAmountChange={this.handleAmountChange}
+            errorText={error}
           />
           <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
-          {isIssue && (
-            <ErrorContainer>
-              <WarningIcon iconName="warning" size={ms(-1)} color="error1" />
-              {warningMessage}
-            </ErrorContainer>
-          )}
         </InputAmount>
         <FeesBurnContainer>
           <FeeContainer>
@@ -469,6 +458,7 @@ class Send extends Component<Props> {
               medium={averageFees.medium}
               high={averageFees.high}
               fee={fee}
+              miniFee={miniFee}
               onChange={this.handleFeeChange}
             />
             {isDisplayedFeeTooltip && (

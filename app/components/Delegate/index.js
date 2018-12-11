@@ -131,6 +131,7 @@ const initialState = {
   tempAddress: '',
   password: '',
   fee: 100,
+  miniFee: 0,
   isShowedPwd: false,
   averageFees: {
     low: 100,
@@ -161,7 +162,7 @@ class Delegate extends Component<Props> {
     if (averageFees.low < miniLowFee) {
       averageFees.low = miniLowFee;
     }
-    this.setState({ averageFees, fee: averageFees.low });
+    this.setState({ averageFees, fee: averageFees.low, miniFee: miniLowFee });
   }
 
   onOpenLedgerConfirmation = status =>
@@ -245,6 +246,7 @@ class Delegate extends Component<Props> {
       open,
       password,
       fee,
+      miniFee,
       averageFees,
       tempAddress,
       isShowedPwd,
@@ -304,6 +306,7 @@ class Delegate extends Component<Props> {
           newAddress={tempAddress}
           password={password}
           fee={fee}
+          miniFee={miniFee}
           averageFees={averageFees}
           handleFeeChange={this.handleFeeChange}
           handlePasswordChange={this.handlePasswordChange}

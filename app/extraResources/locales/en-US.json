@@ -170,7 +170,8 @@
       "custom": "Custom",
       "set_custom_fee": "Set Custom Fee",
       "enter_custom_amount": "Enter Custom Amount",
-      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>."
+      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>.",
+      "minimum_fee_error": "Your custom fee is below Tezos network minimal fee."
     },
     "inputAddress": {
       "setting_delegate": "Setting a Delegate",
