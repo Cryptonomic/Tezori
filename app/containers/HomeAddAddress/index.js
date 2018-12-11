@@ -264,6 +264,7 @@ class AddAddress extends Component<Props> {
       activeTab,
       inputVal,
       pkh,
+      activationCode,
       username,
       passPhrase
     );
