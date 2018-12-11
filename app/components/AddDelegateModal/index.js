@@ -188,6 +188,7 @@ const defaultState = {
   delegate: '',
   amount: '',
   fee: 100,
+  miniFee: 0,
   passPhrase: '',
   isShowedPwd: false,
   averageFees: {
@@ -228,7 +229,8 @@ class AddDelegateModal extends Component<Props> {
         averageFees,
         fee,
         total,
-        balance: managerBalance - total
+        balance: managerBalance - total,
+        miniFee: miniLowFee
       }); // eslint-disable-line react/no-did-update-set-state
     }
   }
@@ -236,11 +238,11 @@ class AddDelegateModal extends Component<Props> {
   onUseMax = () => {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
-    const max = managerBalance - fee - gas - 1;
+    const max = managerBalance - fee - gas;
     if (max > 0) {
       const amount = (max / utez).toFixed(6);
-      const total = managerBalance - 1;
-      const balance = 1;
+      const total = managerBalance;
+      const balance = 0;
       this.setState({ amount, total, balance });
     } else {
       const amount = '0';
@@ -339,13 +341,6 @@ class AddDelegateModal extends Component<Props> {
         balanceColor: 'error1'
       };
     }
-    if (balance === 0) {
-      return {
-        isIssue: true,
-        warningMessage: t('components.addDelegateModal.warning2'),
-        balanceColor: 'error1'
-      };
-    }
 
     if (amount) {
       return {
@@ -377,6 +372,7 @@ class AddDelegateModal extends Component<Props> {
       delegate,
       amount,
       fee,
+      miniFee,
       passPhrase,
       isShowedPwd,
       gas,
@@ -392,7 +388,7 @@ class AddDelegateModal extends Component<Props> {
       !delegate ||
       !amount ||
       (!passPhrase && !isLedger) ||
-      balance < 1 ||
+      balance < 0 ||
       isDelegateIssue;
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
       balance,
@@ -434,6 +430,7 @@ class AddDelegateModal extends Component<Props> {
                 medium={averageFees.medium}
                 high={averageFees.high}
                 fee={fee}
+                miniFee={miniFee}
                 onChange={this.changeFee}
               />
             </FeeContainer>

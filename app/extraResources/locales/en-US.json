@@ -40,7 +40,8 @@
       "delegate": "Delegate",
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Derivation Path",
-      "storage": "Storage"
+      "storage": "Storage",
+      "burn": "Burn"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -169,7 +170,8 @@
       "custom": "Custom",
       "set_custom_fee": "Set Custom Fee",
       "enter_custom_amount": "Enter Custom Amount",
-      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>."
+      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>.",
+      "minimum_fee_error": "Your custom fee is below Tezos network minimal fee."
     },
     "inputAddress": {
       "setting_delegate": "Setting a Delegate",
@@ -228,7 +230,12 @@
       "seed_phrase_password": "Seed Phrase Password",
       "enter_private_key": "Enter your private key",
       "seed_phrase": "SEED PHRASE",
-      "private_key": "PRIVATE KEY"
+      "private_key": "PRIVATE KEY",
+      "secret_key_15": "15 Word Secret Key",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "send": {
       "send_xtz": "Send XTZ",
@@ -244,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "Send Confirmation",
+      "send_description": "You are about to send out a transaction. Please carefully review the details.",
       "confirm_question": "Do you confirm that you want to send"
     },
     "sendLedgerConfirmationModal": {
@@ -297,7 +305,11 @@
       },
       "import_fundraiser": "Import Fundraiser Wallet",
       "create_new_account": "Create New Account",
-      "restore_backup": "Restore from Backup"
+      "restore_backup": "Restore from Backup",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "Back to Wallet",

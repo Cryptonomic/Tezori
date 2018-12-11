@@ -21,6 +21,9 @@ import { importAddress } from '../../reduxContent/wallet/thunks';
 import { openLink } from '../../utils/general';
 import { wrapComponent } from '../../utils/i18n';
 
+import SeedInput from '../../components/RestoreBackup/SeedInput';
+import seedJson from '../../components/RestoreBackup/seed.json';
+
 const Container = styled.div`
   width: 80%;
   margin: ${ms(1)} auto 0;
@@ -29,7 +32,6 @@ const Container = styled.div`
 
 const InputWithTooltip = styled.div`
   position: relative;
-
   & button {
     position: absolute;
     top: 24px;
@@ -203,12 +205,15 @@ class AddAddress extends Component<Props> {
 
   state = {
     activeTab: ADD_ADDRESS_TYPES.FUNDRAISER,
-    seed: '',
+    inputValue: '',
     pkh: '',
     activationCode: '',
     username: '',
     passPhrase: '',
-    isShowedPwd: false
+    isShowedPwd: false,
+    seeds: [],
+    error: false,
+    errorText: ''
   };
 
   renderTab = tabName => {
@@ -245,27 +250,109 @@ class AddAddress extends Component<Props> {
   importAddress = () => {
     const {
       activeTab,
-      seed,
+      seeds,
       passPhrase,
       pkh,
       username,
       activationCode
     } = this.state;
     const { importAddress } = this.props;
-    importAddress(activeTab, seed, pkh, activationCode, username, passPhrase);
+    const input = seeds.toString();
+    const words = input.replace(/["\s]/g, '');
+    const inputVal = words.replace(/,/g, ' ');
+    importAddress(
+      activeTab,
+      inputVal,
+      pkh,
+      username,
+      passPhrase
+    );
+  };
+
+  seedPhraseConvert = inputValue => {
+    if (inputValue.indexOf('"') > -1 || inputValue.indexOf(',') > -1) {
+      const words = inputValue.replace(/["\s]/g, '');
+      const seedString = words.replace(/,/g, ' ');
+      return seedString.split(/\s+/);
+    }
+    return inputValue.trim().split(/\s+/);
+  };
+
+  triggerError = (error, errorText) => {
+    this.setState({ error });
+    this.setState({ errorText });
+  };
+
+  onChangeInput = val => {
+    const { t } = this.props;
+    if (val.length > 15) {
+      const seedWords = seedJson.map(words => {
+        return words.label.toLowerCase();
+      });
+      const seeds = this.seedPhraseConvert(val);
+      const badWords = seeds.filter(
+        element => seedWords.indexOf(element) === -1
+      );
+      if (seeds.length > 15) {
+        this.triggerError(
+          true,
+          t('containers.homeAddAddress.errors.invalid_length')
+        );
+      } else if (badWords.length > 0) {
+        this.triggerError(
+          true,
+          t('containers.homeAddAddress.errors.invalid_words')
+        );
+      }
+      this.setState({ seeds });
+    } else {
+      this.setState({ inputValue: val });
+    }
+  };
+
+  onChangeItems = items => {
+    const { t } = this.props;
+    const seedWords = seedJson.map(words => {
+      return words.label.toLowerCase();
+    });
+    const badWords = items.filter(element => seedWords.indexOf(element) === -1);
+    if (items.length > 15) {
+      this.triggerError(
+        true,
+        t('containers.homeAddAddress.errors.invalid_length')
+      );
+    } else if (badWords.length > 0) {
+      this.triggerError(
+        true,
+        t('containers.homeAddAddress.errors.invalid_words')
+      );
+    } else if (badWords.length === 0 && items.length <= 15) {
+      this.triggerError(false, '');
+    }
+    this.setState({ seeds: items, inputValue: '' });
   };
 
   renderAddBody() {
     const {
       activeTab,
-      seed,
+      inputValue,
       passPhrase,
       pkh,
       username,
       activationCode,
-      isShowedPwd
+      isShowedPwd,
+      seeds,
+      error,
+      errorText
     } = this.state;
-    const { isLoading, t } = this.props;
+    const { t } = this.props;
+    const isDisabled =
+      error ||
+      errorText !== '' ||
+      passPhrase === '' ||
+      activationCode === '' ||
+      pkh === '' ||
+      seeds.length < 15;
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;
@@ -278,10 +365,15 @@ class AddAddress extends Component<Props> {
             <FormTitle>
               {t('containers.homeAddAddress.refer_pdf_title')}
             </FormTitle>
-            <TextField
-              label={t('containers.homeAddAddress.secret_key_15')}
-              value={seed}
-              onChange={newSeed => this.setState({ seed: newSeed })}
+            <SeedInput
+              placeholder={t('containers.homeAddAddress.secret_key_15')}
+              triggerError={this.triggerError}
+              errorText={errorText}
+              error={error}
+              selectedItems={seeds}
+              inputValue={inputValue}
+              onChangeInput={this.onChangeInput}
+              onChangeItems={this.onChangeItems}
             />
             <RowInputs>
               <InputWithTooltip>
@@ -374,7 +466,7 @@ class AddAddress extends Component<Props> {
             <ImportButton
               buttonTheme="primary"
               onClick={this.importAddress}
-              disabled={isLoading}
+              disabled={isDisabled}
             >
               {t('general.verbs.import')}
             </ImportButton>

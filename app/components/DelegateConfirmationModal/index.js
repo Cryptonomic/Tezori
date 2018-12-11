@@ -81,6 +81,7 @@ type Props = {
   newAddress?: string,
   password?: string,
   fee?: number,
+  miniFee?: number,
   averageFees: object,
   handleFeeChange: () => {},
   handlePasswordChange: () => {},
@@ -104,6 +105,7 @@ const DelegateConfirmationModal = (props: Props) => {
     newAddress,
     password,
     fee,
+    miniFee,
     averageFees,
     handleFeeChange,
     handlePasswordChange,
@@ -158,6 +160,7 @@ const DelegateConfirmationModal = (props: Props) => {
             medium={averageFees.medium}
             high={averageFees.high}
             fee={fee}
+            miniFee={miniFee}
             onChange={handleFeeChange}
           />
         </FeesContainer>

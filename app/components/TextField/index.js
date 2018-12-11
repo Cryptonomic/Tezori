@@ -7,32 +7,38 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 const Container = styled(FormControl)`
   width: 100%;
-  pointer-events: ${(props)=> props.disabled?'none': 'auto'};
+  pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
 `;
 
 const InputWrapper = styled(Input)`
   &&& {
     &[class*='focused'] {    
       &:after {
-        border-bottom-color: ${({error, theme: { colors } }) => error? colors.error1:colors.accent };
+        border-bottom-color: ${({ error, theme: { colors } }) =>
+          error ? colors.error1 : colors.accent};
       }
     }
-    color: ${({ disabled, theme: { colors } }) => disabled? colors.gray5 : colors.primary };
+    color: ${({ disabled, theme: { colors } }) =>
+      disabled ? colors.gray5 : colors.primary};
     font-size: 16px;
     font-weight: 300;
-    padding-right: ${({ right }) => right }px;
+    padding-right: ${({ right }) => right}px;
     &:before {
-      border-bottom: ${({ disabled}) => disabled? '1px dotted rgba(0, 0, 0, 0.32)' : '1px solid rgba(0, 0, 0, 0.12)' } ;
+      border-bottom: ${({ disabled }) =>
+        disabled
+          ? '1px dotted rgba(0, 0, 0, 0.32)'
+          : '1px solid rgba(0, 0, 0, 0.12)'} ;
     }
     &:hover:before {
-      border-bottom: solid 2px ${({error, theme: { colors } }) => error? colors.error1:colors.accent } !important;
+      border-bottom: solid 2px ${({ error, theme: { colors } }) =>
+        error ? colors.error1 : colors.accent} !important;
     }    
   }
 }`;
 const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {    
-      color: ${({ theme: { colors } }) => colors.gray3 };
+      color: ${({ theme: { colors } }) => colors.gray3};
     }
     color: rgba(0, 0, 0, 0.38);
     font-size: 16px;
@@ -41,7 +47,7 @@ const LabelWrapper = styled(InputLabel)`
 
 const ErrorText = styled(FormHelperText)`
   &&& {
-    color: ${({ theme: { colors } }) => colors.error1 };
+    color: ${({ theme: { colors } }) => colors.error1};
     font-size: 12px;
     margin-top: 5px;
     line-height: 18px;
@@ -52,40 +58,27 @@ const ErrorText = styled(FormHelperText)`
 type Props = {
   label: string,
   type?: string,
-  errorText?: string,
+  errorText?: string | React.Node,
   disabled?: boolean,
   right?: number,
   onChange?: () => {}
 };
 
 const TextField = (props: Props) => {
-  const {
-    label,
-    type,
-    onChange,
-    errorText,
-    disabled,
-    right,
-    ...other
-  } = props;
+  const { label, type, onChange, errorText, disabled, right, ...other } = props;
   return (
     <Container disabled={disabled}>
-      <LabelWrapper>
-        {label}
-      </LabelWrapper>
+      <LabelWrapper>{label}</LabelWrapper>
       <InputWrapper
         key={label}
         type={type}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={event => onChange(event.target.value)}
         error={!!errorText}
         disabled={disabled}
         right={right}
         {...other}
       />
-      <ErrorText>
-        {errorText}
-      </ErrorText>
-      
+      <ErrorText component="div">{errorText}</ErrorText>
     </Container>
   );
 };

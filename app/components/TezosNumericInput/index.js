@@ -17,17 +17,22 @@ const NumericInput = styled.div`
 
 const validateInput = (amount, handleChange, decimalSeparator) => {
   const separator = decimalSeparator;
-  const preventSeparatorAtStart = new RegExp(`^[${separator}]`,"g");
-  const allowOnlyNumbers = new RegExp(`[^0-9${separator}]`,"g");
-  const allowOnlyOneSeparator = new RegExp(`\\${separator}`,"g");
+  const preventSeparatorAtStart = new RegExp(`^[${separator}]`, 'g');
+  const allowOnlyNumbers = new RegExp(`[^0-9${separator}]`, 'g');
+  const allowOnlyOneSeparator = new RegExp(`\\${separator}`, 'g');
   let counter = 0;
 
   let validatedAmount = amount
     .replace(preventSeparatorAtStart, '')
     .replace(allowOnlyNumbers, '')
-    .replace(allowOnlyOneSeparator, () => {counter += 1; return counter > 1 ? '' : separator});
+    .replace(allowOnlyOneSeparator, () => {
+      counter += 1;
+      return counter > 1 ? '' : separator;
+    });
 
-  const precisionCount = validatedAmount.includes(separator) ? validatedAmount.split(separator)[1].length : 0;
+  const precisionCount = validatedAmount.includes(separator)
+    ? validatedAmount.split(separator)[1].length
+    : 0;
   if (precisionCount > 6) {
     const splitedAmount = validatedAmount.split(separator);
     const fractional = splitedAmount[1].substring(0, 6);
@@ -41,20 +46,23 @@ type Props = {
   handleAmountChange: () => {},
   amount: ?string,
   labelText: string,
-  decimalSeparator: string
+  decimalSeparator: string,
+  errorText?: string | React.Node
 };
 
-const TezosNumericInput = (props: Props) =>
-  (
-    <NumericInput>
-      <TextField
-        label={props.labelText}
-        value={props.amount}
-        onChange={(newVal) => validateInput(newVal, props.handleAmountChange, props.decimalSeparator)}
-        type="text"
-      />
-      <TezosIconInput color="secondary" iconName="tezos" />
-    </NumericInput>
-  );
+const TezosNumericInput = (props: Props) => (
+  <NumericInput>
+    <TextField
+      label={props.labelText}
+      value={props.amount}
+      onChange={newVal =>
+        validateInput(newVal, props.handleAmountChange, props.decimalSeparator)
+      }
+      type="text"
+      errorText={props.errorText}
+    />
+    <TezosIconInput color="secondary" iconName="tezos" />
+  </NumericInput>
+);
 
 export default TezosNumericInput;
