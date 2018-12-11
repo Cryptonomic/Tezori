@@ -188,6 +188,7 @@ const defaultState = {
   delegate: '',
   amount: '',
   fee: 100,
+  miniFee: 0,
   passPhrase: '',
   isShowedPwd: false,
   averageFees: {
@@ -228,7 +229,8 @@ class AddDelegateModal extends Component<Props> {
         averageFees,
         fee,
         total,
-        balance: managerBalance - total
+        balance: managerBalance - total,
+        miniFee: miniLowFee
       }); // eslint-disable-line react/no-did-update-set-state
     }
   }
@@ -377,6 +379,7 @@ class AddDelegateModal extends Component<Props> {
       delegate,
       amount,
       fee,
+      miniFee,
       passPhrase,
       isShowedPwd,
       gas,
@@ -434,6 +437,7 @@ class AddDelegateModal extends Component<Props> {
                 medium={averageFees.medium}
                 high={averageFees.high}
                 fee={fee}
+                miniFee={miniFee}
                 onChange={this.changeFee}
               />
             </FeeContainer>

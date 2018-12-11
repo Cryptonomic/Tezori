@@ -196,6 +196,7 @@ const initialState = {
   toAddress: '',
   amount: '',
   fee: 100,
+  miniFee: 0,
   isShowedPwd: false,
   isDisplayedBurn: false,
   isDisplayedFeeTooltip: false,
@@ -231,7 +232,8 @@ class Send extends Component<Props> {
       fee: averageFees.low,
       total: averageFees.low,
       balance: addressBalance,
-      isDisplayedFeeTooltip: !isRevealed
+      isDisplayedFeeTooltip: !isRevealed,
+      miniFee: miniLowFee
     });
   }
 
@@ -416,7 +418,8 @@ class Send extends Component<Props> {
       total,
       balance,
       isDisplayedBurn,
-      isDisplayedFeeTooltip
+      isDisplayedFeeTooltip,
+      miniFee
     } = this.state;
 
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
@@ -455,6 +458,7 @@ class Send extends Component<Props> {
               medium={averageFees.medium}
               high={averageFees.high}
               fee={fee}
+              miniFee={miniFee}
               onChange={this.handleFeeChange}
             />
             {isDisplayedFeeTooltip && (

@@ -20,6 +20,7 @@ type Props = {
   medium?: number,
   high?: number,
   fee?: number,
+  miniFee?: number,
   onChange?: () => {},
   t: () => {}
 };
@@ -91,8 +92,8 @@ class Fee extends Component<Props> {
 
   closeConfirmation = () => this.setState({ open: false });
   handleCustomChange = custom => {
-    const { low } = this.props;
-    const error = custom < formatAmount(low) ? this.renderError() : '';
+    const { miniFee } = this.props;
+    const error = custom < formatAmount(miniFee) ? this.renderError() : '';
     this.setState({ custom, error });
   };
   handleSetCustom = () => {
@@ -114,7 +115,7 @@ class Fee extends Component<Props> {
 
   render() {
     const { open, custom, error } = this.state;
-    const { low, medium, high, fee, t } = this.props;
+    const { low, medium, high, fee, miniFee, t } = this.props;
     const customFeeLabel = t('components.fees.custom_fee');
 
     return (
@@ -156,11 +157,11 @@ class Fee extends Component<Props> {
             <MiniFeeTitle>
               <Trans
                 i18nKey="components.fees.required_minium_fee"
-                fee={formatAmount(low)}
+                fee={formatAmount(miniFee)}
               >
                 Please keep in mind that the minimum required fee for this
                 transaction is
-                <BoldSpan>{formatAmount(low)} XTZ</BoldSpan>.
+                <BoldSpan>{formatAmount(miniFee)} XTZ</BoldSpan>.
               </Trans>
             </MiniFeeTitle>
             <TezosNumericInput
