@@ -519,7 +519,6 @@ export function connectLedger() {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { derivation } = await getCurrentPath(settings);
-    console.log('UMUR DEBUG: ', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
