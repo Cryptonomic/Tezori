@@ -230,7 +230,6 @@ type Props = {
 
 function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash, t } = props;
-  console.log(transaction.status, ' STATUS CHANGED!');
   const fee = Number.parseInt(transaction.fee, 10);
   const { icon, preposition, state, isFee, color, sign, isBurn } = getStatus(
     transaction,
@@ -244,12 +243,13 @@ function Transaction(props: Props) {
     selectedParentHash,
     t
   );
+  const originated = transaction.kind === 'origination';
 
   return (
     <TransactionContainer>
       <Header>
         <TransactionDate>
-          {transaction.status === READY
+          {transaction.status === READY || originated
             ? timeFormatter(transaction.timestamp)
             : t('components.transaction.pending')}
         </TransactionDate>
