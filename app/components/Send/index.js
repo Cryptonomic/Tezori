@@ -546,6 +546,8 @@ class Send extends Component<Props> {
           <SendConfirmationModal
             onEnterPress={event => this.onEnterPress(event.key, isDisabled)}
             amount={amount}
+            fee={fee}
+            source={selectedAccountHash}
             password={password}
             address={toAddress}
             open={isConfirmationModalOpen}
@@ -554,6 +556,7 @@ class Send extends Component<Props> {
             onSend={this.onSend}
             isLoading={isLoading}
             isShowedPwd={isShowedPwd}
+            isDisplayedBurn={isDisplayedBurn}
             onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           />
         )}

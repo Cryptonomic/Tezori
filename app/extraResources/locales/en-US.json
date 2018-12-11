@@ -40,7 +40,8 @@
       "delegate": "Delegate",
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Derivation Path",
-      "storage": "Storage"
+      "storage": "Storage",
+      "burn": "Burn"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -244,6 +245,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "Send Confirmation",
+      "send_description": "You are about to send out a transaction. Please carefully review the details.",
       "confirm_question": "Do you confirm that you want to send"
     },
     "sendLedgerConfirmationModal": {
