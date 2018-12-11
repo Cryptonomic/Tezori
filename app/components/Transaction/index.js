@@ -244,12 +244,12 @@ function Transaction(props: Props) {
     t
   );
   const originated = transaction.kind === 'origination';
-
+  const activation = transaction.kind === 'activation';
   return (
     <TransactionContainer>
       <Header>
         <TransactionDate>
-          {transaction.status === READY || originated
+          {transaction.status === READY || originated || activation
             ? timeFormatter(transaction.timestamp)
             : t('components.transaction.pending')}
         </TransactionDate>
