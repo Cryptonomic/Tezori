@@ -39,7 +39,8 @@
       "manager": "Manager",
       "delegate": "Delegate",
       "ledger_name": "Ledger Nano S",
-      "derivation_path": "Derivation Path"
+      "derivation_path": "Derivation Path",
+      "storage": "Storage"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -167,7 +168,8 @@
       "custom_fee": "Custom Fee",
       "custom": "Custom",
       "set_custom_fee": "Set Custom Fee",
-      "enter_custom_amount": "Enter Custom Amount"
+      "enter_custom_amount": "Enter Custom Amount",
+      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>."
     },
     "inputAddress": {
       "setting_delegate": "Setting a Delegate",
@@ -229,6 +231,12 @@
       "private_key": "PRIVATE KEY"
     },
     "send": {
+      "send_xtz": "Send XTZ",
+      "recepient_address": "Recepient Address",
+      "burn_tooltip_title": "Why is there a burn fee?",
+      "burn_tooltip_content": "The recepient address you entered has a zero balance. Sending funds to an empty Manager address (tz1,2,3) requires a one-time<1> 0.257 </1>XTZ burn fee.",
+      "fee_tooltip_title": "Why are fees a bit higher for this transaction?",
+      "fee_tooltip_content": "This is your first transaction from this address and it requires for us to reveal your public key to the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
       "warnings": {
         "total_exceeds": "Total exceeds available funds",
         "not_allowed": "Manager Addresses are not yet allowed to have less than 1 µtz"

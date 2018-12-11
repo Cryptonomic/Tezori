@@ -1165,28 +1165,9 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-"conseiljs-staging@https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#staging-two":
+"conseiljs@https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#staging":
   version "0.1.37"
-  resolved "https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#f49a20232113fcb960b942013b73a730692db151"
-  dependencies:
-    "@ledgerhq/hw-transport" "4.21.0"
-    "@ledgerhq/hw-transport-node-hid" "^4.22.0"
-    awesome-typescript-loader "^5.0.0"
-    aws-sdk "^2.326.0"
-    babel-runtime "6.26.0"
-    basil-tezos-ledger "0.0.1"
-    bip32 "^1.0.0"
-    bip39 "^2.5.0"
-    bs58check "^2.1.1"
-    https "^1.0.0"
-    libsodium-wrappers "^0.5.4"
-    libsodium-wrappers-sumo "^0.5.4"
-    tsconfig-paths-webpack-plugin "^3.2.0"
-    zxcvbn "^4.4.2"
-
-conseiljs@^0.1.36:
-  version "0.1.37"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.1.37.tgz#cf2dabee8e0e0b63597240754910ffb558ab696e"
+  resolved "https://a944a75da6e29dc79252b34830eb28ea8b0dbe8b:x-oauth-basic@github.com/Cryptonomic/ConseilJS.git#eae66364a193349558920ee6970952d3a0eb5737"
   dependencies:
     "@ledgerhq/hw-transport" "4.21.0"
     "@ledgerhq/hw-transport-node-hid" "^4.22.0"
