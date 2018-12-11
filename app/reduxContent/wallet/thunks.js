@@ -344,6 +344,7 @@ export function importAddress(
     dispatch(setIsLoading(true));
     try {
       let identity = null;
+      let activating;
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
@@ -366,7 +367,7 @@ export function importAddress(
           ).catch(() => false);
           if (!account) {
             const tezosNode = getSelectedNode(settings, TEZOS);
-            const activating = await sendIdentityActivationOperation(
+            activating = await sendIdentityActivationOperation(
               tezosNode.url,
               identity,
               activationCode
@@ -377,7 +378,7 @@ export function importAddress(
             });
             console.log('identity', identity);
             console.log('ACTIVATING', activating);
-            // activating.results.contents[0].metadata.balance_updates[0].change
+
             console.log('ACCOUNT', account);
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
@@ -431,7 +432,10 @@ export function importAddress(
             createTransaction({
               kind: ACTIVATION,
               timestamp: Date.now(),
-              operationGroupHash: identity.operations.Created
+              operationGroupHash: identity.operations.Created,
+              amount:
+                activating.results.contents[0].metadata.balance_updates[0]
+                  .change
             })
           );
           dispatch(addNewIdentity(identity));
