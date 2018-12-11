@@ -190,6 +190,11 @@ const getAddress = (
       : transaction.source;
 
   const type = transaction.kind;
+  if (type === types.ACTIVATION) {
+    return (
+      <AddressText>{t('components.transaction.this_address')}</AddressText>
+    );
+  }
   if (type === types.REVEAL) {
     return (
       <AddressText>{t('components.transaction.this_address')}</AddressText>
@@ -243,13 +248,17 @@ function Transaction(props: Props) {
     selectedParentHash,
     t
   );
-  const originated = transaction.kind === 'origination';
-  const activation = transaction.kind === 'activation';
+  const origination =
+    transaction.kind === 'origination' &&
+    selectedAccountHash !== selectedParentHash;
+  const activation =
+    transaction.kind === 'activation' &&
+    selectedAccountHash === selectedParentHash;
   return (
     <TransactionContainer>
       <Header>
         <TransactionDate>
-          {transaction.status === READY || originated || activation
+          {transaction.status === READY || origination || activation
             ? timeFormatter(transaction.timestamp)
             : t('components.transaction.pending')}
         </TransactionDate>

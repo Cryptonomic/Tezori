@@ -356,7 +356,6 @@ export function importAddress(
             passPhrase.trim(),
             pkh.trim()
           );
-
           identity.storeType = storeTypes.FUNDRAISER;
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
@@ -365,7 +364,6 @@ export function importAddress(
             identity.publicKeyHash,
             conseilNode.apiKey
           ).catch(() => false);
-
           if (!account) {
             const tezosNode = getSelectedNode(settings, TEZOS);
             const activating = await sendIdentityActivationOperation(
@@ -377,6 +375,10 @@ export function importAddress(
               error.name = err.message;
               throw error;
             });
+            console.log('identity', identity);
+            console.log('ACTIVATING', activating);
+            // activating.results.contents[0].metadata.balance_updates[0].change
+            console.log('ACCOUNT', account);
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
@@ -428,10 +430,10 @@ export function importAddress(
           identity.transactions.push(
             createTransaction({
               kind: ACTIVATION,
-              timestamp: Date.now()
+              timestamp: Date.now(),
+              operationGroupHash: identity.operations.Created
             })
           );
-          console.log('IDENTITY BOYYYYYY ', identity);
           dispatch(addNewIdentity(identity));
           identities = state()
             .wallet.get('identities')
