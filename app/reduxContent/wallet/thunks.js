@@ -11,6 +11,7 @@ import {
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
+import { createTransaction } from '../../utils/transaction';
 
 import {
   findAccountIndex,
@@ -56,6 +57,7 @@ import {
 
 import { getSelectedNode } from '../../utils/nodes';
 import { getCurrentPath } from '../../utils/paths';
+import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
@@ -354,6 +356,7 @@ export function importAddress(
             passPhrase.trim(),
             pkh.trim()
           );
+
           identity.storeType = storeTypes.FUNDRAISER;
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
@@ -422,6 +425,13 @@ export function importAddress(
           delete identity.seed;
           identity.order = jsIdentities.length + 1;
           identity = createIdentity(identity);
+          identity.transactions.push(
+            createTransaction({
+              kind: ACTIVATION,
+              timestamp: Date.now()
+            })
+          );
+          console.log('IDENTITY BOYYYYYY ', identity);
           dispatch(addNewIdentity(identity));
           identities = state()
             .wallet.get('identities')

@@ -5,7 +5,7 @@ import { Trans } from 'react-i18next';
 import styled, { css } from 'styled-components';
 import { lighten } from 'polished';
 import { ms } from '../../styles/helpers';
-import TextField  from '../../components/TextField';
+import TextField from '../../components/TextField';
 
 import Button from '../../components/Button/';
 import { H4 } from '../../components/Heading/';
@@ -51,7 +51,7 @@ const TooltipContainer = styled.div`
   font-size: ${ms(-1)};
   color: ${({ theme: { colors } }) => colors.primary};
   max-width: ${ms(15.5)};
-  font-weight: ${({theme: {typo}}) => typo.weights.light };
+  font-weight: ${({ theme: { typo } }) => typo.weights.light};
 `;
 
 const TooltipTitle = styled.p`
@@ -84,7 +84,7 @@ const Link = styled.span`
 `;
 
 const TitleContainer = styled.div`
-  background-color: #417DEF;
+  background-color: #417def;
   color: white;
   font-size: 24px;
   width: 100%;
@@ -110,16 +110,16 @@ const Tab = styled.div`
   width: 100%;
   height: 100%;
   ${({ isActive }) => {
-    if ( isActive ) {
+    if (isActive) {
       return css`
-        color: #1A325F;
+        color: #1a325f;
         background-color: white;
         text-align: center;
         padding: 0 10px;
       `;
     }
     return css`
-      background-color: #417DEF;
+      background-color: #417def;
       color: white;
       text-align: center;
       padding: 0 10px;
@@ -136,50 +136,58 @@ const ShowHidePwd = styled.div`
   position: absolute;
   top: 22px;
   right: ${ms(4)};
-  color: ${({ theme: { colors } }) => colors.accent };
+  color: ${({ theme: { colors } }) => colors.accent};
   font-size: 12px;
   font-weight: 500;
 `;
 
-const PasswordTooltip = (t) => {
+const PasswordTooltip = t => {
   return (
     <TooltipContainer>
-      <TooltipTitle>{t("containers.homeAddAddress.fundraiser_password")}</TooltipTitle>
-      {t("containers.homeAddAddress.tooltips.password_tooltip")}
+      <TooltipTitle>
+        {t('containers.homeAddAddress.fundraiser_password')}
+      </TooltipTitle>
+      {t('containers.homeAddAddress.tooltips.password_tooltip')}
     </TooltipContainer>
   );
 };
 
-const EmailTooltip = (t) => {
+const EmailTooltip = t => {
   return (
     <TooltipContainer>
-      <TooltipTitle>{t("containers.homeAddAddress.fundraiser_email_address")}</TooltipTitle>
-      {t("containers.homeAddAddress.tooltips.email_tooltip")}
+      <TooltipTitle>
+        {t('containers.homeAddAddress.fundraiser_email_address')}
+      </TooltipTitle>
+      {t('containers.homeAddAddress.tooltips.email_tooltip')}
     </TooltipContainer>
   );
 };
 
-const ActivationTooltip = (t) => {
+const ActivationTooltip = t => {
   const openALink = () => openLink('https://verification.tezos.com/');
   return (
     <TooltipContainer>
-      <TooltipTitle>{t("containers.homeAddAddress.activation_code")}</TooltipTitle>
+      <TooltipTitle>
+        {t('containers.homeAddAddress.activation_code')}
+      </TooltipTitle>
       <Trans i18nKey="containers.homeAddAddress.tooltips.activation_code_tooltip">
-        This is the activation code that you received after completing the KYC/AML
-        process. An activation code corresponds to a public key hash and is
-        required if you participated in the Fundraiser. You may complete the
-        process at <Link onClick={openALink}>verification.tezos.com</Link> if you
-        have not done so already.
+        This is the activation code that you received after completing the
+        KYC/AML process. An activation code corresponds to a public key hash and
+        is required if you participated in the Fundraiser. You may complete the
+        process at <Link onClick={openALink}>verification.tezos.com</Link> if
+        you have not done so already.
       </Trans>
     </TooltipContainer>
   );
 };
 
-const PkhTooltip = (t) => {
+const PkhTooltip = t => {
   return (
     <TooltipContainer>
-      <TooltipTitle>{t("containers.homeAddAddress.public_key_hash")}</TooltipTitle>
-      {t("containers.homeAddAddress.tooltips.public_key_hash_tooltip")}
+      <TooltipTitle>
+        {t('containers.homeAddAddress.public_key_hash')}
+      </TooltipTitle>
+      {t('containers.homeAddAddress.tooltips.public_key_hash_tooltip')}
     </TooltipContainer>
   );
 };
@@ -229,7 +237,7 @@ class AddAddress extends Component<Props> {
     const { t } = this.props;
     return (
       <TitleContainer>
-        <div>{t("containers.homeAddAddress.add_account")}</div>
+        <div>{t('containers.homeAddAddress.add_account')}</div>
       </TitleContainer>
     );
   };
@@ -243,55 +251,61 @@ class AddAddress extends Component<Props> {
       username,
       activationCode
     } = this.state;
-    this.props.importAddress(
-      activeTab,
-      seed,
-      pkh,
-      activationCode,
-      username,
-      passPhrase
-    );
+    const { importAddress } = this.props;
+    importAddress(activeTab, seed, pkh, activationCode, username, passPhrase);
   };
 
   renderAddBody() {
-    const { activeTab, seed, passPhrase, pkh, username, activationCode, isShowedPwd } = this.state;
+    const {
+      activeTab,
+      seed,
+      passPhrase,
+      pkh,
+      username,
+      activationCode,
+      isShowedPwd
+    } = this.state;
     const { isLoading, t } = this.props;
     switch (activeTab) {
       case ADD_ADDRESS_TYPES.GENERATE_MNEMONIC:
         return <CreateAccountSlide />;
       case ADD_ADDRESS_TYPES.RESTORE:
-        return (
-          <RestoreBackup />
-        )
+        return <RestoreBackup />;
       case ADD_ADDRESS_TYPES.FUNDRAISER:
       default:
         return (
           <Fragment>
             <FormTitle>
-              {t("containers.homeAddAddress.refer_pdf_title")}
+              {t('containers.homeAddAddress.refer_pdf_title')}
             </FormTitle>
             <TextField
-              label={t("containers.homeAddAddress.secret_key_15")}
+              label={t('containers.homeAddAddress.secret_key_15')}
               value={seed}
-              onChange={(newSeed) => this.setState({ seed: newSeed })}
+              onChange={newSeed => this.setState({ seed: newSeed })}
             />
             <RowInputs>
               <InputWithTooltip>
                 <TextField
-                  label={t("containers.homeAddAddress.fundraiser_password")}
-                  type={isShowedPwd? 'text': 'password'}
+                  label={t('containers.homeAddAddress.fundraiser_password')}
+                  type={isShowedPwd ? 'text' : 'password'}
                   value={passPhrase}
-                  onChange={(newPassPhrase) =>
+                  onChange={newPassPhrase =>
                     this.setState({ passPhrase: newPassPhrase })
                   }
                   right={65}
                 />
 
-                <ShowHidePwd onClick={()=> this.setState({isShowedPwd: !isShowedPwd})} style={{cursor: 'pointer'}}>
-                  {t((isShowedPwd ? 'general.verbs.hide' : 'general.verbs.show')) }
+                <ShowHidePwd
+                  onClick={() => this.setState({ isShowedPwd: !isShowedPwd })}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {t(isShowedPwd ? 'general.verbs.hide' : 'general.verbs.show')}
                 </ShowHidePwd>
 
-                <StyledTooltip position="bottom" content={()=>PasswordTooltip(t)}>
+                <StyledTooltip
+                  position="bottom"
+                  content={() => PasswordTooltip(t)}
+                >
                   <Button buttonTheme="plain">
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>
@@ -300,12 +314,12 @@ class AddAddress extends Component<Props> {
 
               <InputWithTooltip>
                 <TextField
-                  label={t("containers.homeAddAddress.public_key_hash")}
+                  label={t('containers.homeAddAddress.public_key_hash')}
                   value={pkh}
-                  onChange={(newPkh) => this.setState({ pkh: newPkh })}
+                  onChange={newPkh => this.setState({ pkh: newPkh })}
                   right={30}
                 />
-                <StyledTooltip position="bottom" content={()=>PkhTooltip(t)}>
+                <StyledTooltip position="bottom" content={() => PkhTooltip(t)}>
                   <Button buttonTheme="plain">
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>
@@ -316,13 +330,21 @@ class AddAddress extends Component<Props> {
             <RowInputs>
               <InputWithTooltip>
                 <TextField
-                  label={t("containers.homeAddAddress.fundraiser_email_address")}
+                  label={t(
+                    'containers.homeAddAddress.fundraiser_email_address'
+                  )}
                   value={username}
-                  onChange={(newUsername) => this.setState({ username: newUsername })}
+                  onChange={newUsername =>
+                    this.setState({ username: newUsername })
+                  }
                   right={30}
                 />
 
-                <StyledTooltip position="top" arrowPos={{ left: '71%' }} content={()=>EmailTooltip(t)}>
+                <StyledTooltip
+                  position="top"
+                  arrowPos={{ left: '71%' }}
+                  content={() => EmailTooltip(t)}
+                >
                   <Button buttonTheme="plain">
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>
@@ -331,12 +353,18 @@ class AddAddress extends Component<Props> {
 
               <InputWithTooltip>
                 <TextField
-                  label={t("containers.homeAddAddress.activation_code")}
+                  label={t('containers.homeAddAddress.activation_code')}
                   value={activationCode}
-                  onChange={(newActivationCode) => this.setState({ activationCode: newActivationCode })}
+                  onChange={newActivationCode =>
+                    this.setState({ activationCode: newActivationCode })
+                  }
                   right={30}
                 />
-                <StyledTooltip position="top" arrowPos={{ left: '71%' }} content={()=>ActivationTooltip(t)}>
+                <StyledTooltip
+                  position="top"
+                  arrowPos={{ left: '71%' }}
+                  content={() => ActivationTooltip(t)}
+                >
                   <Button buttonTheme="plain">
                     <HelpIcon iconName="help" size={ms(0)} color="secondary" />
                   </Button>
@@ -348,7 +376,7 @@ class AddAddress extends Component<Props> {
               onClick={this.importAddress}
               disabled={isLoading}
             >
-              {t("general.verbs.import")}
+              {t('general.verbs.import')}
             </ImportButton>
           </Fragment>
         );
@@ -386,4 +414,10 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default compose(wrapComponent, connect(mapStateToProps, mapDispatchToProps))(AddAddress);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(AddAddress);
