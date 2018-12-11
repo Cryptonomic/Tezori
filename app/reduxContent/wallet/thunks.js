@@ -376,10 +376,7 @@ export function importAddress(
               error.name = err.message;
               throw error;
             });
-            console.log('identity', identity);
-            console.log('ACTIVATING', activating);
 
-            console.log('ACCOUNT', account);
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
