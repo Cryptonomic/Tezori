@@ -17,7 +17,10 @@ import CustomSelect from '../../components/CustomSelect/';
 import LanguageSelector from '../../components/LanguageSelector/';
 import { wrapComponent } from '../../utils/i18n';
 
-import { syncWallet } from '../../reduxContent/wallet/thunks';
+import {
+  syncWallet,
+  goHomeAndClearState
+} from '../../reduxContent/wallet/thunks';
 import {
   setSelected,
   removeNode,
@@ -49,7 +52,8 @@ type Props = {
   theme: object,
   t: () => {},
   locale: string,
-  setLocale: () => {}
+  setLocale: () => {},
+  goHomeAndClearState: () => {}
 };
 
 const Row = styled.div`
@@ -160,7 +164,8 @@ class SettingsPage extends Component<Props> {
   state = {
     type: '',
     isNodeModalOpen: false,
-    isPathModalOpen: false
+    isPathModalOpen: false,
+    isPathChanged: false
   };
 
   selectedItem = {
@@ -181,6 +186,8 @@ class SettingsPage extends Component<Props> {
   openAddPathModal = () => this.setState({ isPathModalOpen: true });
 
   closeAddPathModal = () => this.setState({ isPathModalOpen: false });
+
+  onChangedDerivationPath = () => this.setState({ isPathChanged: true });
 
   getNodeUrl = (nodes, selectedNode) => {
     let url = '';
@@ -284,17 +291,27 @@ class SettingsPage extends Component<Props> {
       pathsList,
       locale,
       setLocale,
+      goHomeAndClearState,
       t
     } = this.props;
 
-    const { type, isNodeModalOpen, isPathModalOpen } = this.state;
+    const {
+      type,
+      isNodeModalOpen,
+      isPathModalOpen,
+      isPathChanged
+    } = this.state;
 
     return (
       <Container>
         <BackToWallet
           onClick={() => {
-            goBack();
-            syncWallet();
+            if (isPathChanged) {
+              goHomeAndClearState();
+            } else {
+              goBack();
+              syncWallet();
+            }
           }}
         >
           <BackCaret
@@ -306,7 +323,11 @@ class SettingsPage extends Component<Props> {
               marginLeft: '-9px'
             }}
           />
-          <span>{t('containers.homeSettings.back_to_wallet')}</span>
+          <span>
+            {isPathChanged
+              ? t('containers.homeSettings.back_to_login')
+              : t('containers.homeSettings.back_to_wallet')}
+          </span>
         </BackToWallet>
         <H2>{t('containers.homeSettings.general_settings')}</H2>
 
@@ -422,11 +443,16 @@ class SettingsPage extends Component<Props> {
                 value={selectedPath}
                 onChange={event => {
                   const newValue = event.target.value;
-                  if (newValue !== 'add-more') {
+                  if (newValue === 'add-more') {
+                    this.openAddPathModal();
+                    return true;
+                  }
+                  if (newValue !== selectedPath) {
+                    this.onChangedDerivationPath();
                     this.handlePathChange(newValue);
                     return true;
                   }
-                  this.openAddPathModal();
+                  return true;
                 }}
                 renderValue={value => {
                   const path = this.getPath(pathsList, selectedPath);
@@ -458,6 +484,7 @@ class SettingsPage extends Component<Props> {
         <AddPathModal
           isPathModalOpen={isPathModalOpen}
           closeAddPathModal={this.closeAddPathModal}
+          onChangedPath={this.onChangedDerivationPath}
         />
       </Container>
     );
@@ -484,7 +511,8 @@ function mapDispatchToProps(dispatch) {
       removeNode,
       setLocale,
       setPath,
-      goBack: () => dispatch => dispatch(goBackToWallet())
+      goBack: () => dispatch => dispatch(goBackToWallet()),
+      goHomeAndClearState
     },
     dispatch
   );
