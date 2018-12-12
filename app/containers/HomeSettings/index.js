@@ -37,7 +37,6 @@ import {
   getPathsList,
   getLocale
 } from '../../reduxContent/settings/selectors';
-import { initLedgerTransport } from '../../utils/wallet';
 
 type Props = {
   conseilSelectedNode: string,
@@ -308,7 +307,6 @@ class SettingsPage extends Component<Props> {
         <BackToWallet
           onClick={() => {
             if (isPathChanged) {
-              initLedgerTransport();
               goHomeAndClearState();
             } else {
               goBack();
