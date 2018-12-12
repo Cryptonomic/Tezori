@@ -319,7 +319,8 @@
       "select_display_language": "Select Display Language",
       "hardware_settings": "Hardware Wallet Settings",
       "choose_derivation_path": "Choose Derivation Path",
-      "add_derivation_path": "Add a Derivation Path"
+      "add_derivation_path": "Add a Derivation Path",
+      "back_to_login": "Back to Login"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",
