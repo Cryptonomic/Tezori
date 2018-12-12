@@ -38,7 +38,10 @@
       "destination": "Destination",
       "manager": "Manager",
       "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "Derivation Path",
+      "storage": "Storage",
+      "burn": "Burn"
     },
     "errors": {
       "no_hex_data": "入力したデータに何か問題があります",
@@ -84,6 +87,11 @@
         "node_name": "Node名",
         "api_key": "APIキー"
       }
+    },
+    "addPathModal": {
+      "error": "Derivation Path must start with 44'/1729'/",
+      "title": "Set Up Your Custom {{title}}",
+      "path_label": "Path Label"
     },
     "address": {
       "manager_address": "管理者アドレス",
@@ -161,7 +169,9 @@
       "custom_fee": "カスタム手数料",
       "custom": "カスタム",
       "set_custom_fee": "カスタム手数料を設定",
-      "enter_custom_amount": "カスタム金額を入力"
+      "enter_custom_amount": "カスタム金額を入力",
+      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>.",
+      "minimum_fee_error": "Your custom fee is below Tezos network minimal fee."
     },
     "inputAddress": {
       "setting_delegate": "Baker設定",
@@ -220,9 +230,20 @@
       "seed_phrase_password": "シードフレーズパスワード",
       "enter_private_key": "プライベートキーを入力",
       "seed_phrase": "シードフレーズ",
-      "private_key": "プライベートキー"
+      "private_key": "プライベートキー",
+      "secret_key_15": "15語のシークレットキー",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "send": {
+      "send_xtz": "Send XTZ",
+      "recepient_address": "Recepient Address",
+      "burn_tooltip_title": "Why is there a burn fee?",
+      "burn_tooltip_content": "The recepient address you entered has a zero balance. Sending funds to an empty Manager address (tz1,2,3) requires a one-time<1> 0.257 </1>XTZ burn fee.",
+      "fee_tooltip_title": "Why are fees a bit higher for this transaction?",
+      "fee_tooltip_content": "This is your first transaction from this address and it requires for us to reveal your public key to the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
       "warnings": {
         "total_exceeds": "合計が利用可能な資金を超えています",
         "not_allowed": "管理者アドレスは1µtz以下にすることはまだ許可されていません"
@@ -230,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "確認を送信",
+      "send_description": "You are about to send out a transaction. Please carefully review the details.",
       "confirm_question": "を送金する確認をしますか"
     },
     "sendLedgerConfirmationModal": {
@@ -283,14 +305,22 @@
       },
       "import_fundraiser": "Fundraiser Walletをインポート",
       "create_new_account": "新しいアカウントを作成",
-      "restore_backup": "バックアップから回復"
+      "restore_backup": "バックアップから回復",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "ウォレットに戻る",
-      "wallet_settings": "ウォレット設定",
+      "general_settings": "General Settings",
       "choose_different_node": "別のノードを選択",
       "add_custom_node": "カスタムノードを追加",
-      "select_display_language": "言語"
+      "select_display_language": "言語",
+      "hardware_settings": "Hardware Wallet Settings",
+      "choose_derivation_path": "Choose Derivation Path",
+      "add_derivation_path": "Add a Derivation Path",
+      "back_to_login": "Back to Login"
     },
     "loginHome": {
       "description": "<1>利用規約</1>と<3>プライバシーポリシー</3>を読み、承諾したことを認めます。",
@@ -306,7 +336,8 @@
       "dont_have_ledger_wallet": "Ledger Tezos ウォレットアプリを持っていませんか？",
       "download_it_here": "ここからダウンロード",
       "connect_your_device": "<1> デバイスを接続</1>して、<3>ピンを入力</3>、それから<5>Tezos Walletアプリを開きます</5>。",
-      "connecting": "接続中..."
+      "connecting": "接続中...",
+      "selectedPath": "Selected Path: "
     },
     "loginCreate": {
       "create_wallet_btn": "ウォレットを作成",

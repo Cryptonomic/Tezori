@@ -38,7 +38,10 @@
       "destination": "Destination",
       "manager": "Manager",
       "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "Derivation Path",
+      "storage": "Storage",
+      "burn": "Burn"
     },
     "errors": {
       "no_hex_data": "Algo está mal con los datos que ingresó",
@@ -84,6 +87,11 @@
         "node_name": "Nombre del node",
         "api_key": "Clave Api"
       }
+    },
+    "addPathModal": {
+      "error": "Derivation Path must start with 44'/1729'/",
+      "title": "Set Up Your Custom {{title}}",
+      "path_label": "Path Label"
     },
     "address": {
       "manager_address": "Dirección Administrativa",
@@ -161,7 +169,9 @@
       "custom_fee": "Tasa personalizada",
       "custom": "Personalizar",
       "set_custom_fee": "Confirmar monto personalizado",
-      "enter_custom_amount": "Ingresar monto personalizado"
+      "enter_custom_amount": "Ingresar monto personalizado",
+      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>.",
+      "minimum_fee_error": "Your custom fee is below Tezos network minimal fee."
     },
     "inputAddress": {
       "setting_delegate": "Configurar un Baker",
@@ -220,9 +230,20 @@
       "seed_phrase_password": "Contraseña frase semilla",
       "enter_private_key": "Ingresar tu clave privada",
       "seed_phrase": "Frase semilla",
-      "private_key": "Clave privada"
+      "private_key": "Clave privada",
+      "secret_key_15": "Clave secreta de 15 palabras",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "send": {
+      "send_xtz": "Send XTZ",
+      "recepient_address": "Recepient Address",
+      "burn_tooltip_title": "Why is there a burn fee?",
+      "burn_tooltip_content": "The recepient address you entered has a zero balance. Sending funds to an empty Manager address (tz1,2,3) requires a one-time<1> 0.257 </1>XTZ burn fee.",
+      "fee_tooltip_title": "Why are fees a bit higher for this transaction?",
+      "fee_tooltip_content": "This is your first transaction from this address and it requires for us to reveal your public key to the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
       "warnings": {
         "total_exceeds": "El total excede los fondos disponibles",
         "not_allowed": "Las Direcciones Administrativas todavía no tienen permitido tener menos de  1 µtz"
@@ -230,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "Enviar confirmación",
+      "send_description": "You are about to send out a transaction. Please carefully review the details.",
       "confirm_question": "Confirmas que quieres enviar"
     },
     "sendLedgerConfirmationModal": {
@@ -283,14 +305,22 @@
       },
       "import_fundraiser": "Importar billetera de Fundraiser",
       "create_new_account": "Crear nueva cuenta",
-      "restore_backup": "Recuperar del Respaldo"
+      "restore_backup": "Recuperar del Respaldo",
+      "errors": {
+        "invalid_length": "Seed phrases must contain no more than 15 words.",
+        "invalid_words": "Detected invalid word(s). Please double check."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "Volver a la billetera",
-      "wallet_settings": "Ajustes de la billetera",
+      "general_settings": "General Settings",
       "choose_different_node": "Elegir un nodo distinto",
       "add_custom_node": "Agregar un nodo personalizado",
-      "select_display_language": "Idioma"
+      "select_display_language": "Idioma",
+      "hardware_settings": "Hardware Wallet Settings",
+      "choose_derivation_path": "Choose Derivation Path",
+      "add_derivation_path": "Add a Derivation Path",
+      "back_to_login": "Back to Login"
     },
     "loginHome": {
       "description": "Yo reconozco que he leído y aceptado los<1> Términos del Servicio</1> y la<3> Política de Privacidad</3> ",
@@ -306,7 +336,8 @@
       "dont_have_ledger_wallet": "¿No tienes la app monedero Ledger Tezos?",
       "download_it_here": "Descarga la app aquí.",
       "connect_your_device": "Por favor<1> conecta tu aparato</1>,<3> ingresa tu pin</3>, y<5> abre la app Tezos Wallet</5>.",
-      "connecting": "Conectando..."
+      "connecting": "Conectando...",
+      "selectedPath": "Selected Path: "
     },
     "loginCreate": {
       "create_wallet_btn": "Crear billetera",
