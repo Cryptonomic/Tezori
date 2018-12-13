@@ -256,10 +256,11 @@ class AddAddress extends Component<Props> {
       username,
       activationCode
     } = this.state;
+    const { importAddress } = this.props;
     const input = seeds.toString();
     const words = input.replace(/["\s]/g, '');
     const inputVal = words.replace(/,/g, ' ');
-    this.props.importAddress(
+    importAddress(
       activeTab,
       inputVal,
       pkh,

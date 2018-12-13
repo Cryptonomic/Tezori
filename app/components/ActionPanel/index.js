@@ -181,7 +181,6 @@ class ActionPanel extends Component<Props, State> {
           firstNumber,
           lastNumber
         );
-
         return isEmpty(JSTransactions) ? (
           <EmptyState
             imageSrc={transactionsEmptyState}
