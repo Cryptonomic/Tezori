@@ -393,8 +393,7 @@ class Send extends Component<Props> {
         <TooltipTitle>{t('components.send.fee_tooltip_title')}</TooltipTitle>
         <TooltipContent>
           <Trans i18nKey="components.send.fee_tooltip_content">
-            This is your first transaction from this address and it requires for
-            us to reveal your public key to the blockchain. We have added
+            This address is not revealed on the blockchain. We have added
             <BoldSpan>0.001420 XTZ</BoldSpan> for Public Key Reveal to your
             regular send operation fee.
           </Trans>
