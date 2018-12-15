@@ -34,11 +34,14 @@
       "total_balence": "Summe Total",
       "language": "Sprache",
       "transactions": "Transaktionen",
-      "source": "Source",
-      "destination": "Destination",
+      "source": "Quelle",
+      "destination": "Ziel",
       "manager": "Manager",
-      "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "delegate": "Delegierter",
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "Derivation Pfad",
+      "storage": "Storage",
+      "burn": "Burn"
     },
     "errors": {
       "no_hex_data": "Die angegebene Zeichenfolge sieht nicht wie Hex-Daten aus",
@@ -84,6 +87,11 @@
         "node_name": "Node Name",
         "api_key": "API Schlüssel"
       }
+    },
+    "addPathModal": {
+      "error": "Derivation Pfad muss beginnen mit 44'/1729'/",
+      "title": "Benutzerdefinierter Titel {{title}}",
+      "path_label": "Pfad Label"
     },
     "address": {
       "manager_address": "Manager Adresse",
@@ -146,8 +154,8 @@
       "delegate_warning": "Ihre Delegierungs-Änderung wird nicht angezeigt, bis die Änderung in der Blockchain bestätigt wird."
     },
     "changeDelegationLedgerConfirmModal": {
-      "change_delegate_title": "Confirm Changing Delegate",
-      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+      "change_delegate_title": "Bestätigen Sie die Änderung des Delegierten",
+      "change_description": "Sie sind gerade dabei, eine Operation zur Änderung des Delegierten zu initiieren. Bitte prüfen Sie sorgfältig die Details auf Ihrem Gerät ."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Bestätigen Sie das Hinzufügen eines Delegierten zum Konto 1",
@@ -161,7 +169,9 @@
       "custom_fee": "Benutzdefinierte Gebühr",
       "custom": "Benutzerdefiniert",
       "set_custom_fee": "Setze benutzerdefinierte Gebühr",
-      "enter_custom_amount": "Geben Sie den benutzerdefinierten Betrag ein"
+      "enter_custom_amount": "Geben Sie den benutzerdefinierten Betrag ein",
+      "required_minium_fee": "Bitte beachten Sie, dass die für diese Transaktion erforderliche Mindestgebühr <1> <0>{{fee}}</0> XTZ</1> beträgt.",
+      "minimum_fee_error": "Die benutzerdefinierte Gebühr, ist unter der Netzwerk-Minimalgebühr"
     },
     "inputAddress": {
       "setting_delegate": "Setze einen Delegierten",
@@ -220,9 +230,20 @@
       "seed_phrase_password": "Seedphrase Passwort",
       "enter_private_key": "Gebe deinen privaten Schlüssel ein",
       "seed_phrase": "SEED PHRASE",
-      "private_key": "PRIVATER SCHLÜSSEL"
+      "private_key": "PRIVATER SCHLÜSSEL",
+      "secret_key_15": "15 Wort Geheim Schlüssel",
+      "errors": {
+        "invalid_length": "Seed phrases müssen mehr als 15 Wörter beinhalten",
+        "invalid_words": "Ungültige Wörter festgestellt. Bitte nochmal nachprüfen."
+      }
     },
     "send": {
+      "send_xtz": "Sende XTZ",
+      "recepient_address": "Empfänger Adresse",
+      "burn_tooltip_title": "Warum gibt es eine burn Gebühr",
+      "burn_tooltip_content": "Die von Ihnen eingegebene Empfängeradresse hat einen Nullsaldo. Das Senden von Geld an eine leere Manageradresse (tz1,2,3) benötigt eine einmalige <1> 0.257 </1>XTZ burn Gebühr.",
+      "fee_tooltip_title": "Warum sind die Gebühren höher, für diese Transaktion?",
+      "fee_tooltip_content": "Dies ist Ihre erste Transaktion von dieser Adresse, und Sie müssen Ihren öffentlichen Schlüssel der Blockchain mitteilen. Wir haben <1> 0.001420 XTZ </1> zu den normalen Gebühren hinzugefügt, für den Public Key Reveal.",
       "warnings": {
         "total_exceeds": "Total übersteigt verfügbare Mittel",
         "not_allowed": "Manager Adressen ist es nicht erlaubt, weniger als 1 µtz zu halten"
@@ -230,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "Sende Bestätigung",
+      "send_description": "Sie sind dabei eine Transaktion zu senden. Bitte prüfen Sie sorgfältig die Details.",
       "confirm_question": "Wollen Sie das Senden bestätigen?"
     },
     "sendLedgerConfirmationModal": {
@@ -283,14 +305,22 @@
       },
       "import_fundraiser": "Importiere Fundraiser Wallet",
       "create_new_account": "Erstelle Neues Konto",
-      "restore_backup": "Wiederherstellen aus Sicherung"
+      "restore_backup": "Wiederherstellen aus Sicherung",
+      "errors": {
+        "invalid_length": "Seed phrases muss mehr als 15 Wörter enthalten",
+        "invalid_words": "Ungültige Wörter entdeckt. Bitte nochmal prüfen."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "Zurück zum Wallet",
-      "wallet_settings": "Wallet Einstellungen",
+      "general_settings": "Allgemeine Einstellungen",
       "choose_different_node": "Eine andere Node wählen",
       "add_custom_node": "Benutzerdefinierte Node hinzufügen",
-      "select_display_language": "Sprache"
+      "select_display_language": "Sprache",
+      "hardware_settings": "Hardware Wallet Einstellungen",
+      "choose_derivation_path": "Wähle Derivation Pfad",
+      "add_derivation_path": "Hinzufügen eines Derivation Pfad",
+      "back_to_login": "Zurück zum Login"
     },
     "loginHome": {
       "description": "Ich bestätige, dass ich die <1> Nutzungsbedingungen </ 1> und <3> Datenschutzrichtlinie </ 3> gelesen und akzeptiert habe.",
@@ -306,7 +336,8 @@
       "dont_have_ledger_wallet": "Sie haben keine Ledger Tezos Wallet App?",
       "download_it_here": "Hier herunterladen.",
       "connect_your_device": "Bitte<1> verbinden Sie Ihr Gerät mit dem PC</1>,<3> Geben Sie Ihren PIN ein</3>, und<5> öffnen Sie die Tezos Wallet App</5>.",
-      "connecting": "Verbinde..."
+      "connecting": "Verbinde...",
+      "selectedPath": "Ausgewählter Pfad: "
     },
     "loginCreate": {
       "create_wallet_btn": "Erstelle Wallet",

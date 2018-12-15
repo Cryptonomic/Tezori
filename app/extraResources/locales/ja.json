@@ -34,11 +34,14 @@
       "total_balence": "合計残高",
       "language": "言語",
       "transactions": "取引",
-      "source": "Source",
-      "destination": "Destination",
-      "manager": "Manager",
-      "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "source": "ソース",
+      "destination": "あて先",
+      "manager": "マネージャー",
+      "delegate": "デリゲート",
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "誘導パス",
+      "storage": "ストレージ",
+      "burn": "バーン"
     },
     "errors": {
       "no_hex_data": "入力したデータに何か問題があります",
@@ -84,6 +87,11 @@
         "node_name": "Node名",
         "api_key": "APIキー"
       }
+    },
+    "addPathModal": {
+      "error": "誘導パスは、44'/1729'/で開始してください",
+      "title": "カスタム{{title}}を設定する",
+      "path_label": "パスラベル"
     },
     "address": {
       "manager_address": "管理者アドレス",
@@ -146,8 +154,8 @@
       "delegate_warning": "変更がブロックチェーンで確認されるまで、デリゲーション変更は見えません。"
     },
     "changeDelegationLedgerConfirmModal": {
-      "change_delegate_title": "Confirm Changing Delegate",
-      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+      "change_delegate_title": "デリゲート変更を確認する",
+      "change_description": "デリゲート変更のために、デリゲート操作を発信しようとしています。デバイスの詳細を慎重にレビューしてください。"
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "アカウント1へのデリゲートの追加を確認",
@@ -161,7 +169,9 @@
       "custom_fee": "カスタム手数料",
       "custom": "カスタム",
       "set_custom_fee": "カスタム手数料を設定",
-      "enter_custom_amount": "カスタム金額を入力"
+      "enter_custom_amount": "カスタム金額を入力",
+      "required_minium_fee": "この取引に必要な最低費用<1> <0>{{fee}}</0> XTZ</1>を覚えておいてください。",
+      "minimum_fee_error": "カスタム費用は以下のTezosネットワーク最小料金です。"
     },
     "inputAddress": {
       "setting_delegate": "Baker設定",
@@ -220,9 +230,20 @@
       "seed_phrase_password": "シードフレーズパスワード",
       "enter_private_key": "プライベートキーを入力",
       "seed_phrase": "シードフレーズ",
-      "private_key": "プライベートキー"
+      "private_key": "プライベートキー",
+      "secret_key_15": "15語のシークレットキー",
+      "errors": {
+        "invalid_length": "シードフェーズには最低15文字入れてください。",
+        "invalid_words": "無効な文字を検出しました。ダブルチェックしてください。"
+      }
     },
     "send": {
+      "send_xtz": "XTZを送る",
+      "recepient_address": "受取人アドレス",
+      "burn_tooltip_title": "バーン費用がかかる理由は？",
+      "burn_tooltip_content": "入力した受取人アドレスには残高がありません。空のマネージャーアドレス(tz1,2,3)に資金を送るためには、一度限り<1> 0.257 </1>XTZ バーン費用が必要です。",
+      "fee_tooltip_title": "この取引の費用が少し高い理由は？",
+      "fee_tooltip_content": "これはこのアドレスからの最初の取引で、ブロックチェーンを使用するためにブロックチェーンのパブリックキーを示す必要があります。通常の送信操作費用に、パブリックキーを示すために<1> 0.001420 XTZ </1>を追加しました。",
       "warnings": {
         "total_exceeds": "合計が利用可能な資金を超えています",
         "not_allowed": "管理者アドレスは1µtz以下にすることはまだ許可されていません"
@@ -230,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "確認を送信",
+      "send_description": "取引を発信しようとしています。慎重に詳細をレビューしてください。",
       "confirm_question": "を送金する確認をしますか"
     },
     "sendLedgerConfirmationModal": {
@@ -283,14 +305,22 @@
       },
       "import_fundraiser": "Fundraiser Walletをインポート",
       "create_new_account": "新しいアカウントを作成",
-      "restore_backup": "バックアップから回復"
+      "restore_backup": "バックアップから回復",
+      "errors": {
+        "invalid_length": "シードフェーズには最低15文字入れてください。",
+        "invalid_words": "無効な文字を検出しました。ダブルチェックしてください"
+      }
     },
     "homeSettings": {
       "back_to_wallet": "ウォレットに戻る",
-      "wallet_settings": "ウォレット設定",
+      "general_settings": "一般設定",
       "choose_different_node": "別のノードを選択",
       "add_custom_node": "カスタムノードを追加",
-      "select_display_language": "言語"
+      "select_display_language": "言語",
+      "hardware_settings": "ハードウエアウォレット設定",
+      "choose_derivation_path": "誘導パスを選択する",
+      "add_derivation_path": "誘導パスを追加する",
+      "back_to_login": "ログインに戻る"
     },
     "loginHome": {
       "description": "<1>利用規約</1>と<3>プライバシーポリシー</3>を読み、承諾したことを認めます。",
@@ -306,7 +336,8 @@
       "dont_have_ledger_wallet": "Ledger Tezos ウォレットアプリを持っていませんか？",
       "download_it_here": "ここからダウンロード",
       "connect_your_device": "<1> デバイスを接続</1>して、<3>ピンを入力</3>、それから<5>Tezos Walletアプリを開きます</5>。",
-      "connecting": "接続中..."
+      "connecting": "接続中...",
+      "selectedPath": "選択したパス： "
     },
     "loginCreate": {
       "create_wallet_btn": "ウォレットを作成",
