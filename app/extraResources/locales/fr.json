@@ -39,8 +39,8 @@
       "manager": "Manager",
       "delegate": "Délégué",
       "ledger_name": "Ledger Nano S",
-      "derivation_path": "Derivation Path",
-      "storage": "Storage",
+      "derivation_path": "Chemin de Derivation",
+      "storage": "Stockage",
       "burn": "Burn"
     },
     "errors": {
@@ -89,9 +89,9 @@
       }
     },
     "addPathModal": {
-      "error": "Derivation Path must start with 44'/1729'/",
-      "title": "Set Up Your Custom {{title}}",
-      "path_label": "Path Label"
+      "error": "Le Chemin de Derivation doit commencer par 44'/1729'/",
+      "title": "Paramétrer votre {{title}} Customisé",
+      "path_label": "Etiquette du Chemin"
     },
     "address": {
       "manager_address": "Adresse de management",
@@ -154,8 +154,8 @@
       "delegate_warning": "Votre changement de délégation n`apparaîtra pas tant qu`il n`est pas confirmé sur la blockchain."
     },
     "changeDelegationLedgerConfirmModal": {
-      "change_delegate_title": "Confirm Changing Delegate",
-      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+      "change_delegate_title": "Confirmer le changement de Délégué",
+      "change_description": "Vous êtes sur le point d`envoyer une opération de délégation pour changer de délégué. Merci de revoir attentivement les détails sur votre appareil."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirmer l`ajout d`un délégué au compte 1",
@@ -170,8 +170,8 @@
       "custom": "Customiser",
       "set_custom_fee": "Paramétrer une Commission Customisée",
       "enter_custom_amount": "Entrer votre montant customisé",
-      "required_minium_fee": "Please keep in mind that the minimum required fee for this transaction is<1> <0>{{fee}}</0> XTZ</1>.",
-      "minimum_fee_error": "Your custom fee is below Tezos network minimal fee."
+      "required_minium_fee": "Merci de garder à l`esprit que la commission minimale requise pour cette transaction est de<1> <0>{{fee}}</0> XTZ</1>.",
+      "minimum_fee_error": "Votre commission customisée est inférieure à la commission minimale du réseau Tezos."
     },
     "inputAddress": {
       "setting_delegate": "Paramétrer un délégué",
@@ -233,17 +233,17 @@
       "private_key": "CLE PRIVEE",
       "secret_key_15": "Clé secrète de 15 mots",
       "errors": {
-        "invalid_length": "Seed phrases must contain no more than 15 words.",
-        "invalid_words": "Detected invalid word(s). Please double check."
+        "invalid_length": "La phrase de recovery ne doit pas comporter plus de 15 mots.",
+        "invalid_words": "Mot(s) invalide(s) détécté(s). Merci de vérifier."
       }
     },
     "send": {
-      "send_xtz": "Send XTZ",
-      "recepient_address": "Recepient Address",
-      "burn_tooltip_title": "Why is there a burn fee?",
-      "burn_tooltip_content": "The recepient address you entered has a zero balance. Sending funds to an empty Manager address (tz1,2,3) requires a one-time<1> 0.257 </1>XTZ burn fee.",
-      "fee_tooltip_title": "Why are fees a bit higher for this transaction?",
-      "fee_tooltip_content": "This is your first transaction from this address and it requires for us to reveal your public key to the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
+      "send_xtz": "Envoyer XTZ",
+      "recepient_address": "Adresse du destinataire",
+      "burn_tooltip_title": "Pouquoi y a-t-il une commission de brûlage ?",
+      "burn_tooltip_content": "L`adresse du destinataire que vous avez paramétré à une balance nulle. Envoyer des fonds à une adresse de Manager vide (tz1,2,3) nécéssite une commission de brûlage unique de <1> 0.257 </1>XTZ .",
+      "fee_tooltip_title": "Pourquoi la commission est un peu plus élévée pour cette transaction ?",
+      "fee_tooltip_content": "C`est votre première transaction provenant de cette adresse et cela implique que nous révélions votre clé publique sur la blockchain. Nous avons ajouté <1> 0.001420 XTZ </1> pour la révélation de votre clé publique sur votre commission d`envoi régulière.",
       "warnings": {
         "total_exceeds": "Le Total dépasse les fonds disponibles",
         "not_allowed": "Les addresses de management ne sont pas encore autorisées à avoir moins de 1 µtz"
@@ -251,7 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "Confirmation d`envoi",
-      "send_description": "You are about to send out a transaction. Please carefully review the details.",
+      "send_description": "Vous êtes sur le point d`envoyer une transaction. Merci de revoir attentivement les détails.",
       "confirm_question": "Confirmez-vous que vous voulez effectuer un envoi"
     },
     "sendLedgerConfirmationModal": {
@@ -307,20 +307,20 @@
       "create_new_account": "Créer un nouveau Compte",
       "restore_backup": "Restaurer votre sauvegarde",
       "errors": {
-        "invalid_length": "Seed phrases must contain no more than 15 words.",
-        "invalid_words": "Detected invalid word(s). Please double check."
+        "invalid_length": "La phrase de recovery ne doit pas comporter plus de 15 mots.",
+        "invalid_words": "Mot(s) invalides détécté(s). Merci de vérifier."
       }
     },
     "homeSettings": {
       "back_to_wallet": "Retour au wallet",
-      "general_settings": "General Settings",
+      "general_settings": "Paramètres généraux",
       "choose_different_node": "Choisir un noeud différent",
       "add_custom_node": "Ajouter un noeud customisé",
       "select_display_language": "Langue",
-      "hardware_settings": "Hardware Wallet Settings",
-      "choose_derivation_path": "Choose Derivation Path",
-      "add_derivation_path": "Add a Derivation Path",
-      "back_to_login": "Back to Login"
+      "hardware_settings": "Paramètres du Hardware Wallet",
+      "choose_derivation_path": "Choisissez le Chemin de Derivation",
+      "add_derivation_path": "Ajouter le Chemin de Derivation",
+      "back_to_login": "Retour à l`ouverture de session"
     },
     "loginHome": {
       "description": "Je reconnais avoir lu et accepté les <1> Conditions d'utilisation et <3> Politique de confidentialité. ",
@@ -337,7 +337,7 @@
       "download_it_here": "Télécharger la ici.",
       "connect_your_device": "Merci<1> de connecter votre appareil,<3> entrer votre pin, et<5>ouvrer votre application Tezos Wallet.",
       "connecting": "En cours de connexion…",
-      "selectedPath": "Selected Path: "
+      "selectedPath": "Chemin Séléctionné: "
     },
     "loginCreate": {
       "create_wallet_btn": "Créer un Wallet",
