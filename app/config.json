@@ -1,11 +1,11 @@
 {
-  "name": "Tezori",
+  "name": "Galleon",
   "version": "0.6.0b",
   "network": "mainnet",
   "blockExplorerHost": "http://tzscan.io/",
   "logo": "tezosLogo.svg",
   "icon": "tezos",
-  "termsService": "https://github.com/Cryptonomic/Tezori",
-  "privacyPolicy": "https://github.com/Cryptonomic/Tezori",
-  "tagline": "containers.loginHome.tagline"
+  "termsService": "https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf",
+  "privacyPolicy": "https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf",
+  "tagline": ""
 }
