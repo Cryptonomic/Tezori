@@ -9,14 +9,16 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export function getWalletSettings() {
+  const settings = localStorage.getItem('settings');
+  if (settings) {
+    return JSON.parse(settings);
+  }
   if (fs.existsSync(filePath)) {
     return JSON.parse(fs.readFileSync(filePath));
   }
-  return false;
+  return {};
 }
 
 export function setWalletSettings(nodes) {
-  if (fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, Buffer.from(JSON.stringify(nodes, null,  2)));
-  }
+  localStorage.setItem('settings', JSON.stringify(nodes));
 }

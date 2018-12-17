@@ -11,6 +11,7 @@ import {
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
+import { createTransaction } from '../../utils/transaction';
 
 import {
   findAccountIndex,
@@ -29,7 +30,8 @@ import {
 import {
   clearOperationId,
   getNodesStatus,
-  getNodesError
+  getNodesError,
+  getSelectedKeyStore
 } from '../../utils/general';
 
 import {
@@ -55,6 +57,7 @@ import {
 
 import { getSelectedNode } from '../../utils/nodes';
 import { getCurrentPath } from '../../utils/paths';
+import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
@@ -341,6 +344,7 @@ export function importAddress(
     dispatch(setIsLoading(true));
     try {
       let identity = null;
+      let activating;
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
@@ -361,10 +365,9 @@ export function importAddress(
             identity.publicKeyHash,
             conseilNode.apiKey
           ).catch(() => false);
-
           if (!account) {
             const tezosNode = getSelectedNode(settings, TEZOS);
-            const activating = await sendIdentityActivationOperation(
+            activating = await sendIdentityActivationOperation(
               tezosNode.url,
               identity,
               activationCode
@@ -373,6 +376,7 @@ export function importAddress(
               error.name = err.message;
               throw error;
             });
+
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
@@ -421,6 +425,16 @@ export function importAddress(
           delete identity.seed;
           identity.order = jsIdentities.length + 1;
           identity = createIdentity(identity);
+          identity.transactions.push(
+            createTransaction({
+              kind: ACTIVATION,
+              timestamp: Date.now(),
+              operationGroupHash: identity.operations.Created,
+              amount:
+                activating.results.contents[0].metadata.balance_updates[0]
+                  .change
+            })
+          );
           dispatch(addNewIdentity(identity));
           identities = state()
             .wallet.get('identities')
@@ -505,7 +519,6 @@ export function connectLedger() {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { derivation } = await getCurrentPath(settings);
-    console.log('UMUR DEBUG: ', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
@@ -525,7 +538,7 @@ export function connectLedger() {
             isLoading: true,
             identities,
             walletLocation: '',
-            walletFileName: 'Ledger Nano S'
+            walletFileName: `Ledger Nano S - ${derivation}`
           },
           'wallet'
         )
@@ -540,5 +553,42 @@ export function connectLedger() {
     }
     dispatch(setIsLoading(false));
     dispatch(setIsLedgerConnecting(false));
+  };
+}
+
+export function getIsReveal(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    const identities = state()
+      .wallet.get('identities')
+      .toJS();
+    const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
+    const keyStore = getSelectedKeyStore(
+      identities,
+      selectedAccountHash,
+      selectedParentHash
+    );
+    if (isLedger) {
+      keyStore.storeType = 2;
+    }
+    const { url } = getSelectedNode(settings, TEZOS);
+
+    const isReveal = await TezosOperations.isManagerKeyRevealedForAccount(
+      url,
+      keyStore
+    );
+    return isReveal;
+  };
+}
+
+export function getIsImplicitAndEmpty(recipientHash) {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const { url } = getSelectedNode(settings, TEZOS);
+    const isImplicitAndEmpty = await TezosOperations.isImplicitAndEmpty(
+      url,
+      recipientHash
+    );
+    return isImplicitAndEmpty;
   };
 }

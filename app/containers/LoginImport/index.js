@@ -92,7 +92,10 @@ class LoginImport extends Component<Props> {
     if (event.detail === 0) {
       return;
     }
+
+    const currentWindow = remote.getCurrentWindow();
     remote.dialog.showOpenDialog(
+      currentWindow,
       {
         properties: ['openFile'],
         filters: dialogFilters

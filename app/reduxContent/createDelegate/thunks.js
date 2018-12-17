@@ -166,7 +166,7 @@ export function createNewAccount(
 
       const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
-
+      console.log(newAccount);
       identity.accounts.push(
         createAccount(
           {
@@ -190,6 +190,19 @@ export function createNewAccount(
           operationGroupHash: operationId,
           source: keyStore.publicKeyHash,
           fee
+        })
+      );
+
+      const delegatedAddressee = identity.accounts.filter(
+        account => account.accountId === newAccountHash
+      );
+      delegatedAddressee[0].transactions.push(
+        createTransaction({
+          amount: amountInUtez,
+          delegate,
+          kind: ORIGINATION,
+          operationGroupHash: operationId,
+          destination: keyStore.publicKeyHash
         })
       );
 

@@ -26,6 +26,11 @@ const Amount = styled.span`
   }
 `;
 
+const SelectableText = {
+  userSelect: 'text',
+  cursor: 'text'
+};
+
 const Icon = styled(TezosIcon)`
   line-height: 1;
 `;
@@ -78,7 +83,13 @@ const TezosAmount = (props: Props) => {
       position="bottom"
       content={<Content formatedBalance={formatedBalance} />}
     >
-      <Amount className={className} color={color} size={size} weight={weight}>
+      <Amount
+        className={className}
+        color={color}
+        size={size}
+        weight={weight}
+        style={SelectableText}
+      >
         {format === 6
           ? formatAmount(amount)
           : `~${formatAmount(amount, format)}`}
@@ -92,6 +103,7 @@ const TezosAmount = (props: Props) => {
       size={size}
       weight={weight}
       format={format}
+      style={SelectableText}
     >
       {format === 6 ? formatAmount(amount) : `~${formatAmount(amount, format)}`}
       {iconName && <Icon size={size} color={color} iconName={iconName} />}

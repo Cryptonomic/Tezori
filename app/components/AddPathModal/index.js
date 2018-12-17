@@ -16,6 +16,7 @@ type Props = {
   setPath: () => {},
   addPath: () => {},
   closeAddPathModal: () => {},
+  onChangedPath: () => {},
   isPathModalOpen: boolean,
   t: () => {}
 };
@@ -72,7 +73,7 @@ class AddPathModal extends Component<Props> {
   */
   handleAddPath = () => {
     const { label, derivation } = this.state;
-    const { closeAddPathModal, addPath, setPath } = this.props;
+    const { closeAddPathModal, addPath, setPath, onChangedPath } = this.props;
     /*
     TO-DO: isValidPath
     if (this.isValidUrl()) {
@@ -87,6 +88,7 @@ class AddPathModal extends Component<Props> {
   */
     addPath({ label, derivation });
     setPath(label);
+    onChangedPath();
     closeAddPathModal();
     this.setState(defaultState);
   };

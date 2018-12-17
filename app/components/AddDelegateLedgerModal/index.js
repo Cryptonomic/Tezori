@@ -135,6 +135,22 @@ const AddDelegateLedgerModal = (props: Props) => {
         </DescriptionContainer>
 
         <ItemContainer>
+          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
+          <ItemContent>
+            {amount}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
+          <ItemContent>
+            {calcFee}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
           <ItemTitle>{t('general.nouns.source')}</ItemTitle>
           <TezosAddress
             address={manager}
@@ -155,22 +171,6 @@ const AddDelegateLedgerModal = (props: Props) => {
         </ItemContainer>
 
         <ItemContainer>
-          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
-          <ItemContent>
-            {calcFee}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
-          <ItemContent>
-            {amount}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
           <ItemTitle>{t('general.nouns.delegate')}</ItemTitle>
           <TezosAddress
             address={address}
@@ -178,6 +178,11 @@ const AddDelegateLedgerModal = (props: Props) => {
             weight={300}
             color="primary"
           />
+        </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
+          <ItemContent>{'277'}</ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>

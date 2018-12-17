@@ -163,14 +163,20 @@ class LoginCreate extends Component<Props> {
     if (event.detail === 0 && walletLocation && walletFileName) {
       return;
     }
-    remote.dialog.showSaveDialog({ filters: dialogFilters }, filename => {
-      if (filename) {
-        this.setState({
-          walletLocation: path.dirname(filename),
-          walletFileName: path.basename(filename)
-        });
+
+    const currentWindow = remote.getCurrentWindow();
+    remote.dialog.showSaveDialog(
+      currentWindow,
+      { filters: dialogFilters },
+      filename => {
+        if (filename) {
+          this.setState({
+            walletLocation: path.dirname(filename),
+            walletFileName: path.basename(filename)
+          });
+        }
       }
-    });
+    );
   };
 
   changePassword = password => {
@@ -179,14 +185,11 @@ class LoginCreate extends Component<Props> {
     if (password) {
       const pwdStrength = zxcvbn(password);
       const score = pwdStrength.score || 1;
-      //    let crackTime = t("containers.loginCreate.crack_time_description", {time: pwdStrength.crack_times_display.offline_slow_hashing_1e4_per_second});
       let error = '';
       if (score < 3) {
         error = t('containers.loginCreate.password_not_strong');
-        //    crackTime += t("containers.loginCreate.add_another_word");
       } else if (score === 3) {
         error = t('containers.loginCreate.you_almost_there');
-        //    crackTime += t("containers.loginCreate.add_another_word");
       } else {
         error = t('containers.loginCreate.you_got_it');
       }
@@ -195,7 +198,6 @@ class LoginCreate extends Component<Props> {
       this.setState({
         pwdScore: score,
         pwdError: error,
-        //  pwdSuggestion: crackTime,
         isPasswordValidation: isValid,
         password
       });

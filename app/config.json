@@ -1,8 +1,8 @@
 {
   "name": "Tezori",
-  "version": "0.5.0b",
-  "network": "mainnet",
-  "blockExplorerHost": "http://tzscan.io/",
+  "version": "0.6.0b",
+  "network": "zeronet",
+  "blockExplorerHost": "http://zeronet.tzscan.io/",
   "logo": "tezosLogo.svg",
   "icon": "tezos",
   "termsService": "https://github.com/Cryptonomic/Tezori",

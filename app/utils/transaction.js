@@ -53,39 +53,50 @@ export async function getTransactions(accountHash, nodes) {
   const transFilter = {
     ...emptyFilter,
     limit: 100,
-    operation_participant: [ accountHash ],
-    operation_kind: [ 'transaction', 'activate_account', 'reveal', 'origination', 'delegation' ]
+    operation_participant: [accountHash],
+    operation_kind: [
+      'transaction',
+      'activate_account',
+      'reveal',
+      'origination',
+      'delegation'
+    ]
   };
   return await getOperations(url, transFilter, apiKey);
 }
 
 export function syncTransactionsWithState(syncTransactions, stateTransactions) {
-  const newTransactions = stateTransactions
-    .filter(stateTransaction =>
-      !syncTransactions
-        .find(syncTransaction =>
-          syncTransaction.operationGroupHash === stateTransaction.operationGroupHash
-        )
-    );
+  const newTransactions = stateTransactions.filter(
+    stateTransaction =>
+      !syncTransactions.find(
+        syncTransaction =>
+          syncTransaction.operationGroupHash ===
+          stateTransaction.operationGroupHash
+      )
+  );
 
   return syncTransactions.concat(newTransactions);
 }
 
-export async function getSyncTransactions(accountHash, nodes, stateTransactions) {
-  let newTransactions = await getTransactions(accountHash, nodes)
-    .catch( e => {
-      console.log('-debug: Error in: getSyncAccount -> getTransactions for:' + accountHash);
-      console.error(e);
-      return [];
-    });
-
-  newTransactions = newTransactions
-    .map(transaction =>
-      createTransaction({
-        ...transaction,
-        status: status.READY
-      })
+export async function getSyncTransactions(
+  accountHash,
+  nodes,
+  stateTransactions
+) {
+  let newTransactions = await getTransactions(accountHash, nodes).catch(e => {
+    console.log(
+      '-debug: Error in: getSyncAccount -> getTransactions for:' + accountHash
     );
+    console.error(e);
+    return [];
+  });
+
+  newTransactions = newTransactions.map(transaction =>
+    createTransaction({
+      ...transaction,
+      status: status.READY
+    })
+  );
 
   return syncTransactionsWithState(newTransactions, stateTransactions);
 }
