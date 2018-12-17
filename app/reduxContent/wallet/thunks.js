@@ -425,16 +425,18 @@ export function importAddress(
           delete identity.seed;
           identity.order = jsIdentities.length + 1;
           identity = createIdentity(identity);
-          identity.transactions.push(
-            createTransaction({
-              kind: ACTIVATION,
-              timestamp: Date.now(),
-              operationGroupHash: identity.operations.Created,
-              amount:
-                activating.results.contents[0].metadata.balance_updates[0]
-                  .change
-            })
-          );
+          if (activeTab === FUNDRAISER) {
+            identity.transactions.push(
+              createTransaction({
+                kind: ACTIVATION,
+                timestamp: Date.now(),
+                operationGroupHash: identity.operations.Created,
+                amount:
+                  activating.results.contents[0].metadata.balance_updates[0]
+                    .change
+              })
+            );
+          }
           dispatch(addNewIdentity(identity));
           identities = state()
             .wallet.get('identities')

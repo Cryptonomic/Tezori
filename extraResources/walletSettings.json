@@ -1,0 +1,20 @@
+{
+  "locale": "en-US",
+  "tezosSelectedNode": "Cryptonomic-Nautilus",
+  "conseilSelectedNode": "Cryptonomic-Conseil",
+  "nodesList": [
+    {
+      "name": "Cryptonomic-Nautilus",
+      "type": "TEZOS",
+      "url": "https://tezos-staging.cryptonomic-infra.tech/",
+      "apiKey": ""
+    },
+    {
+      "name": "Cryptonomic-Conseil",
+      "type": "CONSEIL",
+      "url": "https://conseil-staging.cryptonomic-infra.tech/tezos/zeronet",
+      "apiKey": "hooman"
+    }
+  ],
+  "delegateTooltip": false
+}
