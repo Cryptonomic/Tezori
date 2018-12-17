@@ -4,7 +4,7 @@ A wallet for the Tezos blockchain based on [Conseil](https://github.com/Cryptono
 
 This code was written for the community. Use it, hack it, fork it as you please!
 
-[![Build Status](https://travis-ci.org/Cryptonomic/Tezos-Wallet.svg?branch=master)](https://travis-ci.org/Cryptonomic/Tezos-Wallet)
+[![Build Status](https://travis-ci.org/Cryptonomic/Tezori.svg?branch=master)](https://travis-ci.org/Cryptonomic/Tezori)
 
 ## Development
 
@@ -30,6 +30,13 @@ Add the file `extraResources/defaultWalletNodes.json` with your Tezos and Consei
       "type": "CONSEIL",
       "url": "https://myconseilnode.com/",
       "apiKey": "anotherapikey"
+    }
+  ],
+  "selectedPath": "Default",
+  "pathsList": [
+    {
+      "label": "Default",
+      "derivation": "44'/1729'/0'/0'/0'"
     }
   ]
 }
