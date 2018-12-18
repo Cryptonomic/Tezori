@@ -425,7 +425,7 @@ export function importAddress(
           delete identity.seed;
           identity.order = jsIdentities.length + 1;
           identity = createIdentity(identity);
-          if (activeTab === FUNDRAISER){
+          if (activeTab === FUNDRAISER && activating) {
             identity.transactions.push(
               createTransaction({
                 kind: ACTIVATION,
