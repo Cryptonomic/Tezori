@@ -1,7 +1,7 @@
 {
   "name": "Tezori",
   "productName": "Tezori",
-  "version": "0.6.0b",
+  "version": "0.6.1b",
   "description": "A wallet for the Tezos blockchain.",
   "main": "./main.prod.js",
   "author": {

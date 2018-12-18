@@ -1,6 +1,6 @@
 {
   "name": "Tezori",
-  "version": "0.6.0b",
+  "version": "0.6.1b",
   "network": "mainnet",
   "blockExplorerHost": "http://tzscan.io/",
   "logo": "tezosLogo.svg",
