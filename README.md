@@ -1,4 +1,4 @@
-# Tezos Wallet
+# Tezori
 
 A wallet for the Tezos blockchain based on [Conseil](https://github.com/Cryptonomic/Conseil) and [ConseilJS](https://github.com/Cryptonomic/ConseilJS).
 
