@@ -1,0 +1,374 @@
+{
+  "general": {
+    "verbs": {
+      "send": "Gönder",
+      "copy_address": "Adresi Kopyala",
+      "show": "Göster",
+      "hide": "Sakla",
+      "use_max": "Maks Kullan",
+      "import": "Oluştur",
+      "open": "Aç",
+      "save": "Kaydet",
+      "delegate": "Delegasyon",
+      "restore": "Kurtar",
+      "confirm": "Kabul Et",
+      "receive": "Tahsilat",
+      "continue": "Devam"
+    },
+    "nouns": {
+      "amount": "Miktar",
+      "wallet_password": "Cüzdan Şifresi",
+      "total": "Toplam",
+      "fee": "Ücret",
+      "accounts": "Hesaplar",
+      "address": "adres",
+      "account": "hesap",
+      "label_account": "Hesap",
+      "label_address": "Adres",
+      "delegate_address": "Fırıncı Adresi",
+      "remaining_balance": "Kalan Bakiye",
+      "gas": "Yakım",
+      "details": "Detaylar",
+      "conseil": "Conseil",
+      "tezos": "Tezos",
+      "total_balence": "Toplam Bakiye",
+      "language": "Dil",
+      "transactions": "İşlemler",
+      "source": "Kaynak",
+      "destination": "Hedef",
+      "manager": "Yönetici",
+      "delegate": "Delege",
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "Derivasyon",
+      "storage": "Depolama",
+      "burn": "Yakım"
+    },
+    "errors": {
+      "no_hex_data": "Girilen bilgiler onaltılık düzeninde değil.",
+      "no_ledger_detected": "Ledger çıkartıldı."
+    },
+    "decimal_separator": ".",
+    "back": "Geri",
+    "next": "İleri",
+    "to": "Bu adrese:",
+    "of": "||",
+    "from": "Bu adresten:"
+  },
+  "components": {
+    "accountStatus": {
+      "creating_ccount": "Hesap oluşturuluyor",
+      "activation_operation_id": "aktivasyon operasyonu no",
+      "origination_operation_id": "oluşturma operasyonu no",
+      "public_key_reveal_operation_id": "anahtar kayıt operasyonu no",
+      "titles": {
+        "pending": "{{typeText}} hazırlıyoruz...",
+        "ready": "Hesabınız tahsilata hazır!",
+        "retrieving": "{{typeText}} indiriyoruz..."
+      },
+      "descriptions": {
+        "mnemonic_first_transaction": "Yapacağınız ilk işlem adresinizi blok zincirine yazacak. Bu işlem sonrasında gönderi ve delegasyon yapabileceksiniz.",
+        "first_transaction_confirmation": "{{formattedAmount}} tez miktarındaki ilk işleminizi aldık! Hesabınızı hazırlıyoruz."
+      }
+    },
+    "actionPanel": {
+      "description": "Burası çok boş. Bu adresten tez <1> göndermeye</1> ve<3> almaya</3> başlayın.",
+      "empty-title": "Henüz bir işlem gerçekleştirmediniz."
+    },
+    "addDelegateModal": {
+      "gas_tool_tip": "Delege adres oluşturmak için Tezos ağının {{gas}} tz gaz yakması gerekiyor.",
+      "warning1": "Bakiye yetersiz",
+      "warning2": "Yönetici Adreslerin bakiyesi en az 1 µtz olabilir",
+      "add_delegate_title": "Delege Adres Oluştur"
+    },
+    "addNodeModal": {
+      "error": "Nod'un protokolü https olmalı",
+      "title": "Kendi {{title}} Nod'unuzu Kurun",
+      "labels": {
+        "node_name": "Nod Adı",
+        "api_key": "API Anahtarı"
+      }
+    },
+    "addPathModal": {
+      "error": "Derivasyon Seçimi 44'/1729'/ ile başlamalı",
+      "title": "Kendi {{title}}'unuzu Ekleyin",
+      "path_label": "Derivasyon Adı"
+    },
+    "address": {
+      "manager_address": "Yönetici Adres",
+      "delegated_address": "Delege Adres {{index}}"
+    },
+    "addressBlock": {
+      "descriptions": {
+        "description1": "Tez delege etmek, Tez göndermek ile aynı değildir. Delegasyon işlemi ile Fırıncı'nıza sadece pişirme hakkı verirsiniz. Seçtiğiniz Fırıncı sizin bakiyenizi harcayamaz.",
+        "description2": "Fırıncı seçmek ve değiştirmek ücrete tabidir.",
+        "description3": "Delege ettiğiniz Tez'ler ancak 7 tur (~20 gün) sonra pişirmeye hak kazanır.",
+        "description4": "Delegasyon ödül miktarı seçtiğiniz Fırıncı ile yaptığınız anlaşmaya göre hesaplanır."
+      },
+      "account_title": "Hesap {{index}}",
+      "not_ready_tooltip": "Hesabınız delege atmeye hazır değil.",
+      "delegation_tips": "Delegasyon İpuçları"
+    },
+    "addresses": {
+      "support_tooltip": "Birden fazla hesap için destek yakında sizinle."
+    },
+    "addressStatus": {
+      "your_account": "hesabınız",
+      "new_address": "yeni adres",
+      "retrieving_title": "{{typeText}} indiriyoruz...",
+      "preparing_title": "{{typeText}} hazırlıyoruz..."
+    },
+    "balanceBanner": {
+      "breadcrumbs": "Hesap {{parentIndex}} > {{addressLabel}}",
+      "delegated_to": "Delege edilen Fırıncı'nın adresi: "
+    },
+    "copyIcon": {
+      "copied": "Kopyalandı!"
+    },
+    "createAccountSlide": {
+      "descriptions": {
+        "description1": "Anahtar cümlenizi bir kağıda yazıp güvenli bir yerde saklayın. Kaybolması durumunda hesabınızı ancak bu anahtar cümle ile kurtarabilirsiniz.",
+        "description2": "Anahtar cümlenizi güvenli bir yerde sakladığınıza emin olunuz. Bu cümleyi unuttuğunuz takdirde cümleye tekrar erişemez ve kaybolması durumunda hesabınızı kurtaramassınız. Güvenliğiniz için bu cümleyi bizim de kaydetmediğimizi hatırlatmak isteriz.",
+        "description3": "Anahtar cümlenizi bir yere yadığınızdan emin olmak istiyoruz. Lütfen aşağıda sorulan dört kelimeyi girin."
+      },
+      "generate_other_seed": "Başka Anahtar Cümle Oluştur",
+      "create_account": "Oluştur",
+      "seed_backup": "Anahtar cümleniz oluşturuldu!",
+      "back_to_seed": "Anahtar Cümleye Geri Dön",
+      "first_word": "1. Kelime",
+      "second_word": "2. Kelime",
+      "third_word": "3. Kelime",
+      "nth_word": "{{index}}. Kelime",
+      "errors": {
+        "invalid_word": "Yanlış kelime girdiniz. Lütfen tekrar deneyiniz.",
+        "typo_error": "Kelime hatalı. Lütfen kontrol edin."
+      }
+    },
+    "delegate": {
+      "delegate_settings": "Fırıncı Ayarları",
+      "current_delegate": "Şu anda delege ettiğiniz Fırıncı",
+      "change_delegate": "Fırıncı değiştir",
+      "delegate_warning": "Yeni delege ayarlarınız, blok zincirinde kabul edilene kadar görünmeyecektir."
+    },
+    "delegateConfirmationModal": {
+      "new_address_label": "Yeni Fırıncı'nın Adresi",
+      "delegate_warning": "Yaptığınız Fırıncı değişikliği blok zincirine kayıt edilene kadar cüzdana yansımayacaktır."
+    },
+    "changeDelegationLedgerConfirmModal": {
+      "change_delegate_title": "Fırıncı Değişikliğini Onayla",
+      "change_description": "Delegasyon operasyonu yapmak üzeresiniz. Lütfen aşağıdaki bilgilerin cihazınızda görülenler ile aynı olduğuna emin olun."
+    },
+    "delegationLedgerConfirmationModal": {
+      "confirm_delegate_title": "Hesap 1'e Delege Eden Adres Eklemeyi Onayla",
+      "add_description": "Oluşturma operasyonu yapmak üzeresiniz. Lütfen aşağıdaki bilgilerin cihazınızda görülenler ile aynı olduğuna emin olun.",
+      "confirm_description": "Eğer tüm bilgiler doğruysa, lütfen oluşturmayı cihazınızda <1> onaylayın</1>."
+    },
+    "fees": {
+      "low_fee": "Düşük Ücret",
+      "medium_fee": "Orta Ücret",
+      "high_fee": "Yüksek Ücret",
+      "custom_fee": "Kişisel Ücret Gir",
+      "custom": "Kişisel Ücret",
+      "set_custom_fee": "Kişisel Ücret Girişi",
+      "enter_custom_amount": "Kişisel bir ücret girin",
+      "required_minium_fee": "Bu işlem için<1> <0>{{fee}}</0> XTZ</1>'den düşük bir ücret giremezsiniz.",
+      "minimum_fee_error": "Girdiğiniz ücret Tezos'un minimum ücretinden düşük."
+    },
+    "inputAddress": {
+      "setting_delegate": "Fırıncı Seçimi",
+      "contents": {
+        "content1": "Seçtiğiniz Fırıncı'yı istediğiniz zaman değiştirebilirsiniz.",
+        "content2": "Fırıncı değiştirmek ücrete tabidir.",
+        "content3": "Fırıncı Adresleri sadece TZ1, TZ2 veya TZ3 ile başlayabilir."
+      },
+      "errors": {
+        "send_address": "Adresler sadece TZ1, TZ2, TZ3 veya KT1 ile başlayabilir.",
+        "delegate_address": "Sadece TZ1, TZ2 veya TZ3 ile başlayan adreslere delege edebilirsiniz.",
+        "length": "Adresler 36 karakter uzunluğunda olmalıdır.",
+        "special_chars": "Addresler özel karakter barındıramaz.",
+        "send_funds": "Kendinize gönderim yapamassınz."
+      }
+    },
+    "languageSelectModal": {
+      "choose_language": "Dil Seçimi",
+      "language_selection_description": "Dil seçiminizi istediğiniz zaman ayarlar sayfasından değiştirebilirsiniz."
+    },
+    "messageBar": {
+      "operation_id": "OPERASYON NO",
+      "view_block_explorer": "Blok gezgininde görüntüle",
+      "messages": {
+        "amount_not_valid": "Hatalı bir miktar girdiniz.",
+        "address_begin": "Addresler tz1 veya KT1 ile başlamalı.",
+        "must_upload": "Cüzdan yüklemelisiniz.",
+        "err_not_valid": "[ERR] Hatalı Parametre(ler).",
+        "amount_small": "Miktar çok küçük.",
+        "amount_not_empty": "Miktar girişi yapmadınız.",
+        "pass_not_empty": "Şifre girişi yapmadınız.",
+        "address_not_empty": "Adres girişi yapmadınız.",
+        "address_length_36": "Girilen adres 36 karakterden oluşmalı.",
+        "pass_length_8": "Girilen şifre en az 8 karakterden oluşmalı.",
+        "incorrect_password": "Hatalı şifre girdiniz.",
+        "origination_operation_failed": "Oluşturma operasyonu başarısız.",
+        "delegation_operation_failed": "Delegasyon operasyonu başarısız.",
+        "send_operation_failed": "Gönderi operasyonu başarısız.",
+        "success_address_origination": "Adres oluşturma operasyonu başarılı.",
+        "success_delegation_update": "Delegasyon operasyonu başarılı.",
+        "cant_sent_yourself": "Kendinize gönderim yapamassınz.",
+        "success_account_activation": "Hesap aktivasyonu operasyonu başarılı.",
+        "identity_exist": "Bu kimlik zaten var",
+        "success_sent": "İşlem başarılı! {{localeParam}} tz gönderdiniz.",
+        "invalid_wallet_password": "Hatalı cüzdan/şifre kombinasyonu.",
+        "account_not_exist": "Bu hesap bulunamıyor.",
+        "ledger_not_connect": "Ledger bağlantıyı reddetti."
+      }
+    },
+    "pdfReader": {
+      "loading": "Yükleniyor ..."
+    },
+    "restoreBackup": {
+      "restore_from": "Yedekleme şekli ",
+      "seed_encrypted_label": "Bu anahtar cümle şifreli",
+      "seed_phrase_password": "Anahtar Cümle Şifresi",
+      "enter_private_key": "Gizli anahtarınızı girin",
+      "seed_phrase": "ANAHTAR CÜMLE",
+      "private_key": "GİZLİ ANAHTAR",
+      "secret_key_15": "15 Kelimelik Anahtar Cümle",
+      "errors": {
+        "invalid_length": "Anahtar cümleler 15 kelimeden fazla olamaz.",
+        "invalid_words": "Hatalı kelime(ler) saptandı. Lütfen kontrol edin."
+      }
+    },
+    "send": {
+      "send_xtz": "XTZ Gönder",
+      "recepient_address": "Alıcının Adresi",
+      "burn_tooltip_title": "Neden bir yakım ücreti var?",
+      "burn_tooltip_content": "Girdiğiniz alıcı adresinin bakiyesi sıfır. Bakiyesiz yönetici adreslere (tz1,2,3) gönderi yapmak bir kerelik <1> 0.257 </1>XTZ yakım ücretine tabidir.",
+      "fee_tooltip_title": "Bu işlem için ücretler neden normalden yüksek?",
+      "fee_tooltip_content": "Adresiniz henüz blok zincirine kayıt edilmemiş. Anahtar kayıt operasyonu için gönderi işleminize ekstradan<1> 0.001300 XTZ </1>ekledik.",
+      "warnings": {
+        "total_exceeds": "Yetersiz bakiye",
+        "not_allowed": "Yönetici Adreslerin bakiyesi en az 1 µtz olabilir"
+      }
+    },
+    "sendConfirmationModal": {
+      "send_confirmation": "Gönderiyi Onayla",
+      "send_description": "Gönderi operasyonu yapmak üzeresiniz. Lütfen bilgileri dikkatle inceleyin.",
+      "confirm_question": "Gönderiyi onaylıyor musunuz?"
+    },
+    "sendLedgerConfirmationModal": {
+      "confirm_transaction": "Gönderiyi Onayla",
+      "send_description": "Gönderi operasyonu yapmak üzeresiniz. Lütfen aşağıdaki bilgilerin cihazınızda görülenler ile aynı olduğuna emin olun.",
+      "confirm_description": "Eğer tüm bilgiler doğruysa, lütfen gönderiyi cihazınızda <1> onaylayın</1>."
+    },
+    "settingController": {
+      "settings": "AYARLAR",
+      "logout": "ÇIKIŞ"
+    },
+    "termsModal": {
+      "hi_there": "Merhaba!",
+      "welcome_to": "{{name}} - Hoşgeldiniz",
+      "i_agree": "Kabul Ediyorum",
+      "description": "Başlamadan önce lütfen <1> Kullanım Şartlarını </1>ve<3> Gizlilik Politikasını</3> okuyunuz."
+    },
+    "tooltips": {
+      "manager_tooltips_description": "Yönetici Adres bir hesabın ana adresidir, tez tahsili ve gönderisi için kullanılabilir."
+    },
+    "transaction": {
+      "pending": "Onay Bekliyor...",
+      "burn": "Gaz",
+      "public_key_reveal": "ANAHTAR KAYIT",
+      "activitation": "AKTİVASYON",
+      "updated_delegate": "DELEGE DEĞİŞİMİ",
+      "origination": "DELEGE OLUŞTURMA",
+      "sent": "GÖNDERİ",
+      "received": "TAHSİLAT",
+      "this_address": "Adres",
+      "your_manager_address": "Hesap 1 için <0>sizin</0> Yönetici Adresiniz"
+    },
+    "update": {
+      "last_updated": "Son güncelleme {{date}}"
+    }
+  },
+  "containers": {
+    "homeAddAddress": {
+      "add_account": "Hesap Oluştur",
+      "refer_pdf_title": "Lütfen Proje Destek zamanı yaratılan PDF dökümanınıza bakınız.",
+      "secret_key_15": "15 Kelimelik Anahtar Cümle",
+      "fundraiser_password": "Proje Destek Şifresi",
+      "public_key_hash": "Adres",
+      "fundraiser_email_address": "Email Adresi",
+      "activation_code": "Aktivasyon Kodu",
+      "tooltips": {
+        "password_tooltip": "Buraya Tezos Proje Destek zamanı kullanıdığınız şifreyi giriniz.",
+        "email_tooltip": "Buraya Tezos Proje Destek zamanı kullandığınız email adresinizi giriniz.",
+        "activation_code_tooltip": "Buraya KYC/AML işlemini tamamladıktan sonra size verilen aktivasyon kodunu giriniz. Proje Destek zamanı kullanılan her adresin kendine özel bir aktivasyon kodu vardır ve bir sonraki aşamaya geçmek için bilinmesi gerekmektedir. Eğer bu işlemi henüz tamamlamadıysanız <1>verification.tezos.com</1>'u ziyaret ediniz.",
+        "public_key_hash_tooltip": "Buraya Proje Destek sonrası size verilen adresi giriniz."
+      },
+      "import_fundraiser": "Proje Destek Dökümanından",
+      "create_new_account": "Anahtar Cümleden",
+      "restore_backup": "Yedekten Kurtararak",
+      "errors": {
+        "invalid_length": "Anahtar Cümleler 15 kelimeden uzun olamaz.",
+        "invalid_words": "Hatalı kelime(ler) saptandı. Lütfen kontrol edin."
+      }
+    },
+    "homeSettings": {
+      "back_to_wallet": "Cüzdana Geri Dön",
+      "general_settings": "Genel Ayarlar",
+      "choose_different_node": "Nod Ayarları",
+      "add_custom_node": "Başka Nod Ekle",
+      "select_display_language": "Dil Seçimi",
+      "hardware_settings": "Donanım Cüzdan Ayarları",
+      "choose_derivation_path": "Derivasyon Seçimi",
+      "add_derivation_path": "Derivasyon Ekleyin",
+      "back_to_login": "Girişe Geri Dön"
+    },
+    "loginHome": {
+      "description": "<1> Kullanım Şartları </1>ve<3> Gizlilik Politikasını</3> okudum ve kabul ediyorum.",
+      "create_new_wallet_btn": "Yeni Cüzdan Oluştur",
+      "open_exisiting_wallet_btn": "Varolan Cüzdan'ı Aç",
+      "want_to_import_fundraiser_paper_wallet": "Proje Destek zamanı oluşturulan kağıt",
+      "create_named_wallet": "cüzdana mı erişmek istiyorsun? Öncelikle <1><0>yeni bir <1>{{name}}</1> cüzdanı oluştur</0></1>.",
+      "tagline": "Tezos ailesi için bir cüzdan",
+      "app_name": "Tezori",
+      "keystore_wallet": "Anahtar Dosyalı Cüzdan",
+      "ledger_wallet": "Ledger Cüzdan",
+      "connect_ledger": "Ledger ile Bağlan",
+      "dont_have_ledger_wallet": "Ledger'ınız da Tezos Wallet uygulaması yok mu?",
+      "download_it_here": "Hemen indirin.",
+      "connect_your_device": "Lütfen<1> cihazınızı bağlayın</1>,<3> pininizi girin</3>, ve<5> Tezos Wallet uygulamasını açın</5>.",
+      "connecting": "Bağlanıyor...",
+      "selectedPath": "Derivasyon Seçimi: "
+    },
+    "loginCreate": {
+      "create_wallet_btn": "Cüzdan Oluştur",
+      "create_wallet_password_label": "Cüzdan Şifresi Oluştur",
+      "confirm_wallet_password_label": "Cüzdan Şifresini Onayla",
+      "create_new_wallet_btn": "Yeni Cüzdan Oluştur",
+      "create_wallet_title": "Yeni bir cüzdan oluştur",
+      "create_wallet_description": "Cüzdan bilgileriniz seçeceğiniz şifre ile kilitlenip bilgisayarınıza kaydedilecektir.",
+      "crack_time_description": "Kırmak için <span>{{time}}</span> gerekiyor!",
+      "password_not_strong": "Seçtiğiniz şifre yeteri kadar güçlü değil.",
+      "add_another_word": "Bir kaç kelime daha ekleyin.",
+      "you_almost_there": "Nerdeyse oldu!",
+      "you_got_it": "Tamamdır!",
+      "password_dont_match": "Girdiğiniz şifrede bir uyuşmazlık var.",
+      "password_match": "Şifreler uyuşuyor!"
+    },
+    "loginImport": {
+      "open_wallet_label": "Varolan bir cüzdanı aç",
+      "select_file_btn": "Cüzdan Dosyası Seç"
+    },
+    "walletNodesRequired": {
+      "configuration_missing": "Nod ayarları bulunamadı",
+      "close_wallet_description": "Lütfen 'extraResources/walletSettings.json' dosyasını düzeltip uygulamayı tekrar çalıştırın.",
+      "default_wallet_shape": "walletSettings.json böyle gözükmeli:"
+    }
+  },
+  "nodes": {
+    "errors": {
+      "wrong_server": "Sunucularımızdan kaynaklanan bir sorun var. Lütfen işlem yapmak için bekleyin.",
+      "wrong_network": "Seçtiğiniz Tezos Nod'u takılmış veya yanlış bir ağa bağlı. Lütfen kontrol edin.",
+      "not_synced": "Seçtiğiniz Conseil sunucusu Tezos Ağ'ı ile senkronize değil. Lütfen işlem yapmak için bekleyin."
+    }
+  }
+}
