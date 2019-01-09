@@ -133,6 +133,7 @@ const initialState = {
   fee: 100,
   miniFee: 0,
   isShowedPwd: false,
+  isDisplayedFeeTooltip: false,
   averageFees: {
     low: 100,
     medium: 200,
@@ -162,7 +163,12 @@ class Delegate extends Component<Props> {
     if (averageFees.low < miniLowFee) {
       averageFees.low = miniLowFee;
     }
-    this.setState({ averageFees, fee: averageFees.low, miniFee: miniLowFee });
+    this.setState({
+      averageFees,
+      fee: averageFees.low,
+      miniFee: miniLowFee,
+      isDisplayedFeeTooltip: !isRevealed
+    });
   }
 
   onOpenLedgerConfirmation = status =>
@@ -251,7 +257,8 @@ class Delegate extends Component<Props> {
       tempAddress,
       isShowedPwd,
       isDelegateIssue,
-      isOpenLedgerConfirm
+      isOpenLedgerConfirm,
+      isDisplayedFeeTooltip
     } = this.state;
     const delegationTips = [
       t('components.addressBlock.descriptions.description1'),
@@ -316,6 +323,7 @@ class Delegate extends Component<Props> {
           isLoading={isLoading}
           isLedger={isLedger}
           isShowedPwd={isShowedPwd}
+          isDisplayedFeeTooltip={isDisplayedFeeTooltip}
           onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           isDelegateIssue={isDelegateIssue}
           onDelegateIssue={status => this.setState({ isDelegateIssue: status })}

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import Modal from '../CustomModal';
 import Button from './../Button/';
@@ -11,6 +12,7 @@ import Loader from '../Loader';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
 import { wrapComponent } from '../../utils/i18n';
+import Tooltip from '../Tooltip/';
 
 const ModalContainer = styled.div`
   padding: 43px 76px 0 76px;
@@ -74,6 +76,46 @@ const InputAddressContainer = styled.div`
   margin-top: 19px;
 `;
 
+const FeeTooltip = styled(Button)`
+  position: absolute;
+  left: 226px;
+  top: 363px;
+`;
+
+const HelpIcon = styled(TezosIcon)`
+  padding: 0 0 0 ${ms(-4)};
+`;
+
+const TooltipContainer = styled.div`
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  max-width: 312px;
+
+  .customArrow .rc-tooltip-arrow {
+    left: 66%;
+  }
+`;
+
+const TooltipTitle = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
+const TooltipContent = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 21px;
+  width: 270px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.black};
+`;
+
+const BoldSpan = styled.span`
+  font-weight: 500;
+`;
+
 type Props = {
   onEnterPress: () => {},
   open?: boolean,
@@ -94,6 +136,7 @@ type Props = {
   isDelegateIssue: boolean,
   onDelegateIssue: () => {},
   isLedger: boolean,
+  isDisplayedFeeTooltip: boolean,
   t: () => {}
 };
 
@@ -118,10 +161,26 @@ const DelegateConfirmationModal = (props: Props) => {
     isDelegateIssue,
     onDelegateIssue,
     isLedger,
+    isDisplayedFeeTooltip,
     t
   } = props;
   const isDisabled =
     isLoading || !newAddress || (!password && !isLedger) || isDelegateIssue;
+
+  const renderFeeToolTip = () => {
+    return (
+      <TooltipContainer>
+        <TooltipTitle>{t('components.send.fee_tooltip_title')}</TooltipTitle>
+        <TooltipContent>
+          <Trans i18nKey="components.send.fee_tooltip_content">
+            This address is not revealed on the blockchain. We have added
+            <BoldSpan>0.001300 XTZ</BoldSpan> for Public Key Reveal to your
+            regular send operation fee.
+          </Trans>
+        </TooltipContent>
+      </TooltipContainer>
+    );
+  };
 
   return (
     <Modal
@@ -163,6 +222,22 @@ const DelegateConfirmationModal = (props: Props) => {
             miniFee={miniFee}
             onChange={handleFeeChange}
           />
+          {isDisplayedFeeTooltip && (
+            <Tooltip
+              position="bottom"
+              content={renderFeeToolTip}
+              align={{
+                offset: [70, 0]
+              }}
+              arrowPos={{
+                left: '71%'
+              }}
+            >
+              <FeeTooltip buttonTheme="plain">
+                <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+              </FeeTooltip>
+            </Tooltip>
+          )}
         </FeesContainer>
         <WarningContainer>
           <TezosIcon iconName="info" size={ms(5)} color="info" />
