@@ -243,7 +243,7 @@
       "burn_tooltip_title": "Warum gibt es eine burn Gebühr",
       "burn_tooltip_content": "Die von Ihnen eingegebene Empfängeradresse hat einen Nullsaldo. Das Senden von Geld an eine leere Manageradresse (tz1,2,3) benötigt eine einmalige <1> 0.257 </1>XTZ burn Gebühr.",
       "fee_tooltip_title": "Warum sind die Gebühren höher, für diese Transaktion?",
-      "fee_tooltip_content": "Dies ist Ihre erste Transaktion von dieser Adresse, und Sie müssen Ihren öffentlichen Schlüssel der Blockchain mitteilen. Wir haben <1> 0.001420 XTZ </1> zu den normalen Gebühren hinzugefügt, für den Public Key Reveal.",
+      "fee_tooltip_content": "Dies ist Ihre erste Transaktion von dieser Adresse, und Sie müssen Ihren öffentlichen Schlüssel der Blockchain mitteilen. Wir haben <1> 0.001300 XTZ </1> zu den normalen Gebühren hinzugefügt, für den Public Key Reveal.",
       "warnings": {
         "total_exceeds": "Total übersteigt verfügbare Mittel",
         "not_allowed": "Manager Adressen ist es nicht erlaubt, weniger als 1 µtz zu halten"

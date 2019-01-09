@@ -187,14 +187,14 @@ const utez = 1000000;
 const defaultState = {
   delegate: '',
   amount: '',
-  fee: 100,
+  fee: 1420,
   miniFee: 0,
   passPhrase: '',
   isShowedPwd: false,
   averageFees: {
-    low: 100,
-    medium: 200,
-    high: 400
+    low: 1420,
+    medium: 2840,
+    high: 5680
   },
   isDelegateIssue: true,
   gas: 257000,
@@ -219,7 +219,13 @@ class AddDelegateModal extends Component<Props> {
         selectedParentHash,
         selectedParentHash
       );
-      const miniLowFee = isRevealed ? OPERATIONFEE : REVEALOPERATIONFEE;
+      let miniLowFee = OPERATIONFEE;
+      if (!isRevealed) {
+        averageFees.low += REVEALOPERATIONFEE;
+        averageFees.medium += REVEALOPERATIONFEE;
+        averageFees.high += REVEALOPERATIONFEE;
+        miniLowFee += REVEALOPERATIONFEE;
+      }
       if (averageFees.low < miniLowFee) {
         averageFees.low = miniLowFee;
       }
