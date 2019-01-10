@@ -131,7 +131,7 @@
         "description3": "In order to ensure that you wrote down up your seed phrase, please type in the following four seed words."
       },
       "generate_other_seed": "Generate Another Seed Phrase",
-      "copy_seed": " Copy Seed Phrase",
+      "copy_seed": "Copy Seed Phrase",
       "create_account": "Create Account",
       "seed_backup": "Your Tezos account seed is backed up!",
       "back_to_seed": "Back to Seed Phrase",
