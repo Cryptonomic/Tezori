@@ -78,7 +78,7 @@ const IconCopy = styled.div`
   cursor: pointer !important;
   display: flex;
   flex-direction: row;
-  margin-left: -13px;
+  margin-left: -14px;
   margin-top: 10px;
 `;
 
@@ -187,9 +187,8 @@ class CreateAccountSlide extends Component<Props> {
               {t('components.createAccountSlide.copy_seed')}
             </span>
           </IconCopy>
-          <Icon>
+          <Icon onClick={this.updateMnemonic}>
             <RefreshIcon
-              onClick={this.updateMnemonic}
               className="refresh-icon"
               style={{
                 fill: '#2c7df7',
