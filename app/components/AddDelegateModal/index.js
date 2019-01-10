@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -167,6 +168,16 @@ const TextfieldTooltip = styled(Button)`
   top: 27px;
 `;
 
+const FeeTooltip = styled(TextfieldTooltip)`
+  left: 226px;
+  top: 285px;
+`;
+
+const BurnTooltip = styled(TextfieldTooltip)`
+  right: 115px;
+  top: 23px;
+`;
+
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
@@ -180,6 +191,25 @@ const TooltipContainer = styled.div`
   .customArrow .rc-tooltip-arrow {
     left: 66%;
   }
+`;
+
+const TooltipTitle = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
+const TooltipContent = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 21px;
+  width: 270px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.black};
+`;
+
+const BoldSpan = styled.span`
+  font-weight: 500;
 `;
 
 const utez = 1000000;
@@ -198,7 +228,8 @@ const defaultState = {
   },
   isDelegateIssue: true,
   gas: 257000,
-  isOpenLedgerConfirm: false
+  isOpenLedgerConfirm: false,
+  isDisplayedFeeTooltip: false
 };
 
 class AddDelegateModal extends Component<Props> {
@@ -236,6 +267,7 @@ class AddDelegateModal extends Component<Props> {
         fee,
         total,
         balance: managerBalance - total,
+        isDisplayedFeeTooltip: !isRevealed,
         miniFee: miniLowFee
       }); // eslint-disable-line react/no-did-update-set-state
     }
@@ -371,6 +403,22 @@ class AddDelegateModal extends Component<Props> {
     }
   };
 
+  renderFeeToolTip = () => {
+    const { t } = this.props;
+    return (
+      <TooltipContainer>
+        <TooltipTitle>{t('components.send.fee_tooltip_title')}</TooltipTitle>
+        <TooltipContent>
+          <Trans i18nKey="components.send.fee_tooltip_content">
+            This address is not revealed on the blockchain. We have added
+            <BoldSpan>0.001420 XTZ</BoldSpan> for Public Key Reveal to your
+            regular send operation fee.
+          </Trans>
+        </TooltipContent>
+      </TooltipContainer>
+    );
+  };
+
   render() {
     const { isLoading, open, t, isLedger, selectedParentHash } = this.props;
     const {
@@ -385,7 +433,8 @@ class AddDelegateModal extends Component<Props> {
       total,
       balance,
       isDelegateIssue,
-      isOpenLedgerConfirm
+      isOpenLedgerConfirm,
+      isDisplayedFeeTooltip
     } = this.state;
 
     console.log(selectedParentHash, isOpenLedgerConfirm);
@@ -439,6 +488,22 @@ class AddDelegateModal extends Component<Props> {
                 miniFee={miniFee}
                 onChange={this.changeFee}
               />
+              {isDisplayedFeeTooltip && (
+                <Tooltip
+                  position="bottom"
+                  content={this.renderFeeToolTip()}
+                  align={{
+                    offset: [70, 0]
+                  }}
+                  arrowPos={{
+                    left: '71%'
+                  }}
+                >
+                  <FeeTooltip buttonTheme="plain">
+                    <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                  </FeeTooltip>
+                </Tooltip>
+              )}
             </FeeContainer>
             <GasInputContainer>
               <TextField
@@ -457,9 +522,9 @@ class AddDelegateModal extends Component<Props> {
                   left: '71%'
                 }}
               >
-                <TextfieldTooltip buttonTheme="plain">
-                  <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-                </TextfieldTooltip>
+                <BurnTooltip buttonTheme="plain">
+                  <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                </BurnTooltip>
               </Tooltip>
             </GasInputContainer>
           </AmountFeePassContainer>
