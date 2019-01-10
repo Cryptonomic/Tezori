@@ -131,7 +131,6 @@
         "description3": "In order to ensure that you wrote down up your seed phrase, please type in the following four seed words."
       },
       "generate_other_seed": "Generate Another Seed Phrase",
-      "copy_seed": "Copy Seed Phrase",
       "create_account": "Create Account",
       "seed_backup": "Your Tezos account seed is backed up!",
       "back_to_seed": "Back to Seed Phrase",
@@ -244,7 +243,7 @@
       "burn_tooltip_title": "Why is there a burn fee?",
       "burn_tooltip_content": "The recepient address you entered has a zero balance. Sending funds to an empty Manager address (tz1,2,3) requires a one-time<1> 0.257 </1>XTZ burn fee.",
       "fee_tooltip_title": "Why are fees a bit higher for this transaction?",
-      "fee_tooltip_content": "This address is not revealed on the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
+      "fee_tooltip_content": "This is your first transaction from this address and it requires for us to reveal your public key to the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
       "warnings": {
         "total_exceeds": "Total exceeds available funds",
         "not_allowed": "Manager Addresses are not yet allowed to have less than 1 µtz"
@@ -320,8 +319,7 @@
       "select_display_language": "Select Display Language",
       "hardware_settings": "Hardware Wallet Settings",
       "choose_derivation_path": "Choose Derivation Path",
-      "add_derivation_path": "Add a Derivation Path",
-      "back_to_login": "Back to Login"
+      "add_derivation_path": "Add a Derivation Path"
     },
     "loginHome": {
       "description": "I acknowledge that I have read and accepted the<1> Terms of Service </1>and<3> Privacy Policy</3>.",

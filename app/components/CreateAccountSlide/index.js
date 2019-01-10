@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import styled from 'styled-components';
+import CopyIcon from '../CopyIcon';
 import { generateNewMnemonic } from '../../utils/general';
 
 import Button from '../Button';
@@ -39,14 +40,6 @@ const CreateAccountSlideContainer = styled.div`
     font-weight: 300;
   }
 
-  .generate-part {
-    display: flex;
-    float: right;
-    margin-top: 16px;
-    color: ${({ theme: { colors } }) => colors.blue1};
-    font-size: 14px;
-    cursor: pointer;
-  }
   .back-part {
     margin: 0 0 20px -8px;
     color: #4486f0;
@@ -63,6 +56,22 @@ const CreateAccountSlideContainer = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
   }
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  float: right;
+  margin-top: 16px;
+  color: ${({ theme: { colors } }) => colors.blue1};
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+const Icon = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const SeedsContainer = styled.div`
@@ -134,6 +143,7 @@ class CreateAccountSlide extends Component<Props> {
 
   showSeedPhrase = () => {
     const seeds = this.setupSeedColumns(this.state.seed);
+    const { seed } = this.state;
     const { t } = this.props;
     return (
       <Fragment>
@@ -156,13 +166,28 @@ class CreateAccountSlide extends Component<Props> {
             })}
           </SeedsContainer>
         )}
-        <div className="generate-part" onClick={this.updateMnemonic}>
-          <RefreshIcon
-            className="refresh-icon"
-            style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
-          />
-          {t('components.createAccountSlide.generate_other_seed')}
-        </div>
+        <IconContainer>
+          <Icon>
+            <RefreshIcon
+              className="refresh-icon"
+              style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
+            />
+            {t('components.createAccountSlide.generate_other_seed')}
+          </Icon>
+          <Icon>
+            <CopyIcon
+              text={seed
+                .split(' ')
+                .map((seed, index) => {
+                  return `${index + 1}. ${seed}`;
+                })
+                .join(' ')
+                .toString()}
+              color="#2c7df7"
+            />
+            {t('components.createAccountSlide.copy_seed')}
+          </Icon>
+        </IconContainer>
         <ActionButton
           buttonTheme="primary"
           onClick={() => this.nextAccountSlide(1)}
