@@ -78,6 +78,7 @@ const IconCopy = styled.div`
   display: flex;
   flex-direction: row;
   margin-left: -13px;
+  margin-top: 5px;
 `;
 
 const SeedsContainer = styled.div`
