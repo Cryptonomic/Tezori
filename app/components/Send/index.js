@@ -195,15 +195,15 @@ const initialState = {
   password: '',
   toAddress: '',
   amount: '',
-  fee: 100,
+  fee: 1420,
   miniFee: 0,
   isShowedPwd: false,
   isDisplayedBurn: false,
   isDisplayedFeeTooltip: false,
   averageFees: {
-    low: 100,
-    medium: 200,
-    high: 400
+    low: 1420,
+    medium: 2840,
+    high: 5680
   }
 };
 class Send extends Component<Props> {
@@ -223,7 +223,13 @@ class Send extends Component<Props> {
       selectedAccountHash,
       selectedParentHash
     );
-    const miniLowFee = isRevealed ? OPERATIONFEE : REVEALOPERATIONFEE;
+    let miniLowFee = OPERATIONFEE;
+    if (!isRevealed) {
+      averageFees.low += REVEALOPERATIONFEE;
+      averageFees.medium += REVEALOPERATIONFEE;
+      averageFees.high += REVEALOPERATIONFEE;
+      miniLowFee += REVEALOPERATIONFEE;
+    }
     if (averageFees.low < miniLowFee) {
       averageFees.low = miniLowFee;
     }

@@ -243,7 +243,7 @@
       "burn_tooltip_title": "Why is there a burn fee?",
       "burn_tooltip_content": "The recepient address you entered has a zero balance. Sending funds to an empty Manager address (tz1,2,3) requires a one-time<1> 0.257 </1>XTZ burn fee.",
       "fee_tooltip_title": "Why are fees a bit higher for this transaction?",
-      "fee_tooltip_content": "This address is not revealed on the blockchain. We have added<1> 0.001420 XTZ </1>for Public Key Reveal to your regular send operation fee.",
+      "fee_tooltip_content": "This address is not revealed on the blockchain. We have added<1> 0.001300 XTZ </1>for Public Key Reveal to your regular send operation fee.",
       "warnings": {
         "total_exceeds": "Total exceeds available funds",
         "not_allowed": "Manager Addresses are not yet allowed to have less than 1 µtz"
