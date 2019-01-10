@@ -66,19 +66,20 @@ const IconContainer = styled.div`
   margin-top: 16px;
   color: ${({ theme: { colors } }) => colors.blue1};
   font-size: 14px;
-  cursor: pointer;
 `;
 
 const Icon = styled.div`
+  cursor: pointer !important;
   display: flex;
   flex-direction: row;
 `;
 
 const IconCopy = styled.div`
+  cursor: pointer !important;
   display: flex;
   flex-direction: row;
   margin-left: -13px;
-  margin-top: 5px;
+  margin-top: 10px;
 `;
 
 const SeedsContainer = styled.div`
@@ -152,6 +153,12 @@ class CreateAccountSlide extends Component<Props> {
     const seeds = this.setupSeedColumns(this.state.seed);
     const { seed } = this.state;
     const { t } = this.props;
+    const processedSeed = seed
+      .split(' ')
+      .map((seed, index) => {
+        return `${index + 1}. ${seed}`;
+      })
+      .join(' ');
     return (
       <Fragment>
         <div className="description">
@@ -174,28 +181,24 @@ class CreateAccountSlide extends Component<Props> {
           </SeedsContainer>
         )}
         <IconContainer>
-          <Icon>
-            <RefreshIcon
-              className="refresh-icon"
-              style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
-            />
-            {t('components.createAccountSlide.generate_other_seed')}
-          </Icon>
           <IconCopy>
-            <CopyIcon
-              text={seed
-                .split(' ')
-                .map((seed, index) => {
-                  return `${index + 1}. ${seed}`;
-                })
-                .join(' ')
-                .toString()}
-              color="#2c7df7"
-            />
+            <CopyIcon text={processedSeed} color="#2c7df7" />
             <span style={{ marginLeft: '3px' }}>
               {t('components.createAccountSlide.copy_seed')}
             </span>
           </IconCopy>
+          <Icon>
+            <RefreshIcon
+              onClick={this.updateMnemonic}
+              className="refresh-icon"
+              style={{
+                fill: '#2c7df7',
+                transform: 'scaleX(-1)',
+                cursor: 'pointer'
+              }}
+            />
+            {t('components.createAccountSlide.generate_other_seed')}
+          </Icon>
         </IconContainer>
         <ActionButton
           buttonTheme="primary"

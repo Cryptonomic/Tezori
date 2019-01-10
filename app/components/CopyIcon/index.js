@@ -77,4 +77,7 @@ CopyIcon.defaultProps = {
   color: 'white'
 };
 
-export default compose(wrapComponent, withTheme)(CopyIcon);
+export default compose(
+  wrapComponent,
+  withTheme
+)(CopyIcon);
