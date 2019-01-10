@@ -21,8 +21,8 @@
       "total": "Toplam",
       "fee": "Ücret",
       "accounts": "Hesaplar",
-      "address": "adres",
-      "account": "hesap",
+      "address": "Adres",
+      "account": "Hesap",
       "label_account": "Hesap",
       "label_address": "Adres",
       "delegate_address": "Fırıncı Adresi",
@@ -63,7 +63,7 @@
       "titles": {
         "pending": "{{typeText}} hazırlıyoruz...",
         "ready": "Hesabınız tahsilata hazır!",
-        "retrieving": "{{typeText}} indiriyoruz..."
+        "retrieving": "{{typeText}} oluşturuluyor..."
       },
       "descriptions": {
         "mnemonic_first_transaction": "Yapacağınız ilk işlem adresinizi blok zincirine yazacak. Bu işlem sonrasında gönderi ve delegasyon yapabileceksiniz.",
@@ -113,9 +113,9 @@
     },
     "addressStatus": {
       "your_account": "hesabınız",
-      "new_address": "yeni adres",
-      "retrieving_title": "{{typeText}} indiriyoruz...",
-      "preparing_title": "{{typeText}} hazırlıyoruz..."
+      "new_address": "Yeni adres",
+      "retrieving_title": "{{typeText}} oluşturuluyor...",
+      "preparing_title": "{{typeText}} hazırlanıyor..."
     },
     "balanceBanner": {
       "breadcrumbs": "Hesap {{parentIndex}} > {{addressLabel}}",
