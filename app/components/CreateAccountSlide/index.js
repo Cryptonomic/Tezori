@@ -74,6 +74,12 @@ const Icon = styled.div`
   flex-direction: row;
 `;
 
+const IconCopy = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-left: -13px;
+`;
+
 const SeedsContainer = styled.div`
   display: flex;
   background-color: #f7faff;
@@ -174,7 +180,7 @@ class CreateAccountSlide extends Component<Props> {
             />
             {t('components.createAccountSlide.generate_other_seed')}
           </Icon>
-          <Icon>
+          <IconCopy>
             <CopyIcon
               text={seed
                 .split(' ')
@@ -185,8 +191,10 @@ class CreateAccountSlide extends Component<Props> {
                 .toString()}
               color="#2c7df7"
             />
-            {t('components.createAccountSlide.copy_seed')}
-          </Icon>
+            <span style={{ marginLeft: '3px' }}>
+              {t('components.createAccountSlide.copy_seed')}
+            </span>
+          </IconCopy>
         </IconContainer>
         <ActionButton
           buttonTheme="primary"
