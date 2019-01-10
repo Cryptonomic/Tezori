@@ -75,7 +75,6 @@ const Icon = styled.div`
 `;
 
 const IconCopy = styled.div`
-  cursor: pointer !important;
   display: flex;
   flex-direction: row;
   margin-left: -14px;
@@ -118,7 +117,8 @@ class CreateAccountSlide extends Component<Props> {
   state = {
     isDisabled: false,
     seed: '',
-    currentSlide: 0
+    currentSlide: 0,
+    spanClicked: false
   };
 
   componentDidMount() {
@@ -132,7 +132,12 @@ class CreateAccountSlide extends Component<Props> {
 
   nextAccountSlide = currentSlide => this.setState({ currentSlide });
   updateMnemonic = () => this.setState({ seed: generateNewMnemonic() });
-
+  spanClick = () =>
+    this.setState({ spanClicked: true }, () => {
+      setTimeout(() => {
+        this.setState({ spanClicked: false });
+      }, 10);
+    });
   setupSeedColumns = seed => {
     const seedWords = seed.split(' ');
     const seeds = [];
@@ -151,7 +156,7 @@ class CreateAccountSlide extends Component<Props> {
 
   showSeedPhrase = () => {
     const seeds = this.setupSeedColumns(this.state.seed);
-    const { seed } = this.state;
+    const { seed, spanClicked } = this.state;
     const { t } = this.props;
     const processedSeed = seed
       .split(' ')
@@ -182,8 +187,15 @@ class CreateAccountSlide extends Component<Props> {
         )}
         <IconContainer>
           <IconCopy>
-            <CopyIcon text={processedSeed} color="#2c7df7" />
-            <span style={{ marginLeft: '3px' }}>
+            <CopyIcon
+              spanClicked={spanClicked}
+              text={processedSeed}
+              color="#2c7df7"
+            />
+            <span
+              onClick={this.spanClick}
+              style={{ cursor: 'pointer', marginLeft: '3px' }}
+            >
               {t('components.createAccountSlide.copy_seed')}
             </span>
           </IconCopy>

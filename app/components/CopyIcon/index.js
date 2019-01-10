@@ -31,6 +31,13 @@ class CopyIcon extends Component<Props> {
     showCopyConfirmation: false
   };
 
+  componentWillUpdate() {
+    const { text, spanClicked } = this.props;
+    if (spanClicked) {
+      this.copyToClipboard(text);
+    }
+  }
+
   copyToClipboard = text => {
     try {
       clipboard.writeText(text);
@@ -53,9 +60,8 @@ class CopyIcon extends Component<Props> {
       t
     } = this.props;
     return (
-      <Container>
+      <Container onClick={() => this.copyToClipboard(text)}>
         <ContentCopy
-          onClick={() => this.copyToClipboard(text)}
           style={{
             width: ms(1),
             height: ms(1),
