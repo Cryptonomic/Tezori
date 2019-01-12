@@ -8,7 +8,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import AddCircle from '@material-ui/icons/AddCircle';
 import Check from '@material-ui/icons/Check';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Close from '@material-ui/icons/Close';
 import { ms } from '../../styles/helpers';
 import { H2 } from '../../components/Heading/';
@@ -160,15 +159,15 @@ const SelectRenderWrapper = styled.div`
   text-overflow: ellipsis;
 `;
 
-// const RemoveIconWrapper = styled.span`
-//   align-items: flex-end;
-// `;
+const RemoveIconWrapper = styled.span`
+  margin-right: 30px;
+  margin-left: auto;
+`;
 
 const RemoveIcon = styled(Close)`
-  align-items: flex-end;
-  color: gray;
+  color: #d3d3d3;
   &:hover {
-    color: blue;
+    color: ${({ theme: { colors } }) => colors.accent};
   }
 `;
 
@@ -255,7 +254,6 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={url} value={name}>
           {option}
-          <RemoveIcon />
         </ItemWrapper>
       );
     });
@@ -289,6 +287,9 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={derivation} value={label}>
           {option}
+          <RemoveIconWrapper>
+            <RemoveIcon />
+          </RemoveIconWrapper>
         </ItemWrapper>
       );
     });
