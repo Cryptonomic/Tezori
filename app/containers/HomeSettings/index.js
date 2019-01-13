@@ -23,6 +23,7 @@ import {
   goHomeAndClearState
 } from '../../reduxContent/wallet/thunks';
 import {
+  removePath,
   setSelected,
   removeNode,
   setLocale,
@@ -49,6 +50,7 @@ type Props = {
   syncWallet: () => {},
   setSelected: () => {},
   setPath: () => {},
+  removePath: () => {},
   goBack: () => {},
   theme: object,
   t: () => {},
@@ -186,6 +188,27 @@ class SettingsPage extends Component<Props> {
     url: null
   };
 
+  removePath = async (event, label) => {
+    event.stopPropagation();
+    const { removePath, selectedPath, pathsList } = this.props;
+    const labelToRemove = pathsList.find(path => path.get('label') === label);
+    if (labelToRemove) {
+      if (label === selectedPath) {
+        await removePath(label);
+        if (pathsList.size > 1) {
+          const parser = JSON.parse(localStorage.settings);
+          const listLength = parser.pathsList.length;
+          const labelToAdd = parser.pathsList[listLength - 1].label;
+          this.handlePathChange(labelToAdd);
+        } else {
+          await this.handlePathChange('');
+        }
+      } else {
+        removePath(label);
+      }
+    }
+  };
+
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
 
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
@@ -287,7 +310,7 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={derivation} value={label}>
           {option}
-          <RemoveIconWrapper>
+          <RemoveIconWrapper onClick={event => this.removePath(event, label)}>
             <RemoveIcon />
           </RemoveIconWrapper>
         </ItemWrapper>
@@ -527,6 +550,7 @@ function mapDispatchToProps(dispatch) {
       removeNode,
       setLocale,
       setPath,
+      removePath,
       goBack: () => dispatch => dispatch(goBackToWallet()),
       goHomeAndClearState
     },
