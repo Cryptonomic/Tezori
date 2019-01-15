@@ -195,13 +195,13 @@ class SettingsPage extends Component<Props> {
     if (labelToRemove) {
       if (label === selectedPath) {
         await removePath(label);
-        if (pathsList.size > 1) {
+        if (pathsList.size > 2) {
           const parser = JSON.parse(localStorage.settings);
           const listLength = parser.pathsList.length;
           const labelToAdd = parser.pathsList[listLength - 1].label;
           this.handlePathChange(labelToAdd);
         } else {
-          await this.handlePathChange('');
+          await this.handlePathChange('Default');
         }
       } else {
         removePath(label);
@@ -310,9 +310,11 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={derivation} value={label}>
           {option}
-          <RemoveIconWrapper onClick={event => this.removePath(event, label)}>
-            <RemoveIcon />
-          </RemoveIconWrapper>
+          {label !== 'Default' && (
+            <RemoveIconWrapper onClick={event => this.removePath(event, label)}>
+              <RemoveIcon />
+            </RemoveIconWrapper>
+          )}
         </ItemWrapper>
       );
     });

@@ -435,7 +435,7 @@ class Send extends Component<Props> {
     const error = isIssue ? this.renderError(warningMessage) : '';
 
     const isDisabled =
-      !isReady || isIssue || isLoading || !amount || !toAddress;
+      !amount || !toAddress || !isReady || isIssue || isLoading;
 
     return (
       <SendContainer>
