@@ -209,6 +209,27 @@ class SettingsPage extends Component<Props> {
     }
   };
 
+  removePath = async (event, name) => {
+    event.stopPropagation();
+    const { removePath, selectedPath, pathsList } = this.props;
+    const labelToRemove = pathsList.find(path => path.get('name') === name);
+    if (labelToRemove) {
+      if (name === selectedPath) {
+        await removePath(name);
+        if (pathsList.size > 2) {
+          const parser = JSON.parse(localStorage.settings);
+          const listLength = parser.pathsList.length;
+          const labelToAdd = parser.pathsList[listLength - 1].label;
+          this.handlePathChange(labelToAdd);
+        } else {
+          await this.handlePathChange('Default');
+        }
+      } else {
+        removeNode(name);
+      }
+    }
+  };
+
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
 
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
@@ -277,6 +298,9 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={url} value={name}>
           {option}
+          <RemoveIconWrapper onClick={event => this.removeNode(event, name)}>
+            <RemoveIcon />
+          </RemoveIconWrapper>
         </ItemWrapper>
       );
     });
