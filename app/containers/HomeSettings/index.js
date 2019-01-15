@@ -209,7 +209,7 @@ class SettingsPage extends Component<Props> {
     }
   };
 
-  removePath = async (event, name) => {
+  removeNode = async (event, name) => {
     event.stopPropagation();
     const { removePath, selectedPath, pathsList } = this.props;
     const labelToRemove = pathsList.find(path => path.get('name') === name);
