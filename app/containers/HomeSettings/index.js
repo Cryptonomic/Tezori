@@ -225,9 +225,9 @@ class SettingsPage extends Component<Props> {
       if (name === localStorageSettings.conseilSelectedNode) {
         await removeNode(name);
         if (JSON.parse(localStorage.settings).nodesList.length > 4) {
-          await this.handleConseilChange('conseilName');
+          await this.handleConseilChange('Cryptonomic-Conseil');
         } else {
-          this.handleConseilChange('conseilName');
+          this.handleConseilChange('Cryptonomic-Conseil');
         }
       } else {
         removeNode(name);
@@ -237,9 +237,9 @@ class SettingsPage extends Component<Props> {
       if (name === localStorageSettings.tezosSelectedNode) {
         await removeNode(name);
         if (JSON.parse(localStorage.settings).nodesList.length > 4) {
-          await this.handleTezosChange('tezosName');
+          await this.handleTezosChange('Cryptonomic-Nautilus');
         } else {
-          await this.handleTezosChange('tezosName');
+          await this.handleTezosChange('Cryptonomic-Nautilus');
         }
       } else {
         removeNode(name);
