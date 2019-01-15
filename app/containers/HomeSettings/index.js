@@ -26,6 +26,7 @@ import {
   removePath,
   setSelected,
   removeNode,
+  updateNode,
   setLocale,
   setPath
 } from '../../reduxContent/settings/thunks';
@@ -50,6 +51,7 @@ type Props = {
   syncWallet: () => {},
   setSelected: () => {},
   setPath: () => {},
+  removeNode: () => {},
   removePath: () => {},
   goBack: () => {},
   theme: object,
@@ -211,18 +213,33 @@ class SettingsPage extends Component<Props> {
 
   removeNode = async (event, name) => {
     event.stopPropagation();
-    const { removePath, selectedPath, pathsList } = this.props;
-    const labelToRemove = pathsList.find(path => path.get('name') === name);
-    if (labelToRemove) {
-      if (name === selectedPath) {
-        await removePath(name);
-        if (pathsList.size > 2) {
-          const parser = JSON.parse(localStorage.settings);
-          const listLength = parser.pathsList.length;
-          const labelToAdd = parser.pathsList[listLength - 1].label;
-          this.handlePathChange(labelToAdd);
+    const { removeNode, tezosNodes, conseilNodes } = this.props;
+    const conseilNodeToRemove = conseilNodes.find(
+      node => node.get('name') === name
+    );
+    const tezosNodeToRemove = tezosNodes.find(
+      node => node.get('name') === name
+    );
+    const localStorageSettings = JSON.parse(localStorage.settings);
+    if (conseilNodeToRemove) {
+      if (name === localStorageSettings.conseilSelectedNode) {
+        await removeNode(name);
+        if (JSON.parse(localStorage.settings).nodesList.length > 4) {
+          await this.handleConseilChange('conseilName');
         } else {
-          await this.handlePathChange('Default');
+          this.handleConseilChange('conseilName');
+        }
+      } else {
+        removeNode(name);
+      }
+    }
+    if (tezosNodeToRemove) {
+      if (name === localStorageSettings.tezosSelectedNode) {
+        await removeNode(name);
+        if (JSON.parse(localStorage.settings).nodesList.length > 4) {
+          await this.handleTezosChange('tezosName');
+        } else {
+          await this.handleTezosChange('tezosName');
         }
       } else {
         removeNode(name);
@@ -298,9 +315,11 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={url} value={name}>
           {option}
-          <RemoveIconWrapper onClick={event => this.removeNode(event, name)}>
-            <RemoveIcon />
-          </RemoveIconWrapper>
+          {name !== 'Cryptonomic-Conseil' && name !== 'Cryptonomic-Nautilus' && (
+            <RemoveIconWrapper onClick={event => this.removeNode(event, name)}>
+              <RemoveIcon />
+            </RemoveIconWrapper>
+          )}
         </ItemWrapper>
       );
     });
@@ -577,6 +596,7 @@ function mapDispatchToProps(dispatch) {
       setLocale,
       setPath,
       removePath,
+      updateNode,
       goBack: () => dispatch => dispatch(goBackToWallet()),
       goHomeAndClearState
     },
