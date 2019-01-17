@@ -194,8 +194,8 @@ class SettingsPage extends Component<Props> {
     const { removePath, selectedPath, pathsList } = this.props;
     const labelToRemove = pathsList.find(path => path.get('label') === label);
     if (labelToRemove) {
+      await removePath(label);
       if (label === selectedPath) {
-        await removePath(label);
         if (pathsList.size > 2) {
           const parser = JSON.parse(localStorage.settings);
           const listLength = parser.pathsList.length;
@@ -204,8 +204,6 @@ class SettingsPage extends Component<Props> {
         } else {
           await this.handlePathChange('Default');
         }
-      } else {
-        removePath(label);
       }
     }
   };
@@ -221,20 +219,16 @@ class SettingsPage extends Component<Props> {
     );
     const localStorageSettings = JSON.parse(localStorage.settings);
     if (conseilNodeToRemove) {
-      if (name === localStorageSettings.conseilSelectedNode) {
-        await removeNode(name);
-        await this.handleConseilChange('Cryptonomic-Conseil');
-        return;
-      }
       await removeNode(name);
+      if (name === localStorageSettings.conseilSelectedNode) {
+        await this.handleConseilChange('Cryptonomic-Conseil');
+      }
     }
     if (tezosNodeToRemove) {
-      if (name === localStorageSettings.tezosSelectedNode) {
-        await removeNode(name);
-        await this.handleTezosChange('Cryptonomic-Nautilus');
-        return;
-      }
       await removeNode(name);
+      if (name === localStorageSettings.tezosSelectedNode) {
+        await this.handleTezosChange('Cryptonomic-Nautilus');
+      }
     }
   };
 
