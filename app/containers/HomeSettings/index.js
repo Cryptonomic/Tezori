@@ -200,7 +200,7 @@ class SettingsPage extends Component<Props> {
           const parser = JSON.parse(localStorage.settings);
           const listLength = parser.pathsList.length;
           const labelToAdd = parser.pathsList[listLength - 1].label;
-          this.handlePathChange(labelToAdd);
+          await this.handlePathChange(labelToAdd);
         } else {
           await this.handlePathChange('Default');
         }
