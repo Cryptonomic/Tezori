@@ -210,7 +210,7 @@ class SettingsPage extends Component<Props> {
     }
   };
 
-  removeNode = async (event, name) => {
+  removeNodeOption = async (event, name) => {
     event.stopPropagation();
     const { removeNode, tezosNodes, conseilNodes } = this.props;
     const conseilNodeToRemove = conseilNodes.find(
@@ -223,26 +223,18 @@ class SettingsPage extends Component<Props> {
     if (conseilNodeToRemove) {
       if (name === localStorageSettings.conseilSelectedNode) {
         await removeNode(name);
-        if (JSON.parse(localStorage.settings).nodesList.length > 4) {
-          await this.handleConseilChange('Cryptonomic-Conseil');
-        } else {
-          this.handleConseilChange('Cryptonomic-Conseil');
-        }
-      } else {
-        removeNode(name);
+        await this.handleConseilChange('Cryptonomic-Conseil');
+        return;
       }
+      await removeNode(name);
     }
     if (tezosNodeToRemove) {
       if (name === localStorageSettings.tezosSelectedNode) {
         await removeNode(name);
-        if (JSON.parse(localStorage.settings).nodesList.length > 4) {
-          await this.handleTezosChange('Cryptonomic-Nautilus');
-        } else {
-          await this.handleTezosChange('Cryptonomic-Nautilus');
-        }
-      } else {
-        removeNode(name);
+        await this.handleTezosChange('Cryptonomic-Nautilus');
+        return;
       }
+      await removeNode(name);
     }
   };
 
@@ -315,7 +307,9 @@ class SettingsPage extends Component<Props> {
         <ItemWrapper key={index} url={url} value={name}>
           {option}
           {name !== 'Cryptonomic-Conseil' && name !== 'Cryptonomic-Nautilus' && (
-            <RemoveIconWrapper onClick={event => this.removeNode(event, name)}>
+            <RemoveIconWrapper
+              onClick={event => this.removeNodeOption(event, name)}
+            >
               <RemoveIcon />
             </RemoveIconWrapper>
           )}
