@@ -120,7 +120,6 @@ class Fee extends Component<Props> {
     const { open, custom, error } = this.state;
     const { low, medium, high, fee, miniFee, t, tooltip } = this.props;
     const customFeeLabel = t('components.fees.custom_fee');
-    console.log(tooltip);
     return (
       <Fragment>
         <CustomSelect
