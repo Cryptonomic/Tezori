@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import styled from 'styled-components';
+import CopyIcon from '../CopyIcon';
 import { generateNewMnemonic } from '../../utils/general';
 
 import Button from '../Button';
@@ -18,6 +19,11 @@ const ActionButton = styled(Button)`
   padding: 0;
   position: absolute;
   bottom: 0px;
+`;
+
+const CopyIconText = styled.span`
+  cursor: pointer;
+  margin-left: 3px;
 `;
 
 const CreateAccountSlideContainer = styled.div`
@@ -39,14 +45,6 @@ const CreateAccountSlideContainer = styled.div`
     font-weight: 300;
   }
 
-  .generate-part {
-    display: flex;
-    float: right;
-    margin-top: 16px;
-    color: ${({ theme: { colors } }) => colors.blue1};
-    font-size: 14px;
-    cursor: pointer;
-  }
   .back-part {
     margin: 0 0 20px -8px;
     color: #4486f0;
@@ -63,6 +61,29 @@ const CreateAccountSlideContainer = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
   }
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  float: right;
+  margin-top: 16px;
+  color: ${({ theme: { colors } }) => colors.blue1};
+  font-size: 14px;
+`;
+
+const Icon = styled.div`
+  cursor: pointer !important;
+  display: flex;
+  flex-direction: row;
+`;
+
+const IconCopy = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-left: -14px;
+  margin-top: 10px;
 `;
 
 const SeedsContainer = styled.div`
@@ -101,7 +122,8 @@ class CreateAccountSlide extends Component<Props> {
   state = {
     isDisabled: false,
     seed: '',
-    currentSlide: 0
+    currentSlide: 0,
+    spanClicked: false
   };
 
   componentDidMount() {
@@ -115,7 +137,12 @@ class CreateAccountSlide extends Component<Props> {
 
   nextAccountSlide = currentSlide => this.setState({ currentSlide });
   updateMnemonic = () => this.setState({ seed: generateNewMnemonic() });
-
+  spanClick = () =>
+    this.setState({ spanClicked: true }, () => {
+      setTimeout(() => {
+        this.setState({ spanClicked: false });
+      }, 10);
+    });
   setupSeedColumns = seed => {
     const seedWords = seed.split(' ');
     const seeds = [];
@@ -134,7 +161,14 @@ class CreateAccountSlide extends Component<Props> {
 
   showSeedPhrase = () => {
     const seeds = this.setupSeedColumns(this.state.seed);
+    const { seed, spanClicked } = this.state;
     const { t } = this.props;
+    const processedSeed = seed
+      .split(' ')
+      .map((seed, index) => {
+        return `${index + 1}. ${seed}`;
+      })
+      .join(' ');
     return (
       <Fragment>
         <div className="description">
@@ -156,13 +190,29 @@ class CreateAccountSlide extends Component<Props> {
             })}
           </SeedsContainer>
         )}
-        <div className="generate-part" onClick={this.updateMnemonic}>
-          <RefreshIcon
-            className="refresh-icon"
-            style={{ fill: '#2c7df7', transform: 'scaleX(-1)' }}
-          />
-          {t('components.createAccountSlide.generate_other_seed')}
-        </div>
+        <IconContainer>
+          <IconCopy>
+            <CopyIcon
+              spanClicked={spanClicked}
+              text={processedSeed}
+              color="#2c7df7"
+            />
+            <CopyIconText onClick={this.spanClick}>
+              {t('components.createAccountSlide.copy_seed')}
+            </CopyIconText>
+          </IconCopy>
+          <Icon onClick={this.updateMnemonic}>
+            <RefreshIcon
+              className="refresh-icon"
+              style={{
+                fill: '#2c7df7',
+                transform: 'scaleX(-1)',
+                cursor: 'pointer'
+              }}
+            />
+            {t('components.createAccountSlide.generate_other_seed')}
+          </Icon>
+        </IconContainer>
         <ActionButton
           buttonTheme="primary"
           onClick={() => this.nextAccountSlide(1)}

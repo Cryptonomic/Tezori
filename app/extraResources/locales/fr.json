@@ -243,7 +243,7 @@
       "burn_tooltip_title": "Pouquoi y a-t-il une commission de brûlage ?",
       "burn_tooltip_content": "L`adresse du destinataire que vous avez paramétré à une balance nulle. Envoyer des fonds à une adresse de Manager vide (tz1,2,3) nécéssite une commission de brûlage unique de <1> 0.257 </1>XTZ .",
       "fee_tooltip_title": "Pourquoi la commission est un peu plus élévée pour cette transaction ?",
-      "fee_tooltip_content": "C`est votre première transaction provenant de cette adresse et cela implique que nous révélions votre clé publique sur la blockchain. Nous avons ajouté <1> 0.001420 XTZ </1> pour la révélation de votre clé publique sur votre commission d`envoi régulière.",
+      "fee_tooltip_content": "C`est votre première transaction provenant de cette adresse et cela implique que nous révélions votre clé publique sur la blockchain. Nous avons ajouté <1> 0.001300 XTZ </1> pour la révélation de votre clé publique sur votre commission d`envoi régulière.",
       "warnings": {
         "total_exceeds": "Le Total dépasse les fonds disponibles",
         "not_allowed": "Les addresses de management ne sont pas encore autorisées à avoir moins de 1 µtz"

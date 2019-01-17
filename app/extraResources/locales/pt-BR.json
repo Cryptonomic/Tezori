@@ -243,7 +243,7 @@
       "burn_tooltip_title": "Por que existe uma taxa de queima?",
       "burn_tooltip_content": "O endereço do destinatário que você inseriu tem saldo zero. Enviar fundos para um endereço Gerente (tz1,2,3) requer uma taxa de queima não recorrente de <1> 0.257 </1>XTZ.",
       "fee_tooltip_title": "Por que as taxas estão um pouco mais altas nesta transação?",
-      "fee_tooltip_content": "Esta é sua primeira transação neste endereço, e isso requer que nós revelemos sua chave pública ao blockchain. Nós adicionamos<1> 0.001420 XTZ </1>para a Revelação da Chave Pública à sua taxa habitual de operação de envio.",
+      "fee_tooltip_content": "Esta é sua primeira transação neste endereço, e isso requer que nós revelemos sua chave pública ao blockchain. Nós adicionamos<1> 0.001300 XTZ </1>para a Revelação da Chave Pública à sua taxa habitual de operação de envio.",
       "warnings": {
         "total_exceeds": "Total excede os fundos disponíveis",
         "not_allowed": "Endereços Manager ainda não podem ter menos de 1 µtz"

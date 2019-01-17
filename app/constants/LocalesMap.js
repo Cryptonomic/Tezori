@@ -7,5 +7,6 @@ export default {
   fr: 'Français',
   ja: '日本語',
   ko: '한국어',
-  'pt-BR': 'Português (Brasil)'
+  'pt-BR': 'Português (Brasil)',
+  tr: 'Türkçe'
 };

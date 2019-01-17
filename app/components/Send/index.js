@@ -69,8 +69,9 @@ const TextfieldTooltip = styled(Button)`
 const BurnTooltip = styled(TextfieldTooltip)`
   left: 80px;
 `;
-const FeeTooltip = styled(TextfieldTooltip)`
-  left: 150px;
+const FeeTooltip = styled(Button)`
+  position: relative;
+  top: 3px;
 `;
 
 const HelpIcon = styled(TezosIcon)`
@@ -195,15 +196,15 @@ const initialState = {
   password: '',
   toAddress: '',
   amount: '',
-  fee: 100,
+  fee: 1420,
   miniFee: 0,
   isShowedPwd: false,
   isDisplayedBurn: false,
   isDisplayedFeeTooltip: false,
   averageFees: {
-    low: 100,
-    medium: 200,
-    high: 400
+    low: 1420,
+    medium: 2840,
+    high: 5680
   }
 };
 class Send extends Component<Props> {
@@ -223,7 +224,13 @@ class Send extends Component<Props> {
       selectedAccountHash,
       selectedParentHash
     );
-    const miniLowFee = isRevealed ? OPERATIONFEE : REVEALOPERATIONFEE;
+    let miniLowFee = OPERATIONFEE;
+    if (!isRevealed) {
+      averageFees.low += REVEALOPERATIONFEE;
+      averageFees.medium += REVEALOPERATIONFEE;
+      averageFees.high += REVEALOPERATIONFEE;
+      miniLowFee += REVEALOPERATIONFEE;
+    }
     if (averageFees.low < miniLowFee) {
       averageFees.low = miniLowFee;
     }
@@ -429,7 +436,7 @@ class Send extends Component<Props> {
     const error = isIssue ? this.renderError(warningMessage) : '';
 
     const isDisabled =
-      !isReady || isIssue || isLoading || !amount || !toAddress;
+      !amount || !toAddress || !isReady || isIssue || isLoading;
 
     return (
       <SendContainer>
@@ -459,23 +466,25 @@ class Send extends Component<Props> {
               fee={fee}
               miniFee={miniFee}
               onChange={this.handleFeeChange}
+              tooltip={
+                isDisplayedFeeTooltip ? (
+                  <Tooltip
+                    position="bottom"
+                    content={this.renderFeeToolTip()}
+                    align={{
+                      offset: [70, 0]
+                    }}
+                    arrowPos={{
+                      left: '71%'
+                    }}
+                  >
+                    <FeeTooltip buttonTheme="plain">
+                      <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                    </FeeTooltip>
+                  </Tooltip>
+                ) : null
+              }
             />
-            {isDisplayedFeeTooltip && (
-              <Tooltip
-                position="bottom"
-                content={this.renderFeeToolTip()}
-                align={{
-                  offset: [70, 0]
-                }}
-                arrowPos={{
-                  left: '71%'
-                }}
-              >
-                <FeeTooltip buttonTheme="plain">
-                  <HelpIcon iconName="help" size={ms(1)} color="gray5" />
-                </FeeTooltip>
-              </Tooltip>
-            )}
           </FeeContainer>
           {isDisplayedBurn && (
             <BurnsContainer>

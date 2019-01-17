@@ -21,6 +21,7 @@ type Props = {
   high?: number,
   fee?: number,
   miniFee?: number,
+  tooltip?: React.Element,
   onChange?: () => {},
   t: () => {}
 };
@@ -72,6 +73,8 @@ const WarningIcon = styled(TezosIcon)`
   top: 1px;
 `;
 
+const FeeContentWrapper = styled.div``;
+
 class Fee extends Component<Props> {
   props: Props;
   state = {
@@ -115,15 +118,31 @@ class Fee extends Component<Props> {
 
   render() {
     const { open, custom, error } = this.state;
-    const { low, medium, high, fee, miniFee, t } = this.props;
+    const { low, medium, high, fee, miniFee, t, tooltip } = this.props;
     const customFeeLabel = t('components.fees.custom_fee');
-
     return (
       <Fragment>
         <CustomSelect
           label={t('general.nouns.fee')}
           value={fee}
           onChange={this.onFeeChange}
+          renderValue={value => {
+            let feeTitle = 'components.fees.low_fee';
+            if (value === low) {
+              feeTitle = 'components.fees.low_fee';
+            } else if (value === medium) {
+              feeTitle = 'components.fees.medium_fee';
+            } else {
+              feeTitle = 'components.fees.high_fee';
+            }
+            return (
+              <FeeContentWrapper>
+                {t(feeTitle)}: {formatAmount(value)}{' '}
+                <TezosIcon color="black" iconName="tezos" />
+                {tooltip}
+              </FeeContentWrapper>
+            );
+          }}
         >
           <ItemWrapper value={low}>
             {t('components.fees.low_fee')}: {formatAmount(low)}{' '}

@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import AddCircle from '@material-ui/icons/AddCircle';
 import Check from '@material-ui/icons/Check';
+import Close from '@material-ui/icons/Close';
 import { ms } from '../../styles/helpers';
 import { H2 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
@@ -22,6 +23,7 @@ import {
   goHomeAndClearState
 } from '../../reduxContent/wallet/thunks';
 import {
+  removePath,
   setSelected,
   removeNode,
   setLocale,
@@ -48,6 +50,8 @@ type Props = {
   syncWallet: () => {},
   setSelected: () => {},
   setPath: () => {},
+  removeNode: () => {},
+  removePath: () => {},
   goBack: () => {},
   theme: object,
   t: () => {},
@@ -158,6 +162,18 @@ const SelectRenderWrapper = styled.div`
   text-overflow: ellipsis;
 `;
 
+const RemoveIconWrapper = styled.span`
+  margin-right: 30px;
+  margin-left: auto;
+`;
+
+const RemoveIcon = styled(Close)`
+  color: #d3d3d3;
+  &:hover {
+    color: ${({ theme: { colors } }) => colors.accent};
+  }
+`;
+
 class SettingsPage extends Component<Props> {
   props: Props;
 
@@ -171,6 +187,49 @@ class SettingsPage extends Component<Props> {
   selectedItem = {
     value: null,
     url: null
+  };
+
+  removePath = async (event, label) => {
+    event.stopPropagation();
+    const { removePath, selectedPath, pathsList } = this.props;
+    const labelToRemove = pathsList.find(path => path.get('label') === label);
+    if (labelToRemove) {
+      await removePath(label);
+      if (label === selectedPath) {
+        if (pathsList.size > 2) {
+          const parser = JSON.parse(localStorage.settings);
+          const listLength = parser.pathsList.length;
+          const labelToAdd = parser.pathsList[listLength - 1].label;
+          await this.handlePathChange(labelToAdd);
+        } else {
+          await this.handlePathChange('Default');
+        }
+      }
+    }
+  };
+
+  removeNodeOption = async (event, name) => {
+    event.stopPropagation();
+    const { removeNode, tezosNodes, conseilNodes } = this.props;
+    const conseilNodeToRemove = conseilNodes.find(
+      node => node.get('name') === name
+    );
+    const tezosNodeToRemove = tezosNodes.find(
+      node => node.get('name') === name
+    );
+    const localStorageSettings = JSON.parse(localStorage.settings);
+    if (conseilNodeToRemove) {
+      await removeNode(name);
+      if (name === localStorageSettings.conseilSelectedNode) {
+        await this.handleConseilChange('Cryptonomic-Conseil');
+      }
+    }
+    if (tezosNodeToRemove) {
+      await removeNode(name);
+      if (name === localStorageSettings.tezosSelectedNode) {
+        await this.handleTezosChange('Cryptonomic-Nautilus');
+      }
+    }
   };
 
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
@@ -241,6 +300,13 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={url} value={name}>
           {option}
+          {name !== 'Cryptonomic-Conseil' && name !== 'Cryptonomic-Nautilus' && (
+            <RemoveIconWrapper
+              onClick={event => this.removeNodeOption(event, name)}
+            >
+              <RemoveIcon />
+            </RemoveIconWrapper>
+          )}
         </ItemWrapper>
       );
     });
@@ -267,13 +333,18 @@ class SettingsPage extends Component<Props> {
           )}
           <OptionLabel isActive={selected}>
             <NodeName>{label}</NodeName>
-            <NodeUrl>{derivation}</NodeUrl>
+            <NodeUrl>{derivation}</NodeUrl>{' '}
           </OptionLabel>
         </SelectOption>
       );
       return (
         <ItemWrapper key={index} url={derivation} value={label}>
           {option}
+          {label !== 'Default' && (
+            <RemoveIconWrapper onClick={event => this.removePath(event, label)}>
+              <RemoveIcon />
+            </RemoveIconWrapper>
+          )}
         </ItemWrapper>
       );
     });
@@ -511,6 +582,7 @@ function mapDispatchToProps(dispatch) {
       removeNode,
       setLocale,
       setPath,
+      removePath,
       goBack: () => dispatch => dispatch(goBackToWallet()),
       goHomeAndClearState
     },
