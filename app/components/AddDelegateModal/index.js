@@ -168,9 +168,9 @@ const TextfieldTooltip = styled(Button)`
   top: 27px;
 `;
 
-const FeeTooltip = styled(TextfieldTooltip)`
-  left: 226px;
-  top: 285px;
+const FeeTooltip = styled(Button)`
+  position: relative;
+  top: 3px;
 `;
 
 const BurnTooltip = styled(TextfieldTooltip)`
@@ -437,7 +437,6 @@ class AddDelegateModal extends Component<Props> {
       isDisplayedFeeTooltip
     } = this.state;
 
-    console.log(selectedParentHash, isOpenLedgerConfirm);
     const isDisabled =
       isLoading ||
       !delegate ||
@@ -487,23 +486,25 @@ class AddDelegateModal extends Component<Props> {
                 fee={fee}
                 miniFee={miniFee}
                 onChange={this.changeFee}
+                tooltip={
+                  isDisplayedFeeTooltip ? (
+                    <Tooltip
+                      position="bottom"
+                      content={this.renderFeeToolTip()}
+                      align={{
+                        offset: [70, 0]
+                      }}
+                      arrowPos={{
+                        left: '71%'
+                      }}
+                    >
+                      <FeeTooltip buttonTheme="plain">
+                        <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                      </FeeTooltip>
+                    </Tooltip>
+                  ) : null
+                }
               />
-              {isDisplayedFeeTooltip && (
-                <Tooltip
-                  position="bottom"
-                  content={this.renderFeeToolTip()}
-                  align={{
-                    offset: [70, 0]
-                  }}
-                  arrowPos={{
-                    left: '71%'
-                  }}
-                >
-                  <FeeTooltip buttonTheme="plain">
-                    <HelpIcon iconName="help" size={ms(1)} color="gray5" />
-                  </FeeTooltip>
-                </Tooltip>
-              )}
             </FeeContainer>
             <GasInputContainer>
               <TextField

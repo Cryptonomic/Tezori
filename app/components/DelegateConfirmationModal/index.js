@@ -77,9 +77,8 @@ const InputAddressContainer = styled.div`
 `;
 
 const FeeTooltip = styled(Button)`
-  position: absolute;
-  left: 226px;
-  top: 363px;
+  position: relative;
+  top: 3px;
 `;
 
 const HelpIcon = styled(TezosIcon)`
@@ -221,23 +220,25 @@ const DelegateConfirmationModal = (props: Props) => {
             fee={fee}
             miniFee={miniFee}
             onChange={handleFeeChange}
+            tooltip={
+              isDisplayedFeeTooltip ? (
+                <Tooltip
+                  position="bottom"
+                  content={renderFeeToolTip}
+                  align={{
+                    offset: [70, 0]
+                  }}
+                  arrowPos={{
+                    left: '71%'
+                  }}
+                >
+                  <FeeTooltip buttonTheme="plain">
+                    <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                  </FeeTooltip>
+                </Tooltip>
+              ) : null
+            }
           />
-          {isDisplayedFeeTooltip && (
-            <Tooltip
-              position="bottom"
-              content={renderFeeToolTip}
-              align={{
-                offset: [70, 0]
-              }}
-              arrowPos={{
-                left: '71%'
-              }}
-            >
-              <FeeTooltip buttonTheme="plain">
-                <HelpIcon iconName="help" size={ms(1)} color="gray5" />
-              </FeeTooltip>
-            </Tooltip>
-          )}
         </FeesContainer>
         <WarningContainer>
           <TezosIcon iconName="info" size={ms(5)} color="info" />

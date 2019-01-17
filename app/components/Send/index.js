@@ -69,8 +69,9 @@ const TextfieldTooltip = styled(Button)`
 const BurnTooltip = styled(TextfieldTooltip)`
   left: 80px;
 `;
-const FeeTooltip = styled(TextfieldTooltip)`
-  left: 150px;
+const FeeTooltip = styled(Button)`
+  position: relative;
+  top: 3px;
 `;
 
 const HelpIcon = styled(TezosIcon)`
@@ -465,23 +466,25 @@ class Send extends Component<Props> {
               fee={fee}
               miniFee={miniFee}
               onChange={this.handleFeeChange}
+              tooltip={
+                isDisplayedFeeTooltip ? (
+                  <Tooltip
+                    position="bottom"
+                    content={this.renderFeeToolTip()}
+                    align={{
+                      offset: [70, 0]
+                    }}
+                    arrowPos={{
+                      left: '71%'
+                    }}
+                  >
+                    <FeeTooltip buttonTheme="plain">
+                      <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                    </FeeTooltip>
+                  </Tooltip>
+                ) : null
+              }
             />
-            {isDisplayedFeeTooltip && (
-              <Tooltip
-                position="bottom"
-                content={this.renderFeeToolTip()}
-                align={{
-                  offset: [70, 0]
-                }}
-                arrowPos={{
-                  left: '71%'
-                }}
-              >
-                <FeeTooltip buttonTheme="plain">
-                  <HelpIcon iconName="help" size={ms(1)} color="gray5" />
-                </FeeTooltip>
-              </Tooltip>
-            )}
           </FeeContainer>
           {isDisplayedBurn && (
             <BurnsContainer>
