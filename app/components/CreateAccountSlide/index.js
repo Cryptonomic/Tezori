@@ -21,6 +21,11 @@ const ActionButton = styled(Button)`
   bottom: 0px;
 `;
 
+const CopyIconText = styled.span`
+  cursor: pointer;
+  margin-left: 3px;
+`;
+
 const CreateAccountSlideContainer = styled.div`
   max-width: 579px;
   height: 376px;
@@ -192,12 +197,9 @@ class CreateAccountSlide extends Component<Props> {
               text={processedSeed}
               color="#2c7df7"
             />
-            <span
-              onClick={this.spanClick}
-              style={{ cursor: 'pointer', marginLeft: '3px' }}
-            >
+            <CopyIconText onClick={this.spanClick}>
               {t('components.createAccountSlide.copy_seed')}
-            </span>
+            </CopyIconText>
           </IconCopy>
           <Icon onClick={this.updateMnemonic}>
             <RefreshIcon
