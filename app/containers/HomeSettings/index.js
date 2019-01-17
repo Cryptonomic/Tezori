@@ -26,7 +26,6 @@ import {
   removePath,
   setSelected,
   removeNode,
-  updateNode,
   setLocale,
   setPath
 } from '../../reduxContent/settings/thunks';
@@ -596,7 +595,6 @@ function mapDispatchToProps(dispatch) {
       setLocale,
       setPath,
       removePath,
-      updateNode,
       goBack: () => dispatch => dispatch(goBackToWallet()),
       goHomeAndClearState
     },
