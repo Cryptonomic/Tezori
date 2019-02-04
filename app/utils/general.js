@@ -4,7 +4,7 @@ import {
   TezosConseilQuery,
   TezosNode,
   TezosOperations,
-  TezosWallet
+  TezosWalletUtil
 } from 'conseiljs';
 
 import { fromJS } from 'immutable';
@@ -20,7 +20,7 @@ import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
 const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
-const { generateMnemonic } = TezosWallet;
+const { generateMnemonic } = TezosWalletUtil;
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);

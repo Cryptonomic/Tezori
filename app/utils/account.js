@@ -1,4 +1,4 @@
-import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
+import { TezosConseilQuery } from 'conseiljs';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { TRANSACTIONS } from '../constants/TabConstants';

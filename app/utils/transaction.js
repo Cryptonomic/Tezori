@@ -1,8 +1,7 @@
 import {
   TezosConseilQuery,
   TezosNode,
-  TezosOperations,
-  TezosWallet
+  TezosOperations
 } from 'conseiljs';
 
 import * as status from '../constants/StatusTypes';
@@ -52,7 +51,7 @@ export async function getTransactions(accountHash, nodes) {
   const emptyFilter = getEmptyTezosFilter();
   const transFilter = {
     ...emptyFilter,
-    limit: 100,
+    limit: 100, //??
     operation_participant: [accountHash],
     operation_kind: [
       'transaction',

@@ -19,7 +19,7 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const { sendOriginationOperation } = TezosOperations;
+const { sendAccountOriginationOperation } = TezosOperations;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
@@ -82,16 +82,15 @@ export function createNewAccount(
       publicKeyHash,
       publicKeyHash
     );
-    const { url, apiKey } = getSelectedNode(settings, TEZOS);
-    console.log('-debug: - iiiii - url, apiKey', url, apiKey);
+    const { url } = getSelectedNode(settings, TEZOS);
 
     let newAccount;
     if (isLedger) {
       const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-      console.log('-debug: - UMUR - derivationPath', derivation);
+
       newKeyStore.storeType = 2;
-      newAccount = await sendOriginationOperation(
+      newAccount = await sendAccountOriginationOperation(
         url,
         newKeyStore,
         amountInUtez,
@@ -107,7 +106,7 @@ export function createNewAccount(
         return false;
       });
     } else {
-      newAccount = await sendOriginationOperation(
+      newAccount = await sendAccountOriginationOperation(
         url,
         keyStore,
         amountInUtez,
@@ -166,7 +165,7 @@ export function createNewAccount(
 
       const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
-      console.log(newAccount);
+
       identity.accounts.push(
         createAccount(
           {

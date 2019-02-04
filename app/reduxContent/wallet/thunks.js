@@ -1,6 +1,11 @@
 import path from 'path';
 import { push } from 'react-router-redux';
-import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
+import {
+  TezosFileWallet,
+  TezosWalletUtil,
+  TezosConseilQuery,
+  TezosOperations
+} from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import {
@@ -61,9 +66,9 @@ import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
-  unlockIdentityWithMnemonic,
-  createWallet
-} = TezosWallet;
+  unlockIdentityWithMnemonic
+} = TezosWalletUtil;
+const { createWallet } = TezosFileWallet;
 
 const { getAccount } = TezosConseilQuery;
 
