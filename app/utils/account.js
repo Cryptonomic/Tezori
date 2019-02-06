@@ -1,4 +1,3 @@
-import { TezosConseilQuery } from 'conseiljs';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { TRANSACTIONS } from '../constants/TabConstants';
@@ -9,7 +8,7 @@ import {
   getSelectedHash
 } from './general';
 import { getSelectedNode } from './nodes';
-const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
+import { ConseilQuery, ConseilQueryBuilder, ConseilOperator, ConseilPredicate, ConseilOrdering, ConseilSortDirection, TezosConseilClient, TezosNode, TezosOperations } from 'conseiljs';
 
 export function createAccount(account, identity) {
   return {
@@ -54,10 +53,13 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
 }
 
 export async function getAccountsForIdentity(nodes, id) {
-  const emptyFilter = getEmptyTezosFilter();
-  const filter = { ...emptyFilter, account_manager: [id] };
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
-  const accounts = await getAccounts(url, filter, apiKey);
+
+  let accountsquery = ConseilQueryBuilder.blankQuery();
+  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'manager', ConseilOperator.EQ, [id], false);
+  accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 300);
+  const accounts = await TezosConseilClient.getAccounts({url: url, apiKey: apiKey}, 'alphanet', accountsquery);
+
   return accounts.filter(account => account.accountId !== id);
 }
 

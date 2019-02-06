@@ -1,14 +1,9 @@
 import { shell } from 'electron';
-import { pick  } from 'lodash';
-import {
-  TezosConseilQuery,
-  TezosNode,
-  TezosOperations,
-  TezosWalletUtil
-} from 'conseiljs';
-
+import { pick } from 'lodash';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
+import {ConseilQuery, ConseilQueryBuilder, ConseilOperator, ConseilPredicate, ConseilOrdering, ConseilSortDirection, TezosConseilClient, TezosNode, TezosOperations, TezosWalletUtil} from 'conseiljs';
+
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 import { createTransaction } from './transaction';
@@ -19,22 +14,15 @@ import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
-const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
-const { generateMnemonic } = TezosWalletUtil;
+const util = require('util')
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
-  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch((err) => {
-    console.error(err);
-    return false;
-  });
+  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch((err) => { console.error(err); return false; });
   const selectedConseilNode = getSelectedNode(nodes, CONSEIL);
-  const consRes = await TezosConseilQuery.getBlockHead(selectedConseilNode.url, selectedConseilNode.apiKey).catch((err) => {
-    console.error(err);
-    return false;
-  });
+  const consRes = await TezosConseilClient.getBlockHead({ url: selectedConseilNode.url, apiKey: selectedConseilNode.apiKey }, 'alphanet').catch((err) => { console.error(err); return false; });
+  console.log(`-debug: tezos status: ${tezRes}, conseil status: ${consRes}`);
 
-  console.log('-debug: tezRes, consRes', tezRes, consRes);
   return {
     tezos: Object.assign(
       {
@@ -123,38 +111,44 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
 
 export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
-  if ( account.status === status.READY ) {
+  if (account.status === status.READY) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {
-      console.log('-debug: Error in: status.READY for:' + accountHash);
-      console.error(error);
-      return false;
+    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, 'alphanet', accountHash)
+      .catch((error) => {
+        console.log('-debug: Error in: status.READY for:' + accountHash);
+        console.error(error);
+        return null;
     });
-    if ( updatedAccount ) {
-      account.balance = updatedAccount.account.balance;
+    if (updatedAccount) {
+      console.log('ready ' + util.inspect(updatedAccount, false, null, false));
+      account.balance = parseInt(updatedAccount.balance);
     }
     return account;
   }
 
-  if ( account.status === status.INACTIVE ) {
+  if (account.status === status.INACTIVE) {
     //  delete account
   }
 
-  if ( account.status === status.CREATED ) {
+  if (account.status === status.CREATED) {
     const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {
-      console.log('-debug: Error in: status.CREATED for:' + accountHash);
-      console.error(error);
-      return false;
+
+    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, 'alphanet', accountHash)
+      .catch((error) => {
+        console.log('-debug: Error in: status.CREATED for:' + accountHash);
+        console.error(error);
+        return null;
     });
-    if ( updatedAccount ) {
-      account.balance = updatedAccount.account.balance;
+
+    if (updatedAccount) {
+      console.log('created ' + util.inspect(updatedAccount, false, null, false));
+      account.balance = parseInt(updatedAccount.balance);
       account.status = status.FOUND;
     }
   }
 
-  if ( account.status === status.FOUND ) {
-      account.status = status.READY;
+  if (account.status === status.FOUND) {
+    account.status = status.READY;
   }
 
   console.log('-debug: account.status ', account.status);
@@ -162,14 +156,27 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
 }
 
 export function generateNewMnemonic() {
-  return generateMnemonic();
+  return TezosWalletUtil.generateMnemonic();
 }
 
 export async function fetchAverageFees(settings, operationKind) {
   const { url, apiKey } = getSelectedNode(settings, CONSEIL);
-  const emptyFilter = getEmptyTezosFilter();
-  const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
-  return await getAverageFees(url, feeFilter, apiKey);
+
+  let operationFeesQuery = ConseilQueryBuilder.blankQuery();
+  operationFeesQuery = ConseilQueryBuilder.addFields(operationFeesQuery, 'fee');
+  operationFeesQuery = ConseilQueryBuilder.addPredicate(operationFeesQuery, 'kind', ConseilOperator.EQ, ['transaction'], false);
+  operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'block_level', ConseilSortDirection.DESC);
+  operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'fee', ConseilSortDirection.ASC);
+  operationFeesQuery = ConseilQueryBuilder.setLimit(operationFeesQuery, 1000);
+
+  const fees = await TezosConseilClient.getOperations({url: url, apiKey: apiKey}, 'alphanet', operationFeesQuery);
+  const sortedfees = fees.map(f => parseInt(f['fee'])).sort((a, b) => a - b);
+
+  const lowAverageFee = sortedfees.slice(0, 300).reduce((s, c) => s + c) / 300;
+  const mediumAverageFee = sortedfees.slice(300, 700).reduce((s, c) => s + c) / 400;
+  const highAverageFee = sortedfees.slice(700).reduce((s, c) => s + c) / 300;
+
+  return {low: lowAverageFee, medium: mediumAverageFee, high: highAverageFee};
 }
 
 export function isReady(addressStatus, storeType, tab) {
