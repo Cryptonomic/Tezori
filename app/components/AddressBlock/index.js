@@ -281,7 +281,7 @@ class AddressBlock extends Component<Props, State> {
           ? smartAddresses
               .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
               .map((smartAddress, index) => {
-                const smartAddressId = smartAddress.get('accountId');
+                const smartAddressId = smartAddress.get('account_id');
                 const isSmartActive = smartAddressId === selectedAccountHash;
                 const smartAddressReady = isReady(smartAddress.get('status'));
 
