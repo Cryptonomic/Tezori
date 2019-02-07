@@ -156,16 +156,10 @@ export async function getSyncIdentity(
 
 export function syncIdentityWithState(syncIdentity, stateIdentity) {
   const newAccounts = stateIdentity.accounts.filter(stateIdentityAccount => {
-    const syncIdentityAccountIndex = syncIdentity.accounts.findIndex(
-      syncIdentityAccount =>
-        syncIdentityaccount.account_id === stateIdentityaccount.account_id
-    );
+    const syncIdentityAccountIndex = syncIdentity.accounts.findIndex(syncIdentityAccount => syncIdentityAccount.account_id === stateIdentityAccount.account_id);
 
     if (syncIdentityAccountIndex > -1) {
-      syncIdentity.accounts[syncIdentityAccountIndex] = syncAccountWithState(
-        syncIdentity.accounts[syncIdentityAccountIndex],
-        stateIdentityAccount
-      );
+      syncIdentity.accounts[syncIdentityAccountIndex] = syncAccountWithState(syncIdentity.accounts[syncIdentityAccountIndex], stateIdentityAccount);
       return false;
     }
 
