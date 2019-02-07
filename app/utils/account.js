@@ -12,12 +12,12 @@ import { ConseilQuery, ConseilQueryBuilder, ConseilOperator, ConseilPredicate, C
 
 export function createAccount(account, identity) {
   return {
-    accountId: '',
+    account_id: '',
     balance: 0,
-    blockId: '',
+    block_id: '',
     counter: 0,
-    delegateSetable: false,
-    delegateValue: null,
+    delegate_setable: false,
+    delegate_value: null,
     manager: '',
     script: null,
     spendable: true,
@@ -35,7 +35,7 @@ export function createAccount(account, identity) {
 export function findAccount(identity, accountId) {
   return (
     identity &&
-    (identity.accounts || []).find(account => account.accountId === accountId)
+    (identity.accounts || []).find(account => account.account_id === accountId)
   );
 }
 
@@ -43,7 +43,7 @@ export function findAccountIndex(identity, accountId) {
   return (
     identity &&
     (identity.accounts || []).findIndex(
-      account => account.accountId === accountId
+      account => account.account_id === accountId
     )
   );
 }
@@ -59,8 +59,7 @@ export async function getAccountsForIdentity(nodes, id) {
   accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'manager', ConseilOperator.EQ, [id], false);
   accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 300);
   const accounts = await TezosConseilClient.getAccounts({url: url, apiKey: apiKey}, 'alphanet', accountsquery);
-
-  return accounts.filter(account => account.accountId !== id);
+  return accounts.filter(account => account.account_id !== id);
 }
 
 export async function getSyncAccount(

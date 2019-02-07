@@ -193,7 +193,7 @@ export function createNewAccount(
       );
 
       const delegatedAddressee = identity.accounts.filter(
-        account => account.accountId === newAccountHash
+        account => account.account_id === newAccountHash
       );
       delegatedAddressee[0].transactions.push(
         createTransaction({

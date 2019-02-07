@@ -112,7 +112,7 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
 export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   if (account.status === status.READY) {
-    const accountHash = account.publicKeyHash || account.accountId;
+    const accountHash = account.publicKeyHash || account.account_id;
     const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, 'alphanet', accountHash)
       .catch((error) => {
         console.log('-debug: Error in: status.READY for:' + accountHash);
@@ -121,7 +121,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
     });
     if (updatedAccount) {
       console.log('ready ' + util.inspect(updatedAccount, false, null, false));
-      account.balance = parseInt(updatedAccount.balance);
+      account.balance = parseInt(updatedAccount[0].balance);
     }
     return account;
   }
@@ -131,7 +131,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
   }
 
   if (account.status === status.CREATED) {
-    const accountHash = account.publicKeyHash || account.accountId;
+    const accountHash = account.publicKeyHash || account.account_id;
 
     const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, 'alphanet', accountHash)
       .catch((error) => {
@@ -142,7 +142,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
 
     if (updatedAccount) {
       console.log('created ' + util.inspect(updatedAccount, false, null, false));
-      account.balance = parseInt(updatedAccount.balance);
+      account.balance = parseInt(updatedAccount[0].balance);
       account.status = status.FOUND;
     }
   }

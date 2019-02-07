@@ -80,11 +80,11 @@ export async function getSyncIdentity(
   );
 
   const stateAccountIndices = identity.accounts.map(
-    account => account.accountId
+    account => account.account_id
   );
 
   accounts = accounts.map(account => {
-    const foundIndex = stateAccountIndices.indexOf(account.accountId);
+    const foundIndex = stateAccountIndices.indexOf(account.account_id);
     const overrides = {};
     if (foundIndex > -1) {
       overrides.status = identity.accounts[foundIndex].status;
@@ -102,10 +102,10 @@ export async function getSyncIdentity(
     );
   });
 
-  const accountIndices = accounts.map(account => account.accountId);
+  const accountIndices = accounts.map(account => account.account_id);
 
   const accountsToConcat = identity.accounts.filter(account => {
-    return accountIndices.indexOf(account.accountId) === -1;
+    return accountIndices.indexOf(account.account_id) === -1;
   });
 
   accounts = accounts.concat(accountsToConcat);
@@ -122,7 +122,7 @@ export async function getSyncIdentity(
           identities,
           account,
           nodes,
-          account.accountId,
+          account.account_id,
           publicKeyHash,
           isLedger
         ).catch(e => {
@@ -132,7 +132,7 @@ export async function getSyncIdentity(
           console.error(e);
           return account;
         });
-      } else if (selectedAccountHash === account.accountId) {
+      } else if (selectedAccountHash === account.account_id) {
         account.transactions = await getSyncTransactions(
           selectedAccountHash,
           nodes,
@@ -158,7 +158,7 @@ export function syncIdentityWithState(syncIdentity, stateIdentity) {
   const newAccounts = stateIdentity.accounts.filter(stateIdentityAccount => {
     const syncIdentityAccountIndex = syncIdentity.accounts.findIndex(
       syncIdentityAccount =>
-        syncIdentityAccount.accountId === stateIdentityAccount.accountId
+        syncIdentityaccount.account_id === stateIdentityaccount.account_id
     );
 
     if (syncIdentityAccountIndex > -1) {
