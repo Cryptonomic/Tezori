@@ -18,8 +18,8 @@ type Account = {
   block_id: string,
   manager: string,
   spendable: boolean,
-  delegateSetable: boolean,
-  delegateValue: string,
+  delegate_setable: boolean,
+  delegate_value: string,
   counter: number,
   script: string,
   balance: number

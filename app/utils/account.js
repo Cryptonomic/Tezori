@@ -8,7 +8,7 @@ import {
   getSelectedHash
 } from './general';
 import { getSelectedNode } from './nodes';
-import { ConseilQuery, ConseilQueryBuilder, ConseilOperator, ConseilPredicate, ConseilOrdering, ConseilSortDirection, TezosConseilClient, TezosNode, TezosOperations } from 'conseiljs';
+import { ConseilQueryBuilder, ConseilOperator, TezosConseilClient } from 'conseiljs';
 
 export function createAccount(account, identity) {
   return {

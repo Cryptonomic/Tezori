@@ -22,19 +22,19 @@ export function createTransaction(transaction) {
   return {
     amount: null,
     balance: null,
-    blockHash: null,
-    blockLevel: null,
+    block_hash: null,
+    block_level: null,
     delegate: null,
     destination: null,
     fee: null,
-    gasLimit: null,
+    gas_limit: null,
     kind: null,
-    operationGroupHash: null,
-    operationId: null,
+    operation_group_hash: null,
+    operation_id: null,
     pkh: null,
     status: status.CREATED,
     source: null,
-    storageLimit: null,
+    storage_limit: null,
     timestamp: Date.now(),
     ...newTransaction
   };
@@ -81,7 +81,7 @@ export function syncTransactionsWithState(syncTransactions, stateTransactions) {
     stateTransaction =>
       !syncTransactions.find(
         syncTransaction =>
-          syncTransaction.operationGroupHash === stateTransaction.operationGroupHash
+          syncTransaction.operation_group_hash === stateTransaction.operation_group_hash
       )
   );
 

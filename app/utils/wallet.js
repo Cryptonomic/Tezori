@@ -108,7 +108,7 @@ export async function loadWalletFromLedger(derivationPath) {
     const errorObj = {
       name: "components.messageBar.messages.ledger_not_connect"
     };
-    console.error(errorObj);
+    console.error('TezosLedgerWallet.unlockAddress', err);
     throw errorObj;
   });
   identity.storeType = LEDGER;

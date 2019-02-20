@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosNodeWriter } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
@@ -19,7 +19,7 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const { sendAccountOriginationOperation } = TezosOperations;
+const { sendAccountOriginationOperation } = TezosNodeWriter;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
@@ -122,6 +122,8 @@ export function createNewAccount(
       });
     }
 
+    console.log('newAccount----', newAccount);
+
     if (newAccount) {
       const operationResult1 =
         newAccount &&
@@ -169,10 +171,10 @@ export function createNewAccount(
       identity.accounts.push(
         createAccount(
           {
-            accountId: newAccountHash,
+            account_id: newAccountHash,
             balance: amountInUtez,
             manager: publicKeyHash,
-            delegateValue: '',
+            delegate_value: '',
             operations: {
               [CREATED]: operationId
             },
@@ -186,7 +188,7 @@ export function createNewAccount(
         createTransaction({
           delegate,
           kind: ORIGINATION,
-          operationGroupHash: operationId,
+          operation_group_hash: operationId,
           source: keyStore.publicKeyHash,
           fee
         })
@@ -200,7 +202,7 @@ export function createNewAccount(
           amount: amountInUtez,
           delegate,
           kind: ORIGINATION,
-          operationGroupHash: operationId,
+          operation_group_hash: operationId,
           destination: keyStore.publicKeyHash
         })
       );

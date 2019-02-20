@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^4.24.0",
-    "conseiljs": "file:///Users/cryptomike/Work/ConseilJS/beta2",
+    "conseiljs": "https://github.com/Cryptonomic/ConseilJS",
     "react-currency-input": "^1.3.6"
   }
 }

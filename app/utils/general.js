@@ -2,7 +2,14 @@ import { shell } from 'electron';
 import { pick } from 'lodash';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
-import {ConseilQuery, ConseilQueryBuilder, ConseilOperator, ConseilPredicate, ConseilOrdering, ConseilSortDirection, TezosConseilClient, TezosNode, TezosOperations, TezosWalletUtil} from 'conseiljs';
+import {
+  ConseilQueryBuilder,
+  ConseilOperator,
+  ConseilSortDirection,
+  TezosConseilClient,
+  TezosNodeReader,
+  TezosWalletUtil
+} from 'conseiljs';
 
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
@@ -18,10 +25,10 @@ const util = require('util')
 
 export async function getNodesStatus(nodes) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
-  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch((err) => { console.error(err); return false; });
+  const tezRes = await TezosNodeReader.getBlockHead(selectedTezosNode.url).catch((err) => { console.error(err); return false; });
   const selectedConseilNode = getSelectedNode(nodes, CONSEIL);
   const consRes = await TezosConseilClient.getBlockHead({ url: selectedConseilNode.url, apiKey: selectedConseilNode.apiKey }, 'alphanet').catch((err) => { console.error(err); return false; });
-  console.log(`-debug: tezos status: ${tezRes}, conseil status: ${consRes}`);
+  console.log(`-debug: tezos status: ${JSON.stringify(tezRes)}, conseil status: ${JSON.stringify(consRes)}`);
 
   return {
     tezos: Object.assign(
@@ -40,10 +47,10 @@ export async function getNodesStatus(nodes) {
         responsive: false,
         level: null
       },
-      consRes &&
+      consRes && consRes[0] &&
       {
         responsive: true,
-        level: Number(consRes.level)
+        level: Number(consRes[0].level)
       },
     )
   };
@@ -101,11 +108,11 @@ export function getSelectedAccount( identities, selectedAccountHash, selectedPar
 
 export function getSelectedKeyStore( identities, selectedAccountHash, selectedParentHash ) {
   var selectedAccount = getSelectedAccount( identities, selectedAccountHash, selectedParentHash );
-  const { publicKey, privateKey, publicKeyHash, accountId } = selectedAccount.toJS();
+  const { publicKey, privateKey, publicKeyHash, account_id } = selectedAccount.toJS();
   return {
     publicKey,
     privateKey,
-    publicKeyHash: publicKeyHash || accountId
+    publicKeyHash: publicKeyHash || account_id
   };
 }
 
@@ -119,7 +126,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
         console.error(error);
         return null;
     });
-    if (updatedAccount) {
+    if (updatedAccount && updatedAccount[0]) {
       console.log('ready ' + util.inspect(updatedAccount, false, null, false));
       account.balance = parseInt(updatedAccount[0].balance);
     }
@@ -142,7 +149,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
 
     if (updatedAccount) {
       console.log('created ' + util.inspect(updatedAccount, false, null, false));
-      account.balance = parseInt(updatedAccount[0].balance);
+      // account.balance = parseInt(updatedAccount[0].balance);
       account.status = status.FOUND;
     }
   }

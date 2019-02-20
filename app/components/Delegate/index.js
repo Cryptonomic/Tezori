@@ -154,6 +154,7 @@ class Delegate extends Component<Props> {
       selectedAccountHash,
       selectedParentHash
     } = this.props;
+    this.mounted = true;
     const averageFees = await fetchDelegationAverageFees();
     const isRevealed = await getIsReveal(
       selectedAccountHash,
@@ -169,12 +170,19 @@ class Delegate extends Component<Props> {
     if (averageFees.low < miniLowFee) {
       averageFees.low = miniLowFee;
     }
-    this.setState({
-      averageFees,
-      fee: averageFees.low,
-      miniFee: miniLowFee,
-      isDisplayedFeeTooltip: !isRevealed
-    });
+
+    if (this.mounted) {
+      this.setState({
+        averageFees,
+        fee: averageFees.low,
+        miniFee: miniLowFee,
+        isDisplayedFeeTooltip: !isRevealed
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   onOpenLedgerConfirmation = status =>

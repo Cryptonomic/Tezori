@@ -138,7 +138,7 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Delegate
             isReady={ready}
-            address={selectedAccount.get('delegateValue')}
+            address={selectedAccount.get('delegate_value')}
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
           />
@@ -256,7 +256,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
           selectedParentHash={selectedParentHash}
           time={time}
-          delegatedAddress={selectedAccount.get('delegateValue')}
+          delegatedAddress={selectedAccount.get('delegate_value')}
           isWalletSyncing={isWalletSyncing}
         />
 

@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosNodeWriter } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { TEZOS } from '../../constants/NodesTypes';
@@ -20,7 +20,7 @@ import { findIdentity } from '../../utils/identity';
 import { getSelectedNode } from '../../utils/nodes';
 import { getCurrentPath } from '../../utils/paths';
 
-const { sendTransactionOperation } = TezosOperations;
+const { sendTransactionOperation } = TezosNodeWriter;
 
 export function fetchTransactionAverageFees() {
   return async (dispatch, state) => {
@@ -150,7 +150,7 @@ export function sendTez(
         destination: toAddress,
         kind: TRANSACTION,
         source: keyStore.publicKeyHash,
-        operationGroupHash: clearedOperationId,
+        operation_group_hash: clearedOperationId,
         fee
       });
 

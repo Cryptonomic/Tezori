@@ -3,8 +3,8 @@ import { push } from 'react-router-redux';
 import {
   TezosFileWallet,
   TezosWalletUtil,
-  TezosConseilQuery,
-  TezosOperations
+  TezosConseilClient,
+  TezosNodeWriter
 } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
@@ -70,9 +70,9 @@ const {
 } = TezosWalletUtil;
 const { createWallet } = TezosFileWallet;
 
-const { getAccount } = TezosConseilQuery;
+const { getAccount } = TezosConseilClient;
 
-const { sendIdentityActivationOperation } = TezosOperations;
+const { sendIdentityActivationOperation } = TezosNodeWriter;
 let currentAccountRefreshInterval = null;
 
 export function goHomeAndClearState() {
@@ -435,7 +435,7 @@ export function importAddress(
               createTransaction({
                 kind: ACTIVATION,
                 timestamp: Date.now(),
-                operationGroupHash: identity.operations.Created,
+                operation_group_hash: identity.operations.Created,
                 amount:
                   activating.results.contents[0].metadata.balance_updates[0]
                     .change
@@ -526,6 +526,7 @@ export function connectLedger() {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { derivation } = await getCurrentPath(settings);
+    console.log('derivation------', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
@@ -580,7 +581,7 @@ export function getIsReveal(selectedAccountHash, selectedParentHash) {
     }
     const { url } = getSelectedNode(settings, TEZOS);
 
-    const isReveal = await TezosOperations.isManagerKeyRevealedForAccount(
+    const isReveal = await TezosNodeWriter.isManagerKeyRevealedForAccount(
       url,
       keyStore
     );
@@ -592,7 +593,7 @@ export function getIsImplicitAndEmpty(recipientHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { url } = getSelectedNode(settings, TEZOS);
-    const isImplicitAndEmpty = await TezosOperations.isImplicitAndEmpty(
+    const isImplicitAndEmpty = await TezosNodeWriter.isImplicitAndEmpty(
       url,
       recipientHash
     );
