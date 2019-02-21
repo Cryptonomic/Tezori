@@ -147,9 +147,9 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
         return null;
     });
 
-    if (updatedAccount) {
+    if (updatedAccount && updatedAccount[0]) {
       console.log('created ' + util.inspect(updatedAccount, false, null, false));
-      // account.balance = parseInt(updatedAccount[0].balance);
+      account.balance = parseInt(updatedAccount[0].balance);
       account.status = status.FOUND;
     }
   }
