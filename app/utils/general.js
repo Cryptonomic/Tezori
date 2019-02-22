@@ -171,7 +171,7 @@ export async function fetchAverageFees(settings, operationKind) {
 
   let operationFeesQuery = ConseilQueryBuilder.blankQuery();
   operationFeesQuery = ConseilQueryBuilder.addFields(operationFeesQuery, 'fee');
-  operationFeesQuery = ConseilQueryBuilder.addPredicate(operationFeesQuery, 'kind', ConseilOperator.EQ, ['transaction'], false);
+  operationFeesQuery = ConseilQueryBuilder.addPredicate(operationFeesQuery, 'kind', ConseilOperator.EQ, [operationKind], false);
   operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'block_level', ConseilSortDirection.DESC);
   operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'fee', ConseilSortDirection.ASC);
   operationFeesQuery = ConseilQueryBuilder.setLimit(operationFeesQuery, 1000);
@@ -179,9 +179,9 @@ export async function fetchAverageFees(settings, operationKind) {
   const fees = await TezosConseilClient.getOperations({url: url, apiKey: apiKey}, 'alphanet', operationFeesQuery);
   const sortedfees = fees.map(f => parseInt(f['fee'])).sort((a, b) => a - b);
 
-  const lowAverageFee = sortedfees.slice(0, 300).reduce((s, c) => s + c) / 300;
-  const mediumAverageFee = sortedfees.slice(300, 700).reduce((s, c) => s + c) / 400;
-  const highAverageFee = sortedfees.slice(700).reduce((s, c) => s + c) / 300;
+  const lowAverageFee = Math.round(sortedfees.slice(0, 300).reduce((s, c) => s + c) / 300);
+  const mediumAverageFee = Math.round(sortedfees.slice(300, 700).reduce((s, c) => s + c) / 400);
+  const highAverageFee = Math.round(sortedfees.slice(700).reduce((s, c) => s + c) / 300);
 
   return {low: lowAverageFee, medium: mediumAverageFee, high: highAverageFee};
 }
