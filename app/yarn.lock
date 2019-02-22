@@ -1157,9 +1157,9 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     node-fetch "^2.3.0"
     zxcvbn "^4.4.2"
 
-"conseiljs@https://github.com/Cryptonomic/ConseilJS#d5206d3a4be0cbbec63f2daf2eff668851b2c887":
+"conseiljs@https://github.com/Cryptonomic/ConseilJS#c303f141b14c3bb0169c1097f9d98f67078832c6":
   version "0.2.0"
-  resolved "https://github.com/Cryptonomic/ConseilJS#d5206d3a4be0cbbec63f2daf2eff668851b2c887"
+  resolved "https://github.com/Cryptonomic/ConseilJS#c303f141b14c3bb0169c1097f9d98f67078832c6"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"

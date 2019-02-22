@@ -366,9 +366,9 @@ export function importAddress(
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
-            conseilNode.url,
-            identity.publicKeyHash,
-            conseilNode.apiKey
+            { url: conseilNode.url, apiKey: conseilNode.apiKey },
+            'alphanet',
+            identity.publicKeyHash
           ).catch(() => false);
           if (!account) {
             const tezosNode = getSelectedNode(settings, TEZOS);
@@ -406,9 +406,9 @@ export function importAddress(
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
-            conseilNode.url,
-            identity.publicKeyHash,
-            conseilNode.apiKey
+            { url: conseilNode.url, apiKey: conseilNode.apiKey },
+            'alphanet',
+            identity.publicKeyHash
           ).catch(() => false);
 
           if (!account) {
