@@ -23,11 +23,11 @@ import { blockExplorerHost } from '../config.json';
 
 const util = require('util')
 
-export async function getNodesStatus(nodes) {
+export async function getNodesStatus(nodes, network) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
   const tezRes = await TezosNodeReader.getBlockHead(selectedTezosNode.url).catch((err) => { console.error(err); return false; });
   const selectedConseilNode = getSelectedNode(nodes, CONSEIL);
-  const consRes = await TezosConseilClient.getBlockHead({ url: selectedConseilNode.url, apiKey: selectedConseilNode.apiKey }, 'alphanet').catch((err) => { console.error(err); return false; });
+  const consRes = await TezosConseilClient.getBlockHead({ url: selectedConseilNode.url, apiKey: selectedConseilNode.apiKey }, network).catch((err) => { console.error(err); return false; });
   console.log(`-debug: tezos status: ${JSON.stringify(tezRes)}, conseil status: ${JSON.stringify(consRes)}`);
 
   return {
@@ -116,11 +116,11 @@ export function getSelectedKeyStore( identities, selectedAccountHash, selectedPa
   };
 }
 
-export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false) {
+export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false, network) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
   if (account.status === status.READY) {
     const accountHash = account.publicKeyHash || account.account_id;
-    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, 'alphanet', accountHash)
+    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, network, accountHash)
       .catch((error) => {
         console.log('-debug: Error in: status.READY for:' + accountHash);
         console.error(error);
@@ -140,7 +140,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
   if (account.status === status.CREATED) {
     const accountHash = account.publicKeyHash || account.account_id;
 
-    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, 'alphanet', accountHash)
+    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, network, accountHash)
       .catch((error) => {
         console.log('-debug: Error in: status.CREATED for:' + accountHash);
         console.error(error);
@@ -168,6 +168,7 @@ export function generateNewMnemonic() {
 
 export async function fetchAverageFees(settings, operationKind) {
   const { url, apiKey } = getSelectedNode(settings, CONSEIL);
+  const { network } = settings;
 
   let operationFeesQuery = ConseilQueryBuilder.blankQuery();
   operationFeesQuery = ConseilQueryBuilder.addFields(operationFeesQuery, 'fee');
@@ -176,7 +177,7 @@ export async function fetchAverageFees(settings, operationKind) {
   operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'fee', ConseilSortDirection.ASC);
   operationFeesQuery = ConseilQueryBuilder.setLimit(operationFeesQuery, 1000);
 
-  const fees = await TezosConseilClient.getOperations({url: url, apiKey: apiKey}, 'alphanet', operationFeesQuery);
+  const fees = await TezosConseilClient.getOperations({url: url, apiKey: apiKey}, network, operationFeesQuery);
   const sortedfees = fees.map(f => parseInt(f['fee'])).sort((a, b) => a - b);
 
   const lowAverageFee = Math.round(sortedfees.slice(0, 300).reduce((s, c) => s + c) / 300);

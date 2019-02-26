@@ -40,7 +40,7 @@ export function createTransaction(transaction) {
   };
 }
 
-export async function getTransactions(accountHash, nodes) {
+export async function getTransactions(accountHash, nodes, network) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
 
   /*amount: null,
@@ -71,7 +71,7 @@ export async function getTransactions(accountHash, nodes) {
   target = ConseilQueryBuilder.addOrdering(target, 'block_level', ConseilSortDirection.DESC);
   target = ConseilQueryBuilder.setLimit(target, 300);
 
-  return Promise.all([target, origin].map(q => TezosConseilClient.getOperations({url: url, apiKey: apiKey}, 'alphanet', q)))
+  return Promise.all([target, origin].map(q => TezosConseilClient.getOperations({url: url, apiKey: apiKey}, network, q)))
           .then(responses => responses.reduce((result, r) => { r.forEach(rr => result.push(rr)); return result; }));
   // TODO sort by timestamp
 }
@@ -91,9 +91,10 @@ export function syncTransactionsWithState(syncTransactions, stateTransactions) {
 export async function getSyncTransactions(
   accountHash,
   nodes,
-  stateTransactions
+  stateTransactions,
+  network
 ) {
-  let newTransactions = await getTransactions(accountHash, nodes).catch(e => {
+  let newTransactions = await getTransactions(accountHash, nodes, network).catch(e => {
     console.log('-debug: Error in: getSyncAccount -> getTransactions for:' + accountHash);
     console.error(e);
     return [];

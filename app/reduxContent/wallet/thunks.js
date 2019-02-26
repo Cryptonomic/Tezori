@@ -169,6 +169,7 @@ export function updateActiveTab(
 export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const { network } = settings;
     const isLedger = state().wallet.get('isLedger');
     let identities = state()
       .wallet.get('identities')
@@ -184,7 +185,8 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
         settings,
         selectedAccountHash,
         selectedParentHash,
-        isLedger
+        isLedger,
+        network
       ).catch(e => {
         console.log(
           `-debug: Error in: syncAccount for:${identity.publicKeyHash}`
@@ -210,6 +212,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
 export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const { network } = settings;
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -220,7 +223,8 @@ export function syncIdentity(publicKeyHash) {
       identities,
       stateIdentity,
       settings,
-      selectedAccountHash
+      selectedAccountHash,
+      network
     ).catch(e => {
       console.log(`-debug: Error in: syncIdentity for:${publicKeyHash}`);
       console.error(e);
@@ -245,9 +249,10 @@ export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setWalletIsSyncing(true));
     const settings = state().settings.toJS();
+    const { network } = settings;
     const isLedger = state().wallet.get('isLedger');
 
-    const nodesStatus = await getNodesStatus(settings);
+    const nodesStatus = await getNodesStatus(settings, network);
     dispatch(setNodesStatus(nodesStatus));
     const res = getNodesError(nodesStatus);
     console.log('-debug: res, nodesStatus', res, nodesStatus);
@@ -269,7 +274,8 @@ export function syncWallet() {
           stateIdentities,
           identity,
           settings,
-          isLedger
+          isLedger,
+          network
         ).catch(e => {
           console.log(`-debug: Error in: syncIdentity for: ${publicKeyHash}`);
           console.error(e);
@@ -343,7 +349,7 @@ export function importAddress(
     const walletLocation = wallet.get('walletLocation');
     const walletFileName = wallet.get('walletFileName');
     const password = wallet.get('password');
-
+    const { network } = settings;
     // TODO: clear out message bar
     dispatch(addMessage('', true));
     dispatch(setIsLoading(true));
@@ -367,7 +373,7 @@ export function importAddress(
 
           const account = await getAccount(
             { url: conseilNode.url, apiKey: conseilNode.apiKey },
-            'alphanet',
+            network,
             identity.publicKeyHash
           ).catch(() => false);
           if (!account) {
@@ -407,7 +413,7 @@ export function importAddress(
 
           const account = await getAccount(
             { url: conseilNode.url, apiKey: conseilNode.apiKey },
-            'alphanet',
+            network,
             identity.publicKeyHash
           ).catch(() => false);
 

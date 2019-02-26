@@ -52,13 +52,13 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
   return { balance, transactions };
 }
 
-export async function getAccountsForIdentity(nodes, id) {
+export async function getAccountsForIdentity(nodes, id, network) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
 
   let accountsquery = ConseilQueryBuilder.blankQuery();
   accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'manager', ConseilOperator.EQ, [id], false);
   accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 300);
-  const accounts = await TezosConseilClient.getAccounts({url: url, apiKey: apiKey}, 'alphanet', accountsquery);
+  const accounts = await TezosConseilClient.getAccounts({url: url, apiKey: apiKey}, network, accountsquery);
   return accounts.filter(account => account.account_id !== id);
 }
 
@@ -68,14 +68,16 @@ export async function getSyncAccount(
   nodes,
   accountHash,
   parentHash,
-  isLedger = false
+  isLedger = false,
+  network
 ) {
   const keyStore = getSelectedKeyStore(identities, accountHash, parentHash);
   account = await activateAndUpdateAccount(
     account,
     keyStore,
     nodes,
-    isLedger
+    isLedger,
+    network
   ).catch(e => {
     console.log('-debug: Error in: getSyncAccount for:' + accountHash);
     console.error(e);
@@ -87,7 +89,8 @@ export async function getSyncAccount(
     account.transactions = await getSyncTransactions(
       accountHash,
       nodes,
-      account.transactions
+      account.transactions,
+      network
     );
   }
   return account;

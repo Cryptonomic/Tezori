@@ -12,7 +12,7 @@ import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
 import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
-import { setLocale } from '../../reduxContent/settings/thunks';
+import { setLocale, fetchNetwork } from '../../reduxContent/settings/thunks';
 import {
   getLocale,
   getActivePath
@@ -302,6 +302,11 @@ class LoginHome extends Component<Props> {
     });
   };
 
+  componentDidMount = () => {
+    const { fetchNetwork } = this.props;
+    fetchNetwork();
+  };
+
   updateStatusAgreement = () => {
     const { isAgreement } = this.state;
     this.setState({ isAgreement: !isAgreement });
@@ -491,7 +496,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       setLocale,
-      connectLedger
+      connectLedger,
+      fetchNetwork
     },
     dispatch
   );

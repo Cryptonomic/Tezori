@@ -9,3 +9,4 @@ export const HIDE_DELEGATE_TOOLTIP = 'HIDE_DELEGATE_TOOLTIP';
 export const ADD_PATH = 'ADD_PATH';
 export const REMOVE_PATH = 'REMOVE_PATH';
 export const UPDATE_PATH = 'UPDATE_PATH';
+export const SET_NETWORK = 'SET_NETWORK';

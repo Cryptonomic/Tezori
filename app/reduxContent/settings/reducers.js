@@ -11,7 +11,8 @@ import {
   REMOVE_PATH,
   UPDATE_PATH,
   CLEAR_STATE,
-  HIDE_DELEGATE_TOOLTIP
+  HIDE_DELEGATE_TOOLTIP,
+  SET_NETWORK
 } from './types';
 import { CONSEIL } from '../../constants/NodesTypes';
 import { getWalletSettings } from '../../utils/settings';
@@ -26,7 +27,8 @@ const baseDefaults = {
   nodesList: [],
   delegateTooltip: false,
   selectedPath: '',
-  pathsList: []
+  pathsList: [],
+  network: ''
 };
 
 export const initialState = Object.assign(
@@ -48,6 +50,9 @@ export default handleActions(
     },
     [SET_LOCALE]: (state, action) => {
       return state.set('locale', action.locale);
+    },
+    [SET_NETWORK]: (state, action) => {
+      return state.set('network', action.network);
     },
     [SET_PATH]: (state, action) => {
       return state.set('selectedPath', action.selected);

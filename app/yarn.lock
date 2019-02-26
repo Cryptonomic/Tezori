@@ -1138,9 +1138,9 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-"conseiljs@https://github.com/Cryptonomic/ConseilJS#6ad34b5b0014d0eb8fae34903ca5bb14966c7b50":
+"conseiljs@https://github.com/Cryptonomic/ConseilJS":
   version "0.2.0"
-  resolved "https://github.com/Cryptonomic/ConseilJS#6ad34b5b0014d0eb8fae34903ca5bb14966c7b50"
+  resolved "https://github.com/Cryptonomic/ConseilJS#66444c0b4c828248b3f59979d94edced7c024854"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"

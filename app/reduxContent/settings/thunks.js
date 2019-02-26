@@ -1,4 +1,6 @@
+import { ConseilMetadataClient } from 'conseiljs';
 import { setWalletSettings } from '../../utils/settings';
+import { getSelectedNode } from '../../utils/nodes';
 import {
   setSelected as _setSelected,
   setLocale as _setLocale,
@@ -9,10 +11,12 @@ import {
   addPath as _addPath,
   removePath as _removePath,
   updatePath as _updatePath,
-  hideDelegateTooltip as _hideDelegateTooltip
+  hideDelegateTooltip as _hideDelegateTooltip,
+  setNetwork as _setNetwork
 } from './actions';
 
 import { getSettings } from './selectors';
+import { CONSEIL } from '../../constants/NodesTypes';
 
 export function hideDelegateTooltip(boolean) {
   return (dispatch, state) => {
@@ -22,9 +26,13 @@ export function hideDelegateTooltip(boolean) {
 }
 
 export function setSelected(name, target) {
-  return (dispatch, state) => {
+  return async (dispatch, state) => {
     dispatch(_setSelected(name, target));
-    setWalletSettings(getSettings(state()).toJS());
+    if (target === CONSEIL) {
+      await fetchNetwork();
+    } else {
+      setWalletSettings(getSettings(state()).toJS());
+    }
   };
 }
 
@@ -80,6 +88,24 @@ export function removePath(label) {
 export function updatePath(path) {
   return (dispatch, state) => {
     dispatch(_updatePath(path));
+    setWalletSettings(getSettings(state()).toJS());
+  };
+}
+
+export function fetchNetwork() {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const conseilNode = getSelectedNode(settings, CONSEIL);
+    const platforms = await ConseilMetadataClient.getPlatforms(
+      conseilNode.url,
+      conseilNode.apiKey
+    );
+    const networks = await ConseilMetadataClient.getNetworks(
+      conseilNode.url,
+      conseilNode.apiKey,
+      platforms[0].name
+    );
+    dispatch(_setNetwork(networks[0].network));
     setWalletSettings(getSettings(state()).toJS());
   };
 }

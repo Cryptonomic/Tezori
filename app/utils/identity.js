@@ -47,7 +47,8 @@ export async function getSyncIdentity(
   identities,
   identity,
   nodes,
-  isLedger = false
+  isLedger = false,
+  network
 ) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore(
@@ -59,7 +60,8 @@ export async function getSyncIdentity(
     identity,
     keyStore,
     nodes,
-    isLedger
+    isLedger,
+    network
   );
   const { selectedAccountHash } = getSelectedHash();
   /*
@@ -69,7 +71,7 @@ export async function getSyncIdentity(
    *  those accounts with the updated accounts we got from getAccounts.
    * */
 
-  let accounts = await getAccountsForIdentity(nodes, publicKeyHash).catch(
+  let accounts = await getAccountsForIdentity(nodes, publicKeyHash, network).catch(
     error => {
       console.log(
         '-debug: Error in: status.getAccountsForIdentity for:' + publicKeyHash
@@ -124,7 +126,8 @@ export async function getSyncIdentity(
           nodes,
           account.account_id,
           publicKeyHash,
-          isLedger
+          isLedger,
+          network
         ).catch(e => {
           console.log(
             '-debug: Error in: getSyncIdentity for:' + identity.publicKeyHash
@@ -136,7 +139,8 @@ export async function getSyncIdentity(
         account.transactions = await getSyncTransactions(
           selectedAccountHash,
           nodes,
-          account.transactions
+          account.transactions,
+          network
         );
       }
       return account;
@@ -147,7 +151,8 @@ export async function getSyncIdentity(
     identity.transactions = await getSyncTransactions(
       publicKeyHash,
       nodes,
-      identity.transactions
+      identity.transactions,
+      network
     );
   }
 
