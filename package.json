@@ -113,7 +113,9 @@
     "testURL": "http://localhost/",
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+      "electron": "<rootDir>/internals/mocks/electronMock.js",
+      "conseiljs": "<rootDir>/internals/mocks/conseiljsMock.js"
     },
     "moduleFileExtensions": ["js", "jsx", "json"],
     "moduleDirectories": ["node_modules", "app/node_modules"],
@@ -142,6 +144,7 @@
     "chalk": "^2.4.1",
     "concurrently": "^3.6.1",
     "connected-react-router": "^4.4.1",
+    "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
     "css-loader": "^1.0.0",
@@ -174,6 +177,7 @@
     "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^23.4.2",
+    "jest-styled-components": "^6.3.1",
     "lint-staged": "^7.2.0",
     "mini-css-extract-plugin": "^0.4.1",
     "node-sass": "^4.9.2",
@@ -201,7 +205,6 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5",
     "webpack-merge": "^4.1.3",
-    "copy-webpack-plugin": "^4.6.0",
     "yarn": "^1.10.1"
   },
   "dependencies": {
