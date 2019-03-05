@@ -375,14 +375,15 @@ export function importAddress(
             { url: conseilNode.url, apiKey: conseilNode.apiKey },
             network,
             identity.publicKeyHash
-          ).catch(() => false);
-          if (!account) {
+          ).catch(() => []);
+          if (!account || account.length === 0) {
             const tezosNode = getSelectedNode(settings, TEZOS);
             activating = await sendIdentityActivationOperation(
               tezosNode.url,
               identity,
               activationCode
             ).catch(err => {
+              console.error('sendIdentityActivationOperation', err);
               const error = err;
               error.name = err.message;
               throw error;
@@ -415,9 +416,9 @@ export function importAddress(
             { url: conseilNode.url, apiKey: conseilNode.apiKey },
             network,
             identity.publicKeyHash
-          ).catch(() => false);
+          ).catch(() => []);
 
-          if (!account) {
+          if (!account || account.length === 0) {
             const title = 'components.messageBar.messages.account_not_exist';
             const err = new Error(title);
             err.name = title;

@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@ledgerhq/devices@^4.39.0":
-  version "4.39.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.39.0.tgz#47d23a1a58004da162e007e0c456ab2119038c7d"
+"@ledgerhq/devices@^4.41.1":
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.41.1.tgz#a5bfa17aa9d0f0dc48506d765356d36edeef1fd9"
   dependencies:
-    "@ledgerhq/errors" "^4.39.0"
+    "@ledgerhq/errors" "^4.41.1"
 
-"@ledgerhq/errors@^4.39.0":
-  version "4.39.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.39.0.tgz#10b9889f78df94ce36a4b34d9a3a45aac77be0e9"
+"@ledgerhq/errors@^4.41.1":
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.41.1.tgz#8047464bf81c755dc7239b0ffb73fbf17a1c97aa"
 
 "@ledgerhq/hw-transport-node-hid@4.24.0", "@ledgerhq/hw-transport-node-hid@^4.24.0":
   version "4.24.0"
@@ -28,11 +28,11 @@
     events "^3.0.0"
 
 "@ledgerhq/hw-transport@^4.21.0":
-  version "4.39.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.39.0.tgz#602c6ea3fef56d1df205274ea742b4cf85613f6c"
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.41.1.tgz#1c5cfa38a87d58bbb9fcc9fa0b4e8763365afeb9"
   dependencies:
-    "@ledgerhq/devices" "^4.39.0"
-    "@ledgerhq/errors" "^4.39.0"
+    "@ledgerhq/devices" "^4.41.1"
+    "@ledgerhq/errors" "^4.41.1"
     events "^3.0.0"
 
 JSONStream@^1.0.3:
@@ -211,8 +211,8 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
 
 aws-sdk@^2.400.0:
-  version "2.407.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.407.0.tgz#667d7f847e7f9b34cf57fa5e7c70e5f12637f72b"
+  version "2.414.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.414.0.tgz#38f43a536fc47ecd407049565737a0fb009d4cc9"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -807,6 +807,10 @@ bl@^1.0.0:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
 
+blakejs@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/blakejs/-/blakejs-1.1.0.tgz#69df92ef953aa88ca51a32df6ab1c54a155fc7a5"
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.11.8, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
@@ -1138,9 +1142,9 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-"conseiljs@https://github.com/Cryptonomic/ConseilJS":
+"conseiljs@https://github.com/Cryptonomic/conseiljs#c6fc177dc68c77c243a61cb6a0d0c8a83fc719d8":
   version "0.2.0"
-  resolved "https://github.com/Cryptonomic/ConseilJS#66444c0b4c828248b3f59979d94edced7c024854"
+  resolved "https://github.com/Cryptonomic/conseiljs#c6fc177dc68c77c243a61cb6a0d0c8a83fc719d8"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
@@ -1150,28 +1154,9 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     basil-tezos-ledger "0.0.1"
     bip32 "^1.0.0"
     bip39 "^2.5.0"
+    blakejs "^1.1.0"
     bs58check "^2.1.2"
     https "^1.0.0"
-    libsodium-wrappers "0.5.4"
-    libsodium-wrappers-sumo "0.5.4"
-    node-fetch "^2.3.0"
-    zxcvbn "^4.4.2"
-
-"conseiljs@https://github.com/Cryptonomic/ConseilJS#c303f141b14c3bb0169c1097f9d98f67078832c6":
-  version "0.2.0"
-  resolved "https://github.com/Cryptonomic/ConseilJS#c303f141b14c3bb0169c1097f9d98f67078832c6"
-  dependencies:
-    "@ledgerhq/hw-transport" "4.24.0"
-    "@ledgerhq/hw-transport-node-hid" "4.24.0"
-    aws-sdk "^2.400.0"
-    babel-runtime "6.26.0"
-    base-n "git://github.com/yourcodesucks/base-n.git"
-    basil-tezos-ledger "0.0.1"
-    bip32 "^1.0.0"
-    bip39 "^2.5.0"
-    bs58check "^2.1.2"
-    https "^1.0.0"
-    libsodium-wrappers "0.5.4"
     libsodium-wrappers-sumo "0.5.4"
     node-fetch "^2.3.0"
     zxcvbn "^4.4.2"
@@ -2185,16 +2170,6 @@ libsodium-wrappers-sumo@0.5.4:
   resolved "https://registry.yarnpkg.com/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.5.4.tgz#ee69f6c960965e0d7d65cc4282c2fb33485d06a2"
   dependencies:
     libsodium-sumo "0.5.4"
-
-libsodium-wrappers@0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/libsodium-wrappers/-/libsodium-wrappers-0.5.4.tgz#0059bf219c3a37b228f823342399b1607a4c5ba4"
-  dependencies:
-    libsodium "0.5.4"
-
-libsodium@0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/libsodium/-/libsodium-0.5.4.tgz#874413435ee40c512dd59ea6db9b75970f8aec02"
 
 lodash.memoize@~3.0.3:
   version "3.0.4"
