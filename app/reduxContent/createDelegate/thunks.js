@@ -122,8 +122,6 @@ export function createNewAccount(
       });
     }
 
-    console.log('newAccount----', newAccount);
-
     if (newAccount) {
       const operationResult1 =
         newAccount &&

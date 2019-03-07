@@ -13,7 +13,8 @@
       "restore": "Restore",
       "confirm": "Confirm",
       "receive": "Receive",
-      "continue": "Continue"
+      "continue": "Continue",
+      "invoke": "Invoke"
     },
     "nouns": {
       "amount": "Amount",
@@ -41,7 +42,8 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Derivation Path",
       "storage": "Storage",
-      "burn": "Burn"
+      "burn": "Burn",
+      "smart_contract": "Smart Contract"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -79,6 +81,18 @@
       "warning1": "Total exceeds available funds",
       "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
       "add_delegate_title": "Add a Delegate"
+    },
+    "interactModal": {
+      "interact_contract": "Interact with Contracts",
+      "invoke_contract": "Invoke an Existing Contract",
+      "deploy_contract": "Deploy a New Contract",
+      "title": "Interact with Smart Contracts",
+      "smart_address": "Smart Contract Address",
+      "invoke_from": "Invoke from",
+      "storage_limit": "Storage Limit",
+      "gas_limit": "Gas Limit",
+      "parameters": "Parameters",
+      "view_scan": "VIEW ON TZSCAN"
     },
     "addNodeModal": {
       "error": "Node's protocol must be https",
@@ -163,6 +177,10 @@
       "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
       "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
     },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "Confirm Smart Contract Operation",
+      "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device."
+    },
     "fees": {
       "low_fee": "Low Fee",
       "medium_fee": "Medium Fee",
@@ -219,7 +237,9 @@
         "success_sent": "Success! You sent {{localeParam}} tz.",
         "invalid_wallet_password": "Invalid wallet/password combination.",
         "account_not_exist": "The account does not exist.",
-        "ledger_not_connect": "Connection refused by Ledger."
+        "ledger_not_connect": "Connection refused by Ledger.",
+        "invoke_operation_failed": "Smart Contract operation failed",
+        "success_invoke_operation": "Successfully started contract invocation."
       }
     },
     "pdfReader": {
@@ -283,7 +303,8 @@
       "sent": "SENT",
       "received": "RECEIVED",
       "this_address": "this address",
-      "your_manager_address": "<0>your</0> Account 1 Manager Address"
+      "your_manager_address": "<0>your</0> Account 1 Manager Address",
+      "invoke_function": "Invoked function"
     },
     "update": {
       "last_updated": "Last updated {{date}}"

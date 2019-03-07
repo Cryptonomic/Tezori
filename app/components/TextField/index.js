@@ -4,6 +4,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import NumberFormat from 'react-number-format';
 
 const Container = styled(FormControl)`
   width: 100%;
@@ -55,6 +56,31 @@ const ErrorText = styled(FormHelperText)`
   }
 }`;
 
+type Props1 = {
+  inputRef: () => {},
+  onChange: () => {}
+};
+
+const NumberFormatCustom = (props: Props1) => {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      type="text"
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      thousandSeparator
+    />
+  );
+};
+
 type Props = {
   label: string,
   type?: string,
@@ -76,6 +102,7 @@ const TextField = (props: Props) => {
         error={!!errorText}
         disabled={disabled}
         right={right}
+        inputComponent={type === 'number' ? NumberFormatCustom : null}
         {...other}
       />
       <ErrorText component="div">{errorText}</ErrorText>

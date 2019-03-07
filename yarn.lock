@@ -9266,6 +9266,12 @@ react-modal@^3.6.1:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
+react-number-format@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.0.6.tgz#3cdfc48f5fc106edb3cf1d767d320348aa857f6a"
+  dependencies:
+    prop-types "^15.6.0"
+
 react-pdf@^3.0.5:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/react-pdf/-/react-pdf-3.0.6.tgz#399631e05f7057795d273d2b4809b808625b10e0"

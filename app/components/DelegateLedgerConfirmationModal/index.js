@@ -154,7 +154,7 @@ const DelegateLedgerConfirmationModal = (props: Props) => {
 
         <ItemContainer>
           <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
-          <ItemContent>{'0'}</ItemContent>
+          <ItemContent>0</ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>

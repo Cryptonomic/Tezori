@@ -132,6 +132,17 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   const isFee = getIsFee(transaction.fee);
   const isAmount = getIsAmount(transaction.amount);
 
+  if (type === types.INVOCATION) {
+    return {
+      icon: 'send',
+      preposition: t('general.of'),
+      state: t('components.transaction.invoke_function'),
+      isFee: true,
+      color: isAmount ? 'error1' : 'gray8',
+      sign: ''
+    };
+  }
+
   if (type === types.ORIGINATION && isSameLocation) {
     return {
       icon: 'send',
