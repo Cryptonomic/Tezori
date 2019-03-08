@@ -96,13 +96,14 @@ export function fetchNetwork() {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const conseilNode = getSelectedNode(settings, CONSEIL);
-    const platforms = await ConseilMetadataClient.getPlatforms(
-      conseilNode.url,
-      conseilNode.apiKey
-    );
+    const serverInfo = {
+      url: conseilNode.url,
+      apiKey: conseilNode.apiKey
+    };
+
+    const platforms = await ConseilMetadataClient.getPlatforms(serverInfo);
     const networks = await ConseilMetadataClient.getNetworks(
-      conseilNode.url,
-      conseilNode.apiKey,
+      serverInfo,
       platforms[0].name
     );
     dispatch(_setNetwork(networks[0].network));

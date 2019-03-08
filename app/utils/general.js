@@ -166,6 +166,13 @@ export function generateNewMnemonic() {
   return TezosWalletUtil.generateMnemonic();
 }
 
+const getFeeCount = (counts) => {
+  const lowCount = Math.round(counts * 0.3);
+  const mediumCount = Math.round(counts * 0.4);
+  const highCount = counts - lowCount - mediumCount;
+  return [lowCount, mediumCount, highCount];
+}
+
 export async function fetchAverageFees(settings, operationKind) {
   const { url, apiKey } = getSelectedNode(settings, CONSEIL);
   const { network } = settings;
@@ -179,10 +186,11 @@ export async function fetchAverageFees(settings, operationKind) {
 
   const fees = await TezosConseilClient.getOperations({url: url, apiKey: apiKey}, network, operationFeesQuery);
   const sortedfees = fees.map(f => parseInt(f['fee'])).sort((a, b) => a - b);
+  const feeCounts = getFeeCount(sortedfees.length);
 
-  const lowAverageFee = Math.round(sortedfees.slice(0, 300).reduce((s, c) => s + c) / 300);
-  const mediumAverageFee = Math.round(sortedfees.slice(300, 700).reduce((s, c) => s + c) / 400);
-  const highAverageFee = Math.round(sortedfees.slice(700).reduce((s, c) => s + c) / 300);
+  const lowAverageFee = Math.round(sortedfees.slice(0, feeCounts[0]).reduce((s, c) => s + c) / feeCounts[0]);
+  const mediumAverageFee = Math.round(sortedfees.slice(feeCounts[0], feeCounts[0] + feeCounts[1]).reduce((s, c) => s + c) / feeCounts[1]);
+  const highAverageFee = Math.round(sortedfees.slice(feeCounts[0] + feeCounts[1]).reduce((s, c) => s + c) / feeCounts[2]);
 
   return {low: lowAverageFee, medium: mediumAverageFee, high: highAverageFee};
 }
