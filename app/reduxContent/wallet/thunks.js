@@ -383,7 +383,6 @@ export function importAddress(
               identity,
               activationCode
             ).catch(err => {
-              console.error('sendIdentityActivationOperation', err);
               const error = err;
               error.name = err.message;
               throw error;
@@ -533,7 +532,6 @@ export function connectLedger() {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { derivation } = await getCurrentPath(settings);
-    console.log('derivation------', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));

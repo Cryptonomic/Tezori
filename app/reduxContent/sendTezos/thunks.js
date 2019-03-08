@@ -123,7 +123,6 @@ export function sendTez(
     }
 
     if (res) {
-      console.log('-debug: res', res);
       const operationResult =
         res &&
         res.results &&
