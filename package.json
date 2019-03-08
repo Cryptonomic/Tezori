@@ -115,7 +115,7 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy",
       "electron": "<rootDir>/internals/mocks/electronMock.js",
-      "conseiljs": "<rootDir>/internals/mocks/conseiljsMock.js"
+      "conseiljs": "<rootDir>/test/config/conseiljsMock.js"
     },
     "moduleFileExtensions": ["js", "jsx", "json"],
     "moduleDirectories": ["node_modules", "app/node_modules"],
