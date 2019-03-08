@@ -210,9 +210,9 @@ atob@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
 
-aws-sdk@^2.400.0:
-  version "2.414.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.414.0.tgz#38f43a536fc47ecd407049565737a0fb009d4cc9"
+aws-sdk@^2.417.0:
+  version "2.417.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.417.0.tgz#44cda55cbbfde83dab87fbd37e1190fc925c5dc7"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -1142,13 +1142,13 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-"conseiljs@https://github.com/Cryptonomic/conseiljs#c6fc177dc68c77c243a61cb6a0d0c8a83fc719d8":
-  version "0.2.0"
-  resolved "https://github.com/Cryptonomic/conseiljs#c6fc177dc68c77c243a61cb6a0d0c8a83fc719d8"
+conseiljs@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.2.1.tgz#e9a99ad1f5afbd3db4b29e5ed8ea42a0cc91292a"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
-    aws-sdk "^2.400.0"
+    aws-sdk "^2.417.0"
     babel-runtime "6.26.0"
     base-n "git://github.com/yourcodesucks/base-n.git"
     basil-tezos-ledger "0.0.1"
@@ -1157,7 +1157,7 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     blakejs "^1.1.0"
     bs58check "^2.1.2"
     https "^1.0.0"
-    libsodium-wrappers-sumo "0.5.4"
+    libsodium-wrappers-sumo "0.7.4"
     node-fetch "^2.3.0"
     zxcvbn "^4.4.2"
 
@@ -2161,15 +2161,15 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libsodium-sumo@0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/libsodium-sumo/-/libsodium-sumo-0.5.4.tgz#08af4af945754ee9daf2de9d1385c9fc0e64cec0"
+libsodium-sumo@0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/libsodium-sumo/-/libsodium-sumo-0.7.4.tgz#fb99816dac06df5d34cd9e04a99253d23fc0d6bd"
 
-libsodium-wrappers-sumo@0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.5.4.tgz#ee69f6c960965e0d7d65cc4282c2fb33485d06a2"
+libsodium-wrappers-sumo@0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.4.tgz#68443ea2e57fb51e4aefb3f9487be7321fbaf68c"
   dependencies:
-    libsodium-sumo "0.5.4"
+    libsodium-sumo "0.7.4"
 
 lodash.memoize@~3.0.3:
   version "3.0.4"
