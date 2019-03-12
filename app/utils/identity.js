@@ -1,3 +1,4 @@
+import { StoreType } from 'conseiljs';
 import * as status from '../constants/StatusTypes';
 import { getSyncTransactions, syncTransactionsWithState } from './transaction';
 import {
@@ -12,7 +13,8 @@ import {
   syncAccountWithState
 } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
-import { FUNDRAISER } from '../constants/StoreTypes';
+
+const { FUNDRAISER } = StoreType;
 
 export function createIdentity(identity) {
   return {

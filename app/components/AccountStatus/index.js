@@ -2,16 +2,18 @@
 import React from 'react';
 import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
+import { StoreType } from 'conseiljs';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
 import LoaderSpinner from '../LoaderSpinner/';
 import { H4 } from '../Heading/';
 
 import * as statuses from '../../constants/StatusTypes';
-import { MNEMONIC, LEDGER } from '../../constants/StoreTypes';
 import { formatAmount } from '../../utils/currancy';
 import { wrapComponent } from '../../utils/i18n';
 import Info from './Info';
+
+const { MNEMONIC, LEDGER } = StoreType;
 
 const Container = styled.section`
   display: flex;

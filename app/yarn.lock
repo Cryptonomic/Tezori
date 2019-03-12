@@ -1142,9 +1142,28 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
 
-conseiljs@0.2.1:
+"conseiljs@https://github.com/Cryptonomic/ConseilJS":
   version "0.2.1"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.2.1.tgz#e9a99ad1f5afbd3db4b29e5ed8ea42a0cc91292a"
+  resolved "https://github.com/Cryptonomic/ConseilJS#b5b157fbf231851344abb289fd2b40ebea7be93e"
+  dependencies:
+    "@ledgerhq/hw-transport" "4.24.0"
+    "@ledgerhq/hw-transport-node-hid" "4.24.0"
+    aws-sdk "^2.417.0"
+    babel-runtime "6.26.0"
+    base-n "git://github.com/yourcodesucks/base-n.git"
+    basil-tezos-ledger "0.0.1"
+    bip32 "^1.0.0"
+    bip39 "^2.5.0"
+    blakejs "^1.1.0"
+    bs58check "^2.1.2"
+    https "^1.0.0"
+    libsodium-wrappers-sumo "0.7.4"
+    node-fetch "^2.3.0"
+    zxcvbn "^4.4.2"
+
+"conseiljs@https://github.com/Cryptonomic/ConseilJS#a3063feb92caca31011ef7c651389f02c6a9559f":
+  version "0.2.1"
+  resolved "https://github.com/Cryptonomic/ConseilJS#a3063feb92caca31011ef7c651389f02c6a9559f"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"

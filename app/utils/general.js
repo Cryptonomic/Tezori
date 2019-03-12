@@ -8,7 +8,8 @@ import {
   ConseilSortDirection,
   TezosConseilClient,
   TezosNodeReader,
-  TezosWalletUtil
+  TezosWalletUtil,
+  StoreType
 } from 'conseiljs';
 
 import { findAccount, createSelectedAccount } from './account';
@@ -16,12 +17,12 @@ import { findIdentity } from './identity';
 import { createTransaction } from './transaction';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
-import { MNEMONIC, LEDGER } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
-const util = require('util')
+const util = require('util');
+const { MNEMONIC, LEDGER } = StoreType;
 
 export async function getNodesStatus(nodes, network) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
