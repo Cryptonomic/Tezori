@@ -212,6 +212,7 @@ class Send extends Component<Props> {
   state = initialState;
 
   async componentWillMount() {
+    this.mounted = true;
     const {
       fetchTransactionAverageFees,
       addressBalance,
@@ -234,14 +235,20 @@ class Send extends Component<Props> {
     if (averageFees.low < miniLowFee) {
       averageFees.low = miniLowFee;
     }
-    this.setState({
-      averageFees,
-      fee: averageFees.low,
-      total: averageFees.low,
-      balance: addressBalance,
-      isDisplayedFeeTooltip: !isRevealed,
-      miniFee: miniLowFee
-    });
+    if (this.mounted) {
+      this.setState({
+        averageFees,
+        fee: averageFees.low,
+        total: averageFees.low,
+        balance: addressBalance,
+        isDisplayedFeeTooltip: !isRevealed,
+        miniFee: miniLowFee
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   onUseMax = () => {

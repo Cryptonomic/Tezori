@@ -279,7 +279,7 @@ function Transaction(props: Props) {
             iconName="new-window"
             size={ms(0)}
             color="primary"
-            onClick={() => openLink(transaction.operationGroupHash)}
+            onClick={() => openLink(transaction.operation_group_hash)}
           />
         </ContentDiv>
         {isBurn && (

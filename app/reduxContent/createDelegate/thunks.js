@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosNodeWriter } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
@@ -19,7 +19,7 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const { sendOriginationOperation } = TezosOperations;
+const { sendAccountOriginationOperation } = TezosNodeWriter;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
@@ -82,16 +82,15 @@ export function createNewAccount(
       publicKeyHash,
       publicKeyHash
     );
-    const { url, apiKey } = getSelectedNode(settings, TEZOS);
-    console.log('-debug: - iiiii - url, apiKey', url, apiKey);
+    const { url } = getSelectedNode(settings, TEZOS);
 
     let newAccount;
     if (isLedger) {
       const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-      console.log('-debug: - UMUR - derivationPath', derivation);
+
       newKeyStore.storeType = 2;
-      newAccount = await sendOriginationOperation(
+      newAccount = await sendAccountOriginationOperation(
         url,
         newKeyStore,
         amountInUtez,
@@ -107,7 +106,7 @@ export function createNewAccount(
         return false;
       });
     } else {
-      newAccount = await sendOriginationOperation(
+      newAccount = await sendAccountOriginationOperation(
         url,
         keyStore,
         amountInUtez,
@@ -166,14 +165,14 @@ export function createNewAccount(
 
       const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
-      console.log(newAccount);
+
       identity.accounts.push(
         createAccount(
           {
-            accountId: newAccountHash,
+            account_id: newAccountHash,
             balance: amountInUtez,
             manager: publicKeyHash,
-            delegateValue: '',
+            delegate_value: '',
             operations: {
               [CREATED]: operationId
             },
@@ -187,21 +186,21 @@ export function createNewAccount(
         createTransaction({
           delegate,
           kind: ORIGINATION,
-          operationGroupHash: operationId,
+          operation_group_hash: operationId,
           source: keyStore.publicKeyHash,
           fee
         })
       );
 
       const delegatedAddressee = identity.accounts.filter(
-        account => account.accountId === newAccountHash
+        account => account.account_id === newAccountHash
       );
       delegatedAddressee[0].transactions.push(
         createTransaction({
           amount: amountInUtez,
           delegate,
           kind: ORIGINATION,
-          operationGroupHash: operationId,
+          operation_group_hash: operationId,
           destination: keyStore.publicKeyHash
         })
       );

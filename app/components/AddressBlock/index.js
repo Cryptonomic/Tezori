@@ -6,6 +6,7 @@ import styled, { withTheme } from 'styled-components';
 import { darken } from 'polished';
 import AddCircle from '@material-ui/icons/AddCircle';
 import CloseIcon from '@material-ui/icons/Close';
+import { StoreType } from 'conseiljs';
 
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
@@ -15,7 +16,6 @@ import TezosAmount from '../TezosAmount/';
 import Address from '../Address/';
 import AddressStatus from '../AddressStatus/';
 import { READY, PENDING } from '../../constants/StatusTypes';
-import { MNEMONIC } from '../../constants/StoreTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
 import Tooltip from '../Tooltip';
@@ -25,6 +25,8 @@ import { wrapComponent } from '../../utils/i18n';
 
 import { hideDelegateTooltip } from '../../reduxContent/settings/thunks';
 import { getDelegateTooltip } from '../../reduxContent/settings/selectors';
+
+const { MNEMONIC } = StoreType;
 
 const Container = styled.div`
   overflow: hidden;
@@ -281,7 +283,7 @@ class AddressBlock extends Component<Props, State> {
           ? smartAddresses
               .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
               .map((smartAddress, index) => {
-                const smartAddressId = smartAddress.get('accountId');
+                const smartAddressId = smartAddress.get('account_id');
                 const isSmartActive = smartAddressId === selectedAccountHash;
                 const smartAddressReady = isReady(smartAddress.get('status'));
 

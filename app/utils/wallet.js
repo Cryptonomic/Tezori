@@ -2,10 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import { remote } from 'electron';
 import { omit, pick } from 'lodash';
-import { TezosWallet, TezosHardwareWallet } from 'conseiljs';
+import { TezosFileWallet, TezosLedgerWallet, StoreType } from 'conseiljs';
 import { keys } from '@material-ui/core/styles/createBreakpoints';
-import { LEDGER } from '../constants/StoreTypes';
-const { saveWallet, loadWallet } = TezosWallet;
+const { saveWallet, loadWallet } = TezosFileWallet;
+const { LEDGER } = StoreType;
 
 
 const fileName = 'walletState';
@@ -104,11 +104,11 @@ export async function loadPersistedState(walletPath, password) {
 }
 
 export async function loadWalletFromLedger(derivationPath) {
-  const identity = await TezosHardwareWallet.unlockAddress(0, derivationPath).catch(err => {
+  const identity = await TezosLedgerWallet.unlockAddress(0, derivationPath).catch(err => { // TODO: use HardwareDeviceType, but it needs to be exported
     const errorObj = {
       name: "components.messageBar.messages.ledger_not_connect"
     };
-    console.error(errorObj);
+    console.error('TezosLedgerWallet.unlockAddress', err);
     throw errorObj;
   });
   identity.storeType = LEDGER;
@@ -128,5 +128,5 @@ export async function loadWalletFromLedger(derivationPath) {
 }
 
 export function initLedgerTransport() {
-  TezosHardwareWallet.initLedgerTransport();
+  TezosLedgerWallet.initLedgerTransport();
 }

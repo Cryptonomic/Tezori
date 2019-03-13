@@ -14,12 +14,12 @@ import { sortArr } from '../../utils/array';
 import { wrapComponent } from '../../utils/i18n';
 
 type Account = {
-  accountId: string,
-  blockId: string,
+  account_id: string,
+  block_id: string,
   manager: string,
   spendable: boolean,
-  delegateSetable: boolean,
-  delegateValue: string,
+  delegate_setable: boolean,
+  delegate_value: string,
   counter: number,
   script: string,
   balance: number
@@ -105,7 +105,7 @@ class Addresses extends Component<Props> {
             />
           </Tooltip>
         </AccountTitle>
-        { identities
+        {identities
           .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
           .map((accountBlock, index) => (
             <AccountItem key={accountBlock.get('publicKeyHash')}>
@@ -118,8 +118,7 @@ class Addresses extends Component<Props> {
                 history={history}
               />
             </AccountItem>
-          ))
-        }
+          ))}
       </Container>
     );
   }
@@ -142,6 +141,11 @@ function mapDispatchToProps(dispatch: () => {}) {
   );
 }
 
-export default compose(withTheme, wrapComponent, connect(mapStateToProps, mapDispatchToProps))(
-  Addresses
-);
+export default compose(
+  withTheme,
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(Addresses);
