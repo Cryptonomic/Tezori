@@ -22,7 +22,7 @@ const invokeAddress = (
   amount,
   storage,
   gas,
-  parameters,
+  parameters = {},
   password,
   selectedAccountHash,
   selectedParentHash
@@ -48,7 +48,6 @@ const invokeAddress = (
     );
     const { url } = getSelectedNode(settings, TEZOS);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
-    const newParams = JSON.parse(parameters);
     const realKeyStore = keyStore;
     let realDerivation = '';
 
@@ -67,7 +66,7 @@ const invokeAddress = (
       realDerivation,
       storage,
       gas,
-      newParams
+      parameters
     ).catch(err => {
       const errorObj = { name: err.message, ...err };
       console.error(err);

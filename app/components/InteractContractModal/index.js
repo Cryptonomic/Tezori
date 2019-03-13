@@ -375,13 +375,14 @@ class InteractContractModal extends Component<Props> {
 
     let isOperationCompleted = false;
     if (activeTab === 'invoke') {
+      const realParams = parameters ? JSON.parse(parameters) : {};
       isOperationCompleted = await invokeAddress(
         smartAddress,
         fee,
         amount,
         storage,
         gas,
-        parameters,
+        realParams,
         passPhrase,
         selectedInvokeAddress,
         selectedParentHash
