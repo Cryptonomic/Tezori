@@ -304,7 +304,7 @@
       "received": "RECEIVED",
       "this_address": "this address",
       "your_manager_address": "<0>your</0> Account 1 Manager Address",
-      "invoke_function": "Invoked function"
+      "invoke_function": "INVOKED FUNCTION"
     },
     "update": {
       "last_updated": "Last updated {{date}}"
