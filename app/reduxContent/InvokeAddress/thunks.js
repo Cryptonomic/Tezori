@@ -22,7 +22,7 @@ const invokeAddress = (
   amount,
   storage,
   gas,
-  parameters = {},
+  parameters,
   password,
   selectedAccountHash,
   selectedParentHash
