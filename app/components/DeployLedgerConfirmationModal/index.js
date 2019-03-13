@@ -91,35 +91,23 @@ const ItemContent = styled.div`
 `;
 
 type Props = {
-  address?: string,
   source?: string,
   open?: boolean,
   onCloseClick?: () => {},
   isLoading?: boolean,
   fee: number,
   amount: string,
-  parameters: string,
   t: () => {}
 };
 
-const InvokeLedgerConfirmationModal = (props: Props) => {
-  const {
-    address,
-    source,
-    open,
-    isLoading,
-    onCloseClick,
-    fee,
-    amount,
-    parameters,
-    t
-  } = props;
+const DeployLedgerConfirmationModal = (props: Props) => {
+  const { source, open, isLoading, onCloseClick, fee, amount, t } = props;
 
   const calcFee = formatAmount(fee);
 
   return (
     <Modal
-      title={t('components.invokeLedgerConfirmationModal.confirm_invoke_title')}
+      title={t('components.deployLedgerConfirmationModal.confirm_deploy_title')}
       open={open}
       onClose={onCloseClick}
       style={{ width: '671px' }}
@@ -128,33 +116,18 @@ const InvokeLedgerConfirmationModal = (props: Props) => {
         <DescriptionContainer>
           <SendSvg src={sendImg} />
           <SendDes>
-            {t('components.invokeLedgerConfirmationModal.invoke_description')}
+            {t('components.deployLedgerConfirmationModal.deploy_description')}
           </SendDes>
         </DescriptionContainer>
 
         <ItemContainer>
-          <ItemTitle>{t('components.interactModal.invoke_from')}</ItemTitle>
+          <ItemTitle>{t('components.interactModal.deploy_from')}</ItemTitle>
           <TezosAddress
             address={source}
             size="16px"
             weight={300}
             color="primary"
           />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.smart_contract')}</ItemTitle>
-          <TezosAddress
-            address={address}
-            size="16px"
-            weight={300}
-            color="primary"
-          />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('components.interactModal.parameters')}</ItemTitle>
-          <ItemContent>{parameters}</ItemContent>
         </ItemContainer>
 
         <ItemContainer>
@@ -187,4 +160,4 @@ const InvokeLedgerConfirmationModal = (props: Props) => {
   );
 };
 
-export default wrapComponent(InvokeLedgerConfirmationModal);
+export default wrapComponent(DeployLedgerConfirmationModal);

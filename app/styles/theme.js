@@ -18,6 +18,7 @@ export const Theme = {
     blue2: '#0099dc',
     blue3: '#4486f0',
     blue4: '#00cec4',
+    blue5: '#7189B7',
 
     // Gray colors
     gray0: '#191414',
@@ -34,6 +35,8 @@ export const Theme = {
     gray11: '#d4ddf0',
     gray12: '#c8c6c6',
     gray13: '#d8e4fc',
+    gray14: '#F0F3F8',
+    gray15: '#9E9E9E',
 
     // font colors
     index0: '#94a9d1',

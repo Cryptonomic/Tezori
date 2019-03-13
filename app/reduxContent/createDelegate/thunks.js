@@ -34,7 +34,11 @@ export function createNewAccount(
   amount,
   fee,
   passPhrase,
-  publicKeyHash
+  publicKeyHash,
+  storageLimit = 0,
+  gasLimit = 0,
+  code = [],
+  storage = {}
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -83,44 +87,34 @@ export function createNewAccount(
       publicKeyHash
     );
     const { url } = getSelectedNode(settings, TEZOS);
+    const realKeyStore = keyStore;
+    let realDerivation = '';
 
-    let newAccount;
     if (isLedger) {
-      const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-
-      newKeyStore.storeType = 2;
-      newAccount = await sendAccountOriginationOperation(
-        url,
-        newKeyStore,
-        amountInUtez,
-        delegate,
-        true,
-        true,
-        fee,
-        derivation
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
-    } else {
-      newAccount = await sendAccountOriginationOperation(
-        url,
-        keyStore,
-        amountInUtez,
-        delegate,
-        true,
-        true,
-        fee
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
+      realDerivation = derivation;
+      realKeyStore.storeType = 2;
     }
+
+    const newAccount = await sendAccountOriginationOperation(
+      url,
+      realKeyStore,
+      amountInUtez,
+      delegate,
+      true,
+      true,
+      fee,
+      realDerivation,
+      storageLimit,
+      gasLimit,
+      code,
+      storage
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(errorObj);
+      dispatch(addMessage(errorObj.name, true));
+      return false;
+    });
 
     if (newAccount) {
       const operationResult1 =

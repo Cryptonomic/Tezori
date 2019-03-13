@@ -14,7 +14,8 @@
       "confirm": "Confirm",
       "receive": "Receive",
       "continue": "Continue",
-      "invoke": "Invoke"
+      "invoke": "Invoke",
+      "deploy": "Deploy"
     },
     "nouns": {
       "amount": "Amount",
@@ -89,10 +90,13 @@
       "title": "Interact with Smart Contracts",
       "smart_address": "Smart Contract Address",
       "invoke_from": "Invoke from",
+      "deploy_from": "Deploy from",
       "storage_limit": "Storage Limit",
       "gas_limit": "Gas Limit",
       "parameters": "Parameters",
-      "view_scan": "VIEW ON TZSCAN"
+      "view_scan": "VIEW ON TZSCAN",
+      "initial_storage": "Initial Storage",
+      "paste_michelson_code": "Paste in your smart contract Michelson code"
     },
     "addNodeModal": {
       "error": "Node's protocol must be https",
@@ -180,6 +184,10 @@
     "invokeLedgerConfirmationModal": {
       "confirm_invoke_title": "Confirm Smart Contract Operation",
       "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device."
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "Confirm Smart Contract Deployment",
+      "deploy_description": "You are about to deploy a smart contract function. Please carefully review the details on your device."
     },
     "fees": {
       "low_fee": "Low Fee",

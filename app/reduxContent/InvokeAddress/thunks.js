@@ -46,49 +46,34 @@ const invokeAddress = (
       selectedAccountHash,
       selectedParentHash
     );
-    console.log('keystore----', keyStore);
     const { url } = getSelectedNode(settings, TEZOS);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
     const newParams = JSON.parse(parameters);
-    let res;
+    const realKeyStore = keyStore;
+    let realDerivation = '';
+
     if (isLedger) {
-      const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-      newKeyStore.storeType = 2;
-      res = await sendContractInvocationOperation(
-        url,
-        newKeyStore,
-        smartAddress,
-        parsedAmount,
-        fee,
-        derivation,
-        storage,
-        gas,
-        newParams
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(err);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
-    } else {
-      res = await sendContractInvocationOperation(
-        url,
-        keyStore,
-        smartAddress,
-        parsedAmount,
-        fee,
-        '',
-        storage,
-        gas,
-        newParams
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(err);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
+      realDerivation = derivation;
+      realKeyStore.storeType = 2;
     }
+
+    const res = await sendContractInvocationOperation(
+      url,
+      realKeyStore,
+      smartAddress,
+      parsedAmount,
+      fee,
+      realDerivation,
+      storage,
+      gas,
+      newParams
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(err);
+      dispatch(addMessage(errorObj.name, true));
+      return false;
+    });
 
     if (res) {
       const operationResult =
@@ -109,8 +94,6 @@ const invokeAddress = (
         dispatch(addMessage(error, true));
         return false;
       }
-
-      console.log('res-------', res);
 
       const clearedOperationId = clearOperationId(res.operationGroupID);
 

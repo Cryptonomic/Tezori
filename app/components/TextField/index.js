@@ -36,12 +36,41 @@ const InputWrapper = styled(Input)`
     }    
   }
 }`;
+
+const TextAreaWrapper = styled(Input)`
+  &&& {
+    &[class*='focused'] {    
+      &:after {
+        border-bottom-color: ${({ error, theme: { colors } }) =>
+          error ? colors.error1 : colors.accent};
+      }
+    }
+    background-color: ${({ theme: { colors } }) => colors.gray14};
+    border: 1px solid ${({ theme: { colors } }) => colors.gray14};
+    font-size: 14px;
+    color: ${({ theme: { colors } }) => colors.blue5};
+    padding: 10px 22px 5px 22px;
+    &:before {
+      border-bottom: ${({ disabled }) =>
+        disabled
+          ? '1px dotted rgba(0, 0, 0, 0.32)'
+          : '1px solid rgba(0, 0, 0, 0.12)'} ;
+    }
+    &:hover:before {
+      border-bottom: solid 2px ${({ error, theme: { colors } }) =>
+        error ? colors.error1 : colors.accent} !important;
+    }    
+  }
+}`;
+
 const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {    
       color: ${({ theme: { colors } }) => colors.gray3};
     }
-    color: rgba(0, 0, 0, 0.38);
+    color: ${({ multiline, theme: { colors } }) =>
+      multiline ? colors.gray15 : 'rgba(0, 0, 0, 0.38)'};
+    z-index: ${({ multiline }) => (multiline ? 10 : 0)};
     font-size: 16px;
   }
 }`;
@@ -87,24 +116,44 @@ type Props = {
   errorText?: string | React.Node,
   disabled?: boolean,
   right?: number,
+  multiline?: boolean,
   onChange?: () => {}
 };
 
 const TextField = (props: Props) => {
-  const { label, type, onChange, errorText, disabled, right, ...other } = props;
+  const {
+    label,
+    type,
+    onChange,
+    errorText,
+    disabled,
+    right,
+    multiline,
+    ...other
+  } = props;
   return (
     <Container disabled={disabled}>
-      <LabelWrapper>{label}</LabelWrapper>
-      <InputWrapper
-        key={label}
-        type={type}
-        onChange={event => onChange(event.target.value)}
-        error={!!errorText}
-        disabled={disabled}
-        right={right}
-        inputComponent={type === 'number' ? NumberFormatCustom : null}
-        {...other}
-      />
+      <LabelWrapper multiline={multiline ? 1 : 0}>{label}</LabelWrapper>
+      {multiline ? (
+        <TextAreaWrapper
+          key={label}
+          onChange={event => onChange(event.target.value)}
+          right={right}
+          multiline
+          {...other}
+        />
+      ) : (
+        <InputWrapper
+          key={label}
+          type={type}
+          onChange={event => onChange(event.target.value)}
+          error={!!errorText}
+          disabled={disabled}
+          right={right}
+          inputComponent={type === 'number' ? NumberFormatCustom : null}
+          {...other}
+        />
+      )}
       <ErrorText component="div">{errorText}</ErrorText>
     </Container>
   );
@@ -113,7 +162,8 @@ TextField.defaultProps = {
   type: 'text',
   errorText: '',
   disabled: false,
-  right: 0
+  right: 0,
+  multiline: false
 };
 
 export default TextField;
