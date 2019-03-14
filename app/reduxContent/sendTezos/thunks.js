@@ -89,38 +89,28 @@ export function sendTez(
     console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
 
-    let res;
+    const realKeyStore = keyStore;
+    let realDerivation = '';
+
     if (isLedger) {
-      const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-      newKeyStore.storeType = 2;
-      res = await sendTransactionOperation(
-        url,
-        newKeyStore,
-        toAddress,
-        parsedAmount,
-        fee,
-        derivation
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
-    } else {
-      res = await sendTransactionOperation(
-        url,
-        keyStore,
-        toAddress,
-        parsedAmount,
-        fee
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
+      realDerivation = derivation;
+      realKeyStore.storeType = 2;
     }
+
+    const res = await sendTransactionOperation(
+      url,
+      realKeyStore,
+      toAddress,
+      parsedAmount,
+      fee,
+      realDerivation
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(errorObj);
+      dispatch(addMessage(errorObj.name, true));
+      return false;
+    });
 
     if (res) {
       console.log('-debug: res', res);

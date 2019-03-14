@@ -7,7 +7,7 @@ import { getCurrentPath } from '../../utils/paths';
 import { TEZOS } from '../../constants/NodesTypes';
 import { persistWalletState } from '../../utils/wallet';
 import { createTransaction } from '../../utils/transaction';
-import { INVOCATION } from '../../constants/TransactionTypes';
+import { TRANSACTION } from '../../constants/TransactionTypes';
 
 import { getSelectedKeyStore, clearOperationId } from '../../utils/general';
 
@@ -108,12 +108,13 @@ const invokeAddress = (
       const transaction = createTransaction({
         amount: parsedAmount,
         destination: smartAddress,
-        kind: INVOCATION,
+        kind: TRANSACTION,
         source: keyStore.publicKeyHash,
         operation_group_hash: clearedOperationId,
         fee,
         gas_limit: gas,
-        storage_limit: storage
+        storage_limit: storage,
+        parameters
       });
 
       if (selectedParentHash === selectedAccountHash) {
