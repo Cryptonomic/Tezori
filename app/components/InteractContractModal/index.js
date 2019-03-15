@@ -24,11 +24,11 @@ import TezosAddress from '../TezosAddress';
 import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
 import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
 
-import invokeAddress from '../../reduxContent/invokeAddress/thunks';
 import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 import fetchAverageFees from '../../reduxContent/generalThunk';
+import invokeAddress from '../../reduxContent/invokeAddress/thunks';
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
 
 import { openLinkToBlockExplorer } from '../../utils/general';

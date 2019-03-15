@@ -8,7 +8,8 @@ import {
   ConseilSortDirection,
   TezosConseilClient,
   TezosNodeReader,
-  TezosWalletUtil
+  TezosWalletUtil,
+  StoreType
 } from 'conseiljs';
 
 import { findAccount, createSelectedAccount } from './account';
@@ -16,12 +17,12 @@ import { findIdentity } from './identity';
 import { createTransaction } from './transaction';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
-import { MNEMONIC, LEDGER } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
-const util = require('util')
+const util = require('util');
+const { MNEMONIC, LEDGER } = StoreType;
 
 export async function getNodesStatus(nodes, network) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
@@ -166,33 +167,13 @@ export function generateNewMnemonic() {
   return TezosWalletUtil.generateMnemonic();
 }
 
-const getFeeCount = (counts) => {
-  const lowCount = Math.round(counts * 0.3);
-  const mediumCount = Math.round(counts * 0.4);
-  const highCount = counts - lowCount - mediumCount;
-  return [lowCount, mediumCount, highCount];
-}
-
 export async function fetchAverageFees(settings, operationKind) {
   const { url, apiKey } = getSelectedNode(settings, CONSEIL);
   const { network } = settings;
 
-  let operationFeesQuery = ConseilQueryBuilder.blankQuery();
-  operationFeesQuery = ConseilQueryBuilder.addFields(operationFeesQuery, 'fee');
-  operationFeesQuery = ConseilQueryBuilder.addPredicate(operationFeesQuery, 'kind', ConseilOperator.EQ, [operationKind], false);
-  operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'block_level', ConseilSortDirection.DESC);
-  operationFeesQuery = ConseilQueryBuilder.addOrdering(operationFeesQuery, 'fee', ConseilSortDirection.ASC);
-  operationFeesQuery = ConseilQueryBuilder.setLimit(operationFeesQuery, 1000);
+  const fees = await TezosConseilClient.getFeeStatistics({url, apiKey}, network, operationKind);
 
-  const fees = await TezosConseilClient.getOperations({url: url, apiKey: apiKey}, network, operationFeesQuery);
-  const sortedfees = fees.map(f => parseInt(f['fee'])).sort((a, b) => a - b);
-  const feeCounts = getFeeCount(sortedfees.length);
-
-  const lowAverageFee = Math.round(sortedfees.slice(0, feeCounts[0]).reduce((s, c) => s + c) / feeCounts[0]);
-  const mediumAverageFee = Math.round(sortedfees.slice(feeCounts[0], feeCounts[0] + feeCounts[1]).reduce((s, c) => s + c) / feeCounts[1]);
-  const highAverageFee = Math.round(sortedfees.slice(feeCounts[0] + feeCounts[1]).reduce((s, c) => s + c) / feeCounts[2]);
-
-  return {low: lowAverageFee, medium: mediumAverageFee, high: highAverageFee};
+  return {low: fees[0]['low'], medium: fees[0]['medium'], high: fees[0]['high']};
 }
 
 export function isReady(addressStatus, storeType, tab) {

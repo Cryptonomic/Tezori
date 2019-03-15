@@ -3,6 +3,7 @@ import React from 'react';
 import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { lighten } from 'polished';
+import { StoreType } from 'conseiljs';
 import { ms } from '../../styles/helpers';
 import { H4 } from '../Heading/';
 import TezosAmount from '../TezosAmount/';
@@ -13,8 +14,9 @@ import Button from '../Button/';
 import Update from '../Update/';
 import ManagerAddressTooltip from '../Tooltips/ManagerAddressTooltip/';
 import { findAccountIndex } from '../../utils/account';
-import { MNEMONIC } from '../../constants/StoreTypes';
 import { wrapComponent } from '../../utils/i18n';
+
+const { MNEMONIC } = StoreType;
 
 type Props = {
   storeType?: string,

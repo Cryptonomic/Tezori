@@ -4,7 +4,8 @@ import {
   TezosFileWallet,
   TezosWalletUtil,
   TezosConseilClient,
-  TezosNodeWriter
+  TezosNodeWriter,
+  StoreType
 } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
@@ -15,7 +16,6 @@ import {
 } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
-import * as storeTypes from '../../constants/StoreTypes';
 import { createTransaction } from '../../utils/transaction';
 
 import {
@@ -359,7 +359,7 @@ export function importAddress(
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
-          identity.storeType = storeTypes.MNEMONIC;
+          identity.storeType = StoreType.MNEMONIC;
           break;
         case FUNDRAISER: {
           identity = await unlockFundraiserIdentity(
@@ -368,7 +368,7 @@ export function importAddress(
             passPhrase.trim(),
             pkh.trim()
           );
-          identity.storeType = storeTypes.FUNDRAISER;
+          identity.storeType = StoreType.FUNDRAISER;
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
@@ -383,7 +383,6 @@ export function importAddress(
               identity,
               activationCode
             ).catch(err => {
-              console.error('sendIdentityActivationOperation', err);
               const error = err;
               error.name = err.message;
               throw error;
@@ -406,8 +405,8 @@ export function importAddress(
         case RESTORE: {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           const storeTypesMap = {
-            0: storeTypes.MNEMONIC,
-            1: storeTypes.FUNDRAISER
+            0: StoreType.MNEMONIC,
+            1: StoreType.FUNDRAISER
           };
           identity.storeType = storeTypesMap[identity.storeType];
           const conseilNode = getSelectedNode(settings, CONSEIL);
@@ -533,7 +532,6 @@ export function connectLedger() {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { derivation } = await getCurrentPath(settings);
-    console.log('derivation------', derivation);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));

@@ -156,7 +156,6 @@ export function delegate(
         dispatch(updateIdentity(identity));
       }
 
-      console.log('delegateIdentity', delegateIdentity);
       if (delegateIdentity) {
         delegateIdentity.transactions.push(transaction);
         dispatch(updateIdentity(delegateIdentity));
