@@ -26,7 +26,6 @@ import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
 
 import invokeAddress from '../../reduxContent/invokeAddress/thunks';
 import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
-import { sendTez } from '../../reduxContent/sendTezos/thunks';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 import fetchAverageFees from '../../reduxContent/generalThunk';
@@ -221,7 +220,6 @@ type Props = {
   selectedParentHash: string,
   invokeAddress: () => {},
   createNewAccount: () => {},
-  sendTez: () => {},
   fetchAverageFees: () => {},
   addresses: List,
   open: boolean,
@@ -346,7 +344,6 @@ class InteractContractModal extends Component<Props> {
     const {
       invokeAddress,
       createNewAccount,
-      sendTez,
       selectedParentHash,
       setIsLoading,
       isLedger,
@@ -379,34 +376,21 @@ class InteractContractModal extends Component<Props> {
 
     let isOperationCompleted = false;
     if (activeTab === 'invoke') {
-      if (parameters) {
-        isOperationCompleted = await invokeAddress(
-          smartAddress,
-          fee,
-          amount,
-          storage,
-          gas,
-          JSON.parse(parameters),
-          passPhrase,
-          selectedInvokeAddress,
-          selectedParentHash
-        ).catch(err => {
-          console.error(err);
-          return false;
-        });
-      } else {
-        isOperationCompleted = await sendTez(
-          passPhrase,
-          smartAddress,
-          amount,
-          fee,
-          selectedInvokeAddress,
-          selectedParentHash
-        ).catch(err => {
-          console.error(err);
-          return false;
-        });
-      }
+      const realParams = parameters ? JSON.parse(parameters) : null;
+      isOperationCompleted = await invokeAddress(
+        smartAddress,
+        fee,
+        amount,
+        storage,
+        gas,
+        realParams,
+        passPhrase,
+        selectedInvokeAddress,
+        selectedParentHash
+      ).catch(err => {
+        console.error(err);
+        return false;
+      });
     } else {
       const { pkh } = addresses[0];
       const initStorage = parameters1 ? JSON.parse(parameters1) : {};
@@ -726,8 +710,7 @@ function mapDispatchToProps(dispatch) {
       setIsLoading,
       fetchAverageFees,
       invokeAddress,
-      createNewAccount,
-      sendTez
+      createNewAccount
     },
     dispatch
   );
