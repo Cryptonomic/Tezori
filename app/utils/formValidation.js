@@ -33,7 +33,12 @@ export default function hasError(value, validateType, name) {
       }
       break;
     case 'posNum':
-      if ( value < 1 ) {
+      if ( value < 0 ) {
+        return "components.messageBar.messages.amount_small";
+      }
+      break;
+    case 'strictlyPosNum':
+      if ( value <= 0 ) {
         return "components.messageBar.messages.amount_small";
       }
       break;
