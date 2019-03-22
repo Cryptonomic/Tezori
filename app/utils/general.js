@@ -22,7 +22,7 @@ import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
 const util = require('util');
-const { MNEMONIC, LEDGER } = StoreType;
+const { Mnemonic, Hardware } = StoreType;
 
 export async function getNodesStatus(nodes, network) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
@@ -179,11 +179,11 @@ export async function fetchAverageFees(settings, operationKind) {
 export function isReady(addressStatus, storeType, tab) {
   return addressStatus === status.READY
     ||
-    (storeType === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
+    (storeType === Mnemonic && addressStatus === status.CREATED && tab !== SEND)
     ||
-    (storeType === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
+    (storeType === Mnemonic && addressStatus !== status.CREATED && tab === TRANSACTIONS)
     ||
-    (storeType === LEDGER && addressStatus === status.CREATED && tab !== SEND)
+    (storeType === Hardware && addressStatus === status.CREATED && tab !== SEND)
     ;
 }
 

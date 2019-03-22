@@ -13,7 +13,7 @@ import { formatAmount } from '../../utils/currancy';
 import { wrapComponent } from '../../utils/i18n';
 import Info from './Info';
 
-const { MNEMONIC, LEDGER } = StoreType;
+const { Mnemonic, Hardware } = StoreType;
 
 const Container = styled.section`
   display: flex;
@@ -80,7 +80,7 @@ function AccountStatus(props: Props) {
   );
   switch (status) {
     case statuses.CREATED:
-      if (storeType === MNEMONIC || storeType === LEDGER) {
+      if (storeType === Mnemonic || storeType === Hardware) {
         icon = (
           <Image
             alt={t('components.accountStatus.creating_ccount')}
@@ -127,7 +127,7 @@ function AccountStatus(props: Props) {
         );
       }
 
-      if (storeType === MNEMONIC) {
+      if (storeType === Mnemonic) {
         const transaction = address.get('transactions').toJS();
         const { amount } = transaction[0];
         const formattedAmount = formatAmount(amount, 2);
