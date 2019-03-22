@@ -56,8 +56,6 @@ export function originateContract(
     if (code.length === 0) {
       isSmartContract = false;
     }
-    console.log('DEBUUUUG', code);
-    console.log(isSmartContract);
     let validations = [];
 
     if (isLedger) {
