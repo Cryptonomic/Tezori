@@ -26,7 +26,7 @@ import { wrapComponent } from '../../utils/i18n';
 import { hideDelegateTooltip } from '../../reduxContent/settings/thunks';
 import { getDelegateTooltip } from '../../reduxContent/settings/selectors';
 
-const { MNEMONIC } = StoreType;
+const { Mnemonic } = StoreType;
 
 const Container = styled.div`
   overflow: hidden;
@@ -214,7 +214,7 @@ class AddressBlock extends Component<Props, State> {
               index: accountIndex
             })}
           </AccountTitle>
-          {ready || storeType === MNEMONIC ? (
+          {ready || storeType === Mnemonic ? (
             <TezosAmount
               color="primary"
               size={ms(0)}

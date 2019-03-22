@@ -359,7 +359,7 @@ export function importAddress(
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
-          identity.storeType = StoreType.MNEMONIC;
+          identity.storeType = StoreType.Mnemonic;
           break;
         case FUNDRAISER: {
           identity = await unlockFundraiserIdentity(
@@ -368,7 +368,7 @@ export function importAddress(
             passPhrase.trim(),
             pkh.trim()
           );
-          identity.storeType = StoreType.FUNDRAISER;
+          identity.storeType = StoreType.Fundraiser;
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
@@ -405,8 +405,8 @@ export function importAddress(
         case RESTORE: {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           const storeTypesMap = {
-            0: StoreType.MNEMONIC,
-            1: StoreType.FUNDRAISER
+            0: StoreType.Mnemonic,
+            1: StoreType.Fundraiser
           };
           identity.storeType = storeTypesMap[identity.storeType];
           const conseilNode = getSelectedNode(settings, CONSEIL);

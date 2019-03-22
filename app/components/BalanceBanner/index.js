@@ -16,10 +16,10 @@ import ManagerAddressTooltip from '../Tooltips/ManagerAddressTooltip/';
 import { findAccountIndex } from '../../utils/account';
 import { wrapComponent } from '../../utils/i18n';
 
-const { MNEMONIC } = StoreType;
+const { Mnemonic } = StoreType;
 
 type Props = {
-  storeType?: string,
+  storeType?: string | number,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
@@ -175,7 +175,7 @@ function BalanceBanner(props: Props) {
             size={ms(1.7)}
           />
 
-          {isReady || storeType === MNEMONIC ? (
+          {isReady || storeType === Mnemonic ? (
             <Amount
               color="white"
               size={ms(4.5)}

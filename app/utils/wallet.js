@@ -5,7 +5,7 @@ import { omit, pick } from 'lodash';
 import { TezosFileWallet, TezosLedgerWallet, StoreType } from 'conseiljs';
 import { keys } from '@material-ui/core/styles/createBreakpoints';
 const { saveWallet, loadWallet } = TezosFileWallet;
-const { LEDGER } = StoreType;
+const { Hardware } = StoreType;
 
 
 const fileName = 'walletState';
@@ -111,7 +111,7 @@ export async function loadWalletFromLedger(derivationPath) {
     console.error('TezosLedgerWallet.unlockAddress', err);
     throw errorObj;
   });
-  identity.storeType = LEDGER;
+  identity.storeType = Hardware;
   let ledgerWallet = {"identities": []};
   ledgerWallet.identities.push(identity);
 

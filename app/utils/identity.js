@@ -14,7 +14,7 @@ import {
 } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
 
-const { FUNDRAISER } = StoreType;
+const { Fundraiser } = StoreType;
 
 export function createIdentity(identity) {
   return {
@@ -25,7 +25,7 @@ export function createIdentity(identity) {
     privateKey: '',
     operations: {},
     order: null,
-    storeType: FUNDRAISER,
+    storeType: Fundraiser,
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     transactions: [],
