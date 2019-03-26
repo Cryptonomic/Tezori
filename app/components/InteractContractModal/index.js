@@ -24,7 +24,7 @@ import TezosAddress from '../TezosAddress';
 import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
 import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
 
-import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
+import { originateContract } from '../../reduxContent/originate/thunks';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 import fetchAverageFees from '../../reduxContent/generalThunk';
@@ -219,7 +219,7 @@ type Props = {
   isLoading: boolean,
   selectedParentHash: string,
   invokeAddress: () => {},
-  createNewAccount: () => {},
+  originateContract: () => {},
   fetchAverageFees: () => {},
   addresses: List,
   open: boolean,
@@ -343,7 +343,7 @@ class InteractContractModal extends Component<Props> {
   onOperation = async () => {
     const {
       invokeAddress,
-      createNewAccount,
+      originateContract,
       selectedParentHash,
       setIsLoading,
       isLedger,
@@ -395,9 +395,9 @@ class InteractContractModal extends Component<Props> {
       const { pkh } = addresses[0];
       const initStorage = parameters1 ? JSON.parse(parameters1) : {};
       const initCode = michelsonCode ? JSON.parse(michelsonCode) : [];
-      const bakerAddress = 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5';
-      isOperationCompleted = await createNewAccount(
-        bakerAddress,
+
+      isOperationCompleted = await originateContract(
+        undefined,
         amount1,
         fee1,
         passPhrase,
@@ -710,7 +710,7 @@ function mapDispatchToProps(dispatch) {
       setIsLoading,
       fetchAverageFees,
       invokeAddress,
-      createNewAccount
+      originateContract
     },
     dispatch
   );
