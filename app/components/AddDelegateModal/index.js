@@ -324,17 +324,6 @@ class AddDelegateModal extends Component<Props> {
     if (isLedger) {
       this.openLedgerConfirmation();
     }
-    // if (
-    //   await originateContract(
-    //     delegate,
-    //     amount,
-    //     Math.floor(fee),
-    //     passPhrase,
-    //     selectedParentHash
-    //   )
-    // ) {
-    //   this.onCloseClick();
-    // }
 
     const isCreated = await originateContract(
       delegate,
