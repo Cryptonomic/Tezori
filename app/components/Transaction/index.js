@@ -86,8 +86,8 @@ const timeFormatter = timestamp => {
 };
 
 const getIsFee = fee => {
-  const realFee = Number.parseInt(fee, 10);
-  return !!realFee;
+  const userFee = Number.parseInt(fee, 10);
+  return !!userFee;
 };
 
 const getPosition = (source, myaddress) => source === myaddress;

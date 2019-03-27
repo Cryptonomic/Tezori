@@ -48,22 +48,22 @@ export const invokeAddress = (
     );
     const { url } = getSelectedNode(settings, TEZOS);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
-    const realKeyStore = keyStore;
-    let realDerivation = '';
+    const userKeyStore = keyStore;
+    let userDerivation = '';
 
     if (isLedger) {
       const { derivation } = getCurrentPath(settings);
-      realDerivation = derivation;
-      realKeyStore.storeType = 2;
+      userDerivation = derivation;
+      userKeyStore.storeType = 2;
     }
 
     const res = await sendContractInvocationOperation(
       url,
-      realKeyStore,
+      userKeyStore,
       smartAddress,
       parsedAmount,
       fee,
-      realDerivation,
+      userDerivation,
       storage,
       gas,
       parameters

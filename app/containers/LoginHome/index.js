@@ -355,7 +355,7 @@ class LoginHome extends Component<Props> {
   render() {
     const { t, isLoading, isLedgerConnecting, activePath } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
-    const realLedgerImg = isLedgerConnecting
+    const ledgerImg = isLedgerConnecting
       ? ledgerConnectedImg
       : ledgerUnconnectedImg;
     return (
@@ -404,7 +404,7 @@ class LoginHome extends Component<Props> {
               </Tip>
             </CardContainer>
             <CardContainer>
-              <CardImg src={realLedgerImg} />
+              <CardImg src={ledgerImg} />
 
               <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
               <CreateWalletButton

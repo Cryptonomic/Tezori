@@ -127,14 +127,14 @@ class InvokeContract extends Component<Props> {
       this.onLedgerConfirmation(true);
     }
 
-    const realParams = parameters ? JSON.parse(parameters) : null;
+    const userParams = parameters ? JSON.parse(parameters) : null;
     const isOperationCompleted = await invokeAddress(
       smartAddress,
       fee,
       amount,
       storage,
       gas,
-      realParams,
+      userParams,
       passPhrase,
       selectedInvokeAddress,
       selectedParentHash
