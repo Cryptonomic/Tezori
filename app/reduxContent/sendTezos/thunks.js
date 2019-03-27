@@ -38,7 +38,7 @@ export function validateAmount(amount, toAddress) {
     const validations = [
       { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
-      { value: amountInUtez, type: 'posNum', name: 'Amount' },
+      { value: amountInUtez, type: 'strictlyPosNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
     ];
 
@@ -89,22 +89,22 @@ export function sendTez(
     console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
 
-    const realKeyStore = keyStore;
-    let realDerivation = '';
+    const userKeyStore = keyStore;
+    let userDerivation = '';
 
     if (isLedger) {
       const { derivation } = getCurrentPath(settings);
-      realDerivation = derivation;
-      realKeyStore.storeType = 2;
+      userDerivation = derivation;
+      userKeyStore.storeType = 2;
     }
 
     const res = await sendTransactionOperation(
       url,
-      realKeyStore,
+      userKeyStore,
       toAddress,
       parsedAmount,
       fee,
-      realDerivation
+      userDerivation
     ).catch(err => {
       const errorObj = { name: err.message, ...err };
       console.error(errorObj);

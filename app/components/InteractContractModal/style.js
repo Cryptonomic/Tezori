@@ -2,9 +2,6 @@ import styled from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 import Modal from '@material-ui/core/Modal';
 import MenuItem from '@material-ui/core/MenuItem';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-// import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
 import Button from '../Button';
 
@@ -22,6 +19,7 @@ export const ModalContainer = styled.div`
   position: relative;
   min-width: 671px;
   max-width: 750px;
+  width: 672px;
 `;
 
 export const CloseIconWrapper = styled(CloseIcon)`
@@ -47,26 +45,9 @@ export const ModalTitle = styled.div`
   background-color: ${({ theme: { colors } }) => colors.accent};
 `;
 
-// export const Tab = styled(Button)`
-//   background: ${({ isActive, theme: { colors } }) =>
-//     isActive ? colors.white : colors.accent};
-//   color: ${({ isActive, theme: { colors } }) =>
-//     isActive ? colors.primary : colors.white};
-//   text-align: center;
-//   font-weight: 500;
-//   padding: ${ms(-1)} ${ms(1)};
-//   border-radius: 0;
-//   flex: 1;
-// `;
-
-// export const TabList = styled.div`
-//   background-color: ${({ theme: { colors } }) => colors.accent};
-//   display: flex;
-// `;
-
 export const TabContainer = styled.div`
   width: 100%;
-  padding: 50px 40px 30px 30px;
+  padding: 30px 40px;
 `;
 
 export const InputAddressContainer = styled.div`
@@ -159,6 +140,7 @@ export const PasswordButtonContainer = styled.div`
   padding: 0 40px 15px 40px;
   background-color: ${({ theme: { colors } }) => colors.gray1};
   height: 100px;
+  margin-top: auto;
 `;
 
 export const InvokeButton = styled(Button)`
@@ -183,8 +165,8 @@ export const DeployAddressContent = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 `;
 
-export const StyledTabs = styled(Tabs)``;
-
-export const StyledTab = styled(Tab)``;
-
-export const MainContainer = styled.div``;
+export const MainContainer = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;

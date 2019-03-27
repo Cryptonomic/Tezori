@@ -1,7 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import TextField from '../TextField';
 import TezosNumericInput from '../TezosNumericInput/';
 import { ms } from '../../styles/helpers';
@@ -11,11 +9,6 @@ import TezosAmount from '../TezosAmount';
 import TezosAddress from '../TezosAddress';
 import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
 
-import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
-import { setIsLoading } from '../../reduxContent/wallet/actions';
-import { getIsLedger } from '../../reduxContent/wallet/selectors';
-import fetchAverageFees from '../../reduxContent/generalThunk';
-import invokeAddress from '../../reduxContent/invokeAddress/thunks';
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
 
 import { openLinkToBlockExplorer } from '../../utils/general';
@@ -45,7 +38,7 @@ type Props = {
   isLedger: boolean,
   averageFees: object,
   addresses: List,
-  createNewAccount: () => {},
+  originateContract: () => {},
   onClose: () => {},
   t: () => {}
 };
@@ -97,7 +90,7 @@ class DeployContract extends Component<Props> {
 
   onDeployOperation = async () => {
     const {
-      createNewAccount,
+      originateContract,
       setIsLoading,
       isLedger,
       addresses,
@@ -125,7 +118,7 @@ class DeployContract extends Component<Props> {
     const initCode = michelsonCode ? JSON.parse(michelsonCode) : [];
     const bakerAddress = 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5';
 
-    const isOperationCompleted = await createNewAccount(
+    const isOperationCompleted = await originateContract(
       bakerAddress,
       amount,
       fee,
@@ -275,26 +268,4 @@ class DeployContract extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    isLoading: state.wallet.get('isLoading'),
-    isLedger: getIsLedger(state)
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      setIsLoading,
-      fetchAverageFees,
-      invokeAddress,
-      createNewAccount
-    },
-    dispatch
-  );
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeployContract);
+export default DeployContract;

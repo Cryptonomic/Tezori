@@ -16,7 +16,7 @@ import { findIdentity } from '../../utils/identity';
 
 const { sendContractInvocationOperation } = TezosNodeWriter;
 
-const invokeAddress = (
+export const invokeAddress = (
   smartAddress,
   fee,
   amount,

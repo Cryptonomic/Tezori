@@ -2,25 +2,50 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import Loader from '../Loader/';
 import DeployContract from './DeployContract';
 import InvokeContract from './InvokeContract';
 
-import { createNewAccount } from '../../reduxContent/createDelegate/thunks';
+import { invokeAddress } from '../../reduxContent/invokeAddress/thunks';
+import { originateContract } from '../../reduxContent/originate/thunks';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 import fetchAverageFees from '../../reduxContent/generalThunk';
-import invokeAddress from '../../reduxContent/invokeAddress/thunks';
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
 import {
   ModalWrapper,
   ModalContainer,
   ModalTitle,
-  CloseIconWrapper,
-  StyledTabs,
-  StyledTab
+  CloseIconWrapper
 } from './style';
+import themes from '../../styles/theme';
+
+const styles = {
+  tabsRoot: {},
+  tabsIndicator: {
+    height: 0
+  },
+  tabRoot: {
+    textTransform: 'initial',
+    opacity: 1,
+    height: '60px',
+    backgroundColor: themes.colors.accent,
+    color: themes.colors.white,
+    '&$tabSelected': {
+      color: themes.colors.primary,
+      backgroundColor: themes.colors.white
+    }
+  },
+  tabLabel: {
+    fontWeight: 500,
+    fontSize: '16px'
+  },
+  tabSelected: {}
+};
 
 type Props = {
   isLedger: boolean,
@@ -28,8 +53,9 @@ type Props = {
   selectedParentHash: string,
   addresses: List,
   open: boolean,
+  classes: object,
   invokeAddress: () => {},
-  createNewAccount: () => {},
+  originateContract: () => {},
   fetchAverageFees: () => {},
   setIsLoading: () => {},
   onCloseClick: () => {},
@@ -69,6 +95,7 @@ class InteractContractModal extends Component<Props> {
   render() {
     const { activeTab, averageFees } = this.state;
     const {
+      classes,
       isLoading,
       isLedger,
       open,
@@ -76,30 +103,44 @@ class InteractContractModal extends Component<Props> {
       selectedParentHash,
       onCloseClick,
       invokeAddress,
-      createNewAccount,
+      originateContract,
       setIsLoading,
       t
     } = this.props;
+
     return (
       <ModalWrapper open={open}>
-        {!!open && (
+        {open ? (
           <ModalContainer>
             <CloseIconWrapper onClick={onCloseClick} />
             <ModalTitle>{t('components.interactModal.title')}</ModalTitle>
-            <StyledTabs
+            <Tabs
+              classes={{
+                root: classes.tabsRoot,
+                indicator: classes.tabsIndicator
+              }}
               value={activeTab}
               onChange={this.onSetTab}
-              indicatorColor="primary"
-              textColor="primary"
               variant="fullWidth"
+              fullWidth
             >
-              <StyledTab
+              <Tab
+                classes={{
+                  root: classes.tabRoot,
+                  selected: classes.tabSelected,
+                  label: classes.tabLabel
+                }}
                 label={t('components.interactModal.invoke_contract')}
               />
-              <StyledTab
+              <Tab
+                classes={{
+                  root: classes.tabRoot,
+                  selected: classes.tabSelected,
+                  label: classes.tabLabel
+                }}
                 label={t('components.interactModal.deploy_contract')}
               />
-            </StyledTabs>
+            </Tabs>
 
             <SwipeableViews index={activeTab}>
               <InvokeContract
@@ -117,15 +158,17 @@ class InteractContractModal extends Component<Props> {
                 isLedger={isLedger}
                 isLoading={isLoading}
                 addresses={addresses}
+                averageFees={averageFees}
                 onClose={onCloseClick}
                 setIsLoading={setIsLoading}
-                createNewAccount={createNewAccount}
+                originateContract={originateContract}
                 t={t}
               />
             </SwipeableViews>
-
             {isLoading && <Loader />}
           </ModalContainer>
+        ) : (
+          <ModalContainer />
         )}
       </ModalWrapper>
     );
@@ -145,7 +188,7 @@ function mapDispatchToProps(dispatch) {
       setIsLoading,
       fetchAverageFees,
       invokeAddress,
-      createNewAccount
+      originateContract
     },
     dispatch
   );
@@ -154,4 +197,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InteractContractModal);
+)(withStyles(styles)(InteractContractModal));

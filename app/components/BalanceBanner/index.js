@@ -19,7 +19,7 @@ import { wrapComponent } from '../../utils/i18n';
 const { MNEMONIC } = StoreType;
 
 type Props = {
-  storeType?: string,
+  storeType?: string | number,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
