@@ -49,7 +49,7 @@ type Props = {
 
 const defaultState = {
   isAddressIssue: false,
-  smartAddress: '',
+  contractAddress: '',
   selectedInvokeAddress: '',
   gas: 0,
   storage: 0,
@@ -111,7 +111,7 @@ class InvokeContract extends Component<Props> {
     } = this.props;
 
     const {
-      smartAddress,
+      contractAddress,
       amount,
       fee,
       storage,
@@ -129,7 +129,7 @@ class InvokeContract extends Component<Props> {
 
     const userParams = parameters ? JSON.parse(parameters) : null;
     const isOperationCompleted = await invokeAddress(
-      smartAddress,
+      contractAddress,
       fee,
       amount,
       storage,
@@ -156,7 +156,7 @@ class InvokeContract extends Component<Props> {
       isAddressIssue,
       selectedInvokeAddress,
       fee,
-      smartAddress,
+      contractAddress,
       passPhrase,
       isShowedPwd,
       isOpenLedgerConfirm,
@@ -167,7 +167,7 @@ class InvokeContract extends Component<Props> {
       isAddressIssue ||
       isLoading ||
       !amount ||
-      !smartAddress ||
+      !contractAddress ||
       (!passPhrase && !isLedger);
 
     return (
@@ -179,19 +179,19 @@ class InvokeContract extends Component<Props> {
             <InputAddress
               addressType="send"
               labelText={t('components.interactModal.smart_address')}
-              changeDelegate={val => this.setState({ smartAddress: val })}
+              changeDelegate={val => this.setState({ contractAddress: val })}
               onIssue={status => this.setState({ isAddressIssue: status })}
             />
-            {!isAddressIssue && smartAddress && (
+            {!isAddressIssue && contractAddress && (
               <React.Fragment>
-                <ViewScan onClick={() => this.openLink(smartAddress)}>
+                <ViewScan onClick={() => this.openLink(contractAddress)}>
                   {t('components.interactModal.view_scan')}
                 </ViewScan>
                 <LinkIcon
                   iconName="new-window"
                   size={ms(-1)}
                   color="primary"
-                  onClick={() => this.openLink(smartAddress)}
+                  onClick={() => this.openLink(contractAddress)}
                 />
               </React.Fragment>
             )}
@@ -294,7 +294,7 @@ class InvokeContract extends Component<Props> {
             amount={amount}
             fee={fee}
             parameters={parameters}
-            address={smartAddress}
+            address={contractAddress}
             source={selectedInvokeAddress}
             open={isOpenLedgerConfirm}
             onCloseClick={() => this.closeLedgerConfirmation(false)}

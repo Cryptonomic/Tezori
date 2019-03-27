@@ -17,7 +17,7 @@ import { findIdentity } from '../../utils/identity';
 const { sendContractInvocationOperation } = TezosNodeWriter;
 
 export const invokeAddress = (
-  smartAddress,
+  contractAddress,
   fee,
   amount,
   storage,
@@ -60,7 +60,7 @@ export const invokeAddress = (
     const res = await sendContractInvocationOperation(
       url,
       userKeyStore,
-      smartAddress,
+      contractAddress,
       parsedAmount,
       fee,
       userDerivation,
@@ -107,7 +107,7 @@ export const invokeAddress = (
       const identity = findIdentity(identities, selectedParentHash);
       const transaction = createTransaction({
         amount: parsedAmount,
-        destination: smartAddress,
+        destination: contractAddress,
         kind: TRANSACTION,
         source: keyStore.publicKeyHash,
         operation_group_hash: clearedOperationId,
