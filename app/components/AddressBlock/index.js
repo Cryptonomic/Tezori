@@ -295,6 +295,59 @@ class AddressBlock extends Component<Props, State> {
             </Tooltip>
           )}
         </AddDelegateLabel>
+        <InteractContractLabel>
+          <DelegateTitle>
+            {t('components.interactModal.interact_contract')}
+          </DelegateTitle>
+          {isManagerReady && (
+            <AddCircle
+              style={{
+                fill: '#7B91C0',
+                height: ms(1),
+                width: ms(1),
+                cursor: 'pointer'
+              }}
+              onClick={this.openInteractModal}
+            />
+          )}
+          {!isManagerReady && (
+            <Tooltip
+              position="bottom"
+              offset="-24%"
+              content={
+                <NoFundTooltip
+                  content={t('components.addressBlock.not_ready_tooltip')}
+                />
+              }
+            >
+              <Button buttonTheme="plain">
+                <AddCircle
+                  style={{
+                    fill: '#7B91C0',
+                    height: ms(1),
+                    width: ms(1),
+                    opacity: 0.5,
+                    cursor: 'default'
+                  }}
+                />
+              </Button>
+            </Tooltip>
+          )}
+        </InteractContractLabel>
+        <InteractContractModal
+          selectedParentHash={publicKeyHash}
+          open={isInteractModalOpen}
+          onCloseClick={this.closeInteractModal}
+          addresses={addresses}
+          t={t}
+        />
+        <AddDelegateModal
+          selectedParentHash={publicKeyHash}
+          open={isDelegateModalOpen}
+          onCloseClick={this.closeDelegateModal}
+          managerBalance={balance}
+          t={t}
+        />
         {smartAddresses && smartAddresses.toArray().length
           ? smartAddresses
               .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
@@ -354,59 +407,6 @@ class AddressBlock extends Component<Props, State> {
                 </NoSmartAddressesButton>
               </NoSmartAddressesContainer>
             )}
-        <InteractContractLabel>
-          <DelegateTitle>
-            {t('components.interactModal.interact_contract')}
-          </DelegateTitle>
-          {isManagerReady && (
-            <AddCircle
-              style={{
-                fill: '#7B91C0',
-                height: ms(1),
-                width: ms(1),
-                cursor: 'pointer'
-              }}
-              onClick={this.openInteractModal}
-            />
-          )}
-          {!isManagerReady && (
-            <Tooltip
-              position="bottom"
-              offset="-24%"
-              content={
-                <NoFundTooltip
-                  content={t('components.addressBlock.not_ready_tooltip')}
-                />
-              }
-            >
-              <Button buttonTheme="plain">
-                <AddCircle
-                  style={{
-                    fill: '#7B91C0',
-                    height: ms(1),
-                    width: ms(1),
-                    opacity: 0.5,
-                    cursor: 'default'
-                  }}
-                />
-              </Button>
-            </Tooltip>
-          )}
-        </InteractContractLabel>
-        <InteractContractModal
-          selectedParentHash={publicKeyHash}
-          open={isInteractModalOpen}
-          onCloseClick={this.closeInteractModal}
-          addresses={addresses}
-          t={t}
-        />
-        <AddDelegateModal
-          selectedParentHash={publicKeyHash}
-          open={isDelegateModalOpen}
-          onCloseClick={this.closeDelegateModal}
-          managerBalance={balance}
-          t={t}
-        />
       </Container>
     );
   }
