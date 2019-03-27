@@ -114,12 +114,11 @@ class DeployContract extends Component<Props> {
     }
 
     const { pkh } = addresses[0];
-    const initStorage = parameters ? JSON.parse(parameters) : {};
-    const initCode = michelsonCode ? JSON.parse(michelsonCode) : [];
-    const bakerAddress = 'tz3WXYtyDUNL91qfiCJtVUX746QpNv5i5ve5';
+    const initStorage = JSON.parse(parameters);
+    const initCode = JSON.parse(michelsonCode);
 
     const isOperationCompleted = await originateContract(
-      bakerAddress,
+      undefined,
       amount,
       fee,
       passPhrase,
@@ -146,12 +145,19 @@ class DeployContract extends Component<Props> {
       fee,
       passPhrase,
       isShowedPwd,
-      isOpenLedgerConfirm
+      isOpenLedgerConfirm,
+      parameters,
+      michelsonCode
     } = this.state;
 
     const { isLoading, isLedger, addresses, averageFees, t } = this.props;
 
-    const isDisabled = isLoading || !amount || (!passPhrase && !isLedger);
+    const isDisabled =
+      isLoading ||
+      !amount ||
+      (!passPhrase && !isLedger) ||
+      !parameters ||
+      !michelsonCode;
 
     return (
       <MainContainer
