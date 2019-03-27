@@ -16,7 +16,7 @@ import { findIdentity } from '../../utils/identity';
 
 const { sendContractInvocationOperation } = TezosNodeWriter;
 
-export const invokeAddress = (
+export function invokeAddress(
   contractAddress,
   fee,
   amount,
@@ -26,7 +26,7 @@ export const invokeAddress = (
   password,
   selectedAccountHash,
   selectedParentHash
-) => {
+) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const isLedger = state().wallet.get('isLedger');
@@ -133,6 +133,6 @@ export const invokeAddress = (
     }
     return false;
   };
-};
+}
 
 export default invokeAddress;
