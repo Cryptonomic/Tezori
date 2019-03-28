@@ -187,15 +187,4 @@ injectGlobal`
     height: 100vh;
     max-width: 1440px;
     margin: 0 auto;
-  }
-
-  :not(input):not(textarea),
-  :not(input):not(textarea)::after,
-  :not(input):not(textarea)::before {
-      -webkit-user-select: none;
-      -webkit-app-region: no-drag;
-      -webkit-user-drag: none;
-
-      user-select: none;
-      cursor: default;
   }`;

@@ -38,7 +38,7 @@ export function validateAmount(amount, toAddress) {
     const validations = [
       { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
-      { value: amountInUtez, type: 'posNum', name: 'Amount' },
+      { value: amountInUtez, type: 'strictlyPosNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
     ];
 
@@ -89,38 +89,28 @@ export function sendTez(
     console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
 
-    let res;
+    const userKeyStore = keyStore;
+    let userDerivation = '';
+
     if (isLedger) {
-      const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-      newKeyStore.storeType = 2;
-      res = await sendTransactionOperation(
-        url,
-        newKeyStore,
-        toAddress,
-        parsedAmount,
-        fee,
-        derivation
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
-    } else {
-      res = await sendTransactionOperation(
-        url,
-        keyStore,
-        toAddress,
-        parsedAmount,
-        fee
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
+      userDerivation = derivation;
+      userKeyStore.storeType = 2;
     }
+
+    const res = await sendTransactionOperation(
+      url,
+      userKeyStore,
+      toAddress,
+      parsedAmount,
+      fee,
+      userDerivation
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(errorObj);
+      dispatch(addMessage(errorObj.name, true));
+      return false;
+    });
 
     if (res) {
       const operationResult =

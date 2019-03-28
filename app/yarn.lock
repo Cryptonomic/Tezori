@@ -211,8 +211,8 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
 
 aws-sdk@^2.417.0:
-  version "2.417.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.417.0.tgz#44cda55cbbfde83dab87fbd37e1190fc925c5dc7"
+  version "2.420.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.420.0.tgz#b341c805b6206014fb5caebf2c5d4697d3de373d"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -1144,26 +1144,7 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
 
 "conseiljs@https://github.com/Cryptonomic/ConseilJS":
   version "0.2.1"
-  resolved "https://github.com/Cryptonomic/ConseilJS#b5b157fbf231851344abb289fd2b40ebea7be93e"
-  dependencies:
-    "@ledgerhq/hw-transport" "4.24.0"
-    "@ledgerhq/hw-transport-node-hid" "4.24.0"
-    aws-sdk "^2.417.0"
-    babel-runtime "6.26.0"
-    base-n "git://github.com/yourcodesucks/base-n.git"
-    basil-tezos-ledger "0.0.1"
-    bip32 "^1.0.0"
-    bip39 "^2.5.0"
-    blakejs "^1.1.0"
-    bs58check "^2.1.2"
-    https "^1.0.0"
-    libsodium-wrappers-sumo "0.7.4"
-    node-fetch "^2.3.0"
-    zxcvbn "^4.4.2"
-
-"conseiljs@https://github.com/Cryptonomic/ConseilJS#a3063feb92caca31011ef7c651389f02c6a9559f":
-  version "0.2.1"
-  resolved "https://github.com/Cryptonomic/ConseilJS#a3063feb92caca31011ef7c651389f02c6a9559f"
+  resolved "https://github.com/Cryptonomic/ConseilJS#b76cef589e264814a5b1213b97dbd950f0085b70"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"

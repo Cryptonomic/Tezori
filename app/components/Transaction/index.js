@@ -86,8 +86,8 @@ const timeFormatter = timestamp => {
 };
 
 const getIsFee = fee => {
-  const realFee = Number.parseInt(fee, 10);
-  return !!realFee;
+  const userFee = Number.parseInt(fee, 10);
+  return !!userFee;
 };
 
 const getPosition = (source, myaddress) => source === myaddress;
@@ -156,6 +156,16 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && isSameLocation) {
+    if (transaction.parameters) {
+      return {
+        icon: 'send',
+        preposition: t('general.of'),
+        state: t('components.transaction.invoke_function'),
+        isFee: true,
+        color: isAmount ? 'error1' : 'gray8',
+        sign: ''
+      };
+    }
     return {
       icon: 'send',
       preposition: t('general.to'),

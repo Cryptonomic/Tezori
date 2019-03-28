@@ -100,6 +100,8 @@ export async function getSyncTransactions(
     return [];
   });
 
+  console.log('newTransactions-----', JSON.stringify(newTransactions));
+
   newTransactions = newTransactions.map(transaction =>
     createTransaction({
       ...transaction,

@@ -18,6 +18,7 @@ import AddressStatus from '../AddressStatus/';
 import { READY, PENDING } from '../../constants/StatusTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
+import InteractContractModal from '../InteractContractModal';
 import Tooltip from '../Tooltip';
 import NoFundTooltip from '../Tooltips/NoFundTooltip';
 import { sortArr } from '../../utils/array';
@@ -47,6 +48,8 @@ const AddDelegateLabel = styled(AddressLabel)`
   flex-direction: row;
   font-size: ${ms(0)};
 `;
+
+const InteractContractLabel = styled(AddDelegateLabel)``;
 
 const AddressesTitle = styled.div`
   display: flex;
@@ -138,11 +141,15 @@ type State = {
 class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
-    isDelegateModalOpen: false
+    isDelegateModalOpen: false,
+    isInteractModalOpen: false
   };
 
   openDelegateModal = () => this.setState({ isDelegateModalOpen: true });
   closeDelegateModal = () => this.setState({ isDelegateModalOpen: false });
+
+  openInteractModal = () => this.setState({ isInteractModalOpen: true });
+  closeInteractModal = () => this.setState({ isInteractModalOpen: false });
 
   goToAccount = (selectedAccountHash, selectedParentHash) => {
     const { history, syncAccountOrIdentity } = this.props;
@@ -172,7 +179,7 @@ class AddressBlock extends Component<Props, State> {
   };
 
   render() {
-    const { isDelegateModalOpen } = this.state;
+    const { isDelegateModalOpen, isInteractModalOpen } = this.state;
     const {
       accountBlock,
       selectedAccountHash,
@@ -181,13 +188,22 @@ class AddressBlock extends Component<Props, State> {
       t
     } = this.props;
 
+    const addresses = [];
+
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
+    let newAddress = { pkh: publicKeyHash, balance };
+    addresses.push(newAddress);
     let smartBalance = 0;
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const smartAddresses = accountBlock.get('accounts');
     if (smartAddresses && smartAddresses.toArray().length) {
       smartAddresses.forEach(address => {
+        newAddress = {
+          pkh: address.get('account_id'),
+          balance: address.get('balance')
+        };
+        addresses.push(newAddress);
         const addressStatus = address.get('status');
         if (addressStatus === READY || addressStatus === PENDING) {
           smartBalance += address.get('balance');
@@ -279,6 +295,59 @@ class AddressBlock extends Component<Props, State> {
             </Tooltip>
           )}
         </AddDelegateLabel>
+        <InteractContractLabel>
+          <DelegateTitle>
+            {t('components.interactModal.interact_contract')}
+          </DelegateTitle>
+          {isManagerReady && (
+            <AddCircle
+              style={{
+                fill: '#7B91C0',
+                height: ms(1),
+                width: ms(1),
+                cursor: 'pointer'
+              }}
+              onClick={this.openInteractModal}
+            />
+          )}
+          {!isManagerReady && (
+            <Tooltip
+              position="bottom"
+              offset="-24%"
+              content={
+                <NoFundTooltip
+                  content={t('components.addressBlock.not_ready_tooltip')}
+                />
+              }
+            >
+              <Button buttonTheme="plain">
+                <AddCircle
+                  style={{
+                    fill: '#7B91C0',
+                    height: ms(1),
+                    width: ms(1),
+                    opacity: 0.5,
+                    cursor: 'default'
+                  }}
+                />
+              </Button>
+            </Tooltip>
+          )}
+        </InteractContractLabel>
+        <InteractContractModal
+          selectedParentHash={publicKeyHash}
+          open={isInteractModalOpen}
+          onCloseClick={this.closeInteractModal}
+          addresses={addresses}
+          t={t}
+        />
+        <AddDelegateModal
+          selectedParentHash={publicKeyHash}
+          open={isDelegateModalOpen}
+          onCloseClick={this.closeDelegateModal}
+          managerBalance={balance}
+          t={t}
+        />
         {smartAddresses && smartAddresses.toArray().length
           ? smartAddresses
               .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
@@ -338,13 +407,6 @@ class AddressBlock extends Component<Props, State> {
                 </NoSmartAddressesButton>
               </NoSmartAddressesContainer>
             )}
-        <AddDelegateModal
-          selectedParentHash={publicKeyHash}
-          open={isDelegateModalOpen}
-          onCloseClick={this.closeDelegateModal}
-          managerBalance={balance}
-          t={t}
-        />
       </Container>
     );
   }

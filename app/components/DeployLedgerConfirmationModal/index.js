@@ -91,37 +91,23 @@ const ItemContent = styled.div`
 `;
 
 type Props = {
-  amount: ?string,
-  address?: string,
   source?: string,
-  manager?: string,
   open?: boolean,
   onCloseClick?: () => {},
   isLoading?: boolean,
   fee: number,
+  amount: string,
   t: () => {}
 };
 
-const AddDelegateLedgerModal = (props: Props) => {
-  const {
-    amount,
-    address,
-    source,
-    manager,
-    open,
-    isLoading,
-    onCloseClick,
-    fee,
-    t
-  } = props;
+const DeployLedgerConfirmationModal = (props: Props) => {
+  const { source, open, isLoading, onCloseClick, fee, amount, t } = props;
 
   const calcFee = formatAmount(fee);
 
   return (
     <Modal
-      title={t(
-        'components.delegationLedgerConfirmationModal.confirm_delegate_title'
-      )}
+      title={t('components.deployLedgerConfirmationModal.confirm_deploy_title')}
       open={open}
       onClose={onCloseClick}
       style={{ width: '671px' }}
@@ -130,16 +116,18 @@ const AddDelegateLedgerModal = (props: Props) => {
         <DescriptionContainer>
           <SendSvg src={sendImg} />
           <SendDes>
-            {t('components.delegationLedgerConfirmationModal.add_description')}
+            {t('components.deployLedgerConfirmationModal.deploy_description')}
           </SendDes>
         </DescriptionContainer>
 
         <ItemContainer>
-          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
-          <ItemContent>
-            {amount}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
+          <ItemTitle>{t('components.interactModal.deploy_from')}</ItemTitle>
+          <TezosAddress
+            address={source}
+            size="16px"
+            weight={300}
+            color="primary"
+          />
         </ItemContainer>
 
         <ItemContainer>
@@ -151,38 +139,11 @@ const AddDelegateLedgerModal = (props: Props) => {
         </ItemContainer>
 
         <ItemContainer>
-          <ItemTitle>{t('general.nouns.source')}</ItemTitle>
-          <TezosAddress
-            address={manager}
-            size="16px"
-            weight={300}
-            color="primary"
-          />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.manager')}</ItemTitle>
-          <TezosAddress
-            address={source}
-            size="16px"
-            weight={300}
-            color="primary"
-          />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.delegate')}</ItemTitle>
-          <TezosAddress
-            address={address}
-            size="16px"
-            weight={300}
-            color="primary"
-          />
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
-          <ItemContent>277</ItemContent>
+          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
+          <ItemContent>
+            {amount}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>
@@ -199,4 +160,4 @@ const AddDelegateLedgerModal = (props: Props) => {
   );
 };
 
-export default wrapComponent(AddDelegateLedgerModal);
+export default wrapComponent(DeployLedgerConfirmationModal);

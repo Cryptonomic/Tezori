@@ -11,7 +11,7 @@ const SelectContainer = styled(FormControl)`
 const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {    
-      color: ${({ theme: { colors } }) => colors.gray3 };
+      color: ${({ theme: { colors } }) => colors.gray3};
     }
     color: rgba(0, 0, 0, 0.38);
     font-size: 16px;
@@ -20,22 +20,27 @@ const LabelWrapper = styled(InputLabel)`
 
 const SelectWrapper = styled(SelectField)`
   &&& {
-    div[class*='select']:focus {      
-      background: ${({ theme: { colors } }) => colors.transparent };      
+    div[class*='select']:focus {
+      background: ${({ theme: { colors } }) => colors.transparent};
     }
+    div[class*='select'] {
+      display: flex;
+      align-items: center;
+    }
+
     &:before {
       border-bottom: solid 1px rgba(0, 0, 0, 0.12);
     }
     &:after {
-      border-bottom-color: ${({theme: { colors } }) => colors.accent };
+      border-bottom-color: ${({ theme: { colors } }) => colors.accent};
     }
     &:hover:before {
-      border-bottom: solid 2px ${({theme: { colors } }) => colors.accent } !important;
+      border-bottom: solid 2px ${({ theme: { colors } }) => colors.accent} !important;
     }
-    color: ${({ theme: { colors } }) => colors.primary };
+    color: ${({ theme: { colors } }) => colors.primary};
     font-size: 16px;
     font-weight: 300;
-  }  
+  }
 `;
 
 type Props = {
@@ -47,14 +52,7 @@ type Props = {
 };
 
 const CustomSelect = (props: Props) => {
-  const {
-    label,
-    value,
-    children,
-    onChange,
-    renderValue,
-    ...others
-  } = props;
+  const { label, value, children, onChange, renderValue, ...others } = props;
   return (
     <SelectContainer>
       <LabelWrapper>{label}</LabelWrapper>

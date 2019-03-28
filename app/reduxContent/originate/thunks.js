@@ -19,7 +19,10 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const { sendAccountOriginationOperation } = TezosNodeWriter;
+const {
+  sendAccountOriginationOperation,
+  sendContractOriginationOperation
+} = TezosNodeWriter;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
@@ -29,12 +32,16 @@ export function fetchOriginationAverageFees() {
   };
 }
 
-export function createNewAccount(
+export function originateContract(
   delegate,
   amount,
   fee,
   passPhrase,
-  publicKeyHash
+  publicKeyHash,
+  storageLimit = 0,
+  gasLimit = 0,
+  code = [],
+  storage = {}
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -45,7 +52,10 @@ export function createNewAccount(
       .toJS();
     const parsedAmount = Number(amount.replace(/,/g, '.'));
     const amountInUtez = tezToUtez(parsedAmount);
-
+    let isSmartContract = true;
+    if (code.length === 0) {
+      isSmartContract = false;
+    }
     let validations = [];
 
     if (isLedger) {
@@ -83,22 +93,31 @@ export function createNewAccount(
       publicKeyHash
     );
     const { url } = getSelectedNode(settings, TEZOS);
+    const userKeyStore = keyStore;
+    let userDerivation = '';
 
-    let newAccount;
     if (isLedger) {
-      const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
+      userDerivation = derivation;
+      userKeyStore.storeType = 2;
+    }
 
-      newKeyStore.storeType = 2;
-      newAccount = await sendAccountOriginationOperation(
+    let newAddress;
+
+    if (isSmartContract) {
+      newAddress = await sendContractOriginationOperation(
         url,
-        newKeyStore,
+        userKeyStore,
         amountInUtez,
-        delegate,
+        undefined,
         true,
-        true,
+        false,
         fee,
-        derivation
+        userDerivation,
+        storageLimit,
+        gasLimit,
+        code,
+        storage
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);
@@ -106,14 +125,15 @@ export function createNewAccount(
         return false;
       });
     } else {
-      newAccount = await sendAccountOriginationOperation(
+      newAddress = await sendAccountOriginationOperation(
         url,
-        keyStore,
+        userKeyStore,
         amountInUtez,
         delegate,
         true,
         true,
-        fee
+        fee,
+        userDerivation
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);
@@ -122,12 +142,12 @@ export function createNewAccount(
       });
     }
 
-    if (newAccount) {
+    if (newAddress) {
       const operationResult1 =
-        newAccount &&
-        newAccount.results &&
-        newAccount.results.contents &&
-        newAccount.results.contents.length;
+        newAddress &&
+        newAddress.results &&
+        newAddress.results.contents &&
+        newAddress.results.contents.length;
       if (!operationResult1) {
         const error =
           'components.messageBar.messages.origination_operation_failed';
@@ -135,7 +155,7 @@ export function createNewAccount(
         dispatch(addMessage(error, true));
         return false;
       }
-      const newOperation = newAccount.results.contents.find(
+      const newOperation = newAddress.results.contents.find(
         content => content.kind === 'origination'
       );
 
@@ -163,13 +183,13 @@ export function createNewAccount(
         return false;
       }
 
-      const newAccountHash = operationResult.originated_contracts[0];
-      const operationId = clearOperationId(newAccount.operationGroupID);
+      const newAddressHash = operationResult.originated_contracts[0];
+      const operationId = clearOperationId(newAddress.operationGroupID);
 
       identity.accounts.push(
         createAccount(
           {
-            account_id: newAccountHash,
+            account_id: newAddressHash,
             balance: amountInUtez,
             manager: publicKeyHash,
             delegate_value: '',
@@ -193,7 +213,7 @@ export function createNewAccount(
       );
 
       const delegatedAddressee = identity.accounts.filter(
-        account => account.account_id === newAccountHash
+        account => account.account_id === newAddressHash
       );
       delegatedAddressee[0].transactions.push(
         createTransaction({
