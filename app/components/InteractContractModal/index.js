@@ -10,7 +10,7 @@ import Loader from '../Loader/';
 import DeployContract from './DeployContract';
 import InvokeContract from './InvokeContract';
 
-import { invokeAddress } from '../../reduxContent/invokeAddress/thunks';
+import { invokeAddress } from '../../reduxContent/invoke/thunks';
 import { originateContract } from '../../reduxContent/originate/thunks';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';

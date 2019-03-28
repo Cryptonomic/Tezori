@@ -1,6 +1,6 @@
 import { TezosNodeWriter } from 'conseiljs';
-import { updateIdentity } from '../../reduxContent/wallet/actions';
-import { addMessage } from '../../reduxContent/message/thunks';
+import { updateIdentity } from '../wallet/actions';
+import { addMessage } from '../message/thunks';
 import { tezToUtez } from '../../utils/currancy';
 import { getSelectedNode } from '../../utils/nodes';
 import { getCurrentPath } from '../../utils/paths';
