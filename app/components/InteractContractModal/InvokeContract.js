@@ -180,7 +180,7 @@ class InvokeContract extends Component<Props> {
         <TabContainer>
           <InputAddressContainer>
             <InputAddress
-              addressType="send"
+              addressType="invoke"
               labelText={t('components.interactModal.smart_address')}
               changeDelegate={val => this.setState({ contractAddress: val })}
               onIssue={status => this.setState({ isAddressIssue: status })}
