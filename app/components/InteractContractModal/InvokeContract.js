@@ -95,17 +95,12 @@ class InvokeContract extends Component<Props> {
 
   openLink = element => openLinkToBlockExplorer(element);
 
-  onEnterPress = (keyVal, isDisabled) => {
-    if (keyVal === 'Enter' && isDisabled) {
-      this.onInvokeOperation();
-    }
-  };
-
   onInvokeOperation = async () => {
     const {
       isLedger,
       selectedParentHash,
       invokeAddress,
+      isLoading,
       setIsLoading,
       onClose
     } = this.props;
@@ -118,8 +113,18 @@ class InvokeContract extends Component<Props> {
       gas,
       parameters,
       selectedInvokeAddress,
-      passPhrase
+      passPhrase,
+      isAddressIssue
     } = this.state;
+
+    const isDisabled =
+      isAddressIssue ||
+      isLoading ||
+      !amount ||
+      !contractAddress ||
+      (!passPhrase && !isLedger);
+
+    if (isDisabled) return;
 
     setIsLoading(true);
 
@@ -171,9 +176,7 @@ class InvokeContract extends Component<Props> {
       (!passPhrase && !isLedger);
 
     return (
-      <MainContainer
-        onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
-      >
+      <MainContainer>
         <TabContainer>
           <InputAddressContainer>
             <InputAddress

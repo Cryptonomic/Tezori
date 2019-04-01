@@ -72,8 +72,12 @@ const defaultState = {
 };
 
 class InteractContractModal extends Component<Props> {
-  props: Props;
-  state = defaultState;
+  constructor(props) {
+    super(props);
+    this.state = { ...defaultState };
+    this.invokeRef = React.createRef();
+    this.deployRef = React.createRef();
+  }
 
   async componentDidUpdate(prevProps) {
     const { open, fetchAverageFees } = this.props;
@@ -90,6 +94,17 @@ class InteractContractModal extends Component<Props> {
 
   onSetTab = (event, activeTab) => {
     this.setState({ activeTab });
+  };
+
+  onEnterPress = event => {
+    if (event.key === 'Enter') {
+      const { activeTab } = this.state;
+      if (activeTab) {
+        this.deployRef.current.onDeployOperation();
+      } else {
+        this.invokeRef.current.onInvokeOperation();
+      }
+    }
   };
 
   render() {
@@ -109,7 +124,7 @@ class InteractContractModal extends Component<Props> {
     } = this.props;
 
     return (
-      <ModalWrapper open={open}>
+      <ModalWrapper open={open} onKeyDown={this.onEnterPress}>
         {open ? (
           <ModalContainer>
             <CloseIconWrapper onClick={onCloseClick} />
@@ -144,6 +159,7 @@ class InteractContractModal extends Component<Props> {
 
             <SwipeableViews index={activeTab}>
               <InvokeContract
+                ref={this.invokeRef}
                 isLedger={isLedger}
                 isLoading={isLoading}
                 addresses={addresses}
@@ -155,6 +171,7 @@ class InteractContractModal extends Component<Props> {
                 t={t}
               />
               <DeployContract
+                ref={this.deployRef}
                 isLedger={isLedger}
                 isLoading={isLoading}
                 addresses={addresses}
