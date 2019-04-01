@@ -82,18 +82,13 @@ class DeployContract extends Component<Props> {
 
   openLink = element => openLinkToBlockExplorer(element);
 
-  onEnterPress = (keyVal, isDisabled) => {
-    if (keyVal === 'Enter' && isDisabled) {
-      this.onDeployOperation();
-    }
-  };
-
   onDeployOperation = async () => {
     const {
       originateContract,
       setIsLoading,
       isLedger,
       addresses,
+      isLoading,
       onClose
     } = this.props;
 
@@ -106,6 +101,15 @@ class DeployContract extends Component<Props> {
       michelsonCode,
       parameters
     } = this.state;
+
+    const isDisabled =
+      isLoading ||
+      !amount ||
+      (!passPhrase && !isLedger) ||
+      !parameters ||
+      !michelsonCode;
+
+    if (isDisabled) return;
 
     setIsLoading(true);
 
@@ -160,9 +164,7 @@ class DeployContract extends Component<Props> {
       !michelsonCode;
 
     return (
-      <MainContainer
-        onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
-      >
+      <MainContainer>
         <TabContainer>
           <InputAddressContainer>
             <TextField
