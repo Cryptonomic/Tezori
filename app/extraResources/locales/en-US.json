@@ -44,7 +44,8 @@
       "derivation_path": "Derivation Path",
       "storage": "Storage",
       "burn": "Burn",
-      "smart_contract": "Smart Contract"
+      "smart_contract": "Smart Contract",
+      "code": "Code"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -133,7 +134,8 @@
       "your_account": "your account",
       "new_address": "new address",
       "retrieving_title": "Retrieving {{typeText}}...",
-      "preparing_title": "Preparing {{typeText}}..."
+      "preparing_title": "Preparing {{typeText}}...",
+      "deploying_title": "Deploying new contract..."
     },
     "balanceBanner": {
       "breadcrumbs": "Account {{parentIndex}} > {{addressLabel}}",

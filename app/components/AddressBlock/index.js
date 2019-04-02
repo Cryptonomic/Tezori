@@ -273,7 +273,7 @@ class AddressBlock extends Component<Props, State> {
           <AddressStatus
             isManager
             isActive={isManagerActive}
-            address={accountBlock}
+            status={accountBlock.get('status')}
             onClick={() => this.goToAccount(publicKeyHash, publicKeyHash)}
           />
         )}
@@ -335,7 +335,7 @@ class AddressBlock extends Component<Props, State> {
             <AddressStatus
               key={addressId}
               isActive={isDelegatedActive}
-              address={address}
+              status={status}
               onClick={() => this.goToAccount(addressId, publicKeyHash)}
             />
           );
@@ -398,7 +398,8 @@ class AddressBlock extends Component<Props, State> {
             <AddressStatus
               key={addressId}
               isActive={isActive}
-              address={address}
+              status={status}
+              isSmart
               onClick={() => this.goToAccount(addressId, publicKeyHash)}
             />
           );

@@ -38,27 +38,35 @@ const Title = styled.span`
 type Props = {
   isManager?: boolean,
   isActive?: boolean,
-  address?: object,
+  status?: string,
+  isSmart?: boolean,
   onClick?: () => {},
   t: () => {}
 };
 
 function AddressStatus(props: Props) {
-  const { isManager, isActive, address, onClick, t} = props;
-
-  const status = address.get('status');
+  const { isManager, isActive, status, isSmart, onClick, t } = props;
   let text = '';
-  const typeText = t((isManager ? 'components.addressStatus.your_account' : 'components.addressStatus.new_address'));
-  switch (status) {
-    case statuses.CREATED:
-    case statuses.FOUND:
-      text = t('components.addressStatus.retrieving_title', {typeText});
-      break;
-    case statuses.PENDING:
-      text = t('components.addressStatus.preparing_title', {typeText});
-      break;
-    default:
-      break;
+  if (isSmart) {
+    text = t('components.addressStatus.deploying_title');
+  } else {
+    const typeText = t(
+      isManager
+        ? 'components.addressStatus.your_account'
+        : 'components.addressStatus.new_address'
+    );
+    switch (status) {
+      case statuses.CREATED:
+      case statuses.FOUND: {
+        text = t('components.addressStatus.retrieving_title', { typeText });
+        break;
+      }
+      case statuses.PENDING:
+        text = t('components.addressStatus.preparing_title', { typeText });
+        break;
+      default:
+        break;
+    }
   }
 
   return (

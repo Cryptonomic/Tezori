@@ -25,10 +25,11 @@ type Props = {
   publicKeyHash: string,
   onRefreshClick: () => {},
   isManagerAddress: boolean,
+  isSmartAddress?: boolean,
   theme: object,
   parentIndex?: number,
   parentIdentity?: object,
-  delegatedAddress?: string,
+  delegatedAddress?: string | null,
   time?: Date,
   t: () => {},
   isWalletSyncing?: boolean
@@ -75,15 +76,11 @@ const AddressInfo = styled.div`
   display: flex;
   align-items: center;
   line-height: 1.9;
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  flex-wrap: wrap;
 `;
 
 const Amount = styled(TezosAmount)`
-  margin: 0 ${ms(2)} 0 0;
+  margin: 0;
   padding: ${ms(-3)} 0;
   line-height: 1;
 `;
@@ -125,7 +122,8 @@ function BalanceBanner(props: Props) {
     time,
     delegatedAddress,
     t,
-    isWalletSyncing
+    isWalletSyncing,
+    isSmartAddress
   } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel =
@@ -150,22 +148,24 @@ function BalanceBanner(props: Props) {
         />
       </TopRow>
       <BottomRow isReady={isReady}>
-        <AddressTitle>
-          <AddressTitleIcon
-            iconName={isManagerAddress ? 'manager' : 'smart-address'}
-            size={ms(0)}
-            color="white"
-          />
-          {addressLabel}
+        {!isSmartAddress && (
+          <AddressTitle>
+            <AddressTitleIcon
+              iconName={isManagerAddress ? 'manager' : 'smart-address'}
+              size={ms(0)}
+              color="white"
+            />
+            {addressLabel}
 
-          {isManagerAddress && (
-            <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
-              <Button buttonTheme="plain">
-                <HelpIcon iconName="help" size={ms(0)} color="white" />
-              </Button>
-            </Tooltip>
-          )}
-        </AddressTitle>
+            {isManagerAddress && (
+              <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
+                <Button buttonTheme="plain">
+                  <HelpIcon iconName="help" size={ms(0)} color="white" />
+                </Button>
+              </Tooltip>
+            )}
+          </AddressTitle>
+        )}
         <AddressInfo>
           <TezosAddress
             address={publicKeyHash}

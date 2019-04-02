@@ -15,13 +15,17 @@ import Transactions from '../Transactions/';
 import Send from '../Send/';
 import Receive from '../Receive/';
 import Delegate from '../Delegate/';
+import Invoke from '../Invoke';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
 import {
   TRANSACTIONS,
   SEND,
   RECEIVE,
-  DELEGATE
+  DELEGATE,
+  INVOKE,
+  CODE,
+  STORAGE
 } from '../../constants/TabConstants';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
@@ -128,10 +132,11 @@ class ActionPanel extends Component<Props, State> {
     updateActiveTab(selectedAccountHash, selectedParentHash, activeTab);
   };
 
-  renderSection = (selectedAccount, activeTab, balance) => {
+  renderSection = (selectedAccount, activeTab, balance, simpleAddresses) => {
     const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
+    const isSmartAddress = !!selectedAccount.get('script');
 
     switch (activeTab) {
       case DELEGATE:
@@ -155,12 +160,26 @@ class ActionPanel extends Component<Props, State> {
             isManager={selectedAccountHash === selectedParentHash}
           />
         );
+      case CODE:
+        return null;
+      case STORAGE:
+        return null;
+      case INVOKE:
+        return (
+          <Invoke
+            isReady={ready}
+            addresses={simpleAddresses}
+            selectedParentHash={selectedParentHash}
+            selectedAccountHash={selectedAccountHash}
+          />
+        );
       case TRANSACTIONS:
       default: {
         if (!ready) {
           return (
             <AccountStatus
               address={selectedAccount}
+              isSmart={isSmartAddress}
               isManager={selectedAccountHash === selectedParentHash}
             />
           );
@@ -215,6 +234,33 @@ class ActionPanel extends Component<Props, State> {
     }
   };
 
+  getTabList = (isManager, isSmart) => {
+    if (isManager) {
+      return [TRANSACTIONS, SEND, RECEIVE];
+    }
+    if (isSmart) {
+      return [TRANSACTIONS, CODE, STORAGE, INVOKE];
+    }
+    return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+  };
+
+  getSimpleAddresses = identity => {
+    const { balance, publicKeyHash, accounts } = identity;
+    let simpleAddresses = [{ pkh: publicKeyHash, balance }];
+    accounts.forEach(address => {
+      const { script, balance } = address;
+      if (!script) {
+        const newAddress = {
+          pkh: address.account_id,
+          balance
+        };
+        simpleAddresses = simpleAddresses.concat(newAddress);
+      }
+    });
+
+    return simpleAddresses;
+  };
+
   render() {
     const {
       identities,
@@ -239,10 +285,9 @@ class ActionPanel extends Component<Props, State> {
 
     const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
-
-    const tabs = isManagerAddress
-      ? [TRANSACTIONS, SEND, RECEIVE]
-      : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+    const isSmartAddress = !!selectedAccount.get('script');
+    const tabs = this.getTabList(isManagerAddress, isSmartAddress);
+    const simpleAddresses = this.getSimpleAddresses(parentIdentity);
     return (
       <Container>
         <BalanceBanner
@@ -258,6 +303,7 @@ class ActionPanel extends Component<Props, State> {
           time={time}
           delegatedAddress={selectedAccount.get('delegate_value')}
           isWalletSyncing={isWalletSyncing}
+          isSmartAddress={isSmartAddress}
         />
 
         <TabList>
@@ -281,7 +327,12 @@ class ActionPanel extends Component<Props, State> {
           })}
         </TabList>
         <SectionContainer>
-          {this.renderSection(selectedAccount, activeTab, balance || 0)}
+          {this.renderSection(
+            selectedAccount,
+            activeTab,
+            balance || 0,
+            simpleAddresses
+          )}
         </SectionContainer>
       </Container>
     );
