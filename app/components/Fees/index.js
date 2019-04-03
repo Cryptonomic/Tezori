@@ -132,8 +132,10 @@ class Fee extends Component<Props> {
               feeTitle = 'components.fees.low_fee';
             } else if (value === medium) {
               feeTitle = 'components.fees.medium_fee';
-            } else {
+            } else if (value === high) {
               feeTitle = 'components.fees.high_fee';
+            } else {
+              feeTitle = 'components.fees.custom_fee';
             }
             return (
               <FeeContentWrapper>
