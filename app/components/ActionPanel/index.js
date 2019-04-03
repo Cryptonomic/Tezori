@@ -132,7 +132,7 @@ class ActionPanel extends Component<Props, State> {
     updateActiveTab(selectedAccountHash, selectedParentHash, activeTab);
   };
 
-  renderSection = (selectedAccount, activeTab, balance, simpleAddresses) => {
+  renderSection = (selectedAccount, activeTab, balance, regularAddresses) => {
     const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
@@ -168,9 +168,10 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Invoke
             isReady={ready}
-            addresses={simpleAddresses}
+            addresses={regularAddresses}
             selectedParentHash={selectedParentHash}
             selectedAccountHash={selectedAccountHash}
+            onSuccess={() => this.handleLinkPress(TRANSACTIONS)}
           />
         );
       case TRANSACTIONS:
@@ -239,14 +240,14 @@ class ActionPanel extends Component<Props, State> {
       return [TRANSACTIONS, SEND, RECEIVE];
     }
     if (isSmart) {
-      return [TRANSACTIONS, CODE, STORAGE, INVOKE];
+      return [TRANSACTIONS, INVOKE, CODE, STORAGE];
     }
     return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
   };
 
-  getSimpleAddresses = identity => {
+  getRegularAddresses = identity => {
     const { balance, publicKeyHash, accounts } = identity;
-    let simpleAddresses = [{ pkh: publicKeyHash, balance }];
+    let regularAddresses = [{ pkh: publicKeyHash, balance }];
     accounts.forEach(address => {
       const { script, balance } = address;
       if (!script) {
@@ -254,11 +255,11 @@ class ActionPanel extends Component<Props, State> {
           pkh: address.account_id,
           balance
         };
-        simpleAddresses = simpleAddresses.concat(newAddress);
+        regularAddresses = regularAddresses.concat(newAddress);
       }
     });
 
-    return simpleAddresses;
+    return regularAddresses;
   };
 
   render() {
@@ -287,7 +288,7 @@ class ActionPanel extends Component<Props, State> {
     const status = selectedAccount.get('status');
     const isSmartAddress = !!selectedAccount.get('script');
     const tabs = this.getTabList(isManagerAddress, isSmartAddress);
-    const simpleAddresses = this.getSimpleAddresses(parentIdentity);
+    const regularAddresses = this.getRegularAddresses(parentIdentity);
     return (
       <Container>
         <BalanceBanner
@@ -331,7 +332,7 @@ class ActionPanel extends Component<Props, State> {
             selectedAccount,
             activeTab,
             balance || 0,
-            simpleAddresses
+            regularAddresses
           )}
         </SectionContainer>
       </Container>

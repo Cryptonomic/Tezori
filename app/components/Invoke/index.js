@@ -130,6 +130,7 @@ type Props = {
   addresses: List,
   selectedParentHash: string,
   selectedAccountHash: string,
+  onSuccess: () => {},
   fetchAverageFees: () => {},
   invokeAddress: () => {},
   setIsLoading: () => {},
@@ -204,13 +205,20 @@ class Invoke extends Component<Props> {
     this.setState({ isOpenLedgerConfirm: val });
   };
 
+  onEnterPress = (keyVal, isDisabled) => {
+    if (keyVal === 'Enter' && !isDisabled) {
+      this.onInvokeOperation();
+    }
+  };
+
   onInvokeOperation = async () => {
     const {
       isLedger,
       selectedParentHash,
       selectedAccountHash,
       invokeAddress,
-      setIsLoading
+      setIsLoading,
+      onSuccess
     } = this.props;
 
     const {
@@ -230,7 +238,7 @@ class Invoke extends Component<Props> {
     }
 
     const userParams = parameters ? JSON.parse(parameters) : null;
-    await invokeAddress(
+    const operationResult = await invokeAddress(
       selectedAccountHash,
       fee,
       amount,
@@ -246,6 +254,10 @@ class Invoke extends Component<Props> {
     });
     this.onLedgerConfirmation(false);
     setIsLoading(false);
+
+    if (operationResult) {
+      onSuccess();
+    }
   };
 
   render() {
@@ -272,7 +284,7 @@ class Invoke extends Component<Props> {
       !isReady || isLoading || !amount || (!passPhrase && !isLedger);
 
     return (
-      <Container>
+      <Container onKeyDown={event => this.onEnterPress(event.key, isDisabled)}>
         <InvokeTitle>{t('general.verbs.invoke')}</InvokeTitle>
         <InvokeAddressContainer>
           <CustomSelect

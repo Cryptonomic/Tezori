@@ -219,7 +219,7 @@ class AddressBlock extends Component<Props, State> {
 
     const publicKeyHash = accountBlock.get('publicKeyHash');
     const balance = accountBlock.get('balance');
-    let simpleAddresses = [{ pkh: publicKeyHash, balance }];
+    let regularAddresses = [{ pkh: publicKeyHash, balance }];
     const isManagerActive = publicKeyHash === selectedAccountHash;
     const addresses = accountBlock.get('accounts').toJS();
     const {
@@ -228,7 +228,7 @@ class AddressBlock extends Component<Props, State> {
       smartAddresses,
       smartBalance
     } = this.getAddresses(addresses);
-    simpleAddresses = simpleAddresses.concat(newAddresses);
+    regularAddresses = regularAddresses.concat(newAddresses);
 
     const isDelegateToolTip =
       delegateTooltip && delegatedAddresses.length && smartAddresses.length;
@@ -408,7 +408,7 @@ class AddressBlock extends Component<Props, State> {
           selectedParentHash={publicKeyHash}
           open={isInteractModalOpen}
           onCloseClick={this.closeInteractModal}
-          addresses={simpleAddresses}
+          addresses={regularAddresses}
           t={t}
         />
         <AddDelegateModal
