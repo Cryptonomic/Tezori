@@ -7,5 +7,6 @@
   "icon": "tezos",
   "termsService": "https://github.com/Cryptonomic/Tezori",
   "privacyPolicy": "https://github.com/Cryptonomic/Tezori",
-  "tagline": "containers.loginHome.tagline"
+  "tagline": "containers.loginHome.tagline",
+  "versionCheck": "6"
 }

@@ -201,3 +201,13 @@ export function clearOperationId( operationId ) {
   }
   return operationId;
 }
+
+export const getVersionFromApi = async () => {
+  try {
+    let response = await fetch('http://galleon-wallet.tech/version.json');
+    let responseJson = await response.json();
+    return responseJson;
+   } catch(error) {
+    console.error(error);
+  }
+}
