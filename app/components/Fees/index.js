@@ -76,12 +76,17 @@ const WarningIcon = styled(TezosIcon)`
 const FeeContentWrapper = styled.div``;
 
 class Fee extends Component<Props> {
-  props: Props;
-  state = {
-    open: false,
-    custom: '',
-    error: ''
-  };
+  constructor(props) {
+    super(props);
+    const { low, medium, high, fee } = this.props;
+    const custom =
+      fee === low || fee === medium || fee === high ? '' : formatAmount(fee);
+    this.state = {
+      open: false,
+      custom,
+      error: ''
+    };
+  }
 
   renderError = () => {
     const { t } = this.props;
