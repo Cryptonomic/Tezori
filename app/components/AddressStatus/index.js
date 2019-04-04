@@ -39,15 +39,15 @@ type Props = {
   isManager?: boolean,
   isActive?: boolean,
   status?: string,
-  isSmart?: boolean,
+  isContract?: boolean,
   onClick?: () => {},
   t: () => {}
 };
 
 function AddressStatus(props: Props) {
-  const { isManager, isActive, status, isSmart, onClick, t } = props;
+  const { isManager, isActive, status, isContract, onClick, t } = props;
   let text = '';
-  if (isSmart) {
+  if (isContract) {
     text = t('components.addressStatus.deploying_title');
   } else {
     const typeText = t(

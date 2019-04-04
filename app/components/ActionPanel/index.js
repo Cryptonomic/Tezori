@@ -136,7 +136,7 @@ class ActionPanel extends Component<Props, State> {
     const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
-    const isSmartAddress = !!selectedAccount.get('script');
+    const isContractAddress = !!selectedAccount.get('script');
 
     switch (activeTab) {
       case DELEGATE:
@@ -180,7 +180,7 @@ class ActionPanel extends Component<Props, State> {
           return (
             <AccountStatus
               address={selectedAccount}
-              isSmart={isSmartAddress}
+              isContract={isContractAddress}
               isManager={selectedAccountHash === selectedParentHash}
             />
           );
@@ -235,11 +235,11 @@ class ActionPanel extends Component<Props, State> {
     }
   };
 
-  getTabList = (isManager, isSmart) => {
+  getTabList = (isManager, isContract) => {
     if (isManager) {
       return [TRANSACTIONS, SEND, RECEIVE];
     }
-    if (isSmart) {
+    if (isContract) {
       return [TRANSACTIONS, INVOKE, CODE, STORAGE];
     }
     return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
@@ -286,8 +286,8 @@ class ActionPanel extends Component<Props, State> {
 
     const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
-    const isSmartAddress = !!selectedAccount.get('script');
-    const tabs = this.getTabList(isManagerAddress, isSmartAddress);
+    const isContractAddress = !!selectedAccount.get('script');
+    const tabs = this.getTabList(isManagerAddress, isContractAddress);
     const regularAddresses = this.getRegularAddresses(parentIdentity);
     return (
       <Container>
@@ -304,7 +304,7 @@ class ActionPanel extends Component<Props, State> {
           time={time}
           delegatedAddress={selectedAccount.get('delegate_value')}
           isWalletSyncing={isWalletSyncing}
-          isSmartAddress={isSmartAddress}
+          isContractAddress={isContractAddress}
         />
 
         <TabList>

@@ -58,7 +58,7 @@ const AddressLabel = styled.div`
   overflow: hidden;
 `;
 
-const getFirstLine = (isManager, isSmart, isActive, index, accountId, t) => {
+const getFirstLine = (isManager, isContract, isActive, index, accountId, t) => {
   if (isManager) {
     return (
       <AddressFirstLine isActive={isActive}>
@@ -86,7 +86,7 @@ const getFirstLine = (isManager, isSmart, isActive, index, accountId, t) => {
   let displayTxt = t('components.address.delegated_address', {
     index: index + 1
   });
-  if (isSmart) {
+  if (isContract) {
     displayTxt = `${accountId.slice(0, 6)}...${accountId.slice(
       accountId.length - 6,
       accountId.length
@@ -120,7 +120,7 @@ type Props = {
 function Address(props: Props) {
   const {
     isManager,
-    isSmart,
+    isContract,
     isActive,
     balance,
     index,
@@ -130,7 +130,7 @@ function Address(props: Props) {
   } = props;
   const firstLine = getFirstLine(
     isManager,
-    isSmart,
+    isContract,
     isActive,
     index,
     accountId,

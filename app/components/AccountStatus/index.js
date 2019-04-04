@@ -53,14 +53,14 @@ const Description = styled.div`
 
 type Props = {
   isManager?: boolean,
-  isSmart?: boolean,
+  isContract?: boolean,
   address?: object,
   theme?: object,
   t: () => {}
 };
 
 function AccountStatus(props: Props) {
-  const { isManager, isSmart, address, theme, t } = props;
+  const { isManager, isContract, address, theme, t } = props;
   const storeType = address.get('storeType');
   const status = address.get('status');
   const operations = address.get('operations').toJS();
@@ -76,7 +76,7 @@ function AccountStatus(props: Props) {
   let title = '';
   let description = '';
   let info = null;
-  if (isSmart) {
+  if (isContract) {
     title = t('components.addressStatus.deploying_title');
     const opName = operations[statuses.CREATED]
       ? operations[statuses.CREATED]

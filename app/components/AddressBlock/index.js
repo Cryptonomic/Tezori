@@ -388,7 +388,7 @@ class AddressBlock extends Component<Props, State> {
           return smartAddressReady ? (
             <Address
               key={addressId}
-              isSmart
+              isContract
               accountId={addressId}
               isActive={isActive}
               balance={balance}
@@ -399,7 +399,7 @@ class AddressBlock extends Component<Props, State> {
               key={addressId}
               isActive={isActive}
               status={status}
-              isSmart
+              isContract
               onClick={() => this.goToAccount(addressId, publicKeyHash)}
             />
           );

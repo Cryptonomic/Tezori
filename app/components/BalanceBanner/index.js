@@ -25,7 +25,7 @@ type Props = {
   publicKeyHash: string,
   onRefreshClick: () => {},
   isManagerAddress: boolean,
-  isSmartAddress?: boolean,
+  isContractAddress?: boolean,
   theme: object,
   parentIndex?: number,
   parentIdentity?: object,
@@ -123,7 +123,7 @@ function BalanceBanner(props: Props) {
     delegatedAddress,
     t,
     isWalletSyncing,
-    isSmartAddress
+    isContractAddress
   } = props;
   const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
   const addressLabel =
@@ -148,7 +148,7 @@ function BalanceBanner(props: Props) {
         />
       </TopRow>
       <BottomRow isReady={isReady}>
-        {!isSmartAddress && (
+        {!isContractAddress && (
           <AddressTitle>
             <AddressTitleIcon
               iconName={isManagerAddress ? 'manager' : 'smart-address'}
