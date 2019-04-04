@@ -126,6 +126,11 @@ export function invokeAddress(
         }
       }
 
+      const accountIndex = findAccountIndex(identity, contractAddress);
+      if (accountIndex > -1) {
+        identity.accounts[accountIndex].transactions.push(transaction);
+      }
+
       dispatch(updateIdentity(identity));
 
       await persistWalletState(state().wallet.toJS());

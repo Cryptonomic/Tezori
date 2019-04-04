@@ -44,7 +44,8 @@
       "derivation_path": "Derivation Path",
       "storage": "Storage",
       "burn": "Burn",
-      "smart_contract": "Smart Contract"
+      "smart_contract": "Smart Contract",
+      "code": "Code"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -133,7 +134,8 @@
       "your_account": "your account",
       "new_address": "new address",
       "retrieving_title": "Retrieving {{typeText}}...",
-      "preparing_title": "Preparing {{typeText}}..."
+      "preparing_title": "Preparing {{typeText}}...",
+      "deploying_title": "Deploying new contract..."
     },
     "balanceBanner": {
       "breadcrumbs": "Account {{parentIndex}} > {{addressLabel}}",
@@ -212,7 +214,8 @@
         "delegate_address": "You can only delegate to TZ1, TZ2 or TZ3 addresses.",
         "length": "Addresses must be 36 characters long.",
         "special_chars": "Addresses cannot contain any special characters.",
-        "send_funds": "You cannot send funds to yourself."
+        "send_funds": "You cannot send funds to yourself.",
+        "invoke_address": "Smart Contract addresses can only start with KT1"
       }
     },
     "languageSelectModal": {

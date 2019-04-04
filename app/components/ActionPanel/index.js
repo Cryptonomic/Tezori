@@ -15,13 +15,17 @@ import Transactions from '../Transactions/';
 import Send from '../Send/';
 import Receive from '../Receive/';
 import Delegate from '../Delegate/';
+import Invoke from '../Invoke';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
 import {
   TRANSACTIONS,
   SEND,
   RECEIVE,
-  DELEGATE
+  DELEGATE,
+  INVOKE,
+  CODE,
+  STORAGE
 } from '../../constants/TabConstants';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
@@ -128,10 +132,11 @@ class ActionPanel extends Component<Props, State> {
     updateActiveTab(selectedAccountHash, selectedParentHash, activeTab);
   };
 
-  renderSection = (selectedAccount, activeTab, balance) => {
+  renderSection = (selectedAccount, activeTab, balance, regularAddresses) => {
     const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
+    const isContractAddress = !!selectedAccount.get('script');
 
     switch (activeTab) {
       case DELEGATE:
@@ -155,12 +160,27 @@ class ActionPanel extends Component<Props, State> {
             isManager={selectedAccountHash === selectedParentHash}
           />
         );
+      case CODE:
+        return null;
+      case STORAGE:
+        return null;
+      case INVOKE:
+        return (
+          <Invoke
+            isReady={ready}
+            addresses={regularAddresses}
+            selectedParentHash={selectedParentHash}
+            selectedAccountHash={selectedAccountHash}
+            onSuccess={() => this.handleLinkPress(TRANSACTIONS)}
+          />
+        );
       case TRANSACTIONS:
       default: {
         if (!ready) {
           return (
             <AccountStatus
               address={selectedAccount}
+              isContract={isContractAddress}
               isManager={selectedAccountHash === selectedParentHash}
             />
           );
@@ -215,6 +235,33 @@ class ActionPanel extends Component<Props, State> {
     }
   };
 
+  getTabList = (isManager, isContract) => {
+    if (isManager) {
+      return [TRANSACTIONS, SEND, RECEIVE];
+    }
+    if (isContract) {
+      return [TRANSACTIONS, INVOKE, CODE, STORAGE];
+    }
+    return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+  };
+
+  getRegularAddresses = identity => {
+    const { balance, publicKeyHash, accounts } = identity;
+    let regularAddresses = [{ pkh: publicKeyHash, balance }];
+    accounts.forEach(address => {
+      const { script, balance } = address;
+      if (!script) {
+        const newAddress = {
+          pkh: address.account_id,
+          balance
+        };
+        regularAddresses = regularAddresses.concat(newAddress);
+      }
+    });
+
+    return regularAddresses;
+  };
+
   render() {
     const {
       identities,
@@ -239,10 +286,9 @@ class ActionPanel extends Component<Props, State> {
 
     const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
-
-    const tabs = isManagerAddress
-      ? [TRANSACTIONS, SEND, RECEIVE]
-      : [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+    const isContractAddress = !!selectedAccount.get('script');
+    const tabs = this.getTabList(isManagerAddress, isContractAddress);
+    const regularAddresses = this.getRegularAddresses(parentIdentity);
     return (
       <Container>
         <BalanceBanner
@@ -258,6 +304,7 @@ class ActionPanel extends Component<Props, State> {
           time={time}
           delegatedAddress={selectedAccount.get('delegate_value')}
           isWalletSyncing={isWalletSyncing}
+          isContractAddress={isContractAddress}
         />
 
         <TabList>
@@ -281,7 +328,12 @@ class ActionPanel extends Component<Props, State> {
           })}
         </TabList>
         <SectionContainer>
-          {this.renderSection(selectedAccount, activeTab, balance || 0)}
+          {this.renderSection(
+            selectedAccount,
+            activeTab,
+            balance || 0,
+            regularAddresses
+          )}
         </SectionContainer>
       </Container>
     );

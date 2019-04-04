@@ -54,7 +54,7 @@ type Props = {
   changeDelegate: () => {},
   tooltip?: boolean,
   userAddress?: string,
-  addressType: 'send' | 'delegate',
+  addressType: 'send' | 'delegate' | 'invoke',
   t: () => {},
   onIssue?: () => {}
 };
@@ -86,24 +86,35 @@ class InputAddress extends React.PureComponent<Props> {
     );
   };
 
+  getRegExState = (addressType, t) => {
+    let firstCharactersRegEx = /^(tz1|tz2|tz3|kt1|TZ1|TZ2|TZ3|KT1)/;
+    let regErrorTxt = t('components.inputAddress.errors.send_address');
+    if (addressType === 'invoke') {
+      firstCharactersRegEx = /^(KT1)/;
+      regErrorTxt = t('components.inputAddress.errors.invoke_address');
+    } else if (addressType === 'delegate') {
+      firstCharactersRegEx = /^(tz1|tz2|tz3|TZ1|TZ2|TZ3)/;
+      regErrorTxt = t('components.inputAddress.errors.delegate_address');
+    }
+    return {
+      firstCharactersRegEx,
+      regErrorTxt
+    };
+  };
+
   validateAddress = (delegateText, changeDelegate, addressType = 'send') => {
     const { t, onIssue } = this.props;
 
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
-    const firstCharactersRegEx =
-      addressType === 'send'
-        ? /^(tz1|tz2|tz3|kt1|TZ1|TZ2|TZ3|KT1)/
-        : /^(tz1|tz2|tz3|TZ1|TZ2|TZ3)/;
+    const { firstCharactersRegEx, regErrorTxt } = this.getRegExState(
+      addressType,
+      t
+    );
     let errorState = true;
 
     if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
-      this.setState({
-        error:
-          addressType === 'send'
-            ? t('components.inputAddress.errors.send_address')
-            : t('components.inputAddress.errors.delegate_address')
-      });
+      this.setState({ error: regErrorTxt });
     } else if (!lengthRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
         error: t('components.inputAddress.errors.length')

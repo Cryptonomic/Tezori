@@ -196,7 +196,8 @@ export function originateContract(
             operations: {
               [CREATED]: operationId
             },
-            order: (identity.accounts.length || 0) + 1
+            order: (identity.accounts.length || 0) + 1,
+            script: isSmartContract ? JSON.stringify(code) : null
           },
           identity
         )

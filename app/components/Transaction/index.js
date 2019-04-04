@@ -163,7 +163,7 @@ const getStatus = (transaction, selectedAccountHash, t) => {
         state: t('components.transaction.invoke_function'),
         isFee: true,
         color: isAmount ? 'error1' : 'gray8',
-        sign: ''
+        sign: isAmount ? '-' : ''
       };
     }
     return {

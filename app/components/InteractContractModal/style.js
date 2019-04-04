@@ -148,6 +148,7 @@ export const InvokeButton = styled(Button)`
   height: 50px;
   margin-bottom: 10px;
   margin-left: auto;
+  padding: 0;
 `;
 
 export const DeployAddressContainer = styled.div`
