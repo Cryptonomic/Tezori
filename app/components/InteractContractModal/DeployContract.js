@@ -46,7 +46,7 @@ type Props = {
 const defaultState = {
   gas: 0,
   storage: 0,
-  fee: 1420,
+  fee: 50000,
   amount: '',
   parameters: '',
   passPhrase: '',
@@ -58,8 +58,7 @@ const defaultState = {
 class DeployContract extends Component<Props> {
   props: Props;
   state = {
-    ...defaultState,
-    fee: this.props.averageFees.low
+    ...defaultState
   };
 
   onUseMax = () => {

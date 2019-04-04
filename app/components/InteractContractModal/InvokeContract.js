@@ -53,7 +53,7 @@ const defaultState = {
   selectedInvokeAddress: '',
   gas: 0,
   storage: 0,
-  fee: 1420,
+  fee: 50000,
   amount: '',
   parameters: '',
   passPhrase: '',
@@ -65,7 +65,6 @@ class InvokeContract extends Component<Props> {
   props: Props;
   state = {
     ...defaultState,
-    fee: this.props.averageFees.low,
     selectedInvokeAddress: this.props.addresses[0].pkh,
     balance: this.props.addresses[0].balance
   };
