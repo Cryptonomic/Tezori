@@ -204,7 +204,7 @@ export function clearOperationId( operationId ) {
 
 export const getVersionFromApi = async () => {
   try {
-    let response = await fetch('http://galleon-wallet.tech/version.json');
+    let response = await fetch('https://galleon-wallet.tech/version.json');
     let responseJson = await response.json();
     return responseJson;
    } catch(error) {

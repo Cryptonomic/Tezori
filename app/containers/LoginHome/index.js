@@ -43,7 +43,7 @@ const SectionContainer = styled.div`
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: -160px;
+  margin-top: -90px;
 `;
 
 const TermsAndPolicySection = styled.div`
@@ -85,8 +85,7 @@ const Tip = styled.div`
 const AppName = styled.h1`
   text-align: center;
   width: 100%;
-  margin-top: 6%;
-  margin-bottom: -15px;
+  margin: 0;
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
@@ -131,10 +130,10 @@ const DefaultContainer = styled.div`
 
 const NameSection = styled.section`
   display: flex;
-  flex-direction: column;
-  flex: 1;
   width: 100%;
   justify-content: center;
+  align-items: center;
+  height: 140px;
 `;
 
 const Section = styled.section`
