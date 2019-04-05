@@ -12,10 +12,10 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: ${ms(-1)} ${ms(3)};
-  background-color: ${({ theme: { colors } }) => colors.error1};
+  background-color: ${({ theme: { colors } }) => colors.primary};
   color: ${({ theme: { colors } }) => colors.white};
   font-size: ${ms(-0.5)};
-  position: ${({ isAbsolute }) => (isAbsolute ? 'absolute' : 'initial')};
+  position: absolute;
   left: 0;
   top: 92px;
   width: 100%;
@@ -26,29 +26,24 @@ const WarningIcon = styled(TezosIcon)`
   margin-right: ${ms(-1.5)};
 `;
 
-const Strong = styled.span`
-  color: ${({ theme: { colors } }) => colors.accent};
-  font-weight: 400;
-`;
-
-const Link = styled(Strong)`
+const Link = styled.span`
   cursor: pointer;
   margin-left: 5px;
+  text-decoration: underline;
 `;
 
 const url = 'https://galleon-wallet.tech';
 
 type Props = {
   version: string,
-  isAbsolute?: boolean,
   t: () => {}
 };
 
 const VersionStatus = (props: Props) => {
-  const { version, isAbsolute, t } = props;
+  const { version, t } = props;
 
   return (
-    <Container isAbsolute={isAbsolute}>
+    <Container>
       <WarningIcon color="white" iconName="warning" />
       <span>{t('components.versionStatus.version_update', { version })}</span>
       <Link onClick={() => openLink(url)}>{url}</Link>

@@ -73,7 +73,7 @@ class HomePage extends Component<Props> {
 
     return (
       <Fragment>
-        <TopBar />
+        <TopBar isExtended={!!newVersion} />
         {newVersion && <VersionStatus version={newVersion} />}
         <NodesStatus />
         <Switch>

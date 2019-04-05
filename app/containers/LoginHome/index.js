@@ -89,7 +89,7 @@ const AppName = styled.h1`
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 3.7vw;
+  font-size: 45px;
   font-weight: 300;
   line-height: 50px;
   letter-spacing: 5px;

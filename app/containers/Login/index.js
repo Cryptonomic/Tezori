@@ -30,7 +30,7 @@ class LoginPage extends Component<Props> {
     return (
       <Fragment>
         <TopBar onlyLogo />
-        {newVersion && <VersionStatus version={newVersion} isAbsolute />}
+        {newVersion && <VersionStatus version={newVersion} />}
         <Switch>
           <Route path={`${match.path}/home`} component={LoginHome} />
           <Route path={`${match.path}/import`} component={LoginImport} />

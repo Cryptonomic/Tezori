@@ -15,6 +15,7 @@ const Container = styled.div`
   align-items: center;
   padding: ${ms(0)} ${ms(3)};
   flex-shrink: 0;
+  margin-bottom: ${({ isExtended }) => (isExtended ? '50px' : 0)};
 `;
 
 const InfoContainer = styled.div`
@@ -34,15 +35,16 @@ const Text = styled.span`
 
 type Props = {
   onlyLogo: boolean | void,
-  walletName: string
+  walletName: string,
+  isExtended?: boolean
 };
 
 class TopBar extends Component<Props> {
   render() {
-    const { onlyLogo, walletName } = this.props;
+    const { onlyLogo, walletName, isExtended } = this.props;
 
     return (
-      <Container onlyLogo={onlyLogo}>
+      <Container onlyLogo={onlyLogo} isExtended={isExtended}>
         <InfoContainer>
           <Logo />
           <Text>{walletName}</Text>
