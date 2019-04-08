@@ -52,9 +52,7 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 300;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 10px;
+  margin-top: 0 auto 0 10px;
 `;
 
 const Strong = styled.span`

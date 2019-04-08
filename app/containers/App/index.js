@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import type { Node } from 'react';
 import styled from 'styled-components';
-import { ms } from '../../styles/helpers';
 import MessageBar from '../../components/MessageBar/';
 import { getVersionFromApi } from '../../utils/general';
 import { versionCheck } from '../../config.json';
@@ -19,7 +18,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 0 0 ${ms(3)} 0;
+  padding: 0;
 `;
 
 class App extends Component<Props> {
