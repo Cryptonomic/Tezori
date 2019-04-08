@@ -268,7 +268,8 @@ class Invoke extends Component<Props> {
       parameters,
       averageFees,
       passPhrase,
-      isShowedPwd
+      isShowedPwd,
+      storage
     } = this.state;
 
     const {
@@ -384,6 +385,7 @@ class Invoke extends Component<Props> {
             amount={amount}
             fee={fee}
             parameters={parameters}
+            storage={storage}
             address={selectedAccountHash}
             source={selectedInvokeAddress}
             open={isOpenLedgerConfirm}

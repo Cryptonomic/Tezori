@@ -179,15 +179,21 @@
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
       "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+      "confirm_description": "If all the details are correct, please<1> confirm </1>the origination on your device."
     },
     "invokeLedgerConfirmationModal": {
       "confirm_invoke_title": "Confirm Smart Contract Operation",
-      "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device."
+      "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device.",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "Please note that Ledger Nano S devices are not yet capable of parsing parameters. It is expected that you will see above message instead of operation details.",
+      "invoke_confirm": "If all the details are correct, please<1> confirm </1>the invocation on your device.",
+      "invoke_alt_confirm": "Please<1> confirm </1>the invocation on your device at your own risk."
     },
     "deployLedgerConfirmationModal": {
       "confirm_deploy_title": "Confirm Smart Contract Deployment",
-      "deploy_description": "You are about to deploy a smart contract function. Please carefully review the details on your device."
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "Please note that Ledger Nano S devices are not yet capable of parsing scripts or parameters. It is expected that you will see above message instead of operation details.",
+      "deploy_confirm": "Please<1> confirm </1>the deployment on your device at your own risk."
     },
     "fees": {
       "low_fee": "Low Fee",

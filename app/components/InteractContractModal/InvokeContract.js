@@ -164,7 +164,8 @@ class InvokeContract extends Component<Props> {
       passPhrase,
       isShowedPwd,
       isOpenLedgerConfirm,
-      parameters
+      parameters,
+      storage
     } = this.state;
     const { isLoading, isLedger, addresses, averageFees, t } = this.props;
     const isDisabled =
@@ -296,6 +297,7 @@ class InvokeContract extends Component<Props> {
             amount={amount}
             fee={fee}
             parameters={parameters}
+            storage={storage}
             address={contractAddress}
             source={selectedInvokeAddress}
             open={isOpenLedgerConfirm}
