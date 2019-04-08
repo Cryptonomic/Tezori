@@ -150,8 +150,7 @@ class DeployContract extends Component<Props> {
       isShowedPwd,
       isOpenLedgerConfirm,
       parameters,
-      michelsonCode,
-      storage
+      michelsonCode
     } = this.state;
 
     const { isLoading, isLedger, addresses, averageFees, t } = this.props;
@@ -267,7 +266,6 @@ class DeployContract extends Component<Props> {
             fee={fee}
             source={addresses[0].pkh}
             parameters={parameters}
-            storage={storage}
             open={isOpenLedgerConfirm}
             onCloseClick={() => this.closeLedgerConfirmation(false)}
             isLoading={isLoading}

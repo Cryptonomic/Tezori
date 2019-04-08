@@ -103,7 +103,6 @@ type Props = {
   fee: number,
   amount: string,
   parameters: string,
-  storage: string,
   t: () => {}
 };
 
@@ -116,13 +115,11 @@ const DeployLedgerConfirmationModal = (props: Props) => {
     fee,
     amount,
     parameters,
-    storage,
     t
   } = props;
 
   const calcFee = formatAmount(fee);
 
-  console.log(parameters, storage);
   return (
     <Modal
       title={t('components.deployLedgerConfirmationModal.confirm_deploy_title')}
@@ -172,11 +169,6 @@ const DeployLedgerConfirmationModal = (props: Props) => {
         <ItemContainer>
           <ItemTitle>{t('components.interactModal.initial_storage')}</ItemTitle>
           <ItemContent>{parameters}</ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
-          <ItemContent>{storage}</ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>

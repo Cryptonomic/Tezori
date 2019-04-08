@@ -188,12 +188,12 @@ const InvokeLedgerConfirmationModal = (props: Props) => {
           />
         </ItemContainer>
 
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
-          <ItemContent>{storage}</ItemContent>
-        </ItemContainer>
-
-        {parameters !== '' && (
+        {parameters === '' ? (
+          <ItemContainer>
+            <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
+            <ItemContent>{storage}</ItemContent>
+          </ItemContainer>
+        ) : (
           <ItemContainer>
             <ItemTitle>{t('components.interactModal.parameters')}</ItemTitle>
             <ItemContent>{parameters}</ItemContent>
