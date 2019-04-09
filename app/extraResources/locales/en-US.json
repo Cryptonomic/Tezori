@@ -320,7 +320,9 @@
       "received": "RECEIVED",
       "this_address": "this address",
       "your_manager_address": "<0>your</0> Account 1 Manager Address",
-      "invoke_function": "INVOKED FUNCTION"
+      "invoke_function": "INVOKED FUNCTION",
+      "add_delegate": "ORIGINATION - DELEGATED ADDRESS",
+      "deployment": "ORIGINATION - SMART CONTRACT"
     },
     "update": {
       "last_updated": "Last updated {{date}}"

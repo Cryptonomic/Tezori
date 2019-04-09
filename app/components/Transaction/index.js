@@ -133,10 +133,21 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   const isAmount = getIsAmount(transaction.amount);
 
   if (type === types.ORIGINATION && isSameLocation) {
+    if (transaction.script) {
+      return {
+        icon: 'send',
+        preposition: '',
+        state: t('components.transaction.deployment'),
+        isFee,
+        color: isAmount ? 'error1' : 'gray8',
+        sign: isAmount ? '-' : ''
+        // isBurn: true - TODO: Get correct burn amount using paid_storage_size_diff
+      };
+    }
     return {
       icon: 'send',
       preposition: '',
-      state: t('components.transaction.origination'),
+      state: t('components.transaction.add_delegate'),
       isFee,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : '',
