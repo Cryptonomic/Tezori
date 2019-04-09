@@ -31,10 +31,7 @@ const baseDefaults = {
   network: ''
 };
 
-export const initialState = Object.assign(
-  baseDefaults,
-  walletSettings && walletSettings
-);
+export const initialState = { ...baseDefaults, ...walletSettings };
 
 export default handleActions(
   {

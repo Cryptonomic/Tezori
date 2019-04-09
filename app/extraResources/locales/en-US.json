@@ -319,6 +319,9 @@
     },
     "update": {
       "last_updated": "Last updated {{date}}"
+    },
+    "versionStatus": {
+      "version_update": "You are using an older version of Galleon, which might not be fully functional. Please download v{{version}} at "
     }
   },
   "containers": {
