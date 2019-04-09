@@ -1,7 +1,7 @@
 {
   "name": "Tezori",
   "productName": "Tezori",
-  "version": "0.7.0b",
+  "version": "0.8.0b",
   "description": "A wallet for the Tezos blockchain.",
   "main": "./main.prod.js",
   "author": {
@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^4.24.0",
-    "conseiljs": "https://github.com/Cryptonomic/ConseilJS",
+    "conseiljs": "^0.2.2",
     "react-currency-input": "^1.3.6"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "Tezori",
-  "version": "0.7.0b",
+  "version": "0.8.0b",
   "network": "alphanet",
   "blockExplorerHost": "http://alphanet.tzscan.io/",
   "logo": "tezosLogo.svg",
@@ -8,5 +8,5 @@
   "termsService": "https://github.com/Cryptonomic/Tezori",
   "privacyPolicy": "https://github.com/Cryptonomic/Tezori",
   "tagline": "containers.loginHome.tagline",
-  "versionCheck": "6"
+  "versionCheck": "8"
 }
