@@ -185,6 +185,9 @@ export function originateContract(
 
       const newAddressHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAddress.operationGroupID);
+      const burn = operationResult.paid_storage_size_diff
+        ? parseInt(operationResult.paid_storage_size_diff, 10)
+        : 257;
 
       identity.accounts.push(
         createAccount(
@@ -209,7 +212,8 @@ export function originateContract(
           kind: ORIGINATION,
           operation_group_hash: operationId,
           source: keyStore.publicKeyHash,
-          fee
+          fee,
+          paid_storage_size_diff: burn * 1000
         })
       );
 

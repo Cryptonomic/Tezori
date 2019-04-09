@@ -163,7 +163,8 @@ const getStatus = (transaction, selectedAccountHash, t) => {
         state: t('components.transaction.invoke_function'),
         isFee: true,
         color: isAmount ? 'error1' : 'gray8',
-        sign: isAmount ? '-' : ''
+        sign: isAmount ? '-' : '',
+        isBurn: true
       };
     }
     return {
@@ -264,6 +265,9 @@ function Transaction(props: Props) {
   const activation =
     transaction.kind === 'activation' &&
     selectedAccountHash === selectedParentHash;
+  const burn = transaction.paid_storage_size_diff
+    ? transaction.paid_storage_size_diff
+    : 257000;
   return (
     <TransactionContainer>
       <Header>
@@ -295,12 +299,7 @@ function Transaction(props: Props) {
         {isBurn && (
           <Fee>
             <span>{t('components.transaction.burn')}: </span>
-            <TezosAmount
-              color="gray5"
-              size={ms(-2)}
-              amount={257000}
-              format={6}
-            />
+            <TezosAmount color="gray5" size={ms(-2)} amount={burn} format={6} />
           </Fee>
         )}
         {isBurn && isFee && <Linebar />}

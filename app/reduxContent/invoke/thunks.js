@@ -95,6 +95,9 @@ export function invokeAddress(
       }
 
       const clearedOperationId = clearOperationId(res.operationGroupID);
+      const burn = operationResult.paid_storage_size_diff
+        ? parseInt(operationResult.paid_storage_size_diff, 10)
+        : 257;
 
       dispatch(
         addMessage(
@@ -114,7 +117,8 @@ export function invokeAddress(
         fee,
         gas_limit: gas,
         storage_limit: storage,
-        parameters
+        parameters,
+        paid_storage_size_diff: burn * 1000
       });
 
       if (selectedParentHash === selectedAccountHash) {
