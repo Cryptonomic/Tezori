@@ -229,13 +229,23 @@ export function originateContract(
       dispatch(updateIdentity(identity));
 
       // todo: add transaction
-      dispatch(
-        addMessage(
-          'components.messageBar.messages.success_address_origination',
-          false,
-          operationId
-        )
-      );
+      if (isSmartContract) {
+        dispatch(
+          addMessage(
+            'components.messageBar.messages.success_contract_origination',
+            false,
+            operationId
+          )
+        );
+      } else {
+        dispatch(
+          addMessage(
+            'components.messageBar.messages.success_address_origination',
+            false,
+            operationId
+          )
+        );
+      }
 
       await persistWalletState(state().wallet.toJS());
       return true;

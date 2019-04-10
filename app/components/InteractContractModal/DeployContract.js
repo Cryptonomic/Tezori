@@ -167,7 +167,7 @@ class DeployContract extends Component<Props> {
         <TabContainer>
           <InputAddressContainer>
             <TextField
-              label={t('components.interactModal.paste_michelson_code')}
+              label={t('components.interactModal.paste_micheline_code')}
               multiline
               rows={5}
               rowsMax={5}
@@ -265,6 +265,7 @@ class DeployContract extends Component<Props> {
             amount={amount}
             fee={fee}
             source={addresses[0].pkh}
+            parameters={parameters}
             open={isOpenLedgerConfirm}
             onCloseClick={() => this.closeLedgerConfirmation(false)}
             isLoading={isLoading}

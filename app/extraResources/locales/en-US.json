@@ -97,7 +97,7 @@
       "parameters": "Parameters",
       "view_scan": "VIEW ON TZSCAN",
       "initial_storage": "Initial Storage",
-      "paste_michelson_code": "Paste in your smart contract Michelson code"
+      "paste_micheline_code": "Paste in your smart contract Micheline code"
     },
     "addNodeModal": {
       "error": "Node's protocol must be https",
@@ -124,11 +124,9 @@
         "description4": "Delegation rewards will depend on your arrangement with the delegate."
       },
       "account_title": "Account {{index}}",
-      "not_ready_tooltip": "You account is not ready to delegate.",
+      "not_ready_tooltip": "Your account is not ready to delegate.",
+      "not_ready_interact_tooltip": "Your account is not ready to interact with contracts.",
       "delegation_tips": "Delegation Tips"
-    },
-    "addresses": {
-      "support_tooltip": "Support for multiple accounts is coming soon."
     },
     "addressStatus": {
       "your_account": "your account",
@@ -181,15 +179,21 @@
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
       "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+      "confirm_description": "If all the details are correct, please<1> confirm </1>the origination on your device."
     },
     "invokeLedgerConfirmationModal": {
       "confirm_invoke_title": "Confirm Smart Contract Operation",
-      "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device."
+      "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device.",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "Please note that Ledger Nano S devices are not yet capable of parsing parameters. It is expected that you will see above message instead of operation details.",
+      "invoke_confirm": "If all the details are correct, please<1> confirm </1>the invocation on your device.",
+      "invoke_alt_confirm": "Please<1> confirm </1>the invocation on your device at your own risk."
     },
     "deployLedgerConfirmationModal": {
       "confirm_deploy_title": "Confirm Smart Contract Deployment",
-      "deploy_description": "You are about to deploy a smart contract function. Please carefully review the details on your device."
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "Please note that Ledger Nano S devices are not yet capable of parsing scripts or parameters. It is expected that you will see above message instead of operation details.",
+      "deploy_confirm": "Please<1> confirm </1>the deployment on your device at your own risk."
     },
     "fees": {
       "low_fee": "Low Fee",
@@ -250,7 +254,8 @@
         "account_not_exist": "The account does not exist.",
         "ledger_not_connect": "Connection refused by Ledger.",
         "invoke_operation_failed": "Smart Contract operation failed",
-        "success_invoke_operation": "Successfully started contract invocation."
+        "success_invoke_operation": "Successfully started contract invocation.",
+        "success_contract_origination": "Successfully started contract deployment."
       }
     },
     "pdfReader": {
@@ -315,7 +320,9 @@
       "received": "RECEIVED",
       "this_address": "this address",
       "your_manager_address": "<0>your</0> Account 1 Manager Address",
-      "invoke_function": "INVOKED FUNCTION"
+      "invoke_function": "INVOKED FUNCTION",
+      "add_delegate": "ORIGINATION - DELEGATED ADDRESS",
+      "deployment": "ORIGINATION - SMART CONTRACT"
     },
     "update": {
       "last_updated": "Last updated {{date}}"

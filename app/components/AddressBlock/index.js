@@ -361,7 +361,9 @@ class AddressBlock extends Component<Props, State> {
               offset="-24%"
               content={
                 <NoFundTooltip
-                  content={t('components.addressBlock.not_ready_tooltip')}
+                  content={t(
+                    'components.addressBlock.not_ready_interact_tooltip'
+                  )}
                 />
               }
             >

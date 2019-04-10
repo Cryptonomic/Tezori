@@ -27,6 +27,11 @@ const SendSvg = styled.img`
   flex: none;
 `;
 
+const SendDesTitle = styled.div`
+  font-weight: 600;
+  margin-bottom: 4px;
+`;
+
 const SendDes = styled.div`
   margin-left: 16px;
   font-size: 16px;
@@ -99,6 +104,7 @@ type Props = {
   fee: number,
   amount: string,
   parameters: string,
+  storage: string,
   t: () => {}
 };
 
@@ -112,6 +118,7 @@ const InvokeLedgerConfirmationModal = (props: Props) => {
     fee,
     amount,
     parameters,
+    storage,
     t
   } = props;
 
@@ -127,10 +134,39 @@ const InvokeLedgerConfirmationModal = (props: Props) => {
       <MainContainer>
         <DescriptionContainer>
           <SendSvg src={sendImg} />
-          <SendDes>
-            {t('components.invokeLedgerConfirmationModal.invoke_description')}
-          </SendDes>
+          {parameters === '' ? (
+            <SendDes>
+              {t('components.invokeLedgerConfirmationModal.invoke_description')}
+            </SendDes>
+          ) : (
+            <SendDes>
+              <SendDesTitle>
+                {t(
+                  'components.invokeLedgerConfirmationModal.invoke_alt_description_1'
+                )}
+              </SendDesTitle>
+              {t(
+                'components.invokeLedgerConfirmationModal.invoke_alt_description_2'
+              )}
+            </SendDes>
+          )}
         </DescriptionContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
+          <ItemContent>
+            {amount}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
+          <ItemContent>
+            {calcFee}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
 
         <ItemContainer>
           <ItemTitle>{t('components.interactModal.invoke_from')}</ItemTitle>
@@ -152,33 +188,32 @@ const InvokeLedgerConfirmationModal = (props: Props) => {
           />
         </ItemContainer>
 
-        <ItemContainer>
-          <ItemTitle>{t('components.interactModal.parameters')}</ItemTitle>
-          <ItemContent>{parameters}</ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
-          <ItemContent>
-            {calcFee}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
-          <ItemContent>
-            {amount}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
-        </ItemContainer>
+        {parameters === '' ? (
+          <ItemContainer>
+            <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
+            <ItemContent>{storage}</ItemContent>
+          </ItemContainer>
+        ) : (
+          <ItemContainer>
+            <ItemTitle>{t('components.interactModal.parameters')}</ItemTitle>
+            <ItemContent>{parameters}</ItemContent>
+          </ItemContainer>
+        )}
       </MainContainer>
       <BottomContainer>
         <ConfirmDes>
-          <Trans i18nKey="components.delegationLedgerConfirmationModal.confirm_description">
-            If the all the details are correct, please
-            <ConfirmSpan>confirm</ConfirmSpan> the origination on your device.
-          </Trans>
+          {parameters === '' ? (
+            <Trans i18nKey="components.invokeLedgerConfirmationModal.invoke_confirm">
+              If the all the details are correct, please
+              <ConfirmSpan>confirm</ConfirmSpan> the origination on your device.
+            </Trans>
+          ) : (
+            <Trans i18nKey="components.invokeLedgerConfirmationModal.invoke_alt_confirm">
+              Please
+              <ConfirmSpan>confirm</ConfirmSpan> the invocation on your device
+              at your own risk.
+            </Trans>
+          )}
         </ConfirmDes>
         <ConfirmImg src={confirmImg} />
       </BottomContainer>

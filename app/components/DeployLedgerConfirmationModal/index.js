@@ -27,6 +27,11 @@ const SendSvg = styled.img`
   flex: none;
 `;
 
+const SendDesTitle = styled.div`
+  font-weight: 600;
+  margin-bottom: 4px;
+`;
+
 const SendDes = styled.div`
   margin-left: 16px;
   font-size: 16px;
@@ -97,11 +102,21 @@ type Props = {
   isLoading?: boolean,
   fee: number,
   amount: string,
+  parameters: string,
   t: () => {}
 };
 
 const DeployLedgerConfirmationModal = (props: Props) => {
-  const { source, open, isLoading, onCloseClick, fee, amount, t } = props;
+  const {
+    source,
+    open,
+    isLoading,
+    onCloseClick,
+    fee,
+    amount,
+    parameters,
+    t
+  } = props;
 
   const calcFee = formatAmount(fee);
 
@@ -116,9 +131,30 @@ const DeployLedgerConfirmationModal = (props: Props) => {
         <DescriptionContainer>
           <SendSvg src={sendImg} />
           <SendDes>
-            {t('components.deployLedgerConfirmationModal.deploy_description')}
+            <SendDesTitle>
+              {t(
+                'components.deployLedgerConfirmationModal.deploy_description_1'
+              )}
+            </SendDesTitle>
+            {t('components.deployLedgerConfirmationModal.deploy_description_2')}
           </SendDes>
         </DescriptionContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
+          <ItemContent>
+            {amount}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
+
+        <ItemContainer>
+          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
+          <ItemContent>
+            {calcFee}
+            <TezosIcon color="secondary" iconName="tezos" />
+          </ItemContent>
+        </ItemContainer>
 
         <ItemContainer>
           <ItemTitle>{t('components.interactModal.deploy_from')}</ItemTitle>
@@ -131,26 +167,16 @@ const DeployLedgerConfirmationModal = (props: Props) => {
         </ItemContainer>
 
         <ItemContainer>
-          <ItemTitle>{t('general.nouns.fee')}</ItemTitle>
-          <ItemContent>
-            {calcFee}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
-        </ItemContainer>
-
-        <ItemContainer>
-          <ItemTitle>{t('general.nouns.amount')}</ItemTitle>
-          <ItemContent>
-            {amount}
-            <TezosIcon color="secondary" iconName="tezos" />
-          </ItemContent>
+          <ItemTitle>{t('components.interactModal.initial_storage')}</ItemTitle>
+          <ItemContent>{parameters}</ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>
         <ConfirmDes>
-          <Trans i18nKey="components.delegationLedgerConfirmationModal.confirm_description">
-            If the all the details are correct, please
-            <ConfirmSpan>confirm</ConfirmSpan> the origination on your device.
+          <Trans i18nKey="components.deployLedgerConfirmationModal.deploy_confirm">
+            Please
+            <ConfirmSpan>confirm</ConfirmSpan> the deployment on your device at
+            your own risk.
           </Trans>
         </ConfirmDes>
         <ConfirmImg src={confirmImg} />
