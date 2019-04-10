@@ -168,23 +168,23 @@ const getStatus = (transaction, selectedAccountHash, t) => {
 
   if (type === types.TRANSACTION && isSameLocation) {
     if (
-      transaction.parameters ||
-      (transaction.consumed_gas !== 10100 && transaction.consumed_gas !== 10260)
+      !transaction.parameters &&
+      (transaction.consumed_gas === 10100 || transaction.consumed_gas === 10260)
     ) {
       return {
         icon: 'send',
-        preposition: t('general.of'),
-        state: t('components.transaction.invoke_function'),
-        isFee: true,
+        preposition: t('general.to'),
+        state: t('components.transaction.sent'),
+        isFee,
         color: isAmount ? 'error1' : 'gray8',
         sign: isAmount ? '-' : ''
       };
     }
     return {
       icon: 'send',
-      preposition: t('general.to'),
-      state: t('components.transaction.sent'),
-      isFee,
+      preposition: t('general.of'),
+      state: t('components.transaction.invoke_function'),
+      isFee: true,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : ''
     };
