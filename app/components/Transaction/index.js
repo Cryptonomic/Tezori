@@ -167,7 +167,10 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && isSameLocation) {
-    if (transaction.parameters) {
+    if (
+      transaction.parameters ||
+      (transaction.consumed_gas !== 10100 && transaction.consumed_gas !== 10260)
+    ) {
       return {
         icon: 'send',
         preposition: t('general.of'),
