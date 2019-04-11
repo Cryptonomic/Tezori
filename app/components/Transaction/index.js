@@ -9,8 +9,8 @@ import { openLinkToBlockExplorer } from '../../utils/general';
 import * as types from '../../constants/TransactionTypes';
 import { READY } from '../../constants/StatusTypes';
 import {
-  REGULAR_CONSUMED_GAS,
-  IMPLICIT_CONSUMED_GAS
+  REG_TX_GAS_CONSUMPTION,
+  EMPTY_OUT_TX_GAS_CONSUMPTION
 } from '../../constants/ConsumedGasValue';
 import { wrapComponent } from '../../utils/i18n';
 
@@ -173,8 +173,8 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   if (type === types.TRANSACTION && isSameLocation) {
     if (
       !transaction.parameters &&
-      (transaction.consumed_gas === REGULAR_CONSUMED_GAS ||
-        transaction.consumed_gas === IMPLICIT_CONSUMED_GAS)
+      (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
     ) {
       return {
         icon: 'send',
