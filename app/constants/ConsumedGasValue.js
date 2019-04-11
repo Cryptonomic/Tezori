@@ -1,0 +1,2 @@
+export const REGULAR_CONSUMED_GAS = 10100;
+export const IMPLICIT_CONSUMED_GAS = 10260;

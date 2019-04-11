@@ -8,6 +8,10 @@ import TezosIcon from '../TezosIcon/';
 import { openLinkToBlockExplorer } from '../../utils/general';
 import * as types from '../../constants/TransactionTypes';
 import { READY } from '../../constants/StatusTypes';
+import {
+  REGULAR_CONSUMED_GAS,
+  IMPLICIT_CONSUMED_GAS
+} from '../../constants/ConsumedGasValue';
 import { wrapComponent } from '../../utils/i18n';
 
 const AmountContainer = styled.div`
@@ -169,7 +173,8 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   if (type === types.TRANSACTION && isSameLocation) {
     if (
       !transaction.parameters &&
-      (transaction.consumed_gas === 10100 || transaction.consumed_gas === 10260)
+      (transaction.consumed_gas === REGULAR_CONSUMED_GAS ||
+        transaction.consumed_gas === IMPLICIT_CONSUMED_GAS)
     ) {
       return {
         icon: 'send',
