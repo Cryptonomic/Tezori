@@ -196,10 +196,24 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && !isSameLocation) {
+    if (
+      !transaction.parameters &&
+      (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
+    ) {
+      return {
+        icon: 'receive',
+        preposition: t('general.from'),
+        state: t('components.transaction.received'),
+        isFee: false,
+        color: isAmount ? 'check' : 'gray8',
+        sign: isAmount ? '+' : ''
+      };
+    }
     return {
       icon: 'receive',
-      preposition: t('general.from'),
-      state: t('components.transaction.received'),
+      preposition: t('general.by'),
+      state: t('components.transaction.invoked'),
       isFee: false,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''

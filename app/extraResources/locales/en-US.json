@@ -56,7 +56,8 @@
     "next": "Next",
     "to": "to",
     "of": "of",
-    "from": "from"
+    "from": "from",
+    "by": "by"
   },
   "components": {
     "accountStatus": {
@@ -322,7 +323,8 @@
       "your_manager_address": "<0>your</0> Account 1 Manager Address",
       "invoke_function": "INVOKED FUNCTION",
       "add_delegate": "ORIGINATION - DELEGATED ADDRESS",
-      "deployment": "ORIGINATION - SMART CONTRACT"
+      "deployment": "ORIGINATION - SMART CONTRACT",
+      "invoked": "INVOKED"
     },
     "update": {
       "last_updated": "Last updated {{date}}"
