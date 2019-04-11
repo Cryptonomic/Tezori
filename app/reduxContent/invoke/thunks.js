@@ -96,7 +96,7 @@ export function invokeAddress(
 
       const clearedOperationId = clearOperationId(res.operationGroupID);
       const consumedGas = operationResult.consumed_gas
-        ? parseInt(operationResult.consumed_gas, 10)
+        ? Number(operationResult.consumed_gas)
         : null;
 
       dispatch(

@@ -133,7 +133,7 @@ export function sendTez(
       }
 
       const consumedGas = operationResult.consumed_gas
-        ? parseInt(operationResult.consumed_gas, 10)
+        ? Number(operationResult.consumed_gas)
         : null;
 
       const identity = findIdentity(identities, selectedParentHash);
