@@ -132,6 +132,10 @@ export function sendTez(
         return false;
       }
 
+      const consumedGas = operationResult.consumed_gas
+        ? Number(operationResult.consumed_gas)
+        : null;
+
       const identity = findIdentity(identities, selectedParentHash);
       const clearedOperationId = clearOperationId(res.operationGroupID);
       const transaction = createTransaction({
@@ -140,7 +144,8 @@ export function sendTez(
         kind: TRANSACTION,
         source: keyStore.publicKeyHash,
         operation_group_hash: clearedOperationId,
-        fee
+        fee,
+        consumed_gas: consumedGas
       });
 
       if (selectedParentHash === selectedAccountHash) {

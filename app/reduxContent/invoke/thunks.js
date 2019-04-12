@@ -95,6 +95,9 @@ export function invokeAddress(
       }
 
       const clearedOperationId = clearOperationId(res.operationGroupID);
+      const consumedGas = operationResult.consumed_gas
+        ? Number(operationResult.consumed_gas)
+        : null;
 
       dispatch(
         addMessage(
@@ -114,7 +117,8 @@ export function invokeAddress(
         fee,
         gas_limit: gas,
         storage_limit: storage,
-        parameters
+        parameters,
+        consumed_gas: consumedGas
       });
 
       if (selectedParentHash === selectedAccountHash) {

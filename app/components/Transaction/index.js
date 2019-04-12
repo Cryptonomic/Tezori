@@ -8,6 +8,10 @@ import TezosIcon from '../TezosIcon/';
 import { openLinkToBlockExplorer } from '../../utils/general';
 import * as types from '../../constants/TransactionTypes';
 import { READY } from '../../constants/StatusTypes';
+import {
+  REG_TX_GAS_CONSUMPTION,
+  EMPTY_OUT_TX_GAS_CONSUMPTION
+} from '../../constants/ConsumedGasValue';
 import { wrapComponent } from '../../utils/i18n';
 
 const AmountContainer = styled.div`
@@ -167,31 +171,49 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && isSameLocation) {
-    if (transaction.parameters) {
+    if (
+      !transaction.parameters &&
+      (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
+    ) {
       return {
         icon: 'send',
-        preposition: t('general.of'),
-        state: t('components.transaction.invoke_function'),
-        isFee: true,
+        preposition: t('general.to'),
+        state: t('components.transaction.sent'),
+        isFee,
         color: isAmount ? 'error1' : 'gray8',
         sign: isAmount ? '-' : ''
       };
     }
     return {
       icon: 'send',
-      preposition: t('general.to'),
-      state: t('components.transaction.sent'),
-      isFee,
+      preposition: t('general.of'),
+      state: t('components.transaction.invoke_function'),
+      isFee: true,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : ''
     };
   }
 
   if (type === types.TRANSACTION && !isSameLocation) {
+    if (
+      !transaction.parameters &&
+      (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
+    ) {
+      return {
+        icon: 'receive',
+        preposition: t('general.from'),
+        state: t('components.transaction.received'),
+        isFee: false,
+        color: isAmount ? 'check' : 'gray8',
+        sign: isAmount ? '+' : ''
+      };
+    }
     return {
       icon: 'receive',
-      preposition: t('general.from'),
-      state: t('components.transaction.received'),
+      preposition: t('general.by'),
+      state: t('components.transaction.invoked'),
       isFee: false,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''
