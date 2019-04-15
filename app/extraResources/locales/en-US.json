@@ -220,7 +220,10 @@
         "length": "Addresses must be 36 characters long.",
         "special_chars": "Addresses cannot contain any special characters.",
         "send_funds": "You cannot send funds to yourself.",
-        "invoke_address": "Smart Contract addresses can only start with KT1"
+        "invoke_address": "Smart Contract addresses can only start with KT1",
+        "not_exist": "This contract doesn't exist on the blockchain.",
+        "not_smartcontract": "This is a delegated address and not a smart contract. Please use send tab to transfer funds.",
+        "use_interact": "This is a smart contract address. Please use interact with contracts button to transfer funds."
       }
     },
     "languageSelectModal": {

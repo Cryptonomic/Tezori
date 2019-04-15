@@ -1,4 +1,6 @@
 import React from 'react';
+import { bindActionCreators, compose } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import TextField from '../TextField';
@@ -7,6 +9,8 @@ import TezosIcon from '../TezosIcon/';
 import Button from '../Button/';
 import Tooltip from '../Tooltip/';
 import { ms } from '../../styles/helpers';
+
+import { getAccountFromServer } from '../../reduxContent/generalThunk';
 
 const TooltipContainer = styled.div`
   padding: 10px;
@@ -56,7 +60,8 @@ type Props = {
   userAddress?: string,
   addressType: 'send' | 'delegate' | 'invoke',
   t: () => {},
-  onIssue?: () => {}
+  onIssue?: () => {},
+  getAccountFromServer: () => {}
 };
 
 class InputAddress extends React.PureComponent<Props> {
@@ -102,8 +107,12 @@ class InputAddress extends React.PureComponent<Props> {
     };
   };
 
-  validateAddress = (delegateText, changeDelegate, addressType = 'send') => {
-    const { t, onIssue } = this.props;
+  validateAddress = async (
+    delegateText,
+    changeDelegate,
+    addressType = 'send'
+  ) => {
+    const { t, onIssue, getAccountFromServer } = this.props;
 
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
@@ -112,30 +121,46 @@ class InputAddress extends React.PureComponent<Props> {
       t
     );
     let errorState = true;
+    let error = '';
 
     if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
-      this.setState({ error: regErrorTxt });
+      error = regErrorTxt;
     } else if (!lengthRegEx.test(delegateText) && delegateText !== '') {
-      this.setState({
-        error: t('components.inputAddress.errors.length')
-      });
+      error = t('components.inputAddress.errors.length');
     } else if (excludeSpecialChars.test(delegateText) && delegateText !== '') {
-      this.setState({
-        error: t('components.inputAddress.errors.special_chars')
-      });
+      error = t('components.inputAddress.errors.special_chars');
     } else if (this.props.userAddress === delegateText && delegateText !== '') {
-      this.setState({
-        error: t('components.inputAddress.errors.send_funds')
-      });
+      error = t('components.inputAddress.errors.send_funds');
     } else {
-      this.setState({
-        error: ''
-      });
       errorState = false;
     }
 
-    changeDelegate(delegateText);
-    onIssue(errorState);
+    if (!errorState) {
+      if (!delegateText) {
+        changeDelegate(delegateText);
+      } else {
+        const account = await getAccountFromServer(delegateText);
+        if (!account || account.length === 0) {
+          if (addressType === 'invoke') {
+            error = t('components.inputAddress.errors.not_exist');
+          }
+        } else {
+          const { script } = account[0];
+          if (!script && addressType === 'invoke') {
+            error = t('components.inputAddress.errors.not_smartcontract');
+          } else if (script && addressType !== 'invoke') {
+            error = t('components.inputAddress.errors.use_interact');
+          }
+        }
+        if (!error) {
+          changeDelegate(delegateText);
+        }
+      }
+    } else {
+      onIssue(errorState);
+    }
+
+    this.setState({ error });
   };
 
   render() {
@@ -176,4 +201,19 @@ class InputAddress extends React.PureComponent<Props> {
 InputAddress.defaultProps = {
   onIssue: () => null
 };
-export default wrapComponent(InputAddress);
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      getAccountFromServer
+    },
+    dispatch
+  );
+
+export default compose(
+  wrapComponent,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(InputAddress);
