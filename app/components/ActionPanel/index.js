@@ -16,6 +16,7 @@ import Send from '../Send/';
 import Receive from '../Receive/';
 import Delegate from '../Delegate/';
 import Invoke from '../Invoke';
+import ComingSoon from '../ComingSoon';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
 import {
@@ -161,9 +162,9 @@ class ActionPanel extends Component<Props, State> {
           />
         );
       case CODE:
-        return null;
+        return <ComingSoon label={t('general.nouns.code')} />;
       case STORAGE:
-        return null;
+        return <ComingSoon label={t('general.nouns.storage')} />;
       case INVOKE:
         return (
           <Invoke
