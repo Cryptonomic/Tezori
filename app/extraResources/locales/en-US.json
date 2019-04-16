@@ -334,6 +334,10 @@
     },
     "versionStatus": {
       "version_update": "You are using an older version of Galleon, which might not be fully functional. Please download v{{version}} at "
+    },
+    "comingSoon": {
+      "coming_soon": "Coming Soon!",
+      "working_hard": "We are working hard on making this page."
     }
   },
   "containers": {
