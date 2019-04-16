@@ -100,7 +100,7 @@
       "parameters": "Parámetros",
       "view_scan": "VER EN TZSCAN",
       "initial_storage": "Almacenamiento inicial",
-      "paste_michelson_code": "Pegar en tu código Micheline del contrato inteligente"
+      "paste_micheline_code": "Pegar en tu código Micheline del contrato inteligente"
     },
     "addNodeModal": {
       "error": "El protocolo del Node debe ser https",
