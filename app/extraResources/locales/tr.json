@@ -13,7 +13,11 @@
       "restore": "Kurtar",
       "confirm": "Kabul Et",
       "receive": "Tahsilat",
-      "continue": "Devam"
+      "continue": "Devam",
+      "invoke": "Çalıştır",
+      "deploy": "Oluştur",
+      "cancel": "Vazgeç",
+      "proceed": "Devam Et"
     },
     "nouns": {
       "amount": "Miktar",
@@ -41,7 +45,9 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Derivasyon",
       "storage": "Depolama",
-      "burn": "Yakım"
+      "burn": "Yakım",
+      "smart_contract": "Akıllı Sözleşme",
+      "code": "Kod"
     },
     "errors": {
       "no_hex_data": "Girilen bilgiler onaltılık düzeninde değil.",
@@ -52,7 +58,8 @@
     "next": "İleri",
     "to": "Bu adrese:",
     "of": "||",
-    "from": "Bu adresten:"
+    "from": "Bu adresten:",
+    "by": "Tarafından:"
   },
   "components": {
     "accountStatus": {
@@ -80,6 +87,21 @@
       "warning2": "Yönetici Adreslerin bakiyesi en az 1 µtz olabilir",
       "add_delegate_title": "Delege Adres Oluştur"
     },
+    "interactModal": {
+      "interact_contract": "Akıllı Sözleşme Operasyonları",
+      "invoke_contract": "Varolan sözleşmeyi çalıştır",
+      "deploy_contract": "Yeni sözleşme oluştur",
+      "title": "Akıllı Sözleşme Operasyonları",
+      "smart_address": "Akıllı Sözleşme Adresi",
+      "invoke_from": "Çalıştıracak adres",
+      "deploy_from": "Oluşturacak adres",
+      "storage_limit": "Depolama Limiti",
+      "gas_limit": "Gaz Limiti",
+      "parameters": "Parametreler",
+      "view_scan": "TZSCAN'DE GÖRÜNTÜLE",
+      "initial_storage": "İlk Depolama",
+      "paste_micheline_code": "Akıllı Sözleşme'nizin Micheline kodunu yapıştırın"
+    },
     "addNodeModal": {
       "error": "Nod'un protokolü https olmalı",
       "title": "Kendi {{title}} Nod'unuzu Kurun",
@@ -106,16 +128,15 @@
       },
       "account_title": "Hesap {{index}}",
       "not_ready_tooltip": "Hesabınız delege atmeye hazır değil.",
-      "delegation_tips": "Delegasyon İpuçları"
-    },
-    "addresses": {
-      "support_tooltip": "Birden fazla hesap için destek yakında sizinle."
+      "delegation_tips": "Delegasyon İpuçları",
+      "not_ready_interact_tooltip": "Hesabınız sözleşmeler ile iletişime geçmeye hazır değil."
     },
     "addressStatus": {
       "your_account": "hesabınız",
       "new_address": "Yeni adres",
       "retrieving_title": "{{typeText}} oluşturuluyor...",
-      "preparing_title": "{{typeText}} hazırlanıyor..."
+      "preparing_title": "{{typeText}} hazırlanıyor...",
+      "deploying_title": "Yeni sözleşme oluşturuluyor..."
     },
     "balanceBanner": {
       "breadcrumbs": "Hesap {{parentIndex}} > {{addressLabel}}",
@@ -131,6 +152,7 @@
         "description3": "Anahtar cümlenizi bir yere yadığınızdan emin olmak istiyoruz. Lütfen aşağıda sorulan dört kelimeyi girin."
       },
       "generate_other_seed": "Başka Anahtar Cümle Oluştur",
+      "copy_seed": "Anahtar Cümle'yi Kopyala",
       "create_account": "Oluştur",
       "seed_backup": "Anahtar cümleniz oluşturuldu!",
       "back_to_seed": "Anahtar Cümleye Geri Dön",
@@ -162,6 +184,20 @@
       "add_description": "Oluşturma operasyonu yapmak üzeresiniz. Lütfen aşağıdaki bilgilerin cihazınızda görülenler ile aynı olduğuna emin olun.",
       "confirm_description": "Eğer tüm bilgiler doğruysa, lütfen oluşturmayı cihazınızda <1> onaylayın</1>."
     },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "Akıllı Sözleşme Çalıştırma'yı Onaylayın",
+      "invoke_description": "Bir akıllı sözleşmeyi çalıştırmak üzeresiniz. Lütfen aşağıdaki bilgilerin cihazınızda görülenler ile aynı olduğuna emin olun.",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "Ledger Nano S cihazları henüz parametreleri işleyemiyor. Bu sebeple cihazınıda operasyon detayları yerine yukardaki mesajı göreceksiniz.",
+      "invoke_confirm": "Eğer tüm bilgiler doğruysa, lütfen çalıştırmayı cihazınızda<1> onaylayın</1>.",
+      "invoke_alt_confirm": "Çalıştırmayı cihazınıda riskin size ait olduğunu bilerek<1> onaylayın</1>."
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "Akıllı Sözleşme Oluşturma'yı Onaylayın",
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "Ledger Nano S cihazları henüz kod ve parametreleri işleyemiyor. Bu sebeple cihazınıda operasyon detayları yerine yukardaki mesajı göreceksiniz.",
+      "deploy_confirm": "Oluşturmayı cihazınıda riskin size ait olduğunu bilerek<1> onaylayın</1>."
+    },
     "fees": {
       "low_fee": "Düşük Ücret",
       "medium_fee": "Orta Ücret",
@@ -185,7 +221,11 @@
         "delegate_address": "Sadece TZ1, TZ2 veya TZ3 ile başlayan adreslere delege edebilirsiniz.",
         "length": "Adresler 36 karakter uzunluğunda olmalıdır.",
         "special_chars": "Addresler özel karakter barındıramaz.",
-        "send_funds": "Kendinize gönderim yapamassınz."
+        "send_funds": "Kendinize gönderim yapamassınz.",
+        "invoke_address": "Akıllı Sözleşme adresleri ancak KT1 ile başlayabilir.",
+        "not_exist": "Bu sözleşme Tezos blok zincirinde bulunamadı.",
+        "not_smartcontract": "Bu adres bir Delege adresi. İşlem yapmak için lütfen Gönder bölümünü kullanın.",
+        "use_interact": "Bu bir Akıllı Sözleşme adresi. İşlem yapmak için lütfen Akıllı Sözleşme Operasyonları tuşunu kullanın."
       }
     },
     "languageSelectModal": {
@@ -218,7 +258,10 @@
         "success_sent": "İşlem başarılı! {{localeParam}} tz gönderdiniz.",
         "invalid_wallet_password": "Hatalı cüzdan/şifre kombinasyonu.",
         "account_not_exist": "Bu hesap bulunamıyor.",
-        "ledger_not_connect": "Ledger bağlantıyı reddetti."
+        "ledger_not_connect": "Ledger bağlantıyı reddetti.",
+        "invoke_operation_failed": "Akıllı Sözleşme operasyonu başarısız.",
+        "success_invoke_operation": "Akıllı Sözleşme çalıştırma operasyonu başarılı.",
+        "success_contract_origination": "Akıllı Sözleşme oluşturma operasyonu başarılı."
       }
     },
     "pdfReader": {
@@ -236,6 +279,13 @@
         "invalid_length": "Anahtar cümleler 15 kelimeden fazla olamaz.",
         "invalid_words": "Hatalı kelime(ler) saptandı. Lütfen kontrol edin."
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "Güvenlik Uyarısı",
+      "learn_more": "Daha fazla bilgi",
+      "understand_check": "Bu operasyonun riskli olduğunu anlıyor ve kabul ediyorum.",
+      "dont_message": "Bu mesajı bir daha gösterme (tavsiye edilmez).",
+      "notice_content": "Kendinize ait bir Tezos Nod'u kullanmıyorsunuz. Ortak bir Tezos Nod'u kullanmakta bir sorun yok, ancak bağlı olduğunuz ortak Nod hacklenmişse bu operasyon size XTZ'lerinizi kaybettirebilir."
     },
     "send": {
       "send_xtz": "XTZ Gönder",
@@ -282,10 +332,21 @@
       "sent": "GÖNDERİ",
       "received": "TAHSİLAT",
       "this_address": "Adres",
-      "your_manager_address": "Hesap 1 için <0>sizin</0> Yönetici Adresiniz"
+      "your_manager_address": "Hesap 1 için <0>sizin</0> Yönetici Adresiniz",
+      "invoke_function": "FONKSIYON ÇALIŞTIRILDI",
+      "add_delegate": "OLUŞTURMA - DELEGE",
+      "deployment": "OLUŞTURMA - AKILLI SÖZLEŞME",
+      "invoked": "ÇALIŞTIRILDI"
     },
     "update": {
       "last_updated": "Son güncelleme {{date}}"
+    },
+    "versionStatus": {
+      "version_update": "Galleon'un eski bir sürümünü kullanıyorsunuz. Bu sürümde bazı özellikler çalışmıyor olabilir. Lütfen v{{version}}'yi indirin: "
+    },
+    "comingSoon": {
+      "coming_soon": "Yakında!",
+      "working_hard": ""
     }
   },
   "containers": {

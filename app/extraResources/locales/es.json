@@ -222,7 +222,7 @@
         "length": "Las direcciones deben tener 36 caracteres",
         "special_chars": "Las direcciones no deben contener caracteres especiales",
         "send_funds": "No te puedes enviar fondos a ti mismo",
-        "invoke_address": "Smart Contract addresses can only start with KT1",
+        "invoke_address": "Las direcciones de los contratos inteligentes sólo pueden comenzar con KT1",
         "not_exist": "Este contrato no existen en la blockchain.",
         "not_smartcontract": "Esta es una dirección delegada y no un contrato inteligente. Por favor usa la pestaña Enviar para transferir fondos.",
         "use_interact": "Esta es una dirección de contrato inteligente. Por favor usa el botón Interactuar con Contratos para transferir fondos."
