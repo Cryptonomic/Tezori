@@ -128,8 +128,8 @@
       },
       "account_title": "Account {{index}}",
       "not_ready_tooltip": "Your account is not ready to delegate.",
-      "not_ready_interact_tooltip": "Your account is not ready to interact with contracts.",
-      "delegation_tips": "Delegation Tips"
+      "delegation_tips": "Delegation Tips",
+      "not_ready_interact_tooltip": "Your account is not ready to interact with contracts."
     },
     "addressStatus": {
       "your_account": "your account",
