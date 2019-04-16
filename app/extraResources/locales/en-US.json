@@ -15,7 +15,9 @@
       "receive": "Receive",
       "continue": "Continue",
       "invoke": "Invoke",
-      "deploy": "Deploy"
+      "deploy": "Deploy",
+      "cancel": "Cancel",
+      "proceed": "Proceed"
     },
     "nouns": {
       "amount": "Amount",
@@ -277,6 +279,13 @@
         "invalid_length": "Seed phrases must contain no more than 15 words.",
         "invalid_words": "Detected invalid word(s). Please double check."
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "Security Notice",
+      "learn_more": "Learn more",
+      "understand_check": "I understand that this operation may result in a loss of funds.",
+      "dont_message": "Don’t show this message again (not recommended).",
+      "notice_content": "It looks like you are not running a local Tezos node. It's perfectly fine to use a hosted node. However, if the Tezos node is compromised, you might end up losing your funds."
     },
     "send": {
       "send_xtz": "Send XTZ",

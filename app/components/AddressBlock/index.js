@@ -19,12 +19,18 @@ import { READY, PENDING } from '../../constants/StatusTypes';
 import { isReady } from '../../utils/general';
 import AddDelegateModal from '../AddDelegateModal/';
 import InteractContractModal from '../InteractContractModal';
+import SecurityNoticeModal from '../SecurityNoticeModal';
 import Tooltip from '../Tooltip';
 import NoFundTooltip from '../Tooltips/NoFundTooltip';
 import { wrapComponent } from '../../utils/i18n';
+import { getNodeUrl } from '../../utils/settings';
 
 import { hideDelegateTooltip } from '../../reduxContent/settings/thunks';
-import { getDelegateTooltip } from '../../reduxContent/settings/selectors';
+import {
+  getDelegateTooltip,
+  getTezosSelectedNode,
+  getTezosNodes
+} from '../../reduxContent/settings/selectors';
 
 const { Mnemonic } = StoreType;
 
@@ -124,6 +130,8 @@ const NoSmartAddressesButton = styled(Button)`
 type Props = {
   hideDelegateTooltip: () => {},
   delegateTooltip: boolean,
+  tezosSelectedNode: string,
+  tezosNodes: array,
   history: object,
   accountBlock: object, // TODO: type this
   syncAccountOrIdentity: () => {},
@@ -141,14 +149,32 @@ class AddressBlock extends Component<Props, State> {
   props: Props;
   state = {
     isDelegateModalOpen: false,
-    isInteractModalOpen: false
+    isInteractModalOpen: false,
+    isSecurityModalOpen: false
   };
 
   openDelegateModal = () => this.setState({ isDelegateModalOpen: true });
   closeDelegateModal = () => this.setState({ isDelegateModalOpen: false });
 
   openInteractModal = () => this.setState({ isInteractModalOpen: true });
+
+  onCheckInteractModal = () => {
+    const { tezosSelectedNode, tezosNodes } = this.props;
+    const nodeUrl = getNodeUrl(tezosNodes, tezosSelectedNode);
+
+    const index = nodeUrl.indexOf('localhost');
+    const isNotShowMessage = localStorage.getItem('isNotShowMessage');
+    if (index >= 0 || isNotShowMessage) {
+      this.openInteractModal();
+    } else {
+      this.setState({ isSecurityModalOpen: true });
+    }
+  };
+
+  onProceedSecurityModal = () =>
+    this.setState({ isInteractModalOpen: true, isSecurityModalOpen: false });
   closeInteractModal = () => this.setState({ isInteractModalOpen: false });
+  closeSecurityModal = () => this.setState({ isSecurityModalOpen: false });
 
   goToAccount = (selectedAccountHash, selectedParentHash) => {
     const { history, syncAccountOrIdentity } = this.props;
@@ -207,7 +233,11 @@ class AddressBlock extends Component<Props, State> {
   };
 
   render() {
-    const { isDelegateModalOpen, isInteractModalOpen } = this.state;
+    const {
+      isDelegateModalOpen,
+      isInteractModalOpen,
+      isSecurityModalOpen
+    } = this.state;
     const {
       accountBlock,
       selectedAccountHash,
@@ -352,7 +382,7 @@ class AddressBlock extends Component<Props, State> {
                 width: ms(1),
                 cursor: 'pointer'
               }}
-              onClick={this.openInteractModal}
+              onClick={this.onCheckInteractModal}
             />
           )}
           {!isManagerReady && (
@@ -420,6 +450,11 @@ class AddressBlock extends Component<Props, State> {
           managerBalance={balance}
           t={t}
         />
+        <SecurityNoticeModal
+          open={isSecurityModalOpen}
+          onClose={this.closeSecurityModal}
+          onProceed={this.onProceedSecurityModal}
+        />
         {isDelegateToolTip && (
           <NoSmartAddressesContainer>
             <CloseIcon
@@ -457,7 +492,9 @@ class AddressBlock extends Component<Props, State> {
 
 function mapStateToProps(state) {
   return {
-    delegateTooltip: getDelegateTooltip(state)
+    delegateTooltip: getDelegateTooltip(state),
+    tezosSelectedNode: getTezosSelectedNode(state),
+    tezosNodes: getTezosNodes(state)
   };
 }
 
