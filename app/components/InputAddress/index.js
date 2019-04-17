@@ -135,31 +135,23 @@ class InputAddress extends React.PureComponent<Props> {
       errorState = false;
     }
 
-    if (!errorState) {
-      if (!delegateText) {
-        changeDelegate(delegateText);
-      } else {
-        const account = await getAccountFromServer(delegateText);
-        if (!account || account.length === 0) {
-          if (addressType === 'invoke') {
-            error = t('components.inputAddress.errors.not_exist');
-          }
-        } else {
-          const { script } = account[0];
-          if (!script && addressType === 'invoke') {
-            error = t('components.inputAddress.errors.not_smartcontract');
-          } else if (script && addressType !== 'invoke') {
-            error = t('components.inputAddress.errors.use_interact');
-          }
+    if (!errorState && delegateText) {
+      const account = await getAccountFromServer(delegateText);
+      if (!account || account.length === 0) {
+        if (addressType === 'invoke') {
+          error = t('components.inputAddress.errors.not_exist');
         }
-        if (!error) {
-          changeDelegate(delegateText);
+      } else {
+        const { script } = account[0];
+        if (!script && addressType === 'invoke') {
+          error = t('components.inputAddress.errors.not_smartcontract');
+        } else if (script && addressType !== 'invoke') {
+          error = t('components.inputAddress.errors.use_interact');
         }
       }
-    } else {
-      onIssue(errorState);
     }
-
+    changeDelegate(delegateText);
+    onIssue(!!error);
     this.setState({ error });
   };
 

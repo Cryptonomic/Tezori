@@ -205,7 +205,8 @@ const initialState = {
     low: 1420,
     medium: 2840,
     high: 5680
-  }
+  },
+  isAddressIssue: true
 };
 class Send extends Component<Props> {
   props: Props;
@@ -432,7 +433,8 @@ class Send extends Component<Props> {
       balance,
       isDisplayedBurn,
       isDisplayedFeeTooltip,
-      miniFee
+      miniFee,
+      isAddressIssue
     } = this.state;
 
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
@@ -443,22 +445,28 @@ class Send extends Component<Props> {
     const error = isIssue ? this.renderError(warningMessage) : '';
 
     const isDisabled =
-      !amount || !toAddress || !isReady || isIssue || isLoading;
+      !amount ||
+      !toAddress ||
+      !isReady ||
+      isIssue ||
+      isLoading ||
+      isAddressIssue;
 
     return (
       <SendContainer>
         <SendTitle>{t('components.send.send_xtz')}</SendTitle>
         <InputAddress
           labelText={t('components.send.recepient_address')}
-          userAddress={this.props.selectedAccountHash}
+          userAddress={selectedAccountHash}
           addressType="send"
           changeDelegate={this.handleToAddressChange}
+          onIssue={status => this.setState({ isAddressIssue: status })}
         />
         <InputAmount>
           <TezosNumericInput
             decimalSeparator={t('general.decimal_separator')}
             labelText={t('general.nouns.amount')}
-            amount={this.state.amount}
+            amount={amount}
             handleAmountChange={this.handleAmountChange}
             errorText={error}
           />
