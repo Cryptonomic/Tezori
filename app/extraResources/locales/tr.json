@@ -132,7 +132,7 @@
       "not_ready_interact_tooltip": "Hesabınız sözleşmeler ile iletişime geçmeye hazır değil."
     },
     "addressStatus": {
-      "your_account": "hesabınız",
+      "your_account": "Hesabınız",
       "new_address": "Yeni adres",
       "retrieving_title": "{{typeText}} oluşturuluyor...",
       "preparing_title": "{{typeText}} hazırlanıyor...",
