@@ -4,14 +4,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import NumberFormat from 'react-number-format';
 
 const Container = styled(FormControl)`
   width: 100%;
   pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
 `;
 
-const InputWrapper = styled(Input)`
+const TextAreaWrapper = styled(Input)`
   &&& {
     &[class*='focused'] {
       &:after {
@@ -19,11 +18,11 @@ const InputWrapper = styled(Input)`
           error ? colors.error1 : colors.accent};
       }
     }
-    color: ${({ disabled, theme: { colors } }) =>
-      disabled ? colors.gray5 : colors.primary};
-    font-size: 16px;
-    font-weight: 300;
-    padding-right: ${({ right }) => right}px;
+    background-color: ${({ theme: { colors } }) => colors.gray14};
+    border: 1px solid ${({ theme: { colors } }) => colors.gray14};
+    font-size: 14px;
+    color: ${({ theme: { colors } }) => colors.blue5};
+    padding: 10px 22px 5px 22px;
     &:before {
       border-bottom: ${({ disabled }) =>
         disabled
@@ -41,9 +40,13 @@ const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {
       color: ${({ theme: { colors } }) => colors.gray3};
+      transform: translate(0, 1.5px) scale(0.75);
     }
-    color: rgba(0, 0, 0, 0.38);
+    color: ${({ theme: { colors } }) => colors.gray15};
+    z-index: 10;
     font-size: 16px;
+    pointer-events: none;
+    transform: translate(22px, 34px) scale(1);
   }
 }`;
 
@@ -57,65 +60,31 @@ const ErrorText = styled(FormHelperText)`
   }
 }`;
 
-type Props1 = {
-  inputRef: () => {},
-  onChange: () => {}
-};
-
-const NumberFormatCustom = (props: Props1) => {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumberFormat
-      {...other}
-      type="text"
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({
-          target: {
-            value: values.value
-          }
-        });
-      }}
-      thousandSeparator
-    />
-  );
-};
-
 type Props = {
   label: string,
-  type?: string,
   errorText?: string | React.Node,
   disabled?: boolean,
-  right?: number,
   onChange?: () => {}
 };
 
-const TextField = (props: Props) => {
-  const { label, type, onChange, errorText, disabled, right, ...other } = props;
+const CustomTextArea = (props: Props) => {
+  const { label, onChange, errorText, disabled, ...other } = props;
   return (
     <Container disabled={disabled}>
       <LabelWrapper>{label}</LabelWrapper>
-      <InputWrapper
+      <TextAreaWrapper
         key={label}
-        type={type}
         onChange={event => onChange(event.target.value)}
-        error={!!errorText}
-        disabled={disabled}
-        right={right}
-        inputComponent={type === 'number' ? NumberFormatCustom : null}
+        multiline
         {...other}
       />
-
       <ErrorText component="div">{errorText}</ErrorText>
     </Container>
   );
 };
-TextField.defaultProps = {
-  type: 'text',
+CustomTextArea.defaultProps = {
   errorText: '',
-  disabled: false,
-  right: 0
+  disabled: false
 };
 
-export default TextField;
+export default CustomTextArea;
