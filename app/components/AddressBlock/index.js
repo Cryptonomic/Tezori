@@ -176,10 +176,10 @@ class AddressBlock extends Component<Props, State> {
   closeInteractModal = () => this.setState({ isInteractModalOpen: false });
   closeSecurityModal = () => this.setState({ isSecurityModalOpen: false });
 
-  goToAccount = (selectedAccountHash, selectedParentHash) => {
+  goToAccount = (selectedAccountHash, selectedParentHash, index) => {
     const { history, syncAccountOrIdentity } = this.props;
     history.push(
-      `/home/addresses/${selectedAccountHash}/${selectedParentHash}`
+      `/home/addresses/${selectedAccountHash}/${selectedParentHash}/${index}`
     );
     syncAccountOrIdentity(selectedAccountHash, selectedParentHash);
   };
@@ -297,14 +297,14 @@ class AddressBlock extends Component<Props, State> {
             isManager
             isActive={isManagerActive}
             balance={accountBlock.get('balance')}
-            onClick={() => this.goToAccount(publicKeyHash, publicKeyHash)}
+            onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         ) : (
           <AddressStatus
             isManager
             isActive={isManagerActive}
             status={accountBlock.get('status')}
-            onClick={() => this.goToAccount(publicKeyHash, publicKeyHash)}
+            onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         )}
 
@@ -359,14 +359,18 @@ class AddressBlock extends Component<Props, State> {
               index={index}
               isActive={isDelegatedActive}
               balance={balance}
-              onClick={() => this.goToAccount(addressId, publicKeyHash)}
+              onClick={() =>
+                this.goToAccount(addressId, publicKeyHash, index + 1)
+              }
             />
           ) : (
             <AddressStatus
               key={addressId}
               isActive={isDelegatedActive}
               status={status}
-              onClick={() => this.goToAccount(addressId, publicKeyHash)}
+              onClick={() =>
+                this.goToAccount(addressId, publicKeyHash, index + 1)
+              }
             />
           );
         })}
@@ -411,7 +415,7 @@ class AddressBlock extends Component<Props, State> {
             </Tooltip>
           )}
         </InteractContractLabel>
-        {smartAddresses.map(address => {
+        {smartAddresses.map((address, index) => {
           const { status, balance } = address;
           const addressId = address.account_id;
           const isActive = addressId === selectedAccountHash;
@@ -424,7 +428,9 @@ class AddressBlock extends Component<Props, State> {
               accountId={addressId}
               isActive={isActive}
               balance={balance}
-              onClick={() => this.goToAccount(addressId, publicKeyHash)}
+              onClick={() =>
+                this.goToAccount(addressId, publicKeyHash, index + 1)
+              }
             />
           ) : (
             <AddressStatus
@@ -432,7 +438,9 @@ class AddressBlock extends Component<Props, State> {
               isActive={isActive}
               status={status}
               isContract
-              onClick={() => this.goToAccount(addressId, publicKeyHash)}
+              onClick={() =>
+                this.goToAccount(addressId, publicKeyHash, index + 1)
+              }
             />
           );
         })}

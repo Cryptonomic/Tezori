@@ -26,13 +26,15 @@ class AddressPage extends Component<Props> {
   render() {
     const { match, identities } = this.props;
     const { publicKeyHash } = identities[0];
-    const redirectUrl = `${match.url}/${publicKeyHash}/${publicKeyHash}`;
+    const redirectUrl = `${match.url}/${publicKeyHash}/${publicKeyHash}/0`;
 
     return (
       <Switch>
         <Route
           exact
-          path={`${match.path}/:selectedAccountHash/:selectedParentHash`}
+          path={`${
+            match.path
+          }/:selectedAccountHash/:selectedParentHash/:addressIndex`}
           render={context => {
             const { params } = context.match;
             return (
@@ -59,4 +61,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null)(AddressPage);
+export default connect(
+  mapStateToProps,
+  null
+)(AddressPage);

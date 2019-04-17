@@ -109,6 +109,7 @@ type Props = {
   syncWallet: () => {},
   selectedAccountHash: string,
   selectedParentHash: string,
+  addressIndex: string,
   time?: Date,
   t: () => {}
 };
@@ -271,7 +272,8 @@ class ActionPanel extends Component<Props, State> {
       syncWallet,
       time,
       t,
-      isWalletSyncing
+      isWalletSyncing,
+      addressIndex
     } = this.props;
     const jsIdentities = identities.toJS();
     const selectedAccount = getSelectedAccount(
@@ -297,7 +299,6 @@ class ActionPanel extends Component<Props, State> {
           isReady={isReady(status, storeType)}
           balance={balance || 0}
           publicKeyHash={selectedAccountHash || 'Inactive'}
-          parentIdentity={parentIdentity}
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
           onRefreshClick={syncWallet}
@@ -306,6 +307,7 @@ class ActionPanel extends Component<Props, State> {
           delegatedAddress={selectedAccount.get('delegate_value')}
           isWalletSyncing={isWalletSyncing}
           isContractAddress={isContractAddress}
+          addressIndex={addressIndex}
         />
 
         <TabList>
