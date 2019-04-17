@@ -40,6 +40,8 @@ const LabelWrapper = styled(InputLabel)`
   &&& {
     &[class*='focused'] {
       color: ${({ theme: { colors } }) => colors.gray3};
+    }
+    &[class*='shrink'] {
       transform: translate(0, 1.5px) scale(0.75);
     }
     color: ${({ theme: { colors } }) => colors.gray15};
