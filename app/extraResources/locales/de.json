@@ -317,7 +317,7 @@
       "hi_there": "Hi!",
       "welcome_to": "Willkommen zu {{name}}",
       "i_agree": "Ich stimme zu",
-      "description": "Befor wir anfangen lesen Sie bitte und bestätigen Sie unsere<1> Nutzungsbedingungen </1>und<3> Datenschutz-Bestimmungen</3>."
+      "description": "Bevor wir anfangen, lesen und bestätigen Sie bitte unsere<1> Nutzungsbedingungen </1>und<3> Datenschutzbestimmungen</3>."
     },
     "tooltips": {
       "manager_tooltips_description": "Die Manager-Adresse ist die primäre Adresse Ihres Kontos und kann zum Senden und Empfangen von Tez verwendet werden."
