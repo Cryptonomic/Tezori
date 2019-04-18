@@ -168,7 +168,7 @@ class DeployContract extends Component<Props> {
         <TabContainer>
           <InputAddressContainer>
             <CustomTextArea
-              label={t('components.interactModal.paste_michelson_code')}
+              label={t('components.interactModal.paste_micheline_code')}
               multiline
               rows={5}
               rowsMax={5}

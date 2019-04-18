@@ -13,7 +13,11 @@
       "restore": "Wiederherstellen",
       "confirm": "Bestätigen",
       "receive": "Empfangen",
-      "continue": "Weiter"
+      "continue": "Weiter",
+      "invoke": "Aufrufen",
+      "deploy": "Bereitstellen",
+      "cancel": "Abbrechen",
+      "proceed": "Fortfahren"
     },
     "nouns": {
       "amount": "Betrag",
@@ -41,7 +45,9 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Derivation Pfad",
       "storage": "Storage",
-      "burn": "Burn"
+      "burn": "Burn",
+      "smart_contract": "Smart Contract",
+      "code": "Code"
     },
     "errors": {
       "no_hex_data": "Die angegebene Zeichenfolge sieht nicht wie Hex-Daten aus",
@@ -52,7 +58,8 @@
     "next": "Weiter",
     "to": "zu",
     "of": "aus",
-    "from": "von"
+    "from": "von",
+    "by": "von"
   },
   "components": {
     "accountStatus": {
@@ -80,6 +87,21 @@
       "warning2": "Manager-Adressen dürfen (noch) nicht weniger als 1 μtz haben",
       "add_delegate_title": "Fügen Sie einen Delegierten hinzu"
     },
+    "interactModal": {
+      "interact_contract": "Interagiere mit Contracts",
+      "invoke_contract": "Rufe einen existierenden Contract auf",
+      "deploy_contract": "Stelle einen neuen Contract bereit",
+      "title": "Interagiere mit Smart Contracts",
+      "smart_address": "Smart Contract Adresse",
+      "invoke_from": "Aufrufen von",
+      "deploy_from": "Bereitstellen von",
+      "storage_limit": "Storage Limit",
+      "gas_limit": "Gas Limit",
+      "parameters": "Parameter",
+      "view_scan": "Auf TZSCAN anschauen",
+      "initial_storage": "Initial Storage",
+      "paste_micheline_code": "Füge deinen Smart Contract Micheline Code hinzu"
+    },
     "addNodeModal": {
       "error": "Das Protokoll des Knotens muss https sein",
       "title": "Richten Sie eine benutzerdefinierte Node ein {{title}}",
@@ -106,16 +128,15 @@
       },
       "account_title": "Konto {{index}}",
       "not_ready_tooltip": "Ihr Konto ist nicht bereit zum Delegieren.",
-      "delegation_tips": "Delegierungs Tips"
-    },
-    "addresses": {
-      "support_tooltip": "Support für mehrere Konten kommt bald."
+      "delegation_tips": "Delegierungs Tips",
+      "not_ready_interact_tooltip": "Ihr Konto ist nicht bereit zum interagieren mit Contracts."
     },
     "addressStatus": {
       "your_account": "Ihr Konto",
       "new_address": "Neue Adresse",
       "retrieving_title": "Empfangen {{typeText}}...",
-      "preparing_title": "Vorbereiten {{typeText}}..."
+      "preparing_title": "Vorbereiten {{typeText}}...",
+      "deploying_title": "Stelle neuen Contract bereit..."
     },
     "balanceBanner": {
       "breadcrumbs": "Konto {{parentIndex}} > {{addressLabel}}",
@@ -131,6 +152,7 @@
         "description3": "Um sicherzustellen, dass Sie Ihre Seedphrase aufgeschrieben haben, geben Sie bitte die folgenden vier Seedworte ein."
       },
       "generate_other_seed": "Generiere eine andere Seedphrase",
+      "copy_seed": "Seedphrase kopieren",
       "create_account": "Erstelle Konto",
       "seed_backup": "Ihr Tezos Konto Seed ist gesichert!",
       "back_to_seed": "Zurück zu Seedphrase",
@@ -162,6 +184,20 @@
       "add_description": "Sie sind im Begriff, eine Erstelllungsoperation zu senden, um einen Delegierten hinzuzufügen. Bitte überprüfen Sie sorgfältig die Details auf Ihrem Gerät.",
       "confirm_description": "Wenn alle Angaben korrekt sind, bestätigen Sie die Erstellung mit <1> auf ihrem Gerät."
     },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "Bestätige Smart Contract Operation",
+      "invoke_description": "Sie sind dabei, eine Smart-Contract Funktion aufzurufen. Bitte prüfen Sie sorgfältig die Details auf Ihrem Gerät",
+      "invoke_alt_description_1": "Unbekannte Operation, Sign nicht verifiziert?",
+      "invoke_alt_description_2": "Bitte beachten Sie, dass Ledger Nano S Geräte noch keine Parameter analysieren können. Es wird erwartet, dass die obige Meldung anstelle von Operationsdetails angezeigt wird.",
+      "invoke_confirm": "Wenn alle Parameter korrekt sind, bitte<1> bestätige </1>den Aufruf auf deinem Gerät.",
+      "invoke_alt_confirm": "Bitte<1> bestätige </1>den Aufruf auf deinem Gerät, auf eigene Gefahr."
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "Bestätige Smart Contract Bereitstellung",
+      "deploy_description_1": "Unbekannte Operation, Sign nicht verifiziert?",
+      "deploy_description_2": "Bitte beachten Sie, dass Ledger Nano S Geräte noch keine Parameter analysieren können. Es wird erwartet, dass die obige Meldung anstelle von Operationsdetails angezeigt wird.",
+      "deploy_confirm": "Bitte<1> bestätige </1>das Bereitstellen auf deinem Gerät, auf eigene Gefahr."
+    },
     "fees": {
       "low_fee": "Geringe Gebühr",
       "medium_fee": "Mittlere Gebühr",
@@ -185,7 +221,11 @@
         "delegate_address": "Sie können nur zu TZ1, TZ2 or TZ3 Adressen delegieren.",
         "length": "Adressen müssen 36 Zeichen lang sein.",
         "special_chars": "Adressen können keine Sonderzeichen enthalten.",
-        "send_funds": "Sie können sich nichts selbst schicken."
+        "send_funds": "Sie können sich nichts selbst schicken.",
+        "invoke_address": "Smart Contract Adressen starten immer mit KT1",
+        "not_exist": "Dieser Contract existiert nicht auf der Blockchain.",
+        "not_smartcontract": "Dies ist eine delegierte Adresse und kein Smart Contract. Bitte benutze Senden tab um Tezos zu transferieren.",
+        "use_interact": "Dies ist eine Smart Contract Adresse. Bitte benutze Interagiere mit Contracts button um Tezos zu transferieren."
       }
     },
     "languageSelectModal": {
@@ -218,7 +258,10 @@
         "success_sent": "Erfolg! Sie haben {{localeParam}} tz gesendet.",
         "invalid_wallet_password": "Falsche Wallet/Passwort Kombination.",
         "account_not_exist": "Das Konto existiert nicht.",
-        "ledger_not_connect": "Verbindung von Ledger abgelehnt."
+        "ledger_not_connect": "Verbindung von Ledger abgelehnt.",
+        "invoke_operation_failed": "Smart Contract Operation fehlgeschlagen",
+        "success_invoke_operation": "Der Smart Contract Aufruf wurde erfolgreich gestartet",
+        "success_contract_origination": "Die Smart Contract Bereitstellung wurde erfolgreich gestartet"
       }
     },
     "pdfReader": {
@@ -236,6 +279,13 @@
         "invalid_length": "Seed phrases müssen mehr als 15 Wörter beinhalten",
         "invalid_words": "Ungültige Wörter festgestellt. Bitte nochmal nachprüfen."
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "Sicherheitshinweis",
+      "learn_more": "Mehr dazu",
+      "understand_check": "Ich verstehe, dass diese Operation zu einem Geldverlust führen kann.",
+      "dont_message": "Diese Nachricht nicht mehr anzeigen (nicht empfohlen).",
+      "notice_content": "Es sieht so aus, als würden Sie keine lokale Tezos-Node betreiben. Es ist vollkommen in Ordnung, einen gehosteten Knoten zu verwenden.. Wenn der Tezos-Knoten jedoch kompromittiert ist, können Sie Ihre Tezos verlieren."
     },
     "send": {
       "send_xtz": "Sende XTZ",
@@ -267,7 +317,7 @@
       "hi_there": "Hi!",
       "welcome_to": "Willkommen zu {{name}}",
       "i_agree": "Ich stimme zu",
-      "description": "Befor wir anfangen lesen Sie bitte und bestätigen Sie unsere<1> Nutzungsbedingungen </1>und<3> Datenschutz-Bestimmungen</3>."
+      "description": "Bevor wir anfangen, lesen und bestätigen Sie bitte unsere<1> Nutzungsbedingungen </1>und<3> Datenschutzbestimmungen</3>."
     },
     "tooltips": {
       "manager_tooltips_description": "Die Manager-Adresse ist die primäre Adresse Ihres Kontos und kann zum Senden und Empfangen von Tez verwendet werden."
@@ -282,10 +332,21 @@
       "sent": "GESENDET",
       "received": "EMPFANGEN",
       "this_address": "diese Adresse",
-      "your_manager_address": "<0>Ihr</0> Konto 1 Manager Adresse"
+      "your_manager_address": "<0>Ihr</0> Konto 1 Manager Adresse",
+      "invoke_function": "AUFRUF FUNKTION",
+      "add_delegate": "ORIGINATION - DELEGATED ADDRESS",
+      "deployment": "ORIGINATION - SMART CONTRACT",
+      "invoked": "AUFGERUFEN"
     },
     "update": {
       "last_updated": "Letztes Update {{date}}"
+    },
+    "versionStatus": {
+      "version_update": "Sie verwenden eine ältere Version von Galleon, die möglicherweise nicht voll funktionsfähig ist. Bitte laden Sie v{{version}} auf "
+    },
+    "comingSoon": {
+      "coming_soon": "Demnächst!",
+      "working_hard": ""
     }
   },
   "containers": {

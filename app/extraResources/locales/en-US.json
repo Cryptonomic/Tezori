@@ -100,7 +100,7 @@
       "parameters": "Parameters",
       "view_scan": "VIEW ON TZSCAN",
       "initial_storage": "Initial Storage",
-      "paste_michelson_code": "Paste in your smart contract Michelson code"
+      "paste_micheline_code": "Paste in your smart contract Micheline code"
     },
     "addNodeModal": {
       "error": "Node's protocol must be https",
@@ -128,8 +128,8 @@
       },
       "account_title": "Account {{index}}",
       "not_ready_tooltip": "Your account is not ready to delegate.",
-      "not_ready_interact_tooltip": "Your account is not ready to interact with contracts.",
-      "delegation_tips": "Delegation Tips"
+      "delegation_tips": "Delegation Tips",
+      "not_ready_interact_tooltip": "Your account is not ready to interact with contracts."
     },
     "addressStatus": {
       "your_account": "your account",
