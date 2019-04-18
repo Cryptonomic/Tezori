@@ -87,11 +87,13 @@ export function awaitFor(timeout: number) {
 export function getSelectedHash() {
   let hash = location.hash.replace(/$\//, '');
   let segments = hash.split('/');
+  const addressIndex = segments.pop();
   const selectedParentHash = segments.pop();
   const selectedAccountHash = segments.pop();
   return {
     selectedParentHash,
-    selectedAccountHash
+    selectedAccountHash,
+    addressIndex
   };
 }
 
