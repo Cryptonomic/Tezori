@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import TextField from '../TextField';
+import CustomTextArea from './CustomTextArea';
 import TezosNumericInput from '../TezosNumericInput/';
 import { ms } from '../../styles/helpers';
 import Fees from '../Fees';
@@ -166,8 +167,8 @@ class DeployContract extends Component<Props> {
       <MainContainer>
         <TabContainer>
           <InputAddressContainer>
-            <TextField
-              label={t('components.interactModal.paste_micheline_code')}
+            <CustomTextArea
+              label={t('components.interactModal.paste_michelson_code')}
               multiline
               rows={5}
               rowsMax={5}
