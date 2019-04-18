@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -24,9 +25,12 @@ import {
   fetchOriginationAverageFees
 } from '../../reduxContent/createDelegate/thunks';
 
+import { getIsReveal } from '../../reduxContent/wallet/thunks';
+
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
+import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 
 type Props = {
   isLoading: boolean,
@@ -36,8 +40,9 @@ type Props = {
   open: boolean,
   onCloseClick: () => {},
   t: () => {},
-  managerBalance: number,
-  isLedger: boolean
+  managerBalance: ?number,
+  isLedger: boolean,
+  getIsReveal: () => {}
 };
 
 const InputAddressContainer = styled.div`
@@ -163,6 +168,16 @@ const TextfieldTooltip = styled(Button)`
   top: 27px;
 `;
 
+const FeeTooltip = styled(Button)`
+  position: relative;
+  top: 3px;
+`;
+
+const BurnTooltip = styled(TextfieldTooltip)`
+  right: 115px;
+  top: 23px;
+`;
+
 const HelpIcon = styled(TezosIcon)`
   padding: 0 0 0 ${ms(-4)};
 `;
@@ -178,22 +193,43 @@ const TooltipContainer = styled.div`
   }
 `;
 
+const TooltipTitle = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
+const TooltipContent = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 21px;
+  width: 270px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.black};
+`;
+
+const BoldSpan = styled.span`
+  font-weight: 500;
+`;
+
 const utez = 1000000;
 
 const defaultState = {
   delegate: '',
   amount: '',
-  fee: 100,
+  fee: 1420,
+  miniFee: 0,
   passPhrase: '',
   isShowedPwd: false,
   averageFees: {
-    low: 100,
-    medium: 200,
-    high: 400
+    low: 1420,
+    medium: 2840,
+    high: 5680
   },
   isDelegateIssue: true,
   gas: 257000,
-  isOpenLedgerConfirm: false
+  isOpenLedgerConfirm: false,
+  isDisplayedFeeTooltip: false
 };
 
 class AddDelegateModal extends Component<Props> {
@@ -201,16 +237,38 @@ class AddDelegateModal extends Component<Props> {
   state = defaultState;
 
   async componentDidUpdate(prevProps) {
-    const { open, fetchOriginationAverageFees, managerBalance } = this.props;
+    const {
+      open,
+      fetchOriginationAverageFees,
+      managerBalance,
+      getIsReveal,
+      selectedParentHash
+    } = this.props;
     if (open && open !== prevProps.open) {
       const averageFees = await fetchOriginationAverageFees();
+      const isRevealed = await getIsReveal(
+        selectedParentHash,
+        selectedParentHash
+      );
+      let miniLowFee = OPERATIONFEE;
+      if (!isRevealed) {
+        averageFees.low += REVEALOPERATIONFEE;
+        averageFees.medium += REVEALOPERATIONFEE;
+        averageFees.high += REVEALOPERATIONFEE;
+        miniLowFee += REVEALOPERATIONFEE;
+      }
+      if (averageFees.low < miniLowFee) {
+        averageFees.low = miniLowFee;
+      }
       const fee = averageFees.low;
       const total = fee + this.state.gas;
       this.setState({
         averageFees,
         fee,
         total,
-        balance: managerBalance - total
+        balance: managerBalance - total,
+        isDisplayedFeeTooltip: !isRevealed,
+        miniFee: miniLowFee
       }); // eslint-disable-line react/no-did-update-set-state
     }
   }
@@ -218,11 +276,11 @@ class AddDelegateModal extends Component<Props> {
   onUseMax = () => {
     const { managerBalance } = this.props;
     const { fee, gas } = this.state;
-    const max = managerBalance - fee - gas - 1;
+    const max = managerBalance - fee - gas;
     if (max > 0) {
       const amount = (max / utez).toFixed(6);
-      const total = managerBalance - 1;
-      const balance = 1;
+      const total = managerBalance;
+      const balance = 0;
       this.setState({ amount, total, balance });
     } else {
       const amount = '0';
@@ -321,13 +379,6 @@ class AddDelegateModal extends Component<Props> {
         balanceColor: 'error1'
       };
     }
-    if (balance === 0) {
-      return {
-        isIssue: true,
-        warningMessage: t('components.addDelegateModal.warning2'),
-        balanceColor: 'error1'
-      };
-    }
 
     if (amount) {
       return {
@@ -352,6 +403,22 @@ class AddDelegateModal extends Component<Props> {
     }
   };
 
+  renderFeeToolTip = () => {
+    const { t } = this.props;
+    return (
+      <TooltipContainer>
+        <TooltipTitle>{t('components.send.fee_tooltip_title')}</TooltipTitle>
+        <TooltipContent>
+          <Trans i18nKey="components.send.fee_tooltip_content">
+            This address is not revealed on the blockchain. We have added
+            <BoldSpan>0.001420 XTZ</BoldSpan> for Public Key Reveal to your
+            regular send operation fee.
+          </Trans>
+        </TooltipContent>
+      </TooltipContainer>
+    );
+  };
+
   render() {
     const { isLoading, open, t, isLedger, selectedParentHash } = this.props;
     const {
@@ -359,22 +426,23 @@ class AddDelegateModal extends Component<Props> {
       delegate,
       amount,
       fee,
+      miniFee,
       passPhrase,
       isShowedPwd,
       gas,
       total,
       balance,
       isDelegateIssue,
-      isOpenLedgerConfirm
+      isOpenLedgerConfirm,
+      isDisplayedFeeTooltip
     } = this.state;
 
-    console.log(selectedParentHash, isOpenLedgerConfirm);
     const isDisabled =
       isLoading ||
       !delegate ||
       !amount ||
       (!passPhrase && !isLedger) ||
-      balance < 1 ||
+      balance < 0 ||
       isDelegateIssue;
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
       balance,
@@ -416,7 +484,26 @@ class AddDelegateModal extends Component<Props> {
                 medium={averageFees.medium}
                 high={averageFees.high}
                 fee={fee}
+                miniFee={miniFee}
                 onChange={this.changeFee}
+                tooltip={
+                  isDisplayedFeeTooltip ? (
+                    <Tooltip
+                      position="bottom"
+                      content={this.renderFeeToolTip()}
+                      align={{
+                        offset: [70, 0]
+                      }}
+                      arrowPos={{
+                        left: '71%'
+                      }}
+                    >
+                      <FeeTooltip buttonTheme="plain">
+                        <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                      </FeeTooltip>
+                    </Tooltip>
+                  ) : null
+                }
               />
             </FeeContainer>
             <GasInputContainer>
@@ -436,9 +523,9 @@ class AddDelegateModal extends Component<Props> {
                   left: '71%'
                 }}
               >
-                <TextfieldTooltip buttonTheme="plain">
-                  <HelpIcon iconName="help" size={ms(0)} color="secondary" />
-                </TextfieldTooltip>
+                <BurnTooltip buttonTheme="plain">
+                  <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                </BurnTooltip>
               </Tooltip>
             </GasInputContainer>
           </AmountFeePassContainer>
@@ -495,19 +582,18 @@ class AddDelegateModal extends Component<Props> {
           </DelegateButton>
         </PasswordButtonContainer>
         {isLoading && <Loader />}
-        {isLedger &&
-          isOpenLedgerConfirm && (
-            <AddDelegateLedgerModal
-              amount={amount}
-              fee={fee}
-              address={delegate}
-              source={selectedParentHash}
-              manager={selectedParentHash}
-              open={isOpenLedgerConfirm}
-              onCloseClick={this.closeLedgerConfirmation}
-              isLoading={isLoading}
-            />
-          )}
+        {isLedger && isOpenLedgerConfirm && (
+          <AddDelegateLedgerModal
+            amount={amount}
+            fee={fee}
+            address={delegate}
+            source={selectedParentHash}
+            manager={selectedParentHash}
+            open={isOpenLedgerConfirm}
+            onCloseClick={this.closeLedgerConfirmation}
+            isLoading={isLoading}
+          />
+        )}
       </Modal>
     );
   }
@@ -525,7 +611,8 @@ function mapDispatchToProps(dispatch) {
     {
       setIsLoading,
       fetchOriginationAverageFees,
-      createNewAccount
+      createNewAccount,
+      getIsReveal
     },
     dispatch
   );

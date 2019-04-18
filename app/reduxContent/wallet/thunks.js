@@ -11,6 +11,7 @@ import {
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import * as storeTypes from '../../constants/StoreTypes';
+import { createTransaction } from '../../utils/transaction';
 
 import {
   findAccountIndex,
@@ -29,7 +30,8 @@ import {
 import {
   clearOperationId,
   getNodesStatus,
-  getNodesError
+  getNodesError,
+  getSelectedKeyStore
 } from '../../utils/general';
 
 import {
@@ -54,6 +56,8 @@ import {
 } from './actions';
 
 import { getSelectedNode } from '../../utils/nodes';
+import { getCurrentPath } from '../../utils/paths';
+import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
@@ -340,6 +344,7 @@ export function importAddress(
     dispatch(setIsLoading(true));
     try {
       let identity = null;
+      let activating;
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
@@ -360,10 +365,9 @@ export function importAddress(
             identity.publicKeyHash,
             conseilNode.apiKey
           ).catch(() => false);
-
           if (!account) {
             const tezosNode = getSelectedNode(settings, TEZOS);
-            const activating = await sendIdentityActivationOperation(
+            activating = await sendIdentityActivationOperation(
               tezosNode.url,
               identity,
               activationCode
@@ -372,6 +376,7 @@ export function importAddress(
               error.name = err.message;
               throw error;
             });
+
             const operationId = clearOperationId(activating.operationGroupID);
             dispatch(
               addMessage(
@@ -420,6 +425,18 @@ export function importAddress(
           delete identity.seed;
           identity.order = jsIdentities.length + 1;
           identity = createIdentity(identity);
+          if (activating !== undefined) {
+            identity.transactions.push(
+              createTransaction({
+                kind: ACTIVATION,
+                timestamp: Date.now(),
+                operationGroupHash: identity.operations.Created,
+                amount:
+                  activating.results.contents[0].metadata.balance_updates[0]
+                    .change
+              })
+            );
+          }
           dispatch(addNewIdentity(identity));
           identities = state()
             .wallet.get('identities')
@@ -457,7 +474,6 @@ export function importAddress(
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function login(loginType, walletLocation, walletFileName, password) {
   return async dispatch => {
-    dispatch(setIsLoading(true));
     const completeWalletPath = path.join(walletLocation, walletFileName);
     dispatch(addMessage('', true));
     dispatch(setLedger(false));
@@ -479,7 +495,6 @@ export function login(loginType, walletLocation, walletFileName, password) {
       dispatch(
         setWallet(
           {
-            isLoading: true,
             identities,
             walletLocation,
             walletFileName,
@@ -495,21 +510,23 @@ export function login(loginType, walletLocation, walletFileName, password) {
       await dispatch(syncWallet());
     } catch (e) {
       console.error(e);
-      dispatch(addMessage(e.name, true));
       dispatch(setIsLoading(false));
+      dispatch(addMessage(e.name, true));
     }
   };
 }
 
 // todo: 3 on create account success add that account to file - incase someone closed wallet before ready was finish.
 export function connectLedger() {
-  return async dispatch => {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const { derivation } = await getCurrentPath(settings);
     dispatch(setLedger(true));
     dispatch(setIsLedgerConnecting(true));
     dispatch(setIsLoading(true));
     dispatch(addMessage('', true));
     try {
-      const wallet = await loadWalletFromLedger();
+      const wallet = await loadWalletFromLedger(derivation);
       const identities = wallet.identities.map((identity, identityIndex) => {
         return createIdentity({
           ...identity,
@@ -523,7 +540,7 @@ export function connectLedger() {
             isLoading: true,
             identities,
             walletLocation: '',
-            walletFileName: 'Ledger Nano S'
+            walletFileName: `Ledger Nano S - ${derivation}`
           },
           'wallet'
         )
@@ -538,5 +555,42 @@ export function connectLedger() {
     }
     dispatch(setIsLoading(false));
     dispatch(setIsLedgerConnecting(false));
+  };
+}
+
+export function getIsReveal(selectedAccountHash, selectedParentHash) {
+  return async (dispatch, state) => {
+    const identities = state()
+      .wallet.get('identities')
+      .toJS();
+    const settings = state().settings.toJS();
+    const isLedger = state().wallet.get('isLedger');
+    const keyStore = getSelectedKeyStore(
+      identities,
+      selectedAccountHash,
+      selectedParentHash
+    );
+    if (isLedger) {
+      keyStore.storeType = 2;
+    }
+    const { url } = getSelectedNode(settings, TEZOS);
+
+    const isReveal = await TezosOperations.isManagerKeyRevealedForAccount(
+      url,
+      keyStore
+    );
+    return isReveal;
+  };
+}
+
+export function getIsImplicitAndEmpty(recipientHash) {
+  return async (dispatch, state) => {
+    const settings = state().settings.toJS();
+    const { url } = getSelectedNode(settings, TEZOS);
+    const isImplicitAndEmpty = await TezosOperations.isImplicitAndEmpty(
+      url,
+      recipientHash
+    );
+    return isImplicitAndEmpty;
   };
 }

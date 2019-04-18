@@ -34,11 +34,14 @@
       "total_balence": "Saldo Total",
       "language": "Idioma",
       "transactions": "Transações",
-      "source": "Source",
-      "destination": "Destination",
-      "manager": "Manager",
-      "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "source": "Fonte",
+      "destination": "Destino",
+      "manager": "Gerente",
+      "delegate": "Baker",
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "Caminho de derivação",
+      "storage": "Armazenamento",
+      "burn": "Queima"
     },
     "errors": {
       "no_hex_data": "Algo está errado com os dados que você digitou",
@@ -82,8 +85,13 @@
       "title": "Configure seu Node {{title}} customizado",
       "labels": {
         "node_name": "Nome do Node",
-        "api_key": "Chave de Api"
+        "api_key": "Chave de API"
       }
+    },
+    "addPathModal": {
+      "error": "O caminho de derivação deve começar com 44'/1729'/",
+      "title": "Configure seu {{title}} customizado",
+      "path_label": "Rótulo do Caminho"
     },
     "address": {
       "manager_address": "Endereço Manager",
@@ -146,8 +154,8 @@
       "delegate_warning": "Sua alteração de delegação não aparecerá até que a mudança tenha sido confirmada na blockchain."
     },
     "changeDelegationLedgerConfirmModal": {
-      "change_delegate_title": "Confirm Changing Delegate",
-      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+      "change_delegate_title": "Confirme a alteração do Baker",
+      "change_description": "Você está prestes a enviar uma operação de deleção para alterar seu Baker. Por favor, revise atentamente os dados no seu dispositivo."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirme a adição de um Delegate à conta 1",
@@ -161,7 +169,9 @@
       "custom_fee": "Taxa Customizada",
       "custom": "Customizar",
       "set_custom_fee": "Especifique o valor de taxa",
-      "enter_custom_amount": "Digite o valor desejado"
+      "enter_custom_amount": "Digite o valor desejado",
+      "required_minium_fee": "Por favor, tenha em mente que a taxa mínima exigida para essa transação é de<1> <0>{{fee}}</0> XTZ</1>.",
+      "minimum_fee_error": "Sua taxa customizada está abaixo da taxa mínima da rede Tezos."
     },
     "inputAddress": {
       "setting_delegate": "Escolhendo um Baker",
@@ -220,9 +230,20 @@
       "seed_phrase_password": "Senha das palavras-chave",
       "enter_private_key": "Digite sua chave privada",
       "seed_phrase": "Frase-senha",
-      "private_key": "Chave Privada"
+      "private_key": "Chave Privada",
+      "secret_key_15": "Chave Secreta de 15 Palavras",
+      "errors": {
+        "invalid_length": "As frases-senhas devem conter no máximo 15 palavras.",
+        "invalid_words": "Palavra(s) inválida(s) detectadas. Por favor, verifique novamente."
+      }
     },
     "send": {
+      "send_xtz": "Enviar XTZ",
+      "recepient_address": "Endereço do destinatário",
+      "burn_tooltip_title": "Por que existe uma taxa de queima?",
+      "burn_tooltip_content": "O endereço do destinatário que você inseriu tem saldo zero. Enviar fundos para um endereço Gerente (tz1,2,3) requer uma taxa de queima não recorrente de <1> 0.257 </1>XTZ.",
+      "fee_tooltip_title": "Por que as taxas estão um pouco mais altas nesta transação?",
+      "fee_tooltip_content": "Esta é sua primeira transação neste endereço, e isso requer que nós revelemos sua chave pública ao blockchain. Nós adicionamos<1> 0.001300 XTZ </1>para a Revelação da Chave Pública à sua taxa habitual de operação de envio.",
       "warnings": {
         "total_exceeds": "Total excede os fundos disponíveis",
         "not_allowed": "Endereços Manager ainda não podem ter menos de 1 µtz"
@@ -230,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "Confirmação de Envio",
+      "send_description": "Você está prestes a enviar uma transação. Por favor, revise os dados com atenção.",
       "confirm_question": "Confirma que deseja enviar"
     },
     "sendLedgerConfirmationModal": {
@@ -283,14 +305,22 @@
       },
       "import_fundraiser": "Importar Wallet do Fundraiser",
       "create_new_account": "Criar Nova Conta",
-      "restore_backup": "Restaurar à partir de Backup"
+      "restore_backup": "Restaurar à partir de Backup",
+      "errors": {
+        "invalid_length": "As frases-senhas devem conter no máximo 15 palavras.",
+        "invalid_words": "Palavra(s) inválida(s) detectadas. Por favor, verifique novamente."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "Voltar à carteira",
-      "wallet_settings": "Configurações da Carteira",
+      "general_settings": "Configurações gerais",
       "choose_different_node": "Selecionar outro node",
       "add_custom_node": "Adicionar um node específico",
-      "select_display_language": "Idioma"
+      "select_display_language": "Idioma",
+      "hardware_settings": "Configurações da carteira de hardware",
+      "choose_derivation_path": "Escolha o caminho de derivação",
+      "add_derivation_path": "Adicionar um caminho de derivação",
+      "back_to_login": "Retornar ao Login"
     },
     "loginHome": {
       "description": "Eu confirmo que li e aceitei os <1>Termos de Serviço</1> e <3>Política de Privacidade</3>",
@@ -306,7 +336,8 @@
       "dont_have_ledger_wallet": "Não possui o aplicativo Ledger Tezos wallet?",
       "download_it_here": "Obtenha-o aqui.",
       "connect_your_device": "Favor<1> conectar seu dispositivo</1>,<3> digitar seu pin</3>, e<5> abrir o aplicativo Tezos Wallet</5>.",
-      "connecting": "Conectando..."
+      "connecting": "Conectando...",
+      "selectedPath": "Caminho selecionado: "
     },
     "loginCreate": {
       "create_wallet_btn": "Criar Carteira",

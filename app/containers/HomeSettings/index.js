@@ -8,19 +8,26 @@ import MenuItem from '@material-ui/core/MenuItem';
 import BackCaret from '@material-ui/icons/KeyboardArrowLeft';
 import AddCircle from '@material-ui/icons/AddCircle';
 import Check from '@material-ui/icons/Check';
+import Close from '@material-ui/icons/Close';
 import { ms } from '../../styles/helpers';
 import { H2 } from '../../components/Heading/';
 import AddNodeModal from '../../components/AddNodeModal/';
+import AddPathModal from '../../components/AddPathModal/';
 import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 import CustomSelect from '../../components/CustomSelect/';
 import LanguageSelector from '../../components/LanguageSelector/';
 import { wrapComponent } from '../../utils/i18n';
 
-import { syncWallet } from '../../reduxContent/wallet/thunks';
 import {
+  syncWallet,
+  goHomeAndClearState
+} from '../../reduxContent/wallet/thunks';
+import {
+  removePath,
   setSelected,
   removeNode,
-  setLocale
+  setLocale,
+  setPath
 } from '../../reduxContent/settings/thunks';
 
 import {
@@ -28,6 +35,8 @@ import {
   getConseilNodes,
   getTezosSelectedNode,
   getTezosNodes,
+  getSelectedPath,
+  getPathsList,
   getLocale
 } from '../../reduxContent/settings/selectors';
 
@@ -36,13 +45,19 @@ type Props = {
   conseilNodes: array,
   tezosSelectedNode: string,
   tezosNodes: array,
+  selectedPath: string,
+  pathsList: array,
   syncWallet: () => {},
   setSelected: () => {},
+  setPath: () => {},
+  removeNode: () => {},
+  removePath: () => {},
   goBack: () => {},
   theme: object,
   t: () => {},
   locale: string,
-  setLocale: () => {}
+  setLocale: () => {},
+  goHomeAndClearState: () => {}
 };
 
 const Row = styled.div`
@@ -147,12 +162,26 @@ const SelectRenderWrapper = styled.div`
   text-overflow: ellipsis;
 `;
 
+const RemoveIconWrapper = styled.span`
+  margin-right: 30px;
+  margin-left: auto;
+`;
+
+const RemoveIcon = styled(Close)`
+  color: #d3d3d3;
+  &:hover {
+    color: ${({ theme: { colors } }) => colors.accent};
+  }
+`;
+
 class SettingsPage extends Component<Props> {
   props: Props;
 
   state = {
     type: '',
-    isModalOpen: false
+    isNodeModalOpen: false,
+    isPathModalOpen: false,
+    isPathChanged: false
   };
 
   selectedItem = {
@@ -160,13 +189,64 @@ class SettingsPage extends Component<Props> {
     url: null
   };
 
+  removePath = async (event, label) => {
+    event.stopPropagation();
+    const { removePath, selectedPath, pathsList } = this.props;
+    const labelToRemove = pathsList.find(path => path.get('label') === label);
+    if (labelToRemove) {
+      await removePath(label);
+      if (label === selectedPath) {
+        if (pathsList.size > 2) {
+          const parser = JSON.parse(localStorage.settings);
+          const listLength = parser.pathsList.length;
+          const labelToAdd = parser.pathsList[listLength - 1].label;
+          await this.handlePathChange(labelToAdd);
+        } else {
+          await this.handlePathChange('Default');
+        }
+      }
+    }
+  };
+
+  removeNodeOption = async (event, name) => {
+    event.stopPropagation();
+    const { removeNode, tezosNodes, conseilNodes } = this.props;
+    const conseilNodeToRemove = conseilNodes.find(
+      node => node.get('name') === name
+    );
+    const tezosNodeToRemove = tezosNodes.find(
+      node => node.get('name') === name
+    );
+    const localStorageSettings = JSON.parse(localStorage.settings);
+    if (conseilNodeToRemove) {
+      await removeNode(name);
+      if (name === localStorageSettings.conseilSelectedNode) {
+        await this.handleConseilChange('Cryptonomic-Conseil');
+      }
+    }
+    if (tezosNodeToRemove) {
+      await removeNode(name);
+      if (name === localStorageSettings.tezosSelectedNode) {
+        await this.handleTezosChange('Cryptonomic-Nautilus');
+      }
+    }
+  };
+
   handleConseilChange = newValue => this.props.setSelected(newValue, CONSEIL);
 
   handleTezosChange = newValue => this.props.setSelected(newValue, TEZOS);
 
-  openAddNodeModal = type => this.setState({ type, isModalOpen: true });
+  handlePathChange = newValue => this.props.setPath(newValue);
 
-  closeAddNodeModal = () => this.setState({ type: '', isModalOpen: false });
+  openAddNodeModal = type => this.setState({ type, isNodeModalOpen: true });
+
+  closeAddNodeModal = () => this.setState({ type: '', isNodeModalOpen: false });
+
+  openAddPathModal = () => this.setState({ isPathModalOpen: true });
+
+  closeAddPathModal = () => this.setState({ isPathModalOpen: false });
+
+  onChangedDerivationPath = () => this.setState({ isPathChanged: true });
 
   getNodeUrl = (nodes, selectedNode) => {
     let url = '';
@@ -180,7 +260,19 @@ class SettingsPage extends Component<Props> {
     return url;
   };
 
-  renderNodes(nodes, selectedNode) {
+  getPath = (pathsList, selectedPath) => {
+    let path = '';
+    const foundPath = pathsList.find(path => {
+      const label = path.get('label');
+      return label === selectedPath;
+    });
+    if (foundPath) {
+      path = foundPath.get('derivation');
+    }
+    return path;
+  };
+
+  renderNodes = (nodes, selectedNode) => {
     const { theme } = this.props;
     return nodes.map((node, index) => {
       const name = node.get('name');
@@ -208,10 +300,55 @@ class SettingsPage extends Component<Props> {
       return (
         <ItemWrapper key={index} url={url} value={name}>
           {option}
+          {name !== 'Cryptonomic-Conseil' && name !== 'Cryptonomic-Nautilus' && (
+            <RemoveIconWrapper
+              onClick={event => this.removeNodeOption(event, name)}
+            >
+              <RemoveIcon />
+            </RemoveIconWrapper>
+          )}
         </ItemWrapper>
       );
     });
-  }
+  };
+
+  renderPaths = (paths, selectedPath) => {
+    const { theme } = this.props;
+    return paths.map((path, index) => {
+      const label = path.get('label');
+      const derivation = path.get('derivation');
+      const selected = selectedPath === label;
+      const option = (
+        <SelectOption>
+          {selected && (
+            <OptionStatus>
+              <Check
+                style={{
+                  fill: theme.colors.blue1,
+                  height: ms(1.5),
+                  width: ms(1.5)
+                }}
+              />
+            </OptionStatus>
+          )}
+          <OptionLabel isActive={selected}>
+            <NodeName>{label}</NodeName>
+            <NodeUrl>{derivation}</NodeUrl>{' '}
+          </OptionLabel>
+        </SelectOption>
+      );
+      return (
+        <ItemWrapper key={index} url={derivation} value={label}>
+          {option}
+          {label !== 'Default' && (
+            <RemoveIconWrapper onClick={event => this.removePath(event, label)}>
+              <RemoveIcon />
+            </RemoveIconWrapper>
+          )}
+        </ItemWrapper>
+      );
+    });
+  };
 
   render() {
     const {
@@ -221,19 +358,31 @@ class SettingsPage extends Component<Props> {
       conseilNodes,
       tezosSelectedNode,
       tezosNodes,
+      selectedPath,
+      pathsList,
       locale,
       setLocale,
+      goHomeAndClearState,
       t
     } = this.props;
 
-    const { type, isModalOpen } = this.state;
+    const {
+      type,
+      isNodeModalOpen,
+      isPathModalOpen,
+      isPathChanged
+    } = this.state;
 
     return (
       <Container>
         <BackToWallet
           onClick={() => {
-            goBack();
-            syncWallet();
+            if (isPathChanged) {
+              goHomeAndClearState();
+            } else {
+              goBack();
+              syncWallet();
+            }
           }}
         >
           <BackCaret
@@ -245,9 +394,13 @@ class SettingsPage extends Component<Props> {
               marginLeft: '-9px'
             }}
           />
-          <span>{t('containers.homeSettings.back_to_wallet')}</span>
+          <span>
+            {isPathChanged
+              ? t('containers.homeSettings.back_to_login')
+              : t('containers.homeSettings.back_to_wallet')}
+          </span>
         </BackToWallet>
-        <H2>{t('containers.homeSettings.wallet_settings')}</H2>
+        <H2>{t('containers.homeSettings.general_settings')}</H2>
 
         <Content6>
           <ContentTitle>
@@ -341,9 +494,68 @@ class SettingsPage extends Component<Props> {
         </Content>
 
         <AddNodeModal
-          isModalOpen={isModalOpen}
+          isNodeModalOpen={isNodeModalOpen}
           type={type}
           closeAddNodeModal={this.closeAddNodeModal}
+        />
+
+        <H2 style={{ marginTop: '30px' }}>
+          {t('containers.homeSettings.hardware_settings')}
+        </H2>
+
+        <Content6>
+          <ContentTitle>
+            {t('containers.homeSettings.choose_derivation_path')}
+          </ContentTitle>
+          <RowForParts>
+            <Part>
+              <CustomSelect
+                label="Derivation Path"
+                value={selectedPath}
+                onChange={event => {
+                  const newValue = event.target.value;
+                  if (newValue === 'add-more') {
+                    this.openAddPathModal();
+                    return true;
+                  }
+                  if (newValue !== selectedPath) {
+                    this.onChangedDerivationPath();
+                    this.handlePathChange(newValue);
+                    return true;
+                  }
+                  return true;
+                }}
+                renderValue={value => {
+                  const path = this.getPath(pathsList, selectedPath);
+                  return (
+                    <SelectRenderWrapper>
+                      <span>{value} </span>
+                      <NodeUrlSpan>({path})</NodeUrlSpan>
+                    </SelectRenderWrapper>
+                  );
+                }}
+              >
+                {this.renderPaths(pathsList, selectedPath)}
+                <ItemWrapper value="add-more" type="addmore">
+                  <AddCircle
+                    style={{
+                      fill: '#7B91C0',
+                      height: ms(1),
+                      width: ms(1),
+                      marginRight: '10px'
+                    }}
+                  />
+                  {t('containers.homeSettings.add_derivation_path')}
+                </ItemWrapper>
+              </CustomSelect>
+            </Part>
+          </RowForParts>
+        </Content6>
+
+        <AddPathModal
+          isPathModalOpen={isPathModalOpen}
+          closeAddPathModal={this.closeAddPathModal}
+          onChangedPath={this.onChangedDerivationPath}
         />
       </Container>
     );
@@ -356,6 +568,8 @@ function mapStateToProps(state) {
     conseilNodes: getConseilNodes(state),
     tezosSelectedNode: getTezosSelectedNode(state),
     tezosNodes: getTezosNodes(state),
+    selectedPath: getSelectedPath(state),
+    pathsList: getPathsList(state),
     locale: getLocale(state)
   };
 }
@@ -367,7 +581,10 @@ function mapDispatchToProps(dispatch) {
       setSelected,
       removeNode,
       setLocale,
-      goBack: () => dispatch => dispatch(goBackToWallet())
+      setPath,
+      removePath,
+      goBack: () => dispatch => dispatch(goBackToWallet()),
+      goHomeAndClearState
     },
     dispatch
   );

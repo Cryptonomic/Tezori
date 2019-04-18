@@ -26,7 +26,6 @@ const Address = styled.span`
   font-size: ${({ size }) => size || ms(2)};
   margin: 0 0 0 0;
   -webkit-app-region: no-drag;
-  user-select: all;
 `;
 
 const FirstPart = styled.span`
@@ -37,6 +36,11 @@ const FirstPart = styled.span`
   }) => weights.bold};
   color: ${({ color, theme: { colors } }) => colors[color]};
 `;
+
+const SelectableText = {
+  userSelect: 'text',
+  cursor: 'text'
+};
 
 const TezosAddress = (props: Props) => {
   const { className, address, weight, size, color, text, color2 } = props;
@@ -49,8 +53,10 @@ const TezosAddress = (props: Props) => {
       text={text}
     >
       <span>
-        <FirstPart color={color2}>{address.slice(0, 3)}</FirstPart>
-        <span>{address.slice(3)}</span>
+        <FirstPart style={SelectableText} color={color2}>
+          {address.slice(0, 3)}
+        </FirstPart>
+        <span style={SelectableText}>{address.slice(3)}</span>
       </span>
       {text && <CopyIcon text={text} color={color} />}
     </Address>

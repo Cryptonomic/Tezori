@@ -1,7 +1,7 @@
 {
   "name": "Tezori",
   "productName": "Tezori",
-  "version": "0.4.0b",
+  "version": "0.7.0b",
   "description": "A community wallet for Tezos",
   "scripts": {
     "build": "npm run check-wallet-state &&  concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -201,6 +201,7 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5",
     "webpack-merge": "^4.1.3",
+    "copy-webpack-plugin": "^4.6.0",
     "yarn": "^1.10.1"
   },
   "dependencies": {

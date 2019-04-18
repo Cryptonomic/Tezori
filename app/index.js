@@ -18,6 +18,9 @@ render(
   document.getElementById('root')
 );
 
+document.addEventListener('dragover', event => event.preventDefault());
+document.addEventListener('drop', event => event.preventDefault());
+
 if (module.hot) {
   module.hot.accept('./containers/Root', () => {
     const NextRoot = require('./containers/Root'); // eslint-disable-line global-require

@@ -34,11 +34,14 @@
       "total_balence": "총 잔액",
       "language": "언어",
       "transactions": "트랜잭션",
-      "source": "Source",
-      "destination": "Destination",
-      "manager": "Manager",
-      "delegate": "Delegate",
-      "ledger_name": "Ledger Nano S"
+      "source": "소스",
+      "destination": "목적지",
+      "manager": "매니저",
+      "delegate": "대리인",
+      "ledger_name": "Ledger Nano S",
+      "derivation_path": "유도 경로",
+      "storage": "스토리지",
+      "burn": "소각"
     },
     "errors": {
       "no_hex_data": "입력 한 데이터가 잘못되었습니다.",
@@ -84,6 +87,11 @@
         "node_name": "Node 이름",
         "api_key": "API 키"
       }
+    },
+    "addPathModal": {
+      "error": "유도 경로는 44'/1729'/로 시작합니다",
+      "title": "사용자 정의 {{title}} 설정",
+      "path_label": "경로 라벨"
     },
     "address": {
       "manager_address": "관리자 주소",
@@ -146,8 +154,8 @@
       "delegate_warning": "위임 변경은 블록체인에서 변경이 확인될 때까지 나타나지 않습니다."
     },
     "changeDelegationLedgerConfirmModal": {
-      "change_delegate_title": "Confirm Changing Delegate",
-      "change_description": "You are about to send out an delegation operation to change your delegate. Please carefully review the details on your device."
+      "change_delegate_title": "대리인 변경 확인",
+      "change_description": "대리인을 변경하기 위해 유도 작업을 보내려고 합니다. 기기의 세부 정보를 자세히 검토하세요."
     },
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "계정 1에 개시를 추가하는 걸 확인하세요",
@@ -161,7 +169,9 @@
       "custom_fee": "사용자 정의 비용",
       "custom": "사용자 정의",
       "set_custom_fee": "사용자 정의 비용 설정",
-      "enter_custom_amount": "사용자 정의 비용을 입력하세요"
+      "enter_custom_amount": "사용자 정의 비용을 입력하세요",
+      "required_minium_fee": "이 거래에 필요한 최소 수수료는 <1> <0>{{fee}}</0> XTZ</1> 입니다.",
+      "minimum_fee_error": "사용자 정의 요금은 Tezos 네트워크 최소 비용보다 낮습니다."
     },
     "inputAddress": {
       "setting_delegate": "베이커 설정하기",
@@ -220,9 +230,20 @@
       "seed_phrase_password": "시드 문구 암호",
       "enter_private_key": "개인 키를 입력하세요",
       "seed_phrase": "시드 문구",
-      "private_key": "개인 키"
+      "private_key": "개인 키",
+      "secret_key_15": "15자리 비밀 키",
+      "errors": {
+        "invalid_length": "시드 문구는 15자 이내여야 합니다.",
+        "invalid_words": "잘못된 단어를 감지했습니다. 두 번 확인해주세요."
+      }
     },
     "send": {
+      "send_xtz": "XTZ 전송",
+      "recepient_address": "수신자 주소",
+      "burn_tooltip_title": "소각 비용이 왜 있는건가요?",
+      "burn_tooltip_content": "입력한 수신자 주소의 잔액이 0입니다. 빈 관리자 주소(tz1, 2, 3)로 자금을 보내려면 1회에 대해 <1> 0.257 </1>XTZ 소각 요금이 필요합니다.",
+      "fee_tooltip_title": "이 트랜잭션에 대한 수수료가 조금 더 높은 이유는 무엇입니까?",
+      "fee_tooltip_content": "이것은 이 주소의 첫 트랜잭션이며, 우리가 공개 키를 블록체인에 공개해야 합니다. 공개 키 공개를 위해 <1> 0.001300 XTZ </1>를 귀하의 정기 송금 수수료에 추가했습니다.",
       "warnings": {
         "total_exceeds": "총 이용 가능한 금액을 초과합니다.",
         "not_allowed": "관리자 주소는 아직 1 µtz 미만이어야 합니다."
@@ -230,6 +251,7 @@
     },
     "sendConfirmationModal": {
       "send_confirmation": "확인 전송",
+      "send_description": "곧 트랜잭션을 보내려고 합니다. 세부 사항을 자세히 검토하세요.",
       "confirm_question": "(을)를 전송하길 원하십니까?"
     },
     "sendLedgerConfirmationModal": {
@@ -283,14 +305,22 @@
       },
       "import_fundraiser": "펀드라이저 지갑 불러오기",
       "create_new_account": "새 계정 만들기",
-      "restore_backup": "백업에서 복원"
+      "restore_backup": "백업에서 복원",
+      "errors": {
+        "invalid_length": "시드 문구는 15자 이내여야 합니다.",
+        "invalid_words": "잘못된 단어를 감지했습니다. 두 번 확인해주세요."
+      }
     },
     "homeSettings": {
       "back_to_wallet": "지갑으로 돌아가기",
-      "wallet_settings": "지갑 설정",
+      "general_settings": "일반 설정",
       "choose_different_node": "다른 노드 선택",
       "add_custom_node": "사용자 정의 노드 추가",
-      "select_display_language": "언어"
+      "select_display_language": "언어",
+      "hardware_settings": "하드웨어 월렛 설정",
+      "choose_derivation_path": "파생 경로 선택",
+      "add_derivation_path": "파생 경로 추가",
+      "back_to_login": "로그인으로 돌아가기"
     },
     "loginHome": {
       "description": "본인은 <1>서비스 이용 약관</1> 및 <3>개인 정보 보호 정책</3>을 읽고 동의함을 인정합니다.",
@@ -306,7 +336,8 @@
       "dont_have_ledger_wallet": "Ledger Tezos 지갑 앱이 없나요?",
       "download_it_here": "여기에서 다운로드하세요.",
       "connect_your_device": "<1> 장치에 연결하세요</1>,<3> 핀을 입력하고</3>, <5> Tezos 지갑 앱을 여세요</5>.",
-      "connecting": "연결 중..."
+      "connecting": "연결 중...",
+      "selectedPath": "선택한 경로: "
     },
     "loginCreate": {
       "create_wallet_btn": "지갑 만들기",

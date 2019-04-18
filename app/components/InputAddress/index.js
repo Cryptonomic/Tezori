@@ -25,7 +25,7 @@ const TooltipTitle = styled.div`
 `;
 
 const TooltipContent1 = styled.div`
-  border-bottom:solid 1px #94a9d1;
+  border-bottom: solid 1px #94a9d1;
   padding: 12px 0;
 `;
 
@@ -46,7 +46,7 @@ const DelegateContainer = styled.div`
 const TextfieldTooltip = styled(Button)`
   position: absolute;
   right: 10px;
-  top: 42px;
+  top: 38px;
 `;
 
 type Props = {
@@ -64,13 +64,15 @@ class InputAddress extends React.PureComponent<Props> {
 
   state = {
     error: ''
-  }
-  
+  };
+
   renderToolTipComponent = () => {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <TooltipContainer>
-        <TooltipTitle>{t('components.inputAddress.setting_delegate')}</TooltipTitle>
+        <TooltipTitle>
+          {t('components.inputAddress.setting_delegate')}
+        </TooltipTitle>
         <TooltipContent1>
           {t('components.inputAddress.contents.content1')}
         </TooltipContent1>
@@ -85,49 +87,61 @@ class InputAddress extends React.PureComponent<Props> {
   };
 
   validateAddress = (delegateText, changeDelegate, addressType = 'send') => {
-    const {t, onIssue} = this.props;
-     
+    const { t, onIssue } = this.props;
+
     const lengthRegEx = /^([a-zA-Z0-9~%@#$^*/"`'()!_+=[\]{}|\\,.?: -\s]{36})$/;
     const excludeSpecialChars = /[^\w]/;
-    const firstCharactersRegEx = addressType === 'send' ? /^(tz1|tz2|tz3|kt1|TZ1|TZ2|TZ3|KT1)/ : /^(tz1|tz2|tz3|TZ1|TZ2|TZ3)/;
+    const firstCharactersRegEx =
+      addressType === 'send'
+        ? /^(tz1|tz2|tz3|kt1|TZ1|TZ2|TZ3|KT1)/
+        : /^(tz1|tz2|tz3|TZ1|TZ2|TZ3)/;
     let errorState = true;
 
     if (!firstCharactersRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
-        error: addressType === 'send' ? t('components.inputAddress.errors.send_address') :  t('components.inputAddress.errors.delegate_address')
-      })
+        error:
+          addressType === 'send'
+            ? t('components.inputAddress.errors.send_address')
+            : t('components.inputAddress.errors.delegate_address')
+      });
     } else if (!lengthRegEx.test(delegateText) && delegateText !== '') {
       this.setState({
         error: t('components.inputAddress.errors.length')
-      })
+      });
     } else if (excludeSpecialChars.test(delegateText) && delegateText !== '') {
       this.setState({
         error: t('components.inputAddress.errors.special_chars')
-      })
-    }  else if ((this.props.userAddress === delegateText) && delegateText !== '') {
+      });
+    } else if (this.props.userAddress === delegateText && delegateText !== '') {
       this.setState({
-        error:  t('components.inputAddress.errors.send_funds')
-      })
+        error: t('components.inputAddress.errors.send_funds')
+      });
     } else {
       this.setState({
         error: ''
-      })
+      });
       errorState = false;
     }
 
     changeDelegate(delegateText);
     onIssue(errorState);
-  }
+  };
 
   render() {
     return (
       <DelegateContainer>
         <TextField
           label={this.props.labelText}
-          onChange={(value) => this.validateAddress(value, this.props.changeDelegate, this.props.addressType)}
+          onChange={value =>
+            this.validateAddress(
+              value,
+              this.props.changeDelegate,
+              this.props.addressType
+            )
+          }
           errorText={this.state.error}
         />
-        {this.props.tooltip &&
+        {this.props.tooltip && (
           <Tooltip
             position="bottom"
             content={this.renderToolTipComponent()}
@@ -138,23 +152,17 @@ class InputAddress extends React.PureComponent<Props> {
               left: '71%'
             }}
           >
-            <TextfieldTooltip
-              buttonTheme="plain"
-            >
-              <HelpIcon
-                iconName="help"
-                size={ms(0)}
-                color='secondary'
-              />
+            <TextfieldTooltip buttonTheme="plain">
+              <HelpIcon iconName="help" size={ms(1)} color="gray5" />
             </TextfieldTooltip>
           </Tooltip>
-        }
+        )}
       </DelegateContainer>
-    )
+    );
   }
 }
 
 InputAddress.defaultProps = {
   onIssue: () => null
-}
-export default wrapComponent(InputAddress)
+};
+export default wrapComponent(InputAddress);

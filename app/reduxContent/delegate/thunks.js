@@ -3,6 +3,7 @@ import { addMessage } from '../../reduxContent/message/thunks';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { displayError } from '../../utils/formValidation';
 import { getSelectedNode } from '../../utils/nodes';
+import { getCurrentPath } from '../../utils/paths';
 import { findIdentity } from '../../utils/identity';
 import { findAccountIndex } from '../../utils/account';
 import { TEZOS } from '../../constants/NodesTypes';
@@ -15,7 +16,6 @@ import {
   fetchAverageFees,
   clearOperationId
 } from '../../utils/general';
-import derivationPth from '../../constants/DerivationPath';
 
 const { sendDelegationOperation } = TezosOperations;
 
@@ -74,13 +74,14 @@ export function delegate(
     let res;
     if (isLedger) {
       const newKeyStore = keyStore;
+      const { derivation } = getCurrentPath(settings);
       newKeyStore.storeType = 2;
       res = await sendDelegationOperation(
         url,
-        keyStore,
+        newKeyStore,
         delegateValue,
         fee,
-        derivationPth
+        derivation
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);

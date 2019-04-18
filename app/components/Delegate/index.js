@@ -11,6 +11,8 @@ import TezosAddress from '../TezosAddress';
 import { wrapComponent } from '../../utils/i18n';
 import DelegateLedgerConfirmationModal from '../DelegateLedgerConfirmationModal';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
+import { getIsReveal } from '../../reduxContent/wallet/thunks';
+import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 
 import {
   validateAddress,
@@ -128,12 +130,14 @@ const initialState = {
   isLoading: false,
   tempAddress: '',
   password: '',
-  fee: 100,
+  fee: 1420,
+  miniFee: 0,
   isShowedPwd: false,
+  isDisplayedFeeTooltip: false,
   averageFees: {
-    low: 100,
-    medium: 200,
-    high: 400
+    low: 1420,
+    medium: 2840,
+    high: 5680
   },
   isDelegateIssue: true,
   isOpenLedgerConfirm: false
@@ -144,9 +148,33 @@ class Delegate extends Component<Props> {
   state = initialState;
 
   async componentWillMount() {
-    const { fetchDelegationAverageFees } = this.props;
+    const {
+      fetchDelegationAverageFees,
+      getIsReveal,
+      selectedAccountHash,
+      selectedParentHash
+    } = this.props;
     const averageFees = await fetchDelegationAverageFees();
-    this.setState({ averageFees, fee: averageFees.low });
+    const isRevealed = await getIsReveal(
+      selectedAccountHash,
+      selectedParentHash
+    );
+    let miniLowFee = OPERATIONFEE;
+    if (!isRevealed) {
+      averageFees.low += REVEALOPERATIONFEE;
+      averageFees.medium += REVEALOPERATIONFEE;
+      averageFees.high += REVEALOPERATIONFEE;
+      miniLowFee += REVEALOPERATIONFEE;
+    }
+    if (averageFees.low < miniLowFee) {
+      averageFees.low = miniLowFee;
+    }
+    this.setState({
+      averageFees,
+      fee: averageFees.low,
+      miniFee: miniLowFee,
+      isDisplayedFeeTooltip: !isRevealed
+    });
   }
 
   onOpenLedgerConfirmation = status =>
@@ -230,11 +258,13 @@ class Delegate extends Component<Props> {
       open,
       password,
       fee,
+      miniFee,
       averageFees,
       tempAddress,
       isShowedPwd,
       isDelegateIssue,
-      isOpenLedgerConfirm
+      isOpenLedgerConfirm,
+      isDisplayedFeeTooltip
     } = this.state;
     const delegationTips = [
       t('components.addressBlock.descriptions.description1'),
@@ -289,6 +319,7 @@ class Delegate extends Component<Props> {
           newAddress={tempAddress}
           password={password}
           fee={fee}
+          miniFee={miniFee}
           averageFees={averageFees}
           handleFeeChange={this.handleFeeChange}
           handlePasswordChange={this.handlePasswordChange}
@@ -298,21 +329,21 @@ class Delegate extends Component<Props> {
           isLoading={isLoading}
           isLedger={isLedger}
           isShowedPwd={isShowedPwd}
+          isDisplayedFeeTooltip={isDisplayedFeeTooltip}
           onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           isDelegateIssue={isDelegateIssue}
           onDelegateIssue={status => this.setState({ isDelegateIssue: status })}
         />
-        {isLedger &&
-          isOpenLedgerConfirm && (
-            <DelegateLedgerConfirmationModal
-              fee={fee}
-              address={tempAddress}
-              source={selectedAccountHash}
-              open={isOpenLedgerConfirm}
-              onCloseClick={() => this.onOpenLedgerConfirmation(false)}
-              isLoading={isLoading}
-            />
-          )}
+        {isLedger && isOpenLedgerConfirm && (
+          <DelegateLedgerConfirmationModal
+            fee={fee}
+            address={tempAddress}
+            source={selectedAccountHash}
+            open={isOpenLedgerConfirm}
+            onCloseClick={() => this.onOpenLedgerConfirmation(false)}
+            isLoading={isLoading}
+          />
+        )}
       </Container>
     );
   }
@@ -329,7 +360,8 @@ function mapDispatchToProps(dispatch) {
     {
       fetchDelegationAverageFees,
       validateAddress,
-      delegate
+      delegate,
+      getIsReveal
     },
     dispatch
   );

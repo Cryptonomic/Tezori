@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Trans } from 'react-i18next';
 
 import Button from '../Button/';
 import { ms } from '../../styles/helpers';
@@ -13,6 +14,8 @@ import InputAddress from '../InputAddress';
 import TezosNumericInput from '../TezosNumericInput';
 import TezosAmount from '../TezosAmount/';
 import TezosIcon from '../TezosIcon/';
+import TextField from '../TextField';
+import Tooltip from '../Tooltip/';
 
 import {
   validateAmount,
@@ -23,26 +26,99 @@ import {
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
 import Fees from '../Fees/';
+import {
+  getIsReveal,
+  getIsImplicitAndEmpty
+} from '../../reduxContent/wallet/thunks';
+import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 
 const SendContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  padding: 20px;
-  height: 345px;
+  padding: 0 20px 20px 20px;
   position: relative;
 `;
 
-const AmountContainer = styled.div`
+const SendTitle = styled.div`
+  font-size: 24px;
+  line-height: 34px;
+  letter-spacing: 1px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
+const FeesBurnContainer = styled.div`
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const BurnsContainer = styled.div`
   width: 45%;
+  position: relative;
+`;
+
+const TextfieldTooltip = styled(Button)`
+  position: absolute;
+  left: 80px;
+  top: 22px;
+`;
+
+const BurnTooltip = styled(TextfieldTooltip)`
+  left: 80px;
+`;
+const FeeTooltip = styled(Button)`
+  position: relative;
+  top: 3px;
+`;
+
+const HelpIcon = styled(TezosIcon)`
+  padding: 0 0 0 ${ms(-4)};
+`;
+
+const TezosIconInput = styled(TezosIcon)`
+  position: absolute;
+  left: 70px;
+  top: 25px;
+  display: block;
+`;
+
+const TooltipContainer = styled.div`
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  max-width: 312px;
+
+  .customArrow .rc-tooltip-arrow {
+    left: 66%;
+  }
+`;
+
+const TooltipTitle = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${({ theme: { colors } }) => colors.primary};
+`;
+
+const TooltipContent = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 21px;
+  width: 270px;
+  font-weight: 300;
+  color: ${({ theme: { colors } }) => colors.black};
+`;
+
+const BoldSpan = styled.span`
+  font-weight: 500;
 `;
 
 const SendButton = styled(Button)`
-  position: absolute;
-  bottom: 0;
+  margin-left: auto;
+  width: 194px;
+  height: 50px;
 `;
 
 const InputAmount = styled.div`
@@ -50,33 +126,17 @@ const InputAmount = styled.div`
   width: 100%;
 `;
 
-const MainContainer = styled.div`
-  display: flex;
-  width: 100%;
-`;
-const BalanceContainer = styled.div`
-  padding: 0 0px 0 20px;
-  flex: 1;
+const FeeContainer = styled.div`
   position: relative;
-  margin: 0px 0 0px 40px;
+  width: 45%;
+  display: flex;
+  height: 64px;
 `;
-const BalanceArrow = styled.div`
-  top: 50%;
-  left: 4px;
-  margin-top: -17px;
-  border-top: 17px solid transparent;
-  border-bottom: 17px solid transparent;
-  border-right: 20px solid ${({ theme: { colors } }) => colors.gray1};
-  width: 0;
-  height: 0;
-  position: absolute;
-`;
+
+const TotalContent = styled.div``;
+
 const BalanceContent = styled.div`
-  padding: ${ms(0)} ${ms(0)} ${ms(0)} ${ms(3)};
-  color: #123262;
-  text-align: left;
-  height: 100%;
-  background-color: ${({ theme: { colors } }) => colors.gray1};
+  margin-left: 40px;
 `;
 
 const UseMax = styled.div`
@@ -89,9 +149,7 @@ const UseMax = styled.div`
   color: ${({ theme: { colors } }) => colors.accent};
   cursor: pointer;
 `;
-const TotalAmount = styled(TezosAmount)`
-  margin-bottom: 22px;
-`;
+const TotalAmount = styled(TezosAmount)``;
 const BalanceAmount = styled(TezosAmount)``;
 
 const WarningIcon = styled(TezosIcon)`
@@ -111,6 +169,14 @@ const ErrorContainer = styled.div`
   color: ${({ theme: { colors } }) => colors.error1};
 `;
 
+const BottomContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 96px;
+  width: 100%;
+  margin-top: 15px;
+`;
+
 const utez = 1000000;
 
 type Props = {
@@ -121,7 +187,6 @@ type Props = {
   validateAmount?: () => {},
   t: () => {},
   addressBalance: number,
-  isManager: boolean,
   isLedger: boolean
 };
 
@@ -131,42 +196,63 @@ const initialState = {
   password: '',
   toAddress: '',
   amount: '',
-  fee: 100,
+  fee: 1420,
+  miniFee: 0,
   isShowedPwd: false,
+  isDisplayedBurn: false,
+  isDisplayedFeeTooltip: false,
   averageFees: {
-    low: 100,
-    medium: 200,
-    high: 400
+    low: 1420,
+    medium: 2840,
+    high: 5680
   }
 };
-
 class Send extends Component<Props> {
   props: Props;
   state = initialState;
 
   async componentWillMount() {
-    const { fetchTransactionAverageFees, addressBalance } = this.props;
+    const {
+      fetchTransactionAverageFees,
+      addressBalance,
+      getIsReveal,
+      selectedAccountHash,
+      selectedParentHash
+    } = this.props;
     const averageFees = await fetchTransactionAverageFees();
+    const isRevealed = await getIsReveal(
+      selectedAccountHash,
+      selectedParentHash
+    );
+    let miniLowFee = OPERATIONFEE;
+    if (!isRevealed) {
+      averageFees.low += REVEALOPERATIONFEE;
+      averageFees.medium += REVEALOPERATIONFEE;
+      averageFees.high += REVEALOPERATIONFEE;
+      miniLowFee += REVEALOPERATIONFEE;
+    }
+    if (averageFees.low < miniLowFee) {
+      averageFees.low = miniLowFee;
+    }
     this.setState({
       averageFees,
       fee: averageFees.low,
       total: averageFees.low,
-      balance: addressBalance
+      balance: addressBalance,
+      isDisplayedFeeTooltip: !isRevealed,
+      miniFee: miniLowFee
     });
   }
 
   onUseMax = () => {
-    const { addressBalance, isManager } = this.props;
-    const { fee } = this.state;
-    let balance = 1;
-    if (!isManager) {
-      balance = 0;
-    }
-    const max = addressBalance - fee - balance;
+    const { addressBalance } = this.props;
+    const { fee, isDisplayedBurn } = this.state;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
+    const max = addressBalance - fee - burnFee;
     if (max > 0) {
       const amount = (max / utez).toFixed(6);
-      const total = addressBalance - balance;
-      this.setState({ amount, total, balance });
+      const total = addressBalance;
+      this.setState({ amount, total, balance: 0 });
     } else {
       const amount = '0';
       const total = fee;
@@ -193,24 +279,35 @@ class Send extends Component<Props> {
     });
   };
   handlePasswordChange = password => this.setState({ password });
-  handleToAddressChange = toAddress => this.setState({ toAddress });
-  handleAmountChange = amount => this.setState({ amount });
+  handleToAddressChange = async toAddress => {
+    const { getIsImplicitAndEmpty, addressBalance } = this.props;
+    const { amount, fee } = this.state;
+    const isDisplayedBurn = await getIsImplicitAndEmpty(toAddress);
+    const burnFee = isDisplayedBurn ? 257000 : 0;
+    const newAmount = amount || '0';
+    const numAmount = parseFloat(newAmount) * utez;
+    const total = numAmount + fee + burnFee;
+    const balance = addressBalance - total;
+    this.setState({ toAddress, isDisplayedBurn, total, balance });
+  };
   handleAmountChange = amount => {
     const { addressBalance } = this.props;
-    const { fee } = this.state;
+    const { fee, isDisplayedBurn } = this.state;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const commaReplacedAmount = newAmount.replace(',', '.');
     const numAmount = parseFloat(commaReplacedAmount) * utez;
-    const total = numAmount + fee;
+    const total = numAmount + fee + burnFee;
     const balance = addressBalance - total;
     this.setState({ amount, total, balance });
   };
   handleFeeChange = fee => {
     const { addressBalance } = this.props;
-    const { amount } = this.state;
+    const { amount, isDisplayedBurn } = this.state;
+    const burnFee = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const numAmount = parseFloat(newAmount) * utez;
-    const total = numAmount + fee;
+    const total = numAmount + fee + burnFee;
     const balance = addressBalance - total;
     this.setState({ fee, total, balance });
   };
@@ -247,19 +344,12 @@ class Send extends Component<Props> {
     this.setIsLoading(false);
   };
 
-  getBalanceState = (balance, amount, isManager) => {
+  getBalanceState = (balance, amount) => {
     const { t } = this.props;
     if (balance < 0) {
       return {
         isIssue: true,
         warningMessage: t('components.send.warnings.total_exceeds'),
-        balanceColor: 'error1'
-      };
-    }
-    if (isManager && balance === 0) {
-      return {
-        isIssue: true,
-        warningMessage: t('components.send.warnings.not_allowed'),
         balanceColor: 'error1'
       };
     }
@@ -278,8 +368,49 @@ class Send extends Component<Props> {
     };
   };
 
+  renderBurnToolTip = () => {
+    const { t } = this.props;
+    return (
+      <TooltipContainer>
+        <TooltipTitle>{t('components.send.burn_tooltip_title')}</TooltipTitle>
+        <TooltipContent>
+          <Trans i18nKey="components.send.burn_tooltip_content">
+            The recepient address you entered has a zero balance. Sending funds
+            to an empty Manager address (tz1,2,3) requires a one-time
+            <BoldSpan>0.257</BoldSpan> XTZ burn fee.
+          </Trans>
+        </TooltipContent>
+      </TooltipContainer>
+    );
+  };
+
+  renderError = warningMessage => {
+    return (
+      <ErrorContainer>
+        <WarningIcon iconName="warning" size={ms(-1)} color="error1" />
+        {warningMessage}
+      </ErrorContainer>
+    );
+  };
+
+  renderFeeToolTip = () => {
+    const { t } = this.props;
+    return (
+      <TooltipContainer>
+        <TooltipTitle>{t('components.send.fee_tooltip_title')}</TooltipTitle>
+        <TooltipContent>
+          <Trans i18nKey="components.send.fee_tooltip_content">
+            This address is not revealed on the blockchain. We have added
+            <BoldSpan>0.001420 XTZ</BoldSpan> for Public Key Reveal to your
+            regular send operation fee.
+          </Trans>
+        </TooltipContent>
+      </TooltipContainer>
+    );
+  };
+
   render() {
-    const { isReady, t, isManager, isLedger, selectedAccountHash } = this.props;
+    const { isReady, t, isLedger, selectedAccountHash } = this.props;
 
     const {
       isLoading,
@@ -291,92 +422,130 @@ class Send extends Component<Props> {
       averageFees,
       isShowedPwd,
       total,
-      balance
+      balance,
+      isDisplayedBurn,
+      isDisplayedFeeTooltip,
+      miniFee
     } = this.state;
 
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
       balance,
-      amount,
-      isManager
+      amount
     );
 
+    const error = isIssue ? this.renderError(warningMessage) : '';
+
     const isDisabled =
-      !isReady || isIssue || isLoading || !amount || !toAddress;
+      !amount || !toAddress || !isReady || isIssue || isLoading;
 
     return (
       <SendContainer>
+        <SendTitle>{t('components.send.send_xtz')}</SendTitle>
         <InputAddress
-          labelText={t('general.nouns.label_address')}
+          labelText={t('components.send.recepient_address')}
           userAddress={this.props.selectedAccountHash}
           addressType="send"
           changeDelegate={this.handleToAddressChange}
         />
-        <MainContainer>
-          <AmountContainer>
-            <InputAmount>
-              <TezosNumericInput
-                decimalSeparator={t('general.decimal_separator')}
-                labelText={t('general.nouns.amount')}
-                amount={this.state.amount}
-                handleAmountChange={this.handleAmountChange}
-              />
-              <UseMax onClick={this.onUseMax}>
-                {t('general.verbs.use_max')}
-              </UseMax>
-            </InputAmount>
+        <InputAmount>
+          <TezosNumericInput
+            decimalSeparator={t('general.decimal_separator')}
+            labelText={t('general.nouns.amount')}
+            amount={this.state.amount}
+            handleAmountChange={this.handleAmountChange}
+            errorText={error}
+          />
+          <UseMax onClick={this.onUseMax}>{t('general.verbs.use_max')}</UseMax>
+        </InputAmount>
+        <FeesBurnContainer>
+          <FeeContainer>
             <Fees
-              styles={{ width: '100%' }}
               low={averageFees.low}
               medium={averageFees.medium}
               high={averageFees.high}
               fee={fee}
+              miniFee={miniFee}
               onChange={this.handleFeeChange}
+              tooltip={
+                isDisplayedFeeTooltip ? (
+                  <Tooltip
+                    position="bottom"
+                    content={this.renderFeeToolTip()}
+                    align={{
+                      offset: [70, 0]
+                    }}
+                    arrowPos={{
+                      left: '71%'
+                    }}
+                  >
+                    <FeeTooltip buttonTheme="plain">
+                      <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                    </FeeTooltip>
+                  </Tooltip>
+                ) : null
+              }
             />
-          </AmountContainer>
-          <BalanceContainer>
-            <BalanceArrow />
-            <BalanceContent>
-              <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
-              <TotalAmount
-                weight="500"
-                color={amount ? 'gray3' : 'gray8'}
-                size={ms(0.65)}
-                amount={total}
+          </FeeContainer>
+          {isDisplayedBurn && (
+            <BurnsContainer>
+              <TextField
+                disabled
+                label={t('components.transaction.burn')}
+                defaultValue="0.257000"
               />
-              <BalanceTitle>
-                {t('general.nouns.remaining_balance')}
-              </BalanceTitle>
-              <BalanceAmount
-                weight="500"
-                color={balanceColor}
-                size={ms(-0.75)}
-                amount={balance}
-              />
-              {isIssue && (
-                <ErrorContainer>
-                  <WarningIcon
-                    iconName="warning"
-                    size={ms(-1)}
-                    color="error1"
-                  />
-                  {warningMessage}
-                </ErrorContainer>
-              )}
-            </BalanceContent>
-          </BalanceContainer>
-        </MainContainer>
-        <SendButton
-          disabled={isDisabled}
-          onClick={this.validateAmount}
-          buttonTheme="secondary"
-          small
-        >
-          {t('general.verbs.send')}
-        </SendButton>
+              <TezosIconInput color="gray5" iconName="tezos" />
+              <Tooltip
+                position="bottom"
+                content={this.renderBurnToolTip()}
+                align={{
+                  offset: [70, 0]
+                }}
+                arrowPos={{
+                  left: '71%'
+                }}
+              >
+                <BurnTooltip buttonTheme="plain">
+                  <HelpIcon iconName="help" size={ms(1)} color="gray5" />
+                </BurnTooltip>
+              </Tooltip>
+            </BurnsContainer>
+          )}
+        </FeesBurnContainer>
+
+        <BottomContainer>
+          <TotalContent>
+            <BalanceTitle>{t('general.nouns.total')}</BalanceTitle>
+            <TotalAmount
+              weight="500"
+              color={amount ? 'gray3' : 'gray8'}
+              size={ms(0.65)}
+              amount={total}
+            />
+          </TotalContent>
+          <BalanceContent>
+            <BalanceTitle>{t('general.nouns.remaining_balance')}</BalanceTitle>
+            <BalanceAmount
+              weight="500"
+              color={balanceColor}
+              size={ms(0.65)}
+              amount={balance}
+            />
+          </BalanceContent>
+          <SendButton
+            disabled={isDisabled}
+            onClick={this.validateAmount}
+            buttonTheme="primary"
+          >
+            {t('general.verbs.send')}
+          </SendButton>
+        </BottomContainer>
+
         {!isLedger && (
           <SendConfirmationModal
             onEnterPress={event => this.onEnterPress(event.key, isDisabled)}
             amount={amount}
+            fee={fee}
+            source={selectedAccountHash}
             password={password}
             address={toAddress}
             open={isConfirmationModalOpen}
@@ -385,6 +554,7 @@ class Send extends Component<Props> {
             onSend={this.onSend}
             isLoading={isLoading}
             isShowedPwd={isShowedPwd}
+            isDisplayedBurn={isDisplayedBurn}
             onShowPwd={() => this.setState({ isShowedPwd: !isShowedPwd })}
           />
         )}
@@ -416,7 +586,9 @@ const mapDispatchToProps = dispatch =>
     {
       fetchTransactionAverageFees,
       sendTez,
-      validateAmount
+      validateAmount,
+      getIsReveal,
+      getIsImplicitAndEmpty
     },
     dispatch
   );

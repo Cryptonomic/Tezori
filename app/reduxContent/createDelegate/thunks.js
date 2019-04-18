@@ -6,12 +6,12 @@ import { tezToUtez } from '../../utils/currancy';
 import { createAccount } from '../../utils/account';
 import { findIdentity } from '../../utils/identity';
 import { getSelectedNode } from '../../utils/nodes';
+import { getCurrentPath } from '../../utils/paths';
 import { TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
 import { persistWalletState } from '../../utils/wallet';
 import { createTransaction } from '../../utils/transaction';
 import { ORIGINATION } from '../../constants/TransactionTypes';
-import derivationPth from '../../constants/DerivationPath';
 
 import {
   getSelectedKeyStore,
@@ -88,6 +88,8 @@ export function createNewAccount(
     let newAccount;
     if (isLedger) {
       const newKeyStore = keyStore;
+      const { derivation } = getCurrentPath(settings);
+      console.log('-debug: - UMUR - derivationPath', derivation);
       newKeyStore.storeType = 2;
       newAccount = await sendOriginationOperation(
         url,
@@ -97,7 +99,7 @@ export function createNewAccount(
         true,
         true,
         fee,
-        derivationPth
+        derivation
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);
@@ -164,7 +166,7 @@ export function createNewAccount(
 
       const newAccountHash = operationResult.originated_contracts[0];
       const operationId = clearOperationId(newAccount.operationGroupID);
-
+      console.log(newAccount);
       identity.accounts.push(
         createAccount(
           {
@@ -188,6 +190,19 @@ export function createNewAccount(
           operationGroupHash: operationId,
           source: keyStore.publicKeyHash,
           fee
+        })
+      );
+
+      const delegatedAddressee = identity.accounts.filter(
+        account => account.accountId === newAccountHash
+      );
+      delegatedAddressee[0].transactions.push(
+        createTransaction({
+          amount: amountInUtez,
+          delegate,
+          kind: ORIGINATION,
+          operationGroupHash: operationId,
+          destination: keyStore.publicKeyHash
         })
       );
 
