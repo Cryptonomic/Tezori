@@ -100,7 +100,7 @@
       "parameters": "Parameters",
       "view_scan": "VIEW ON TZSCAN",
       "initial_storage": "Initial Storage",
-      "paste_michelson_code": "Paste in your smart contract Michelson code"
+      "paste_micheline_code": "Paste in your smart contract Micheline code"
     },
     "addNodeModal": {
       "error": "Node's protocol must be https",
