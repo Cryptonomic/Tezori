@@ -13,7 +13,11 @@
       "restore": "回復",
       "confirm": "確認",
       "receive": "受け取る",
-      "continue": "続ける"
+      "continue": "続ける",
+      "invoke": "呼び出す",
+      "deploy": "展開する",
+      "cancel": "キャンセル",
+      "proceed": "続行"
     },
     "nouns": {
       "amount": "金額",
@@ -41,7 +45,9 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "誘導パス",
       "storage": "ストレージ",
-      "burn": "バーン"
+      "burn": "バーン",
+      "smart_contract": "スマートコントラクト",
+      "code": "コード"
     },
     "errors": {
       "no_hex_data": "入力したデータに何か問題があります",
@@ -52,7 +58,8 @@
     "next": "次へ",
     "to": "へ",
     "of": "の",
-    "from": "から"
+    "from": "から",
+    "by": "によって"
   },
   "components": {
     "accountStatus": {
@@ -80,6 +87,21 @@
       "warning2": "管理者アドレスは1µtz以下にすることはまだ許可されていません",
       "add_delegate_title": "デリゲートを追加する"
     },
+    "interactModal": {
+      "interact_contract": "コントラクトと相互作用",
+      "invoke_contract": "既存のコントラクトを呼び出す",
+      "deploy_contract": "新しいコントラクトを展開する",
+      "title": "スマートコントラクトと相互作用",
+      "smart_address": "スマートコントラクトアドレス",
+      "invoke_from": "呼び出し元",
+      "deploy_from": "展開元",
+      "storage_limit": "ストレージ制限",
+      "gas_limit": "ガスリミット",
+      "parameters": "パラメーター",
+      "view_scan": "TZSCANのビュー",
+      "initial_storage": "初期ストレージ",
+      "paste_micheline_code": "スマートコントラクトMichelineコードにペースト"
+    },
     "addNodeModal": {
       "error": "Nodeのプロトコルはhttpsにしてください",
       "title": "カスタム {{title}} Nodeを設定します",
@@ -106,16 +128,15 @@
       },
       "account_title": "口座 {{index}}",
       "not_ready_tooltip": "アカウントはデリゲートの準備ができました。",
-      "delegation_tips": "デリゲーションのヒント"
-    },
-    "addresses": {
-      "support_tooltip": "複数のアカウントのサポートは準備中"
+      "delegation_tips": "デリゲーションのヒント",
+      "not_ready_interact_tooltip": "あなたのアカウントはコントラクトとの相互作用の準備ができていません。"
     },
     "addressStatus": {
       "your_account": "あなたのアカウント",
       "new_address": "新しいアドレス",
       "retrieving_title": " {{typeText}}回復中…",
-      "preparing_title": " {{typeText}}準備中…"
+      "preparing_title": " {{typeText}}準備中…",
+      "deploying_title": "新しいコントラクトを展開中..."
     },
     "balanceBanner": {
       "breadcrumbs": "口座 {{parentIndex}} > {{addressLabel}}",
@@ -131,6 +152,7 @@
         "description3": "シードフレーズを書き留めたことを確実にするために、以下の4つのシードワードに入力してください。"
       },
       "generate_other_seed": "別のシードフレーズを生成する",
+      "copy_seed": "シードフレーズをコピー",
       "create_account": "アカウントを作成",
       "seed_backup": "お持ちのTezos アカウントシードはバックアップされました！",
       "back_to_seed": "シードフレーズに戻る",
@@ -162,6 +184,20 @@
       "add_description": "デリゲート追加の発信操作をしようとしています。デバイスで慎重に詳細をレビューしてください。",
       "confirm_description": "すべての詳細が正しければ、デバイスの発信を<1>確認</1>してください。"
     },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "スマートコントラクト操作を確認",
+      "invoke_description": "スマートコントラクト機能を展開しようとしています。デバイスで慎重に詳細をレビューしてください。",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "Ledger Nano S デバイスはまだパラメータ解析をすることができないことにご注意ください。操作詳細ではなく、上記のメッセージを見ることが予想されます。",
+      "invoke_confirm": "すべての詳細が正しい場合には、デバイスで呼び出しを<1> 確認 </1>してください。",
+      "invoke_alt_confirm": "ご自身のリスクにおいて、お持ちのデバイスで呼び出しを<1> 確認 </1>してください。"
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "スマートコントラクト展開を確認",
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "Ledger Nano S デバイスはまだスクリプトまたはパラメータ解析をすることができないことにご注意ください。操作詳細ではなく、上記のメッセージを見ることが予想されます。",
+      "deploy_confirm": "ご自身のリスクにおいて、お持ちのデバイスで展開を<1> 確認 </1>してください。"
+    },
     "fees": {
       "low_fee": "低手数料",
       "medium_fee": "普通の手数料",
@@ -185,7 +221,11 @@
         "delegate_address": "TZ1、TZ2、TZ3アドレスにのみデリゲートすることができます。",
         "length": "アドレスは36文字の長さにしてください。",
         "special_chars": "アドレスに特殊文字を入れることはできません。",
-        "send_funds": "自分に資金を送ることはできません"
+        "send_funds": "自分に資金を送ることはできません",
+        "invoke_address": "スマートコントラクトアドレスはKT1だけで開始することができます",
+        "not_exist": "このコントラクトはブロックチェンに存在しません。",
+        "not_smartcontract": "これは委任されたアドレスで、スマートコントラクトではありません。送信タブを使用して、資金を移動させます。",
+        "use_interact": "これはスマートコントラクトアドレスです。コントラクトと相互作用ボタンを使用して、資金を移動させます。"
       }
     },
     "languageSelectModal": {
@@ -218,7 +258,10 @@
         "success_sent": "うまく行きました！ {{localeParam}} tzを送りました。",
         "invalid_wallet_password": "無効なウォレット/パスワードの組み合わせ",
         "account_not_exist": "アカウントは存在しません。",
-        "ledger_not_connect": "Ledgerに接続を拒否されました"
+        "ledger_not_connect": "Ledgerに接続を拒否されました",
+        "invoke_operation_failed": "スマートコントラクト操作を失敗しました",
+        "success_invoke_operation": "コントラクト呼び出しをうまく開始しました。",
+        "success_contract_origination": "コントラクト展開をうまく開始しました。"
       }
     },
     "pdfReader": {
@@ -236,6 +279,13 @@
         "invalid_length": "シードフェーズには最低15文字入れてください。",
         "invalid_words": "無効な文字を検出しました。ダブルチェックしてください。"
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "セキュリティ通知",
+      "learn_more": "もっと知る",
+      "understand_check": "この操作は資金の損失につながる場合があることを理解しました。",
+      "dont_message": "このメッセージを再度表示しない(推奨しません)。",
+      "notice_content": "ローカルTezosノードを実行していないようです。ホストされたノードを使用することは申し分なく良いことです。しかし、Tezosノードが危険にさらされる場合、資金を失って終わるかも知れません。"
     },
     "send": {
       "send_xtz": "XTZを送る",
@@ -282,10 +332,21 @@
       "sent": "送信しました",
       "received": "受信しました",
       "this_address": "このアドレス",
-      "your_manager_address": "<0>あなたの</0>アカウント 1 マネージャーアドレス"
+      "your_manager_address": "<0>あなたの</0>アカウント 1 マネージャーアドレス",
+      "invoke_function": "呼び出された機能",
+      "add_delegate": "発信 - 委任されたアドレス",
+      "deployment": "発信 - スマートコントラクト",
+      "invoked": "呼び出しました"
     },
     "update": {
       "last_updated": "最終更新 {{date}}"
+    },
+    "versionStatus": {
+      "version_update": "あなたはGalleonの旧バージョンを使用しており、完全に機能しないかも知れません。v{{version}}をダウンロードしてください "
+    },
+    "comingSoon": {
+      "coming_soon": "準備中",
+      "working_hard": ""
     }
   },
   "containers": {
@@ -327,7 +388,7 @@
       "create_new_wallet_btn": "新しいウォレットを作成",
       "open_exisiting_wallet_btn": "既存のウォレットを開く",
       "want_to_import_fundraiser_paper_wallet": "Fundraiser ペーパーウォレットをインポートしますか？",
-      "create_named_wallet": "<0><0><1> {{name}}</1>ウォレットを最初に作成してください。</0></0>",
+      "create_named_wallet": "<1><0><1> {{name}}</1>ウォレットを最初に作成してください。</0></1>",
       "tagline": "Tezosのコミュニティウォレット",
       "app_name": "Tezori",
       "keystore_wallet": "Keystore Wallet",

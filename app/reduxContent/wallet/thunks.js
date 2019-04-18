@@ -1,6 +1,12 @@
 import path from 'path';
 import { push } from 'react-router-redux';
-import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
+import {
+  TezosFileWallet,
+  TezosWalletUtil,
+  TezosConseilClient,
+  TezosNodeWriter,
+  StoreType
+} from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
 import {
@@ -10,7 +16,6 @@ import {
 } from '../../constants/AddAddressTypes';
 import { CONSEIL, TEZOS } from '../../constants/NodesTypes';
 import { CREATED } from '../../constants/StatusTypes';
-import * as storeTypes from '../../constants/StoreTypes';
 import { createTransaction } from '../../utils/transaction';
 
 import {
@@ -61,13 +66,13 @@ import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
-  unlockIdentityWithMnemonic,
-  createWallet
-} = TezosWallet;
+  unlockIdentityWithMnemonic
+} = TezosWalletUtil;
+const { createWallet } = TezosFileWallet;
 
-const { getAccount } = TezosConseilQuery;
+const { getAccount } = TezosConseilClient;
 
-const { sendIdentityActivationOperation } = TezosOperations;
+const { sendIdentityActivationOperation } = TezosNodeWriter;
 let currentAccountRefreshInterval = null;
 
 export function goHomeAndClearState() {
@@ -164,6 +169,7 @@ export function updateActiveTab(
 export function syncAccount(selectedAccountHash, selectedParentHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const { network } = settings;
     const isLedger = state().wallet.get('isLedger');
     let identities = state()
       .wallet.get('identities')
@@ -179,7 +185,8 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
         settings,
         selectedAccountHash,
         selectedParentHash,
-        isLedger
+        isLedger,
+        network
       ).catch(e => {
         console.log(
           `-debug: Error in: syncAccount for:${identity.publicKeyHash}`
@@ -205,6 +212,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
 export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
+    const { network } = settings;
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -215,7 +223,8 @@ export function syncIdentity(publicKeyHash) {
       identities,
       stateIdentity,
       settings,
-      selectedAccountHash
+      selectedAccountHash,
+      network
     ).catch(e => {
       console.log(`-debug: Error in: syncIdentity for:${publicKeyHash}`);
       console.error(e);
@@ -240,9 +249,10 @@ export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setWalletIsSyncing(true));
     const settings = state().settings.toJS();
+    const { network } = settings;
     const isLedger = state().wallet.get('isLedger');
 
-    const nodesStatus = await getNodesStatus(settings);
+    const nodesStatus = await getNodesStatus(settings, network);
     dispatch(setNodesStatus(nodesStatus));
     const res = getNodesError(nodesStatus);
     console.log('-debug: res, nodesStatus', res, nodesStatus);
@@ -264,7 +274,8 @@ export function syncWallet() {
           stateIdentities,
           identity,
           settings,
-          isLedger
+          isLedger,
+          network
         ).catch(e => {
           console.log(`-debug: Error in: syncIdentity for: ${publicKeyHash}`);
           console.error(e);
@@ -338,7 +349,7 @@ export function importAddress(
     const walletLocation = wallet.get('walletLocation');
     const walletFileName = wallet.get('walletFileName');
     const password = wallet.get('password');
-
+    const { network } = settings;
     // TODO: clear out message bar
     dispatch(addMessage('', true));
     dispatch(setIsLoading(true));
@@ -348,7 +359,7 @@ export function importAddress(
       switch (activeTab) {
         case GENERATE_MNEMONIC:
           identity = await unlockIdentityWithMnemonic(seed, '');
-          identity.storeType = storeTypes.MNEMONIC;
+          identity.storeType = StoreType.Mnemonic;
           break;
         case FUNDRAISER: {
           identity = await unlockFundraiserIdentity(
@@ -357,15 +368,15 @@ export function importAddress(
             passPhrase.trim(),
             pkh.trim()
           );
-          identity.storeType = storeTypes.FUNDRAISER;
+          identity.storeType = StoreType.Fundraiser;
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
-            conseilNode.url,
-            identity.publicKeyHash,
-            conseilNode.apiKey
-          ).catch(() => false);
-          if (!account) {
+            { url: conseilNode.url, apiKey: conseilNode.apiKey },
+            network,
+            identity.publicKeyHash
+          ).catch(() => []);
+          if (!account || account.length === 0) {
             const tezosNode = getSelectedNode(settings, TEZOS);
             activating = await sendIdentityActivationOperation(
               tezosNode.url,
@@ -394,19 +405,19 @@ export function importAddress(
         case RESTORE: {
           identity = await unlockIdentityWithMnemonic(seed, passPhrase);
           const storeTypesMap = {
-            0: storeTypes.MNEMONIC,
-            1: storeTypes.FUNDRAISER
+            0: StoreType.Mnemonic,
+            1: StoreType.Fundraiser
           };
           identity.storeType = storeTypesMap[identity.storeType];
           const conseilNode = getSelectedNode(settings, CONSEIL);
 
           const account = await getAccount(
-            conseilNode.url,
-            identity.publicKeyHash,
-            conseilNode.apiKey
-          ).catch(() => false);
+            { url: conseilNode.url, apiKey: conseilNode.apiKey },
+            network,
+            identity.publicKeyHash
+          ).catch(() => []);
 
-          if (!account) {
+          if (!account || account.length === 0) {
             const title = 'components.messageBar.messages.account_not_exist';
             const err = new Error(title);
             err.name = title;
@@ -430,7 +441,7 @@ export function importAddress(
               createTransaction({
                 kind: ACTIVATION,
                 timestamp: Date.now(),
-                operationGroupHash: identity.operations.Created,
+                operation_group_hash: identity.operations.Created,
                 amount:
                   activating.results.contents[0].metadata.balance_updates[0]
                     .change
@@ -575,7 +586,7 @@ export function getIsReveal(selectedAccountHash, selectedParentHash) {
     }
     const { url } = getSelectedNode(settings, TEZOS);
 
-    const isReveal = await TezosOperations.isManagerKeyRevealedForAccount(
+    const isReveal = await TezosNodeWriter.isManagerKeyRevealedForAccount(
       url,
       keyStore
     );
@@ -587,7 +598,7 @@ export function getIsImplicitAndEmpty(recipientHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { url } = getSelectedNode(settings, TEZOS);
-    const isImplicitAndEmpty = await TezosOperations.isImplicitAndEmpty(
+    const isImplicitAndEmpty = await TezosNodeWriter.isImplicitAndEmpty(
       url,
       recipientHash
     );

@@ -1,4 +1,3 @@
-import { TezosWallet, TezosConseilQuery, TezosOperations } from 'conseiljs';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 import { TRANSACTIONS } from '../constants/TabConstants';
@@ -9,16 +8,16 @@ import {
   getSelectedHash
 } from './general';
 import { getSelectedNode } from './nodes';
-const { getAccounts, getEmptyTezosFilter } = TezosConseilQuery;
+import { ConseilQueryBuilder, ConseilOperator, TezosConseilClient } from 'conseiljs';
 
 export function createAccount(account, identity) {
   return {
-    accountId: '',
+    account_id: '',
     balance: 0,
-    blockId: '',
+    block_id: '',
     counter: 0,
-    delegateSetable: false,
-    delegateValue: null,
+    delegate_setable: false,
+    delegate_value: null,
     manager: '',
     script: null,
     spendable: true,
@@ -36,7 +35,7 @@ export function createAccount(account, identity) {
 export function findAccount(identity, accountId) {
   return (
     identity &&
-    (identity.accounts || []).find(account => account.accountId === accountId)
+    (identity.accounts || []).find(account => account.account_id === accountId)
   );
 }
 
@@ -44,7 +43,7 @@ export function findAccountIndex(identity, accountId) {
   return (
     identity &&
     (identity.accounts || []).findIndex(
-      account => account.accountId === accountId
+      account => account.account_id === accountId
     )
   );
 }
@@ -53,12 +52,14 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
   return { balance, transactions };
 }
 
-export async function getAccountsForIdentity(nodes, id) {
-  const emptyFilter = getEmptyTezosFilter();
-  const filter = { ...emptyFilter, account_manager: [id] };
+export async function getAccountsForIdentity(nodes, id, network) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
-  const accounts = await getAccounts(url, filter, apiKey);
-  return accounts.filter(account => account.accountId !== id);
+
+  let accountsquery = ConseilQueryBuilder.blankQuery();
+  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'manager', ConseilOperator.EQ, [id], false);
+  accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 300);
+  const accounts = await TezosConseilClient.getAccounts({url: url, apiKey: apiKey}, network, accountsquery);
+  return accounts.filter(account => account.account_id !== id);
 }
 
 export async function getSyncAccount(
@@ -67,14 +68,16 @@ export async function getSyncAccount(
   nodes,
   accountHash,
   parentHash,
-  isLedger = false
+  isLedger = false,
+  network
 ) {
   const keyStore = getSelectedKeyStore(identities, accountHash, parentHash);
   account = await activateAndUpdateAccount(
     account,
     keyStore,
     nodes,
-    isLedger
+    isLedger,
+    network
   ).catch(e => {
     console.log('-debug: Error in: getSyncAccount for:' + accountHash);
     console.error(e);
@@ -86,7 +89,8 @@ export async function getSyncAccount(
     account.transactions = await getSyncTransactions(
       accountHash,
       nodes,
-      account.transactions
+      account.transactions,
+      network
     );
   }
   return account;

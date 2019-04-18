@@ -4,6 +4,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import NumberFormat from 'react-number-format';
 
 const Container = styled(FormControl)`
   width: 100%;
@@ -12,7 +13,7 @@ const Container = styled(FormControl)`
 
 const InputWrapper = styled(Input)`
   &&& {
-    &[class*='focused'] {    
+    &[class*='focused'] {
       &:after {
         border-bottom-color: ${({ error, theme: { colors } }) =>
           error ? colors.error1 : colors.accent};
@@ -32,12 +33,13 @@ const InputWrapper = styled(Input)`
     &:hover:before {
       border-bottom: solid 2px ${({ error, theme: { colors } }) =>
         error ? colors.error1 : colors.accent} !important;
-    }    
+    }
   }
 }`;
+
 const LabelWrapper = styled(InputLabel)`
   &&& {
-    &[class*='focused'] {    
+    &[class*='focused'] {
       color: ${({ theme: { colors } }) => colors.gray3};
     }
     color: rgba(0, 0, 0, 0.38);
@@ -54,6 +56,31 @@ const ErrorText = styled(FormHelperText)`
     height: 18px;
   }
 }`;
+
+type Props1 = {
+  inputRef: () => {},
+  onChange: () => {}
+};
+
+const NumberFormatCustom = (props: Props1) => {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      type="text"
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      thousandSeparator
+    />
+  );
+};
 
 type Props = {
   label: string,
@@ -76,8 +103,10 @@ const TextField = (props: Props) => {
         error={!!errorText}
         disabled={disabled}
         right={right}
+        inputComponent={type === 'number' ? NumberFormatCustom : null}
         {...other}
       />
+
       <ErrorText component="div">{errorText}</ErrorText>
     </Container>
   );

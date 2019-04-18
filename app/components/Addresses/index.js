@@ -2,24 +2,22 @@
 import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import AddCircle from '@material-ui/icons/AddCircle';
 import styled, { withTheme } from 'styled-components';
 import { ms } from '../../styles/helpers';
 
 import { H4 } from '../Heading/';
 import AddressBlock from '../AddressBlock/';
-import Tooltip from '../Tooltip/';
 import { syncAccountOrIdentity } from '../../reduxContent/wallet/thunks';
 import { sortArr } from '../../utils/array';
 import { wrapComponent } from '../../utils/i18n';
 
 type Account = {
-  accountId: string,
-  blockId: string,
+  account_id: string,
+  block_id: string,
   manager: string,
   spendable: boolean,
-  delegateSetable: boolean,
-  delegateValue: string,
+  delegate_setable: boolean,
+  delegate_value: string,
   counter: number,
   script: string,
   balance: number
@@ -52,17 +50,10 @@ const AccountItem = styled.div`
   margin: 0 0 ${ms(1)} 0;
 `;
 
-const AccountsTooltip = styled.div`
-  font-size: ${ms(-1)};
-  max-width: ${ms(12)};
-  color: ${({ theme: { colors } }) => colors.secondary};
-`;
-
 type Props = {
   identities: List<Identity>,
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
-  theme: object,
   history: object,
   selectedParentHash: string,
   t: () => {}
@@ -78,34 +69,14 @@ class Addresses extends Component<Props> {
       selectedAccountHash,
       selectedParentHash,
       identities,
-      theme: { colors },
       t
     } = this.props;
     return (
       <Container>
         <AccountTitle>
           <H4>{t('general.nouns.accounts')}</H4>
-          <Tooltip
-            position="bottom"
-            content={
-              <AccountsTooltip>
-                {t('components.addresses.support_tooltip')}
-              </AccountsTooltip>
-            }
-          >
-            <AddCircle
-              disabled
-              style={{
-                fill: colors.secondary,
-                opacity: 0.5,
-                width: ms(3),
-                height: ms(3),
-                cursor: 'default'
-              }}
-            />
-          </Tooltip>
         </AccountTitle>
-        { identities
+        {identities
           .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
           .map((accountBlock, index) => (
             <AccountItem key={accountBlock.get('publicKeyHash')}>
@@ -118,8 +89,7 @@ class Addresses extends Component<Props> {
                 history={history}
               />
             </AccountItem>
-          ))
-        }
+          ))}
       </Container>
     );
   }
@@ -142,6 +112,11 @@ function mapDispatchToProps(dispatch: () => {}) {
   );
 }
 
-export default compose(withTheme, wrapComponent, connect(mapStateToProps, mapDispatchToProps))(
-  Addresses
-);
+export default compose(
+  withTheme,
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(Addresses);

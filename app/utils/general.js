@@ -1,40 +1,36 @@
 import { shell } from 'electron';
-import { pick  } from 'lodash';
-import {
-  TezosConseilQuery,
-  TezosNode,
-  TezosOperations,
-  TezosWallet
-} from 'conseiljs';
-
+import { pick } from 'lodash';
 import { fromJS } from 'immutable';
 import { flatten } from 'lodash';
+import {
+  ConseilQueryBuilder,
+  ConseilOperator,
+  ConseilSortDirection,
+  TezosConseilClient,
+  TezosNodeReader,
+  TezosWalletUtil,
+  StoreType
+} from 'conseiljs';
+
 import { findAccount, createSelectedAccount } from './account';
 import { findIdentity } from './identity';
 import { createTransaction } from './transaction';
 import * as status from '../constants/StatusTypes';
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
-import { MNEMONIC, LEDGER } from '../constants/StoreTypes';
 import { SEND, TRANSACTIONS } from '../constants/TabConstants';
 import { getSelectedNode } from './nodes';
 import { blockExplorerHost } from '../config.json';
 
-const { getEmptyTezosFilter, getOperations, getAccount, getAverageFees } = TezosConseilQuery;
-const { generateMnemonic } = TezosWallet;
+const util = require('util');
+const { Mnemonic, Hardware } = StoreType;
 
-export async function getNodesStatus(nodes) {
+export async function getNodesStatus(nodes, network) {
   const selectedTezosNode = getSelectedNode(nodes, TEZOS);
-  const tezRes = await TezosNode.getBlockHead(selectedTezosNode.url).catch((err) => {
-    console.error(err);
-    return false;
-  });
+  const tezRes = await TezosNodeReader.getBlockHead(selectedTezosNode.url).catch((err) => { console.error(err); return false; });
   const selectedConseilNode = getSelectedNode(nodes, CONSEIL);
-  const consRes = await TezosConseilQuery.getBlockHead(selectedConseilNode.url, selectedConseilNode.apiKey).catch((err) => {
-    console.error(err);
-    return false;
-  });
+  const consRes = await TezosConseilClient.getBlockHead({ url: selectedConseilNode.url, apiKey: selectedConseilNode.apiKey }, network).catch((err) => { console.error(err); return false; });
+  console.log(`-debug: tezos status: ${JSON.stringify(tezRes)}, conseil status: ${JSON.stringify(consRes)}`);
 
-  console.log('-debug: tezRes, consRes', tezRes, consRes);
   return {
     tezos: Object.assign(
       {
@@ -52,10 +48,10 @@ export async function getNodesStatus(nodes) {
         responsive: false,
         level: null
       },
-      consRes &&
+      consRes && consRes[0] &&
       {
         responsive: true,
-        level: Number(consRes.level)
+        level: Number(consRes[0].level)
       },
     )
   };
@@ -91,11 +87,13 @@ export function awaitFor(timeout: number) {
 export function getSelectedHash() {
   let hash = location.hash.replace(/$\//, '');
   let segments = hash.split('/');
+  const addressIndex = segments.pop();
   const selectedParentHash = segments.pop();
   const selectedAccountHash = segments.pop();
   return {
     selectedParentHash,
-    selectedAccountHash
+    selectedAccountHash,
+    addressIndex
   };
 }
 
@@ -113,48 +111,54 @@ export function getSelectedAccount( identities, selectedAccountHash, selectedPar
 
 export function getSelectedKeyStore( identities, selectedAccountHash, selectedParentHash ) {
   var selectedAccount = getSelectedAccount( identities, selectedAccountHash, selectedParentHash );
-  const { publicKey, privateKey, publicKeyHash, accountId } = selectedAccount.toJS();
+  const { publicKey, privateKey, publicKeyHash, account_id } = selectedAccount.toJS();
   return {
     publicKey,
     privateKey,
-    publicKeyHash: publicKeyHash || accountId
+    publicKeyHash: publicKeyHash || account_id
   };
 }
 
-export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false) {
+export async function activateAndUpdateAccount(account, keyStore, nodes, isLedger = false, network) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
-  if ( account.status === status.READY ) {
-    const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {
-      console.log('-debug: Error in: status.READY for:' + accountHash);
-      console.error(error);
-      return false;
+  if (account.status === status.READY) {
+    const accountHash = account.publicKeyHash || account.account_id;
+    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, network, accountHash)
+      .catch((error) => {
+        console.log('-debug: Error in: status.READY for:' + accountHash);
+        console.error(error);
+        return null;
     });
-    if ( updatedAccount ) {
-      account.balance = updatedAccount.account.balance;
+    if (updatedAccount && updatedAccount[0]) {
+      console.log('ready ' + util.inspect(updatedAccount, false, null, false));
+      account.balance = parseInt(updatedAccount[0].balance);
     }
     return account;
   }
 
-  if ( account.status === status.INACTIVE ) {
+  if (account.status === status.INACTIVE) {
     //  delete account
   }
 
-  if ( account.status === status.CREATED ) {
-    const accountHash = account.publicKeyHash || account.accountId;
-    const updatedAccount = await getAccount(url, accountHash, apiKey).catch( (error) => {
-      console.log('-debug: Error in: status.CREATED for:' + accountHash);
-      console.error(error);
-      return false;
+  if (account.status === status.CREATED) {
+    const accountHash = account.publicKeyHash || account.account_id;
+
+    const updatedAccount = await TezosConseilClient.getAccount({url: url, apiKey: apiKey}, network, accountHash)
+      .catch((error) => {
+        console.log('-debug: Error in: status.CREATED for:' + accountHash);
+        console.error(error);
+        return null;
     });
-    if ( updatedAccount ) {
-      account.balance = updatedAccount.account.balance;
+
+    if (updatedAccount && updatedAccount[0]) {
+      console.log('created ' + util.inspect(updatedAccount, false, null, false));
+      account.balance = parseInt(updatedAccount[0].balance);
       account.status = status.FOUND;
     }
   }
 
-  if ( account.status === status.FOUND ) {
-      account.status = status.READY;
+  if (account.status === status.FOUND) {
+    account.status = status.READY;
   }
 
   console.log('-debug: account.status ', account.status);
@@ -162,24 +166,26 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
 }
 
 export function generateNewMnemonic() {
-  return generateMnemonic();
+  return TezosWalletUtil.generateMnemonic();
 }
 
 export async function fetchAverageFees(settings, operationKind) {
   const { url, apiKey } = getSelectedNode(settings, CONSEIL);
-  const emptyFilter = getEmptyTezosFilter();
-  const feeFilter = {...emptyFilter, limit: 1000, operation_kind: [ operationKind ]};
-  return await getAverageFees(url, feeFilter, apiKey);
+  const { network } = settings;
+
+  const fees = await TezosConseilClient.getFeeStatistics({url, apiKey}, network, operationKind);
+
+  return {low: fees[0]['low'], medium: fees[0]['medium'], high: fees[0]['high']};
 }
 
 export function isReady(addressStatus, storeType, tab) {
   return addressStatus === status.READY
     ||
-    (storeType === MNEMONIC && addressStatus === status.CREATED && tab !== SEND)
+    (storeType === Mnemonic && addressStatus === status.CREATED && tab !== SEND)
     ||
-    (storeType === MNEMONIC && addressStatus !== status.CREATED && tab === TRANSACTIONS)
+    (storeType === Mnemonic && addressStatus !== status.CREATED && tab === TRANSACTIONS)
     ||
-    (storeType === LEDGER && addressStatus === status.CREATED && tab !== SEND)
+    (storeType === Hardware && addressStatus === status.CREATED && tab !== SEND)
     ;
 }
 
@@ -196,4 +202,14 @@ export function clearOperationId( operationId ) {
     return operationId.replace(/\\|"|\n|\r/g, '');
   }
   return operationId;
+}
+
+export const getVersionFromApi = async () => {
+  try {
+    let response = await fetch('https://galleon-wallet.tech/version.json');
+    let responseJson = await response.json();
+    return responseJson;
+   } catch(error) {
+    console.error(error);
+  }
 }

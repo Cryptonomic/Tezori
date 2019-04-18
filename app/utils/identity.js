@@ -1,3 +1,4 @@
+import { StoreType } from 'conseiljs';
 import * as status from '../constants/StatusTypes';
 import { getSyncTransactions, syncTransactionsWithState } from './transaction';
 import {
@@ -12,7 +13,8 @@ import {
   syncAccountWithState
 } from './account';
 import { TRANSACTIONS } from '../constants/TabConstants';
-import { FUNDRAISER } from '../constants/StoreTypes';
+
+const { Fundraiser } = StoreType;
 
 export function createIdentity(identity) {
   return {
@@ -23,7 +25,7 @@ export function createIdentity(identity) {
     privateKey: '',
     operations: {},
     order: null,
-    storeType: FUNDRAISER,
+    storeType: Fundraiser,
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     transactions: [],
@@ -47,7 +49,8 @@ export async function getSyncIdentity(
   identities,
   identity,
   nodes,
-  isLedger = false
+  isLedger = false,
+  network
 ) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore(
@@ -59,7 +62,8 @@ export async function getSyncIdentity(
     identity,
     keyStore,
     nodes,
-    isLedger
+    isLedger,
+    network
   );
   const { selectedAccountHash } = getSelectedHash();
   /*
@@ -69,7 +73,7 @@ export async function getSyncIdentity(
    *  those accounts with the updated accounts we got from getAccounts.
    * */
 
-  let accounts = await getAccountsForIdentity(nodes, publicKeyHash).catch(
+  let accounts = await getAccountsForIdentity(nodes, publicKeyHash, network).catch(
     error => {
       console.log(
         '-debug: Error in: status.getAccountsForIdentity for:' + publicKeyHash
@@ -80,11 +84,11 @@ export async function getSyncIdentity(
   );
 
   const stateAccountIndices = identity.accounts.map(
-    account => account.accountId
+    account => account.account_id
   );
 
   accounts = accounts.map(account => {
-    const foundIndex = stateAccountIndices.indexOf(account.accountId);
+    const foundIndex = stateAccountIndices.indexOf(account.account_id);
     const overrides = {};
     if (foundIndex > -1) {
       overrides.status = identity.accounts[foundIndex].status;
@@ -102,10 +106,10 @@ export async function getSyncIdentity(
     );
   });
 
-  const accountIndices = accounts.map(account => account.accountId);
+  const accountIndices = accounts.map(account => account.account_id);
 
   const accountsToConcat = identity.accounts.filter(account => {
-    return accountIndices.indexOf(account.accountId) === -1;
+    return accountIndices.indexOf(account.account_id) === -1;
   });
 
   accounts = accounts.concat(accountsToConcat);
@@ -122,9 +126,10 @@ export async function getSyncIdentity(
           identities,
           account,
           nodes,
-          account.accountId,
+          account.account_id,
           publicKeyHash,
-          isLedger
+          isLedger,
+          network
         ).catch(e => {
           console.log(
             '-debug: Error in: getSyncIdentity for:' + identity.publicKeyHash
@@ -132,11 +137,12 @@ export async function getSyncIdentity(
           console.error(e);
           return account;
         });
-      } else if (selectedAccountHash === account.accountId) {
+      } else if (selectedAccountHash === account.account_id) {
         account.transactions = await getSyncTransactions(
           selectedAccountHash,
           nodes,
-          account.transactions
+          account.transactions,
+          network
         );
       }
       return account;
@@ -147,7 +153,8 @@ export async function getSyncIdentity(
     identity.transactions = await getSyncTransactions(
       publicKeyHash,
       nodes,
-      identity.transactions
+      identity.transactions,
+      network
     );
   }
 
@@ -156,16 +163,10 @@ export async function getSyncIdentity(
 
 export function syncIdentityWithState(syncIdentity, stateIdentity) {
   const newAccounts = stateIdentity.accounts.filter(stateIdentityAccount => {
-    const syncIdentityAccountIndex = syncIdentity.accounts.findIndex(
-      syncIdentityAccount =>
-        syncIdentityAccount.accountId === stateIdentityAccount.accountId
-    );
+    const syncIdentityAccountIndex = syncIdentity.accounts.findIndex(syncIdentityAccount => syncIdentityAccount.account_id === stateIdentityAccount.account_id);
 
     if (syncIdentityAccountIndex > -1) {
-      syncIdentity.accounts[syncIdentityAccountIndex] = syncAccountWithState(
-        syncIdentity.accounts[syncIdentityAccountIndex],
-        stateIdentityAccount
-      );
+      syncIdentity.accounts[syncIdentityAccountIndex] = syncAccountWithState(syncIdentity.accounts[syncIdentityAccountIndex], stateIdentityAccount);
       return false;
     }
 

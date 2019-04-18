@@ -13,7 +13,11 @@
       "restore": "Restaurar",
       "confirm": "Confirmar",
       "receive": "Recibir",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "invoke": "Recurrir",
+      "deploy": "Abrir",
+      "cancel": "Cancelar",
+      "proceed": "Continuar"
     },
     "nouns": {
       "amount": "Monto",
@@ -41,7 +45,9 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Trayectoria de derivación",
       "storage": "Almacenamiento",
-      "burn": "Quemar"
+      "burn": "Quemar",
+      "smart_contract": "Contrato Inteligente",
+      "code": "Código"
     },
     "errors": {
       "no_hex_data": "Algo está mal con los datos que ingresó",
@@ -52,7 +58,8 @@
     "next": "Siguiente",
     "to": "Para",
     "of": "de",
-    "from": "De"
+    "from": "De",
+    "by": "por"
   },
   "components": {
     "accountStatus": {
@@ -80,6 +87,21 @@
       "warning2": "Las Direcciones Administrativas todavía no tienen permitido tener menos de  1 µtz",
       "add_delegate_title": "Agregar un delegado"
     },
+    "interactModal": {
+      "interact_contract": "Interactuar con Contratos",
+      "invoke_contract": "Recurrir a un Contrato ya Existente",
+      "deploy_contract": "Abrir un Contrato Nuevo",
+      "title": "Interactuar con Contratos Inteligentes ",
+      "smart_address": "Dirección del Contrato Inteligente",
+      "invoke_from": "Recurrir desde",
+      "deploy_from": "Abrir desde",
+      "storage_limit": "Límite de almacenamiento",
+      "gas_limit": "Límite de gas",
+      "parameters": "Parámetros",
+      "view_scan": "VER EN TZSCAN",
+      "initial_storage": "Almacenamiento inicial",
+      "paste_micheline_code": "Pegar en tu código Micheline del contrato inteligente"
+    },
     "addNodeModal": {
       "error": "El protocolo del Node debe ser https",
       "title": "Establece el nombre personalizado de tu {{title}} Node",
@@ -106,16 +128,15 @@
       },
       "account_title": "Cuenta {{index}}",
       "not_ready_tooltip": "Tu cuenta no está lista para ser delegada.",
-      "delegation_tips": "Tips de la Delegación"
-    },
-    "addresses": {
-      "support_tooltip": "Próximante habrá soporte para múltiples cuentas"
+      "delegation_tips": "Tips de la Delegación",
+      "not_ready_interact_tooltip": "Tu cuenta no está lista para ser interactuar con contratos."
     },
     "addressStatus": {
       "your_account": "tu cuenta",
       "new_address": "nueva dirección",
       "retrieving_title": "Recuperando {{typeText}}...",
-      "preparing_title": "Preparando {{typeText}}..."
+      "preparing_title": "Preparando {{typeText}}...",
+      "deploying_title": "Abriendo el contrato nuevo..."
     },
     "balanceBanner": {
       "breadcrumbs": "Cuenta {{parentIndex}} > {{addressLabel}}",
@@ -131,6 +152,7 @@
         "description3": "Para asegurar que anotaste tu frase semilla, por favor escribe las siguientes cuatro palabras clave."
       },
       "generate_other_seed": "Generar otra frase semilla",
+      "copy_seed": "Copiar Frase Semilla",
       "create_account": "Crear Cuenta",
       "seed_backup": "¡La semilla de tu cuenta Tezos está respaldada!",
       "back_to_seed": "Volver a la frase semilla",
@@ -162,6 +184,20 @@
       "add_description": "Vas a enviar una operación de creación para agregar un delegado. Por favor, revisa cuidadosamente los detalles en tu aparato.",
       "confirm_description": "Si todos los detalles son correctos, por favor <1> confirma </1> la creación en tu aparato."
     },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "Confirmar la Operación del Contrato Inteligente",
+      "invoke_description": "Vas a recurrir a una función del contrato inteligente. Por favor, revisa cuidadosamente los detalles en tu aparato.",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "Por favor, ten en cuenta que los aparatos Ledger Nano S todavía no son capaces de analizar parámetros. Se espera que vas a recibir el mensaje anterior en vez de los detalles de la operación.",
+      "invoke_confirm": "Si todos los detalles son correctos, por favor<1> confirma </1>la invocación en tu aparato.",
+      "invoke_alt_confirm": "Por favor<1> confirma </1>la invocación en tu aparato a tu propio riesgo."
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "Confirma la Apertura del Contrato Inteligente",
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "Por favor, ten en cuenta que los aparatos Ledger Nano S todavía no son capaces de analizar scripts o parámetros. Se espera que vas a recibir el mensaje anterior en vez de los detalles de la operación.",
+      "deploy_confirm": "Por favor<1> confirma </1> la operación en tu aparato a tu propio riesgo."
+    },
     "fees": {
       "low_fee": "Tasa mínima",
       "medium_fee": "Tasa media",
@@ -185,7 +221,11 @@
         "delegate_address": "Sólo puedes delegar a direcciones TZ1, TZ2 o TZ3",
         "length": "Las direcciones deben tener 36 caracteres",
         "special_chars": "Las direcciones no deben contener caracteres especiales",
-        "send_funds": "No te puedes enviar fondos a ti mismo"
+        "send_funds": "No te puedes enviar fondos a ti mismo",
+        "invoke_address": "Las direcciones de los contratos inteligentes sólo pueden comenzar con KT1",
+        "not_exist": "Este contrato no existen en la blockchain.",
+        "not_smartcontract": "Esta es una dirección delegada y no un contrato inteligente. Por favor usa la pestaña Enviar para transferir fondos.",
+        "use_interact": "Esta es una dirección de contrato inteligente. Por favor usa el botón Interactuar con Contratos para transferir fondos."
       }
     },
     "languageSelectModal": {
@@ -218,7 +258,10 @@
         "success_sent": "¡Éxito! Has enviado {{localeParam}} tz.",
         "invalid_wallet_password": "Combinación billetera/contraseña inválida.",
         "account_not_exist": "Esta cuenta no existe",
-        "ledger_not_connect": "Conexión rechazada por el Ledger."
+        "ledger_not_connect": "Conexión rechazada por el Ledger.",
+        "invoke_operation_failed": "La operación del Contrato Inteligente falló",
+        "success_invoke_operation": "La operación del Contrato Inteligente fue exitosa.",
+        "success_contract_origination": "Comenzó exitosamente el despliegue del contrato."
       }
     },
     "pdfReader": {
@@ -236,6 +279,13 @@
         "invalid_length": "La frase secreta debe contener 15 palabras.",
         "invalid_words": "Palabra(s) inválida(s). Por favor revise."
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "Notificación de Seguridad",
+      "learn_more": "Saber Más",
+      "understand_check": "Comprendo que esta operación puede resultar en pérdida de fondos.",
+      "dont_message": "No mostrar este mensaje otra vez (no es recomendable).",
+      "notice_content": "Parece que no estás usando un nodo local de Tezos. Es perfectamente aceptable usar un nodo alojado. Sin embargo, si el nodo Tezos fue comprometido, podrías perder tus fondos."
     },
     "send": {
       "send_xtz": "Enviar XTZ",
@@ -282,10 +332,21 @@
       "sent": "Enviar",
       "received": "Recibido",
       "this_address": "esta dirección",
-      "your_manager_address": "<0>tu</0> cuenta 1 Dirección Administrativa"
+      "your_manager_address": "<0>tu</0> cuenta 1 Dirección Administrativa",
+      "invoke_function": "FUNCIÓN INVOCADA",
+      "add_delegate": "CREACIÓN - DIRECCIÓN DELEGADA",
+      "deployment": "CREACIÓN - CONTRATO INTELIGENTE",
+      "invoked": "INVOCADO"
     },
     "update": {
       "last_updated": "Última actualización {{date}}"
+    },
+    "versionStatus": {
+      "version_update": "Estás ulizando una versión antigua de Galleon, la cual puede que no tenga todas las funciones. Por favor descarga la versión v{{version}} en "
+    },
+    "comingSoon": {
+      "coming_soon": "Próximamente!",
+      "working_hard": ""
     }
   },
   "containers": {
@@ -327,7 +388,7 @@
       "create_new_wallet_btn": "Crear una nueva billetera",
       "open_exisiting_wallet_btn": "Abrir billetera existente",
       "want_to_import_fundraiser_paper_wallet": "¿Quieres importar tu billetera de papel de la Fundraiser?",
-      "create_named_wallet": "<0><0>Crear una billetera <1>{{name}}</1></0></0>primero",
+      "create_named_wallet": "<1><0>Crear una billetera <1>{{name}}</1></0></1>primero",
       "tagline": "Una billetera comunitaria para Tezos",
       "app_name": "Tezori",
       "keystore_wallet": "Keystore Monedero",

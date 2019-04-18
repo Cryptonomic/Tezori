@@ -21,9 +21,9 @@ import TezosAmount from '../TezosAmount/';
 import AddDelegateLedgerModal from '../AddDelegateLedgerModal';
 
 import {
-  createNewAccount,
+  originateContract,
   fetchOriginationAverageFees
-} from '../../reduxContent/createDelegate/thunks';
+} from '../../reduxContent/originate/thunks';
 
 import { getIsReveal } from '../../reduxContent/wallet/thunks';
 
@@ -35,7 +35,7 @@ import { OPERATIONFEE, REVEALOPERATIONFEE } from '../../constants/LowFeeValue';
 type Props = {
   isLoading: boolean,
   selectedParentHash: string,
-  createNewAccount: () => {},
+  originateContract: () => {},
   fetchOriginationAverageFees: () => {},
   open: boolean,
   onCloseClick: () => {},
@@ -314,7 +314,7 @@ class AddDelegateModal extends Component<Props> {
 
   createAccount = async () => {
     const {
-      createNewAccount,
+      originateContract,
       selectedParentHash,
       setIsLoading,
       isLedger
@@ -324,19 +324,8 @@ class AddDelegateModal extends Component<Props> {
     if (isLedger) {
       this.openLedgerConfirmation();
     }
-    // if (
-    //   await createNewAccount(
-    //     delegate,
-    //     amount,
-    //     Math.floor(fee),
-    //     passPhrase,
-    //     selectedParentHash
-    //   )
-    // ) {
-    //   this.onCloseClick();
-    // }
 
-    const isCreated = await createNewAccount(
+    const isCreated = await originateContract(
       delegate,
       amount,
       Math.floor(fee),
@@ -611,7 +600,7 @@ function mapDispatchToProps(dispatch) {
     {
       setIsLoading,
       fetchOriginationAverageFees,
-      createNewAccount,
+      originateContract,
       getIsReveal
     },
     dispatch

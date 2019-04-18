@@ -22,3 +22,15 @@ export function getWalletSettings() {
 export function setWalletSettings(nodes) {
   localStorage.setItem('settings', JSON.stringify(nodes));
 }
+
+export const getNodeUrl = (nodes, selectedNode) => {
+  let url = '';
+  const findedNode = nodes.find(node => {
+    const name = node.get('name');
+    return name === selectedNode;
+  });
+  if (findedNode) {
+    url = findedNode.get('url');
+  }
+  return url;
+};

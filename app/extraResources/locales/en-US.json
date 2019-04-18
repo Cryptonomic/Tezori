@@ -13,7 +13,11 @@
       "restore": "Restore",
       "confirm": "Confirm",
       "receive": "Receive",
-      "continue": "Continue"
+      "continue": "Continue",
+      "invoke": "Invoke",
+      "deploy": "Deploy",
+      "cancel": "Cancel",
+      "proceed": "Proceed"
     },
     "nouns": {
       "amount": "Amount",
@@ -41,7 +45,9 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "Derivation Path",
       "storage": "Storage",
-      "burn": "Burn"
+      "burn": "Burn",
+      "smart_contract": "Smart Contract",
+      "code": "Code"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -52,7 +58,8 @@
     "next": "Next",
     "to": "to",
     "of": "of",
-    "from": "from"
+    "from": "from",
+    "by": "by"
   },
   "components": {
     "accountStatus": {
@@ -80,6 +87,21 @@
       "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
       "add_delegate_title": "Add a Delegate"
     },
+    "interactModal": {
+      "interact_contract": "Interact with Contracts",
+      "invoke_contract": "Invoke an Existing Contract",
+      "deploy_contract": "Deploy a New Contract",
+      "title": "Interact with Smart Contracts",
+      "smart_address": "Smart Contract Address",
+      "invoke_from": "Invoke from",
+      "deploy_from": "Deploy from",
+      "storage_limit": "Storage Limit",
+      "gas_limit": "Gas Limit",
+      "parameters": "Parameters",
+      "view_scan": "VIEW ON TZSCAN",
+      "initial_storage": "Initial Storage",
+      "paste_micheline_code": "Paste in your smart contract Micheline code"
+    },
     "addNodeModal": {
       "error": "Node's protocol must be https",
       "title": "Set Up Your Custom {{title}} Node",
@@ -105,17 +127,16 @@
         "description4": "Delegation rewards will depend on your arrangement with the delegate."
       },
       "account_title": "Account {{index}}",
-      "not_ready_tooltip": "You account is not ready to delegate.",
-      "delegation_tips": "Delegation Tips"
-    },
-    "addresses": {
-      "support_tooltip": "Support for multiple accounts is coming soon."
+      "not_ready_tooltip": "Your account is not ready to delegate.",
+      "delegation_tips": "Delegation Tips",
+      "not_ready_interact_tooltip": "Your account is not ready to interact with contracts."
     },
     "addressStatus": {
       "your_account": "your account",
       "new_address": "new address",
       "retrieving_title": "Retrieving {{typeText}}...",
-      "preparing_title": "Preparing {{typeText}}..."
+      "preparing_title": "Preparing {{typeText}}...",
+      "deploying_title": "Deploying new contract..."
     },
     "balanceBanner": {
       "breadcrumbs": "Account {{parentIndex}} > {{addressLabel}}",
@@ -161,7 +182,21 @@
     "delegationLedgerConfirmationModal": {
       "confirm_delegate_title": "Confirm Adding a Delegate to Account 1",
       "add_description": "You are about to send out an origination operation to add a delegate. Please carefully review the details on your device.",
-      "confirm_description": "If the all the details are correct, please<1> confirm </1>the origination on your device."
+      "confirm_description": "If all the details are correct, please<1> confirm </1>the origination on your device."
+    },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "Confirm Smart Contract Operation",
+      "invoke_description": "You are about to invoke a smart contract function. Please carefully review the details on your device.",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "Please note that Ledger Nano S devices are not yet capable of parsing parameters. It is expected that you will see above message instead of operation details.",
+      "invoke_confirm": "If all the details are correct, please<1> confirm </1>the invocation on your device.",
+      "invoke_alt_confirm": "Please<1> confirm </1>the invocation on your device at your own risk."
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "Confirm Smart Contract Deployment",
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "Please note that Ledger Nano S devices are not yet capable of parsing scripts or parameters. It is expected that you will see above message instead of operation details.",
+      "deploy_confirm": "Please<1> confirm </1>the deployment on your device at your own risk."
     },
     "fees": {
       "low_fee": "Low Fee",
@@ -186,7 +221,11 @@
         "delegate_address": "You can only delegate to TZ1, TZ2 or TZ3 addresses.",
         "length": "Addresses must be 36 characters long.",
         "special_chars": "Addresses cannot contain any special characters.",
-        "send_funds": "You cannot send funds to yourself."
+        "send_funds": "You cannot send funds to yourself.",
+        "invoke_address": "Smart Contract addresses can only start with KT1",
+        "not_exist": "This contract doesn't exist on the blockchain.",
+        "not_smartcontract": "This is a delegated address and not a smart contract. Please use send tab to transfer funds.",
+        "use_interact": "This is a smart contract address. Please use interact with contracts button to transfer funds."
       }
     },
     "languageSelectModal": {
@@ -219,7 +258,10 @@
         "success_sent": "Success! You sent {{localeParam}} tz.",
         "invalid_wallet_password": "Invalid wallet/password combination.",
         "account_not_exist": "The account does not exist.",
-        "ledger_not_connect": "Connection refused by Ledger."
+        "ledger_not_connect": "Connection refused by Ledger.",
+        "invoke_operation_failed": "Smart Contract operation failed",
+        "success_invoke_operation": "Successfully started contract invocation.",
+        "success_contract_origination": "Successfully started contract deployment."
       }
     },
     "pdfReader": {
@@ -237,6 +279,13 @@
         "invalid_length": "Seed phrases must contain no more than 15 words.",
         "invalid_words": "Detected invalid word(s). Please double check."
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "Security Notice",
+      "learn_more": "Learn more",
+      "understand_check": "I understand that this operation may result in a loss of funds.",
+      "dont_message": "Don’t show this message again (not recommended).",
+      "notice_content": "It looks like you are not running a local Tezos node. It's perfectly fine to use a hosted node. However, if the Tezos node is compromised, you might end up losing your funds."
     },
     "send": {
       "send_xtz": "Send XTZ",
@@ -283,10 +332,21 @@
       "sent": "SENT",
       "received": "RECEIVED",
       "this_address": "this address",
-      "your_manager_address": "<0>your</0> Account 1 Manager Address"
+      "your_manager_address": "<0>your</0> Account 1 Manager Address",
+      "invoke_function": "INVOKED FUNCTION",
+      "add_delegate": "ORIGINATION - DELEGATED ADDRESS",
+      "deployment": "ORIGINATION - SMART CONTRACT",
+      "invoked": "INVOKED"
     },
     "update": {
       "last_updated": "Last updated {{date}}"
+    },
+    "versionStatus": {
+      "version_update": "You are using an older version of Galleon, which might not be fully functional. Please download v{{version}} at "
+    },
+    "comingSoon": {
+      "coming_soon": "Coming Soon!",
+      "working_hard": "We are working hard on making this page."
     }
   },
   "containers": {

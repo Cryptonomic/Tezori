@@ -58,38 +58,42 @@ const AddressLabel = styled.div`
   overflow: hidden;
 `;
 
-type Props = {
-  isManager?: boolean,
-  isActive?: boolean,
-  balance?: number,
-  index?: number,
-  onClick?: () => {},
-  t: () => {}
-};
+const getFirstLine = (isManager, isContract, isActive, index, accountId, t) => {
+  if (isManager) {
+    return (
+      <AddressFirstLine isActive={isActive}>
+        <AddressesTitle>
+          <AddressLabelIcon
+            iconName="manager"
+            size={ms(0)}
+            color={isActive ? 'white' : 'secondary'}
+          />
+          <AddressLabel>{t('components.address.manager_address')}</AddressLabel>
+          <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
+            <Button buttonTheme="plain">
+              <HelpIcon
+                iconName="help"
+                size={ms(0)}
+                color={isActive ? 'white' : 'secondary'}
+              />
+            </Button>
+          </Tooltip>
+        </AddressesTitle>
+      </AddressFirstLine>
+    );
+  }
 
-function Address(props: Props) {
-  const { isManager, isActive, balance, index, onClick, t } = props;
-  const firstLine = isManager ? (
-    <AddressFirstLine isActive={isActive}>
-      <AddressesTitle>
-        <AddressLabelIcon
-          iconName="manager"
-          size={ms(0)}
-          color={isActive ? 'white' : 'secondary'}
-        />
-        <AddressLabel>{t('components.address.manager_address')}</AddressLabel>
-        <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
-          <Button buttonTheme="plain">
-            <HelpIcon
-              iconName="help"
-              size={ms(0)}
-              color={isActive ? 'white' : 'secondary'}
-            />
-          </Button>
-        </Tooltip>
-      </AddressesTitle>
-    </AddressFirstLine>
-  ) : (
+  let displayTxt = t('components.address.delegated_address', {
+    index: index + 1
+  });
+  if (isContract) {
+    displayTxt = `${accountId.slice(0, 6)}...${accountId.slice(
+      accountId.length - 6,
+      accountId.length
+    )}`;
+  }
+
+  return (
     <AddressFirstLine isActive={isActive}>
       <AddressesTitle>
         <AddressLabelIcon
@@ -97,9 +101,40 @@ function Address(props: Props) {
           size={ms(0)}
           color={isActive ? 'white' : 'secondary'}
         />
-        {t("components.address.delegated_address", {index: index + 1})}
+        {displayTxt}
       </AddressesTitle>
     </AddressFirstLine>
+  );
+};
+
+type Props = {
+  isManager?: boolean,
+  isActive?: boolean,
+  balance?: number,
+  index?: number,
+  accountId?: string,
+  onClick?: () => {},
+  t: () => {}
+};
+
+function Address(props: Props) {
+  const {
+    isManager,
+    isContract,
+    isActive,
+    balance,
+    index,
+    accountId,
+    onClick,
+    t
+  } = props;
+  const firstLine = getFirstLine(
+    isManager,
+    isContract,
+    isActive,
+    index,
+    accountId,
+    t
   );
 
   const amountProps = {

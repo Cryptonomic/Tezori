@@ -17,6 +17,7 @@ import { TEZOS, CONSEIL } from '../../constants/NodesTypes';
 import CustomSelect from '../../components/CustomSelect/';
 import LanguageSelector from '../../components/LanguageSelector/';
 import { wrapComponent } from '../../utils/i18n';
+import { getNodeUrl } from '../../utils/settings';
 
 import {
   syncWallet,
@@ -248,18 +249,6 @@ class SettingsPage extends Component<Props> {
 
   onChangedDerivationPath = () => this.setState({ isPathChanged: true });
 
-  getNodeUrl = (nodes, selectedNode) => {
-    let url = '';
-    const findedNode = nodes.find(node => {
-      const name = node.get('name');
-      return name === selectedNode;
-    });
-    if (findedNode) {
-      url = findedNode.get('url');
-    }
-    return url;
-  };
-
   getPath = (pathsList, selectedPath) => {
     let path = '';
     const foundPath = pathsList.find(path => {
@@ -431,7 +420,7 @@ class SettingsPage extends Component<Props> {
                   this.openAddNodeModal(CONSEIL);
                 }}
                 renderValue={value => {
-                  const url = this.getNodeUrl(conseilNodes, value);
+                  const url = getNodeUrl(conseilNodes, value);
                   return (
                     <SelectRenderWrapper>
                       <span>{value} </span>
@@ -467,7 +456,7 @@ class SettingsPage extends Component<Props> {
                   this.openAddNodeModal(TEZOS);
                 }}
                 renderValue={value => {
-                  const url = this.getNodeUrl(tezosNodes, value);
+                  const url = getNodeUrl(tezosNodes, value);
                   return (
                     <SelectRenderWrapper>
                       <span>{value} </span>

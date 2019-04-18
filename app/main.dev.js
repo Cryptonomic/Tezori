@@ -65,7 +65,7 @@ app.on('ready', async () => {
     show: false,
     width: 1199,
     height: 768,
-    minHeight: 728,
+    minHeight: 758,
     minWidth: 1024,
     title: `${name} - v${version}`
   });

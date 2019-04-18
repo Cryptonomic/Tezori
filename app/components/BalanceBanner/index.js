@@ -3,6 +3,7 @@ import React from 'react';
 import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { lighten } from 'polished';
+import { StoreType } from 'conseiljs';
 import { ms } from '../../styles/helpers';
 import { H4 } from '../Heading/';
 import TezosAmount from '../TezosAmount/';
@@ -12,24 +13,25 @@ import Tooltip from '../Tooltip/';
 import Button from '../Button/';
 import Update from '../Update/';
 import ManagerAddressTooltip from '../Tooltips/ManagerAddressTooltip/';
-import { findAccountIndex } from '../../utils/account';
-import { MNEMONIC } from '../../constants/StoreTypes';
 import { wrapComponent } from '../../utils/i18n';
 
+const { Mnemonic } = StoreType;
+
 type Props = {
-  storeType?: string,
+  storeType?: string | number,
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
   onRefreshClick: () => {},
   isManagerAddress: boolean,
+  isContractAddress?: boolean,
   theme: object,
   parentIndex?: number,
-  parentIdentity?: object,
-  delegatedAddress?: string,
+  delegatedAddress?: string | null,
   time?: Date,
   t: () => {},
-  isWalletSyncing?: boolean
+  isWalletSyncing?: boolean,
+  addressIndex: string
 };
 
 const Container = styled.header`
@@ -73,15 +75,11 @@ const AddressInfo = styled.div`
   display: flex;
   align-items: center;
   line-height: 1.9;
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  flex-wrap: wrap;
 `;
 
 const Amount = styled(TezosAmount)`
-  margin: 0 ${ms(2)} 0 0;
+  margin: 0;
   padding: ${ms(-3)} 0;
   line-height: 1;
 `;
@@ -118,18 +116,25 @@ function BalanceBanner(props: Props) {
     onRefreshClick,
     theme,
     parentIndex,
-    parentIdentity,
     isManagerAddress,
     time,
     delegatedAddress,
     t,
-    isWalletSyncing
+    isWalletSyncing,
+    isContractAddress,
+    addressIndex
   } = props;
-  const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel =
-    !isManagerAddress && smartAddressIndex
-      ? t('components.address.delegated_address', { index: smartAddressIndex })
-      : t('components.address.manager_address');
+
+  let addressLabel = '';
+  if (isManagerAddress) {
+    addressLabel = t('components.address.manager_address');
+  } else if (isContractAddress) {
+    addressLabel = `${t('general.nouns.smart_contract')} ${addressIndex}`;
+  } else {
+    addressLabel = t('components.address.delegated_address', {
+      index: addressIndex
+    });
+  }
 
   const breadcrumbs = t('components.balanceBanner.breadcrumbs', {
     parentIndex,
@@ -148,22 +153,24 @@ function BalanceBanner(props: Props) {
         />
       </TopRow>
       <BottomRow isReady={isReady}>
-        <AddressTitle>
-          <AddressTitleIcon
-            iconName={isManagerAddress ? 'manager' : 'smart-address'}
-            size={ms(0)}
-            color="white"
-          />
-          {addressLabel}
+        {!isContractAddress && (
+          <AddressTitle>
+            <AddressTitleIcon
+              iconName={isManagerAddress ? 'manager' : 'smart-address'}
+              size={ms(0)}
+              color="white"
+            />
+            {addressLabel}
 
-          {isManagerAddress && (
-            <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
-              <Button buttonTheme="plain">
-                <HelpIcon iconName="help" size={ms(0)} color="white" />
-              </Button>
-            </Tooltip>
-          )}
-        </AddressTitle>
+            {isManagerAddress && (
+              <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
+                <Button buttonTheme="plain">
+                  <HelpIcon iconName="help" size={ms(0)} color="white" />
+                </Button>
+              </Tooltip>
+            )}
+          </AddressTitle>
+        )}
         <AddressInfo>
           <TezosAddress
             address={publicKeyHash}
@@ -173,7 +180,7 @@ function BalanceBanner(props: Props) {
             size={ms(1.7)}
           />
 
-          {isReady || storeType === MNEMONIC ? (
+          {isReady || storeType === Mnemonic ? (
             <Amount
               color="white"
               size={ms(4.5)}
@@ -201,7 +208,6 @@ function BalanceBanner(props: Props) {
 }
 
 BalanceBanner.defaultProps = {
-  parentIdentity: null,
   parentIndex: 0,
   isWalletSyncing: false
 };

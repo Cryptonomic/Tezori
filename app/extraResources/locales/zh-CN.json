@@ -13,7 +13,11 @@
       "restore": "恢复",
       "confirm": "确认",
       "receive": "接收",
-      "continue": "继续"
+      "continue": "继续",
+      "invoke": "调用",
+      "deploy": "部署",
+      "cancel": "取消",
+      "proceed": "继续"
     },
     "nouns": {
       "amount": "数额",
@@ -41,7 +45,9 @@
       "ledger_name": "Ledger Nano S",
       "derivation_path": "派生路径",
       "storage": "存储",
-      "burn": "燃烧"
+      "burn": "燃烧",
+      "smart_contract": "智能合同",
+      "code": "代码"
     },
     "errors": {
       "no_hex_data": "您输入的数据有问题",
@@ -52,7 +58,8 @@
     "next": "下一步",
     "to": "到",
     "of": "的",
-    "from": "从"
+    "from": "从",
+    "by": "被"
   },
   "components": {
     "accountStatus": {
@@ -80,6 +87,21 @@
       "warning2": "管理者地址还不被允许有少于1 µtz",
       "add_delegate_title": "添加一个委托者"
     },
+    "interactModal": {
+      "interact_contract": "与合同交互",
+      "invoke_contract": "调用一个现有的合同",
+      "deploy_contract": "部署一个新的合同",
+      "title": "与智能合同交互",
+      "smart_address": "智能合同地址",
+      "invoke_from": "调用从",
+      "deploy_from": "部署从",
+      "storage_limit": "存储限制",
+      "gas_limit": "计算费用限制",
+      "parameters": "参数",
+      "view_scan": "在TZSCAN上查看",
+      "initial_storage": "初始存储",
+      "paste_micheline_code": "把Micheline代码粘贴进你的智能合同里"
+    },
     "addNodeModal": {
       "error": "Node的协议必须是https",
       "title": "建立你的自定义{{title}} Node",
@@ -106,16 +128,15 @@
       },
       "account_title": "账户{{index}}",
       "not_ready_tooltip": "你的账户还没有准备好可以委托。",
-      "delegation_tips": "委托小窍门"
-    },
-    "addresses": {
-      "support_tooltip": "对多个账户的支持即将实现"
+      "delegation_tips": "委托小窍门",
+      "not_ready_interact_tooltip": "你的账户尚未准备就绪与合同交互。"
     },
     "addressStatus": {
       "your_account": "你的账户",
       "new_address": "新地址",
       "retrieving_title": "正获取{{typeText}}...",
-      "preparing_title": "正准备{{typeText}}..."
+      "preparing_title": "正准备{{typeText}}...",
+      "deploying_title": "正在部署新合同..."
     },
     "balanceBanner": {
       "breadcrumbs": "账户{{parentIndex}} > {{addressLabel}}",
@@ -131,6 +152,7 @@
         "description3": "为了确保你写下了你的助记词，请输入以下四个助记单词。"
       },
       "generate_other_seed": "生成另外一组助记词",
+      "copy_seed": "复制种子短语",
       "create_account": "创建账户",
       "seed_backup": "你的Tezos账户种子(seed)已被备份！",
       "back_to_seed": "返回到助记词",
@@ -162,6 +184,20 @@
       "add_description": "你即将要发送出一个合同初创操作来添加一个委托者。请认真复查在你设备上的细节。",
       "confirm_description": "如果所有的细节都是正确的，请<1> 确认 </1>在你设备上的合同初创。"
     },
+    "invokeLedgerConfirmationModal": {
+      "confirm_invoke_title": "确认智能合同操作",
+      "invoke_description": "你即将要调用一个智能合同函数。请仔细复查在你的设备上的细节。",
+      "invoke_alt_description_1": "Unrecognized Operation, Sign Unverified?",
+      "invoke_alt_description_2": "请注意Ledger Nano S设备尚无法解析参数。预计你将看到上面的消息，而不是操作细节。",
+      "invoke_confirm": "如果所有的细节都是正确的，请<1>确认</1>在你的设备上的调用。",
+      "invoke_alt_confirm": "请自担风险地<1>确认</1>在你的设备上的调用。"
+    },
+    "deployLedgerConfirmationModal": {
+      "confirm_deploy_title": "确认智能合同部署",
+      "deploy_description_1": "Unrecognized Operation, Sign Unverified?",
+      "deploy_description_2": "请注意Ledger Nano S 设备尚无法解析脚本或者参数。预计你将看到上面的消息，而不是操作细节。",
+      "deploy_confirm": "请自担风险地<1>确认</1>在你的设备上的部署。"
+    },
     "fees": {
       "low_fee": "低费用",
       "medium_fee": "中级费用",
@@ -185,7 +221,11 @@
         "delegate_address": "你只能委托给TZ1, TZ2或者TZ3地址。",
         "length": "地址必须是36个字符长度。",
         "special_chars": "地址不能含有特殊字符。",
-        "send_funds": "你不能发送资金给你自己。"
+        "send_funds": "你不能发送资金给你自己。",
+        "invoke_address": "智能合同地址只能以KT1开头",
+        "not_exist": "这个合同不存在于区块链上。",
+        "not_smartcontract": "这是一个委托的地址，并不是智能合同。请使用发送标签来转账。",
+        "use_interact": "这是一个智能合同地址。请使用与合同交互按钮来转账。"
       }
     },
     "languageSelectModal": {
@@ -218,7 +258,10 @@
         "success_sent": "成功！你发送了{{localeParam}} tz。",
         "invalid_wallet_password": "无效的钱包/密码组合。",
         "account_not_exist": "账户不存在。",
-        "ledger_not_connect": "连接被 Ledger 拒绝了。"
+        "ledger_not_connect": "连接被 Ledger 拒绝了。",
+        "invoke_operation_failed": "智能合同操作失败了",
+        "success_invoke_operation": "成功地开始了合同调用。",
+        "success_contract_origination": "成功地开始了合同部署。"
       }
     },
     "pdfReader": {
@@ -236,6 +279,13 @@
         "invalid_length": "助记词必须包含不超过15个单词。",
         "invalid_words": "发现了无效单词。请再次检查。"
       }
+    },
+    "securityNoticeModal": {
+      "security_notice": "安全通知",
+      "learn_more": "了解更多",
+      "understand_check": "我明白这个操作可能会导致资金损失。",
+      "dont_message": "不再显示这条消息（不推荐）。",
+      "notice_content": "看起来你没有在运行一个本地的Tezos节点。使用一个托管的节点是完全可以的。然而如果Tezos节点被攻破，你可能最终会损失你的资金。"
     },
     "send": {
       "send_xtz": "发送XTZ",
@@ -282,10 +332,21 @@
       "sent": "已发送",
       "received": "已收到",
       "this_address": "这个地址",
-      "your_manager_address": "<0>你的</0>账户1管理者地址"
+      "your_manager_address": "<0>你的</0>账户1管理者地址",
+      "invoke_function": "被调用的函数",
+      "add_delegate": "合同初创 – 委托的地址",
+      "deployment": "合同初创 – 智能合同",
+      "invoked": "已调用"
     },
     "update": {
       "last_updated": "最后更新于{{date}}"
+    },
+    "versionStatus": {
+      "version_update": "你正在使用Galleon的一个更老的版本，它可能不是完全可用。请下载v{{version}}于 "
+    },
+    "comingSoon": {
+      "coming_soon": "即将上线",
+      "working_hard": ""
     }
   },
   "containers": {
@@ -327,7 +388,7 @@
       "create_new_wallet_btn": "创建新钱包",
       "open_exisiting_wallet_btn": "打开已有钱包",
       "want_to_import_fundraiser_paper_wallet": "想要导入你的资金筹集活动纸钱包吗?",
-      "create_named_wallet": "<0><0>首先创建一个<1>{{name}}</1>钱包。</0></0>",
+      "create_named_wallet": "<1><0>首先创建一个<1>{{name}}</1>钱包。</0></1>",
       "tagline": "为Tezos而生的社区钱包",
       "app_name": "Tezori",
       "keystore_wallet": "Keystore 钱包",

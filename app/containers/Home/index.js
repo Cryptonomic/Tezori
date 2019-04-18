@@ -12,11 +12,13 @@ import {
 } from '../../reduxContent/wallet/selectors';
 import { goHomeAndClearState } from '../../reduxContent/wallet/thunks';
 import { addMessage } from '../../reduxContent/message/thunks';
+import { getNewVersion } from '../../reduxContent/message/selectors';
 import { initLedgerTransport } from '../../utils/wallet';
 
 import Loader from '../../components/Loader/';
 import TopBar from '../../components/TopBar/';
 import NodesStatus from '../../components/NodesStatus/';
+import VersionStatus from '../../components/VersionStatus';
 
 import HomeAddresses from './../HomeAddresses/';
 import HomeAddAddress from './../HomeAddAddress/';
@@ -28,7 +30,8 @@ type Props = {
   match: object,
   goHomeAndClearState: () => {},
   addMessage: () => {},
-  isLedger: boolean
+  isLedger: boolean,
+  newVersion: string
 };
 
 class HomePage extends Component<Props> {
@@ -62,7 +65,7 @@ class HomePage extends Component<Props> {
   };
 
   render() {
-    const { match, identities, isLoading } = this.props;
+    const { match, identities, isLoading, newVersion } = this.props;
     const redirectTo =
       !identities || !identities.size
         ? `${match.url}/addAddress`
@@ -70,7 +73,8 @@ class HomePage extends Component<Props> {
 
     return (
       <Fragment>
-        <TopBar />
+        <TopBar isExtended={!!newVersion} />
+        {newVersion && <VersionStatus version={newVersion} />}
         <NodesStatus />
         <Switch>
           <Route path={`${match.path}/addresses`} component={HomeAddresses} />
@@ -88,7 +92,8 @@ function mapStateToProps(state) {
   return {
     identities: getIdentities(state),
     isLoading: getWalletIsLoading(state),
-    isLedger: getIsLedger(state)
+    isLedger: getIsLedger(state),
+    newVersion: getNewVersion(state)
   };
 }
 

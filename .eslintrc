@@ -18,6 +18,7 @@
     "no-shadow": "off",
     "react/no-array-index-key": "off",
     "generator-star-spacing": "off",
+    "import/no-cycle": "off",
     "import/no-useless-path-segments": "off",
     "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": "off",

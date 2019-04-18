@@ -1,4 +1,4 @@
-import { TezosOperations } from 'conseiljs';
+import { TezosNodeWriter } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { TEZOS } from '../../constants/NodesTypes';
@@ -20,7 +20,7 @@ import { findIdentity } from '../../utils/identity';
 import { getSelectedNode } from '../../utils/nodes';
 import { getCurrentPath } from '../../utils/paths';
 
-const { sendTransactionOperation } = TezosOperations;
+const { sendTransactionOperation } = TezosNodeWriter;
 
 export function fetchTransactionAverageFees() {
   return async (dispatch, state) => {
@@ -38,7 +38,7 @@ export function validateAmount(amount, toAddress) {
     const validations = [
       { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
-      { value: amountInUtez, type: 'posNum', name: 'Amount' },
+      { value: amountInUtez, type: 'strictlyPosNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
     ];
 
@@ -89,41 +89,30 @@ export function sendTez(
     console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
 
-    let res;
+    const userKeyStore = keyStore;
+    let userDerivation = '';
+
     if (isLedger) {
-      const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
-      newKeyStore.storeType = 2;
-      res = await sendTransactionOperation(
-        url,
-        newKeyStore,
-        toAddress,
-        parsedAmount,
-        fee,
-        derivation
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
-    } else {
-      res = await sendTransactionOperation(
-        url,
-        keyStore,
-        toAddress,
-        parsedAmount,
-        fee
-      ).catch(err => {
-        const errorObj = { name: err.message, ...err };
-        console.error(errorObj);
-        dispatch(addMessage(errorObj.name, true));
-        return false;
-      });
+      userDerivation = derivation;
+      userKeyStore.storeType = 2;
     }
 
+    const res = await sendTransactionOperation(
+      url,
+      userKeyStore,
+      toAddress,
+      parsedAmount,
+      fee,
+      userDerivation
+    ).catch(err => {
+      const errorObj = { name: err.message, ...err };
+      console.error(errorObj);
+      dispatch(addMessage(errorObj.name, true));
+      return false;
+    });
+
     if (res) {
-      console.log('-debug: res', res);
       const operationResult =
         res &&
         res.results &&
@@ -143,6 +132,10 @@ export function sendTez(
         return false;
       }
 
+      const consumedGas = operationResult.consumed_gas
+        ? Number(operationResult.consumed_gas)
+        : null;
+
       const identity = findIdentity(identities, selectedParentHash);
       const clearedOperationId = clearOperationId(res.operationGroupID);
       const transaction = createTransaction({
@@ -150,8 +143,9 @@ export function sendTez(
         destination: toAddress,
         kind: TRANSACTION,
         source: keyStore.publicKeyHash,
-        operationGroupHash: clearedOperationId,
-        fee
+        operation_group_hash: clearedOperationId,
+        fee,
+        consumed_gas: consumedGas
       });
 
       if (selectedParentHash === selectedAccountHash) {

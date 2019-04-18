@@ -63,3 +63,8 @@ export const getActivePath = createSelector(
     return path;
   }
 );
+
+export const getNetwork = createSelector(
+  getSettings,
+  settings => settings.get('network')
+);

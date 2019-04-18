@@ -12,7 +12,7 @@ import TermsModal from '../../components/TermsModal/';
 import LanguageSelectModal from '../../components/LanguageSelectModal';
 import { name } from '../../config.json';
 import { wrapComponent } from '../../utils/i18n';
-import { setLocale } from '../../reduxContent/settings/thunks';
+import { setLocale, fetchNetwork } from '../../reduxContent/settings/thunks';
 import {
   getLocale,
   getActivePath
@@ -43,7 +43,7 @@ const SectionContainer = styled.div`
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: -160px;
+  margin-top: -90px;
 `;
 
 const TermsAndPolicySection = styled.div`
@@ -52,9 +52,7 @@ const TermsAndPolicySection = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 300;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 10px;
+  margin-top: 0 auto 0 10px;
 `;
 
 const Strong = styled.span`
@@ -85,12 +83,11 @@ const Tip = styled.div`
 const AppName = styled.h1`
   text-align: center;
   width: 100%;
-  margin-top: 6%;
-  margin-bottom: -15px;
+  margin: 0;
   font-family: 'Roboto', san-serif;
   font-style: normal;
   font-stretch: normal;
-  font-size: 3.7vw;
+  font-size: 45px;
   font-weight: 300;
   line-height: 50px;
   letter-spacing: 5px;
@@ -131,10 +128,10 @@ const DefaultContainer = styled.div`
 
 const NameSection = styled.section`
   display: flex;
-  flex-direction: column;
-  flex: 1;
   width: 100%;
   justify-content: center;
+  align-items: center;
+  height: 140px;
 `;
 
 const Section = styled.section`
@@ -302,6 +299,11 @@ class LoginHome extends Component<Props> {
     });
   };
 
+  componentDidMount = () => {
+    const { fetchNetwork } = this.props;
+    fetchNetwork();
+  };
+
   updateStatusAgreement = () => {
     const { isAgreement } = this.state;
     this.setState({ isAgreement: !isAgreement });
@@ -350,7 +352,7 @@ class LoginHome extends Component<Props> {
   render() {
     const { t, isLoading, isLedgerConnecting, activePath } = this.props;
     const { isLanguageSelected, isAgreement, selectedLanguage } = this.state;
-    const realLedgerImg = isLedgerConnecting
+    const ledgerImg = isLedgerConnecting
       ? ledgerConnectedImg
       : ledgerUnconnectedImg;
     return (
@@ -399,7 +401,7 @@ class LoginHome extends Component<Props> {
               </Tip>
             </CardContainer>
             <CardContainer>
-              <CardImg src={realLedgerImg} />
+              <CardImg src={ledgerImg} />
 
               <CardTitle>{t('containers.loginHome.ledger_wallet')}</CardTitle>
               <CreateWalletButton
@@ -491,7 +493,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       setLocale,
-      connectLedger
+      connectLedger,
+      fetchNetwork
     },
     dispatch
   );

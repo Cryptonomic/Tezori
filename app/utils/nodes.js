@@ -1,7 +1,7 @@
 import { TEZOS, CONSEIL } from '../constants/NodesTypes';
 
 export function getSelectedNode(settings, type) {
-  const selected =  type === CONSEIL
+  const selected = type === CONSEIL
     ? settings.conseilSelectedNode
     : settings.tezosSelectedNode;
   return settings.nodesList.find( node => node.type === type && node.name === selected );

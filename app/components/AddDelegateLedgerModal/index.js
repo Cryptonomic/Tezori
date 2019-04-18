@@ -182,7 +182,7 @@ const AddDelegateLedgerModal = (props: Props) => {
 
         <ItemContainer>
           <ItemTitle>{t('general.nouns.storage')}</ItemTitle>
-          <ItemContent>{'277'}</ItemContent>
+          <ItemContent>277</ItemContent>
         </ItemContainer>
       </MainContainer>
       <BottomContainer>

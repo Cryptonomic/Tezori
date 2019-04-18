@@ -8,6 +8,10 @@ import TezosIcon from '../TezosIcon/';
 import { openLinkToBlockExplorer } from '../../utils/general';
 import * as types from '../../constants/TransactionTypes';
 import { READY } from '../../constants/StatusTypes';
+import {
+  REG_TX_GAS_CONSUMPTION,
+  EMPTY_OUT_TX_GAS_CONSUMPTION
+} from '../../constants/ConsumedGasValue';
 import { wrapComponent } from '../../utils/i18n';
 
 const AmountContainer = styled.div`
@@ -86,8 +90,8 @@ const timeFormatter = timestamp => {
 };
 
 const getIsFee = fee => {
-  const realFee = Number.parseInt(fee, 10);
-  return !!realFee;
+  const userFee = Number.parseInt(fee, 10);
+  return !!userFee;
 };
 
 const getPosition = (source, myaddress) => source === myaddress;
@@ -133,10 +137,21 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   const isAmount = getIsAmount(transaction.amount);
 
   if (type === types.ORIGINATION && isSameLocation) {
+    if (transaction.script) {
+      return {
+        icon: 'send',
+        preposition: '',
+        state: t('components.transaction.deployment'),
+        isFee,
+        color: isAmount ? 'error1' : 'gray8',
+        sign: isAmount ? '-' : ''
+        // isBurn: true - TODO: Get correct burn amount using paid_storage_size_diff
+      };
+    }
     return {
       icon: 'send',
       preposition: '',
-      state: t('components.transaction.origination'),
+      state: t('components.transaction.add_delegate'),
       isFee,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : '',
@@ -156,21 +171,49 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && isSameLocation) {
+    if (
+      !transaction.parameters &&
+      (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
+    ) {
+      return {
+        icon: 'send',
+        preposition: t('general.to'),
+        state: t('components.transaction.sent'),
+        isFee,
+        color: isAmount ? 'error1' : 'gray8',
+        sign: isAmount ? '-' : ''
+      };
+    }
     return {
       icon: 'send',
-      preposition: t('general.to'),
-      state: t('components.transaction.sent'),
-      isFee,
+      preposition: t('general.of'),
+      state: t('components.transaction.invoke_function'),
+      isFee: true,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : ''
     };
   }
 
   if (type === types.TRANSACTION && !isSameLocation) {
+    if (
+      !transaction.parameters &&
+      (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
+    ) {
+      return {
+        icon: 'receive',
+        preposition: t('general.from'),
+        state: t('components.transaction.received'),
+        isFee: false,
+        color: isAmount ? 'check' : 'gray8',
+        sign: isAmount ? '+' : ''
+      };
+    }
     return {
       icon: 'receive',
-      preposition: t('general.from'),
-      state: t('components.transaction.received'),
+      preposition: t('general.by'),
+      state: t('components.transaction.invoked'),
       isFee: false,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''
@@ -279,7 +322,7 @@ function Transaction(props: Props) {
             iconName="new-window"
             size={ms(0)}
             color="primary"
-            onClick={() => openLink(transaction.operationGroupHash)}
+            onClick={() => openLink(transaction.operation_group_hash)}
           />
         </ContentDiv>
         {isBurn && (
