@@ -13,7 +13,6 @@ import Tooltip from '../Tooltip/';
 import Button from '../Button/';
 import Update from '../Update/';
 import ManagerAddressTooltip from '../Tooltips/ManagerAddressTooltip/';
-import { findAccountIndex } from '../../utils/account';
 import { wrapComponent } from '../../utils/i18n';
 
 const { Mnemonic } = StoreType;
@@ -28,11 +27,11 @@ type Props = {
   isContractAddress?: boolean,
   theme: object,
   parentIndex?: number,
-  parentIdentity?: object,
   delegatedAddress?: string | null,
   time?: Date,
   t: () => {},
-  isWalletSyncing?: boolean
+  isWalletSyncing?: boolean,
+  addressIndex: string
 };
 
 const Container = styled.header`
@@ -117,19 +116,25 @@ function BalanceBanner(props: Props) {
     onRefreshClick,
     theme,
     parentIndex,
-    parentIdentity,
     isManagerAddress,
     time,
     delegatedAddress,
     t,
     isWalletSyncing,
-    isContractAddress
+    isContractAddress,
+    addressIndex
   } = props;
-  const smartAddressIndex = findAccountIndex(parentIdentity, publicKeyHash) + 1;
-  const addressLabel =
-    !isManagerAddress && smartAddressIndex
-      ? t('components.address.delegated_address', { index: smartAddressIndex })
-      : t('components.address.manager_address');
+
+  let addressLabel = '';
+  if (isManagerAddress) {
+    addressLabel = t('components.address.manager_address');
+  } else if (isContractAddress) {
+    addressLabel = `${t('general.nouns.smart_contract')} ${addressIndex}`;
+  } else {
+    addressLabel = t('components.address.delegated_address', {
+      index: addressIndex
+    });
+  }
 
   const breadcrumbs = t('components.balanceBanner.breadcrumbs', {
     parentIndex,
@@ -203,7 +208,6 @@ function BalanceBanner(props: Props) {
 }
 
 BalanceBanner.defaultProps = {
-  parentIdentity: null,
   parentIndex: 0,
   isWalletSyncing: false
 };
