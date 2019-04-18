@@ -24,6 +24,7 @@
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
     "package-linux": "yarn build && electron-builder build --linux",
+    "package-linux-debug": "yarn build-debug && electron-builder build --linux",
     "package-win": "yarn build && electron-builder build --win --x64",
     "package-win-debug": "yarn build-debug && electron-builder build --win --x64",
     "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && yarn flow-typed && yarn build-dll && electron-builder install-app-deps package.json",
