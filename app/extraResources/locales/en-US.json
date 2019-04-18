@@ -390,7 +390,7 @@
       "want_to_import_fundraiser_paper_wallet": "Want to import your Fundraiser paper",
       "create_named_wallet": "wallet? <1><0>Create a <1>{{name}}</1> wallet</0></1> first.",
       "tagline": "A community wallet for Tezos",
-      "app_name": "Tezori",
+      "app_name": "Galleon",
       "keystore_wallet": "Keystore Wallet",
       "ledger_wallet": "Ledger Wallet",
       "connect_ledger": "Connect with Ledger",

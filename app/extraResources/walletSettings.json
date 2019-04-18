@@ -1,0 +1,29 @@
+{
+  "tezosSelectedNode": "Cryptonomic-Nautilus",
+  "conseilSelectedNode": "Cryptonomic-Conseil",
+  "nodesList": [
+    {
+      "name": "Cryptonomic-Nautilus",
+      "type": "TEZOS",
+      "url": "https://tezos-prod.cryptonomic-infra.tech:443",
+      "apiKey": ""
+    },
+    {
+      "name": "Cryptonomic-Conseil",
+      "type": "CONSEIL",
+      "url": "https://conseil-prod.cryptonomic-infra.tech:443",
+      "apiKey": "galleon"
+    }
+  ],
+  "selectedPath": "Default",
+  "pathsList": [
+    {
+      "label": "Default",
+      "derivation": "44'/1729'/0'/0'/0'"
+    },
+    {
+      "label": "TezBox",
+      "derivation": "44'/1729'/0'/0'"
+    }
+  ]
+}

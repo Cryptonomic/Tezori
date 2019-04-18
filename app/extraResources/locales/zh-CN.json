@@ -390,7 +390,7 @@
       "want_to_import_fundraiser_paper_wallet": "想要导入你的资金筹集活动纸钱包吗?",
       "create_named_wallet": "<1><0>首先创建一个<1>{{name}}</1>钱包。</0></1>",
       "tagline": "为Tezos而生的社区钱包",
-      "app_name": "Tezori",
+      "app_name": "Galleon",
       "keystore_wallet": "Keystore 钱包",
       "ledger_wallet": "Ledger 钱包",
       "connect_ledger": "与 Ledger 连接",
