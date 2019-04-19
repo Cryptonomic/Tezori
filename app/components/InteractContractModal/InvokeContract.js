@@ -30,7 +30,8 @@ import {
   ViewScan,
   LinkIcon,
   InvokeAddressContainer,
-  ItemWrapper
+  ItemWrapper,
+  SelectRenderWrapper
 } from './style';
 
 const utez = 1000000;
@@ -204,6 +205,27 @@ class InvokeContract extends Component<Props> {
               label={t('components.interactModal.invoke_from')}
               value={selectedInvokeAddress}
               onChange={this.onChangeInvokeAddress}
+              renderValue={value => {
+                const address = addresses.find(
+                  address => address.pkh === value
+                );
+                return (
+                  <SelectRenderWrapper>
+                    <TezosAddress
+                      address={address.pkh}
+                      size="16px"
+                      color="gray3"
+                      color2="primary"
+                    />
+                    <SpaceBar />
+                    <TezosAmount
+                      color="primary"
+                      size={ms(0.65)}
+                      amount={address.balance}
+                    />
+                  </SelectRenderWrapper>
+                );
+              }}
             >
               {addresses.map(address => (
                 <ItemWrapper

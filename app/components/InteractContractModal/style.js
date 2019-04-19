@@ -171,3 +171,11 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const SelectRenderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
