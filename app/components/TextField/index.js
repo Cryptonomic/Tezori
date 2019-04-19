@@ -95,8 +95,9 @@ const TextField = (props: Props) => {
   const { label, type, onChange, errorText, disabled, right, ...other } = props;
   return (
     <Container disabled={disabled}>
-      <LabelWrapper>{label}</LabelWrapper>
+      <LabelWrapper htmlFor="custom-input">{label}</LabelWrapper>
       <InputWrapper
+        id="custom-input"
         key={label}
         type={type}
         onChange={event => onChange(event.target.value)}
