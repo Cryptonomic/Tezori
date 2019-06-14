@@ -110,7 +110,7 @@ export function originateContract(
         userKeyStore,
         amountInUtez,
         undefined,
-        true,
+        false,
         false,
         fee,
         userDerivation,
