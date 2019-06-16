@@ -10,6 +10,7 @@ import * as types from '../../constants/TransactionTypes';
 import { READY } from '../../constants/StatusTypes';
 import {
   REG_TX_GAS_CONSUMPTION,
+  REG_TX_GAS_CONSUMPTION_ATHENS,
   EMPTY_OUT_TX_GAS_CONSUMPTION
 } from '../../constants/ConsumedGasValue';
 import { wrapComponent } from '../../utils/i18n';
@@ -174,6 +175,7 @@ const getStatus = (transaction, selectedAccountHash, t) => {
     if (
       !transaction.parameters &&
       (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === REG_TX_GAS_CONSUMPTION_ATHENS ||
         transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
     ) {
       return {
@@ -196,9 +198,11 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && !isSameLocation) {
+    console.log(`${transaction.parameters} ${transaction.consumed_gas}`);
     if (
       !transaction.parameters &&
       (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
+        transaction.consumed_gas === REG_TX_GAS_CONSUMPTION_ATHENS ||
         transaction.consumed_gas === EMPTY_OUT_TX_GAS_CONSUMPTION)
     ) {
       return {
