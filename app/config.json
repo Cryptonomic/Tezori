@@ -1,6 +1,6 @@
 {
   "name": "Galleon",
-  "version": "0.8.2b",
+  "version": "0.8.4b",
   "network": "mainnet",
   "blockExplorerHost": "http://tzscan.io/",
   "logo": "tezosLogo.svg",
