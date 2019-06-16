@@ -5,7 +5,8 @@ import {
   TezosWalletUtil,
   TezosConseilClient,
   TezosNodeWriter,
-  StoreType
+  StoreType,
+  TezosNodeReader
 } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
@@ -586,9 +587,9 @@ export function getIsReveal(selectedAccountHash, selectedParentHash) {
     }
     const { url } = getSelectedNode(settings, TEZOS);
 
-    const isReveal = await TezosNodeWriter.isManagerKeyRevealedForAccount(
+    const isReveal = await TezosNodeReader.isManagerKeyRevealedForAccount(
       url,
-      keyStore
+      keyStore.publicKeyHash
     );
     return isReveal;
   };
@@ -598,7 +599,7 @@ export function getIsImplicitAndEmpty(recipientHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { url } = getSelectedNode(settings, TEZOS);
-    const isImplicitAndEmpty = await TezosNodeWriter.isImplicitAndEmpty(
+    const isImplicitAndEmpty = await TezosNodeReader.isImplicitAndEmpty(
       url,
       recipientHash
     );
