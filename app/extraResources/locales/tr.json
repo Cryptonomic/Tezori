@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "XTZ Gönder",
-      "recepient_address": "Alıcının Adresi",
+      "recipient_address": "Alıcının Adresi",
       "burn_tooltip_title": "Neden bir yakım ücreti var?",
       "burn_tooltip_content": "Girdiğiniz alıcı adresinin bakiyesi sıfır. Bakiyesiz yönetici adreslere (tz1,2,3) gönderi yapmak bir kerelik <1> 0.257 </1>XTZ yakım ücretine tabidir.",
       "fee_tooltip_title": "Bu işlem için ücretler neden normalden yüksek?",

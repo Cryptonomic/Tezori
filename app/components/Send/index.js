@@ -456,7 +456,7 @@ class Send extends Component<Props> {
       <SendContainer>
         <SendTitle>{t('components.send.send_xtz')}</SendTitle>
         <InputAddress
-          labelText={t('components.send.recepient_address')}
+          labelText={t('components.send.recipient_address')}
           userAddress={selectedAccountHash}
           addressType="send"
           changeDelegate={this.handleToAddressChange}

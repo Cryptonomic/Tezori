@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "Enviar XTZ",
-      "recepient_address": "Endereço do destinatário",
+      "recipient_address": "Endereço do destinatário",
       "burn_tooltip_title": "Por que existe uma taxa de queima?",
       "burn_tooltip_content": "O endereço do destinatário que você inseriu tem saldo zero. Enviar fundos para um endereço Gerente (tz1,2,3) requer uma taxa de queima não recorrente de <1> 0.257 </1>XTZ.",
       "fee_tooltip_title": "Por que as taxas estão um pouco mais altas nesta transação?",

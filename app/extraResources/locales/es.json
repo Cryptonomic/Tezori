@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "Enviar XTZ",
-      "recepient_address": "Dirección del Beneficiario",
+      "recipient_address": "Dirección del Beneficiario",
       "burn_tooltip_title": "¿Por qué hay tasa de quema?",
       "burn_tooltip_content": "La dirección beneficiante que ingresaste tiene un balance de cero. Enviar fondos a una dirección administradora (tz1,2,3) requiere una tasa de quema única de <1> 0.257 </1>XTZ.",
       "fee_tooltip_title": "¿Por qué las tasas son altas para esta transacción?",

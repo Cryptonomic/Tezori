@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "发送XTZ",
-      "recepient_address": "接收人地址",
+      "recipient_address": "接收人地址",
       "burn_tooltip_title": "为什么有消耗费？",
       "burn_tooltip_content": "你输入的接收人地址的余额为零。发送资金到一个空的管理者地址(tz1,2,3)需要一次性的<1> 0.257 </1>XTZ消耗费。",
       "fee_tooltip_title": "为什么这笔交易的费用要高一些？",

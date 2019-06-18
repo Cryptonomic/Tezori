@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "XTZ 전송",
-      "recepient_address": "수신자 주소",
+      "recipient_address": "수신자 주소",
       "burn_tooltip_title": "소각 비용이 왜 있는건가요?",
       "burn_tooltip_content": "입력한 수신자 주소의 잔액이 0입니다. 빈 관리자 주소(tz1, 2, 3)로 자금을 보내려면 1회에 대해 <1> 0.257 </1>XTZ 소각 요금이 필요합니다.",
       "fee_tooltip_title": "이 트랜잭션에 대한 수수료가 조금 더 높은 이유는 무엇입니까?",
