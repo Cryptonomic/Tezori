@@ -66,7 +66,6 @@ const renderInput = inputProps => {
   return (
     <TextField
       helperText
-      // placeholder="15 Word Secret Key"
       InputProps={{
         inputRef: ref,
         classes: {
@@ -212,7 +211,7 @@ class SeedInput extends Component<Props> {
 
   handleInputChange = event => {
     const { onChangeInput, selectedItems } = this.props;
-    if (selectedItems.length > 14) {
+    if (selectedItems.length > 23) {
       return;
     }
     const newValue = event.target.value;
@@ -287,7 +286,7 @@ class SeedInput extends Component<Props> {
                             return items.label.toLowerCase();
                           })
                           .indexOf(item);
-                        if (itemIndex > -1 && index <= 14) {
+                        if (itemIndex > -1 && index <= 23) {
                           return (
                             <ChipWrapper
                               key={item + index}

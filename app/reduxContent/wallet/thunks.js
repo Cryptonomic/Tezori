@@ -67,7 +67,8 @@ import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
-  unlockIdentityWithMnemonic
+  unlockIdentityWithMnemonic,
+  restoreIdentityWithSecretKey
 } = TezosWalletUtil;
 const { createWallet } = TezosFileWallet;
 
@@ -341,7 +342,8 @@ export function importAddress(
   pkh,
   activationCode,
   username,
-  passPhrase
+  passPhrase,
+  sk
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -404,14 +406,18 @@ export function importAddress(
           break;
         }
         case RESTORE: {
-          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
-          const storeTypesMap = {
-            0: StoreType.Mnemonic,
-            1: StoreType.Fundraiser
-          };
-          identity.storeType = storeTypesMap[identity.storeType];
-          const conseilNode = getSelectedNode(settings, CONSEIL);
+          if (sk !== undefined && sk.length > 0) {
+            identity = await restoreIdentityWithSecretKey(sk);
+          } else {
+            identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+            const storeTypesMap = {
+              0: StoreType.Mnemonic,
+              1: StoreType.Fundraiser
+            };
+            identity.storeType = storeTypesMap[identity.storeType];
+          }
 
+          const conseilNode = getSelectedNode(settings, CONSEIL);
           const account = await getAccount(
             { url: conseilNode.url, apiKey: conseilNode.apiKey },
             network,

@@ -84,8 +84,10 @@ type Props1 = {
   changeFunc: () => {},
   t: () => {}
 };
+
 const RestoreTabs = (props: Props1) => {
   const { type, changeFunc, t } = props;
+
   return (
     <RestoreTabContainer>
       <RestoreTabItem
@@ -94,13 +96,7 @@ const RestoreTabs = (props: Props1) => {
       >
         {t('components.restoreBackup.seed_phrase')}
       </RestoreTabItem>
-      {/* <RestoreTabItem
-        active={type==='key'}
-        onClick={() => changeFunc('key')}
-      >
-        {t('components.restoreBackup.private_key')}
-      </RestoreTabItem> */}
-      <RestoreTabItem active={type === 'key'}>
+      <RestoreTabItem active={type === 'key'} onClick={() => changeFunc('key')}>
         {t('components.restoreBackup.private_key')}
       </RestoreTabItem>
     </RestoreTabContainer>
@@ -127,16 +123,11 @@ class RestoreBackup extends Component<Props> {
   };
 
   importAddress = () => {
-    const { seeds, inputValue, password } = this.state;
+    const { seeds, inputValue, password, key } = this.state;
     let str = '';
+
     if (seeds.length) {
-      seeds.forEach((item, index) => {
-        if (index) {
-          str += ` ${item}`;
-        } else {
-          str = item;
-        }
-      });
+      str = seeds.join(' ');
     }
 
     if (inputValue) {
@@ -146,13 +137,15 @@ class RestoreBackup extends Component<Props> {
         str = inputValue;
       }
     }
+
     this.props.importAddress(
       ADD_ADDRESS_TYPES.RESTORE,
       str,
       '',
       '',
       '',
-      password
+      password,
+      key
     );
   };
 
@@ -180,12 +173,8 @@ class RestoreBackup extends Component<Props> {
       const badWords = seeds.filter(
         element => seedWords.indexOf(element) === -1
       );
-      if (seeds.length > 15) {
-        this.triggerError(
-          true,
-          t('containers.homeAddAddress.errors.invalid_length')
-        );
-      } else if (badWords.length > 0) {
+
+      if (badWords.length > 0) {
         this.triggerError(
           true,
           t('containers.homeAddAddress.errors.invalid_words')
@@ -203,24 +192,23 @@ class RestoreBackup extends Component<Props> {
       return words.label.toLowerCase();
     });
     const badWords = items.filter(element => seedWords.indexOf(element) === -1);
-    if (items.length > 15) {
-      this.triggerError(
-        true,
-        t('containers.homeAddAddress.errors.invalid_length')
-      );
-    } else if (badWords.length > 0) {
+    if (badWords.length > 0) {
       this.triggerError(
         true,
         t('containers.homeAddAddress.errors.invalid_words')
       );
-    } else if (badWords.length === 0 && items.length <= 15) {
+    } else if (badWords.length === 0 && items.length <= 24) {
       this.triggerError(false, '');
     }
     this.setState({ seeds: items, inputValue: '' });
   };
 
   onEnterPress = (keyValue, isdisabled) => {
-    if (keyValue === 'Enter' && !isdisabled && this.state.seeds.length === 15) {
+    if (
+      keyValue === 'Enter' &&
+      !isdisabled &&
+      (this.state.seeds.length === 15 || this.state.seeds.length === 24)
+    ) {
       this.importAddress();
     }
   };
@@ -240,7 +228,7 @@ class RestoreBackup extends Component<Props> {
     const { t } = this.props;
     let isdisabled = false;
     if (type === 'phrase') {
-      isdisabled = seeds.length !== 15 || error;
+      isdisabled = ![12, 15, 18, 21, 24].includes(seeds.length) || error;
     } else {
       isdisabled = !key;
     }
@@ -314,12 +302,7 @@ class RestoreBackup extends Component<Props> {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      importAddress
-    },
-    dispatch
-  );
+  return bindActionCreators({ importAddress }, dispatch);
 }
 
 export default compose(
