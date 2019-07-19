@@ -98,7 +98,7 @@
       "storage_limit": "Límite de almacenamiento",
       "gas_limit": "Límite de gas",
       "parameters": "Parámetros",
-      "view_scan": "VER EN TZSCAN",
+      "view_scan": "Ver en Mininax",
       "initial_storage": "Almacenamiento inicial",
       "paste_micheline_code": "Pegar en tu código Micheline del contrato inteligente"
     },

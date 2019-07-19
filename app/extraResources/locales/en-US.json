@@ -98,7 +98,7 @@
       "storage_limit": "Storage Limit",
       "gas_limit": "Gas Limit",
       "parameters": "Parameters",
-      "view_scan": "VIEW ON TZSCAN",
+      "view_scan": "View on Mininax",
       "initial_storage": "Initial Storage",
       "paste_micheline_code": "Paste in your smart contract Micheline code"
     },
@@ -156,9 +156,9 @@
       "create_account": "Create Account",
       "seed_backup": "Your Tezos account seed is backed up!",
       "back_to_seed": "Back to Seed Phrase",
-      "first_word": "1st Word",
-      "second_word": "2nd Word",
-      "third_word": "3rd Word",
+      "first_word": "{{index}}st Word",
+      "second_word": "{{index}}nd Word",
+      "third_word": "{{index}}rd Word",
       "nth_word": "{{index}}th Word",
       "errors": {
         "invalid_word": "Invalid word, please check again!",

@@ -98,7 +98,7 @@
       "storage_limit": "스토리지 제한",
       "gas_limit": "가스 제한",
       "parameters": "파라미터",
-      "view_scan": "TZSCAN에서 보기",
+      "view_scan": "Mininax에서 보기",
       "initial_storage": "초기 스토리지",
       "paste_micheline_code": "스마트 계약서 Micheline 코드 붙여넣기"
     },

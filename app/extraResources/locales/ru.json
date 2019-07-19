@@ -98,7 +98,7 @@
       "storage_limit": "Лимит Хранилища",
       "gas_limit": "Gas Лимит",
       "parameters": "Параметры",
-      "view_scan": "Посмотреть на TZSCAN",
+      "view_scan": "Посмотреть на Mininax",
       "initial_storage": "Изначальное хранилище",
       "paste_micheline_code": "Вставить Micheline код в ваш смарт контракт"
     },

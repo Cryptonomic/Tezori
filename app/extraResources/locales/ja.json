@@ -98,7 +98,7 @@
       "storage_limit": "ストレージ制限",
       "gas_limit": "ガスリミット",
       "parameters": "パラメーター",
-      "view_scan": "TZSCANのビュー",
+      "view_scan": "Mininaxのビュー",
       "initial_storage": "初期ストレージ",
       "paste_micheline_code": "スマートコントラクトMichelineコードにペースト"
     },

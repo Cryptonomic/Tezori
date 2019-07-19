@@ -98,7 +98,7 @@
       "storage_limit": "Depolama Limiti",
       "gas_limit": "Gaz Limiti",
       "parameters": "Parametreler",
-      "view_scan": "TZSCAN'DE GÖRÜNTÜLE",
+      "view_scan": "Mininax'DE GÖRÜNTÜLE",
       "initial_storage": "İlk Depolama",
       "paste_micheline_code": "Akıllı Sözleşme'nizin Micheline kodunu yapıştırın"
     },

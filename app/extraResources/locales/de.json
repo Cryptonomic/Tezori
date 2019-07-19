@@ -98,7 +98,7 @@
       "storage_limit": "Storage Limit",
       "gas_limit": "Gas Limit",
       "parameters": "Parameter",
-      "view_scan": "Auf TZSCAN anschauen",
+      "view_scan": "Auf Mininax anschauen",
       "initial_storage": "Initial Storage",
       "paste_micheline_code": "Füge deinen Smart Contract Micheline Code hinzu"
     },

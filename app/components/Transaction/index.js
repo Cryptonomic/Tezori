@@ -198,7 +198,6 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   }
 
   if (type === types.TRANSACTION && !isSameLocation) {
-    console.log(`${transaction.parameters} ${transaction.consumed_gas}`);
     if (
       !transaction.parameters &&
       (transaction.consumed_gas === REG_TX_GAS_CONSUMPTION ||
