@@ -156,9 +156,9 @@
       "create_account": "Create Account",
       "seed_backup": "Your Tezos account seed is backed up!",
       "back_to_seed": "Back to Seed Phrase",
-      "first_word": "{{index}}st Word",
-      "second_word": "{{index}}nd Word",
-      "third_word": "{{index}}rd Word",
+      "first_word": "1st Word",
+      "second_word": "2nd Word",
+      "third_word": "3rd Word",
       "nth_word": "{{index}}th Word",
       "errors": {
         "invalid_word": "Invalid word, please check again!",

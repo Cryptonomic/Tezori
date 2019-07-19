@@ -2,7 +2,7 @@
   "name": "Galleon",
   "version": "0.8.4b",
   "network": "mainnet",
-  "blockExplorerHost": "https://mininax.cryptonomic.tech/#/alphanet/operations/",
+  "blockExplorerHost": "https://mininax.cryptonomic.tech/#/mainnet/operations/",
   "logo": "tezosLogo.svg",
   "icon": "tezos",
   "termsService": "https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf",

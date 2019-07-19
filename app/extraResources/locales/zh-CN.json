@@ -156,9 +156,9 @@
       "create_account": "创建账户",
       "seed_backup": "你的Tezos账户种子(seed)已被备份！",
       "back_to_seed": "返回到助记词",
-      "first_word": "第{{index}}个单词",
-      "second_word": "第{{index}}个单词",
-      "third_word": "第{{index}}个单词",
+      "first_word": "第1个单词",
+      "second_word": "第2个单词",
+      "third_word": "第3个单词",
       "nth_word": "第{{index}}个单词",
       "errors": {
         "invalid_word": "无效单词，请再次检查！",
