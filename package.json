@@ -21,12 +21,12 @@
     "check-wallet-state": "node -r babel-register internals/scripts/CheckWalletStateExist.js",
     "package": "yarn build && electron-builder build --publish never",
     "package-debug": "yarn build-debug && electron-builder build --publish never",
-    "package-all": "yarn build && electron-builder build -mwl",
+    "package-all": "yarn build && electron-builder build -mwl --publish never",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
-    "package-linux": "yarn build && electron-builder build --linux",
-    "package-linux-debug": "yarn build-debug && electron-builder build --linux",
-    "package-win": "yarn build && electron-builder build --win --x64",
-    "package-win-debug": "yarn build-debug && electron-builder build --win --x64",
+    "package-linux": "yarn build && electron-builder build --linux --publish never",
+    "package-linux-debug": "yarn build-debug && electron-builder build --linux --publish never",
+    "package-win": "yarn build && electron-builder build --win --x64 --publish never",
+    "package-win-debug": "yarn build-debug && electron-builder build --win --x64 --publish never",
     "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && yarn flow-typed && yarn build-dll && electron-builder install-app-deps package.json",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
@@ -87,10 +87,10 @@
       ]
     },
     "win": {
-      "target": ["nsis", "msi"]
+      "target": ["msi"]
     },
     "linux": {
-      "target": ["deb", "rpm", "snap", "AppImage"],
+      "target": ["deb", "rpm"],
       "category": "Development"
     },
     "directories": {
