@@ -59,7 +59,7 @@ class InputValidComponent extends Component<Props> {
 
   getLabel = index => {
     const { t } = this.props;
-    switch (`${index}`.slice(-1)) {
+    switch (`${index}`) {
       case '1':
         return t('components.createAccountSlide.first_word');
       case '2':
