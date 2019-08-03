@@ -342,7 +342,7 @@
       "last_updated": "最后更新于{{date}}"
     },
     "versionStatus": {
-      "version_update": "你正在使用Galleon的一个更老的版本，它可能不是完全可用。请下载v{{version}}于 "
+      "version_update": "你正在使用Tezori的一个更老的版本，它可能不是完全可用。请下载v{{version}}于 "
     },
     "comingSoon": {
       "coming_soon": "即将上线",
@@ -390,7 +390,7 @@
       "want_to_import_fundraiser_paper_wallet": "想要导入你的资金筹集活动纸钱包吗?",
       "create_named_wallet": "<1><0>首先创建一个<1>{{name}}</1>钱包。</0></1>",
       "tagline": "为Tezos而生的社区钱包",
-      "app_name": "Galleon",
+      "app_name": "Tezori",
       "keystore_wallet": "Keystore 钱包",
       "ledger_wallet": "Ledger 钱包",
       "connect_ledger": "与 Ledger 连接",
