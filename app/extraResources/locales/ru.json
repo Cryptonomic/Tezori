@@ -342,7 +342,7 @@
       "last_updated": "Последнее обновление {{date}}"
     },
     "versionStatus": {
-      "version_update": "Вы пользуетесь старой версией Galleon, которая может функционировать неполностью. Пожалуйста установите самую последнюю версию кошелька v{{version}} "
+      "version_update": "Вы пользуетесь старой версией Tezori, которая может функционировать неполностью. Пожалуйста установите самую последнюю версию кошелька v{{version}} "
     },
     "comingSoon": {
       "coming_soon": "Ожидается Скоро",
@@ -390,7 +390,7 @@
       "want_to_import_fundraiser_paper_wallet": "Хотите импортировать вашего бумажного кошелька Фандрейзера?",
       "create_named_wallet": "кошелёк? <1><0>Создайте <1>{{name}}</1> кошелёк </0></1>сначала.",
       "tagline": "Коммьюнити кошелёк для Tezos",
-      "app_name": "Galleon",
+      "app_name": "Tezori",
       "keystore_wallet": "Keystore Кошелёк ",
       "ledger_wallet": "Ledger Кошелёк",
       "connect_ledger": "Подсоединить к Ledger",
