@@ -3,16 +3,16 @@
   "conseilSelectedNode": "Cryptonomic-Conseil",
   "nodesList": [
     {
-      "name": "Cryptonomic-Nautilus",
+      "name": "",
       "type": "TEZOS",
-      "url": "https://tezos-prod.cryptonomic-infra.tech:443",
+      "url": "https://...",
       "apiKey": ""
     },
     {
-      "name": "Cryptonomic-Conseil",
+      "name": "",
       "type": "CONSEIL",
-      "url": "https://conseil-prod.cryptonomic-infra.tech:443",
-      "apiKey": "galleon"
+      "url": "https://...",
+      "apiKey": ""
     }
   ],
   "selectedPath": "Default",
