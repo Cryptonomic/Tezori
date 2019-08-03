@@ -1,12 +1,12 @@
 {
-  "name": "Galleon",
+  "name": "Tezori",
   "version": "0.8.4b",
   "network": "mainnet",
   "blockExplorerHost": "https://mininax.cryptonomic.tech/#/mainnet/operations/",
   "logo": "tezosLogo.svg",
   "icon": "tezos",
-  "termsService": "https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf",
-  "privacyPolicy": "https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf",
+  "termsService": "https://github.com/Cryptonomic/Tezori",
+  "privacyPolicy": "https://github.com/Cryptonomic/Tezori",
   "tagline": "containers.loginHome.tagline",
-  "versionCheck": "10"
+  "versionCheck": "11"
 }
