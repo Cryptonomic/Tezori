@@ -342,7 +342,7 @@
       "last_updated": "최종 업데이트 날짜: {{date}}"
     },
     "versionStatus": {
-      "version_update": "완벽히 작동하지 않을 수 있는 이전 버전의 Galleon을 사용하고 있습니다. 다음에서 v{{version}}을/를 다운로드하세요:"
+      "version_update": "완벽히 작동하지 않을 수 있는 이전 버전의 Tezori을 사용하고 있습니다. 다음에서 v{{version}}을/를 다운로드하세요:"
     },
     "comingSoon": {
       "coming_soon": "곧 준비됩니다",
@@ -390,7 +390,7 @@
       "want_to_import_fundraiser_paper_wallet": "기금 모금 페이퍼 지갑을 불러오겠습니까?",
       "create_named_wallet": "<1><0>우선 <1>{{name}}</1> 지갑을 만드세요.</0></1>",
       "tagline": "Tezos를 위한 커뮤니티 지갑",
-      "app_name": "Galleon",
+      "app_name": "Tezori",
       "keystore_wallet": "Keystore 지갑",
       "ledger_wallet": "Ledger 지갑",
       "connect_ledger": "Ledger 연결",
