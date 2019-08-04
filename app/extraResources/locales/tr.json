@@ -98,7 +98,7 @@
       "storage_limit": "Depolama Limiti",
       "gas_limit": "Gaz Limiti",
       "parameters": "Parametreler",
-      "view_scan": "TZSCAN'DE GÖRÜNTÜLE",
+      "view_scan": "Mininax'DE GÖRÜNTÜLE",
       "initial_storage": "İlk Depolama",
       "paste_micheline_code": "Akıllı Sözleşme'nizin Micheline kodunu yapıştırın"
     },
@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "XTZ Gönder",
-      "recepient_address": "Alıcının Adresi",
+      "recipient_address": "Alıcının Adresi",
       "burn_tooltip_title": "Neden bir yakım ücreti var?",
       "burn_tooltip_content": "Girdiğiniz alıcı adresinin bakiyesi sıfır. Bakiyesiz yönetici adreslere (tz1,2,3) gönderi yapmak bir kerelik <1> 0.257 </1>XTZ yakım ücretine tabidir.",
       "fee_tooltip_title": "Bu işlem için ücretler neden normalden yüksek?",
@@ -342,7 +342,7 @@
       "last_updated": "Son güncelleme {{date}}"
     },
     "versionStatus": {
-      "version_update": "Galleon'un eski bir sürümünü kullanıyorsunuz. Bu sürümde bazı özellikler çalışmıyor olabilir. Lütfen v{{version}}'yi indirin: "
+      "version_update": "Tezori'un eski bir sürümünü kullanıyorsunuz. Bu sürümde bazı özellikler çalışmıyor olabilir. Lütfen v{{version}}'yi indirin: "
     },
     "comingSoon": {
       "coming_soon": "Yakında!",

@@ -1,7 +1,7 @@
 {
   "name": "Tezori",
   "productName": "Tezori",
-  "version": "0.8.0b",
+  "version": "0.8.4b",
   "description": "A community wallet for Tezos",
   "scripts": {
     "build": "npm run check-wallet-state &&  concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -21,12 +21,12 @@
     "check-wallet-state": "node -r babel-register internals/scripts/CheckWalletStateExist.js",
     "package": "yarn build && electron-builder build --publish never",
     "package-debug": "yarn build-debug && electron-builder build --publish never",
-    "package-all": "yarn build && electron-builder build -mwl",
+    "package-all": "yarn build && electron-builder build -mwl --publish never",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
-    "package-linux": "yarn build && electron-builder build --linux",
-    "package-linux-debug": "yarn build-debug && electron-builder build --linux",
-    "package-win": "yarn build && electron-builder build --win --x64",
-    "package-win-debug": "yarn build-debug && electron-builder build --win --x64",
+    "package-linux": "yarn build && electron-builder build --linux --publish never",
+    "package-linux-debug": "yarn build-debug && electron-builder build --linux --publish never",
+    "package-win": "yarn build && electron-builder build --win --x64 --publish never",
+    "package-win-debug": "yarn build-debug && electron-builder build --win --x64 --publish never",
     "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && yarn flow-typed && yarn build-dll && electron-builder install-app-deps package.json",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
@@ -87,10 +87,10 @@
       ]
     },
     "win": {
-      "target": ["nsis", "msi"]
+      "target": ["msi"]
     },
     "linux": {
-      "target": ["deb", "rpm", "snap", "AppImage"],
+      "target": ["deb", "rpm"],
       "category": "Development"
     },
     "directories": {
@@ -180,7 +180,7 @@
     "flow-typed": "^2.5.1",
     "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^23.4.2",
+    "jest": "^24.8.0",
     "jest-styled-components": "^6.3.1",
     "lint-staged": "^7.2.0",
     "mini-css-extract-plugin": "^0.4.1",

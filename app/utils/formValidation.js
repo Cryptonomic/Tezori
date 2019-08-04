@@ -37,11 +37,6 @@ export default function hasError(value, validateType, name) {
         return "components.messageBar.messages.amount_small";
       }
       break;
-    case 'strictlyPosNum':
-      if ( value <= 0 ) {
-        return "components.messageBar.messages.amount_small";
-      }
-      break;
     case 'validAddress':
       if ( value.length < 36 ) {
         return "components.messageBar.messages.address_length_36";

@@ -5,7 +5,8 @@ import {
   TezosWalletUtil,
   TezosConseilClient,
   TezosNodeWriter,
-  StoreType
+  StoreType,
+  TezosNodeReader
 } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { CREATE, IMPORT } from '../../constants/CreationTypes';
@@ -66,7 +67,8 @@ import { ACTIVATION } from '../../constants/TransactionTypes';
 
 const {
   unlockFundraiserIdentity,
-  unlockIdentityWithMnemonic
+  unlockIdentityWithMnemonic,
+  restoreIdentityWithSecretKey
 } = TezosWalletUtil;
 const { createWallet } = TezosFileWallet;
 
@@ -340,7 +342,8 @@ export function importAddress(
   pkh,
   activationCode,
   username,
-  passPhrase
+  passPhrase,
+  sk
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -403,14 +406,18 @@ export function importAddress(
           break;
         }
         case RESTORE: {
-          identity = await unlockIdentityWithMnemonic(seed, passPhrase);
-          const storeTypesMap = {
-            0: StoreType.Mnemonic,
-            1: StoreType.Fundraiser
-          };
-          identity.storeType = storeTypesMap[identity.storeType];
-          const conseilNode = getSelectedNode(settings, CONSEIL);
+          if (sk !== undefined && sk.length > 0) {
+            identity = await restoreIdentityWithSecretKey(sk);
+          } else {
+            identity = await unlockIdentityWithMnemonic(seed, passPhrase);
+            const storeTypesMap = {
+              0: StoreType.Mnemonic,
+              1: StoreType.Fundraiser
+            };
+            identity.storeType = storeTypesMap[identity.storeType];
+          }
 
+          const conseilNode = getSelectedNode(settings, CONSEIL);
           const account = await getAccount(
             { url: conseilNode.url, apiKey: conseilNode.apiKey },
             network,
@@ -586,9 +593,9 @@ export function getIsReveal(selectedAccountHash, selectedParentHash) {
     }
     const { url } = getSelectedNode(settings, TEZOS);
 
-    const isReveal = await TezosNodeWriter.isManagerKeyRevealedForAccount(
+    const isReveal = await TezosNodeReader.isManagerKeyRevealedForAccount(
       url,
-      keyStore
+      keyStore.publicKeyHash
     );
     return isReveal;
   };
@@ -598,7 +605,7 @@ export function getIsImplicitAndEmpty(recipientHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
     const { url } = getSelectedNode(settings, TEZOS);
-    const isImplicitAndEmpty = await TezosNodeWriter.isImplicitAndEmpty(
+    const isImplicitAndEmpty = await TezosNodeReader.isImplicitAndEmpty(
       url,
       recipientHash
     );

@@ -1,0 +1,29 @@
+{
+  "tezosSelectedNode": "Tezos Node",
+  "conseilSelectedNode": "Conseil Server",
+  "nodesList": [
+    {
+      "name": "Tezos Node",
+      "type": "TEZOS",
+      "url": "https://...",
+      "apiKey": ""
+    },
+    {
+      "name": "Conseil Server",
+      "type": "CONSEIL",
+      "url": "https://...",
+      "apiKey": ""
+    }
+  ],
+  "selectedPath": "Default",
+  "pathsList": [
+    {
+      "label": "Default",
+      "derivation": "44'/1729'/0'/0'/0'"
+    },
+    {
+      "label": "TezBox",
+      "derivation": "44'/1729'/0'/0'"
+    }
+  ]
+}

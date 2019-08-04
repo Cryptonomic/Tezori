@@ -66,7 +66,7 @@ export function invokeAddress(
       userDerivation,
       storage,
       gas,
-      parameters
+      JSON.stringify(parameters)
     ).catch(err => {
       const errorObj = { name: err.message, ...err };
       console.error(err);

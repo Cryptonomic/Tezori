@@ -47,7 +47,7 @@ class BackUpSeedPhrase extends Component<Props> {
     const seedsArrObj = seeds.map((item, index) => ({ index, item }));
     const resultObj = [];
     for (let ii = 0; ii < 4; ii += 1) {
-      const rndNum = this.generateRndNum(15 - ii);
+      const rndNum = this.generateRndNum(seeds.length - ii);
       resultObj.push(seedsArrObj[rndNum]);
       seedsArrObj.splice(rndNum, 1);
     }

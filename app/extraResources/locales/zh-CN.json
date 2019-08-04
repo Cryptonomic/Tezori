@@ -98,7 +98,7 @@
       "storage_limit": "存储限制",
       "gas_limit": "计算费用限制",
       "parameters": "参数",
-      "view_scan": "在TZSCAN上查看",
+      "view_scan": "在Mininax上查看",
       "initial_storage": "初始存储",
       "paste_micheline_code": "把Micheline代码粘贴进你的智能合同里"
     },
@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "发送XTZ",
-      "recepient_address": "接收人地址",
+      "recipient_address": "接收人地址",
       "burn_tooltip_title": "为什么有消耗费？",
       "burn_tooltip_content": "你输入的接收人地址的余额为零。发送资金到一个空的管理者地址(tz1,2,3)需要一次性的<1> 0.257 </1>XTZ消耗费。",
       "fee_tooltip_title": "为什么这笔交易的费用要高一些？",
@@ -342,7 +342,7 @@
       "last_updated": "最后更新于{{date}}"
     },
     "versionStatus": {
-      "version_update": "你正在使用Galleon的一个更老的版本，它可能不是完全可用。请下载v{{version}}于 "
+      "version_update": "你正在使用Tezori的一个更老的版本，它可能不是完全可用。请下载v{{version}}于 "
     },
     "comingSoon": {
       "coming_soon": "即将上线",

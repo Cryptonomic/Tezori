@@ -38,7 +38,7 @@ export function validateAmount(amount, toAddress) {
     const validations = [
       { value: amount, type: 'notEmpty', name: 'amount' },
       { value: parsedAmount, type: 'validAmount' },
-      { value: amountInUtez, type: 'strictlyPosNum', name: 'Amount' },
+      { value: amountInUtez, type: 'posNum', name: 'Amount' },
       { value: toAddress, type: 'validAddress' }
     ];
 

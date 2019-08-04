@@ -2,12 +2,15 @@ import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import { setLogLevel } from 'conseiljs';
 import Root from './containers/Root/';
 import { configureStore, history } from './store/configureStore';
 import muiTheme from './muiTheme';
 import './styles/global-styles';
 
 const store = configureStore();
+
+setLogLevel('debug');
 
 render(
   <MuiThemeProvider theme={muiTheme}>

@@ -24,7 +24,7 @@ const WarningIcon = styled(Warning)`
     position: absolute;
     right: 12px;
     top: 42px;
-    fill: ${({ theme: { colors } }) => colors.error1 };
+    fill: ${({ theme: { colors } }) => colors.error1};
     width: 18px;
     height: 18px;
   }
@@ -59,15 +59,15 @@ class InputValidComponent extends Component<Props> {
 
   getLabel = index => {
     const { t } = this.props;
-    switch (index) {
-      case 1:
+    switch (`${index}`) {
+      case '1':
         return t('components.createAccountSlide.first_word');
-      case 2:
+      case '2':
         return t('components.createAccountSlide.second_word');
-      case 3:
+      case '3':
         return t('components.createAccountSlide.third_word');
       default:
-        return t('components.createAccountSlide.nth_word', {index});
+        return t('components.createAccountSlide.nth_word', { index });
     }
   };
 
@@ -111,12 +111,12 @@ class InputValidComponent extends Component<Props> {
   render() {
     const { index, t } = this.props;
     const label = this.getLabel(index);
-    const {errorText} = this.state;
+    const { errorText } = this.state;
     return (
       <StyledInputContainer>
         <TextField
           label={label}
-          onChange={(newVal) => this.changFunc(newVal)}
+          onChange={newVal => this.changFunc(newVal)}
           errorText={t(errorText)}
           onKeyPress={this.keyHandler}
         />

@@ -98,7 +98,7 @@
       "storage_limit": "ストレージ制限",
       "gas_limit": "ガスリミット",
       "parameters": "パラメーター",
-      "view_scan": "TZSCANのビュー",
+      "view_scan": "Mininaxのビュー",
       "initial_storage": "初期ストレージ",
       "paste_micheline_code": "スマートコントラクトMichelineコードにペースト"
     },
@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "XTZを送る",
-      "recepient_address": "受取人アドレス",
+      "recipient_address": "受取人アドレス",
       "burn_tooltip_title": "バーン費用がかかる理由は？",
       "burn_tooltip_content": "入力した受取人アドレスには残高がありません。空のマネージャーアドレス(tz1,2,3)に資金を送るためには、一度限り<1> 0.257 </1>XTZ バーン費用が必要です。",
       "fee_tooltip_title": "この取引の費用が少し高い理由は？",
@@ -342,7 +342,7 @@
       "last_updated": "最終更新 {{date}}"
     },
     "versionStatus": {
-      "version_update": "あなたはGalleonの旧バージョンを使用しており、完全に機能しないかも知れません。v{{version}}をダウンロードしてください "
+      "version_update": "あなたはTezoriの旧バージョンを使用しており、完全に機能しないかも知れません。v{{version}}をダウンロードしてください "
     },
     "comingSoon": {
       "coming_soon": "準備中",

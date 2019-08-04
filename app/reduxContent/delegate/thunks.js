@@ -79,6 +79,7 @@ export function delegate(
       res = await sendDelegationOperation(
         url,
         newKeyStore,
+        keyStore.publicKeyHash,
         delegateValue,
         fee,
         derivation
@@ -92,6 +93,7 @@ export function delegate(
       res = await sendDelegationOperation(
         url,
         keyStore,
+        keyStore.publicKeyHash,
         delegateValue,
         fee
       ).catch(err => {

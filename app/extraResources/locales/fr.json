@@ -98,7 +98,7 @@
       "storage_limit": "Limite de Stockage",
       "gas_limit": "Limite de Gaz",
       "parameters": "Paramètres",
-      "view_scan": "VOIR SUR TZSCAN",
+      "view_scan": "Voir sur Mininax",
       "initial_storage": "Stockage Initial",
       "paste_micheline_code": "Coller dans votre contrat intelligent en code Micheline"
     },
@@ -289,7 +289,7 @@
     },
     "send": {
       "send_xtz": "Envoyer XTZ",
-      "recepient_address": "Adresse du destinataire",
+      "recipient_address": "Adresse du destinataire",
       "burn_tooltip_title": "Pouquoi y a-t-il une commission de brûlage ?",
       "burn_tooltip_content": "L`adresse du destinataire que vous avez paramétré à une balance nulle. Envoyer des fonds à une adresse de Manager vide (tz1,2,3) nécéssite une commission de brûlage unique de <1> 0.257 </1>XTZ .",
       "fee_tooltip_title": "Pourquoi la commission est un peu plus élévée pour cette transaction ?",
@@ -342,7 +342,7 @@
       "last_updated": "Dernière modification {{date}}"
     },
     "versionStatus": {
-      "version_update": "Vous utilisez une ancienne version de Galleon, qui n'est peut-être pas entièrement fonctionnelle. Merci de télécharger v{{version}} à "
+      "version_update": "Vous utilisez une ancienne version de Tezori, qui n'est peut-être pas entièrement fonctionnelle. Merci de télécharger v{{version}} à "
     },
     "comingSoon": {
       "coming_soon": "Bientôt disponible!",

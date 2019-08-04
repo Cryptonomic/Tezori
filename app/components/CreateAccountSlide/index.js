@@ -28,7 +28,7 @@ const CopyIconText = styled.span`
 
 const CreateAccountSlideContainer = styled.div`
   max-width: 579px;
-  height: 376px;
+  height: 426px;
   margin: 0 auto;
   position: relative;
   .title {
@@ -150,7 +150,7 @@ class CreateAccountSlide extends Component<Props> {
 
     seedWords.forEach((item, index) => {
       seedColums.push(item);
-      if (index % 5 === 4) {
+      if ((index + 1) % 6 === 0) {
         seeds.push(seedColums);
         seedColums = [];
       }
@@ -181,7 +181,7 @@ class CreateAccountSlide extends Component<Props> {
                 <div className="seedColumn" key={index}>
                   {items.map((item, index1) => (
                     <div key={index1} className="seedItem">
-                      <div>{index * 5 + index1 + 1}</div>
+                      <div>{index * 6 + index1 + 1}</div>
                       {item}
                     </div>
                   ))}
