@@ -6,7 +6,7 @@ import type { Node } from 'react';
 import styled from 'styled-components';
 import MessageBar from '../../components/MessageBar/';
 import { getVersionFromApi } from '../../utils/general';
-import { versionCheck } from '../../config.json';
+import { LocalVersionIndex } from '../../config.json';
 import { updateNewVersion } from '../../reduxContent/message/thunks';
 
 type Props = {
@@ -27,10 +27,10 @@ class App extends Component<Props> {
   componentDidMount = async () => {
     const { updateNewVersion } = this.props;
     const result = await getVersionFromApi();
-    const newVersionCheck = parseInt(result.versionCheck, 10);
+    const RemoteVersionIndex = parseInt(result.currentVersionIndex, 10);
     let newVersion = '';
-    if (newVersionCheck > parseInt(versionCheck, 10)) {
-      newVersion = result.currentVersion;
+    if (RemoteVersionIndex > parseInt(LocalVersionIndex, 10)) {
+      newVersion = result.currentVersionIndex;
     }
     updateNewVersion(newVersion);
   };
