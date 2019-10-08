@@ -9,8 +9,10 @@ import InputAddress from '../InputAddress/';
 import CustomSelect from '../CustomSelect';
 import TezosAmount from '../TezosAmount';
 import TezosAddress from '../TezosAddress';
+import TezosIcon from '../TezosIcon';
 import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
+import TezosChainFormatArrary from '../../constants/TezosChainFormat';
 
 import { openLinkToBlockExplorer } from '../../utils/general';
 
@@ -31,7 +33,13 @@ import {
   LinkIcon,
   InvokeAddressContainer,
   ItemWrapper,
-  SelectRenderWrapper
+  SelectRenderWrapper,
+  StorageFormatContainer,
+  ColFormat,
+  ColStorage,
+  ChainItemWrapper,
+  SelectChainItemWrapper,
+  SelectChainRenderWrapper
 } from './style';
 
 const utez = 1000000;
@@ -59,7 +67,9 @@ const defaultState = {
   parameters: '',
   passPhrase: '',
   isShowedPwd: false,
-  isOpenLedgerConfirm: false
+  isOpenLedgerConfirm: false,
+  codeFormat: '',
+  entryPoint: ''
 };
 
 class InvokeContract extends Component<Props> {
@@ -95,6 +105,9 @@ class InvokeContract extends Component<Props> {
 
   openLink = element => openLinkToBlockExplorer(element);
 
+  onChangeFormatType = event =>
+    this.setState({ codeFormat: event.target.value });
+
   onInvokeOperation = async () => {
     const {
       isLedger,
@@ -114,7 +127,9 @@ class InvokeContract extends Component<Props> {
       parameters,
       selectedInvokeAddress,
       passPhrase,
-      isAddressIssue
+      isAddressIssue,
+      entryPoint,
+      codeFormat
     } = this.state;
 
     const isDisabled =
@@ -142,7 +157,9 @@ class InvokeContract extends Component<Props> {
       userParams,
       passPhrase,
       selectedInvokeAddress,
-      selectedParentHash
+      selectedParentHash,
+      entryPoint,
+      codeFormat
     ).catch(err => {
       console.error(err);
       return false;
@@ -166,7 +183,8 @@ class InvokeContract extends Component<Props> {
       isShowedPwd,
       isOpenLedgerConfirm,
       parameters,
-      storage
+      storage,
+      codeFormat
     } = this.state;
     const { isLoading, isLedger, addresses, averageFees, t } = this.props;
     const isDisabled =
@@ -249,12 +267,44 @@ class InvokeContract extends Component<Props> {
               ))}
             </CustomSelect>
           </InvokeAddressContainer>
+          <StorageFormatContainer>
+            <ColStorage>
+              <TextField
+                label={t('components.interactModal.parameters')}
+                onChange={val => this.setState({ parameters: val })}
+              />
+            </ColStorage>
+            <ColFormat>
+              <CustomSelect
+                label={t('general.nouns.format')}
+                value={codeFormat}
+                onChange={this.onChangeFormatType}
+                renderValue={value => (
+                  <SelectChainRenderWrapper>{value}</SelectChainRenderWrapper>
+                )}
+              >
+                {TezosChainFormatArrary.map(format => (
+                  <ChainItemWrapper component="div" key={format} value={format}>
+                    {format === codeFormat && (
+                      <TezosIcon
+                        size="14px"
+                        color="accent"
+                        iconName="checkmark2"
+                      />
+                    )}
+                    <SelectChainItemWrapper>{format}</SelectChainItemWrapper>
+                  </ChainItemWrapper>
+                ))}
+              </CustomSelect>
+            </ColFormat>
+          </StorageFormatContainer>
           <ParametersContainer>
             <TextField
-              label={t('components.interactModal.parameters')}
-              onChange={val => this.setState({ parameters: val })}
+              label={t('components.interactModal.entry_point')}
+              onChange={val => this.setState({ entryPoint: val })}
             />
           </ParametersContainer>
+
           <RowContainer>
             <ColContainer>
               <TextField

@@ -220,13 +220,13 @@ atob@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
 
-aws-sdk@^2.507.0:
-  version "2.530.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.530.0.tgz#c1c6603a6fa6aa73462c42f8e94483cd18416adc"
+aws-sdk@^2.533.0:
+  version "2.537.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.537.0.tgz#e7b42ee4c431f5520f701dee3cf780e2b6f883c3"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
-    ieee754 "1.1.8"
+    ieee754 "1.1.13"
     jmespath "0.15.0"
     querystring "0.2.0"
     sax "1.2.1"
@@ -741,9 +741,9 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-"base-n@git://github.com/yourcodesucks/base-n.git":
+"base-n@git+https://github.com/yourcodesucks/base-n.git":
   version "1.0.0"
-  resolved "git://github.com/yourcodesucks/base-n.git#9d983f475c7396fbdc2fcbbc35b4821f0deeaa25"
+  resolved "git+https://github.com/yourcodesucks/base-n.git#9d983f475c7396fbdc2fcbbc35b4821f0deeaa25"
   dependencies:
     dashdash "^1.14.1"
 
@@ -781,7 +781,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-big-integer@^1.6.44:
+big-integer@^1.6.45:
   version "1.6.45"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.45.tgz#1bf2fa1271bfd20d4c52c3d6c6f08cab8d91c77e"
 
@@ -1149,23 +1149,23 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     typedarray "~0.0.5"
 
 "conseiljs@file:../../../ConseilJS":
-  version "0.3.0"
+  version "0.3.1-alpha"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
-    aws-sdk "^2.507.0"
+    aws-sdk "^2.533.0"
     babel-runtime "6.26.0"
-    base-n "git://github.com/yourcodesucks/base-n.git"
+    base-n "git+https://github.com/yourcodesucks/base-n.git"
     basil-tezos-ledger "0.0.1"
-    big-integer "^1.6.44"
+    big-integer "^1.6.45"
     bip39 "^3.0.2"
     blakejs "^1.1.0"
     bs58check "^2.1.2"
     https "^1.0.0"
     libsodium-wrappers-sumo "0.7.5"
-    loglevel "^1.6.3"
-    moo "^0.5.0"
-    nearley "^2.18.0"
+    loglevel "^1.6.4"
+    moo "0.5.0"
+    nearley "2.18.0"
     node-fetch "^2.6.0"
     zxcvbn "^4.4.2"
 
@@ -1820,9 +1820,9 @@ iconv-lite@0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-ieee754@1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
+ieee754@1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
 
 ieee754@^1.1.4:
   version "1.1.12"
@@ -2191,7 +2191,7 @@ lodash@^4.17.11, lodash@^4.17.4:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
-loglevel@^1.6.3:
+loglevel@^1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.4.tgz#f408f4f006db8354d0577dcf6d33485b3cb90d56"
 
@@ -2352,13 +2352,13 @@ module-deps@^4.0.8:
     through2 "^2.0.0"
     xtend "^4.0.0"
 
+moo@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/moo/-/moo-0.5.0.tgz#72f949e6735aeb27d07eb7c087ea5a70143c56e5"
+
 moo@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/moo/-/moo-0.4.3.tgz#3f847a26f31cf625a956a87f2b10fbc013bfd10e"
-
-moo@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/moo/-/moo-0.5.0.tgz#72f949e6735aeb27d07eb7c087ea5a70143c56e5"
 
 ms@2.0.0:
   version "2.0.0"
@@ -2388,9 +2388,9 @@ napi-build-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/napi-build-utils/-/napi-build-utils-1.0.1.tgz#1381a0f92c39d66bf19852e7873432fc2123e508"
 
-nearley@^2.18.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/nearley/-/nearley-2.19.0.tgz#37717781d0fd0f2bfc95e233ebd75678ca4bda46"
+nearley@2.18.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/nearley/-/nearley-2.18.0.tgz#a9193612dd6d528a2e47e743b1dc694cfe105223"
   dependencies:
     commander "^2.19.0"
     moo "^0.4.3"

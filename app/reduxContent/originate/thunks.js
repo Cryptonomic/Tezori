@@ -41,7 +41,8 @@ export function originateContract(
   storageLimit = 0,
   gasLimit = 0,
   code = [],
-  storage = {}
+  storage = {},
+  codeFormat
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -109,15 +110,14 @@ export function originateContract(
         url,
         userKeyStore,
         amountInUtez,
-        undefined,
-        false,
-        false,
+        delegate,
         fee,
         userDerivation,
         storageLimit,
         gasLimit,
         code,
-        storage
+        storage,
+        codeFormat
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);

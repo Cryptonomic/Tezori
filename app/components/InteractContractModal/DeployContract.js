@@ -4,13 +4,16 @@ import TextField from '../TextField';
 import CustomTextArea from './CustomTextArea';
 import TezosNumericInput from '../TezosNumericInput/';
 import { ms } from '../../styles/helpers';
+import CustomSelect from '../CustomSelect';
 import Fees from '../Fees';
 import PasswordInput from '../PasswordInput';
 import TezosAmount from '../TezosAmount';
 import TezosAddress from '../TezosAddress';
+import TezosIcon from '../TezosIcon';
 import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
 
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
+import TezosChainFormatArrary from '../../constants/TezosChainFormat';
 
 import { openLinkToBlockExplorer } from '../../utils/general';
 
@@ -29,7 +32,13 @@ import {
   FeeContainer,
   PasswordButtonContainer,
   InvokeButton,
-  UseMax
+  UseMax,
+  StorageFormatContainer,
+  ColFormat,
+  ColStorage,
+  ChainItemWrapper,
+  SelectChainItemWrapper,
+  SelectChainRenderWrapper
 } from './style';
 
 const utez = 1000000;
@@ -53,7 +62,9 @@ const defaultState = {
   passPhrase: '',
   isShowedPwd: false,
   isOpenLedgerConfirm: false,
-  michelsonCode: ''
+  michelsonCode: '',
+  delegate: '',
+  codeFormat: ''
 };
 
 class DeployContract extends Component<Props> {
@@ -82,6 +93,9 @@ class DeployContract extends Component<Props> {
 
   openLink = element => openLinkToBlockExplorer(element);
 
+  onChangeFormatType = event =>
+    this.setState({ codeFormat: event.target.value });
+
   onDeployOperation = async () => {
     const {
       originateContract,
@@ -99,7 +113,9 @@ class DeployContract extends Component<Props> {
       storage,
       fee,
       michelsonCode,
-      parameters
+      parameters,
+      delegate,
+      codeFormat
     } = this.state;
 
     const isDisabled =
@@ -122,7 +138,7 @@ class DeployContract extends Component<Props> {
     const initCode = JSON.parse(michelsonCode);
 
     const isOperationCompleted = await originateContract(
-      undefined,
+      delegate,
       amount,
       fee,
       passPhrase,
@@ -130,7 +146,8 @@ class DeployContract extends Component<Props> {
       storage,
       gas,
       initCode,
-      initStorage
+      initStorage,
+      codeFormat
     ).catch(err => {
       console.error(err);
       return false;
@@ -151,7 +168,8 @@ class DeployContract extends Component<Props> {
       isShowedPwd,
       isOpenLedgerConfirm,
       parameters,
-      michelsonCode
+      michelsonCode,
+      codeFormat
     } = this.state;
 
     const { isLoading, isLedger, addresses, averageFees, t } = this.props;
@@ -176,10 +194,41 @@ class DeployContract extends Component<Props> {
             />
           </InputAddressContainer>
 
+          <StorageFormatContainer>
+            <ColStorage>
+              <TextField
+                label={t('components.interactModal.initial_storage')}
+                onChange={val => this.setState({ parameters: val })}
+              />
+            </ColStorage>
+            <ColFormat>
+              <CustomSelect
+                label={t('general.nouns.format')}
+                value={codeFormat}
+                onChange={this.onChangeFormatType}
+                renderValue={value => (
+                  <SelectChainRenderWrapper>{value}</SelectChainRenderWrapper>
+                )}
+              >
+                {TezosChainFormatArrary.map(format => (
+                  <ChainItemWrapper component="div" key={format} value={format}>
+                    {format === codeFormat && (
+                      <TezosIcon
+                        size="14px"
+                        color="accent"
+                        iconName="checkmark2"
+                      />
+                    )}
+                    <SelectChainItemWrapper>{format}</SelectChainItemWrapper>
+                  </ChainItemWrapper>
+                ))}
+              </CustomSelect>
+            </ColFormat>
+          </StorageFormatContainer>
           <ParametersContainer>
             <TextField
-              label={t('components.interactModal.initial_storage')}
-              onChange={val => this.setState({ parameters: val })}
+              label={t('general.verbs.delegate')}
+              onChange={val => this.setState({ delegate: val })}
             />
           </ParametersContainer>
 

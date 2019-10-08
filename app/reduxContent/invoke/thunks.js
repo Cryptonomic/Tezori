@@ -25,7 +25,9 @@ export function invokeAddress(
   parameters,
   password,
   selectedAccountHash,
-  selectedParentHash
+  selectedParentHash,
+  entryPoint,
+  parameterFormat
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -66,7 +68,9 @@ export function invokeAddress(
       userDerivation,
       storage,
       gas,
-      JSON.stringify(parameters)
+      entryPoint,
+      JSON.stringify(parameters),
+      parameterFormat
     ).catch(err => {
       const errorObj = { name: err.message, ...err };
       console.error(err);

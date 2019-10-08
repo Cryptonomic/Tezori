@@ -48,10 +48,10 @@ export async function getNodesStatus(nodes, network) {
         responsive: false,
         level: null
       },
-      consRes && consRes[0] &&
+      consRes &&
       {
         responsive: true,
-        level: Number(consRes[0].level)
+        level: Number(consRes.level)
       },
     )
   };

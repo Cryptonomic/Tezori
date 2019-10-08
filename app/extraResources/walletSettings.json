@@ -1,18 +1,18 @@
 {
-  "tezosSelectedNode": "Tezos Node",
-  "conseilSelectedNode": "Conseil Server",
+  "tezosSelectedNode": "Cryptonomic-Nautilus",
+  "conseilSelectedNode": "Cryptonomic-Conseil",
   "nodesList": [
     {
-      "name": "Tezos Node",
+      "name": "Cryptonomic-Nautilus",
       "type": "TEZOS",
-      "url": "https://...",
+      "url": "https://tezos-zeronet.cryptonomic-infra.tech/",
       "apiKey": ""
     },
     {
-      "name": "Conseil Server",
+      "name": "Cryptonomic-Conseil",
       "type": "CONSEIL",
-      "url": "https://...",
-      "apiKey": ""
+      "url": "https://conseil-staging2.cryptonomic-infra.tech:443",
+      "apiKey": "galleon"
     }
   ],
   "selectedPath": "Default",
