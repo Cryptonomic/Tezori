@@ -93,7 +93,7 @@ const Description = (props: DescriptionProps) => {
   return (
     <DescriptionContainer>
       <Trans i18nKey="components.actionPanel.description">
-        {"It's pretty empty here. Get started"}
+        It is pretty empty here. Get started
         <Link onClick={onSendClick}> sending</Link> and
         <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
       </Trans>
@@ -298,6 +298,7 @@ class ActionPanel extends Component<Props, State> {
           storeType={storeType}
           isReady={isReady(status, storeType)}
           balance={balance || 0}
+          privateKey={parentIdentity.privateKey}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}

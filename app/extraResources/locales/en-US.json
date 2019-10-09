@@ -17,7 +17,8 @@
       "invoke": "Invoke",
       "deploy": "Deploy",
       "cancel": "Cancel",
-      "proceed": "Proceed"
+      "proceed": "Proceed",
+      "close": "Close"
     },
     "nouns": {
       "amount": "Amount",
@@ -142,7 +143,12 @@
     },
     "balanceBanner": {
       "breadcrumbs": "Account {{parentIndex}} > {{addressLabel}}",
-      "delegated_to": "Delegated to "
+      "delegated_to": "Delegated to ",
+      "secret_key": "Secret Key",
+      "reveal_key": "Click to reveal secret key.",
+      "hide_key": "Click to hide secret key.",
+      "warning": "Warning!",
+      "do_not_store": " Do not store your secret key on your  computer. Write it down and keep in a safe place."
     },
     "copyIcon": {
       "copied": "Copied!"
