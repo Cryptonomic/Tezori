@@ -1,4 +1,4 @@
-import { TezosNodeWriter } from 'conseiljs';
+import { TezosNodeWriter, TezosProtocolHelper } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
@@ -19,10 +19,8 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const {
-  sendAccountOriginationOperation,
-  sendContractOriginationOperation
-} = TezosNodeWriter;
+const { sendContractOriginationOperation } = TezosNodeWriter;
+const { deployManagerContract } = TezosProtocolHelper;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
@@ -125,14 +123,12 @@ export function originateContract(
         return false;
       });
     } else {
-      newAddress = await sendAccountOriginationOperation(
+      newAddress = await deployManagerContract(
         url,
         userKeyStore,
-        amountInUtez,
         delegate,
-        true,
-        true,
         fee,
+        amountInUtez,
         userDerivation
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
@@ -141,6 +137,8 @@ export function originateContract(
         return false;
       });
     }
+
+    console.log('newAddress results-----', newAddress);
 
     if (newAddress) {
       const operationResult1 =

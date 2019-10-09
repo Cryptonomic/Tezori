@@ -106,7 +106,7 @@ export function fetchNetwork() {
       serverInfo,
       platforms[0].name
     );
-    dispatch(_setNetwork(networks[0].network));
+    dispatch(_setNetwork(networks[0].network, platforms[0].name));
     setWalletSettings(getSettings(state()).toJS());
   };
 }

@@ -1,4 +1,4 @@
-import { TezosNodeWriter } from 'conseiljs';
+import { TezosProtocolHelper } from 'conseiljs';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { displayError } from '../../utils/formValidation';
@@ -17,7 +17,7 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const { sendDelegationOperation } = TezosNodeWriter;
+const { setDelegate } = TezosProtocolHelper;
 
 export function fetchDelegationAverageFees() {
   return async (dispatch, state) => {
@@ -76,7 +76,7 @@ export function delegate(
       const newKeyStore = keyStore;
       const { derivation } = getCurrentPath(settings);
       newKeyStore.storeType = 2;
-      res = await sendDelegationOperation(
+      res = await setDelegate(
         url,
         newKeyStore,
         keyStore.publicKeyHash,
@@ -90,7 +90,7 @@ export function delegate(
         return false;
       });
     } else {
-      res = await sendDelegationOperation(
+      res = await setDelegate(
         url,
         keyStore,
         keyStore.publicKeyHash,
@@ -103,6 +103,8 @@ export function delegate(
         return false;
       });
     }
+
+    console.log('delegate results-----', res);
 
     if (res) {
       const operationResult =

@@ -78,6 +78,8 @@ export function invokeAddress(
       return false;
     });
 
+    console.log('invoke results-----', res);
+
     if (res) {
       const operationResult =
         res &&

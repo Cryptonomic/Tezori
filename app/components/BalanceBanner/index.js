@@ -155,7 +155,7 @@ const KeyContainer = styled.div`
 const WarningContainer = styled.div`
   border-radius: 3px;
   border: 1px solid ${({ theme: { colors } }) => colors.index1};
-  width: 475%;
+  width: 475px;
   height: 91px;
   padding: 0 39px 0 29px;
   display: flex;

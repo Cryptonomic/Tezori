@@ -187,20 +187,21 @@ class AddressBlock extends Component<Props, State> {
   getAddresses = addresses => {
     const newAddresses = [];
     const delegatedAddresses = [];
-    const smartAddresses = [];
+    const smartAddresses = addresses;
     let smartBalance = 0;
     addresses.forEach(address => {
-      const { script, balance, status } = address;
-      if (script) {
-        smartAddresses.push(address);
-      } else {
-        const newAddress = {
-          pkh: address.account_id,
-          balance
-        };
-        newAddresses.push(newAddress);
-        delegatedAddresses.push(address);
-      }
+      const { balance, status } = address;
+      // const { script, balance, status } = address;
+      // if (script) {
+      //   smartAddresses.push(address);
+      // } else {
+      //   const newAddress = {
+      //     pkh: address.account_id,
+      //     balance
+      //   };
+      //   newAddresses.push(newAddress);
+      //   delegatedAddresses.push(address);
+      // }
       if (status === READY || status === PENDING) {
         smartBalance += balance;
       }

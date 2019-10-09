@@ -8,7 +8,7 @@ import {
   getSelectedHash
 } from './general';
 import { getSelectedNode } from './nodes';
-import { ConseilQueryBuilder, ConseilOperator, TezosConseilClient } from 'conseiljs';
+import { ConseilQueryBuilder, ConseilOperator, ConseilDataClient, ConseilSortDirection } from 'conseiljs';
 
 export function createAccount(account, identity) {
   return {
@@ -52,13 +52,18 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
   return { balance, transactions };
 }
 
-export async function getAccountsForIdentity(nodes, id, network) {
+export async function getAccountsForIdentity(nodes, id, network, platform) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
 
   let accountsquery = ConseilQueryBuilder.blankQuery();
-  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'manager', ConseilOperator.EQ, [id], false);
-  accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 300);
-  const accounts = await TezosConseilClient.getAccounts({url: url, apiKey: apiKey}, network, accountsquery);
+  accountsquery = ConseilQueryBuilder.addFields(accountsquery, 'block_level', 'originated_contracts');
+  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'kind', ConseilOperator.EQ, ['origination'], false);
+  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'source', ConseilOperator.EQ, [id], false);
+  accountsquery = ConseilQueryBuilder.addOrdering(accountsquery, 'block_level', ConseilSortDirection.DESC);
+  accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 1000);
+  const serverInfo = {url: url, apiKey: apiKey, network: network};
+  const accounts = await ConseilDataClient.executeEntityQuery(serverInfo, platform, network, 'operations', accountsquery);
+  console.log('accounts----', accounts);
   return accounts.filter(account => account.account_id !== id);
 }
 
