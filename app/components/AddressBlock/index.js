@@ -308,7 +308,7 @@ class AddressBlock extends Component<Props, State> {
             onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         )}
-
+        {/*
         <AddDelegateLabel>
           <DelegateTitle>
             {t('components.addDelegateModal.add_delegate_title')}
@@ -348,6 +348,7 @@ class AddressBlock extends Component<Props, State> {
             </Tooltip>
           )}
         </AddDelegateLabel>
+        */}
         {delegatedAddresses.map((address, index) => {
           const { status, balance } = address;
           const addressId = address.account_id;

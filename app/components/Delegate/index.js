@@ -25,6 +25,8 @@ type Props = {
   selectedParentHash?: string,
   address?: string,
   delegate?: () => {},
+  fetchDelegationAverageFees: () => {},
+  getIsReveal: () => {},
   isLedger: boolean,
   t: () => {}
 };

@@ -145,7 +145,9 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Delegate
             isReady={ready}
-            address={selectedAccount.get('delegate_value')}
+            address={
+              selectedAccount.get('delegate_value') || selectedAccountHash
+            }
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
           />
@@ -239,7 +241,7 @@ class ActionPanel extends Component<Props, State> {
 
   getTabList = (isManager, isContract) => {
     if (isManager) {
-      return [TRANSACTIONS, SEND, RECEIVE];
+      return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     }
     if (isContract) {
       return [TRANSACTIONS, INVOKE, CODE, STORAGE];
