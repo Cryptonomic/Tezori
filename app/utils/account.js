@@ -54,17 +54,24 @@ export function createSelectedAccount({ balance = 0, transactions = [] } = {}) {
 
 export async function getAccountsForIdentity(nodes, id, network, platform) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
-
-  let accountsquery = ConseilQueryBuilder.blankQuery();
-  accountsquery = ConseilQueryBuilder.addFields(accountsquery, 'block_level', 'originated_contracts');
-  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'kind', ConseilOperator.EQ, ['origination'], false);
-  accountsquery = ConseilQueryBuilder.addPredicate(accountsquery, 'source', ConseilOperator.EQ, [id], false);
-  accountsquery = ConseilQueryBuilder.addOrdering(accountsquery, 'block_level', ConseilSortDirection.DESC);
-  accountsquery = ConseilQueryBuilder.setLimit(accountsquery, 1000);
   const serverInfo = {url: url, apiKey: apiKey, network: network};
-  const accounts = await ConseilDataClient.executeEntityQuery(serverInfo, platform, network, 'operations', accountsquery);
-  console.log('accounts----', accounts);
-  return accounts.filter(account => account.account_id !== id);
+
+  let originationQuery = ConseilQueryBuilder.blankQuery();
+  originationQuery = ConseilQueryBuilder.addFields(originationQuery, 'originated_contracts');
+  originationQuery = ConseilQueryBuilder.addPredicate(originationQuery, 'kind', ConseilOperator.EQ, ['origination'], false);
+  originationQuery = ConseilQueryBuilder.addPredicate(originationQuery, 'source', ConseilOperator.EQ, [id], false);
+  originationQuery = ConseilQueryBuilder.addPredicate(originationQuery, 'status', ConseilOperator.EQ, ['applied'], false);
+  originationQuery = ConseilQueryBuilder.setLimit(originationQuery, 1000);
+
+  const originations = await ConseilDataClient.executeEntityQuery(serverInfo, platform, network, 'operations', originationQuery);
+
+  let accountQuery = ConseilQueryBuilder.blankQuery();
+  accountQuery = ConseilQueryBuilder.addPredicate(accountQuery, 'account_id', ConseilOperator.IN, originations.map(o => o['originated_contracts']), false);
+  accountQuery = ConseilQueryBuilder.setLimit(accountQuery, originations.length);
+
+  const accounts = await ConseilDataClient.executeEntityQuery(serverInfo, platform, network, 'accounts', accountQuery);
+
+  return accounts;
 }
 
 export async function getSyncAccount(
