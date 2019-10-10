@@ -65,6 +65,8 @@ export async function getAccountsForIdentity(nodes, id, network, platform) {
 
   const originations = await ConseilDataClient.executeEntityQuery(serverInfo, platform, network, 'operations', originationQuery);
 
+  if (originations.length === 0) { return []; }
+
   let accountQuery = ConseilQueryBuilder.blankQuery();
   accountQuery = ConseilQueryBuilder.addPredicate(accountQuery, 'account_id', ConseilOperator.IN, originations.map(o => o['originated_contracts']), false);
   accountQuery = ConseilQueryBuilder.setLimit(accountQuery, originations.length);
