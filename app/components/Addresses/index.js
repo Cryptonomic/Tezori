@@ -17,7 +17,7 @@ type Account = {
   manager: string,
   spendable: boolean,
   delegate_setable: boolean,
-  delegate_value: string,
+  delegate: string,
   counter: number,
   script: string,
   balance: number

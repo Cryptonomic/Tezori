@@ -17,7 +17,7 @@ export function createAccount(account, identity) {
     block_id: '',
     counter: 0,
     delegate_setable: false,
-    delegate_value: null,
+    delegate: null,
     manager: '',
     script: null,
     spendable: true,
@@ -68,7 +68,12 @@ export async function getAccountsForIdentity(nodes, id, network, platform) {
   if (originations.length === 0) { return []; }
 
   let accountQuery = ConseilQueryBuilder.blankQuery();
-  accountQuery = ConseilQueryBuilder.addPredicate(accountQuery, 'account_id', ConseilOperator.IN, originations.map(o => o['originated_contracts']), false);
+  if (originations.length === 1) {
+    accountQuery = ConseilQueryBuilder.addPredicate(accountQuery, 'account_id', ConseilOperator.EQ, [originations[0]['originated_contracts']], false);
+  } else {
+    accountQuery = ConseilQueryBuilder.addPredicate(accountQuery, 'account_id', ConseilOperator.IN, originations.map(o => o['originated_contracts']), false);
+  }
+
   accountQuery = ConseilQueryBuilder.setLimit(accountQuery, originations.length);
 
   const accounts = await ConseilDataClient.executeEntityQuery(serverInfo, platform, network, 'accounts', accountQuery);

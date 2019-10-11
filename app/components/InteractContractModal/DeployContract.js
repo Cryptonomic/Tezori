@@ -49,6 +49,7 @@ type Props = {
   averageFees: object,
   addresses: List,
   originateContract: () => {},
+  setIsLoading: () => {},
   onClose: () => {},
   t: () => {}
 };
@@ -134,8 +135,6 @@ class DeployContract extends Component<Props> {
     }
 
     const { pkh } = addresses[0];
-    const initStorage = JSON.parse(parameters);
-    const initCode = JSON.parse(michelsonCode);
 
     const isOperationCompleted = await originateContract(
       delegate,
@@ -145,9 +144,10 @@ class DeployContract extends Component<Props> {
       pkh,
       storage,
       gas,
-      initCode,
-      initStorage,
-      codeFormat
+      michelsonCode,
+      parameters,
+      codeFormat,
+      true
     ).catch(err => {
       console.error(err);
       return false;
@@ -186,7 +186,9 @@ class DeployContract extends Component<Props> {
         <TabContainer>
           <InputAddressContainer>
             <CustomTextArea
-              label={t('components.interactModal.paste_micheline_code')}
+              label={t('components.interactModal.paste_micheline_code', {
+                format: codeFormat || 'micheline'
+              })}
               multiline
               rows={5}
               rowsMax={5}

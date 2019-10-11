@@ -16,7 +16,7 @@ import Send from '../Send/';
 import Receive from '../Receive/';
 import Delegate from '../Delegate/';
 import Invoke from '../Invoke';
-import ComingSoon from '../ComingSoon';
+import CodeStorage from '../CodeStorage';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
 import {
@@ -138,6 +138,8 @@ class ActionPanel extends Component<Props, State> {
     const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
+    const script = selectedAccount.get('script');
+    const storage = selectedAccount.get('storage');
     const isContractAddress = !!selectedAccount.get('script');
 
     switch (activeTab) {
@@ -145,9 +147,7 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Delegate
             isReady={ready}
-            address={
-              selectedAccount.get('delegate_value') || selectedAccountHash
-            }
+            address={selectedAccount.get('delegate') || selectedAccountHash}
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
           />
@@ -165,9 +165,11 @@ class ActionPanel extends Component<Props, State> {
           />
         );
       case CODE:
-        return <ComingSoon label={t('general.nouns.code')} />;
+        return <CodeStorage label={t('general.nouns.code')} code={script} />;
       case STORAGE:
-        return <ComingSoon label={t('general.nouns.storage')} />;
+        return (
+          <CodeStorage label={t('general.nouns.storage')} code={storage} />
+        );
       case INVOKE:
         return (
           <Invoke
@@ -307,7 +309,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
           selectedParentHash={selectedParentHash}
           time={time}
-          delegatedAddress={selectedAccount.get('delegate_value')}
+          delegatedAddress={selectedAccount.get('delegate')}
           isWalletSyncing={isWalletSyncing}
           isContractAddress={isContractAddress}
           addressIndex={addressIndex}

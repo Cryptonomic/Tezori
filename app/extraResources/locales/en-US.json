@@ -102,7 +102,7 @@
       "parameters": "Parameters",
       "view_scan": "View on Mininax",
       "initial_storage": "Initial Storage",
-      "paste_micheline_code": "Paste in your smart contract Micheline code",
+      "paste_micheline_code": "Paste in your smart contract {{format}} code",
       "entry_point": "Entry Point"
     },
     "addNodeModal": {

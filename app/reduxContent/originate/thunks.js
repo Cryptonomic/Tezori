@@ -38,9 +38,10 @@ export function originateContract(
   publicKeyHash,
   storageLimit = 0,
   gasLimit = 0,
-  code = [],
-  storage = {},
-  codeFormat
+  code,
+  storage,
+  codeFormat,
+  isSmartContract = false
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -51,10 +52,6 @@ export function originateContract(
       .toJS();
     const parsedAmount = Number(amount.replace(/,/g, '.'));
     const amountInUtez = tezToUtez(parsedAmount);
-    let isSmartContract = true;
-    if (code.length === 0) {
-      isSmartContract = false;
-    }
     let validations = [];
 
     if (isLedger) {
@@ -190,7 +187,7 @@ export function originateContract(
             account_id: newAddressHash,
             balance: amountInUtez,
             manager: publicKeyHash,
-            delegate_value: '',
+            delegate: '',
             operations: {
               [CREATED]: operationId
             },
