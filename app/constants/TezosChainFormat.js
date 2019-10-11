@@ -1,1 +1,1 @@
-export default ['michelson', 'micheline', 'michelsonlambda'];
+export default ['michelson', 'micheline'];
