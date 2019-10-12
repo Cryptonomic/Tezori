@@ -217,6 +217,7 @@
     "@material-ui/icons": "^2.0.2",
     "aws-sdk": "^2.327.0",
     "bignumber.js": "^7.2.1",
+    "blakejs": "^1.1.0",
     "classnames": "^2.2.6",
     "devtron": "^1.4.0",
     "downshift": "^2.2.3",

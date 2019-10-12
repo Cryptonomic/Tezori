@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { isEmpty } from 'lodash';
 import { Trans } from 'react-i18next';
+import * as blakejs from 'blakejs';
 
 import Button from '../Button/';
 import BalanceBanner from '../BalanceBanner/';
@@ -241,14 +242,30 @@ class ActionPanel extends Component<Props, State> {
     }
   };
 
-  getTabList = (isManager, isContract) => {
-    if (isManager) {
+  getTabList = (address, script) => {
+    if (
+      address.startsWith('tz1') ||
+      address.startsWith('tz2') ||
+      address.startsWith('tz3')
+    ) {
       return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     }
-    if (isContract) {
+
+    if (
+      script !== undefined &&
+      script.length > 0 &&
+      address.startsWith('KT1')
+    ) {
+      const k = Buffer.from(
+        blakejs.blake2s(script.toString(), null, 16)
+      ).toString('hex');
+
+      if (k === '023fc21b332d338212185c817801f288') {
+        return [TRANSACTIONS, INVOKE]; // TODO
+      }
+
       return [TRANSACTIONS, INVOKE, CODE, STORAGE];
     }
-    return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
   };
 
   getRegularAddresses = identity => {
@@ -294,7 +311,10 @@ class ActionPanel extends Component<Props, State> {
     const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
     const isContractAddress = !!selectedAccount.get('script');
-    const tabs = this.getTabList(isManagerAddress, isContractAddress);
+    const tabs = this.getTabList(
+      selectedAccountHash,
+      selectedAccount.get('script')
+    );
     const regularAddresses = this.getRegularAddresses(parentIdentity);
     return (
       <Container>
