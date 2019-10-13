@@ -1,7 +1,7 @@
 {
   "name": "Tezori",
   "productName": "Tezori",
-  "version": "0.8.5b",
+  "version": "0.9.0b",
   "description": "A community wallet for Tezos",
   "scripts": {
     "build": "npm run check-wallet-state &&  concurrently \"yarn build-main\" \"yarn build-renderer\"",
