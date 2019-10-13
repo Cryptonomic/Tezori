@@ -293,54 +293,6 @@ class Invoke extends Component<Props> {
 
     return (
       <Container onKeyDown={event => this.onEnterPress(event.key, isDisabled)}>
-        <InvokeTitle>{t('general.verbs.invoke')}</InvokeTitle>
-        <InvokeAddressContainer>
-          <CustomSelect
-            label={t('components.interactModal.invoke_from')}
-            value={selectedInvokeAddress}
-            onChange={this.onChangeInvokeAddress}
-            renderValue={value => {
-              const address = addresses.find(address => address.pkh === value);
-              return (
-                <SelectRenderWrapper>
-                  <TezosAddress
-                    address={address.pkh}
-                    size="16px"
-                    color="gray3"
-                    color2="primary"
-                  />
-                  <SpaceBar />
-                  <TezosAmount
-                    color="primary"
-                    size={ms(0.65)}
-                    amount={address.balance}
-                  />
-                </SelectRenderWrapper>
-              );
-            }}
-          >
-            {addresses.map(address => (
-              <ItemWrapper
-                component="div"
-                key={address.pkh}
-                value={address.pkh}
-              >
-                <TezosAddress
-                  address={address.pkh}
-                  size="16px"
-                  color="gray3"
-                  color2="primary"
-                />
-                <SpaceBar />
-                <TezosAmount
-                  color="primary"
-                  size={ms(0.65)}
-                  amount={address.balance}
-                />
-              </ItemWrapper>
-            ))}
-          </CustomSelect>
-        </InvokeAddressContainer>
         <ParametersContainer>
           <TextField
             label={t('components.interactModal.parameters')}
