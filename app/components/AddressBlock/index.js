@@ -136,7 +136,6 @@ type Props = {
   accountBlock: object, // TODO: type this
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
-  accountIndex: number,
   theme: object,
   t: () => {}
 };
@@ -242,7 +241,6 @@ class AddressBlock extends Component<Props, State> {
     const {
       accountBlock,
       selectedAccountHash,
-      accountIndex,
       delegateTooltip,
       theme,
       t
@@ -261,8 +259,11 @@ class AddressBlock extends Component<Props, State> {
     } = this.getAddresses(addresses);
     regularAddresses = regularAddresses.concat(newAddresses);
 
-    const isDelegateToolTip =
-      delegateTooltip && delegatedAddresses.length && smartAddresses.length;
+    const isDelegateToolTip = !!(
+      delegateTooltip &&
+      delegatedAddresses.length &&
+      smartAddresses.length
+    );
 
     const isManagerReady = accountBlock.get('status') === READY;
     const noSmartAddressesDescriptionContent = [
