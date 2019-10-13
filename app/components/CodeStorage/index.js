@@ -11,30 +11,21 @@ const MainContainer = styled.div`
   margin-top: 30px;
 `;
 
-const MainTitle = styled.div`
-  font-size: 24px;
-  line-height: 34px;
-  letter-spacing: 1px;
-  font-weight: 300;
-  color: ${({ theme: { colors } }) => colors.primary};
-`;
-
 const CodeTxt = styled.div`
   font-size: 16px;
   color: ${({ theme: { colors } }) => colors.primary};
   word-wrap: break-word;
+  white-space: pre;
 `;
 
 type Props = {
-  label: string,
   code: string
 };
 
 const CodeStorage = (props: Props) => {
-  const { label, code } = props;
+  const { code } = props;
   return (
     <Container>
-      <MainTitle>{label}</MainTitle>
       <MainContainer>
         <CodeTxt>{code}</CodeTxt>
       </MainContainer>

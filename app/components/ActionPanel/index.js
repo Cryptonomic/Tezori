@@ -168,11 +168,9 @@ class ActionPanel extends Component<Props, State> {
           />
         );
       case CODE:
-        return <CodeStorage label={t('general.nouns.code')} code={script} />;
+        return <CodeStorage code={script.replace(/\\n/g, '\n')} />;
       case STORAGE:
-        return (
-          <CodeStorage label={t('general.nouns.storage')} code={storage} />
-        );
+        return <CodeStorage code={storage} />;
       case INVOKE:
         return (
           <Invoke
@@ -185,14 +183,14 @@ class ActionPanel extends Component<Props, State> {
         );
       case INVOKE_MANAGER:
         return (
-            <InvokeManager
+          <InvokeManager
             balance={balance}
             isReady={ready}
             addresses={regularAddresses}
             selectedParentHash={selectedParentHash}
             selectedAccountHash={selectedAccountHash}
             onSuccess={() => this.handleLinkPress(TRANSACTIONS)}
-            />
+          />
         );
       case TRANSACTIONS:
       default: {
@@ -206,7 +204,9 @@ class ActionPanel extends Component<Props, State> {
           );
         }
 
-        const JSTransactions = transactions.sort(sortArr({ sortOrder: 'desc', sortBy: 'timestamp' })).toJS();
+        const JSTransactions = transactions
+          .sort(sortArr({ sortOrder: 'desc', sortBy: 'timestamp' }))
+          .toJS();
         const itemsCount = 5;
         const pageCount = Math.ceil(JSTransactions.length / itemsCount);
 
@@ -215,7 +215,10 @@ class ActionPanel extends Component<Props, State> {
         if (lastNumber > JSTransactions.length) {
           lastNumber = JSTransactions.length;
         }
-        const showedTransactions = JSTransactions.slice( firstNumber, lastNumber );
+        const showedTransactions = JSTransactions.slice(
+          firstNumber,
+          lastNumber
+        );
         return isEmpty(JSTransactions) ? (
           <EmptyState
             imageSrc={transactionsEmptyState}
@@ -264,7 +267,9 @@ class ActionPanel extends Component<Props, State> {
       script.length > 0 &&
       address.startsWith('KT1')
     ) {
-      const k = Buffer.from(blakejs.blake2s(script.toString(), null, 16)).toString('hex');
+      const k = Buffer.from(
+        blakejs.blake2s(script.toString(), null, 16)
+      ).toString('hex');
 
       if (k === '023fc21b332d338212185c817801f288') {
         return [TRANSACTIONS, INVOKE_MANAGER];
