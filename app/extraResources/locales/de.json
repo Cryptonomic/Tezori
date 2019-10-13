@@ -17,7 +17,10 @@
       "invoke": "Aufrufen",
       "deploy": "Bereitstellen",
       "cancel": "Abbrechen",
-      "proceed": "Fortfahren"
+      "proceed": "Fortfahren",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "Betrag",
@@ -35,7 +38,7 @@
       "details": "Details",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Summe Total",
+      "total_balance": "Summe Total",
       "language": "Sprache",
       "transactions": "Transaktionen",
       "source": "Quelle",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "Es ist ziemlich leer hier. Los gehts<1> Sende</1> und<3> Empfange</3> Tez von dieser Adresse.",
-      "empty-title": "Sie haben noch keine Transaktionen"
+      "empty-title": "Sie haben noch keine Transaktionen",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "{{gas}} tz wird vom Netzwerk benötigt, um eine delegierte Adresse zu erstellen",
@@ -92,7 +96,7 @@
       "invoke_contract": "Rufe einen existierenden Contract auf",
       "deploy_contract": "Stelle einen neuen Contract bereit",
       "title": "Interagiere mit Smart Contracts",
-      "smart_address": "Smart Contract Adresse",
+      "smart_address": "Contract Adresse",
       "invoke_from": "Aufrufen von",
       "deploy_from": "Bereitstellen von",
       "storage_limit": "Storage Limit",

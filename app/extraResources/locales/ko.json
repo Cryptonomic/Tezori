@@ -17,7 +17,10 @@
       "invoke": "호출",
       "deploy": "배치",
       "cancel": "취소",
-      "proceed": "처리"
+      "proceed": "처리",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "금액",
@@ -35,7 +38,7 @@
       "details": "세부정보",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "총 잔액",
+      "total_balance": "총 잔액",
       "language": "언어",
       "transactions": "트랜잭션",
       "source": "소스",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "여기는 꽤 비어 있습니다. 이 주소에서 tez를 <1>전송</1> 및 <3>수신하기</3> 시작하세요.",
-      "empty-title": "아직 트랜잭션을 하지 않았습니다"
+      "empty-title": "아직 트랜잭션을 하지 않았습니다",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "위임용 주소를 만들려면 네트워크에서 {{gas}} tz가 필요합니다.",

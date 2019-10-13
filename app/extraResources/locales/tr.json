@@ -17,7 +17,10 @@
       "invoke": "Çalıştır",
       "deploy": "Oluştur",
       "cancel": "Vazgeç",
-      "proceed": "Devam Et"
+      "proceed": "Devam Et",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "Miktar",
@@ -35,7 +38,7 @@
       "details": "Detaylar",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Toplam Bakiye",
+      "total_balance": "Toplam Bakiye",
       "language": "Dil",
       "transactions": "İşlemler",
       "source": "Kaynak",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "Burası çok boş. Bu adresten tez <1> göndermeye</1> ve<3> almaya</3> başlayın.",
-      "empty-title": "Henüz bir işlem gerçekleştirmediniz."
+      "empty-title": "Henüz bir işlem gerçekleştirmediniz.",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "Delege adres oluşturmak için Tezos ağının {{gas}} tz gaz yakması gerekiyor.",

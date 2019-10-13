@@ -17,7 +17,10 @@
       "invoke": "调用",
       "deploy": "部署",
       "cancel": "取消",
-      "proceed": "继续"
+      "proceed": "继续",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "数额",
@@ -35,7 +38,7 @@
       "details": "细节",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "总余额",
+      "total_balance": "总余额",
       "language": "语言",
       "transactions": "交易",
       "source": "源头",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "这里空空如也。开始<1>发送</1>和<3>接收</3>tez到这个地址。",
-      "empty-title": "你还没有做任何一笔交易"
+      "empty-title": "你还没有做任何一笔交易",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "网络需要{{gas}} tz来创建一个被委托的地址",

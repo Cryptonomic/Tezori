@@ -17,7 +17,10 @@
       "invoke": "呼び出す",
       "deploy": "展開する",
       "cancel": "キャンセル",
-      "proceed": "続行"
+      "proceed": "続行",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "金額",
@@ -35,7 +38,7 @@
       "details": "詳細",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "合計残高",
+      "total_balance": "合計残高",
       "language": "言語",
       "transactions": "取引",
       "source": "ソース",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "ここはかなり空です。このアドレスからtezの<1>送金</1>と<3>受け取り</3>を始めます。",
-      "empty-title": "まだ取引をしていません"
+      "empty-title": "まだ取引をしていません",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "デリゲートされたアドレスを作成するために、{{gas}} tzにはネットワークが必要です。",

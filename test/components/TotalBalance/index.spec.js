@@ -31,6 +31,6 @@ function setup(props) {
 describe('<TotalBalance />', () => {
   it('renders TotalBalance', () => {
     const wrapper = setup();
-    expect(wrapper.find('Text').text()).toEqual('general.nouns.total_balence');
+    expect(wrapper.find('Text').text()).toEqual('general.nouns.total_balance');
   });
 });

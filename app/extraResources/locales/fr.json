@@ -17,7 +17,10 @@
       "invoke": "Invoquer",
       "deploy": "Deployer",
       "cancel": "Annuller",
-      "proceed": "Continuer"
+      "proceed": "Continuer",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "Montant",
@@ -35,7 +38,7 @@
       "details": "Détails",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Balance Totale",
+      "total_balance": "Balance Totale",
       "language": "Langue",
       "transactions": "Transactions",
       "source": "Source",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "C`est assez vide ici. Commencez par <1> envoyer et <3> recevoir tez de cette adresse",
-      "empty-title": "Vous n`avez pas encore fait de transactions"
+      "empty-title": "Vous n`avez pas encore fait de transactions",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "{{gas}} tz sont requis par le réseau afin de créer une adresse de délégation",
