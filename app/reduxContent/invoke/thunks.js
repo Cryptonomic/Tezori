@@ -253,11 +253,6 @@ export function withdrawThunk(
         }
       }
 
-      const accountIndex = findAccountIndex(identity, selectedAccountHash);
-      if (accountIndex > -1) {
-        identity.accounts[accountIndex].transactions.push(transaction);
-      }
-
       dispatch(updateIdentity(identity));
 
       await persistWalletState(state().wallet.toJS());
@@ -367,11 +362,6 @@ export function depositThunk(
         if (accountIndex > -1) {
           identity.accounts[accountIndex].transactions.push(transaction);
         }
-      }
-
-      const accountIndex = findAccountIndex(identity, selectedAccountHash);
-      if (accountIndex > -1) {
-        identity.accounts[accountIndex].transactions.push(transaction);
       }
 
       dispatch(updateIdentity(identity));
