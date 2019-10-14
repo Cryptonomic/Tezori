@@ -4,16 +4,14 @@ import TextField from '../TextField';
 import CustomTextArea from './CustomTextArea';
 import TezosNumericInput from '../TezosNumericInput/';
 import { ms } from '../../styles/helpers';
-import CustomSelect from '../CustomSelect';
 import Fees from '../Fees';
 import PasswordInput from '../PasswordInput';
 import TezosAmount from '../TezosAmount';
 import TezosAddress from '../TezosAddress';
-import TezosIcon from '../TezosIcon';
 import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
+import FormatSelector from '../FormatSelector';
 
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
-import TezosChainFormatArrary from '../../constants/TezosChainFormat';
 
 import { openLinkToBlockExplorer } from '../../utils/general';
 
@@ -35,10 +33,7 @@ import {
   UseMax,
   StorageFormatContainer,
   ColFormat,
-  ColStorage,
-  ChainItemWrapper,
-  SelectChainItemWrapper,
-  SelectChainRenderWrapper
+  ColStorage
 } from './style';
 
 const utez = 1000000;
@@ -93,9 +88,6 @@ class DeployContract extends Component<Props> {
   };
 
   openLink = element => openLinkToBlockExplorer(element);
-
-  onChangeFormatType = event =>
-    this.setState({ codeFormat: event.target.value });
 
   onDeployOperation = async () => {
     const {
@@ -204,27 +196,10 @@ class DeployContract extends Component<Props> {
               />
             </ColStorage>
             <ColFormat>
-              <CustomSelect
-                label={t('general.nouns.format')}
+              <FormatSelector
                 value={codeFormat}
-                onChange={this.onChangeFormatType}
-                renderValue={value => (
-                  <SelectChainRenderWrapper>{value}</SelectChainRenderWrapper>
-                )}
-              >
-                {TezosChainFormatArrary.map(format => (
-                  <ChainItemWrapper component="div" key={format} value={format}>
-                    {format === codeFormat && (
-                      <TezosIcon
-                        size="14px"
-                        color="accent"
-                        iconName="checkmark2"
-                      />
-                    )}
-                    <SelectChainItemWrapper>{format}</SelectChainItemWrapper>
-                  </ChainItemWrapper>
-                ))}
-              </CustomSelect>
+                onChange={val => this.setState({ codeFormat: val })}
+              />
             </ColFormat>
           </StorageFormatContainer>
           <ParametersContainer>

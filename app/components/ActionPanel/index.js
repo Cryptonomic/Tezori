@@ -186,7 +186,6 @@ class ActionPanel extends Component<Props, State> {
           <InvokeManager
             balance={balance}
             isReady={ready}
-            addresses={regularAddresses}
             selectedParentHash={selectedParentHash}
             selectedAccountHash={selectedAccountHash}
             onSuccess={() => this.handleLinkPress(TRANSACTIONS)}

@@ -77,23 +77,6 @@ export const ItemWrapper = styled(MenuItem)`
   }
 `;
 
-export const ChainItemWrapper = styled(MenuItem)`
-  &&& {
-    &[class*='selected'] {
-      color: ${({ theme: { colors } }) => colors.accent};
-    }
-    color: ${({ theme: { colors } }) => colors.primary};
-    width: 100%;
-    font-size: 14px;
-    font-weight: 400;
-    box-sizing: border-box;
-    height: 54px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-`;
-
 export const SpaceBar = styled.div`
   height: 16px;
   width: 2px;
@@ -212,16 +195,4 @@ export const SelectRenderWrapper = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-`;
-
-export const SelectChainRenderWrapper = styled.div`
-  color: ${({ theme: { colors } }) => colors.primary};
-  font-size: 16px;
-  font-weight: 500;
-  text-transform: capitalize;
-`;
-
-export const SelectChainItemWrapper = styled.div`
-  margin-left: auto;
-  text-transform: capitalize;
 `;

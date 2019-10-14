@@ -27,7 +27,7 @@ const CodeStorage = (props: Props) => {
   return (
     <Container>
       <MainContainer>
-        <CodeTxt>{code}</CodeTxt>
+        <CodeTxt dangerouslySetInnerHTML={{ __html: code }} />
       </MainContainer>
     </Container>
   );

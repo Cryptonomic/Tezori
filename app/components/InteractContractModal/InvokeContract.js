@@ -6,14 +6,10 @@ import { ms } from '../../styles/helpers';
 import Fees from '../Fees';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
-import CustomSelect from '../CustomSelect';
-import TezosAmount from '../TezosAmount';
-import TezosAddress from '../TezosAddress';
-import TezosIcon from '../TezosIcon';
 import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
-import { OPERATIONFEE } from '../../constants/LowFeeValue';
-import TezosChainFormatArrary from '../../constants/TezosChainFormat';
+import FormatSelector from '../FormatSelector';
 
+import { OPERATIONFEE } from '../../constants/LowFeeValue';
 import { openLinkToBlockExplorer } from '../../utils/general';
 
 import {
@@ -21,7 +17,6 @@ import {
   TabContainer,
   InputAddressContainer,
   ParametersContainer,
-  SpaceBar,
   RowContainer,
   ColContainer,
   AmountContainer,
@@ -31,15 +26,9 @@ import {
   UseMax,
   ViewScan,
   LinkIcon,
-  InvokeAddressContainer,
-  ItemWrapper,
-  SelectRenderWrapper,
   StorageFormatContainer,
   ColFormat,
-  ColStorage,
-  ChainItemWrapper,
-  SelectChainItemWrapper,
-  SelectChainRenderWrapper
+  ColStorage
 } from './style';
 
 const utez = 1000000;
@@ -104,9 +93,6 @@ class InvokeContract extends Component<Props> {
   };
 
   openLink = element => openLinkToBlockExplorer(element);
-
-  onChangeFormatType = event =>
-    this.setState({ codeFormat: event.target.value });
 
   onInvokeOperation = async () => {
     const {
@@ -186,7 +172,7 @@ class InvokeContract extends Component<Props> {
       storage,
       codeFormat
     } = this.state;
-    const { isLoading, isLedger, addresses, averageFees, t } = this.props;
+    const { isLoading, isLedger, averageFees, t } = this.props;
     const isDisabled =
       isAddressIssue ||
       isLoading ||
@@ -226,27 +212,10 @@ class InvokeContract extends Component<Props> {
               />
             </ColStorage>
             <ColFormat>
-              <CustomSelect
-                label={t('general.nouns.format')}
+              <FormatSelector
                 value={codeFormat}
-                onChange={this.onChangeFormatType}
-                renderValue={value => (
-                  <SelectChainRenderWrapper>{value}</SelectChainRenderWrapper>
-                )}
-              >
-                {TezosChainFormatArrary.map(format => (
-                  <ChainItemWrapper component="div" key={format} value={format}>
-                    {format === codeFormat && (
-                      <TezosIcon
-                        size="14px"
-                        color="accent"
-                        iconName="checkmark2"
-                      />
-                    )}
-                    <SelectChainItemWrapper>{format}</SelectChainItemWrapper>
-                  </ChainItemWrapper>
-                ))}
-              </CustomSelect>
+                onChange={val => this.setState({ codeFormat: val })}
+              />
             </ColFormat>
           </StorageFormatContainer>
           <ParametersContainer>

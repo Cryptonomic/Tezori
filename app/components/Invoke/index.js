@@ -6,16 +6,13 @@ import styled from 'styled-components';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import Button from '../Button/';
-import { ms } from '../../styles/helpers';
 import { wrapComponent } from '../../utils/i18n';
 import TezosNumericInput from '../TezosNumericInput';
-import TezosAmount from '../TezosAmount/';
 import TextField from '../TextField';
-import CustomSelect from '../CustomSelect';
 import Fees from '../Fees';
-import TezosAddress from '../TezosAddress';
 import PasswordInput from '../PasswordInput';
 import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
+import FormatSelector from '../FormatSelector';
 
 import fetchAverageFees from '../../reduxContent/generalThunk';
 import { invokeAddress } from '../../reduxContent/invoke/thunks';
@@ -33,14 +30,6 @@ const Container = styled.div`
   position: relative;
 `;
 
-const InvokeTitle = styled.div`
-  font-size: 24px;
-  line-height: 34px;
-  letter-spacing: 1px;
-  font-weight: 300;
-  color: ${({ theme: { colors } }) => colors.primary};
-`;
-
 export const InvokeAddressContainer = styled.div`
   width: 100%;
   display: flex;
@@ -49,8 +38,20 @@ export const InvokeAddressContainer = styled.div`
 `;
 
 export const ParametersContainer = styled.div`
-  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   height: 64px;
+  width: 100%;
+`;
+
+export const ColStorage = styled.div`
+  flex: 1;
+`;
+
+export const ColFormat = styled.div`
+  min-width: 19%;
+  margin-left: 80px;
 `;
 
 export const ItemWrapper = styled(MenuItem)`
@@ -121,14 +122,6 @@ export const InvokeButton = styled(Button)`
   padding: 0;
 `;
 
-const SelectRenderWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`;
-
 const utez = 1000000;
 
 type Props = {
@@ -159,7 +152,8 @@ const initialState = {
   parameters: '',
   passPhrase: '',
   isShowedPwd: false,
-  isOpenLedgerConfirm: false
+  isOpenLedgerConfirm: false,
+  codeFormat: ''
 };
 
 class Invoke extends Component<Props> {
@@ -235,7 +229,8 @@ class Invoke extends Component<Props> {
       gas,
       parameters,
       selectedInvokeAddress,
-      passPhrase
+      passPhrase,
+      codeFormat
     } = this.state;
 
     setIsLoading(true);
@@ -244,17 +239,18 @@ class Invoke extends Component<Props> {
       this.onLedgerConfirmation(true);
     }
 
-    const userParams = parameters ? JSON.parse(parameters) : null;
     const operationResult = await invokeAddress(
       selectedAccountHash,
       fee,
       amount,
       storage,
       gas,
-      userParams,
+      parameters,
       passPhrase,
       selectedInvokeAddress,
-      selectedParentHash
+      selectedParentHash,
+      '',
+      codeFormat
     ).catch(err => {
       console.error(err);
       return false;
@@ -277,27 +273,29 @@ class Invoke extends Component<Props> {
       averageFees,
       passPhrase,
       isShowedPwd,
-      storage
+      storage,
+      codeFormat
     } = this.state;
 
-    const {
-      isReady,
-      isLoading,
-      isLedger,
-      addresses,
-      selectedAccountHash,
-      t
-    } = this.props;
+    const { isReady, isLoading, isLedger, selectedAccountHash, t } = this.props;
     const isDisabled =
       !isReady || isLoading || !amount || (!passPhrase && !isLedger);
 
     return (
       <Container onKeyDown={event => this.onEnterPress(event.key, isDisabled)}>
         <ParametersContainer>
-          <TextField
-            label={t('components.interactModal.parameters')}
-            onChange={val => this.setState({ parameters: val })}
-          />
+          <ColStorage>
+            <TextField
+              label={t('components.interactModal.parameters')}
+              onChange={val => this.setState({ parameters: val })}
+            />
+          </ColStorage>
+          <ColFormat>
+            <FormatSelector
+              value={codeFormat}
+              onChange={val => this.setState({ codeFormat: val })}
+            />
+          </ColFormat>
         </ParametersContainer>
         <RowContainer>
           <ColContainer>

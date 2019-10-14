@@ -5,7 +5,7 @@
     {
       "name": "Cryptonomic-Nautilus",
       "type": "TEZOS",
-      "url": "https://tezos-zeronet.cryptonomic-infra.tech/",
+      "url": "https://tezos-zeronet.cryptonomic-infra.tech:443",
       "apiKey": ""
     },
     {

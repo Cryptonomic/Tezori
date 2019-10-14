@@ -3,26 +3,33 @@ import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import Button from '../Button/';
-import { ms } from '../../styles/helpers';
 import { wrapComponent } from '../../utils/i18n';
 import TezosNumericInput from '../TezosNumericInput';
-import TezosAmount from '../TezosAmount/';
 import TextField from '../TextField';
-import CustomSelect from '../CustomSelect';
 import Fees from '../Fees';
-import TezosAddress from '../TezosAddress';
 import PasswordInput from '../PasswordInput';
-import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
+import DelegateLedgerConfirmationModal from '../DelegateLedgerConfirmationModal';
+import WithdrawLedgerConfirmationModal from '../WithdrawLedgerConfirmationModal';
 
 import fetchAverageFees from '../../reduxContent/generalThunk';
-import { invokeAddress } from '../../reduxContent/invoke/thunks';
+import { withdrawThunk } from '../../reduxContent/invoke/thunks';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
+import { delegate } from '../../reduxContent/delegate/thunks';
 
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
+
+const InvokeType = {
+  DELEGATE: 'delegate',
+  WITHDRAW: 'withdraw',
+  DEPOSIT: 'deposit'
+};
 
 const Container = styled.div`
   display: flex;
@@ -31,14 +38,6 @@ const Container = styled.div`
   width: 100%;
   padding: 0 20px 20px 20px;
   position: relative;
-`;
-
-const InvokeTitle = styled.div`
-  font-size: 24px;
-  line-height: 34px;
-  letter-spacing: 1px;
-  font-weight: 300;
-  color: ${({ theme: { colors } }) => colors.primary};
 `;
 
 export const InvokeAddressContainer = styled.div`
@@ -121,12 +120,23 @@ export const InvokeButton = styled(Button)`
   padding: 0;
 `;
 
-const SelectRenderWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+export const RadioLabel = styled(FormControlLabel)`
+  &&& {
+    span[class*='MuiFormControlLabel-label'] {
+      font-size: 20px;
+      color: ${({ theme: { colors } }) => colors.primary};
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+  }
+`;
+
+export const RadioWrapper = styled(Radio)`
+  &&& {
+    &[class*='checked'] {
+      color: ${({ theme: { colors } }) => colors.accent};
+    }
+  }
 `;
 
 const utez = 1000000;
@@ -135,12 +145,13 @@ type Props = {
   isReady?: boolean,
   isLedger: boolean,
   isLoading: boolean,
-  addresses: List,
+  balance: number,
   selectedParentHash: string,
   selectedAccountHash: string,
   onSuccess: () => {},
   fetchAverageFees: () => {},
-  invokeAddress: () => {},
+  delegate?: () => {},
+  withdrawThunk?: () => {},
   setIsLoading: () => {},
   t: () => {}
 };
@@ -148,24 +159,17 @@ type Props = {
 const initialState = {
   fee: 50000,
   averageFees: { low: 1420, medium: 2840, high: 5680 },
-  selectedInvokeAddress: '',
-  gas: 0,
-  storage: 0,
+  delegateAddress: '',
   amount: '',
-  parameters: '',
   passPhrase: '',
   isShowedPwd: false,
-  isOpenLedgerConfirm: false
+  isOpenLedgerConfirm: false,
+  invokeFormat: 'delegate'
 };
 
 class InvokeManager extends Component<Props> {
   props: Props;
   state = initialState;
-  state = {
-    ...initialState,
-    selectedInvokeAddress: this.props.addresses[0].pkh,
-    balance: this.props.addresses[0].balance
-  };
 
   async componentWillMount() {
     this.mounted = true;
@@ -185,19 +189,8 @@ class InvokeManager extends Component<Props> {
     this.mounted = false;
   }
 
-  onUseMax = () => {
-    const { fee, gas, balance, storage } = this.state;
-    const max = balance - fee - gas - storage;
-    let amount = '0';
-    if (max > 0) {
-      amount = (max / utez).toFixed(6);
-    }
-    this.setState({ amount });
-  };
-
   onMaxWithdraw = () => {
     const { balance } = this.props;
-    console.log(`BALANCE: ${balance}`)
     let amount = '0';
     if (balance > 0) {
       amount = (balance / utez).toFixed(6);
@@ -205,18 +198,7 @@ class InvokeManager extends Component<Props> {
     this.setState({ amount });
   };
 
-  onChangeInvokeAddress = event => {
-    const { addresses } = this.props;
-    const pkh = event.target.value;
-    const address = addresses.find(address => address.pkh === pkh);
-    this.setState({ selectedInvokeAddress: pkh, balance: address.balance });
-  };
-
   updatePassPhrase = passPhrase => this.setState({ passPhrase });
-
-  onLedgerConfirmation = val => {
-    this.setState({ isOpenLedgerConfirm: val });
-  };
 
   onEnterPress = (keyVal, isDisabled) => {
     if (keyVal === 'Enter' && !isDisabled) {
@@ -224,12 +206,77 @@ class InvokeManager extends Component<Props> {
     }
   };
 
+  handleChangeFormat = event => {
+    this.setState({ invokeFormat: event.target.value });
+  };
+
+  renderContent = format => {
+    const { t } = this.props;
+    const { amount } = this.state;
+    if (format === InvokeType.DELEGATE) {
+      return (
+        <ParametersContainer>
+          <TextField
+            label={t('general.nouns.delegate')}
+            onChange={val => this.setState({ delegateAddress: val })}
+          />
+        </ParametersContainer>
+      );
+    }
+
+    return (
+      <AmountContainer>
+        <TezosNumericInput
+          decimalSeparator={t('general.decimal_separator')}
+          labelText={t('general.nouns.amount')}
+          amount={amount}
+          handleAmountChange={val => this.setState({ amount: val })}
+        />
+        <UseMax onClick={this.onMaxWithdraw}>
+          {t('general.verbs.use_max')}
+        </UseMax>
+      </AmountContainer>
+    );
+  };
+
+  renderConfirmationModal = format => {
+    const { isLoading, selectedAccountHash } = this.props;
+    const { fee, delegateAddress, isOpenLedgerConfirm, amount } = this.state;
+    if (format === InvokeType.DELEGATE) {
+      return (
+        <DelegateLedgerConfirmationModal
+          fee={fee}
+          address={delegateAddress}
+          source={selectedAccountHash}
+          open={isOpenLedgerConfirm}
+          onCloseClick={() => this.onOpenLedgerConfirmation(false)}
+          isLoading={isLoading}
+        />
+      );
+    }
+    return (
+      <WithdrawLedgerConfirmationModal
+        amount={amount}
+        fee={fee}
+        source={selectedAccountHash}
+        open={isOpenLedgerConfirm}
+        onCloseClick={() => this.closeLedgerConfirmation(false)}
+        isLoading={isLoading}
+      />
+    );
+  };
+
+  onLedgerConfirmation = val => {
+    this.setState({ isOpenLedgerConfirm: val });
+  };
+
   onInvokeOperation = async () => {
     const {
       isLedger,
       selectedParentHash,
       selectedAccountHash,
-      invokeAddress,
+      delegate,
+      withdrawThunk,
       setIsLoading,
       onSuccess
     } = this.props;
@@ -237,11 +284,9 @@ class InvokeManager extends Component<Props> {
     const {
       amount,
       fee,
-      storage,
-      gas,
-      parameters,
-      selectedInvokeAddress,
-      passPhrase
+      passPhrase,
+      invokeFormat,
+      delegateAddress
     } = this.state;
 
     setIsLoading(true);
@@ -250,21 +295,32 @@ class InvokeManager extends Component<Props> {
       this.onLedgerConfirmation(true);
     }
 
-    const userParams = parameters ? JSON.parse(parameters) : null;
-    const operationResult = await invokeAddress(
-      selectedAccountHash,
-      fee,
-      amount,
-      storage,
-      gas,
-      userParams,
-      passPhrase,
-      selectedInvokeAddress,
-      selectedParentHash
-    ).catch(err => {
-      console.error(err);
-      return false;
-    });
+    let operationResult;
+    if (invokeFormat === InvokeType.DELEGATE) {
+      operationResult = await delegate(
+        delegateAddress,
+        fee,
+        passPhrase,
+        selectedAccountHash,
+        selectedParentHash
+      ).catch(err => {
+        console.error(err);
+        return false;
+      });
+    } else {
+      operationResult = await withdrawThunk(
+        fee,
+        amount,
+        passPhrase,
+        selectedAccountHash,
+        selectedParentHash,
+        invokeFormat === InvokeType.WITHDRAW
+      ).catch(err => {
+        console.error(err);
+        return false;
+      });
+    }
+
     this.onLedgerConfirmation(false);
     setIsLoading(false);
 
@@ -274,49 +330,53 @@ class InvokeManager extends Component<Props> {
   };
 
   render() {
-    const { amount, selectedInvokeAddress, fee, isOpenLedgerConfirm, parameters, averageFees, passPhrase, isShowedPwd, storage } = this.state;
-    const { isReady, isLoading, isLedger, addresses, selectedAccountHash, t } = this.props;
-    const isDisabled = !isReady || isLoading || !amount || (!passPhrase && !isLedger);
+    const {
+      amount,
+      fee,
+      averageFees,
+      passPhrase,
+      isShowedPwd,
+      invokeFormat,
+      delegateAddress,
+      isOpenLedgerConfirm
+    } = this.state;
+    const { isReady, isLoading, isLedger, t } = this.props;
+    const isDisabled =
+      !isReady ||
+      isLoading ||
+      (!delegateAddress && invokeFormat === InvokeType.DELEGATE) ||
+      (!amount && invokeFormat !== InvokeType.DELEGATE) ||
+      (!passPhrase && !isLedger);
 
     return (
       <Container onKeyDown={event => this.onEnterPress(event.key, isDisabled)}>
-        <InvokeTitle>{t('general.verbs.delegate')}</InvokeTitle>
-        <RowContainer>
-          <ParametersContainer>
-            <TextField label={t('general.nouns.delegate')} onChange={val => this.setState({ parameters: val })} />
-          </ParametersContainer>
-        </RowContainer>
-
-        <InvokeTitle>{t('general.verbs.withdraw')}</InvokeTitle>
-        <RowContainer>
-          <AmountContainer>
-            <TezosNumericInput
-              decimalSeparator={t('general.decimal_separator')}
-              labelText={t('general.nouns.amount')}
-              amount={amount}
-              handleAmountChange={val => this.setState({ amount: val })}
-            />
-            <UseMax onClick={this.onMaxWithdraw}>
-              {t('general.verbs.use_max')}
-            </UseMax>
-          </AmountContainer>
-        </RowContainer>
-
-        <InvokeTitle>{t('general.verbs.deposit')}</InvokeTitle>
-        <RowContainer>
-          <AmountContainer>
-            <TezosNumericInput
-              decimalSeparator={t('general.decimal_separator')}
-              labelText={t('general.nouns.amount')}
-              amount={amount}
-              handleAmountChange={val => this.setState({ amount: val })}
-            />
-            <UseMax onClick={this.onUseMax}>
-              {t('general.verbs.use_max')}
-            </UseMax>
-          </AmountContainer>
-        </RowContainer>
-
+        <RadioGroup
+          aria-label="position"
+          name="position"
+          value={invokeFormat}
+          onChange={this.handleChangeFormat}
+          row
+        >
+          <RadioLabel
+            value={InvokeType.DELEGATE}
+            control={<RadioWrapper />}
+            label={t('general.verbs.delegate')}
+            labelPlacement="end"
+          />
+          <RadioLabel
+            value={InvokeType.WITHDRAW}
+            control={<RadioWrapper />}
+            label={t('general.verbs.withdraw')}
+            labelPlacement="end"
+          />
+          <RadioLabel
+            value={InvokeType.DEPOSIT}
+            control={<RadioWrapper />}
+            label={t('general.verbs.deposit')}
+            labelPlacement="end"
+          />
+        </RadioGroup>
+        {this.renderContent(invokeFormat)}
         <RowContainer>
           <FeeContainer>
             <Fees
@@ -349,20 +409,9 @@ class InvokeManager extends Component<Props> {
             {t('general.verbs.invoke')}
           </InvokeButton>
         </PasswordButtonContainer>
-
-        {isLedger && isOpenLedgerConfirm && (
-          <InvokeLedgerConfirmationModal
-            amount={amount}
-            fee={fee}
-            parameters={parameters}
-            storage={storage}
-            address={selectedAccountHash}
-            source={selectedInvokeAddress}
-            open={isOpenLedgerConfirm}
-            onCloseClick={() => this.closeLedgerConfirmation(false)}
-            isLoading={isLoading}
-          />
-        )}
+        {isLedger &&
+          isOpenLedgerConfirm &&
+          this.renderConfirmationModal(invokeFormat)}
       </Container>
     );
   }
@@ -379,7 +428,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchAverageFees,
-      invokeAddress,
+      delegate,
+      withdrawThunk,
       setIsLoading
     },
     dispatch
