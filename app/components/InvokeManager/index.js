@@ -18,7 +18,7 @@ import DelegateLedgerConfirmationModal from '../DelegateLedgerConfirmationModal'
 import WithdrawLedgerConfirmationModal from '../WithdrawLedgerConfirmationModal';
 
 import fetchAverageFees from '../../reduxContent/generalThunk';
-import { withdrawThunk } from '../../reduxContent/invoke/thunks';
+import { withdrawThunk, depositThunk } from '../../reduxContent/invoke/thunks';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 import { setIsLoading } from '../../reduxContent/wallet/actions';
 import { delegate } from '../../reduxContent/delegate/thunks';
@@ -145,6 +145,7 @@ type Props = {
   isReady?: boolean,
   isLedger: boolean,
   isLoading: boolean,
+  addresses: List,
   balance: number,
   selectedParentHash: string,
   selectedAccountHash: string,
@@ -152,6 +153,7 @@ type Props = {
   fetchAverageFees: () => {},
   delegate?: () => {},
   withdrawThunk?: () => {},
+  depositThunk?: () => {},
   setIsLoading: () => {},
   t: () => {}
 };
@@ -190,8 +192,8 @@ class InvokeManager extends Component<Props> {
   }
 
   onMaxDeposit = () => {
-    const { fee, gas, balance, storage } = this.state;
-    const max = balance - fee - gas - storage;
+    const { fee } = this.state;
+    const max = this.props.addresses[0].balance - fee;
     let amount = '0';
     if (max > 0) {
       amount = (max / utez).toFixed(6);
@@ -304,6 +306,7 @@ class InvokeManager extends Component<Props> {
       selectedAccountHash,
       delegate,
       withdrawThunk,
+      depositThunk,
       setIsLoading,
       onSuccess
     } = this.props;
@@ -334,14 +337,24 @@ class InvokeManager extends Component<Props> {
         console.error(err);
         return false;
       });
-    } else {
+    } else if (invokeFormat === InvokeType.WITHDRAW) {
       operationResult = await withdrawThunk(
         fee,
         amount,
         passPhrase,
         selectedAccountHash,
-        selectedParentHash,
-        invokeFormat === InvokeType.WITHDRAW
+        selectedParentHash
+      ).catch(err => {
+        console.error(err);
+        return false;
+      });
+    } else {
+      operationResult = await depositThunk(
+        fee,
+        amount,
+        passPhrase,
+        selectedAccountHash,
+        selectedParentHash
       ).catch(err => {
         console.error(err);
         return false;
@@ -457,6 +470,7 @@ const mapDispatchToProps = dispatch =>
       fetchAverageFees,
       delegate,
       withdrawThunk,
+      depositThunk,
       setIsLoading
     },
     dispatch
