@@ -189,6 +189,16 @@ class InvokeManager extends Component<Props> {
     this.mounted = false;
   }
 
+  onMaxDeposit = () => {
+    const { fee, gas, balance, storage } = this.state;
+    const max = balance - fee - gas - storage;
+    let amount = '0';
+    if (max > 0) {
+      amount = (max / utez).toFixed(6);
+    }
+    this.setState({ amount });
+  };
+
   onMaxWithdraw = () => {
     const { balance } = this.props;
     let amount = '0';
@@ -213,6 +223,7 @@ class InvokeManager extends Component<Props> {
   renderContent = format => {
     const { t } = this.props;
     const { amount } = this.state;
+
     if (format === InvokeType.DELEGATE) {
       return (
         <ParametersContainer>
@@ -221,6 +232,22 @@ class InvokeManager extends Component<Props> {
             onChange={val => this.setState({ delegateAddress: val })}
           />
         </ParametersContainer>
+      );
+    }
+
+    if (format === InvokeType.DEPOSIT) {
+      return (
+        <AmountContainer>
+          <TezosNumericInput
+            decimalSeparator={t('general.decimal_separator')}
+            labelText={t('general.nouns.amount')}
+            amount={amount}
+            handleAmountChange={val => this.setState({ amount: val })}
+          />
+          <UseMax onClick={this.onMaxDeposit}>
+            {t('general.verbs.use_max')}
+          </UseMax>
+        </AmountContainer>
       );
     }
 

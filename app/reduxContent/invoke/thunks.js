@@ -175,7 +175,7 @@ export function withdrawThunk(
 
     const keyStore = getSelectedKeyStore(
       identities,
-      selectedAccountHash,
+      selectedParentHash,
       selectedParentHash
     );
     const { url } = getSelectedNode(settings, TEZOS);
@@ -220,8 +220,6 @@ export function withdrawThunk(
         return false;
       });
     }
-
-    console.log('invoke results-----', res);
 
     if (res) {
       const operationResult =
