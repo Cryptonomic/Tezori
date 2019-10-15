@@ -112,6 +112,8 @@ export function sendTez(
       return false;
     });
 
+    console.log('send results-----', res);
+
     if (res) {
       const operationResult =
         res &&

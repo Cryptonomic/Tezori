@@ -9,6 +9,7 @@ import PasswordInput from '../PasswordInput';
 import TezosAmount from '../TezosAmount';
 import TezosAddress from '../TezosAddress';
 import DeployLedgerConfirmationModal from '../DeployLedgerConfirmationModal';
+import FormatSelector from '../FormatSelector';
 
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
 
@@ -29,7 +30,10 @@ import {
   FeeContainer,
   PasswordButtonContainer,
   InvokeButton,
-  UseMax
+  UseMax,
+  StorageFormatContainer,
+  ColFormat,
+  ColStorage
 } from './style';
 
 const utez = 1000000;
@@ -40,6 +44,7 @@ type Props = {
   averageFees: object,
   addresses: List,
   originateContract: () => {},
+  setIsLoading: () => {},
   onClose: () => {},
   t: () => {}
 };
@@ -53,7 +58,9 @@ const defaultState = {
   passPhrase: '',
   isShowedPwd: false,
   isOpenLedgerConfirm: false,
-  michelsonCode: ''
+  michelsonCode: '',
+  delegate: '',
+  codeFormat: ''
 };
 
 class DeployContract extends Component<Props> {
@@ -99,7 +106,9 @@ class DeployContract extends Component<Props> {
       storage,
       fee,
       michelsonCode,
-      parameters
+      parameters,
+      delegate,
+      codeFormat
     } = this.state;
 
     const isDisabled =
@@ -118,19 +127,19 @@ class DeployContract extends Component<Props> {
     }
 
     const { pkh } = addresses[0];
-    const initStorage = JSON.parse(parameters);
-    const initCode = JSON.parse(michelsonCode);
 
     const isOperationCompleted = await originateContract(
-      undefined,
+      delegate,
       amount,
       fee,
       passPhrase,
       pkh,
       storage,
       gas,
-      initCode,
-      initStorage
+      michelsonCode,
+      parameters,
+      codeFormat,
+      true
     ).catch(err => {
       console.error(err);
       return false;
@@ -151,7 +160,8 @@ class DeployContract extends Component<Props> {
       isShowedPwd,
       isOpenLedgerConfirm,
       parameters,
-      michelsonCode
+      michelsonCode,
+      codeFormat
     } = this.state;
 
     const { isLoading, isLedger, addresses, averageFees, t } = this.props;
@@ -168,7 +178,9 @@ class DeployContract extends Component<Props> {
         <TabContainer>
           <InputAddressContainer>
             <CustomTextArea
-              label={t('components.interactModal.paste_micheline_code')}
+              label={t('components.interactModal.paste_micheline_code', {
+                format: codeFormat || 'micheline'
+              })}
               multiline
               rows={5}
               rowsMax={5}
@@ -176,10 +188,24 @@ class DeployContract extends Component<Props> {
             />
           </InputAddressContainer>
 
+          <StorageFormatContainer>
+            <ColStorage>
+              <TextField
+                label={t('components.interactModal.initial_storage')}
+                onChange={val => this.setState({ parameters: val })}
+              />
+            </ColStorage>
+            <ColFormat>
+              <FormatSelector
+                value={codeFormat}
+                onChange={val => this.setState({ codeFormat: val })}
+              />
+            </ColFormat>
+          </StorageFormatContainer>
           <ParametersContainer>
             <TextField
-              label={t('components.interactModal.initial_storage')}
-              onChange={val => this.setState({ parameters: val })}
+              label={t('general.verbs.delegate')}
+              onChange={val => this.setState({ delegate: val })}
             />
           </ParametersContainer>
 

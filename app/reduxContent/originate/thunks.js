@@ -1,4 +1,4 @@
-import { TezosNodeWriter } from 'conseiljs';
+import { TezosNodeWriter, TezosProtocolHelper } from 'conseiljs';
 import { updateIdentity } from '../../reduxContent/wallet/actions';
 import { addMessage } from '../../reduxContent/message/thunks';
 import { displayError } from '../../utils/formValidation';
@@ -19,10 +19,8 @@ import {
   clearOperationId
 } from '../../utils/general';
 
-const {
-  sendAccountOriginationOperation,
-  sendContractOriginationOperation
-} = TezosNodeWriter;
+const { sendContractOriginationOperation } = TezosNodeWriter;
+const { deployManagerContract } = TezosProtocolHelper;
 
 export function fetchOriginationAverageFees() {
   return async (dispatch, state) => {
@@ -40,8 +38,10 @@ export function originateContract(
   publicKeyHash,
   storageLimit = 0,
   gasLimit = 0,
-  code = [],
-  storage = {}
+  code,
+  storage,
+  codeFormat,
+  isSmartContract = false
 ) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
@@ -52,10 +52,6 @@ export function originateContract(
       .toJS();
     const parsedAmount = Number(amount.replace(/,/g, '.'));
     const amountInUtez = tezToUtez(parsedAmount);
-    let isSmartContract = true;
-    if (code.length === 0) {
-      isSmartContract = false;
-    }
     let validations = [];
 
     if (isLedger) {
@@ -109,15 +105,14 @@ export function originateContract(
         url,
         userKeyStore,
         amountInUtez,
-        undefined,
-        false,
-        false,
+        delegate,
         fee,
         userDerivation,
         storageLimit,
         gasLimit,
         code,
-        storage
+        storage,
+        codeFormat
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
         console.error(errorObj);
@@ -125,14 +120,12 @@ export function originateContract(
         return false;
       });
     } else {
-      newAddress = await sendAccountOriginationOperation(
+      newAddress = await deployManagerContract(
         url,
         userKeyStore,
-        amountInUtez,
         delegate,
-        true,
-        true,
         fee,
+        amountInUtez,
         userDerivation
       ).catch(err => {
         const errorObj = { name: err.message, ...err };
@@ -141,6 +134,8 @@ export function originateContract(
         return false;
       });
     }
+
+    console.log('newAddress results-----', newAddress);
 
     if (newAddress) {
       const operationResult1 =
@@ -192,7 +187,7 @@ export function originateContract(
             account_id: newAddressHash,
             balance: amountInUtez,
             manager: publicKeyHash,
-            delegate_value: '',
+            delegate: '',
             operations: {
               [CREATED]: operationId
             },

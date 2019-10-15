@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { useState } from 'react';
 import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { lighten } from 'polished';
@@ -9,11 +9,13 @@ import { H4 } from '../Heading/';
 import TezosAmount from '../TezosAmount/';
 import TezosAddress from '../TezosAddress/';
 import TezosIcon from '../TezosIcon/';
-import Tooltip from '../Tooltip/';
-import Button from '../Button/';
 import Update from '../Update/';
-import ManagerAddressTooltip from '../Tooltips/ManagerAddressTooltip/';
+import Modal from '../CustomModal';
+import Button from '../Button';
 import { wrapComponent } from '../../utils/i18n';
+
+import keyIconSvg from '../../../resources/imgs/Key_Icon.svg';
+import circleKeyIconSvg from '../../../resources/imgs/Circle_Key_Icon.svg';
 
 const { Mnemonic } = StoreType;
 
@@ -22,6 +24,7 @@ type Props = {
   isReady: boolean,
   balance: number,
   publicKeyHash: string,
+  privateKey: string,
   onRefreshClick: () => {},
   isManagerAddress: boolean,
   isContractAddress?: boolean,
@@ -103,8 +106,74 @@ const Breadcrumbs = styled.div`
   font-size: ${ms(-1)};
 `;
 
-const HelpIcon = styled(TezosIcon)`
-  padding: 0 0 0 ${ms(-4)};
+const CircleKeyIcon = styled.img`
+  width: 27px;
+`;
+
+const KeyIcon = styled.img`
+  width: 12px;
+  height: 13px;
+  margin-left: 10px;
+  cursor: pointer;
+`;
+
+const ModalContent = styled.div`
+  padding: 35px 76px 25px 76px;
+`;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  margin-top: 75px;
+  text-align: center;
+`;
+
+const CloseButton = styled(Button)`
+  width: 194px;
+  height: 50px;
+`;
+
+const HideShowContainer = styled.div`
+  color: ${({ theme: { colors } }) => colors.gray5};
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  cursor: pointer;
+  width: 100%;
+`;
+
+const KeyContainer = styled.div`
+  color: ${({ theme: { colors } }) => colors.primary};
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  padding: 20px 19px 14px 19px;
+  margin-top: 10px;
+  width: 100%;
+  word-wrap: break-word;
+`;
+
+const WarningContainer = styled.div`
+  border-radius: 3px;
+  border: 1px solid ${({ theme: { colors } }) => colors.index1};
+  width: 475px;
+  height: 91px;
+  padding: 0 39px 0 29px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 50px;
+  font-size: 16px;
+  line-height: 19px;
+  color: rgb(18, 50, 98);
+`;
+
+const WarningTxt = styled.span`
+  font-weight: 700;
+`;
+
+const StoreTxt = styled.div`
+  font-weight: 400;
+  margin-left: 23px;
 `;
 
 function BalanceBanner(props: Props) {
@@ -112,6 +181,7 @@ function BalanceBanner(props: Props) {
     storeType,
     isReady,
     balance,
+    privateKey,
     publicKeyHash,
     onRefreshClick,
     theme,
@@ -124,6 +194,11 @@ function BalanceBanner(props: Props) {
     isContractAddress,
     addressIndex
   } = props;
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isShowKey, setIsShowKey] = useState(false);
+
+  const secretPrivateKey = privateKey.split('').map(() => '*');
 
   let addressLabel = '';
   if (isManagerAddress) {
@@ -163,11 +238,7 @@ function BalanceBanner(props: Props) {
             {addressLabel}
 
             {isManagerAddress && (
-              <Tooltip position="bottom" content={<ManagerAddressTooltip />}>
-                <Button buttonTheme="plain">
-                  <HelpIcon iconName="help" size={ms(0)} color="white" />
-                </Button>
-              </Tooltip>
+              <KeyIcon src={keyIconSvg} onClick={() => setIsOpen(true)} />
             )}
           </AddressTitle>
         )}
@@ -203,6 +274,35 @@ function BalanceBanner(props: Props) {
           </DelegateContainer>
         )}
       </BottomRow>
+      <Modal
+        title={t('components.balanceBanner.secret_key')}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        style={{ width: '671px' }}
+      >
+        <ModalContent>
+          <HideShowContainer onClick={() => setIsShowKey(!isShowKey)}>
+            {isShowKey
+              ? t('components.balanceBanner.hide_key')
+              : t('components.balanceBanner.reveal_key')}
+          </HideShowContainer>
+          <KeyContainer>
+            {isShowKey ? privateKey : secretPrivateKey}
+          </KeyContainer>
+          <WarningContainer>
+            <CircleKeyIcon src={circleKeyIconSvg} />
+            <StoreTxt>
+              <WarningTxt>{t('components.balanceBanner.warning')}</WarningTxt>
+              {t('components.balanceBanner.do_not_store')}
+            </StoreTxt>
+          </WarningContainer>
+          <ButtonContainer>
+            <CloseButton buttonTheme="primary" onClick={() => setIsOpen(false)}>
+              {t('general.verbs.close')}
+            </CloseButton>
+          </ButtonContainer>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }

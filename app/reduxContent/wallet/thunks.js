@@ -214,7 +214,7 @@ export function syncAccount(selectedAccountHash, selectedParentHash) {
 export function syncIdentity(publicKeyHash) {
   return async (dispatch, state) => {
     const settings = state().settings.toJS();
-    const { network } = settings;
+    const { network, platform } = settings;
     const identities = state()
       .wallet.get('identities')
       .toJS();
@@ -226,7 +226,8 @@ export function syncIdentity(publicKeyHash) {
       stateIdentity,
       settings,
       selectedAccountHash,
-      network
+      network,
+      platform
     ).catch(e => {
       console.log(`-debug: Error in: syncIdentity for:${publicKeyHash}`);
       console.error(e);
@@ -251,7 +252,7 @@ export function syncWallet() {
   return async (dispatch, state) => {
     dispatch(setWalletIsSyncing(true));
     const settings = state().settings.toJS();
-    const { network } = settings;
+    const { network, platform } = settings;
     const isLedger = state().wallet.get('isLedger');
 
     const nodesStatus = await getNodesStatus(settings, network);
@@ -277,7 +278,8 @@ export function syncWallet() {
           identity,
           settings,
           isLedger,
-          network
+          network,
+          platform
         ).catch(e => {
           console.log(`-debug: Error in: syncIdentity for: ${publicKeyHash}`);
           console.error(e);

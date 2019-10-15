@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 import { isEmpty } from 'lodash';
 import { Trans } from 'react-i18next';
+import * as blakejs from 'blakejs';
 
 import Button from '../Button/';
 import BalanceBanner from '../BalanceBanner/';
@@ -16,7 +17,8 @@ import Send from '../Send/';
 import Receive from '../Receive/';
 import Delegate from '../Delegate/';
 import Invoke from '../Invoke';
-import ComingSoon from '../ComingSoon';
+import InvokeManager from '../InvokeManager';
+import CodeStorage from '../CodeStorage';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
 import {
@@ -26,7 +28,8 @@ import {
   DELEGATE,
   INVOKE,
   CODE,
-  STORAGE
+  STORAGE,
+  INVOKE_MANAGER
 } from '../../constants/TabConstants';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
@@ -93,7 +96,7 @@ const Description = (props: DescriptionProps) => {
   return (
     <DescriptionContainer>
       <Trans i18nKey="components.actionPanel.description">
-        {"It's pretty empty here. Get started"}
+        It is pretty empty here. Get started
         <Link onClick={onSendClick}> sending</Link> and
         <Link onClick={onReceiveClick}> receiving</Link> tez from this address.
       </Trans>
@@ -138,6 +141,8 @@ class ActionPanel extends Component<Props, State> {
     const { selectedAccountHash, selectedParentHash, t } = this.props;
     const transactions = selectedAccount.get('transactions');
     const ready = selectedAccount.get('status') === READY;
+    const script = selectedAccount.get('script');
+    const storage = selectedAccount.get('storage');
     const isContractAddress = !!selectedAccount.get('script');
 
     switch (activeTab) {
@@ -145,7 +150,7 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Delegate
             isReady={ready}
-            address={selectedAccount.get('delegate_value')}
+            address={selectedAccount.get('delegate') || selectedAccountHash}
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
           />
@@ -163,12 +168,23 @@ class ActionPanel extends Component<Props, State> {
           />
         );
       case CODE:
-        return <ComingSoon label={t('general.nouns.code')} />;
+        return <CodeStorage code={script.replace(/\\n/g, '\n')} />;
       case STORAGE:
-        return <ComingSoon label={t('general.nouns.storage')} />;
+        return <CodeStorage code={storage} />;
       case INVOKE:
         return (
           <Invoke
+            isReady={ready}
+            addresses={regularAddresses}
+            selectedParentHash={selectedParentHash}
+            selectedAccountHash={selectedAccountHash}
+            onSuccess={() => this.handleLinkPress(TRANSACTIONS)}
+          />
+        );
+      case INVOKE_MANAGER:
+        return (
+          <InvokeManager
+            balance={balance}
             isReady={ready}
             addresses={regularAddresses}
             selectedParentHash={selectedParentHash}
@@ -237,14 +253,30 @@ class ActionPanel extends Component<Props, State> {
     }
   };
 
-  getTabList = (isManager, isContract) => {
-    if (isManager) {
-      return [TRANSACTIONS, SEND, RECEIVE];
+  getTabList = (address, script) => {
+    if (
+      address.startsWith('tz1') ||
+      address.startsWith('tz2') ||
+      address.startsWith('tz3')
+    ) {
+      return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
     }
-    if (isContract) {
+
+    if (
+      script !== undefined &&
+      script.length > 0 &&
+      address.startsWith('KT1')
+    ) {
+      const k = Buffer.from(
+        blakejs.blake2s(script.toString(), null, 16)
+      ).toString('hex');
+
+      if (k === '023fc21b332d338212185c817801f288') {
+        return [TRANSACTIONS, INVOKE_MANAGER];
+      }
+
       return [TRANSACTIONS, INVOKE, CODE, STORAGE];
     }
-    return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
   };
 
   getRegularAddresses = identity => {
@@ -290,7 +322,10 @@ class ActionPanel extends Component<Props, State> {
     const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
     const isContractAddress = !!selectedAccount.get('script');
-    const tabs = this.getTabList(isManagerAddress, isContractAddress);
+    const tabs = this.getTabList(
+      selectedAccountHash,
+      selectedAccount.get('script')
+    );
     const regularAddresses = this.getRegularAddresses(parentIdentity);
     return (
       <Container>
@@ -298,13 +333,14 @@ class ActionPanel extends Component<Props, State> {
           storeType={storeType}
           isReady={isReady(status, storeType)}
           balance={balance || 0}
+          privateKey={parentIdentity.privateKey}
           publicKeyHash={selectedAccountHash || 'Inactive'}
           parentIndex={parentIndex}
           isManagerAddress={isManagerAddress}
           onRefreshClick={syncWallet}
           selectedParentHash={selectedParentHash}
           time={time}
-          delegatedAddress={selectedAccount.get('delegate_value')}
+          delegatedAddress={selectedAccount.get('delegate')}
           isWalletSyncing={isWalletSyncing}
           isContractAddress={isContractAddress}
           addressIndex={addressIndex}

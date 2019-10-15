@@ -29,6 +29,7 @@ export function createIdentity(identity) {
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     transactions: [],
+    delegate: '',
     ...identity
   };
 }
@@ -50,7 +51,8 @@ export async function getSyncIdentity(
   identity,
   nodes,
   isLedger = false,
-  network
+  network,
+  platform
 ) {
   const { publicKeyHash } = identity;
   const keyStore = getSelectedKeyStore(
@@ -65,6 +67,7 @@ export async function getSyncIdentity(
     isLedger,
     network
   );
+
   const { selectedAccountHash } = getSelectedHash();
   /*
    *  we are taking state identity accounts overriding their state
@@ -73,7 +76,7 @@ export async function getSyncIdentity(
    *  those accounts with the updated accounts we got from getAccounts.
    * */
 
-  let accounts = await getAccountsForIdentity(nodes, publicKeyHash, network).catch(
+  let accounts = await getAccountsForIdentity(nodes, publicKeyHash, network, platform).catch(
     error => {
       console.log(
         '-debug: Error in: status.getAccountsForIdentity for:' + publicKeyHash

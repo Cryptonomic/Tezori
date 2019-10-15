@@ -17,7 +17,7 @@ type Account = {
   manager: string,
   spendable: boolean,
   delegate_setable: boolean,
-  delegate_value: string,
+  delegate: string,
   counter: number,
   script: string,
   balance: number
@@ -73,9 +73,6 @@ class Addresses extends Component<Props> {
     } = this.props;
     return (
       <Container>
-        <AccountTitle>
-          <H4>{t('general.nouns.accounts')}</H4>
-        </AccountTitle>
         {identities
           .sort(sortArr({ sortOrder: 'asc', sortBy: 'order' }))
           .map((accountBlock, index) => (

@@ -17,7 +17,10 @@
       "invoke": "Invoke",
       "deploy": "Deploy",
       "cancel": "Cancel",
-      "proceed": "Proceed"
+      "proceed": "Proceed",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "Amount",
@@ -35,7 +38,7 @@
       "details": "Details",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Total Balance",
+      "total_balance": "Total Balance",
       "language": "Language",
       "transactions": "Transactions",
       "source": "Source",
@@ -47,7 +50,8 @@
       "storage": "Storage",
       "burn": "Burn",
       "smart_contract": "Smart Contract",
-      "code": "Code"
+      "code": "Code",
+      "format": "Format"
     },
     "errors": {
       "no_hex_data": "The provided string doesn't look like hex data",
@@ -79,7 +83,8 @@
     },
     "actionPanel": {
       "description": "It's pretty empty here. Get started<1> sending</1> and<3> receiving</3> tez from this address.",
-      "empty-title": "You have not made any transactions yet"
+      "empty-title": "You have not made any transactions yet",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "{{gas}} tz is required by the network to create a delegated address",
@@ -92,7 +97,7 @@
       "invoke_contract": "Invoke an Existing Contract",
       "deploy_contract": "Deploy a New Contract",
       "title": "Interact with Smart Contracts",
-      "smart_address": "Smart Contract Address",
+      "smart_address": "Contract Address",
       "invoke_from": "Invoke from",
       "deploy_from": "Deploy from",
       "storage_limit": "Storage Limit",
@@ -100,7 +105,8 @@
       "parameters": "Parameters",
       "view_scan": "View on Mininax",
       "initial_storage": "Initial Storage",
-      "paste_micheline_code": "Paste in your smart contract Micheline code"
+      "paste_micheline_code": "Paste in your smart contract {{format}} code",
+      "entry_point": "Entry Point"
     },
     "addNodeModal": {
       "error": "Node's protocol must be https",
@@ -140,7 +146,12 @@
     },
     "balanceBanner": {
       "breadcrumbs": "Account {{parentIndex}} > {{addressLabel}}",
-      "delegated_to": "Delegated to "
+      "delegated_to": "Delegated to ",
+      "secret_key": "Secret Key",
+      "reveal_key": "Click to reveal secret key.",
+      "hide_key": "Click to hide secret key.",
+      "warning": "Warning!",
+      "do_not_store": " Do not store your secret key on your  computer. Write it down and keep in a safe place."
     },
     "copyIcon": {
       "copied": "Copied!"

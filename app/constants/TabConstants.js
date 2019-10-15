@@ -5,3 +5,4 @@ export const DELEGATE = 'general.verbs.delegate';
 export const INVOKE = 'general.verbs.invoke';
 export const CODE = 'general.nouns.code';
 export const STORAGE = 'general.nouns.storage';
+export const INVOKE_MANAGER = 'components.actionPanel.invoke_manager';

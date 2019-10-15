@@ -136,7 +136,6 @@ type Props = {
   accountBlock: object, // TODO: type this
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
-  accountIndex: number,
   theme: object,
   t: () => {}
 };
@@ -187,20 +186,21 @@ class AddressBlock extends Component<Props, State> {
   getAddresses = addresses => {
     const newAddresses = [];
     const delegatedAddresses = [];
-    const smartAddresses = [];
+    const smartAddresses = addresses;
     let smartBalance = 0;
     addresses.forEach(address => {
-      const { script, balance, status } = address;
-      if (script) {
-        smartAddresses.push(address);
-      } else {
-        const newAddress = {
-          pkh: address.account_id,
-          balance
-        };
-        newAddresses.push(newAddress);
-        delegatedAddresses.push(address);
-      }
+      const { balance, status } = address;
+      // const { script, balance, status } = address;
+      // if (script) {
+      //   smartAddresses.push(address);
+      // } else {
+      //   const newAddress = {
+      //     pkh: address.account_id,
+      //     balance
+      //   };
+      //   newAddresses.push(newAddress);
+      //   delegatedAddresses.push(address);
+      // }
       if (status === READY || status === PENDING) {
         smartBalance += balance;
       }
@@ -241,7 +241,6 @@ class AddressBlock extends Component<Props, State> {
     const {
       accountBlock,
       selectedAccountHash,
-      accountIndex,
       delegateTooltip,
       theme,
       t
@@ -260,8 +259,11 @@ class AddressBlock extends Component<Props, State> {
     } = this.getAddresses(addresses);
     regularAddresses = regularAddresses.concat(newAddresses);
 
-    const isDelegateToolTip =
-      delegateTooltip && delegatedAddresses.length && smartAddresses.length;
+    const isDelegateToolTip = !!(
+      delegateTooltip &&
+      delegatedAddresses.length &&
+      smartAddresses.length
+    );
 
     const isManagerReady = accountBlock.get('status') === READY;
     const noSmartAddressesDescriptionContent = [
@@ -276,22 +278,6 @@ class AddressBlock extends Component<Props, State> {
 
     return (
       <Container>
-        <AddressLabel>
-          <AccountTitle>
-            {t('components.addressBlock.account_title', {
-              index: accountIndex
-            })}
-          </AccountTitle>
-          {ready || storeType === Mnemonic ? (
-            <TezosAmount
-              color="primary"
-              size={ms(0)}
-              amount={balance + smartBalance}
-              format={2}
-            />
-          ) : null}
-        </AddressLabel>
-
         {ready ? (
           <Address
             isManager
@@ -307,73 +293,6 @@ class AddressBlock extends Component<Props, State> {
             onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         )}
-
-        <AddDelegateLabel>
-          <DelegateTitle>
-            {t('components.addDelegateModal.add_delegate_title')}
-          </DelegateTitle>
-          {isManagerReady && (
-            <AddCircle
-              style={{
-                fill: '#7B91C0',
-                height: ms(1),
-                width: ms(1),
-                cursor: 'pointer'
-              }}
-              onClick={this.openDelegateModal}
-            />
-          )}
-          {!isManagerReady && (
-            <Tooltip
-              position="bottom"
-              offset="-24%"
-              content={
-                <NoFundTooltip
-                  content={t('components.addressBlock.not_ready_tooltip')}
-                />
-              }
-            >
-              <Button buttonTheme="plain">
-                <AddCircle
-                  style={{
-                    fill: '#7B91C0',
-                    height: ms(1),
-                    width: ms(1),
-                    opacity: 0.5,
-                    cursor: 'default'
-                  }}
-                />
-              </Button>
-            </Tooltip>
-          )}
-        </AddDelegateLabel>
-        {delegatedAddresses.map((address, index) => {
-          const { status, balance } = address;
-          const addressId = address.account_id;
-          const isDelegatedActive = addressId === selectedAccountHash;
-          const delegatedAddressReady = isReady(status);
-
-          return delegatedAddressReady ? (
-            <Address
-              key={addressId}
-              index={index}
-              isActive={isDelegatedActive}
-              balance={balance}
-              onClick={() =>
-                this.goToAccount(addressId, publicKeyHash, index + 1)
-              }
-            />
-          ) : (
-            <AddressStatus
-              key={addressId}
-              isActive={isDelegatedActive}
-              status={status}
-              onClick={() =>
-                this.goToAccount(addressId, publicKeyHash, index + 1)
-              }
-            />
-          );
-        })}
         <InteractContractLabel>
           <DelegateTitle>
             {t('components.interactModal.interact_contract')}
@@ -444,6 +363,17 @@ class AddressBlock extends Component<Props, State> {
             />
           );
         })}
+        <AddressLabel>
+          <AccountTitle>{t('general.nouns.total_balance')}</AccountTitle>
+          {ready || storeType === Mnemonic ? (
+            <TezosAmount
+              color="primary"
+              size={ms(0)}
+              amount={balance + smartBalance}
+              format={2}
+            />
+          ) : null}
+        </AddressLabel>
         <InteractContractModal
           selectedParentHash={publicKeyHash}
           open={isInteractModalOpen}

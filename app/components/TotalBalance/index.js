@@ -35,7 +35,7 @@ class TotalBalance extends Component<Props> {
     const { totalBalance, t } = this.props;
     return (
       <Container>
-        <Text>{t("general.nouns.total_balence")}</Text>
+        <Text>{t('general.nouns.total_balance')}</Text>
         <Amount
           size={ms(3)}
           amount={totalBalance}
@@ -55,4 +55,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(wrapComponent, connect(mapStateToProps, null))(TotalBalance);
+export default compose(
+  wrapComponent,
+  connect(
+    mapStateToProps,
+    null
+  )
+)(TotalBalance);

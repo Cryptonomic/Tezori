@@ -28,7 +28,8 @@ const baseDefaults = {
   delegateTooltip: false,
   selectedPath: '',
   pathsList: [],
-  network: ''
+  network: '',
+  platform: ''
 };
 
 export const initialState = { ...baseDefaults, ...walletSettings };
@@ -49,7 +50,9 @@ export default handleActions(
       return state.set('locale', action.locale);
     },
     [SET_NETWORK]: (state, action) => {
-      return state.set('network', action.network);
+      return state
+        .set('network', action.network)
+        .set('platform', action.platform);
     },
     [SET_PATH]: (state, action) => {
       return state.set('selectedPath', action.selected);

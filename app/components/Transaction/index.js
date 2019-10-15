@@ -217,7 +217,7 @@ const getStatus = (transaction, selectedAccountHash, t) => {
       icon: 'receive',
       preposition: t('general.by'),
       state: t('components.transaction.invoked'),
-      isFee: false,
+      isFee,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''
     };
@@ -281,7 +281,7 @@ type Props = {
 
 function Transaction(props: Props) {
   const { transaction, selectedAccountHash, selectedParentHash, t } = props;
-  const fee = Number.parseInt(transaction.fee, 10);
+  const fee = transaction.fee ? Number.parseInt(transaction.fee, 10) : 0;
   const { icon, preposition, state, isFee, color, sign, isBurn } = getStatus(
     transaction,
     selectedAccountHash,

@@ -6,12 +6,10 @@ import { ms } from '../../styles/helpers';
 import Fees from '../Fees';
 import PasswordInput from '../PasswordInput';
 import InputAddress from '../InputAddress/';
-import CustomSelect from '../CustomSelect';
-import TezosAmount from '../TezosAmount';
-import TezosAddress from '../TezosAddress';
 import InvokeLedgerConfirmationModal from '../InvokeLedgerConfirmationModal';
-import { OPERATIONFEE } from '../../constants/LowFeeValue';
+import FormatSelector from '../FormatSelector';
 
+import { OPERATIONFEE } from '../../constants/LowFeeValue';
 import { openLinkToBlockExplorer } from '../../utils/general';
 
 import {
@@ -19,7 +17,6 @@ import {
   TabContainer,
   InputAddressContainer,
   ParametersContainer,
-  SpaceBar,
   RowContainer,
   ColContainer,
   AmountContainer,
@@ -29,9 +26,9 @@ import {
   UseMax,
   ViewScan,
   LinkIcon,
-  InvokeAddressContainer,
-  ItemWrapper,
-  SelectRenderWrapper
+  StorageFormatContainer,
+  ColFormat,
+  ColStorage
 } from './style';
 
 const utez = 1000000;
@@ -59,7 +56,9 @@ const defaultState = {
   parameters: '',
   passPhrase: '',
   isShowedPwd: false,
-  isOpenLedgerConfirm: false
+  isOpenLedgerConfirm: false,
+  codeFormat: '',
+  entryPoint: ''
 };
 
 class InvokeContract extends Component<Props> {
@@ -114,7 +113,9 @@ class InvokeContract extends Component<Props> {
       parameters,
       selectedInvokeAddress,
       passPhrase,
-      isAddressIssue
+      isAddressIssue,
+      entryPoint,
+      codeFormat
     } = this.state;
 
     const isDisabled =
@@ -142,7 +143,9 @@ class InvokeContract extends Component<Props> {
       userParams,
       passPhrase,
       selectedInvokeAddress,
-      selectedParentHash
+      selectedParentHash,
+      entryPoint,
+      codeFormat
     ).catch(err => {
       console.error(err);
       return false;
@@ -166,9 +169,10 @@ class InvokeContract extends Component<Props> {
       isShowedPwd,
       isOpenLedgerConfirm,
       parameters,
-      storage
+      storage,
+      codeFormat
     } = this.state;
-    const { isLoading, isLedger, addresses, averageFees, t } = this.props;
+    const { isLoading, isLedger, averageFees, t } = this.props;
     const isDisabled =
       isAddressIssue ||
       isLoading ||
@@ -200,61 +204,27 @@ class InvokeContract extends Component<Props> {
               </React.Fragment>
             )}
           </InputAddressContainer>
-          <InvokeAddressContainer>
-            <CustomSelect
-              label={t('components.interactModal.invoke_from')}
-              value={selectedInvokeAddress}
-              onChange={this.onChangeInvokeAddress}
-              renderValue={value => {
-                const address = addresses.find(
-                  address => address.pkh === value
-                );
-                return (
-                  <SelectRenderWrapper>
-                    <TezosAddress
-                      address={address.pkh}
-                      size="16px"
-                      color="gray3"
-                      color2="primary"
-                    />
-                    <SpaceBar />
-                    <TezosAmount
-                      color="primary"
-                      size={ms(0.65)}
-                      amount={address.balance}
-                    />
-                  </SelectRenderWrapper>
-                );
-              }}
-            >
-              {addresses.map(address => (
-                <ItemWrapper
-                  component="div"
-                  key={address.pkh}
-                  value={address.pkh}
-                >
-                  <TezosAddress
-                    address={address.pkh}
-                    size="16px"
-                    color="gray3"
-                    color2="primary"
-                  />
-                  <SpaceBar />
-                  <TezosAmount
-                    color="primary"
-                    size={ms(0.65)}
-                    amount={address.balance}
-                  />
-                </ItemWrapper>
-              ))}
-            </CustomSelect>
-          </InvokeAddressContainer>
+          <StorageFormatContainer>
+            <ColStorage>
+              <TextField
+                label={t('components.interactModal.parameters')}
+                onChange={val => this.setState({ parameters: val })}
+              />
+            </ColStorage>
+            <ColFormat>
+              <FormatSelector
+                value={codeFormat}
+                onChange={val => this.setState({ codeFormat: val })}
+              />
+            </ColFormat>
+          </StorageFormatContainer>
           <ParametersContainer>
             <TextField
-              label={t('components.interactModal.parameters')}
-              onChange={val => this.setState({ parameters: val })}
+              label={t('components.interactModal.entry_point')}
+              onChange={val => this.setState({ entryPoint: val })}
             />
           </ParametersContainer>
+
           <RowContainer>
             <ColContainer>
               <TextField

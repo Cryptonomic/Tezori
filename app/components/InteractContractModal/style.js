@@ -89,8 +89,25 @@ export const RowContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+export const StorageFormatContainer = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  height: 64px;
+`;
+
 export const ColContainer = styled.div`
   width: 45%;
+`;
+
+export const ColStorage = styled.div`
+  flex: 1;
+`;
+
+export const ColFormat = styled.div`
+  min-width: 19%;
+  margin-left: 80px;
 `;
 
 export const AmountContainer = styled.div`

@@ -43,31 +43,17 @@ export function createTransaction(transaction) {
 export async function getTransactions(accountHash, nodes, network) {
   const { url, apiKey } = getSelectedNode(nodes, CONSEIL);
 
-  /*amount: null,
-    balance: null,
-    blockHash: null,
-    blockLevel: null,
-    delegate: null,
-    destination: null,
-    fee: null,
-    gasLimit: null,
-    kind: null,
-    operationGroupHash: null,
-    operationId: null,
-    pkh: null,
-    status: status.CREATED,
-    source: null,
-    storageLimit: null,
-    timestamp: Date.now()*/
   let origin = ConseilQueryBuilder.blankQuery();
   origin = ConseilQueryBuilder.addPredicate(origin, 'kind', ConseilOperator.IN, ['transaction', 'activate_account', 'reveal', 'origination', 'delegation'], false);
   origin = ConseilQueryBuilder.addPredicate(origin, 'source', ConseilOperator.EQ, [accountHash], false);
+  origin = ConseilQueryBuilder.addPredicate(origin, 'internal', ConseilOperator.EQ, ["false"], false);
   origin = ConseilQueryBuilder.addOrdering(origin, 'block_level', ConseilSortDirection.DESC);
   origin = ConseilQueryBuilder.setLimit(origin, 300);
 
   let target = ConseilQueryBuilder.blankQuery();
   target = ConseilQueryBuilder.addPredicate(target, 'kind', ConseilOperator.IN, ['transaction', 'activate_account', 'reveal', 'origination', 'delegation'], false);
   target = ConseilQueryBuilder.addPredicate(target, 'destination', ConseilOperator.EQ, [accountHash], false);
+  target = ConseilQueryBuilder.addPredicate(target, 'internal', ConseilOperator.EQ, ["false"], false);
   target = ConseilQueryBuilder.addOrdering(target, 'block_level', ConseilSortDirection.DESC);
   target = ConseilQueryBuilder.setLimit(target, 300);
 

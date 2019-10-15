@@ -28,4 +28,4 @@ export const addPath = actionCreator(ADD_PATH, 'path');
 export const removePath = actionCreator(REMOVE_PATH, 'label');
 export const updatePath = actionCreator(UPDATE_PATH, 'path');
 export const clearState = actionCreator(CLEAR_STATE);
-export const setNetwork = actionCreator(SET_NETWORK, 'network');
+export const setNetwork = actionCreator(SET_NETWORK, 'network', 'platform');

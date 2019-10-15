@@ -48,10 +48,10 @@ export async function getNodesStatus(nodes, network) {
         responsive: false,
         level: null
       },
-      consRes && consRes[0] &&
+      consRes &&
       {
         responsive: true,
-        level: Number(consRes[0].level)
+        level: Number(consRes.level)
       },
     )
   };
@@ -131,6 +131,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
     });
     if (updatedAccount && updatedAccount[0]) {
       console.log('ready ' + util.inspect(updatedAccount, false, null, false));
+      account.delegate = updatedAccount[0].delegate;
       account.balance = parseInt(updatedAccount[0].balance);
     }
     return account;

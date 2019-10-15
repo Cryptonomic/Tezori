@@ -17,7 +17,10 @@
       "invoke": "Recurrir",
       "deploy": "Abrir",
       "cancel": "Cancelar",
-      "proceed": "Continuar"
+      "proceed": "Continuar",
+      "close": "Close",
+      "withdraw": "Withdraw",
+      "deposit": "Deposit"
     },
     "nouns": {
       "amount": "Monto",
@@ -35,7 +38,7 @@
       "details": "Detalles",
       "conseil": "Conseil",
       "tezos": "Tezos",
-      "total_balence": "Balance total",
+      "total_balance": "Balance total",
       "language": "Idioma",
       "transactions": "Transacciones",
       "source": "Origen",
@@ -79,7 +82,8 @@
     },
     "actionPanel": {
       "description": "Esto está bastante vacío. Empieza <1> a mandar</1> y a <3>recibir</3> tez desde esta dirección",
-      "empty-title": "No has hecho ninguna transacción"
+      "empty-title": "No has hecho ninguna transacción",
+      "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
       "gas_tool_tip": "La red necesita {{gas}} tz para crear una dirección delegada",
