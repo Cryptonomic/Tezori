@@ -131,6 +131,7 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
     });
     if (updatedAccount && updatedAccount[0]) {
       console.log('ready ' + util.inspect(updatedAccount, false, null, false));
+      account.delegate = updatedAccount[0].delegate;
       account.balance = parseInt(updatedAccount[0].balance);
     }
     return account;

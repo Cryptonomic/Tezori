@@ -29,6 +29,7 @@ export function createIdentity(identity) {
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     transactions: [],
+    delegate: '',
     ...identity
   };
 }
@@ -66,6 +67,7 @@ export async function getSyncIdentity(
     isLedger,
     network
   );
+
   const { selectedAccountHash } = getSelectedHash();
   /*
    *  we are taking state identity accounts overriding their state
