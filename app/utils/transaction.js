@@ -46,7 +46,7 @@ export async function getTransactions(accountHash, nodes, network) {
   let origin = ConseilQueryBuilder.blankQuery();
   origin = ConseilQueryBuilder.addPredicate(origin, 'kind', ConseilOperator.IN, ['transaction', 'activate_account', 'reveal', 'origination', 'delegation'], false);
   origin = ConseilQueryBuilder.addPredicate(origin, 'source', ConseilOperator.EQ, [accountHash], false);
-  target = ConseilQueryBuilder.addPredicate(origin, 'internal', ConseilOperator.EQ, ["false"], false);
+  origin = ConseilQueryBuilder.addPredicate(origin, 'internal', ConseilOperator.EQ, ["false"], false);
   origin = ConseilQueryBuilder.addOrdering(origin, 'block_level', ConseilSortDirection.DESC);
   origin = ConseilQueryBuilder.setLimit(origin, 300);
 
