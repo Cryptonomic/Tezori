@@ -105,7 +105,7 @@ export function originateContract(
         url,
         userKeyStore,
         amountInUtez,
-        delegate,
+        delegate.length > 0 ? delegate : undefined,
         fee,
         userDerivation,
         storageLimit,
@@ -134,8 +134,6 @@ export function originateContract(
         return false;
       });
     }
-
-    console.log('newAddress results-----', newAddress);
 
     if (newAddress) {
       const operationResult1 =
