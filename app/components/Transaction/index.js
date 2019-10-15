@@ -217,7 +217,7 @@ const getStatus = (transaction, selectedAccountHash, t) => {
       icon: 'receive',
       preposition: t('general.by'),
       state: t('components.transaction.invoked'),
-      isFee: false,
+      isFee,
       color: isAmount ? 'check' : 'gray8',
       sign: isAmount ? '+' : ''
     };
