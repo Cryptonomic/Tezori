@@ -346,7 +346,7 @@
       "last_updated": "最終更新 {{date}}"
     },
     "versionStatus": {
-      "version_update": "あなたはTezoriの旧バージョンを使用しており、完全に機能しないかも知れません。v{{version}}をダウンロードしてください "
+      "version_update": "あなたはGalleonの旧バージョンを使用しており、完全に機能しないかも知れません。v{{version}}をダウンロードしてください "
     },
     "comingSoon": {
       "coming_soon": "準備中",
@@ -394,7 +394,7 @@
       "want_to_import_fundraiser_paper_wallet": "Fundraiser ペーパーウォレットをインポートしますか？",
       "create_named_wallet": "<1><0><1> {{name}}</1>ウォレットを最初に作成してください。</0></1>",
       "tagline": "Tezosのコミュニティウォレット",
-      "app_name": "Tezori",
+      "app_name": "Galleon",
       "keystore_wallet": "Keystore Wallet",
       "ledger_wallet": "Ledger Wallet",
       "connect_ledger": "Connect with Ledgerと接続",

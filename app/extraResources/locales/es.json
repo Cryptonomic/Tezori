@@ -346,7 +346,7 @@
       "last_updated": "Última actualización {{date}}"
     },
     "versionStatus": {
-      "version_update": "Estás ulizando una versión antigua de Tezori, la cual puede que no tenga todas las funciones. Por favor descarga la versión v{{version}} en "
+      "version_update": "Estás ulizando una versión antigua de Galleon, la cual puede que no tenga todas las funciones. Por favor descarga la versión v{{version}} en "
     },
     "comingSoon": {
       "coming_soon": "Próximamente!",
@@ -394,7 +394,7 @@
       "want_to_import_fundraiser_paper_wallet": "¿Quieres importar tu billetera de papel de la Fundraiser?",
       "create_named_wallet": "<1><0>Crear una billetera <1>{{name}}</1></0></1>primero",
       "tagline": "Una billetera comunitaria para Tezos",
-      "app_name": "Tezori",
+      "app_name": "Galleon",
       "keystore_wallet": "Keystore Monedero",
       "ledger_wallet": "Ledger Monedero",
       "connect_ledger": "Conectar con Ledger",

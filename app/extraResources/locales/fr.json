@@ -346,7 +346,7 @@
       "last_updated": "Dernière modification {{date}}"
     },
     "versionStatus": {
-      "version_update": "Vous utilisez une ancienne version de Tezori, qui n'est peut-être pas entièrement fonctionnelle. Merci de télécharger v{{version}} à "
+      "version_update": "Vous utilisez une ancienne version de Galleon, qui n'est peut-être pas entièrement fonctionnelle. Merci de télécharger v{{version}} à "
     },
     "comingSoon": {
       "coming_soon": "Bientôt disponible!",
@@ -394,7 +394,7 @@
       "want_to_import_fundraiser_paper_wallet": "Vous voulez importez votre papier de levée de fonds",
       "create_named_wallet": "wallet? <1><0>Créer un <1>{{name}}</1> wallet</0></1> en premier.",
       "tagline": "Un wallet communautaire pour Tezos",
-      "app_name": "Tezori",
+      "app_name": "Galleon",
       "keystore_wallet": "Keystore Wallet",
       "ledger_wallet": "Ledger Wallet",
       "connect_ledger": "Se connecter au Ledger",

@@ -1,6 +1,6 @@
 {
-  "name": "Tezori",
-  "productName": "Tezori",
+  "name": "galleon",
+  "productName": "Galleon",
   "version": "0.9.0b",
   "description": "A wallet for the Tezos blockchain.",
   "main": "./main.prod.js",

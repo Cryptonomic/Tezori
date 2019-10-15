@@ -1,18 +1,30 @@
 {
-  "tezosSelectedNode": "Cryptonomic-Nautilus",
-  "conseilSelectedNode": "Cryptonomic-Conseil",
+  "tezosSelectedNode": "Nautilus Cloud (Tezos - mainnet)",
+  "conseilSelectedNode": "Nautilus Cloud (Conseil - mainnet)",
   "nodesList": [
     {
-      "name": "Cryptonomic-Nautilus",
+      "name": "Nautilus Cloud (Tezos - mainnet)",
       "type": "TEZOS",
-      "url": "https://tezos-zeronet.cryptonomic-infra.tech:443",
+      "url": "https://tezos-prod.cryptonomic-infra.tech",
       "apiKey": ""
     },
     {
-      "name": "Cryptonomic-Conseil",
+      "name": "Nautilus Cloud (Tezos - alphanet)",
+      "type": "TEZOS",
+      "url": "https://tezos-dev.cryptonomic-infra.tech",
+      "apiKey": ""
+    },
+    {
+      "name": "Nautilus Cloud (Conseil - mainnet)",
       "type": "CONSEIL",
-      "url": "https://conseil-staging2.cryptonomic-infra.tech:443",
+      "url": "https://conseil-prod.cryptonomic-infra.tech",
       "apiKey": "galleon"
+    },
+    {
+      "name": "Nautilus Cloud (Conseil - alphanet)",
+      "type": "CONSEIL",
+      "url": "https://conseil-dev.cryptonomic-infra.tech",
+      "apiKey": "hooman"
     }
   ],
   "selectedPath": "Default",

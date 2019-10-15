@@ -1,6 +1,6 @@
 {
-  "name": "Tezori",
-  "productName": "Tezori",
+  "name": "galleon",
+  "productName": "Galleon",
   "version": "0.9.0b",
   "description": "A community wallet for Tezos",
   "scripts": {
@@ -62,8 +62,8 @@
     ]
   },
   "build": {
-    "productName": "Tezori",
-    "appId": "tech.cryptonomic.Tezori",
+    "productName": "Galleon",
+    "appId": "tech.cryptonomic.Galleon",
     "files": [
       "dist/",
       "node_modules/",

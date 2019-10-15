@@ -346,7 +346,7 @@
       "last_updated": "Son güncelleme {{date}}"
     },
     "versionStatus": {
-      "version_update": "Tezori'un eski bir sürümünü kullanıyorsunuz. Bu sürümde bazı özellikler çalışmıyor olabilir. Lütfen v{{version}}'yi indirin: "
+      "version_update": "Galleon'un eski bir sürümünü kullanıyorsunuz. Bu sürümde bazı özellikler çalışmıyor olabilir. Lütfen v{{version}}'yi indirin: "
     },
     "comingSoon": {
       "coming_soon": "Yakında!",
@@ -394,7 +394,7 @@
       "want_to_import_fundraiser_paper_wallet": "Proje Destek zamanı oluşturulan kağıt",
       "create_named_wallet": "cüzdana mı erişmek istiyorsun? Öncelikle <1><0>yeni bir <1>{{name}}</1> cüzdanı oluştur</0></1>.",
       "tagline": "Tezos ailesi için bir cüzdan",
-      "app_name": "Tezori",
+      "app_name": "Galleon",
       "keystore_wallet": "Anahtar Dosyalı Cüzdan",
       "ledger_wallet": "Ledger Cüzdan",
       "connect_ledger": "Ledger ile Bağlan",
