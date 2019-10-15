@@ -67,7 +67,7 @@ export function delegate(
 
     const keyStore = getSelectedKeyStore(
       identities,
-      selectedAccountHash,
+      selectedParentHash,
       selectedParentHash
     );
     const { url } = getSelectedNode(settings, TEZOS);
@@ -79,7 +79,7 @@ export function delegate(
       res = await setDelegate(
         url,
         newKeyStore,
-        keyStore.publicKeyHash,
+        selectedAccountHash,
         delegateValue,
         fee,
         derivation
@@ -93,7 +93,7 @@ export function delegate(
       res = await setDelegate(
         url,
         keyStore,
-        keyStore.publicKeyHash,
+        selectedAccountHash,
         delegateValue,
         fee
       ).catch(err => {
@@ -103,8 +103,6 @@ export function delegate(
         return false;
       });
     }
-
-    console.log('delegate results-----', res);
 
     if (res) {
       const operationResult =
