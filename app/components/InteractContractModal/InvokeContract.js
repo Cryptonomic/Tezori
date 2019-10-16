@@ -52,12 +52,12 @@ const defaultState = {
   gas: 0,
   storage: 0,
   fee: 50000,
-  amount: '',
+  amount: '0',
   parameters: '',
   passPhrase: '',
   isShowedPwd: false,
   isOpenLedgerConfirm: false,
-  codeFormat: '',
+  codeFormat: 'micheline',
   entryPoint: ''
 };
 

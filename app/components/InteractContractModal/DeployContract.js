@@ -53,14 +53,14 @@ const defaultState = {
   gas: 0,
   storage: 0,
   fee: 50000,
-  amount: '',
+  amount: '0',
   parameters: '',
   passPhrase: '',
   isShowedPwd: false,
   isOpenLedgerConfirm: false,
   michelsonCode: '',
   delegate: '',
-  codeFormat: ''
+  codeFormat: 'micheline'
 };
 
 class DeployContract extends Component<Props> {
@@ -179,7 +179,7 @@ class DeployContract extends Component<Props> {
           <InputAddressContainer>
             <CustomTextArea
               label={t('components.interactModal.paste_micheline_code', {
-                format: codeFormat || 'micheline'
+                format: codeFormat
               })}
               multiline
               rows={5}

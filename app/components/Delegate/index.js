@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -23,7 +23,7 @@ import {
 type Props = {
   selectedAccountHash?: string,
   selectedParentHash?: string,
-  address?: string,
+  address?: string | null,
   delegate?: () => {},
   fetchDelegationAverageFees: () => {},
   getIsReveal: () => {},
@@ -108,24 +108,6 @@ const SetADelegate = styled.div`
   margin-bottom: 14px;
   color: ${({ theme: { colors } }) => colors.black2};
 `;
-const WarningContainer = styled.div`
-  height: 91px;
-  width: 60%;
-  border: solid 1px rgba(148, 169, 209, 0.49);
-  border-radius: 3px;
-  background-color: ${({ theme: { colors } }) => colors.light};
-  display: flex;
-  align-items: center;
-  padding: 0 19px;
-  margin-right: 5%;
-`;
-const InfoText = styled.div`
-  color: ${({ theme: { colors } }) => colors.primary};
-  font-size: 16px;
-  letter-spacing: 0.7px;
-  margin-left: 11px;
-  line-height: 21px;
-`;
 
 const initialState = {
   open: false,
@@ -199,12 +181,6 @@ class Delegate extends Component<Props> {
   handleTempAddressChange = tempAddress => this.setState({ tempAddress });
   handleFeeChange = fee => this.setState({ fee });
   setIsLoading = isLoading => this.setState({ isLoading });
-
-  getAddress = () => {
-    const { tempAddress } = this.state;
-    const { address } = this.props;
-    return tempAddress || address;
-  };
 
   onDelegate = async () => {
     const { password, fee, tempAddress } = this.state;
@@ -287,33 +263,29 @@ class Delegate extends Component<Props> {
       <Container>
         <Title>{t('components.delegate.delegate_settings')}</Title>
         <DelegateContainer>
-          {address && (
-            <DelegateInputContainer>
-              <SetADelegate>
-                {t('components.delegate.current_delegate')}:
-              </SetADelegate>
-              <TezosAddress
-                address={address}
-                size="16px"
-                color="primary"
-                color2="index0"
-              />
-              <UpdateButton
-                disabled={isLoading}
-                onClick={this.openConfirmation}
-                buttonTheme="secondary"
-                small
-              >
-                {t('components.delegate.change_delegate')}
-              </UpdateButton>
-            </DelegateInputContainer>
-          )}
-          {!address && (
-            <WarningContainer>
-              <TezosIcon iconName="info" size={ms(5)} color="info" />
-              <InfoText>{t('components.delegate.delegate_warning')}</InfoText>
-            </WarningContainer>
-          )}
+          <DelegateInputContainer>
+            {!!address && (
+              <Fragment>
+                <SetADelegate>
+                  {t('components.delegate.current_delegate')}:
+                </SetADelegate>
+                <TezosAddress
+                  address={address}
+                  size="16px"
+                  color="primary"
+                  color2="index0"
+                />
+              </Fragment>
+            )}
+            <UpdateButton
+              disabled={isLoading}
+              onClick={this.openConfirmation}
+              buttonTheme="secondary"
+              small
+            >
+              {t('components.delegate.change_delegate')}
+            </UpdateButton>
+          </DelegateInputContainer>
           <DelegationTipsContainer>
             <DelegationTitle>
               {t('components.addressBlock.delegation_tips')}
@@ -358,6 +330,10 @@ class Delegate extends Component<Props> {
     );
   }
 }
+
+Delegate.defaultProps = {
+  address: ''
+};
 
 function mapStateToProps(state) {
   return {
