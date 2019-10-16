@@ -148,12 +148,12 @@ const initialState = {
   selectedInvokeAddress: '',
   gas: 0,
   storage: 0,
-  amount: '',
+  amount: '0',
   parameters: '',
   passPhrase: '',
   isShowedPwd: false,
   isOpenLedgerConfirm: false,
-  codeFormat: ''
+  codeFormat: 'micheline'
 };
 
 class Invoke extends Component<Props> {

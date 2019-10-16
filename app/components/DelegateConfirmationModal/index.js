@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import Modal from '../CustomModal';
@@ -15,7 +15,8 @@ import { wrapComponent } from '../../utils/i18n';
 import Tooltip from '../Tooltip/';
 
 const ModalContainer = styled.div`
-  padding: 43px 76px 0 76px;
+  padding: ${({ isAddress }) =>
+    isAddress ? '43px 76px 0 76px' : '10px 76px 0 76px'};
 `;
 const DelegateTitle = styled.div`
   color: ${({ theme: { colors } }) => colors.gray5};
@@ -118,7 +119,7 @@ const BoldSpan = styled.span`
 type Props = {
   onEnterPress: () => {},
   open?: boolean,
-  address: string,
+  address: string | null,
   newAddress?: string,
   password?: string,
   fee?: number,
@@ -189,18 +190,22 @@ const DelegateConfirmationModal = (props: Props) => {
       style={{ width: '651px' }}
       onKeyDown={onEnterPress}
     >
-      <ModalContainer>
-        <DelegateTitle>
-          {t('components.delegate.current_delegate')}
-        </DelegateTitle>
-        <AddressContainer>
-          <TezosAddress
-            address={address}
-            size="16px"
-            color="primary"
-            color2="index0"
-          />
-        </AddressContainer>
+      <ModalContainer isAddress={!!address}>
+        {!!address && (
+          <Fragment>
+            <DelegateTitle>
+              {t('components.delegate.current_delegate')}
+            </DelegateTitle>
+            <AddressContainer>
+              <TezosAddress
+                address={address}
+                size="16px"
+                color="primary"
+                color2="index0"
+              />
+            </AddressContainer>
+          </Fragment>
+        )}
         <InputAddressContainer>
           <InputAddress
             labelText={t(

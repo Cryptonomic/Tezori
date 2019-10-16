@@ -150,7 +150,7 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Delegate
             isReady={ready}
-            address={selectedAccount.get('delegate') || selectedAccountHash}
+            address={selectedAccount.get('delegate')}
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
           />
