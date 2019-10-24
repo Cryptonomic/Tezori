@@ -187,7 +187,7 @@ class InvokeContract extends Component<Props> {
             <InputAddress
               addressType="invoke"
               labelText={t('components.interactModal.smart_address')}
-              changeDelegate={val => this.setState({ contractAddress: val })}
+              onAddressChange={val => this.setState({ contractAddress: val })}
               onIssue={status => this.setState({ isAddressIssue: status })}
             />
             {!isAddressIssue && contractAddress && (

@@ -186,6 +186,9 @@ type Props = {
   selectedParentHash?: string,
   validateAmount?: () => {},
   t: () => {},
+  getIsImplicitAndEmpty: () => {},
+  getIsReveal: () => {},
+  fetchTransactionAverageFees: () => {},
   addressBalance: number,
   isLedger: boolean
 };
@@ -354,7 +357,9 @@ class Send extends Component<Props> {
 
   getBalanceState = (balance, amount) => {
     const { t } = this.props;
-    if (balance < 0) {
+    const realAmount = !amount ? Number(amount) : 0;
+
+    if (balance <= 0 || balance < realAmount) {
       return {
         isIssue: true,
         warningMessage: t('components.send.warnings.total_exceeds'),
@@ -362,13 +367,6 @@ class Send extends Component<Props> {
       };
     }
 
-    if (amount) {
-      return {
-        isIssue: false,
-        warningMessage: '',
-        balanceColor: 'gray3'
-      };
-    }
     return {
       isIssue: false,
       warningMessage: '',
@@ -445,6 +443,7 @@ class Send extends Component<Props> {
     const error = isIssue ? this.renderError(warningMessage) : '';
 
     const isDisabled =
+      !amount === '0' ||
       !amount ||
       !toAddress ||
       !isReady ||
@@ -459,7 +458,7 @@ class Send extends Component<Props> {
           labelText={t('components.send.recipient_address')}
           userAddress={selectedAccountHash}
           addressType="send"
-          changeDelegate={this.handleToAddressChange}
+          onAddressChange={this.handleToAddressChange}
           onIssue={status => this.setState({ isAddressIssue: status })}
         />
         <InputAmount>

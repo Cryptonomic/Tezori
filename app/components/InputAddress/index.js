@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { debounce } from 'throttle-debounce';
 
 import TextField from '../TextField';
 import { wrapComponent } from '../../utils/i18n';
@@ -55,7 +56,7 @@ const TextfieldTooltip = styled(Button)`
 
 type Props = {
   labelText: string,
-  changeDelegate: () => {},
+  onAddressChange: () => {},
   tooltip?: boolean,
   userAddress?: string,
   addressType: 'send' | 'delegate' | 'invoke',
@@ -64,12 +65,14 @@ type Props = {
   getAccountFromServer: () => {}
 };
 
-class InputAddress extends React.PureComponent<Props> {
-  props: Props;
-
-  state = {
-    error: ''
-  };
+class InputAddress extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: ''
+    };
+    this.inputDebounce = debounce(300, this.validateAddress);
+  }
 
   renderToolTipComponent = () => {
     const { t } = this.props;
@@ -109,7 +112,7 @@ class InputAddress extends React.PureComponent<Props> {
 
   validateAddress = async (
     delegateText,
-    changeDelegate,
+    onAddressChange,
     addressType = 'send'
   ) => {
     const { t, onIssue, getAccountFromServer } = this.props;
@@ -138,34 +141,22 @@ class InputAddress extends React.PureComponent<Props> {
     if (!errorState && delegateText) {
       const account = await getAccountFromServer(delegateText);
       if (!account || account.length === 0) {
-        if (addressType === 'invoke') {
-          error = t('components.inputAddress.errors.not_exist');
-        }
-      } else {
-        const { script } = account[0];
-        if (!script && addressType === 'invoke') {
-          error = t('components.inputAddress.errors.not_smartcontract');
-        } else if (script && addressType !== 'invoke') {
-          error = t('components.inputAddress.errors.use_interact');
-        }
+        error = t('components.inputAddress.errors.not_exist');
       }
     }
-    changeDelegate(delegateText);
+    onAddressChange(delegateText);
     onIssue(!!error);
     this.setState({ error });
   };
 
   render() {
+    const { onAddressChange, addressType } = this.props;
     return (
       <DelegateContainer>
         <TextField
           label={this.props.labelText}
           onChange={value =>
-            this.validateAddress(
-              value,
-              this.props.changeDelegate,
-              this.props.addressType
-            )
+            this.inputDebounce(value, onAddressChange, addressType)
           }
           errorText={this.state.error}
         />

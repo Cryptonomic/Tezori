@@ -21,6 +21,7 @@ import InvokeManager from '../InvokeManager';
 import CodeStorage from '../CodeStorage';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
+import WithdrawDeposit from '../WithdrawDeposit';
 import {
   TRANSACTIONS,
   SEND,
@@ -29,7 +30,9 @@ import {
   INVOKE,
   CODE,
   STORAGE,
-  INVOKE_MANAGER
+  INVOKE_MANAGER,
+  DEPOSIT,
+  WITHDRAW
 } from '../../constants/TabConstants';
 import { ms } from '../../styles/helpers';
 import transactionsEmptyState from '../../../resources/transactionsEmptyState.svg';
@@ -60,7 +63,8 @@ const Tab = styled(Button)`
 const TabList = styled.div`
   background-color: ${({ theme: { colors } }) => colors.accent};
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: ${({ count }) =>
+    count > 4 ? `repeat(${count}, 1fr)` : 'repeat(4, 1fr)'};
   grid-column-gap: 50px;
 `;
 
@@ -192,6 +196,19 @@ class ActionPanel extends Component<Props, State> {
             onSuccess={() => this.handleLinkPress(TRANSACTIONS)}
           />
         );
+      case WITHDRAW:
+      case DEPOSIT:
+        return (
+          <WithdrawDeposit
+            balance={balance}
+            isReady={ready}
+            addresses={regularAddresses}
+            selectedParentHash={selectedParentHash}
+            selectedAccountHash={selectedAccountHash}
+            format={activeTab}
+            onSuccess={() => this.handleLinkPress(TRANSACTIONS)}
+          />
+        );
       case TRANSACTIONS:
       default: {
         if (!ready) {
@@ -272,7 +289,7 @@ class ActionPanel extends Component<Props, State> {
       ).toString('hex');
 
       if (k === '023fc21b332d338212185c817801f288') {
-        return [TRANSACTIONS, INVOKE_MANAGER];
+        return [TRANSACTIONS, SEND, DELEGATE, WITHDRAW, DEPOSIT];
       }
 
       return [TRANSACTIONS, INVOKE, CODE, STORAGE];
@@ -346,7 +363,7 @@ class ActionPanel extends Component<Props, State> {
           addressIndex={addressIndex}
         />
 
-        <TabList>
+        <TabList count={tabs.length}>
           {tabs.map(tab => {
             const ready = isReady(status, storeType, tab);
             return (
