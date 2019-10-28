@@ -15,13 +15,13 @@ import PageNumbers from '../PageNumbers/';
 import Transactions from '../Transactions/';
 import Send from '../Send/';
 import Receive from '../Receive/';
-import Delegate from '../Delegate/';
 import Invoke from '../Invoke';
 import InvokeManager from '../InvokeManager';
 import CodeStorage from '../CodeStorage';
 import Loader from '../Loader/';
 import AccountStatus from '../AccountStatus/';
-import WithdrawDeposit from '../WithdrawDeposit';
+import WithdrawDeposit from '../TabContents/WithdrawDeposit';
+import Delegate from '../TabContents/Delegate';
 import {
   TRANSACTIONS,
   SEND,
@@ -154,7 +154,6 @@ class ActionPanel extends Component<Props, State> {
         return (
           <Delegate
             isReady={ready}
-            address={selectedAccount.get('delegate')}
             selectedAccountHash={selectedAccountHash}
             selectedParentHash={selectedParentHash}
           />
