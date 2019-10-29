@@ -51,13 +51,13 @@ type Props = {
 };
 
 function Delegate(props: Props) {
-  const [fee, setFee] = useState(50000);
   const [miniFee, setMiniFee] = useState(0);
   const [averageFees, setAverageFees] = useState({
     low: 1420,
     medium: 2840,
     high: 5680
   });
+  const [fee, setFee] = useState(averageFees.low);
   const [newAddress, setAddress] = useState('');
   const [passPhrase, setPassPhrase] = useState('');
   const [isAddressIssue, setIsAddressIssue] = useState(false);
@@ -166,7 +166,7 @@ function Delegate(props: Props) {
           )}
           addressType="delegate"
           tooltip={false}
-          handleAmountChange={val => setAddress(val)}
+          onAddressChange={val => setAddress(val)}
           onIssue={val => setIsAddressIssue(val)}
         />
       </AmountContainer>

@@ -47,12 +47,12 @@ type Props = {
 };
 
 function WithdrawDeposit(props: Props) {
-  const [fee, setFee] = useState(50000);
   const [averageFees, setAverageFees] = useState({
     low: 1420,
     medium: 2840,
     high: 5680
   });
+  const [fee, setFee] = useState(averageFees.low);
   const [amount, setAmount] = useState('');
   const [passPhrase, setPassPhrase] = useState('');
   const [isShowedPwd, setIsShowedPwd] = useState(false);
@@ -79,6 +79,7 @@ function WithdrawDeposit(props: Props) {
     if (averageFees.low < OPERATIONFEE) {
       averageFees.low = OPERATIONFEE;
       setAverageFees(averageFees);
+      setFee(averageFees.low);
     }
   }
 
