@@ -213,7 +213,7 @@ const DelegateConfirmationModal = (props: Props) => {
             )}
             addressType="delegate"
             tooltip={false}
-            changeDelegate={onAddressChange}
+            onAddressChange={onAddressChange}
             onIssue={onDelegateIssue}
           />
         </InputAddressContainer>

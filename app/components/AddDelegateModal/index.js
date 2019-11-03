@@ -40,6 +40,7 @@ type Props = {
   open: boolean,
   onCloseClick: () => {},
   t: () => {},
+  setIsLoading: () => {},
   managerBalance: ?number,
   isLedger: boolean,
   getIsReveal: () => {}
@@ -450,7 +451,7 @@ class AddDelegateModal extends Component<Props> {
             labelText={t('general.nouns.delegate_address')}
             addressType="delegate"
             tooltip
-            changeDelegate={this.changeDelegate}
+            onAddressChange={this.changeDelegate}
             onIssue={status => this.setState({ isDelegateIssue: status })}
           />
         </InputAddressContainer>
