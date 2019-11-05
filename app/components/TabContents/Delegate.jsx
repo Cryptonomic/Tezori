@@ -164,7 +164,7 @@ function Delegate(props: Props) {
           labelText={t(
             'components.delegateConfirmationModal.new_address_label'
           )}
-          addressType="delegate"
+          operationType="delegate"
           tooltip={false}
           onAddressChange={val => setAddress(val)}
           onIssue={val => setIsAddressIssue(val)}

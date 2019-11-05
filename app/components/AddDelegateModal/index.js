@@ -442,14 +442,14 @@ class AddDelegateModal extends Component<Props> {
     return (
       <Modal
         onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
-        title={t('components.addDelegateModal.add_delegate_title')}
+        title={t('components.addDelegateModal.deploy_delegation')}
         open={open}
         onClose={this.onCloseClick}
       >
         <InputAddressContainer>
           <InputAddress
             labelText={t('general.nouns.delegate_address')}
-            addressType="delegate"
+            operationType="delegate"
             tooltip
             onAddressChange={this.changeDelegate}
             onIssue={status => this.setState({ isDelegateIssue: status })}

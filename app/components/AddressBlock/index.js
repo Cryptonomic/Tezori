@@ -7,6 +7,7 @@ import { darken } from 'polished';
 import AddCircle from '@material-ui/icons/AddCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import { StoreType } from 'conseiljs';
+import * as blakejs from 'blakejs';
 
 import { ms } from '../../styles/helpers';
 import TezosIcon from '../TezosIcon/';
@@ -186,21 +187,25 @@ class AddressBlock extends Component<Props, State> {
   getAddresses = addresses => {
     const newAddresses = [];
     const delegatedAddresses = [];
-    const smartAddresses = addresses;
+    const smartAddresses = [];
     let smartBalance = 0;
     addresses.forEach(address => {
-      const { balance, status } = address;
-      // const { script, balance, status } = address;
-      // if (script) {
-      //   smartAddresses.push(address);
-      // } else {
-      //   const newAddress = {
-      //     pkh: address.account_id,
-      //     balance
-      //   };
-      //   newAddresses.push(newAddress);
-      //   delegatedAddresses.push(address);
-      // }
+      const { balance, status, script } = address;
+      if (
+        script !== undefined &&
+        script.length > 0 &&
+        address.account_id.startsWith('KT1')
+      ) {
+        const k = Buffer.from(
+          blakejs.blake2s(script.toString(), null, 16)
+        ).toString('hex');
+
+        if (k === '023fc21b332d338212185c817801f288') {
+          delegatedAddresses.push(address);
+        } else {
+          smartAddresses.push(address);
+        }
+      }
       if (status === READY || status === PENDING) {
         smartBalance += balance;
       }
@@ -293,6 +298,74 @@ class AddressBlock extends Component<Props, State> {
             onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         )}
+        <AddDelegateLabel>
+          <DelegateTitle>
+            {t('components.addDelegateModal.deploy_delegation')}
+          </DelegateTitle>
+          {isManagerReady && (
+            <AddCircle
+              style={{
+                fill: '#7B91C0',
+                height: ms(1),
+                width: ms(1),
+                cursor: 'pointer'
+              }}
+              onClick={this.openDelegateModal}
+            />
+          )}
+          {!isManagerReady && (
+            <Tooltip
+              position="bottom"
+              offset="-24%"
+              content={
+                <NoFundTooltip
+                  content={t('components.addressBlock.not_ready_tooltip')}
+                />
+              }
+            >
+              <Button buttonTheme="plain">
+                <AddCircle
+                  style={{
+                    fill: '#7B91C0',
+                    height: ms(1),
+                    width: ms(1),
+                    opacity: 0.5,
+                    cursor: 'default'
+                  }}
+                />
+              </Button>
+            </Tooltip>
+          )}
+        </AddDelegateLabel>
+        {delegatedAddresses.map((address, index) => {
+          const { status, balance } = address;
+          const addressId = address.account_id;
+          const isDelegatedActive = addressId === selectedAccountHash;
+          const delegatedAddressReady = isReady(status);
+
+          return delegatedAddressReady ? (
+            <Address
+              key={addressId}
+              isContract
+              accountId={addressId}
+              isActive={isDelegatedActive}
+              balance={balance}
+              onClick={() =>
+                this.goToAccount(addressId, publicKeyHash, index + 1)
+              }
+            />
+          ) : (
+            <AddressStatus
+              key={addressId}
+              isContract
+              isActive={isDelegatedActive}
+              status={status}
+              onClick={() =>
+                this.goToAccount(addressId, publicKeyHash, index + 1)
+              }
+            />
+          );
+        })}
         <InteractContractLabel>
           <DelegateTitle>
             {t('components.interactModal.interact_contract')}

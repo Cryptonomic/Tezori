@@ -16,6 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "4.24.0",
-    "conseiljs": "0.3.1-beta"
+    "conseiljs": "0.3.2-alpha"
   }
 }

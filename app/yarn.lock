@@ -210,10 +210,10 @@ commander@^2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-conseiljs@0.3.1-beta:
-  version "0.3.1-beta"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.1-beta.tgz#7a23025f0f2b776ea095c624262da630b4b3195d"
-  integrity sha512-/g4J3HtCZMMSmpdERAMUo1E7BfhImYbRlFDfbqiB0AOX7HIyhVNG35365W07fC6Puvy8oXKgIAG72yTay80gdQ==
+conseiljs@0.3.2-alpha:
+  version "0.3.2-alpha"
+  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.2-alpha.tgz#c201b4b00a142fea7ad13291c5a1c73d7694ba94"
+  integrity sha512-n/fxo2FyDNq3u6TQ9bGSpbPt9TANsrafwb9xb2G2uWzNUAOskieZKxr4UT4FgLIu6E4EIbnJy9F2gl7CsdWSXQ==
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
