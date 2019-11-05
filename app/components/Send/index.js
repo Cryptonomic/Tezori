@@ -22,6 +22,7 @@ import {
   sendTez,
   fetchTransactionAverageFees
 } from '../../reduxContent/sendTezos/thunks';
+import { depositThunk } from '../../reduxContent/invoke/thunks';
 
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
 
@@ -182,6 +183,7 @@ const utez = 1000000;
 type Props = {
   isReady?: boolean,
   sendTez?: () => {},
+  depositThunk: () => {},
   selectedAccountHash?: string,
   selectedParentHash?: string,
   validateAmount?: () => {},
@@ -209,7 +211,8 @@ const initialState = {
     medium: 2840,
     high: 5680
   },
-  isAddressIssue: true
+  isAddressIssue: true,
+  addressType: ''
 };
 class Send extends Component<Props> {
   props: Props;
@@ -337,20 +340,39 @@ class Send extends Component<Props> {
   };
 
   onSend = async () => {
-    const { password, toAddress, amount, fee } = this.state;
-    const { sendTez, selectedAccountHash, selectedParentHash } = this.props;
-    this.setIsLoading(true);
-    await sendTez(
-      password,
-      toAddress,
-      amount,
-      Math.floor(fee),
+    const { password, toAddress, amount, fee, addressType } = this.state;
+    const {
+      sendTez,
+      depositThunk,
       selectedAccountHash,
       selectedParentHash
-    ).catch(err => {
-      console.log(err);
-      return false;
-    });
+    } = this.props;
+    this.setIsLoading(true);
+    if (addressType === 'kt') {
+      await depositThunk(
+        fee,
+        amount,
+        password,
+        toAddress,
+        selectedParentHash
+      ).catch(err => {
+        console.log(err);
+        return false;
+      });
+    } else {
+      await sendTez(
+        password,
+        toAddress,
+        amount,
+        Math.floor(fee),
+        selectedAccountHash,
+        selectedParentHash
+      ).catch(err => {
+        console.log(err);
+        return false;
+      });
+    }
+
     this.closeConfirmation();
     this.setIsLoading(false);
   };
@@ -432,7 +454,8 @@ class Send extends Component<Props> {
       isDisplayedBurn,
       isDisplayedFeeTooltip,
       miniFee,
-      isAddressIssue
+      isAddressIssue,
+      addressType
     } = this.state;
 
     const { isIssue, warningMessage, balanceColor } = this.getBalanceState(
@@ -451,15 +474,21 @@ class Send extends Component<Props> {
       isLoading ||
       isAddressIssue;
 
+    const buttonTitle =
+      addressType === 'kt'
+        ? t('general.verbs.deposit')
+        : t('general.verbs.send');
+
     return (
       <SendContainer>
         <SendTitle>{t('components.send.send_xtz')}</SendTitle>
         <InputAddress
           labelText={t('components.send.recipient_address')}
           userAddress={selectedAccountHash}
-          addressType="send"
+          operationType="send"
           onAddressChange={this.handleToAddressChange}
           onIssue={status => this.setState({ isAddressIssue: status })}
+          onAddressType={type => this.setState({ addressType: type })}
         />
         <InputAmount>
           <TezosNumericInput
@@ -550,7 +579,7 @@ class Send extends Component<Props> {
             onClick={this.validateAmount}
             buttonTheme="primary"
           >
-            {t('general.verbs.send')}
+            {buttonTitle}
           </SendButton>
         </BottomContainer>
 
@@ -600,6 +629,7 @@ const mapDispatchToProps = dispatch =>
     {
       fetchTransactionAverageFees,
       sendTez,
+      depositThunk,
       validateAmount,
       getIsReveal,
       getIsImplicitAndEmpty

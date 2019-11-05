@@ -9,7 +9,9 @@ import Fees from '../Fees';
 import PasswordInput from '../PasswordInput';
 import WithdrawLedgerConfirmationModal from '../WithdrawLedgerConfirmationModal';
 import InputError from './InputError';
+import TezosIcon from './../TezosIcon';
 
+import { ms } from '../../styles/helpers';
 import fetchAverageFees from '../../reduxContent/generalThunk';
 import { withdrawThunk, depositThunk } from '../../reduxContent/invoke/thunks';
 import { getIsLedger } from '../../reduxContent/wallet/selectors';
@@ -24,7 +26,9 @@ import {
   FeeContainer,
   UseMax,
   PasswordButtonContainer,
-  InvokeButton
+  InvokeButton,
+  WarningContainer,
+  InfoText
 } from './style';
 
 const utez = 1000000;
@@ -182,6 +186,15 @@ function WithdrawDeposit(props: Props) {
       : t('general.verbs.deposit');
   const error = isIssue ? <InputError error={warningMessage} /> : '';
 
+  const warningTxt =
+    format === WITHDRAW
+      ? t('components.withdrawDeposit.withdraw_warning', {
+          managerAddress: selectedParentHash
+        })
+      : t('components.withdrawDeposit.deposit_warning', {
+          managerAddress: selectedParentHash
+        });
+
   return (
     <Container onKeyDown={event => onEnterPress(event.key, isDisabled)}>
       <AmountContainer>
@@ -204,6 +217,10 @@ function WithdrawDeposit(props: Props) {
           onChange={val => setFee(val)}
         />
       </FeeContainer>
+      <WarningContainer>
+        <TezosIcon iconName="info" size={ms(5)} color="info" />
+        <InfoText>{warningTxt}</InfoText>
+      </WarningContainer>
 
       <PasswordButtonContainer>
         {!isLedger && (

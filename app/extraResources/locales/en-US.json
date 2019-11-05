@@ -90,7 +90,8 @@
       "gas_tool_tip": "{{gas}} tz is required by the network to create a delegated address",
       "warning1": "Total exceeds available funds",
       "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
-      "add_delegate_title": "Add a Delegate"
+      "add_delegate_title": "Add a Delegate",
+      "deploy_delegation": "Deploy Delegation..."
     },
     "interactModal": {
       "interact_contract": "Interact with Contracts",
@@ -123,7 +124,8 @@
     },
     "address": {
       "manager_address": "Manager Address",
-      "delegated_address": "Delegated Address {{index}}"
+      "delegated_address": "Delegated Address {{index}}",
+      "delegation_contract": "Delegation Contract {{index}}"
     },
     "addressBlock": {
       "descriptions": {
@@ -358,6 +360,10 @@
     "comingSoon": {
       "coming_soon": "Coming Soon!",
       "working_hard": "We are working hard on making this page."
+    },
+    "withdrawDeposit": {
+      "withdraw_warning": "Transfer balance to the manager account at {{managerAddress}}.",
+      "deposit_warning": "Transfer balance from the manager account at {{managerAddress}}"
     }
   },
   "containers": {

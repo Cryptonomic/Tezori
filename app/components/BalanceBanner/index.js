@@ -206,7 +206,7 @@ function BalanceBanner(props: Props) {
   } else if (isContractAddress) {
     addressLabel = `${t('general.nouns.smart_contract')} ${addressIndex}`;
   } else {
-    addressLabel = t('components.address.delegated_address', {
+    addressLabel = t('components.address.delegation_contract', {
       index: addressIndex
     });
   }

@@ -275,7 +275,10 @@ class ActionPanel extends Component<Props, State> {
       address.startsWith('tz2') ||
       address.startsWith('tz3')
     ) {
-      return [TRANSACTIONS, SEND, RECEIVE, DELEGATE];
+      return {
+        tabs: [TRANSACTIONS, SEND, RECEIVE, DELEGATE],
+        isSmartContract: false
+      };
     }
 
     if (
@@ -288,10 +291,16 @@ class ActionPanel extends Component<Props, State> {
       ).toString('hex');
 
       if (k === '023fc21b332d338212185c817801f288') {
-        return [TRANSACTIONS, SEND, DELEGATE, WITHDRAW, DEPOSIT];
+        return {
+          tabs: [TRANSACTIONS, SEND, DELEGATE, WITHDRAW, DEPOSIT],
+          isSmartContract: false
+        };
       }
 
-      return [TRANSACTIONS, INVOKE, CODE, STORAGE];
+      return {
+        tabs: [TRANSACTIONS, INVOKE, CODE, STORAGE],
+        isSmartContract: true
+      };
     }
   };
 
@@ -337,8 +346,7 @@ class ActionPanel extends Component<Props, State> {
 
     const storeType = selectedAccount.get('storeType');
     const status = selectedAccount.get('status');
-    const isContractAddress = !!selectedAccount.get('script');
-    const tabs = this.getTabList(
+    const { tabs, isSmartContract } = this.getTabList(
       selectedAccountHash,
       selectedAccount.get('script')
     );
@@ -358,7 +366,7 @@ class ActionPanel extends Component<Props, State> {
           time={time}
           delegatedAddress={selectedAccount.get('delegate')}
           isWalletSyncing={isWalletSyncing}
-          isContractAddress={isContractAddress}
+          isContractAddress={isSmartContract}
           addressIndex={addressIndex}
         />
 
