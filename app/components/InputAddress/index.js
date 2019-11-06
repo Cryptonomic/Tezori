@@ -181,6 +181,7 @@ class InputAddress extends React.Component<Props> {
       console.log('account----', account);
       if (!account || account.length === 0) {
         error = t('components.inputAddress.errors.not_exist');
+        errorState = false;
       } else {
         const accountState = this.getAddressType(
           delegateText,
@@ -188,13 +189,16 @@ class InputAddress extends React.Component<Props> {
         );
         addressType = accountState.addressType;
         if (accountState.isSmartContract) {
-          error = t('general.nouns.smart_contract');
+          error = t('components.inputAddress.errors.use_interact');
+          errorState = true;
         }
       }
     }
     onAddressChange(delegateText);
-    onIssue(!!error);
-    onAddressType(addressType);
+    onIssue(errorState);
+    if (operationType === 'send') {
+      onAddressType(addressType);
+    }
     this.setState({ error });
   };
 
