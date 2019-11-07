@@ -140,7 +140,7 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   if (type === types.ORIGINATION && isSameLocation) {
     return {
       icon: 'send',
-      preposition: '',
+      preposition: t('general.of'),
       state: t('components.transaction.origination'),
       isFee,
       color: isAmount ? 'error1' : 'gray8',
@@ -239,6 +239,20 @@ const getAddress = (
     return (
       <TezosAddress
         address={transaction.delegate}
+        size="14px"
+        weight="200"
+        color="black2"
+      />
+    );
+  }
+  if (
+    type === types.ORIGINATION &&
+    transaction.source === selectedParentHash &&
+    selectedAccountHash === selectedParentHash
+  ) {
+    return (
+      <TezosAddress
+        address={transaction.originated_contracts}
         size="14px"
         weight="200"
         color="black2"

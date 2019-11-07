@@ -203,6 +203,7 @@ export function originateContract(
           operation_group_hash: operationId,
           source: keyStore.publicKeyHash,
           balance: amountInUtez,
+          originated_contracts: newAddressHash,
           fee
         })
       );
