@@ -34,7 +34,8 @@ type Props = {
   time?: Date,
   t: () => {},
   isWalletSyncing?: boolean,
-  addressIndex: string
+  addressIndex: string,
+  isLedger: boolean
 };
 
 const Container = styled.header`
@@ -192,7 +193,8 @@ function BalanceBanner(props: Props) {
     t,
     isWalletSyncing,
     isContractAddress,
-    addressIndex
+    addressIndex,
+    isLedger
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -237,7 +239,7 @@ function BalanceBanner(props: Props) {
             />
             {addressLabel}
 
-            {isManagerAddress && (
+            {isManagerAddress && !isLedger && (
               <KeyIcon src={keyIconSvg} onClick={() => setIsOpen(true)} />
             )}
           </AddressTitle>

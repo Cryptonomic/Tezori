@@ -113,6 +113,7 @@ type Props = {
   identities: array,
   isLoadingTransactions: boolean,
   isWalletSyncing: boolean,
+  isLedger: boolean,
   syncWallet: () => {},
   selectedAccountHash: string,
   selectedParentHash: string,
@@ -330,7 +331,8 @@ class ActionPanel extends Component<Props, State> {
       time,
       t,
       isWalletSyncing,
-      addressIndex
+      addressIndex,
+      isLedger
     } = this.props;
     const jsIdentities = identities.toJS();
     const selectedAccount = getSelectedAccount(
@@ -368,6 +370,7 @@ class ActionPanel extends Component<Props, State> {
           isWalletSyncing={isWalletSyncing}
           isContractAddress={isSmartContract}
           addressIndex={addressIndex}
+          isLedger={isLedger}
         />
 
         <TabList count={tabs.length}>
@@ -408,7 +411,8 @@ function mapStateToProps({ wallet }) {
     identities: wallet.get('identities'),
     isLoadingTransactions: wallet.get('isLoading'),
     time: wallet.get('time'),
-    isWalletSyncing: wallet.get('isWalletSyncing')
+    isWalletSyncing: wallet.get('isWalletSyncing'),
+    isLedger: wallet.get('isLedger')
   };
 }
 function mapDispatchToProps(dispatch: () => {}) {
