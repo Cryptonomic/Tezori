@@ -442,7 +442,7 @@ class AddDelegateModal extends Component<Props> {
     return (
       <Modal
         onKeyDown={event => this.onEnterPress(event.key, isDisabled)}
-        title={t('components.addDelegateModal.deploy_delegation')}
+        title={t('components.addDelegateModal.add_delegate_title')}
         open={open}
         onClose={this.onCloseClick}
       >

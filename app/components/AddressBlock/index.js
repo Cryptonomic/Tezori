@@ -300,7 +300,7 @@ class AddressBlock extends Component<Props, State> {
         )}
         <AddDelegateLabel>
           <DelegateTitle>
-            {t('components.addDelegateModal.deploy_delegation')}
+            {t('components.addDelegateModal.add_delegate_title')}
           </DelegateTitle>
           {isManagerReady && (
             <AddCircle

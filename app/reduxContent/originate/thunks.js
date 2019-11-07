@@ -190,7 +190,7 @@ export function originateContract(
               [CREATED]: operationId
             },
             order: (identity.accounts.length || 0) + 1,
-            script: isSmartContract ? JSON.stringify(code) : null
+            script: isSmartContract ? JSON.stringify(code) : ''
           },
           identity
         )
@@ -202,6 +202,7 @@ export function originateContract(
           kind: ORIGINATION,
           operation_group_hash: operationId,
           source: keyStore.publicKeyHash,
+          balance: amountInUtez,
           fee
         })
       );
