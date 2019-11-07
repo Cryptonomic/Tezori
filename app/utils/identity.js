@@ -29,7 +29,7 @@ export function createIdentity(identity) {
     activeTab: TRANSACTIONS,
     status: status.CREATED,
     transactions: [],
-    delegate: '',
+    delegate_value: '',
     ...identity
   };
 }

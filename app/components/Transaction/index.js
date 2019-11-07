@@ -248,7 +248,8 @@ const getAddress = (
   if (
     type === types.ORIGINATION &&
     transaction.source === selectedParentHash &&
-    selectedAccountHash === selectedParentHash
+    selectedAccountHash === selectedParentHash &&
+    !!transaction.originated_contracts
   ) {
     return (
       <TezosAddress
