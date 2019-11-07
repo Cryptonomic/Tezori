@@ -138,21 +138,10 @@ const getStatus = (transaction, selectedAccountHash, t) => {
   const isAmount = getIsAmount(transaction.amount);
 
   if (type === types.ORIGINATION && isSameLocation) {
-    if (transaction.script) {
-      return {
-        icon: 'send',
-        preposition: '',
-        state: t('components.transaction.deployment'),
-        isFee,
-        color: isAmount ? 'error1' : 'gray8',
-        sign: isAmount ? '-' : ''
-        // isBurn: true - TODO: Get correct burn amount using paid_storage_size_diff
-      };
-    }
     return {
       icon: 'send',
-      preposition: '',
-      state: t('components.transaction.add_delegate'),
+      preposition: t('general.of'),
+      state: t('components.transaction.origination'),
       isFee,
       color: isAmount ? 'error1' : 'gray8',
       sign: isAmount ? '-' : '',
@@ -259,6 +248,20 @@ const getAddress = (
   if (
     type === types.ORIGINATION &&
     transaction.source === selectedParentHash &&
+    selectedAccountHash === selectedParentHash
+  ) {
+    return (
+      <TezosAddress
+        address={transaction.originated_contracts}
+        size="14px"
+        weight="200"
+        color="black2"
+      />
+    );
+  }
+  if (
+    type === types.ORIGINATION &&
+    transaction.source === selectedParentHash &&
     selectedAccountHash !== selectedParentHash
   ) {
     return null;
@@ -287,7 +290,12 @@ function Transaction(props: Props) {
     selectedAccountHash,
     t
   );
-  const amount = transaction.amount ? parseInt(transaction.amount, 10) : 0;
+  let amount = 0;
+  if (transaction.amount) {
+    amount = parseInt(transaction.amount, 10);
+  } else if (transaction.balance) {
+    amount = parseInt(transaction.balance, 10);
+  }
   const address = getAddress(
     transaction,
     selectedAccountHash,

@@ -598,7 +598,10 @@ export function getIsReveal(selectedAccountHash, selectedParentHash) {
     const isReveal = await TezosNodeReader.isManagerKeyRevealedForAccount(
       url,
       keyStore.publicKeyHash
-    );
+    ).catch(err => {
+      console.log('isreveal error---', err);
+      return false;
+    });
     return isReveal;
   };
 }
