@@ -188,7 +188,7 @@ class InputAddress extends React.Component<Props> {
           account[0].script
         );
         addressType = accountState.addressType;
-        if (accountState.isSmartContract) {
+        if (accountState.isSmartContract && operationType !== 'invoke') {
           error = t('components.inputAddress.errors.use_interact');
           errorState = true;
         }
