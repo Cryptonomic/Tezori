@@ -366,7 +366,7 @@ class ActionPanel extends Component<Props, State> {
           onRefreshClick={syncWallet}
           selectedParentHash={selectedParentHash}
           time={time}
-          delegatedAddress={selectedAccount.get('delegate')}
+          delegatedAddress={selectedAccount.get('delegate_value')}
           isWalletSyncing={isWalletSyncing}
           isContractAddress={isSmartContract}
           addressIndex={addressIndex}

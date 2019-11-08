@@ -24,7 +24,7 @@ export function createTransaction(transaction) {
     balance: null,
     block_hash: null,
     block_level: null,
-    delegate: null,
+    delegate_value: null,
     destination: null,
     fee: null,
     gas_limit: null,

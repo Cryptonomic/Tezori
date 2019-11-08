@@ -17,7 +17,7 @@ export function createAccount(account, identity) {
     block_id: '',
     counter: 0,
     delegate_setable: false,
-    delegate: null,
+    delegate_value: null,
     manager: '',
     script: null,
     spendable: true,
