@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
@@ -138,6 +138,7 @@ type Props = {
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
   theme: object,
+  isLedger: boolean,
   t: () => {}
 };
 
@@ -248,6 +249,7 @@ class AddressBlock extends Component<Props, State> {
       selectedAccountHash,
       delegateTooltip,
       theme,
+      isLedger,
       t
     } = this.props;
 
@@ -298,74 +300,79 @@ class AddressBlock extends Component<Props, State> {
             onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         )}
-        <AddDelegateLabel>
-          <DelegateTitle>
-            {t('components.addDelegateModal.add_delegate_title')}
-          </DelegateTitle>
-          {isManagerReady && (
-            <AddCircle
-              style={{
-                fill: '#7B91C0',
-                height: ms(1),
-                width: ms(1),
-                cursor: 'pointer'
-              }}
-              onClick={this.openDelegateModal}
-            />
-          )}
-          {!isManagerReady && (
-            <Tooltip
-              position="bottom"
-              offset="-24%"
-              content={
-                <NoFundTooltip
-                  content={t('components.addressBlock.not_ready_tooltip')}
-                />
-              }
-            >
-              <Button buttonTheme="plain">
+        {!isLedger && (
+          <Fragment>
+            <AddDelegateLabel>
+              <DelegateTitle>
+                {t('components.addDelegateModal.add_delegate_title')}
+              </DelegateTitle>
+              {isManagerReady && (
                 <AddCircle
                   style={{
                     fill: '#7B91C0',
                     height: ms(1),
                     width: ms(1),
-                    opacity: 0.5,
-                    cursor: 'default'
+                    cursor: 'pointer'
                   }}
+                  onClick={this.openDelegateModal}
                 />
-              </Button>
-            </Tooltip>
-          )}
-        </AddDelegateLabel>
-        {delegatedAddresses.map((address, index) => {
-          const { status, balance } = address;
-          const addressId = address.account_id;
-          const isDelegatedActive = addressId === selectedAccountHash;
-          const delegatedAddressReady = isReady(status);
+              )}
+              {!isManagerReady && (
+                <Tooltip
+                  position="bottom"
+                  offset="-24%"
+                  content={
+                    <NoFundTooltip
+                      content={t('components.addressBlock.not_ready_tooltip')}
+                    />
+                  }
+                >
+                  <Button buttonTheme="plain">
+                    <AddCircle
+                      style={{
+                        fill: '#7B91C0',
+                        height: ms(1),
+                        width: ms(1),
+                        opacity: 0.5,
+                        cursor: 'default'
+                      }}
+                    />
+                  </Button>
+                </Tooltip>
+              )}
+            </AddDelegateLabel>
+            {delegatedAddresses.map((address, index) => {
+              const { status, balance } = address;
+              const addressId = address.account_id;
+              const isDelegatedActive = addressId === selectedAccountHash;
+              const delegatedAddressReady = isReady(status);
 
-          return delegatedAddressReady ? (
-            <Address
-              key={addressId}
-              isContract
-              accountId={addressId}
-              isActive={isDelegatedActive}
-              balance={balance}
-              onClick={() =>
-                this.goToAccount(addressId, publicKeyHash, index + 1)
-              }
-            />
-          ) : (
-            <AddressStatus
-              key={addressId}
-              isContract
-              isActive={isDelegatedActive}
-              status={status}
-              onClick={() =>
-                this.goToAccount(addressId, publicKeyHash, index + 1)
-              }
-            />
-          );
-        })}
+              return delegatedAddressReady ? (
+                <Address
+                  key={addressId}
+                  isContract
+                  accountId={addressId}
+                  isActive={isDelegatedActive}
+                  balance={balance}
+                  onClick={() =>
+                    this.goToAccount(addressId, publicKeyHash, index + 1)
+                  }
+                />
+              ) : (
+                <AddressStatus
+                  key={addressId}
+                  isContract
+                  isActive={isDelegatedActive}
+                  status={status}
+                  onClick={() =>
+                    this.goToAccount(addressId, publicKeyHash, index + 1)
+                  }
+                />
+              );
+            })}
+          </Fragment>
+        )}
+
         <InteractContractLabel>
           <DelegateTitle>
             {t('components.interactModal.interact_contract')}
@@ -505,7 +512,8 @@ function mapStateToProps(state) {
   return {
     delegateTooltip: getDelegateTooltip(state),
     tezosSelectedNode: getTezosSelectedNode(state),
-    tezosNodes: getTezosNodes(state)
+    tezosNodes: getTezosNodes(state),
+    isLedger: state.wallet.get('isLedger')
   };
 }
 
