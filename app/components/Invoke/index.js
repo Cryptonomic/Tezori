@@ -153,7 +153,8 @@ const initialState = {
   passPhrase: '',
   isShowedPwd: false,
   isOpenLedgerConfirm: false,
-  codeFormat: 'micheline'
+  codeFormat: 'micheline',
+  entryPoint: ''
 };
 
 class Invoke extends Component<Props> {
@@ -231,7 +232,8 @@ class Invoke extends Component<Props> {
       parameters,
       selectedInvokeAddress,
       passPhrase,
-      codeFormat
+      codeFormat,
+      entryPoint
     } = this.state;
 
     setIsLoading(true);
@@ -250,7 +252,7 @@ class Invoke extends Component<Props> {
       passPhrase,
       selectedInvokeAddress,
       selectedParentHash,
-      '',
+      entryPoint,
       codeFormat
     ).catch(err => {
       console.error(err);
@@ -297,6 +299,12 @@ class Invoke extends Component<Props> {
               onChange={val => this.setState({ codeFormat: val })}
             />
           </ColFormat>
+        </ParametersContainer>
+        <ParametersContainer>
+          <TextField
+            label={t('components.interactModal.entry_point')}
+            onChange={val => this.setState({ entryPoint: val })}
+          />
         </ParametersContainer>
         <RowContainer>
           <ColContainer>

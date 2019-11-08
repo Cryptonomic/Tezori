@@ -60,6 +60,8 @@ export function invokeAddress(
       userKeyStore.storeType = 2;
     }
 
+    const realEntryPoint = entryPoint !== '' ? entryPoint : undefined;
+
     const res = await sendContractInvocationOperation(
       url,
       userKeyStore,
@@ -69,8 +71,8 @@ export function invokeAddress(
       userDerivation,
       storage,
       gas,
-      entryPoint,
-      JSON.stringify(parameters),
+      realEntryPoint,
+      parameters,
       parameterFormat
     ).catch(err => {
       const errorObj = { name: err.message, ...err };

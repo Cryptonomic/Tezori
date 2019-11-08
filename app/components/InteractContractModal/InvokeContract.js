@@ -51,7 +51,7 @@ const defaultState = {
   selectedInvokeAddress: '',
   gas: 0,
   storage: 0,
-  fee: 50000,
+  fee: 1420,
   amount: '0',
   parameters: '',
   passPhrase: '',
@@ -133,14 +133,13 @@ class InvokeContract extends Component<Props> {
       this.onLedgerConfirmation(true);
     }
 
-    const userParams = parameters ? JSON.parse(parameters) : null;
     const isOperationCompleted = await invokeAddress(
       contractAddress,
       fee,
       amount,
       storage,
       gas,
-      userParams,
+      parameters,
       passPhrase,
       selectedInvokeAddress,
       selectedParentHash,
