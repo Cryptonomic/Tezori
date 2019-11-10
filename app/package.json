@@ -1,7 +1,7 @@
 {
   "name": "galleon",
   "productName": "Galleon",
-  "version": "0.9.0b",
+  "version": "0.9.1b",
   "description": "A wallet for the Tezos blockchain.",
   "main": "./main.prod.js",
   "author": {
@@ -17,6 +17,6 @@
   "dependencies": {
     "@ledgerhq/hw-transport": "4.24.0",
     "@ledgerhq/hw-transport-node-hid": "4.24.0",
-    "conseiljs": "0.3.2-alpha"
+    "conseiljs": "0.3.2-beta"
   }
 }

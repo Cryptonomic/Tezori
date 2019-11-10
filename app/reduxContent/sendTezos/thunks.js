@@ -85,8 +85,7 @@ export function sendTez(
       return false;
     }
 
-    const { url, apiKey } = getSelectedNode(settings, TEZOS);
-    console.log('-debug: - kkkkk - url, apiKey ', url, apiKey);
+    const { url } = getSelectedNode(settings, TEZOS);
     const parsedAmount = tezToUtez(Number(amount.replace(/,/g, '.')));
 
     const userKeyStore = keyStore;

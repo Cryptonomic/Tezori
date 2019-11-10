@@ -128,7 +128,7 @@ basil-tezos-ledger@0.0.1:
   dependencies:
     "@ledgerhq/hw-transport" "^4.21.0"
 
-big-integer@^1.6.45:
+big-integer@^1.6.47:
   version "1.6.47"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.47.tgz#e1e9320e26c4cc81f64fbf4b3bb20e025bf18e2d"
   integrity sha512-9t9f7X3as2XGX8b52GqG6ox0GvIdM86LyIXASJnDCFhYNgt+A+MByQZ3W2PyMRZjEvG5f8TEbSPfEotVuMJnQg==
@@ -210,10 +210,10 @@ commander@^2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-conseiljs@0.3.2-alpha:
-  version "0.3.2-alpha"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.2-alpha.tgz#c201b4b00a142fea7ad13291c5a1c73d7694ba94"
-  integrity sha512-n/fxo2FyDNq3u6TQ9bGSpbPt9TANsrafwb9xb2G2uWzNUAOskieZKxr4UT4FgLIu6E4EIbnJy9F2gl7CsdWSXQ==
+conseiljs@0.3.2-beta:
+  version "0.3.2-beta"
+  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.2-beta.tgz#f08daaab93d4b2a6175fe194583d6a5169a46b67"
+  integrity sha512-bsJfWKiePk3/rLHEmOYGmxbTawXfR1tWvIAfCq4ZEShG70YyjE3wSDZZALhm6qm79G37DrzYz4b2Onf+EShBMQ==
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
@@ -221,13 +221,13 @@ conseiljs@0.3.2-alpha:
     babel-runtime "6.26.0"
     base-n "git+https://github.com/yourcodesucks/base-n.git"
     basil-tezos-ledger "0.0.1"
-    big-integer "^1.6.45"
+    big-integer "^1.6.47"
     bip39 "^3.0.2"
     blakejs "^1.1.0"
     bs58check "^2.1.2"
     https "^1.0.0"
     libsodium-wrappers-sumo "0.7.5"
-    loglevel "^1.6.4"
+    loglevel "^1.6.6"
     moo "0.5.0"
     nearley "2.18.0"
     node-fetch "^2.6.0"
@@ -428,10 +428,10 @@ lodash@^4.17.11:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
-loglevel@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.4.tgz#f408f4f006db8354d0577dcf6d33485b3cb90d56"
-  integrity sha512-p0b6mOGKcGa+7nnmKbpzR6qloPbrgLcnio++E+14Vo/XffOGwZtRpUhr8dTH/x2oCMmEoIU0Zwm3ZauhvYD17g==
+loglevel@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.6.tgz#0ee6300cc058db6b3551fa1c4bf73b83bb771312"
+  integrity sha512-Sgr5lbboAUBo3eXCSPL4/KoVz3ROKquOjcctxmHIt+vol2DrqTQe3SwkKKuYhEiWB5kYa13YyopJ69deJ1irzQ==
 
 md5.js@^1.3.4:
   version "1.3.5"
