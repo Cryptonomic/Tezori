@@ -348,7 +348,18 @@ class Send extends Component<Props> {
       selectedParentHash
     } = this.props;
     this.setIsLoading(true);
-    if (addressType === 'kt') {
+    if (selectedAccountHash.startsWith('KT1')) {
+      await depositThunk(
+        fee,
+        amount,
+        password,
+        toAddress,
+        selectedParentHash
+      ).catch(err => {
+        console.log(err);
+        return false;
+      });
+    } else if (addressType === 'kt') {
       await depositThunk(
         fee,
         amount,
