@@ -341,37 +341,39 @@ class AddressBlock extends Component<Props, State> {
                 </Tooltip>
               )}
             </AddDelegateLabel>
-            {delegatedAddresses.map((address, index) => {
-              const { status, balance } = address;
-              const addressId = address.account_id;
-              const isDelegatedActive = addressId === selectedAccountHash;
-              const delegatedAddressReady = isReady(status);
-
-              return delegatedAddressReady ? (
-                <Address
-                  key={addressId}
-                  isContract
-                  accountId={addressId}
-                  isActive={isDelegatedActive}
-                  balance={balance}
-                  onClick={() =>
-                    this.goToAccount(addressId, publicKeyHash, index + 1)
-                  }
-                />
-              ) : (
-                <AddressStatus
-                  key={addressId}
-                  isContract
-                  isActive={isDelegatedActive}
-                  status={status}
-                  onClick={() =>
-                    this.goToAccount(addressId, publicKeyHash, index + 1)
-                  }
-                />
-              );
-            })}
           </Fragment>
         )}
+        <Fragment>
+          {delegatedAddresses.map((address, index) => {
+            const { status, balance } = address;
+            const addressId = address.account_id;
+            const isDelegatedActive = addressId === selectedAccountHash;
+            const delegatedAddressReady = isReady(status);
+
+            return delegatedAddressReady ? (
+              <Address
+                key={addressId}
+                isContract
+                accountId={addressId}
+                isActive={isDelegatedActive}
+                balance={balance}
+                onClick={() =>
+                  this.goToAccount(addressId, publicKeyHash, index + 1)
+                }
+              />
+            ) : (
+              <AddressStatus
+                key={addressId}
+                isContract
+                isActive={isDelegatedActive}
+                status={status}
+                onClick={() =>
+                  this.goToAccount(addressId, publicKeyHash, index + 1)
+                }
+              />
+            );
+          })}
+        </Fragment>
 
         <InteractContractLabel>
           <DelegateTitle>
