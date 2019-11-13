@@ -4,7 +4,7 @@
   "version": "0.9.1b",
   "description": "A community wallet for Tezos",
   "scripts": {
-    "build": "npm run check-wallet-state &&  concurrently \"yarn build-main\" \"yarn build-renderer\"",
+    "build": "npm run check-wallet-state && concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-debug": "cross-env DEBUG_PROD=true yarn build",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config ./configs/webpack.config.renderer.dev.dll.js --colors",
     "build-e2e": "cross-env E2E_BUILD=true yarn build",
@@ -13,7 +13,7 @@
     "dev": "cross-env START_HOT=1 node -r babel-register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
     "electron-rebuild": "electron-rebuild --parallel --force --types prod,dev,optional --module-dir app",
     "flow": "flow",
-    "flow-typed": "rimraf flow-typed/npm && flow-typed install --overwrite || true",
+    "flow-typed": "rimraf flow-typed/npm && flow-typed install",
     "lint": "cross-env NODE_ENV=development eslint --cache --format=pretty .",
     "lint-fix": "yarn --silent lint --fix; exit 0",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
