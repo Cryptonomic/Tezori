@@ -1,6 +1,6 @@
 {
   "name": "Galleon",
-  "version": "0.9.1b",
+  "version": "0.9.2b",
   "network": "mainnet",
   "blockExplorerHost": "https://mininax.io/mainnet/operations/",
   "logo": "tezosLogo.svg",
@@ -8,5 +8,5 @@
   "termsService": "https://github.com/Cryptonomic/Deployments/raw/master/Terms_of_Service.pdf",
   "privacyPolicy": "https://github.com/Cryptonomic/Deployments/raw/master/Privacy_Policy.pdf",
   "tagline": "containers.loginHome.tagline",
-  "LocalVersionIndex": "13"
+  "LocalVersionIndex": "14"
 }

@@ -214,7 +214,7 @@ export function sendDelegatedFundsThunk(
     const walletPassword = state().wallet.get('password');
     const keyStore = getSelectedKeyStore(
       identities,
-      selectedAccountHash,
+      selectedParentHash,
       selectedParentHash
     );
 
@@ -245,11 +245,11 @@ export function sendDelegatedFundsThunk(
     const res = await sendDelegatedFunds(
       url,
       userKeyStore,
-      toAddress,
+      selectedAccountHash,
       fee,
       parsedAmount,
       userDerivation,
-      ''
+      toAddress
     ).catch(err => {
       const errorObj = { name: err.message, ...err };
       console.error(errorObj);

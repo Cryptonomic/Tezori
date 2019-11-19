@@ -355,7 +355,6 @@ class Send extends Component<Props> {
       selectedAccountHash.startsWith('KT1') &&
       selectedParentHash !== toAddress
     ) {
-      // ConseilJS chain/tezos/TezosProtocolHelper.sendDelegatedFunds
       await sendDelegatedFundsThunk(
         password,
         toAddress,
