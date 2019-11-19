@@ -20,7 +20,8 @@ import Tooltip from '../Tooltip/';
 import {
   validateAmount,
   sendTez,
-  fetchTransactionAverageFees
+  fetchTransactionAverageFees,
+  sendDelegatedFundsThunk
 } from '../../reduxContent/sendTezos/thunks';
 import { depositThunk } from '../../reduxContent/invoke/thunks';
 
@@ -183,6 +184,7 @@ const utez = 1000000;
 type Props = {
   isReady?: boolean,
   sendTez?: () => {},
+  sendDelegatedFundsThunk: () => {},
   depositThunk: () => {},
   selectedAccountHash?: string,
   selectedParentHash?: string,
@@ -343,6 +345,7 @@ class Send extends Component<Props> {
     const { password, toAddress, amount, fee, addressType } = this.state;
     const {
       sendTez,
+      sendDelegatedFundsThunk,
       depositThunk,
       selectedAccountHash,
       selectedParentHash
@@ -353,12 +356,17 @@ class Send extends Component<Props> {
       selectedParentHash !== toAddress
     ) {
       // ConseilJS chain/tezos/TezosProtocolHelper.sendDelegatedFunds
-      /*
-        sendDelegatedFunds(server: string, keyStore: KeyStore, contract: string, fee: number, amount: number, derivationPath: string = '', destination: string)
-            keyStore: Find by selectedParentHash
-            contract: selectedAccountHash
-            destination: toAddress
-        */
+      await sendDelegatedFundsThunk(
+        password,
+        toAddress,
+        amount,
+        Math.floor(fee),
+        selectedAccountHash,
+        selectedParentHash
+      ).catch(err => {
+        console.log(err);
+        return false;
+      });
     } else if (selectedAccountHash.startsWith('KT1')) {
       await depositThunk(
         fee,
@@ -654,7 +662,8 @@ const mapDispatchToProps = dispatch =>
       depositThunk,
       validateAmount,
       getIsReveal,
-      getIsImplicitAndEmpty
+      getIsImplicitAndEmpty,
+      sendDelegatedFundsThunk
     },
     dispatch
   );
