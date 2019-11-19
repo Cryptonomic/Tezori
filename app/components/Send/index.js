@@ -348,7 +348,18 @@ class Send extends Component<Props> {
       selectedParentHash
     } = this.props;
     this.setIsLoading(true);
-    if (selectedAccountHash.startsWith('KT1')) {
+    if (
+      selectedAccountHash.startsWith('KT1') &&
+      selectedParentHash !== toAddress
+    ) {
+      // ConseilJS chain/tezos/TezosProtocolHelper.sendDelegatedFunds
+      /*
+        sendDelegatedFunds(server: string, keyStore: KeyStore, contract: string, fee: number, amount: number, derivationPath: string = '', destination: string)
+            keyStore: Find by selectedParentHash
+            contract: selectedAccountHash
+            destination: toAddress
+        */
+    } else if (selectedAccountHash.startsWith('KT1')) {
       await depositThunk(
         fee,
         amount,
