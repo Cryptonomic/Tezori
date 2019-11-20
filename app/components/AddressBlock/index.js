@@ -138,7 +138,6 @@ type Props = {
   syncAccountOrIdentity: () => {},
   selectedAccountHash: string,
   theme: object,
-  isLedger: boolean,
   t: () => {}
 };
 
@@ -249,7 +248,6 @@ class AddressBlock extends Component<Props, State> {
       selectedAccountHash,
       delegateTooltip,
       theme,
-      isLedger,
       t
     } = this.props;
 
@@ -300,49 +298,47 @@ class AddressBlock extends Component<Props, State> {
             onClick={() => this.goToAccount(publicKeyHash, publicKeyHash, 0)}
           />
         )}
-        {!isLedger && (
-          <Fragment>
-            <AddDelegateLabel>
-              <DelegateTitle>
-                {t('components.addDelegateModal.add_delegate_title')}
-              </DelegateTitle>
-              {isManagerReady && (
-                <AddCircle
-                  style={{
-                    fill: '#7B91C0',
-                    height: ms(1),
-                    width: ms(1),
-                    cursor: 'pointer'
-                  }}
-                  onClick={this.openDelegateModal}
-                />
-              )}
-              {!isManagerReady && (
-                <Tooltip
-                  position="bottom"
-                  offset="-24%"
-                  content={
-                    <NoFundTooltip
-                      content={t('components.addressBlock.not_ready_tooltip')}
-                    />
-                  }
-                >
-                  <Button buttonTheme="plain">
-                    <AddCircle
-                      style={{
-                        fill: '#7B91C0',
-                        height: ms(1),
-                        width: ms(1),
-                        opacity: 0.5,
-                        cursor: 'default'
-                      }}
-                    />
-                  </Button>
-                </Tooltip>
-              )}
-            </AddDelegateLabel>
-          </Fragment>
-        )}
+        <Fragment>
+          <AddDelegateLabel>
+            <DelegateTitle>
+              {t('components.addDelegateModal.add_delegate_title')}
+            </DelegateTitle>
+            {isManagerReady && (
+              <AddCircle
+                style={{
+                  fill: '#7B91C0',
+                  height: ms(1),
+                  width: ms(1),
+                  cursor: 'pointer'
+                }}
+                onClick={this.openDelegateModal}
+              />
+            )}
+            {!isManagerReady && (
+              <Tooltip
+                position="bottom"
+                offset="-24%"
+                content={
+                  <NoFundTooltip
+                    content={t('components.addressBlock.not_ready_tooltip')}
+                  />
+                }
+              >
+                <Button buttonTheme="plain">
+                  <AddCircle
+                    style={{
+                      fill: '#7B91C0',
+                      height: ms(1),
+                      width: ms(1),
+                      opacity: 0.5,
+                      cursor: 'default'
+                    }}
+                  />
+                </Button>
+              </Tooltip>
+            )}
+          </AddDelegateLabel>
+        </Fragment>
         <Fragment>
           {delegatedAddresses.map((address, index) => {
             const { status, balance } = address;
@@ -514,8 +510,7 @@ function mapStateToProps(state) {
   return {
     delegateTooltip: getDelegateTooltip(state),
     tezosSelectedNode: getTezosSelectedNode(state),
-    tezosNodes: getTezosNodes(state),
-    isLedger: state.wallet.get('isLedger')
+    tezosNodes: getTezosNodes(state)
   };
 }
 
