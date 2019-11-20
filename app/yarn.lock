@@ -33,7 +33,7 @@
   dependencies:
     events "^3.0.0"
 
-"@ledgerhq/hw-transport@^4.21.0", "@ledgerhq/hw-transport@^4.24.0":
+"@ledgerhq/hw-transport@^4.24.0":
   version "4.72.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.72.1.tgz#431be99e883c71be6fc6bd7480902bcd41ae24a0"
   integrity sha512-6RBiDALBiVfBWK6zaZzhVj/jPZR4vEfxfRvh8iDerxYhcFY/uVVbQkoegt6dBtCX0q5T4nDLAWp5jqV8j0dcZw==
@@ -121,13 +121,6 @@ base64-js@^1.0.2:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
   integrity sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
 
-basil-tezos-ledger@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/basil-tezos-ledger/-/basil-tezos-ledger-0.0.1.tgz#29a2136618f08d33c0725bd4beef3e7a44bdd440"
-  integrity sha512-w4qU75Ta0i4uvTUNDFC+/h+oc7bAqNaEP6tqXbkZJNn6Q4cyRv/3NHTIFGchKSm8UOu6VA/7jouwt/oGvUsfZA==
-  dependencies:
-    "@ledgerhq/hw-transport" "^4.21.0"
-
 big-integer@^1.6.47:
   version "1.6.47"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.47.tgz#e1e9320e26c4cc81f64fbf4b3bb20e025bf18e2d"
@@ -139,6 +132,11 @@ bindings@^1.4.0, bindings@^1.5.0:
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
   dependencies:
     file-uri-to-path "1.0.0"
+
+bip32-path@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/bip32-path/-/bip32-path-0.4.2.tgz#5db0416ad6822712f077836e2557b8697c0c7c99"
+  integrity sha1-XbBBataCJxLwd4NuJVe4aXwMfJk=
 
 bip39@^3.0.2:
   version "3.0.2"
@@ -210,18 +208,17 @@ commander@^2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-conseiljs@0.3.2-beta:
-  version "0.3.2-beta"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.2-beta.tgz#f08daaab93d4b2a6175fe194583d6a5169a46b67"
-  integrity sha512-bsJfWKiePk3/rLHEmOYGmxbTawXfR1tWvIAfCq4ZEShG70YyjE3wSDZZALhm6qm79G37DrzYz4b2Onf+EShBMQ==
+"conseiljs@file:../../../ConseilJS/conseiljs-0.3.3-alpha.tgz":
+  version "0.3.3-alpha"
+  resolved "file:../../../ConseilJS/conseiljs-0.3.3-alpha.tgz#b82bfd50f00cb5fd2ae03553b91c2253929d295a"
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
     aws-sdk "^2.533.0"
     babel-runtime "6.26.0"
     base-n "git+https://github.com/yourcodesucks/base-n.git"
-    basil-tezos-ledger "0.0.1"
     big-integer "^1.6.47"
+    bip32-path "^0.4.2"
     bip39 "^3.0.2"
     blakejs "^1.1.0"
     bs58check "^2.1.2"
