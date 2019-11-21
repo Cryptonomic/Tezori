@@ -5,13 +5,13 @@
     {
       "name": "Cryptonomic-Nautilus",
       "type": "TEZOS",
-      "url": "https://tezos-prod.cryptonomic-infra.tech:443",
+      "url": "https://tezos-dev.cryptonomic-infra.tech:443",
       "apiKey": ""
     },
     {
       "name": "Cryptonomic-Conseil",
       "type": "CONSEIL",
-      "url": "https://conseil-prod.cryptonomic-infra.tech:443",
+      "url": "https://conseil-dev.cryptonomic-infra.tech:443",
       "apiKey": "galleon"
     }
   ],

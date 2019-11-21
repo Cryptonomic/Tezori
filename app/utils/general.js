@@ -129,10 +129,11 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
         console.error(error);
         return null;
     });
-    if (updatedAccount && updatedAccount[0]) {
+
+    if (updatedAccount) {
       console.log('ready ' + util.inspect(updatedAccount, false, null, false));
-      account.delegate_value = updatedAccount[0].delegate_value;
-      account.balance = parseInt(updatedAccount[0].balance);
+      account.delegate_value = updatedAccount.delegate_value;
+      account.balance = parseInt(updatedAccount.balance);
     }
     return account;
   }
@@ -151,9 +152,9 @@ export async function activateAndUpdateAccount(account, keyStore, nodes, isLedge
         return null;
     });
 
-    if (updatedAccount && updatedAccount[0]) {
+    if (updatedAccount) {
       console.log('created ' + util.inspect(updatedAccount, false, null, false));
-      account.balance = parseInt(updatedAccount[0].balance);
+      account.balance = parseInt(updatedAccount.balance);
       account.status = status.FOUND;
     }
   }
