@@ -18,6 +18,6 @@
     "@ledgerhq/hw-transport": "4.24.0",
     "@ledgerhq/hw-transport-node-hid": "4.24.0",
     "babel-runtime": "^6.26.0",
-    "conseiljs": "0.3.3-alpha"
+    "conseiljs": "0.3.3-beta"
   }
 }
