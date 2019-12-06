@@ -5,7 +5,7 @@
     {
       "name": "Nautilus Cloud (Tezos - mainnet)",
       "type": "TEZOS",
-      "url": "https://tezos-prod.cryptonomic-infra.tech",
+      "url": "https://tezos-prod.cryptonomic-infra.tech:443",
       "apiKey": ""
     },
     {
@@ -17,7 +17,7 @@
     {
       "name": "Nautilus Cloud (Conseil - mainnet)",
       "type": "CONSEIL",
-      "url": "https://conseil-prod.cryptonomic-infra.tech",
+      "url": "https://conseil-prod.cryptonomic-infra.tech:443",
       "apiKey": "galleon"
     },
     {
