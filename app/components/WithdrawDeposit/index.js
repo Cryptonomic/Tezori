@@ -143,11 +143,8 @@ class WithdrawDeposit extends Component<Props> {
   onGetMax = () => {
     const { fee } = this.state;
     const { balance, format, addresses } = this.props;
-    const max = format === WITHDRAW ? balance : addresses[0].balance - fee;
-    let amount = '0';
-    if (max > 0) {
-      amount = (max / utez).toFixed(6);
-    }
+    const max = format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
+    const amount = (max > 0) ? (max / utez).toFixed(6) : '0';
     this.setState({ amount });
   };
 

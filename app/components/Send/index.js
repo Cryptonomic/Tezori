@@ -264,7 +264,7 @@ class Send extends Component<Props> {
     const { addressBalance } = this.props;
     const { fee, isDisplayedBurn } = this.state;
     const burnFee = isDisplayedBurn ? 257000 : 0;
-    const max = addressBalance - fee - burnFee;
+    const max = addressBalance - fee - burnFee - 1;
     if (max > 0) {
       const amount = (max / utez).toFixed(6);
       const total = addressBalance;
