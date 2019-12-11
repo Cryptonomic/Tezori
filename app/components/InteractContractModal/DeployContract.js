@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '../TextField';
 import CustomTextArea from './CustomTextArea';
 import TezosNumericInput from '../TezosNumericInput/';
@@ -13,7 +13,7 @@ import FormatSelector from '../FormatSelector';
 
 import { OPERATIONFEE } from '../../constants/LowFeeValue';
 
-import { openLinkToBlockExplorer } from '../../utils/general';
+// import { openLinkToBlockExplorer } from '../../utils/general';
 
 import {
   MainContainer,
@@ -43,6 +43,7 @@ type Props = {
   isLedger: boolean,
   averageFees: object,
   addresses: List,
+  enterNum: number,
   originateContract: () => {},
   setIsLoading: () => {},
   onClose: () => {},
@@ -52,7 +53,7 @@ type Props = {
 const defaultState = {
   gas: 0,
   storage: 0,
-  fee: 50000,
+  fee: 2840,
   amount: '0',
   parameters: '',
   passPhrase: '',
@@ -63,67 +64,75 @@ const defaultState = {
   codeFormat: 'micheline'
 };
 
-class DeployContract extends Component<Props> {
-  props: Props;
-  state = {
-    ...defaultState
-  };
+function DeployContract(props: Props) {
+  const {
+    isLoading,
+    isLedger,
+    addresses,
+    averageFees,
+    enterNum,
+    setIsLoading,
+    originateContract,
+    onClose,
+    t
+  } = props;
 
-  onUseMax = () => {
-    const { fee, gas, storage } = this.state;
-    const { addresses } = this.props;
+  const [state, setState] = useState(defaultState);
+  const {
+    amount,
+    fee,
+    gas,
+    storage,
+    passPhrase,
+    isShowedPwd,
+    isOpenLedgerConfirm,
+    parameters,
+    michelsonCode,
+    codeFormat,
+    delegate
+  } = state;
+
+  const isDisabled =
+    isLoading ||
+    !amount ||
+    (!passPhrase && !isLedger) ||
+    !parameters ||
+    !michelsonCode;
+
+  function updateState(updatedValues) {
+    setState(prevState => {
+      return { ...prevState, ...updatedValues };
+    });
+  }
+
+  function onUseMax() {
     const { balance } = addresses[0];
     const max = balance - fee - gas - storage;
     let amount = '0';
     if (max > 0) {
       amount = (max / utez).toFixed(6);
     }
-    this.setState({ amount });
-  };
+    updateState({ amount });
+  }
 
-  updatePassPhrase = passPhrase => this.setState({ passPhrase });
+  function updatePassPhrase(val) {
+    updateState({ passPhrase: val });
+  }
 
-  onLedgerConfirmation = val => {
-    this.setState({ isOpenLedgerConfirm: val });
-  };
+  function onLedgerConfirmation(flag) {
+    updateState({ isOpenLedgerConfirm: flag });
+  }
 
-  openLink = element => openLinkToBlockExplorer(element);
+  // function openLink (element) {
+  //   openLinkToBlockExplorer(element);
+  // }
 
-  onDeployOperation = async () => {
-    const {
-      originateContract,
-      setIsLoading,
-      isLedger,
-      addresses,
-      isLoading,
-      onClose
-    } = this.props;
-
-    const {
-      passPhrase,
-      amount,
-      gas,
-      storage,
-      fee,
-      michelsonCode,
-      parameters,
-      delegate,
-      codeFormat
-    } = this.state;
-
-    const isDisabled =
-      isLoading ||
-      !amount ||
-      (!passPhrase && !isLedger) ||
-      !parameters ||
-      !michelsonCode;
-
+  async function onDeployOperation() {
     if (isDisabled) return;
-
     setIsLoading(true);
 
     if (isLedger) {
-      this.onLedgerConfirmation(true);
+      onLedgerConfirmation(true);
     }
 
     const { pkh } = addresses[0];
@@ -145,162 +154,148 @@ class DeployContract extends Component<Props> {
       return false;
     });
 
-    this.onLedgerConfirmation(false);
+    onLedgerConfirmation(false);
     setIsLoading(false);
     if (isOperationCompleted) {
       onClose();
     }
-  };
+  }
 
-  render() {
-    const {
-      amount,
-      fee,
-      passPhrase,
-      isShowedPwd,
-      isOpenLedgerConfirm,
-      parameters,
-      michelsonCode,
-      codeFormat
-    } = this.state;
+  useEffect(() => {
+    updateState({ fee: averageFees.medium });
+  }, [averageFees]);
 
-    const { isLoading, isLedger, addresses, averageFees, t } = this.props;
+  useEffect(() => {
+    if (enterNum !== 0) {
+      onDeployOperation();
+    }
+  }, [enterNum]);
 
-    const isDisabled =
-      isLoading ||
-      !amount ||
-      (!passPhrase && !isLedger) ||
-      !parameters ||
-      !michelsonCode;
+  return (
+    <MainContainer>
+      <TabContainer>
+        <InputAddressContainer>
+          <CustomTextArea
+            label={t('components.interactModal.paste_micheline_code', {
+              format: codeFormat
+            })}
+            multiline
+            rows={5}
+            rowsMax={5}
+            onChange={val => updateState({ michelsonCode: val })}
+          />
+        </InputAddressContainer>
 
-    return (
-      <MainContainer>
-        <TabContainer>
-          <InputAddressContainer>
-            <CustomTextArea
-              label={t('components.interactModal.paste_micheline_code', {
-                format: codeFormat
-              })}
-              multiline
-              rows={5}
-              rowsMax={5}
-              onChange={val => this.setState({ michelsonCode: val })}
-            />
-          </InputAddressContainer>
-
-          <StorageFormatContainer>
-            <ColStorage>
-              <TextField
-                label={t('components.interactModal.initial_storage')}
-                onChange={val => this.setState({ parameters: val })}
-              />
-            </ColStorage>
-            <ColFormat>
-              <FormatSelector
-                value={codeFormat}
-                onChange={val => this.setState({ codeFormat: val })}
-              />
-            </ColFormat>
-          </StorageFormatContainer>
-          <ParametersContainer>
+        <StorageFormatContainer>
+          <ColStorage>
             <TextField
-              label={t('general.verbs.delegate')}
-              onChange={val => this.setState({ delegate: val })}
+              label={t('components.interactModal.initial_storage')}
+              onChange={val => updateState({ parameters: val })}
             />
-          </ParametersContainer>
+          </ColStorage>
+          <ColFormat>
+            <FormatSelector
+              value={codeFormat}
+              onChange={val => updateState({ codeFormat: val })}
+            />
+          </ColFormat>
+        </StorageFormatContainer>
+        <ParametersContainer>
+          <TextField
+            label={t('general.verbs.delegate')}
+            onChange={val => updateState({ delegate: val })}
+          />
+        </ParametersContainer>
 
-          <DeployAddressContainer>
-            <DeployAddressLabel>
-              {t('components.interactModal.deploy_from')}
-            </DeployAddressLabel>
-            <DeployAddressContent>
-              <TezosAddress
-                address={addresses[0].pkh}
-                size="16px"
-                color="gray3"
-                color2="primary"
-              />
-              <SpaceBar />
-              <TezosAmount
-                color="primary"
-                size={ms(0.65)}
-                amount={addresses[0].balance}
-              />
-            </DeployAddressContent>
-          </DeployAddressContainer>
-          <RowContainer>
-            <ColContainer>
-              <TextField
-                type="number"
-                label={t('components.interactModal.storage_limit')}
-                onChange={val => this.setState({ storage: val })}
-              />
-            </ColContainer>
-            <ColContainer>
-              <TextField
-                type="number"
-                label={t('components.interactModal.gas_limit')}
-                onChange={val => this.setState({ gas: val })}
-              />
-            </ColContainer>
-          </RowContainer>
-          <RowContainer>
-            <AmountContainer>
-              <TezosNumericInput
-                decimalSeparator={t('general.decimal_separator')}
-                labelText={t('general.nouns.amount')}
-                amount={amount}
-                handleAmountChange={val => this.setState({ amount: val })}
-              />
-              <UseMax onClick={this.onUseMax}>
-                {t('general.verbs.use_max')}
-              </UseMax>
-            </AmountContainer>
-            <FeeContainer>
-              <Fees
-                low={averageFees.low}
-                medium={averageFees.medium}
-                high={averageFees.high}
-                fee={fee}
-                miniFee={OPERATIONFEE}
-                onChange={val => this.setState({ fee: val })}
-              />
-            </FeeContainer>
-          </RowContainer>
-        </TabContainer>
-        <PasswordButtonContainer>
-          {!isLedger && (
-            <PasswordInput
-              label={t('general.nouns.wallet_password')}
-              isShowed={isShowedPwd}
-              password={passPhrase}
-              changFunc={this.updatePassPhrase}
-              containerStyle={{ width: '60%', marginTop: '10px' }}
-              onShow={() => this.setState({ isShowedPwd: !isShowedPwd })}
+        <DeployAddressContainer>
+          <DeployAddressLabel>
+            {t('components.interactModal.deploy_from')}
+          </DeployAddressLabel>
+          <DeployAddressContent>
+            <TezosAddress
+              address={addresses[0].pkh}
+              size="16px"
+              color="gray3"
+              color2="primary"
             />
-          )}
-          <InvokeButton
-            buttonTheme="primary"
-            disabled={isDisabled}
-            onClick={this.onDeployOperation}
-          >
-            {t('general.verbs.deploy')}
-          </InvokeButton>
-        </PasswordButtonContainer>
-        {isLedger && isOpenLedgerConfirm && (
-          <DeployLedgerConfirmationModal
-            amount={amount}
-            fee={fee}
-            source={addresses[0].pkh}
-            parameters={parameters}
-            open={isOpenLedgerConfirm}
-            onCloseClick={() => this.closeLedgerConfirmation(false)}
-            isLoading={isLoading}
+            <SpaceBar />
+            <TezosAmount
+              color="primary"
+              size={ms(0.65)}
+              amount={addresses[0].balance}
+            />
+          </DeployAddressContent>
+        </DeployAddressContainer>
+        <RowContainer>
+          <ColContainer>
+            <TextField
+              type="number"
+              label={t('components.interactModal.storage_limit')}
+              onChange={val => updateState({ storage: val })}
+            />
+          </ColContainer>
+          <ColContainer>
+            <TextField
+              type="number"
+              label={t('components.interactModal.gas_limit')}
+              onChange={val => updateState({ gas: val })}
+            />
+          </ColContainer>
+        </RowContainer>
+        <RowContainer>
+          <AmountContainer>
+            <TezosNumericInput
+              decimalSeparator={t('general.decimal_separator')}
+              labelText={t('general.nouns.amount')}
+              amount={amount}
+              handleAmountChange={val => updateState({ amount: val })}
+            />
+            <UseMax onClick={onUseMax}>{t('general.verbs.use_max')}</UseMax>
+          </AmountContainer>
+          <FeeContainer>
+            <Fees
+              low={averageFees.low}
+              medium={averageFees.medium}
+              high={averageFees.high}
+              fee={fee}
+              miniFee={OPERATIONFEE}
+              onChange={val => updateState({ fee: val })}
+            />
+          </FeeContainer>
+        </RowContainer>
+      </TabContainer>
+      <PasswordButtonContainer>
+        {!isLedger && (
+          <PasswordInput
+            label={t('general.nouns.wallet_password')}
+            isShowed={isShowedPwd}
+            password={passPhrase}
+            changFunc={updatePassPhrase}
+            containerStyle={{ width: '60%', marginTop: '10px' }}
+            onShow={() => updateState({ isShowedPwd: !isShowedPwd })}
           />
         )}
-      </MainContainer>
-    );
-  }
+        <InvokeButton
+          buttonTheme="primary"
+          disabled={isDisabled}
+          onClick={onDeployOperation}
+        >
+          {t('general.verbs.deploy')}
+        </InvokeButton>
+      </PasswordButtonContainer>
+      {isLedger && isOpenLedgerConfirm && (
+        <DeployLedgerConfirmationModal
+          amount={amount}
+          fee={fee}
+          source={addresses[0].pkh}
+          parameters={parameters}
+          open={isOpenLedgerConfirm}
+          onCloseClick={() => onLedgerConfirmation(false)}
+          isLoading={isLoading}
+        />
+      )}
+    </MainContainer>
+  );
 }
 
 export default DeployContract;

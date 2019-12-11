@@ -218,7 +218,7 @@ const utez = 1000000;
 const defaultState = {
   delegate: '',
   amount: '',
-  fee: 1420,
+  fee: 2840,
   miniFee: 0,
   passPhrase: '',
   isShowedPwd: false,
@@ -261,7 +261,7 @@ class AddDelegateModal extends Component<Props> {
       if (averageFees.low < miniLowFee) {
         averageFees.low = miniLowFee;
       }
-      const fee = averageFees.low;
+      const fee = averageFees.medium;
       const total = fee + this.state.gas;
       this.setState({
         averageFees,

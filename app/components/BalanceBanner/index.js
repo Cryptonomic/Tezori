@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import styled, { withTheme } from 'styled-components';
 import { lighten } from 'polished';
 import { StoreType } from 'conseiljs';
+import Notifications from '@material-ui/icons/Notifications';
 import { ms } from '../../styles/helpers';
 import { H4 } from '../Heading/';
 import TezosAmount from '../TezosAmount/';
@@ -12,7 +13,9 @@ import TezosIcon from '../TezosIcon/';
 import Update from '../Update/';
 import Modal from '../CustomModal';
 import Button from '../Button';
+import Tooltip from './../Tooltip/';
 import { wrapComponent } from '../../utils/i18n';
+import { openLink } from '../../utils/general';
 
 import keyIconSvg from '../../../resources/imgs/Key_Icon.svg';
 import circleKeyIconSvg from '../../../resources/imgs/Circle_Key_Icon.svg';
@@ -177,6 +180,24 @@ const StoreTxt = styled.div`
   margin-left: 23px;
 `;
 
+const BellIcon = styled(Notifications)`
+  &&& {
+    font-size: 18px;
+    margin-left: 3px;
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+    color: white;
+  }
+`;
+
+const TooltipContent = styled.div`
+  color: ${({ theme: { colors } }) => colors.primary};
+  font-weight: ${({ theme: { typo } }) => typo.weights.light};
+  font-size: ${ms(-1)};
+  max-width: ${ms(13)};
+`;
+
 function BalanceBanner(props: Props) {
   const {
     storeType,
@@ -218,6 +239,11 @@ function BalanceBanner(props: Props) {
     addressLabel
   });
 
+  function openUrl() {
+    const newUrl = `https://t.me/TezosNotifierBot?start=${publicKeyHash}`;
+    openLink(newUrl);
+  }
+
   return (
     <Container>
       <TopRow isReady={isReady}>
@@ -241,6 +267,20 @@ function BalanceBanner(props: Props) {
 
             {isManagerAddress && !isLedger && (
               <KeyIcon src={keyIconSvg} onClick={() => setIsOpen(true)} />
+            )}
+            {isManagerAddress && (
+              <Tooltip
+                position="bottom"
+                content={
+                  <TooltipContent>
+                    {t('components.balanceBanner.tooltip_content')}
+                  </TooltipContent>
+                }
+              >
+                <Button buttonTheme="plain">
+                  <BellIcon onClick={() => openUrl()} />
+                </Button>
+              </Tooltip>
             )}
           </AddressTitle>
         )}

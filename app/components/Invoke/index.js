@@ -139,7 +139,7 @@ type Props = {
 };
 
 const initialState = {
-  fee: 1420,
+  fee: 2840,
   averageFees: {
     low: 1420,
     medium: 2840,
@@ -176,7 +176,7 @@ class Invoke extends Component<Props> {
     if (this.mounted) {
       this.setState({
         averageFees,
-        fee: averageFees.low
+        fee: averageFees.medium
       });
     }
   }

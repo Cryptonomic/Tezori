@@ -57,7 +57,7 @@ function Delegate(props: Props) {
     medium: 2840,
     high: 5680
   });
-  const [fee, setFee] = useState(averageFees.low);
+  const [fee, setFee] = useState(averageFees.medium);
   const [newAddress, setAddress] = useState('');
   const [passPhrase, setPassPhrase] = useState('');
   const [isAddressIssue, setIsAddressIssue] = useState(false);
@@ -94,7 +94,7 @@ function Delegate(props: Props) {
       averageFees.low = miniLowFee;
     }
     setAverageFees({ ...averageFees });
-    setFee(averageFees.low);
+    setFee(averageFees.medium);
     setMiniFee(miniLowFee);
     setIsDisplayedFeeTooltip(!isRevealed);
   }

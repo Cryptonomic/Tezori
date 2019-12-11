@@ -203,7 +203,7 @@ const initialState = {
   password: '',
   toAddress: '',
   amount: '',
-  fee: 1420,
+  fee: 2840,
   miniFee: 0,
   isShowedPwd: false,
   isDisplayedBurn: false,
@@ -247,7 +247,7 @@ class Send extends Component<Props> {
     if (this.mounted) {
       this.setState({
         averageFees,
-        fee: averageFees.low,
+        fee: averageFees.medium,
         total: averageFees.low,
         balance: addressBalance,
         isDisplayedFeeTooltip: !isRevealed,
