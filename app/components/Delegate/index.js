@@ -114,7 +114,7 @@ const initialState = {
   isLoading: false,
   tempAddress: '',
   password: '',
-  fee: 1420,
+  fee: 2840,
   miniFee: 0,
   isShowedPwd: false,
   isDisplayedFeeTooltip: false,
@@ -158,7 +158,7 @@ class Delegate extends Component<Props> {
     if (this.mounted) {
       this.setState({
         averageFees,
-        fee: averageFees.low,
+        fee: averageFees.medium,
         miniFee: miniLowFee,
         isDisplayedFeeTooltip: !isRevealed
       });

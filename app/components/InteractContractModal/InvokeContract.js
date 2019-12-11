@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '../TextField';
 import TezosNumericInput from '../TezosNumericInput/';
 import { ms } from '../../styles/helpers';
@@ -39,6 +39,7 @@ type Props = {
   selectedParentHash: string,
   averageFees: object,
   addresses: List,
+  enterNum: number,
   invokeAddress: () => {},
   onClose: () => {},
   setIsLoading: () => {},
@@ -51,7 +52,7 @@ const defaultState = {
   selectedInvokeAddress: '',
   gas: 0,
   storage: 0,
-  fee: 1420,
+  fee: 2840,
   amount: '0',
   parameters: '',
   passPhrase: '',
@@ -61,76 +62,88 @@ const defaultState = {
   entryPoint: ''
 };
 
-class InvokeContract extends Component<Props> {
-  props: Props;
-  state = {
-    ...defaultState,
-    selectedInvokeAddress: this.props.addresses[0].pkh,
-    balance: this.props.addresses[0].balance
-  };
+function InvokeContract(props: Props) {
+  const {
+    t,
+    isLoading,
+    isLedger,
+    selectedParentHash,
+    averageFees,
+    addresses,
+    enterNum,
+    invokeAddress,
+    onClose,
+    setIsLoading
+  } = props;
+  const [state, setState] = useState(() => {
+    return {
+      ...defaultState,
+      selectedInvokeAddress: addresses[0].pkh,
+      balance: addresses[0].balance
+    };
+  });
+  const {
+    fee,
+    gas,
+    balance,
+    storage,
+    amount,
+    parameters,
+    passPhrase,
+    isShowedPwd,
+    isOpenLedgerConfirm,
+    codeFormat,
+    entryPoint,
+    isAddressIssue,
+    contractAddress,
+    selectedInvokeAddress
+  } = state;
 
-  onUseMax = () => {
-    const { fee, gas, balance, storage } = this.state;
+  const isDisabled =
+    isAddressIssue ||
+    isLoading ||
+    !amount ||
+    !contractAddress ||
+    (!passPhrase && !isLedger);
+
+  function updateState(updatedValues) {
+    setState(prevState => {
+      return { ...prevState, ...updatedValues };
+    });
+  }
+
+  function onUseMax() {
     const max = balance - fee - gas - storage;
-    let amount = '0';
+    let newAmount = '0';
     if (max > 0) {
-      amount = (max / utez).toFixed(6);
+      newAmount = (max / utez).toFixed(6);
     }
-    this.setState({ amount });
-  };
+    updateState({ amount: newAmount });
+  }
 
-  onChangeInvokeAddress = event => {
-    const { addresses } = this.props;
-    const pkh = event.target.value;
-    const address = addresses.find(address => address.pkh === pkh);
-    this.setState({ selectedInvokeAddress: pkh, balance: address.balance });
-  };
+  // function onChangeInvokeAddress(event) {
+  //   const pkh = event.target.value;
+  //   const address = addresses.find(address => address.pkh === pkh);
+  //   updateState({ selectedInvokeAddress: pkh, balance: address.balance });
+  // };
 
-  updatePassPhrase = passPhrase => this.setState({ passPhrase });
+  function updatePassPhrase(val) {
+    updateState({ passPhrase: val });
+  }
 
-  onLedgerConfirmation = val => {
-    this.setState({ isOpenLedgerConfirm: val });
-  };
+  function onLedgerConfirmation(val) {
+    updateState({ isOpenLedgerConfirm: val });
+  }
 
-  openLink = element => openLinkToBlockExplorer(element);
+  function openLink(link) {
+    openLinkToBlockExplorer(link);
+  }
 
-  onInvokeOperation = async () => {
-    const {
-      isLedger,
-      selectedParentHash,
-      invokeAddress,
-      isLoading,
-      setIsLoading,
-      onClose
-    } = this.props;
-
-    const {
-      contractAddress,
-      amount,
-      fee,
-      storage,
-      gas,
-      parameters,
-      selectedInvokeAddress,
-      passPhrase,
-      isAddressIssue,
-      entryPoint,
-      codeFormat
-    } = this.state;
-
-    const isDisabled =
-      isAddressIssue ||
-      isLoading ||
-      !amount ||
-      !contractAddress ||
-      (!passPhrase && !isLedger);
-
+  async function onInvokeOperation() {
     if (isDisabled) return;
-
     setIsLoading(true);
-
     if (isLedger) {
-      this.onLedgerConfirmation(true);
+      onLedgerConfirmation(true);
     }
 
     const isOperationCompleted = await invokeAddress(
@@ -150,155 +163,140 @@ class InvokeContract extends Component<Props> {
       return false;
     });
 
-    this.onLedgerConfirmation(false);
+    onLedgerConfirmation(false);
     setIsLoading(false);
     if (isOperationCompleted) {
       onClose();
     }
-  };
+  }
 
-  render() {
-    const {
-      amount,
-      isAddressIssue,
-      selectedInvokeAddress,
-      fee,
-      contractAddress,
-      passPhrase,
-      isShowedPwd,
-      isOpenLedgerConfirm,
-      parameters,
-      storage,
-      codeFormat
-    } = this.state;
-    const { isLoading, isLedger, averageFees, t } = this.props;
-    const isDisabled =
-      isAddressIssue ||
-      isLoading ||
-      !amount ||
-      !contractAddress ||
-      (!passPhrase && !isLedger);
+  useEffect(() => {
+    updateState({ fee: averageFees.medium });
+  }, [averageFees]);
 
-    return (
-      <MainContainer>
-        <TabContainer>
-          <InputAddressContainer>
-            <InputAddress
-              operationType="invoke"
-              labelText={t('components.interactModal.smart_address')}
-              onAddressChange={val => this.setState({ contractAddress: val })}
-              onIssue={status => this.setState({ isAddressIssue: status })}
-            />
-            {!isAddressIssue && contractAddress && (
-              <React.Fragment>
-                <ViewScan onClick={() => this.openLink(contractAddress)}>
-                  {t('components.interactModal.view_scan')}
-                </ViewScan>
-                <LinkIcon
-                  iconName="new-window"
-                  size={ms(-1)}
-                  color="primary"
-                  onClick={() => this.openLink(contractAddress)}
-                />
-              </React.Fragment>
-            )}
-          </InputAddressContainer>
-          <StorageFormatContainer>
-            <ColStorage>
-              <TextField
-                label={t('components.interactModal.parameters')}
-                onChange={val => this.setState({ parameters: val })}
-              />
-            </ColStorage>
-            <ColFormat>
-              <FormatSelector
-                value={codeFormat}
-                onChange={val => this.setState({ codeFormat: val })}
-              />
-            </ColFormat>
-          </StorageFormatContainer>
-          <ParametersContainer>
-            <TextField
-              label={t('components.interactModal.entry_point')}
-              onChange={val => this.setState({ entryPoint: val })}
-            />
-          </ParametersContainer>
+  useEffect(() => {
+    if (enterNum !== 0) {
+      onInvokeOperation();
+    }
+  }, [enterNum]);
 
-          <RowContainer>
-            <ColContainer>
-              <TextField
-                type="number"
-                label={t('components.interactModal.storage_limit')}
-                onChange={val => this.setState({ storage: val })}
+  return (
+    <MainContainer>
+      <TabContainer>
+        <InputAddressContainer>
+          <InputAddress
+            operationType="invoke"
+            labelText={t('components.interactModal.smart_address')}
+            onAddressChange={val => updateState({ contractAddress: val })}
+            onIssue={status => updateState({ isAddressIssue: status })}
+          />
+          {!isAddressIssue && contractAddress && (
+            <React.Fragment>
+              <ViewScan onClick={() => openLink(contractAddress)}>
+                {t('components.interactModal.view_scan')}
+              </ViewScan>
+              <LinkIcon
+                iconName="new-window"
+                size={ms(-1)}
+                color="primary"
+                onClick={() => openLink(contractAddress)}
               />
-            </ColContainer>
-            <ColContainer>
-              <TextField
-                type="number"
-                label={t('components.interactModal.gas_limit')}
-                onChange={val => this.setState({ gas: val })}
-              />
-            </ColContainer>
-          </RowContainer>
-          <RowContainer>
-            <AmountContainer>
-              <TezosNumericInput
-                decimalSeparator={t('general.decimal_separator')}
-                labelText={t('general.nouns.amount')}
-                amount={amount}
-                handleAmountChange={val => this.setState({ amount: val })}
-              />
-              <UseMax onClick={this.onUseMax}>
-                {t('general.verbs.use_max')}
-              </UseMax>
-            </AmountContainer>
-            <FeeContainer>
-              <Fees
-                low={averageFees.low}
-                medium={averageFees.medium}
-                high={averageFees.high}
-                fee={fee}
-                miniFee={OPERATIONFEE}
-                onChange={val => this.setState({ fee: val })}
-              />
-            </FeeContainer>
-          </RowContainer>
-        </TabContainer>
-        <PasswordButtonContainer>
-          {!isLedger && (
-            <PasswordInput
-              label={t('general.nouns.wallet_password')}
-              isShowed={isShowedPwd}
-              password={passPhrase}
-              changFunc={this.updatePassPhrase}
-              containerStyle={{ width: '60%', marginTop: '10px' }}
-              onShow={() => this.setState({ isShowedPwd: !isShowedPwd })}
-            />
+            </React.Fragment>
           )}
-          <InvokeButton
-            buttonTheme="primary"
-            disabled={isDisabled}
-            onClick={this.onInvokeOperation}
-          >
-            {t('general.verbs.invoke')}
-          </InvokeButton>
-        </PasswordButtonContainer>
-        {isLedger && isOpenLedgerConfirm && (
-          <InvokeLedgerConfirmationModal
-            amount={amount}
-            fee={fee}
-            parameters={parameters}
-            storage={storage}
-            address={contractAddress}
-            source={selectedInvokeAddress}
-            open={isOpenLedgerConfirm}
-            onCloseClick={() => this.closeLedgerConfirmation(false)}
-            isLoading={isLoading}
+        </InputAddressContainer>
+        <StorageFormatContainer>
+          <ColStorage>
+            <TextField
+              label={t('components.interactModal.parameters')}
+              onChange={val => updateState({ parameters: val })}
+            />
+          </ColStorage>
+          <ColFormat>
+            <FormatSelector
+              value={codeFormat}
+              onChange={val => updateState({ codeFormat: val })}
+            />
+          </ColFormat>
+        </StorageFormatContainer>
+        <ParametersContainer>
+          <TextField
+            label={t('components.interactModal.entry_point')}
+            onChange={val => updateState({ entryPoint: val })}
+          />
+        </ParametersContainer>
+
+        <RowContainer>
+          <ColContainer>
+            <TextField
+              type="number"
+              label={t('components.interactModal.storage_limit')}
+              onChange={val => updateState({ storage: val })}
+            />
+          </ColContainer>
+          <ColContainer>
+            <TextField
+              type="number"
+              label={t('components.interactModal.gas_limit')}
+              onChange={val => updateState({ gas: val })}
+            />
+          </ColContainer>
+        </RowContainer>
+        <RowContainer>
+          <AmountContainer>
+            <TezosNumericInput
+              decimalSeparator={t('general.decimal_separator')}
+              labelText={t('general.nouns.amount')}
+              amount={amount}
+              handleAmountChange={val => updateState({ amount: val })}
+            />
+            <UseMax onClick={onUseMax}>{t('general.verbs.use_max')}</UseMax>
+          </AmountContainer>
+          <FeeContainer>
+            <Fees
+              low={averageFees.low}
+              medium={averageFees.medium}
+              high={averageFees.high}
+              fee={fee}
+              miniFee={OPERATIONFEE}
+              onChange={val => updateState({ fee: val })}
+            />
+          </FeeContainer>
+        </RowContainer>
+      </TabContainer>
+      <PasswordButtonContainer>
+        {!isLedger && (
+          <PasswordInput
+            label={t('general.nouns.wallet_password')}
+            isShowed={isShowedPwd}
+            password={passPhrase}
+            changFunc={updatePassPhrase}
+            containerStyle={{ width: '60%', marginTop: '10px' }}
+            onShow={() => updateState({ isShowedPwd: !isShowedPwd })}
           />
         )}
-      </MainContainer>
-    );
-  }
+        <InvokeButton
+          buttonTheme="primary"
+          disabled={isDisabled}
+          onClick={onInvokeOperation}
+        >
+          {t('general.verbs.invoke')}
+        </InvokeButton>
+      </PasswordButtonContainer>
+      {isLedger && isOpenLedgerConfirm && (
+        <InvokeLedgerConfirmationModal
+          amount={amount}
+          fee={fee}
+          parameters={parameters}
+          storage={storage}
+          address={contractAddress}
+          source={selectedInvokeAddress}
+          open={isOpenLedgerConfirm}
+          onCloseClick={() => onLedgerConfirmation(false)}
+          isLoading={isLoading}
+        />
+      )}
+    </MainContainer>
+  );
 }
 
 export default InvokeContract;

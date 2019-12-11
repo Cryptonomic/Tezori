@@ -56,7 +56,7 @@ function WithdrawDeposit(props: Props) {
     medium: 2840,
     high: 5680
   });
-  const [fee, setFee] = useState(averageFees.low);
+  const [fee, setFee] = useState(averageFees.medium);
   const [amount, setAmount] = useState('');
   const [passPhrase, setPassPhrase] = useState('');
   const [isShowedPwd, setIsShowedPwd] = useState(false);
@@ -83,7 +83,7 @@ function WithdrawDeposit(props: Props) {
     if (averageFees.low < OPERATIONFEE) {
       averageFees.low = OPERATIONFEE;
       setAverageFees(averageFees);
-      setFee(averageFees.low);
+      setFee(averageFees.medium);
     }
   }
 
@@ -96,14 +96,16 @@ function WithdrawDeposit(props: Props) {
   }, [format]);
 
   function onGetMax() {
-    const max = format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
-    const amount = (max > 0) ? (max / utez).toFixed(6) : '0';
+    const max =
+      format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
+    const amount = max > 0 ? (max / utez).toFixed(6) : '0';
     setAmount(amount);
   }
 
   function getBalanceState() {
     const realAmount = !amount ? Number(amount) : 0;
-    const max = format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
+    const max =
+      format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
 
     if (max <= 0 || max < realAmount) {
       return {

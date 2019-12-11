@@ -110,7 +110,7 @@ type Props = {
 };
 
 const initialState = {
-  fee: 50000,
+  fee: 5000,
   averageFees: { low: 1420, medium: 2840, high: 5680 },
   amount: '',
   passPhrase: '',
@@ -131,7 +131,8 @@ class WithdrawDeposit extends Component<Props> {
     }
     if (this.mounted) {
       this.setState({
-        averageFees
+        averageFees,
+        fee: averageFees.medium
       });
     }
   }
@@ -143,8 +144,9 @@ class WithdrawDeposit extends Component<Props> {
   onGetMax = () => {
     const { fee } = this.state;
     const { balance, format, addresses } = this.props;
-    const max = format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
-    const amount = (max > 0) ? (max / utez).toFixed(6) : '0';
+    const max =
+      format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
+    const amount = max > 0 ? (max / utez).toFixed(6) : '0';
     this.setState({ amount });
   };
 

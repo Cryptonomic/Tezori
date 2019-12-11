@@ -153,7 +153,8 @@
       "reveal_key": "Click to reveal secret key.",
       "hide_key": "Click to hide secret key.",
       "warning": "Warning!",
-      "do_not_store": " Do not store your secret key on your  computer. Write it down and keep in a safe place."
+      "do_not_store": " Do not store your secret key on your computer. Write it down and keep in a safe place.",
+      "tooltip_content": "Tezos Telegram Notifier bot"
     },
     "copyIcon": {
       "copied": "Copied!"
