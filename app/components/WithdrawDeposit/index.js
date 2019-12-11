@@ -110,7 +110,7 @@ type Props = {
 };
 
 const initialState = {
-  fee: 2840,
+  fee: 5000,
   averageFees: { low: 1420, medium: 2840, high: 5680 },
   amount: '',
   passPhrase: '',

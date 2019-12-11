@@ -218,7 +218,7 @@ const utez = 1000000;
 const defaultState = {
   delegate: '',
   amount: '',
-  fee: 2840,
+  fee: 5000,
   miniFee: 0,
   passPhrase: '',
   isShowedPwd: false,

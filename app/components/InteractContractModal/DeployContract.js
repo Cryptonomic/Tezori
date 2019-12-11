@@ -53,7 +53,7 @@ type Props = {
 const defaultState = {
   gas: 0,
   storage: 0,
-  fee: 2840,
+  fee: 10000,
   amount: '0',
   parameters: '',
   passPhrase: '',
