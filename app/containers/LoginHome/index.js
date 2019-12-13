@@ -106,9 +106,6 @@ const CreateWalletButton = styled(BaseButton)`
 
 const UnlockWalletButton = styled(BaseButton)`
   margin-top: 5%;
-  color: black;
-  border-color: black;
-  background-color: rgba(255, 255, 255, 0.2);
   &:hover {
     color: #5d4444;
     border-color: #5d4444;
@@ -367,17 +364,17 @@ class LoginHome extends Component<Props> {
               <CardTitle>{t('containers.loginHome.keystore_wallet')}</CardTitle>
               <CreateWalletButton
                 buttonTheme="primary"
-                onClick={() => this.goTo('create')}
-                disabled={!isAgreement}
-              >
-                {t('containers.loginHome.create_new_wallet_btn')}
-              </CreateWalletButton>
-              <UnlockWalletButton
-                buttonTheme="secondary"
                 onClick={() => this.goTo('import')}
                 disabled={!isAgreement}
               >
                 {t('containers.loginHome.open_exisiting_wallet_btn')}
+              </CreateWalletButton>
+              <UnlockWalletButton
+                buttonTheme="secondary"
+                onClick={() => this.goTo('create')}
+                disabled={!isAgreement}
+              >
+                {t('containers.loginHome.create_new_wallet_btn')}
               </UnlockWalletButton>
               <Linebar />
               <Tip>
