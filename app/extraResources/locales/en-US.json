@@ -87,7 +87,7 @@
       "invoke_manager": "Manage Delegation"
     },
     "addDelegateModal": {
-      "gas_tool_tip": "{{gas}} tz is required by the network to create a delegated address",
+      "gas_tool_tip": "{{gas}} xtz is required by the network to create a delegated address",
       "warning1": "Total exceeds available funds",
       "warning2": "Manager Addresses are not yet allowed to have less than 1 µtz",
       "add_delegate_title": "Add a Delegate",
@@ -237,7 +237,7 @@
         "special_chars": "Addresses cannot contain any special characters.",
         "send_funds": "You cannot send funds to yourself.",
         "invoke_address": "Smart Contract addresses can only start with KT1",
-        "not_exist": "This contract doesn't exist on the blockchain.",
+        "not_exist": "This account doesn't exist or has 0 balance",
         "not_smartcontract": "This is a delegated address and not a smart contract. Please use send tab to transfer funds.",
         "use_interact": "This is a smart contract address. Please use interact with contracts button to transfer funds."
       }
@@ -422,7 +422,7 @@
       "create_wallet_btn": "Create Wallet",
       "create_wallet_password_label": "Create Wallet Password",
       "confirm_wallet_password_label": "Confirm Wallet Password",
-      "create_new_wallet_btn": "Create New Wallet",
+      "create_new_wallet_btn": "Select Wallet File",
       "create_wallet_title": "Create a new wallet",
       "create_wallet_description": "Your wallet information will be saved to your computer. It will be encrypted with a password that you set.",
       "crack_time_description": "It will take <span>{{time}}</span> to crack!",

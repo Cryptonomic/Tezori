@@ -499,7 +499,7 @@ class AddDelegateModal extends Component<Props> {
             <GasInputContainer>
               <TextField
                 disabled
-                label={t('general.nouns.gas')}
+                label={t('components.transaction.burn')}
                 defaultValue="0.257000"
               />
               <TezosIconInput color="gray5" iconName="tezos" />
