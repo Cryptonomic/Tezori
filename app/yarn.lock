@@ -75,11 +75,6 @@ are-we-there-yet@~1.1.2:
     delegates "^1.0.0"
     readable-stream "^2.0.6"
 
-assert-plus@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
-  integrity sha1-8S4PPF13sLHN2RRpQuTpbB5N1SU=
-
 aws-sdk@2.533.0:
   version "2.533.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.533.0.tgz#69298d2e6c646ce5cb5ba2bf414c9e53ec3f7761"
@@ -102,12 +97,6 @@ babel-runtime@6.26.0:
   dependencies:
     core-js "^2.4.0"
     regenerator-runtime "^0.11.0"
-
-"base-n@git+https://github.com/yourcodesucks/base-n.git":
-  version "1.0.0"
-  resolved "git+https://github.com/yourcodesucks/base-n.git#9d983f475c7396fbdc2fcbbc35b4821f0deeaa25"
-  dependencies:
-    dashdash "^1.14.1"
 
 base-x@^3.0.2:
   version "3.0.7"
@@ -208,16 +197,15 @@ commander@^2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-conseiljs@0.3.4-beta:
-  version "0.3.4-beta"
-  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.4-beta.tgz#8f54ba67fe9817704d593e1e35059359398c9f93"
-  integrity sha512-w66BUPl/u2ZsCS1bPbrCx7lp0KOnX0xau8VSRE404tEc0nzsXs/pAMETU+U37yDuw1JVXkC3mf9GImtm8Ee/7w==
+conseiljs@0.3.5-beta:
+  version "0.3.5-beta"
+  resolved "https://registry.yarnpkg.com/conseiljs/-/conseiljs-0.3.5-beta.tgz#c6e44f1d59459d3fff2b8b0b7ba8dcababd0790a"
+  integrity sha512-/UNQJXPHE2tlZ11tiNGwT1HD34FEApUoh+Hrpd+TbtyoNmZEmCxXw9xh2khdwvckmLl0zBNrxoKEvSak0d9BUQ==
   dependencies:
     "@ledgerhq/hw-transport" "4.24.0"
     "@ledgerhq/hw-transport-node-hid" "4.24.0"
     aws-sdk "2.533.0"
     babel-runtime "6.26.0"
-    base-n "git+https://github.com/yourcodesucks/base-n.git"
     big-integer "1.6.48"
     bip32-path "0.4.2"
     bip39 "3.0.2"
@@ -267,13 +255,6 @@ create-hmac@^1.1.4:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-dashdash@^1.14.1:
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
-  integrity sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
-  dependencies:
-    assert-plus "^1.0.0"
 
 decompress-response@^4.2.0:
   version "4.2.1"
