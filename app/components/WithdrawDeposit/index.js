@@ -132,7 +132,7 @@ class WithdrawDeposit extends Component<Props> {
     if (this.mounted) {
       this.setState({
         averageFees,
-        fee: averageFees.medium
+        fee: averageFees.high
       });
     }
   }
@@ -146,6 +146,7 @@ class WithdrawDeposit extends Component<Props> {
     const { balance, format, addresses } = this.props;
     const max =
       format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
+
     const amount = max > 0 ? (max / utez).toFixed(6) : '0';
     this.setState({ amount });
   };
@@ -154,7 +155,8 @@ class WithdrawDeposit extends Component<Props> {
     const { fee } = this.state;
     const { balance, format, addresses, t } = this.props;
     const realAmount = !amount ? Number(amount) : 0;
-    const max = format === WITHDRAW ? balance : addresses[0].balance - fee;
+    const max =
+      format === WITHDRAW ? balance - 1 : addresses[0].balance - fee - 1;
 
     if (max <= 0 || max < realAmount) {
       return {

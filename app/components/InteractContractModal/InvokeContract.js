@@ -113,7 +113,7 @@ function InvokeContract(props: Props) {
   }
 
   function onUseMax() {
-    const max = balance - fee - gas - storage;
+    const max = balance - fee - gas - storage - 1;
     let newAmount = '0';
     if (max > 0) {
       newAmount = (max / utez).toFixed(6);

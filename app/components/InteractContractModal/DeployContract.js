@@ -107,7 +107,7 @@ function DeployContract(props: Props) {
 
   function onUseMax() {
     const { balance } = addresses[0];
-    const max = balance - fee - gas - storage;
+    const max = balance - fee - gas - storage - 1;
     let amount = '0';
     if (max > 0) {
       amount = (max / utez).toFixed(6);

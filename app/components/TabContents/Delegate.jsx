@@ -57,7 +57,11 @@ function Delegate(props: Props) {
     medium: 2840,
     high: 5680
   });
-  const [fee, setFee] = useState(averageFees.medium);
+  const [fee, setFee] = useState(
+    props.selectedAccountHash.startsWith('KT1')
+      ? averageFees.medium
+      : averageFees.low
+  );
   const [newAddress, setAddress] = useState('');
   const [passPhrase, setPassPhrase] = useState('');
   const [isAddressIssue, setIsAddressIssue] = useState(false);
@@ -94,7 +98,11 @@ function Delegate(props: Props) {
       averageFees.low = miniLowFee;
     }
     setAverageFees({ ...averageFees });
-    setFee(averageFees.medium);
+    setFee(
+      props.selectedAccountHash.startsWith('KT1')
+        ? averageFees.medium
+        : averageFees.low
+    );
     setMiniFee(miniLowFee);
     setIsDisplayedFeeTooltip(!isRevealed);
   }

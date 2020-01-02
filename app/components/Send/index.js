@@ -229,6 +229,7 @@ class Send extends Component<Props> {
       selectedAccountHash,
       selectedParentHash
     } = this.props;
+
     const averageFees = await fetchTransactionAverageFees();
     const isRevealed = await getIsReveal(
       selectedAccountHash,
@@ -247,7 +248,9 @@ class Send extends Component<Props> {
     if (this.mounted) {
       this.setState({
         averageFees,
-        fee: averageFees.medium,
+        fee: selectedAccountHash.startsWith('KT1')
+          ? averageFees.high
+          : averageFees.low,
         total: averageFees.low,
         balance: addressBalance,
         isDisplayedFeeTooltip: !isRevealed,
@@ -261,10 +264,15 @@ class Send extends Component<Props> {
   }
 
   onUseMax = () => {
-    const { addressBalance } = this.props;
+    const { addressBalance, selectedAccountHash } = this.props;
     const { fee, isDisplayedBurn } = this.state;
-    const burnFee = isDisplayedBurn ? 257000 : 0;
-    const max = addressBalance - fee - burnFee - 1;
+    const burn = isDisplayedBurn ? 257000 : 0;
+
+    const localFee = selectedAccountHash.startsWith('KT1') ? 0 : fee;
+    const localBurn = selectedAccountHash.startsWith('KT1') ? 0 : burn;
+
+    const max = addressBalance - localFee - localBurn - 1;
+
     if (max > 0) {
       const amount = (max / utez).toFixed(6);
       const total = addressBalance;
@@ -295,35 +303,56 @@ class Send extends Component<Props> {
     });
   };
   handlePasswordChange = password => this.setState({ password });
+
   handleToAddressChange = async toAddress => {
-    const { getIsImplicitAndEmpty, addressBalance } = this.props;
+    const {
+      getIsImplicitAndEmpty,
+      addressBalance,
+      selectedAccountHash
+    } = this.props;
     const { amount, fee } = this.state;
     const isDisplayedBurn = await getIsImplicitAndEmpty(toAddress);
-    const burnFee = isDisplayedBurn ? 257000 : 0;
+    const burn = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const numAmount = parseFloat(newAmount) * utez;
-    const total = numAmount + fee + burnFee;
+
+    const localFee = selectedAccountHash.startsWith('KT1') ? 0 : fee;
+    const localBurn = selectedAccountHash.startsWith('KT1') ? 0 : burn;
+
+    const total = numAmount + localFee + localBurn;
     const balance = addressBalance - total;
     this.setState({ toAddress, isDisplayedBurn, total, balance });
   };
+
   handleAmountChange = amount => {
-    const { addressBalance } = this.props;
+    const { addressBalance, selectedAccountHash } = this.props;
     const { fee, isDisplayedBurn } = this.state;
-    const burnFee = isDisplayedBurn ? 257000 : 0;
+    const burn = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const commaReplacedAmount = newAmount.replace(',', '.');
     const numAmount = parseFloat(commaReplacedAmount) * utez;
-    const total = numAmount + fee + burnFee;
+
+    console.log(`-------${selectedAccountHash}`);
+
+    const localFee = selectedAccountHash.startsWith('KT1') ? 0 : fee;
+    const localBurn = selectedAccountHash.startsWith('KT1') ? 0 : burn;
+
+    const total = numAmount + localFee + localBurn;
     const balance = addressBalance - total;
     this.setState({ amount, total, balance });
   };
+
   handleFeeChange = fee => {
-    const { addressBalance } = this.props;
+    const { addressBalance, selectedAccountHash } = this.props;
     const { amount, isDisplayedBurn } = this.state;
-    const burnFee = isDisplayedBurn ? 257000 : 0;
+    const burn = isDisplayedBurn ? 257000 : 0;
     const newAmount = amount || '0';
     const numAmount = parseFloat(newAmount) * utez;
-    const total = numAmount + fee + burnFee;
+
+    const localFee = selectedAccountHash.startsWith('KT1') ? 0 : fee;
+    const localBurn = selectedAccountHash.startsWith('KT1') ? 0 : burn;
+
+    const total = numAmount + localFee + localBurn;
     const balance = addressBalance - total;
     this.setState({ fee, total, balance });
   };
