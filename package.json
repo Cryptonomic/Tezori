@@ -61,7 +61,8 @@
   },
   "build": {
     "productName": "Galleon",
-    "appId": "tech.cryptonomic.Galleon",
+    "appId": "tech.galleon-wallet.galleon",
+    "afterSign": "./afterSignHook.js",
     "files": [
       "dist/",
       "node_modules/",
@@ -70,6 +71,11 @@
       "main.prod.js.map",
       "package.json"
     ],
+    "mac": {
+      "hardenedRuntime": true,
+      "entitlements": "./entitlements.mac.plist",
+      "target": ["dmg"]
+    },
     "dmg": {
       "contents": [
         {
@@ -82,7 +88,8 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "sign": false
     },
     "win": {
       "target": ["msi"]
