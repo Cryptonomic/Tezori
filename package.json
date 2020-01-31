@@ -25,7 +25,7 @@
     "package-linux-debug": "yarn build-debug && electron-builder build --linux --publish never",
     "package-win": "yarn build && electron-builder build --win --x64 --publish never",
     "package-win-debug": "yarn build-debug && electron-builder build --win --x64 --publish never",
-    "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && yarn build-dll && electron-builder install-app-deps package.json",
+    "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && yarn build-dll && electron-builder install-app-deps",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
     "precommit": "lint-staged",
@@ -74,6 +74,7 @@
     "mac": {
       "hardenedRuntime": true,
       "entitlements": "./entitlements.mac.plist",
+      "entitlementsInherit": "./entitlements.mac.plist",
       "target": ["dmg"]
     },
     "dmg": {
@@ -159,10 +160,10 @@
     "css-loader": "^1.0.0",
     "detect-port": "^1.2.3",
     "electron": "^2.0.6",
-    "electron-builder": "^21.2.0",
+    "electron-builder": "^22.3.2",
     "electron-devtools-installer": "^2.2.4",
     "electron-notarize": "^0.2.1",
-    "electron-rebuild": "^1.8.2",
+    "electron-rebuild": "^1.10.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.4",
@@ -221,7 +222,6 @@
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@material-ui/core": "^1.5.0",
     "@material-ui/icons": "^2.0.2",
-    "aws-sdk": "^2.327.0",
     "bignumber.js": "^7.2.1",
     "blakejs": "^1.1.0",
     "classnames": "^2.2.6",
