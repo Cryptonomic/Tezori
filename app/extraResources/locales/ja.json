@@ -362,6 +362,7 @@
       "public_key_hash": "パブリックキーハッシュ",
       "fundraiser_email_address": "Fundraiser メールアドレス",
       "activation_code": "アクティブ化コード",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "これは、fundraiserに加入するためにTezos ペーパーウォレットを生成する際に使用されるパスワードです。",
         "email_tooltip": "これは、fundraiserに加入するためにTezos ペーパーウォレットを生成する際に使用されるメールアドレスです。",

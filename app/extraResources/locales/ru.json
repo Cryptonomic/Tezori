@@ -358,6 +358,7 @@
       "public_key_hash": "Хеш публичного ключа",
       "fundraiser_email_address": "Адрес Электронной Почты Фандрейзера",
       "activation_code": "Код Активизации",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "Вы использовали этот пароль при создании бумажного Tezos кошелька, чтобы участвовать в Фандрейзере.",
         "email_tooltip": "Вы использовали этот адрес электронной почты при создании бумажного Tezos кошелька, чтобы участвовать в Фандрейзере.",

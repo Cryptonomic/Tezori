@@ -362,6 +362,7 @@
       "public_key_hash": "Clave pública del hash",
       "fundraiser_email_address": "Correo electrónico de Fundraiser",
       "activation_code": "Código de activación",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "Esta es la contraseña que usaste para generar una billetera de papel Tezos para participar en la Fundraiser",
         "email_tooltip": "Esta es la dirección de correo electrónico que usaste para generar una billetera de papel Tezos para participar en la Fundraiser",

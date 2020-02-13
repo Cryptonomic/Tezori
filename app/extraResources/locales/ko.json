@@ -362,6 +362,7 @@
       "public_key_hash": "공개 키 해시",
       "fundraiser_email_address": "기금 모금 이메일 주소",
       "activation_code": "활성화 코드",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "기금 모금에 참여하기 위해 Tezos 페이퍼 지갑을 만들 때 사용한 암호입니다.",
         "email_tooltip": "기금 모금에 참여하기 위해 Tezos 페이퍼 지갑을 만들 때 사용한 암호입니다.",

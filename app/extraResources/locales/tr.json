@@ -362,6 +362,7 @@
       "public_key_hash": "Adres",
       "fundraiser_email_address": "Email Adresi",
       "activation_code": "Aktivasyon Kodu",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "Buraya Tezos Proje Destek zamanı kullanıdığınız şifreyi giriniz.",
         "email_tooltip": "Buraya Tezos Proje Destek zamanı kullandığınız email adresinizi giriniz.",

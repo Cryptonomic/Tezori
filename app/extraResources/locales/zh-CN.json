@@ -362,6 +362,7 @@
       "public_key_hash": "公开密钥哈希",
       "fundraiser_email_address": "资金筹集活动电子邮件地址",
       "activation_code": "激活码",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "这是你在生成Tezos纸钱包以参与资金筹集活动时使用的密码。",
         "email_tooltip": "这是你在生成Tezos纸钱包以参与资金筹集活动时使用的电子邮件地址。",

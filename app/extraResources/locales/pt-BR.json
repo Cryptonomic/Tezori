@@ -362,6 +362,7 @@
       "public_key_hash": "Hash da chave pública",
       "fundraiser_email_address": "Endereço de Email do Fundraiser",
       "activation_code": "Código de Ativação",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "Essa é a senha que você utilizou quando gerou a paper wallet de Tezos para participar do Fundraiser.",
         "email_tooltip": "Esse é o endereço de e-mail que você utilizou quando gerou a paper wallet de Tezos para participar do Fundraiser.",

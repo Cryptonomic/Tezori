@@ -237,7 +237,7 @@
         "special_chars": "Addresses cannot contain any special characters.",
         "send_funds": "You cannot send funds to yourself.",
         "invoke_address": "Smart Contract addresses can only start with KT1",
-        "not_exist": "This account doesn't exist or has 0 balance",
+        "not_exist": "This account has 0 balance or doesn't exist",
         "not_smartcontract": "This is a delegated address and not a smart contract. Please use send tab to transfer funds.",
         "use_interact": "This is a smart contract address. Please use interact with contracts button to transfer funds."
       }
@@ -376,6 +376,7 @@
       "public_key_hash": "Public key hash",
       "fundraiser_email_address": "Fundraiser Email Address",
       "activation_code": "Activation Code",
+      "activation_code_optional": "Activation Code (Optional)",
       "tooltips": {
         "password_tooltip": "This is the password that you used when generating a Tezos paper wallet to participate in the Fundraiser.",
         "email_tooltip": "This is the email address that you used when generating a Tezos paper wallet to participate in the Fundraiser",

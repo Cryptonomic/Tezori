@@ -351,7 +351,7 @@ class AddAddress extends Component<Props> {
       error ||
       errorText !== '' ||
       passPhrase === '' ||
-      activationCode === '' ||
+      username === '' ||
       pkh === '' ||
       seeds.length < 15;
     switch (activeTab) {
@@ -446,7 +446,9 @@ class AddAddress extends Component<Props> {
 
               <InputWithTooltip>
                 <TextField
-                  label={t('containers.homeAddAddress.activation_code')}
+                  label={t(
+                    'containers.homeAddAddress.activation_code_optional'
+                  )}
                   value={activationCode}
                   onChange={newActivationCode =>
                     this.setState({ activationCode: newActivationCode })

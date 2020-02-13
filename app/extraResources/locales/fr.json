@@ -362,6 +362,7 @@
       "public_key_hash": "Clé de hashage publique",
       "fundraiser_email_address": "Adresse Email de la levée de fonds",
       "activation_code": "Code d`activation",
+      "activation_code_optional": "Activation Code (optional)",
       "tooltips": {
         "password_tooltip": "C’est le mot de passe que vous avez utilisé pour générer un wallet Tezos en papier afin de participer à la levée de fonds.",
         "email_tooltip": "Il s'agit de l'email que vous avez utilisée lors de la génération d'un wallet Tezos papier pour participer à la levée de fonds",

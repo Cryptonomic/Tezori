@@ -1,7 +1,7 @@
 {
   "name": "galleon",
   "productName": "Galleon",
-  "version": "0.9.3b",
+  "version": "0.9.4b",
   "description": "A community wallet for Tezos",
   "scripts": {
     "build": "npm run check-wallet-state && concurrently \"yarn build-main\" \"yarn build-renderer\"",
