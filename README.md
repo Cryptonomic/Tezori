@@ -1,3 +1,5 @@
+# Please note that this repository is now deprecated in favor of [T2](https://github.com/Cryptonomic/T2)!
+
 # Tezori
 
 A wallet for the Tezos blockchain based on [Conseil](https://github.com/Cryptonomic/Conseil) and [ConseilJS](https://github.com/Cryptonomic/ConseilJS).
