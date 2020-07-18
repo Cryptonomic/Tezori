@@ -2,6 +2,8 @@
 
 A wallet for the Tezos blockchain based on [Conseil](https://github.com/Cryptonomic/Conseil) and [ConseilJS](https://github.com/Cryptonomic/ConseilJS).
 
+Please note that this repository is now deprecated in favor of [T2](https://github.com/Cryptonomic/T2)!
+
 This code was written for the community. Use it, hack it, fork it as you please!
 
 [![Build Status](https://travis-ci.org/Cryptonomic/Tezori.svg?branch=master)](https://travis-ci.org/Cryptonomic/Tezori)
