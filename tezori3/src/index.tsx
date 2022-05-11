@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactElement } from "react";
 import ReactDOM from 'react-dom/client';
 import './styles/default.css';
 import {Tezori3} from "./components/Tezori3";

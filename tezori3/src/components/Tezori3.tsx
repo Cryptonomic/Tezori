@@ -10,8 +10,6 @@ export function Tezori3() {
         <body>
             <AddressBar defaultAddress={"t1wtfbbq"} />
             <div>
-                <Wallet address={} />
-                <Gallery address={} />
                 <Settings />
             </div>
         </body>
