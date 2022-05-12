@@ -1,4 +1,4 @@
-import { createContext, useReducer, FC } from 'react';
+import {createContext, useReducer, ReactElement} from 'react';
 import AppReducer from './AppReducer';
 
 export type IAppContext = {
@@ -7,7 +7,7 @@ export type IAppContext = {
     network: string;
     tezosServer: string;
     apiKey: string;
-    children: string;
+    children: ReactElement | null;
 }
 
 const initialContext: IAppContext = {
@@ -16,10 +16,10 @@ const initialContext: IAppContext = {
     network: "ithacanet",
     tezosServer: "https://tezos-ithaca.cryptonomic-infra.tech:443",
     apiKey: "ab682065-864a-4f11-bc77-0ef4e9493fa1",
-    children: ""
+    children: null
 }
 
-const GlobalContext = createContext<{
+export const GlobalContext = createContext<{
     state: IAppContext;
     dispatch: React.Dispatch<any>;
     }>({

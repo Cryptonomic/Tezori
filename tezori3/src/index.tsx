@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-      <GlobalProvider>
+      <GlobalProvider address={""} apiKey={""} derivationPath={""} network={""} tezosServer={""}>
         <Tezori3 />
       </GlobalProvider>
   </React.StrictMode>

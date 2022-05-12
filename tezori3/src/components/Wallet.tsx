@@ -2,11 +2,7 @@ import * as React from "react";
 import * as TezosRPCTypes from "conseiljs/dist/types/tezos/TezosRPCResponseTypes";
 import {TezosNodeReader} from "conseiljs";
 
-type Props = {
-    defaultAddress: string;
-};
-
-export function Wallet(props: Props) {
+export function Wallet() {
     return (
         <div id={"wallet"}>
             <div id={"accountInfo"}>
