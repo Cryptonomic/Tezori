@@ -13,12 +13,6 @@ export function Wallet() {
                 <p>USDtz Balance</p>
                 <input id={"balance_usdtz"} type={"text"} />
             </div>
-            <div id={"settings"}>
-                <p>Tezos Node</p>
-                <input id={"settings_tezosNode"}>https://tezos-ithaca.cryptonomic-infra.tech:443</input>
-                <p>Nautilus API Key</p>
-                <input id={"settings_apikey"}>ab682065-864a-4f11-bc77-0ef4e9493fa1</input>
-            </div>
         </div>
     );
 }

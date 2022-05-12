@@ -1,11 +1,10 @@
 import * as React from "react";
+import {useContext} from "react";
+import {GlobalContext} from "../context/GlobalState";
 
-type Props = {
-    address: string;
-};
-
-export function Gallery(props: Props) {
+export function Gallery() {
+    const {state } = useContext(GlobalContext);
     return (
-        <h1 id="address">{props.address}</h1>
+        <p>{state.address}</p>
     );
 }

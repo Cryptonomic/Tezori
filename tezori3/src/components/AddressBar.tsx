@@ -1,11 +1,13 @@
 import * as React from "react";
+import {useContext} from "react";
+import {GlobalContext} from "../context/GlobalState";
 
-type Props = {
-    defaultAddress: string;
-};
-
-export function AddressBar(props: Props) {
+export function AddressBar() {
+    const {state } = useContext(GlobalContext);
     return (
-        <h1 id="address">{props.defaultAddress}</h1>
+        <div>
+            <input id="address" defaultValue={state.address} />
+            <button>Update</button>
+        </div>
     );
 }
