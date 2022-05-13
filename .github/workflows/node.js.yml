@@ -14,6 +14,10 @@ on:
     - trunk
     - master
   workflow_dispatch:
+  
+defaults:
+  run:
+    working-directory: tezori3
 
 jobs:
   build:
