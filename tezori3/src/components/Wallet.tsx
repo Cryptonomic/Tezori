@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as TezosRPCTypes from "conseiljs/dist/types/tezos/TezosRPCResponseTypes";
 import {TezosNodeReader} from "conseiljs";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../context/GlobalState";
 
 type WalletState = {
@@ -22,8 +22,15 @@ export function Wallet() {
     const {state } = useContext(GlobalContext);
     const [walletState, setWalletState] = useState(initialState);
 
-    async function fetchAccountInfo(address: string, tezosNode: string) {
-        const account: TezosRPCTypes.Contract = await TezosNodeReader.getAccountForBlock(tezosNode, "head", address);
+    useEffect(() => {
+        fetchAccountInfo().then(r => r)
+    }, [state]);
+
+    async function fetchAccountInfo() {
+        const account: TezosRPCTypes.Contract = await TezosNodeReader.getAccountForBlock(
+            state.tezosServer,
+            "head",
+            state.address);
         setWalletState(
             {
                 ...walletState,
@@ -34,12 +41,12 @@ export function Wallet() {
     }
 
     return (
-            <div onLoad={() => fetchAccountInfo(state.address, state.tezosServer)}>
+            <div>
                 <h1>Wallet</h1>
                 <p>Delegate: {walletState.delegate}</p>
                 <p>XTZ Balance: {walletState.balance}</p>
                 <p>USDtz Balance: N/A</p>
-                <button onClick={() => fetchAccountInfo(state.address, state.tezosServer)}>Update</button>
+                <button onClick={() => fetchAccountInfo()}>Update</button>
             </div>
     );
 }
