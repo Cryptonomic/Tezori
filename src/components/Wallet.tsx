@@ -19,18 +19,18 @@ const initialState: WalletState = {
 }
 
 export function Wallet() {
-    const {state } = useContext(GlobalContext);
+    const {globalState } = useContext(GlobalContext);
     const [walletState, setWalletState] = useState(initialState);
 
     useEffect(() => {
         fetchAccountInfo().then(r => r)
-    }, [state]);
+    }, [globalState]);
 
     async function fetchAccountInfo() {
         const account: TezosRPCTypes.Contract = await TezosNodeReader.getAccountForBlock(
-            state.tezosServer,
+            globalState.tezosServer,
             "head",
-            state.address);
+            globalState.address);
         setWalletState(
             {
                 ...walletState,
