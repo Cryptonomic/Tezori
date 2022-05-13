@@ -5,9 +5,10 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ feature/718-tezori3-poc ]
+    branches: [ 'feature/718-tezori3-poc' ]
   pull_request:
-    branches: [ feature/718-tezori3-poc ]
+    branches: [ 'feature/718-tezori3-poc' ]
+  workflow_dispatch:
 
 jobs:
   build:
