@@ -4,9 +4,11 @@ type Action = {
     type: string
 }
 
-export default (state: IAppContext, action: Action): IAppContext => {
+function reducer(state: IAppContext, action: Action): IAppContext {
     switch(action.type) {
         default:
             return state;
     }
 }
+
+export default reducer;
