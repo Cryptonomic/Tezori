@@ -15,11 +15,6 @@ on:
     - master
   workflow_dispatch:
   
-defaults:
-  run:
-    working-directory: tezori3
-    shell: bash
-
 jobs:
   build:
 
