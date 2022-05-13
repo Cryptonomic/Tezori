@@ -11,7 +11,7 @@ export type IAppContext = {
 }
 
 const initialContext: IAppContext = {
-    address: "tz1foobar",
+    address: "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
     derivationPath: "1/1/1/1/",
     network: "ithacanet",
     tezosServer: "https://tezos-ithaca.cryptonomic-infra.tech:443",

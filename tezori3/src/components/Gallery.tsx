@@ -5,6 +5,9 @@ import {GlobalContext} from "../context/GlobalState";
 export function Gallery() {
     const {state } = useContext(GlobalContext);
     return (
-        <p>{state.address}</p>
+        <div>
+            <h1>Gallery</h1>
+            <p>{state.address}</p>
+        </div>
     );
 }
