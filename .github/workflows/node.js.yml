@@ -7,12 +7,10 @@ on:
   push:
     branches: 
     - trunk
-    - master
     - feature/718-tezori3-poc
-  pull_request:
-    branches:
-    - trunk
-    - master
+  # pull_request:
+    # branches:
+    # - trunk
   workflow_dispatch:
   
 jobs:
