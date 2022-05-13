@@ -1,4 +1,3 @@
-import React from 'react';
 import {IAppContext} from "./GlobalState";
 
 type Action = {

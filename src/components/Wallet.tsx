@@ -24,7 +24,7 @@ export function Wallet() {
 
     useEffect(() => {
         fetchAccountInfo().then(r => r)
-    }, [globalState]);
+    }, [globalState, fetchAccountInfo]);
 
     async function fetchAccountInfo() {
         const account: TezosRPCTypes.Contract = await TezosNodeReader.getAccountForBlock(
