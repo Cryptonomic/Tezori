@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/tezori/static/css/main.42e3415f.css",
+    "main.js": "/tezori/static/js/main.a248f71f.js",
+    "index.html": "/tezori/index.html",
+    "main.42e3415f.css.map": "/tezori/static/css/main.42e3415f.css.map",
+    "main.a248f71f.js.map": "/tezori/static/js/main.a248f71f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.42e3415f.css",
+    "static/js/main.a248f71f.js"
+  ]
+}
