@@ -12,7 +12,7 @@ export type IAppContext = {
 
 const initialContext: IAppContext = {
     address: "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
-    derivationPath: "1/1/1/1/",
+    derivationPath: "44'/1729'/0'/0'/1'",
     network: "ithacanet",
     tezosServer: "https://tezos-ithaca.cryptonomic-infra.tech:443",
     apiKey: "ab682065-864a-4f11-bc77-0ef4e9493fa1",
@@ -20,33 +20,18 @@ const initialContext: IAppContext = {
 }
 
 export const GlobalContext = createContext<{
-    state: IAppContext;
+    globalState: IAppContext;
     dispatch: React.Dispatch<any>;
     }>({
-        state: initialContext,
+        globalState: initialContext,
         dispatch: () => null
     });
 
 export const GlobalProvider: React.FC<IAppContext> = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialContext);
 
-    // Actions for changing state
-
-    /*function addItemToList(item) {
-        dispatch({
-            type: 'ADD_ITEM',
-            payload: item
-        });
-    }
-    function removeItemFromList(item) {
-        dispatch({
-            type: 'REMOVE_ITEM',
-            payload: item
-        });
-    }*/
-
     return (
-        <GlobalContext.Provider value={{state, dispatch}}>
+        <GlobalContext.Provider value={{globalState: state, dispatch}}>
             {children}
         </GlobalContext.Provider>
     )

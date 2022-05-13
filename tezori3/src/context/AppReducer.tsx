@@ -7,14 +7,6 @@ type Action = {
 
 export default (state: IAppContext, action: Action): IAppContext => {
     switch(action.type) {
-        /*case 'ADD_ITEM':
-            return {
-                shoppingList: [action.payload, ...state.shoppingList]
-            }
-        case 'REMOVE_ITEM':
-            return {
-                shoppingList: state.shoppingList.filter(item => item !== action.payload)
-            }*/
         default:
             return state;
     }
