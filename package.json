@@ -1,7 +1,7 @@
 {
   "name": "tezori3",
   "version": "0.1.0",
-  "homepage": "./",
+  "homepage": "https://cryptonomic.github.io/Tezori/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -21,12 +21,12 @@
     "typescript": "^4.6.4"
   },
   "author": {
-    "name": "cryptonomic",
-    "email": "admin@cryptonomic.tech"
+    "name": "Cryptonomic Inc.",
+    "email": "info@cryptonomic.tech"
   },
   "build": {
-    "appId": "com.electron.gaellon",
-    "productName": "Gaellon",
+    "appId": "tech.cryptonomic.tezori3",
+    "productName": "Tezori3",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -39,14 +39,16 @@
       "target": "deb"
     }
   },
-  "main": "main.js",
+  "main": "electron-main.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=main.js",
+    "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=electron-main.js",
     "preelectron-package": "npm run build"
   },
   "eslintConfig": {
@@ -69,6 +71,7 @@
   },
   "devDependencies": {
     "parcel": "^2.5.0",
+     "gh-pages": "^4.0.0",
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
     "electron": "^5.0.8",
