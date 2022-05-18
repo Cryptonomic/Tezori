@@ -35,12 +35,12 @@ export function Wallet() {
                 }
             )
         },
-        [globalState, setWalletState, walletState]
+        [globalState]
     )
 
     useEffect(() => {
         fetchAccountInfo().then(r => r)
-    }, [globalState, fetchAccountInfo]);
+    }, [globalState]);
 
     return (
             <div>
