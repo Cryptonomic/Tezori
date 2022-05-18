@@ -13,19 +13,43 @@
     "@types/react-dom": "^18.0.3",
     "conseiljs": "^5.1.0",
     "conseiljs-ledgersigner": "^5.0.4",
+    "electron-is-dev": "^2.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "^5.0.1",
     "stream": "^0.0.2",
     "typescript": "^4.6.4"
   },
+  "author": {
+    "name": "Cryptonomic Inc.",
+    "email": "info@cryptonomic.tech"
+  },
+  "build": {
+    "appId": "tech.cryptonomic.tezori3",
+    "productName": "Tezori3",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "main.js"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "linux": {
+      "target": "deb"
+    }
+  },
+  "main": "electron-main.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=electron-main.js",
+    "preelectron-package": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -46,7 +70,12 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0",
-    "parcel": "^2.5.0"
+    "parcel": "^2.5.0",
+     "gh-pages": "^4.0.0",
+    "concurrently": "^4.1.1",
+    "cross-env": "^5.2.0",
+    "electron": "^5.0.8",
+    "electron-builder": "^21.1.5",
+    "wait-on": "^3.3.0"
   }
 }
