@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as TezosRPCTypes from "conseiljs/dist/types/tezos/TezosRPCResponseTypes";
 import {TezosNodeReader} from "conseiljs";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../context/GlobalState";
 
 type WalletState = {
@@ -22,24 +22,24 @@ export function Wallet() {
     const {globalState } = useContext(GlobalContext);
     const [walletState, setWalletState] = useState(initialState);
 
-    const fetchAccountInfo = useCallback( async() => {
+    useEffect(() => {
+
+        const fetchAccountInfo = async () => {
             const account: TezosRPCTypes.Contract = await TezosNodeReader.getAccountForBlock(
                 globalState.tezosServer,
                 "head",
                 globalState.address);
-            setWalletState(
+            setWalletState( (w) => (
                 {
-                    ...walletState,
+                    ...w,
                     balance: account.balance,
                     delegate: account.delegate
                 }
+                )
             )
-        },
-        [globalState]
-    )
+        }
 
-    useEffect(() => {
-        fetchAccountInfo().then(r => r)
+        fetchAccountInfo().then(r => r);
     }, [globalState]);
 
     return (
@@ -48,7 +48,6 @@ export function Wallet() {
                 <p>Delegate: {walletState.delegate}</p>
                 <p>XTZ Balance: {walletState.balance}</p>
                 <p>USDtz Balance: N/A</p>
-                <button onClick={() => fetchAccountInfo()}>Update</button>
             </div>
     );
 }
