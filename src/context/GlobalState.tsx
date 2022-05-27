@@ -10,7 +10,7 @@ export type IAppContext = {
     children: ReactElement | null;
 }
 
-const initialContext: IAppContext = {
+export const initialContext: IAppContext = {
     address: "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
     derivationPath: "44'/1729'/0'/0'/1'",
     network: "ithacanet",
@@ -18,6 +18,8 @@ const initialContext: IAppContext = {
     apiKey: "ab682065-864a-4f11-bc77-0ef4e9493fa1",
     children: null
 }
+
+
 
 export const GlobalContext = createContext<{
     globalState: IAppContext;
