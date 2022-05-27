@@ -16,7 +16,10 @@
     "@types/react-dom": "^18.0.3",
     "conseiljs": "^5.1.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "conseiljs-ledgersigner": "^5.0.4",
+=======
+>>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
 =======
 >>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
     "electron-is-dev": "^2.0.0",
@@ -77,6 +80,7 @@
   },
   "devDependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "parcel": "^2.5.0",
      "gh-pages": "^4.0.0",
     "concurrently": "^4.1.1",
@@ -84,6 +88,8 @@
     "electron": "^5.0.8",
     "electron-builder": "^21.1.5",
 =======
+=======
+>>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "concurrently": "^4.1.1",
@@ -100,6 +106,9 @@
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "url": "^0.11.0",
+<<<<<<< HEAD
+>>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
+=======
 >>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
     "wait-on": "^3.3.0"
   }
