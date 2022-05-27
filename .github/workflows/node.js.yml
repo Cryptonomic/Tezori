@@ -6,8 +6,8 @@ name: Node.js CI
 on:
   push:
     branches:
-      - trunk
-      - feature/718-tezori3-poc
+      
+      - feature/718-tezori3-poc-ticket2
   pull_request:
     branches:
       - trunk
