@@ -4,6 +4,9 @@
   "homepage": "https://cryptonomic.github.io/Tezori/",
   "private": true,
   "dependencies": {
+    "@ledgerhq/hw-app-tezos": "^6.27.1",
+    "@ledgerhq/hw-transport-webhid": "^6.27.1",
+    "@ledgerhq/logs": "^6.10.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
@@ -12,7 +15,10 @@
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "conseiljs": "^5.1.0",
+<<<<<<< HEAD
     "conseiljs-ledgersigner": "^5.0.4",
+=======
+>>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
     "electron-is-dev": "^2.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -41,9 +47,9 @@
   },
   "main": "electron-main.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --passWithNoTests",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --passWithNoTests",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
@@ -70,12 +76,31 @@
     ]
   },
   "devDependencies": {
+<<<<<<< HEAD
     "parcel": "^2.5.0",
      "gh-pages": "^4.0.0",
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
     "electron": "^5.0.8",
     "electron-builder": "^21.1.5",
+=======
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
+    "concurrently": "^4.1.1",
+    "cross-env": "^5.2.0",
+    "crypto-browserify": "^3.12.0",
+    "electron": "^5.0.8",
+    "electron-builder": "^21.1.5",
+    "gh-pages": "^4.0.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "parcel": "^2.5.0",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.0",
+>>>>>>> fcd7724df8d264411be8054c3d3c2a7a00eaa7c4
     "wait-on": "^3.3.0"
   }
 }
