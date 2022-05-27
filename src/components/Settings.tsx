@@ -8,7 +8,6 @@ export function Settings() {
   const [data, setdata] = useState(null);
   const [settings_apikey, set_settings_apikey] = useState("");
   const [settings_network, set_settings_network] = useState("");
-  const [settings_tezosNode, set_settings_tezosNode] = useState("");
   const [print, setprint] = useState(false);
 
   function getdata(e) {
