@@ -51,7 +51,7 @@ export function Settings() {
           setprint(true);
           dispatch({
             type: "UPDATE_VALUES",
-            payload: { apiKey: settings_apikey, network: settings_network , tezosServer: settings_tezosNode},
+            payload: { apiKey: settings_apikey, network: settings_network},
           });
         }}
       >
