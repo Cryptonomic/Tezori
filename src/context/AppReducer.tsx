@@ -1,19 +1,20 @@
-import {IAppContext, initialContext} from "./GlobalState";
+import {IAppContext} from "./GlobalState";
 
-type Action = {
-    type: string
-    payload?: any
-}
-const enum ACTIONS {
-    UPDATE_VALUES= "UPDATE_VALUES",
+export type Action = {
+    type: ActionTypes,
+    newAddress: string
 }
 
-function reducer(state: IAppContext = initialContext , action: Action): IAppContext {
+export enum ActionTypes {
+    UpdateAddress
+}
+
+function reducer(state: IAppContext, action: Action): IAppContext {
     switch(action.type) {
-        case ACTIONS.UPDATE_VALUES:
+        case ActionTypes.UpdateAddress:
             return {
-                ...action.payload,
                 ...state,
+                address: action.newAddress
             }
         default:
             return state;
