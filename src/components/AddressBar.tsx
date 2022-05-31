@@ -8,6 +8,8 @@ import Tezos from "@ledgerhq/hw-app-tezos";
 export function AddressBar() {
     const {globalState, dispatch } = useContext(GlobalContext);
     const [address, setAddress] = useState(globalState.address);
+    const [ledgerInitialized, setLedgerInitalized] = useState(false);
+    const [ledgerAppXtz, setLedgerAppXtz] = useState<Tezos>();
 
     const handleAddressUpdateClick = () => {
         const action: Action = {
@@ -18,26 +20,32 @@ export function AddressBar() {
     }
 
     const getAddressFromLedger = async () => {
-        //trying to connect to your Ledger device with HID protocol
-        const transport = await TransportWebHID.create()
-        console.log("transport", transport)
-        const appXtz = new Tezos(transport)
-        console.log("appXtz", appXtz)
-        const address = await appXtz.getAddress("44'/1729'/0'/0'")
-        console.log("address", address)
+
+        if(!ledgerInitialized) {
+            const transport = await TransportWebHID.create()
+            console.log("transport", transport)
+            const appXtz = new Tezos(transport)
+            console.log("appXtz", appXtz)
+            setLedgerAppXtz(appXtz)
+            setLedgerInitalized(true)
+        }
+
+        if(ledgerAppXtz) {
+            const address = await ledgerAppXtz.getAddress("44'/1729'/0'/0'")
+            console.log("address", address)
+            setAddress(address.address)
+        }
     }
 
     return (
         <div>
             <input
                 id="address"
-                defaultValue={address}
+                value={address}
                 onChange={(e: React.FormEvent<HTMLInputElement>) => { setAddress(e.currentTarget.value)}
             }
             />
-            <button
-                onClick={() => handleAddressUpdateClick()}
-            >
+            <button onClick={() => handleAddressUpdateClick()}>
                     Update
             </button>
             <button onClick={() => getAddressFromLedger()}>Get from Ledger</button>
