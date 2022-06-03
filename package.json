@@ -73,7 +73,7 @@
   "devDependencies": {
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
-    "electron": "^5.0.8",
+    "electron": "^13.6.6",
     "electron-builder": "^21.1.5",
     "gh-pages": "^4.0.0",
     "parcel": "^2.5.0",
