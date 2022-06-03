@@ -37,6 +37,26 @@ export function AddressBar() {
         }
     }
 
+    const getAddressFromBeacon = async () => {
+        const dAppClient = globalState.beaconClient
+        if(dAppClient) {
+            const activeAccount = await dAppClient.getActiveAccount();
+            if (activeAccount) {
+                setAddress(activeAccount.address)
+            }
+            else
+            {
+                console.log("Requesting permissions...");
+                const permissions = await dAppClient.requestPermissions();
+                console.log("Got permissions:", permissions);
+                setAddress(permissions.address)
+            }
+        }
+        else {
+            throw ReferenceError("Beacon client not defined!")
+        }
+    }
+
     return (
         <div>
             <input
@@ -49,6 +69,7 @@ export function AddressBar() {
                     Update
             </button>
             <button onClick={() => getAddressFromLedger()}>Get from Ledger</button>
+            <button onClick={() => getAddressFromBeacon()}>Get from Beacon</button>
         </div>
     );
 }

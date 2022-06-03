@@ -4,6 +4,7 @@
   "homepage": "https://cryptonomic.github.io/Tezori/",
   "private": true,
   "dependencies": {
+    "@airgap/beacon-sdk": "^3.1.0",
     "@ledgerhq/hw-app-tezos": "^6.27.1",
     "@ledgerhq/hw-transport-webhid": "^6.27.1",
     "@ledgerhq/logs": "^6.10.0",
