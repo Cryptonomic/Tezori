@@ -1,5 +1,8 @@
 # Tezori - A whitelabel wallet framework for Tezos
 
+[![Node.js CI](https://github.com/Cryptonomic/Tezori/actions/workflows/node.js.yml/badge.svg)](https://github.com/Cryptonomic/Tezori/actions/workflows/node.js.yml)
+[![Dependency Review](https://github.com/Cryptonomic/Tezori/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Cryptonomic/Tezori/actions/workflows/dependency-review.yml)
+
 ## Overview
 
 Tezori is a whitelabel wallet framework for the [Tezos](https://tezos.com) blockchain. 
@@ -28,4 +31,10 @@ To build a deployable web application, run:
 
 `npm run build`
 
-Coming soon: Instructions for building and running the native application using Electron.js. 
+To run the app as a native Electron.js application, run:
+
+`npm run electron-dev`
+
+to build a deployable native application using Electron.js, run:
+
+`npm run electron-package`
