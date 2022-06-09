@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - trunk
-      - feature/718-tezori3-poc
   pull_request:
     branches:
       - trunk
