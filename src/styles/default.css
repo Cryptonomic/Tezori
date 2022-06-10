@@ -2,3 +2,9 @@ body {
     background-color: black;
     color: green;
 }
+
+img.gallery-image {
+    width: 25%;
+    height: 100%;
+    vertical-align: top;
+}

@@ -33,13 +33,14 @@ const createCacheKey = (url: string) => {
  * @param server    The server to fall back on if the data is not available in local storage.
  * @param url       The URL for which content proxy data is being fetched.
  */
-export const fetchImage = async (server: ImageProxyServer, url: string) => {
+export const lookupContentProxy = async (server: ImageProxyServer, url: string) => {
     try {
         return fetchFromLocalStorage(url)
     }
     catch(e: any) {
         if(! (e instanceof CacheMissError))
             Logger.warn(e)
+        // TODO: Switch to img_proxy_describe
         const result = await proxyFetch(
             server,
             url,
@@ -48,7 +49,7 @@ export const fetchImage = async (server: ImageProxyServer, url: string) => {
         )
 
         Logger.info("Content proxy result: " + result)
-        // TODO: Differential handling of bonafide and error results.
+        // TODO: Differential handling of bona-fide and error results.
         saveToLocalStorage(url, result)
         return result
     }
