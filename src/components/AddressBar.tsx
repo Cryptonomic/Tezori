@@ -31,7 +31,7 @@ export function AddressBar() {
         }
 
         if(ledgerAppXtz) {
-            const address = await ledgerAppXtz.getAddress("44'/1729'/0'/0'")
+            const address = await ledgerAppXtz.getAddress(globalState.derivationPath)
             console.log("address", address)
             setAddress(address.address)
         }

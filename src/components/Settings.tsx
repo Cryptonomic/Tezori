@@ -13,6 +13,8 @@ export function Settings() {
             <input id={"settings_apikey"} defaultValue={globalState.apiKey} />
             <p>Network</p>
             <input id={"settings_apikey"} defaultValue={globalState.network} />
+            <p>Derivation Path</p>
+            <input id={"settings_derivationPath"} defaultValue={globalState.derivationPath} />
         </div>
     );
 }
