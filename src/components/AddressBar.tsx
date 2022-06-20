@@ -8,12 +8,18 @@ import Tezos from "@ledgerhq/hw-app-tezos";
 export function AddressBar() {
     const {globalState, dispatch } = useContext(GlobalContext);
     const [address, setAddress] = useState(globalState.address);
+    const [tezosServer] = useState(globalState.tezosServer);
+    const [apiKey] = useState(globalState.apiKey);
+    const [network] = useState(globalState.network);
     const [ledgerInitialized, setLedgerInitalized] = useState(false);
     const [ledgerAppXtz, setLedgerAppXtz] = useState<Tezos>();
 
     const handleAddressUpdateClick = () => {
         const action: Action = {
-            type: ActionTypes.UpdateAddress,
+            type: ActionTypes.UpdateSettings,
+            newTezosServer: tezosServer,
+            newApiKey: apiKey,
+            newNetwork: network,
             newAddress: address
         }
         dispatch(action);
