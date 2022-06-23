@@ -50,7 +50,7 @@ export const lookupContentProxy = async (server: ImageProxyServer, url: string) 
 
         Logger.info("Content proxy result: " + result)
         // TODO: Differential handling of bona-fide and error results.
-        saveToLocalStorage(url, result)
+        //saveToLocalStorage(url, result)
         return result
     }
 }
