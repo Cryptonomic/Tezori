@@ -40,7 +40,7 @@ export function Settings() {
             />
             <p>Network</p>
             <input 
-            id={"settings_apikey"} 
+            id={"settings_network"} 
             defaultValue={globalState.network}
             onChange={(e: React.FormEvent<HTMLInputElement>) => { setNetwork(e.currentTarget.value)}}
             />
