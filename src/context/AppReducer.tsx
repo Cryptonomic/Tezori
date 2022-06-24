@@ -6,6 +6,7 @@ export type Action = {
     newTezosServer: string,
     newApiKey: string,
     newNetwork: string,
+    newDerivationPath: string
 }
 
 export enum ActionTypes {
@@ -25,7 +26,8 @@ function reducer(state: IAppContext, action: Action): IAppContext {
                 ...state,
                 tezosServer: action.newTezosServer,
                 apiKey: action.newApiKey,
-                network: action.newNetwork,                
+                network: action.newNetwork,
+                derivationPath: action.newDerivationPath,                
             }
         default:
             return state;
