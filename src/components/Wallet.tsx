@@ -47,7 +47,6 @@ export function Wallet() {
                 <h1>Wallet</h1>
                 <p>Delegate: {walletState.delegate}</p>
                 <p>XTZ Balance: {walletState.balance}</p>
-                <p>USDtz Balance: N/A</p>
             </div>
     );
 }

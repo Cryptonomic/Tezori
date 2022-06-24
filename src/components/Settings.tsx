@@ -8,6 +8,7 @@ export function Settings() {
     const [tezosServer, setTezosServer] = useState(globalState.tezosServer);
     const [apiKey, setApiKey] = useState(globalState.apiKey);
     const [network, setNetwork] = useState(globalState.network);
+    const [derivationPath, setDerivationPath] = useState(globalState.network);
     const [address] = useState(globalState.address);
     
     const handleSettingsUpdateClick = () => {
@@ -16,7 +17,8 @@ export function Settings() {
             newTezosServer: tezosServer,
             newApiKey: apiKey,
             newNetwork: network,
-            newAddress: address
+            newAddress: address,
+            newDerivationPath: derivationPath
         }
         dispatch(action);
     }
@@ -44,11 +46,17 @@ export function Settings() {
             defaultValue={globalState.network}
             onChange={(e: React.FormEvent<HTMLInputElement>) => { setNetwork(e.currentTarget.value)}}
             />
+            <p>Derivation Path</p>
+            <input 
+            id={"settings_derivationPath"} 
+            defaultValue={globalState.derivationPath}
+            onChange={(e: React.FormEvent<HTMLInputElement>) => { setDerivationPath(e.currentTarget.value)}}
+            />
             <p>
             <button onClick={() => handleSettingsUpdateClick()}>
                     Update
             </button>
-            </p>        
+            </p>
         </div>
     );
 }

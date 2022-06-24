@@ -37,9 +37,29 @@ export function AddressBar() {
         }
 
         if(ledgerAppXtz) {
-            const address = await ledgerAppXtz.getAddress("44'/1729'/0'/0'")
+            const address = await ledgerAppXtz.getAddress(globalState.derivationPath)
             console.log("address", address)
             setAddress(address.address)
+        }
+    }
+
+    const getAddressFromBeacon = async () => {
+        const dAppClient = globalState.beaconClient
+        if(dAppClient) {
+            const activeAccount = await dAppClient.getActiveAccount();
+            if (activeAccount) {
+                setAddress(activeAccount.address)
+            }
+            else
+            {
+                console.log("Requesting permissions...");
+                const permissions = await dAppClient.requestPermissions();
+                console.log("Got permissions:", permissions);
+                setAddress(permissions.address)
+            }
+        }
+        else {
+            throw ReferenceError("Beacon client not defined!")
         }
     }
 
@@ -55,6 +75,7 @@ export function AddressBar() {
                     Update
             </button>
             <button onClick={() => getAddressFromLedger()}>Get from Ledger</button>
+            <button onClick={() => getAddressFromBeacon()}>Get from Beacon</button>
         </div>
     );
 }

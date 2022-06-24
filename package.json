@@ -1,9 +1,10 @@
 {
   "name": "tezori3",
   "version": "0.1.0",
-  "homepage": "https://cryptonomic.github.io/Tezori/",
+  "homepage": "./",
   "private": true,
   "dependencies": {
+    "@airgap/beacon-sdk": "^3.1.0",
     "@ledgerhq/hw-app-tezos": "^6.27.1",
     "@ledgerhq/hw-transport-webhid": "^6.27.1",
     "@ledgerhq/logs": "^6.10.0",
@@ -30,17 +31,15 @@
     "productName": "Tezori3",
     "files": [
       "build/**/*",
-      "node_modules/**/*",
-      "main.js"
+      "electron/main.ts",
+      "package.json"
     ],
-    "directories": {
-      "buildResources": "public"
-    },
     "linux": {
       "target": "deb"
-    }
+    },
+    "extends": null
   },
-  "main": "electron-main.js",
+  "main": "electron/main.ts",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -48,9 +47,9 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-package": "./node_modules/.bin/electron-builder -c.extraMetadata.main=electron-main.js",
-    "preelectron-package": "npm run build"
+    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-package": "npm run build && electron-builder build --publish never",
+    "electron-package:all": "npm run build && electron-builder build --publish never -mwl"
   },
   "eslintConfig": {
     "extends": [
@@ -71,12 +70,11 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^4.1.1",
-    "cross-env": "^5.2.0",
-    "electron": "^5.0.8",
-    "electron-builder": "^21.1.5",
+    "concurrently": "^7.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "^19.0.3",
+    "electron-builder": "^23.0.3",
     "gh-pages": "^4.0.0",
-    "parcel": "^2.5.0",
-    "wait-on": "^3.3.0"
+    "wait-on": "^6.0.1"
   }
 }
