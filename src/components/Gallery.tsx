@@ -57,14 +57,36 @@ export function Gallery() {
             apikey: "TQf4O3OwUYaNYyXjVHLGXQoPZXa0FtsNSijyxxwSYhc7hbeJdtR2kLBK0uTBDsxJ",
         };
 
-        const urls = [
+        /*const urls = [
             "https://upload.wikimedia.org/wikipedia/commons/8/84/Michelangelo%27s_David_2015.jpg",
             "https://upload.wikimedia.org/wikipedia/commons/9/9d/Botticelli_-_Adoration_of_the_Magi_%28Zanobi_Altar%29_-_Uffizi.jpg",
             "https://imageio.forbes.com/blogs-images/yjeanmundelsalle/files/2014/11/ymj_the-execution_a41-1940x966112.jpg?format=jpg&width=960"
-        ].concat(tezTokURLS)
+        ].concat(tezTokURLS)*/
 
-        setURLS(urls)
-        urls.forEach(url => ContentProxyUtils.lookupContentProxy(contentProxyServer, url))
+        const urls = tezTokURLS
+
+        /*const processedURLS = urls.map(url => {
+            if(url.startsWith("ipfs://")) return "https://tezori.infura-ipfs.io/ipfs/" + url.substring(7)
+            else return url
+        })
+        console.log("Processed URL: " + JSON.stringify(processedURLS))*/
+
+        //const moderationResults = processedURLS.map(url => ContentProxyUtils.lookupContentProxy(contentProxyServer, url))
+        let moderatedURLS: string[] = []
+        for(let url of urls) {
+            console.log(url)
+            const moderationInfo = await ContentProxyUtils.lookupContentProxy(contentProxyServer, url)
+            console.log(JSON.stringify(moderationInfo))
+            if("moderation_status" in moderationInfo) {
+                moderatedURLS.push(
+                    url.startsWith("ipfs://")?
+                        "https://tezori.infura-ipfs.io/ipfs/" + url.substring(7) :
+                        url
+                )
+            }
+        }
+        console.log("Processed URLs: " + JSON.stringify(moderatedURLS))
+        setURLS(moderatedURLS)
     }
 
     return (

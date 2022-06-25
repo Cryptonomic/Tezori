@@ -1,12 +1,22 @@
-import {FetchResponse, ImageProxyDataType, ImageProxyError, ImageProxyServer, proxyFetch} from "nft-image-proxy";
+import {
+    FetchResponse,
+    ImageProxyDataType,
+    ImageProxyServer,
+    proxyFetch,
+    RpcStatus
+} from "nft-image-proxy";
 import Logger from "js-logger";
+import {ModerationLabel, ModerationStatus} from "nft-image-proxy/dist/types/common";
+
+interface ModerationInfo {
+    moderation_status: ModerationStatus;
+    categories: ModerationLabel[];
+}
 
 /**
  * Prefix used for storing content proxy data in local storage
  */
 const LOCAL_STORAGE_KEY = "CONTENT_PROXY_CACHE"
-
-type ContentProxyResult = FetchResponse | ImageProxyError
 
 /**
  * Bespoke error for cache misses in local storage for content proxy data.
@@ -34,12 +44,8 @@ const createCacheKey = (url: string) => {
  * @param url       The URL for which content proxy data is being fetched.
  */
 export const lookupContentProxy = async (server: ImageProxyServer, url: string) => {
-    try {
-        return fetchFromLocalStorage(url)
-    }
-    catch(e: any) {
-        if(! (e instanceof CacheMissError))
-            Logger.warn(e)
+    const storedResult = fetchFromLocalStorage(url);
+    if(storedResult instanceof CacheMissError) {
         // TODO: Switch to img_proxy_describe
         const result = await proxyFetch(
             server,
@@ -47,37 +53,49 @@ export const lookupContentProxy = async (server: ImageProxyServer, url: string) 
             ImageProxyDataType.Json,
             false
         )
-
-        Logger.info("Content proxy result: " + result)
-        // TODO: Differential handling of bona-fide and error results.
-        //saveToLocalStorage(url, result)
-        return result
+        if (typeof result !== "string" && result.rpc_status === RpcStatus.Ok) {
+            saveToLocalStorage(url, result as FetchResponse)
+            return fetchFromLocalStorage(url);
+        }
+        else {
+            Logger.warn("Content proxy could not return a result for: " + url + ". The result was: " + JSON.stringify(result))
+            return new CacheMissError(JSON.stringify(result))
+        }
     }
+    return storedResult
 }
 
 /**
  * Saves content proxy results to local storage.
  * @param url       The URL to which the results correspond.
- * @param result    The results to be stored.
+ * @param contentProxyResponse    The results to be stored.
  */
-const saveToLocalStorage = (url: string, result: ContentProxyResult) => {
-    const key = createCacheKey(url)
-    localStorage.setItem(key, JSON.stringify(result))
-    Logger.info("Cache save: " + key)
+const saveToLocalStorage = (url: string, contentProxyResponse: FetchResponse): boolean => {
+    if (typeof contentProxyResponse !== "string" && contentProxyResponse.rpc_status == RpcStatus.Ok) {
+        const key = createCacheKey(url)
+        const justTheModerationResults: ModerationInfo = {
+            moderation_status: contentProxyResponse.result.moderation_status,
+            categories: contentProxyResponse.result.categories
+        }
+        localStorage.setItem(key, JSON.stringify(justTheModerationResults))
+        Logger.info("Cache save: " + key)
+        return true
+    }
+    return false
 }
 
 /**
  * Fetches content proxy results from local storage.
  * @param url       The URL for which the results are desired.
  */
-const fetchFromLocalStorage = (url: string) => {
+const fetchFromLocalStorage = (url: string): ModerationInfo | CacheMissError => {
     const key = createCacheKey(url)
     const cachedResult = localStorage.getItem(key)
     if(cachedResult == null) {
         Logger.info("Cache miss: " + key)
-        throw new CacheMissError("Item not found in local storage: " + url)
+        return new CacheMissError("Item not found in local storage: " + url)
     }
-    const result: ContentProxyResult = JSON.parse(cachedResult)
+    const result: ModerationInfo = JSON.parse(cachedResult)
     Logger.info("Cache hit: " + key)
     return result
 }
