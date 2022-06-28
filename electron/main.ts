@@ -27,7 +27,7 @@ function createWindow () {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('new-window', (event: Event, url: string) => {
+  mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
     mainWindow.loadURL(url);
   });
@@ -50,4 +50,3 @@ app.on('window-all-closed', () => {
   }
 });
 
-export {}
