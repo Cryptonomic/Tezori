@@ -13,7 +13,7 @@ export type IAppContext = {
 }
 
 const initialContext: IAppContext = {
-    address: "tz1NEGFHXe2XEztwCfpduZqULRFTUZQTezSt",
+    address: "tz1M6yVQCTUkpwCGPRs9G5bboA7N3GV8ChHU",
     derivationPath: "44'/1729'/0'/0'/1'",
     network: "mainnet",
     tezosServer: "https://tezos-prod.cryptonomic-infra.tech:443",

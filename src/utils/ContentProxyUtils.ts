@@ -1,10 +1,4 @@
-import {
-    FetchResponse,
-    ImageProxyDataType,
-    ImageProxyServer,
-    proxyFetch,
-    RpcStatus
-} from "nft-image-proxy";
+import {FetchResponse, ImageProxyDataType, ImageProxyServer, proxyFetch} from "nft-image-proxy";
 import Logger from "js-logger";
 import {ModerationLabel, ModerationStatus} from "nft-image-proxy/dist/types/common";
 
@@ -45,7 +39,9 @@ const createCacheKey = (url: string) => {
  */
 export const lookupContentProxy = async (server: ImageProxyServer, url: string) => {
     const storedResult = fetchFromLocalStorage(url);
+    Logger.info("Stored result: " + JSON.stringify(storedResult))
     if(storedResult instanceof CacheMissError) {
+        Logger.info("Fetching from content proxy")
         // TODO: Switch to img_proxy_describe
         const result = await proxyFetch(
             server,
@@ -53,12 +49,16 @@ export const lookupContentProxy = async (server: ImageProxyServer, url: string) 
             ImageProxyDataType.Json,
             false
         )
-        if (typeof result !== "string" && result.rpc_status === RpcStatus.Ok) {
+        if (typeof result !== "string" && result.rpc_status.toString() === "Ok") {
+            Logger.info("foo")
             saveToLocalStorage(url, result as FetchResponse)
             return fetchFromLocalStorage(url);
         }
         else {
+            Logger.info("bar")
             Logger.warn("Content proxy could not return a result for: " + url + ". The result was: " + JSON.stringify(result))
+            Logger.info(typeof result)
+            if (typeof result !== "string") Logger.info(result.rpc_status.toString() === "Ok")
             return new CacheMissError(JSON.stringify(result))
         }
     }
@@ -71,7 +71,7 @@ export const lookupContentProxy = async (server: ImageProxyServer, url: string) 
  * @param contentProxyResponse    The results to be stored.
  */
 const saveToLocalStorage = (url: string, contentProxyResponse: FetchResponse): boolean => {
-    if (typeof contentProxyResponse !== "string" && contentProxyResponse.rpc_status == RpcStatus.Ok) {
+    if (typeof contentProxyResponse !== "string" && contentProxyResponse.rpc_status.toString() === "Ok") {
         const key = createCacheKey(url)
         const justTheModerationResults: ModerationInfo = {
             moderation_status: contentProxyResponse.result.moderation_status,

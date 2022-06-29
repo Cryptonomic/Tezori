@@ -9,7 +9,7 @@ export function Gallery() {
     const {globalState } = useContext(GlobalContext);
     const [urls, setURLS] = useState<string[]>();
 
-    const fetchImages = async () => {
+    const fetchImages = async (holder: string) => {
 
         console.log("Fetching images..")
 
@@ -17,7 +17,7 @@ export function Gallery() {
 
         const tezTokQuery = {query: `
         query LatestEvents {
-          holdings(limit: 100, where: {holder_address: {_eq: "tz1NEGFHXe2XEztwCfpduZqULRFTUZQTezSt"}}) {
+          holdings(limit: 100, where: {holder_address: {_eq: "${holder}"}}) {
             holder_address
             token {
               artist_profile {
@@ -65,28 +65,28 @@ export function Gallery() {
 
         const urls = tezTokURLS
 
-        /*const processedURLS = urls.map(url => {
-            if(url.startsWith("ipfs://")) return "https://tezori.infura-ipfs.io/ipfs/" + url.substring(7)
-            else return url
-        })
-        console.log("Processed URL: " + JSON.stringify(processedURLS))*/
-
-        //const moderationResults = processedURLS.map(url => ContentProxyUtils.lookupContentProxy(contentProxyServer, url))
+        let contentProxyPromises: Promise<void>[] = []
         let moderatedURLS: string[] = []
         for(let url of urls) {
             console.log(url)
-            const moderationInfo = await ContentProxyUtils.lookupContentProxy(contentProxyServer, url)
-            console.log(JSON.stringify(moderationInfo))
-            if("moderation_status" in moderationInfo) {
-                moderatedURLS.push(
-                    url.startsWith("ipfs://")?
-                        "https://tezori.infura-ipfs.io/ipfs/" + url.substring(7) :
-                        url
-                )
+            const contentProxyPromise = ContentProxyUtils.lookupContentProxy(contentProxyServer, url).then ( (moderationInfo) => {
+                console.log(JSON.stringify(moderationInfo))
+                if ("moderation_status" in moderationInfo) {
+                    moderatedURLS.push(
+                        url.startsWith("ipfs://") ?
+                            "https://tezori.infura-ipfs.io/ipfs/" + url.substring(7) :
+                            url
+                    )
+                }
             }
+            ).then ( () => setURLS(moderatedURLS) )
+            contentProxyPromises.push(contentProxyPromise)
         }
+        await Promise.all(contentProxyPromises)
         console.log("Processed URLs: " + JSON.stringify(moderatedURLS))
         setURLS(moderatedURLS)
+        const leftoverURLS = urls.filter(u => !moderatedURLS.includes(u))
+        console.log("Leftover URLs: " + JSON.stringify(leftoverURLS))
     }
 
     return (
@@ -99,7 +99,7 @@ export function Gallery() {
                     )
                 }
             </div>
-            <button onClick={() => fetchImages()}>Load</button>
+            <button onClick={() => fetchImages(globalState.address)}>Load</button>
         </div>
     );
 }
