@@ -2,7 +2,7 @@ import {FetchResponse, ImageProxyDataType, ImageProxyServer, proxyFetch} from "n
 import Logger from "js-logger";
 import {ModerationLabel, ModerationStatus} from "nft-image-proxy/dist/types/common";
 
-interface ModerationInfo {
+export interface ModerationInfo {
     moderation_status: ModerationStatus;
     categories: ModerationLabel[];
 }
@@ -11,6 +11,12 @@ interface ModerationInfo {
  * Prefix used for storing content proxy data in local storage
  */
 const LOCAL_STORAGE_KEY = "CONTENT_PROXY_CACHE"
+
+const contentProxyServer: ImageProxyServer = {
+    url: "https://imgproxy-prod.cryptonomic-infra.tech",
+    version: "1.0.0",
+    apikey: "TQf4O3OwUYaNYyXjVHLGXQoPZXa0FtsNSijyxxwSYhc7hbeJdtR2kLBK0uTBDsxJ",
+};
 
 /**
  * Bespoke error for cache misses in local storage for content proxy data.
@@ -34,17 +40,16 @@ const createCacheKey = (url: string) => {
  * Given a URL, fetch content proxy data preferentially from local storage,
  * otherwise from a given content proxy server.
  * NOTE: The caching implementation is quite naive and can be improved in the future as the need arises.
- * @param server    The server to fall back on if the data is not available in local storage.
  * @param url       The URL for which content proxy data is being fetched.
  */
-export const lookupContentProxy = async (server: ImageProxyServer, url: string) => {
+export const lookupContentProxy = async (url: string) => {
     const storedResult = fetchFromLocalStorage(url);
     Logger.info("Stored result: " + JSON.stringify(storedResult))
     if(storedResult instanceof CacheMissError) {
         Logger.info("Fetching from content proxy")
         // TODO: Switch to img_proxy_describe
         const result = await proxyFetch(
-            server,
+            contentProxyServer,
             url,
             ImageProxyDataType.Json,
             false
