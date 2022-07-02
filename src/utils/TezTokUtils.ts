@@ -2,6 +2,11 @@ import TezTokResult from "../types/TezTokResult";
 
 const getTezTokServerURL = () => {return "https://api.teztok.com/v1/graphql";}
 
+export interface AnnotatedTezTokResults {
+    tezTokResult:   TezTokResult,
+    contentURLs:    Set<string>
+}
+
 const getTezTokQuery = (holder: string) => {
     return {
         query: `
@@ -24,7 +29,7 @@ const getTezTokQuery = (holder: string) => {
         }
     }
 
-export const queryTezTok = async (holder: string) => {
+export const queryTezTok = async (holder: string): Promise<AnnotatedTezTokResults> => {
     const response = await fetch(
         getTezTokServerURL(),
         {
@@ -39,5 +44,14 @@ export const queryTezTok = async (holder: string) => {
         }
     );
     const responseJson = await response.json()
-    return responseJson as TezTokResult
+    const tezTokResult = responseJson as TezTokResult
+    const contentURLs = extractContentURLSFromTezTokResults(tezTokResult)
+    return {
+        tezTokResult: tezTokResult,
+        contentURLs: contentURLs
+    }
+}
+
+export const extractContentURLSFromTezTokResults = (tezTokResult: TezTokResult) => {
+    return new Set(tezTokResult.data.holdings.map(item => item.token.artifact_uri))
 }

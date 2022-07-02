@@ -16,12 +16,10 @@ export function Gallery() {
 
         Logger.info("Getting NFTs for current address from TezTok")
         const tezTokResult = await TezTokUtils.queryTezTok(holder)
-        const tezTokURLS = tezTokResult.data.holdings.map(item => item.token.artifact_uri)
-        Logger.info("TezTok URLs: " + tezTokURLS)
-
-        const urls = tezTokURLS
+        Logger.info("TezTok URLs: " + tezTokResult.contentURLs)
 
         Logger.info("Fetching moderation results from content proxy and rendering results")
+        const urls = Array.from(tezTokResult.contentURLs)
         let contentProxyPromises: Promise<void>[] = []
         let moderatedURLS: string[] = []
         let moderationResults: Map<string, ModerationInfo> = new Map<string, ModerationInfo>()
@@ -30,8 +28,9 @@ export function Gallery() {
             const contentProxyPromise = ContentProxyUtils.lookupContentProxy(url).then ( (moderationInfo) => {
                 console.log(JSON.stringify(moderationInfo))
                 if ("moderation_status" in moderationInfo) {
-                    moderatedURLS.push(InfuraUtils.convertRawToProxiedIpfsUrl(url))
-                    moderationResults.set(url, moderationInfo)
+                    const proxiedURL = InfuraUtils.convertRawToProxiedIpfsUrl(url)
+                    moderatedURLS.push(proxiedURL)
+                    moderationResults.set(proxiedURL, moderationInfo)
                 }
             }
             ).then ( () => setURLS(moderatedURLS) )
