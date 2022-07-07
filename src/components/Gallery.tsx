@@ -2,9 +2,7 @@ import * as React from "react";
 import {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../context/GlobalState";
 import * as ContentProxyUtils from "../utils/ContentProxyUtils";
-import {ModerationInfo} from "../utils/ContentProxyUtils";
 import * as TezTokUtils from "../utils/TezTokUtils";
-import * as InfuraUtils from "../utils/InfuraUtils"
 import Logger from "js-logger";
 
 export function Gallery() {
@@ -20,27 +18,8 @@ export function Gallery() {
 
         Logger.info("Fetching moderation results from content proxy and rendering results")
         const urls = Array.from(tezTokResult.contentURLs)
-        let contentProxyPromises: Promise<void>[] = []
-        let moderatedURLS: string[] = []
-        let moderationResults: Map<string, ModerationInfo> = new Map<string, ModerationInfo>()
-        for(let url of urls) {
-            console.log(url)
-            const contentProxyPromise = ContentProxyUtils.lookupContentProxy(url).then ( (moderationInfo) => {
-                console.log(JSON.stringify(moderationInfo))
-                if ("moderation_status" in moderationInfo) {
-                    const proxiedURL = InfuraUtils.convertRawToProxiedIpfsUrl(url)
-                    moderatedURLS.push(proxiedURL)
-                    moderationResults.set(proxiedURL, moderationInfo)
-                }
-            }
-            ).then ( () => setURLS(moderatedURLS) )
-            contentProxyPromises.push(contentProxyPromise)
-        }
-        await Promise.all(contentProxyPromises)
-        Logger.info("Processed URLs: " + JSON.stringify(moderatedURLS))
-        setURLS(moderatedURLS)
-        const leftoverURLS = urls.filter(u => !moderatedURLS.includes(u))
-        Logger.info("Leftover URLs: " + JSON.stringify(leftoverURLS))
+        const moderationMap = await ContentProxyUtils.getSuccessfullyModeratedURLS(await ContentProxyUtils.moderateURLs(urls))
+        setURLS(Array.from(moderationMap.keys()))
     }
 
     useEffect( () => {

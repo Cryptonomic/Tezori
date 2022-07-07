@@ -104,3 +104,17 @@ const fetchFromLocalStorage = (url: string): ModerationInfo | CacheMissError => 
     Logger.info("Cache hit: " + key)
     return result
 }
+
+export const moderateURLs = async (urls: string[]) => {
+    const moderationData = await Promise.all(urls.map(url => lookupContentProxy(url)))
+    const zippedModerationData = moderationData.map((r, i) => {
+        return {url: urls[i], result: r}
+    })
+    return new Map(zippedModerationData.map(x => [x.url, x.result]))
+}
+
+export const getSuccessfullyModeratedURLS = async (moderationMap:  Map<string, ModerationInfo | CacheMissError>) => {
+    const resultsWithValidRecords = Array.from(moderationMap.entries()).filter(x => ("moderation_status" in x[1]))
+    return new Map(resultsWithValidRecords)
+}
+
