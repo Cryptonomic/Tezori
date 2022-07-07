@@ -7,3 +7,8 @@ img.gallery-image {
     height: 200px;
     vertical-align: top;
 }
+
+video.gallery-image {
+    height: 200px;
+    vertical-align: top;
+}
