@@ -22,6 +22,7 @@ const getTezTokQuery = (holder: string) => {
               description
               name
               platform
+              mime_type
             }
           }
         }

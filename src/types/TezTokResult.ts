@@ -19,7 +19,8 @@ export interface TezTokToken {
     artifact_uri: string,
     description: string,
     name: string,
-    platform: string
+    platform: string,
+    mime_type: string
 }
 
 export interface TezTokArtistProfile {

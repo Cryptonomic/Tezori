@@ -21,7 +21,7 @@ const contentProxyServer: ImageProxyServer = {
 /**
  * Bespoke error for cache misses in local storage for content proxy data.
  */
-class CacheMissError extends Error {
+export class CacheMissError extends Error {
     constructor(message: string) {
         super(message)
         this.name = "CacheMissError"
@@ -44,9 +44,9 @@ const createCacheKey = (url: string) => {
  */
 export const lookupContentProxy = async (url: string) => {
     const storedResult = fetchFromLocalStorage(url);
-    Logger.info("Stored result: " + JSON.stringify(storedResult))
+    Logger.info("Lookup result: " + JSON.stringify(storedResult))
     if(storedResult instanceof CacheMissError) {
-        Logger.info("Fetching from content proxy")
+        Logger.info("Fetching from content proxy: " + url)
         // TODO: Switch to img_proxy_describe
         const result = await proxyFetch(
             contentProxyServer,
@@ -55,12 +55,10 @@ export const lookupContentProxy = async (url: string) => {
             false
         )
         if (typeof result !== "string" && result.rpc_status.toString() === "Ok") {
-            Logger.info("foo")
             saveToLocalStorage(url, result as FetchResponse)
             return fetchFromLocalStorage(url);
         }
         else {
-            Logger.info("bar")
             Logger.warn("Content proxy could not return a result for: " + url + ". The result was: " + JSON.stringify(result))
             Logger.info(typeof result)
             if (typeof result !== "string") Logger.info(result.rpc_status.toString() === "Ok")
@@ -83,7 +81,7 @@ const saveToLocalStorage = (url: string, contentProxyResponse: FetchResponse): b
             categories: contentProxyResponse.result.categories
         }
         localStorage.setItem(key, JSON.stringify(justTheModerationResults))
-        Logger.info("Cache save: " + key)
+        Logger.info("Cache save: " + key + JSON.stringify(justTheModerationResults))
         return true
     }
     return false
@@ -105,16 +103,11 @@ const fetchFromLocalStorage = (url: string): ModerationInfo | CacheMissError => 
     return result
 }
 
-export const moderateURLs = async (urls: string[]) => {
-    const moderationData = await Promise.all(urls.map(url => lookupContentProxy(url)))
+export const moderateURLs = (urls: string[]) => {
+    const moderationData = urls.map(url => lookupContentProxy(url))
     const zippedModerationData = moderationData.map((r, i) => {
         return {url: urls[i], result: r}
     })
     return new Map(zippedModerationData.map(x => [x.url, x.result]))
-}
-
-export const getSuccessfullyModeratedURLS = async (moderationMap:  Map<string, ModerationInfo | CacheMissError>) => {
-    const resultsWithValidRecords = Array.from(moderationMap.entries()).filter(x => ("moderation_status" in x[1]))
-    return new Map(resultsWithValidRecords)
 }
 
