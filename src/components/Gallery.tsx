@@ -13,7 +13,7 @@ export function Gallery() {
     const [urls, setURLS] = useState<string[]>([]);
     const [vidURLS, setVidURLS] = useState<string[]>([])
     const [moderationResults, setModerationResults] = useState<Map<string, ModerationInfo | CacheMissError>>(new Map<string, ModerationInfo | CacheMissError>())
-    const [nftInfo, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
+    const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
 
     const fetchImages = async (holder: string) => {
         Logger.info("Fetching NFT content")
@@ -77,25 +77,32 @@ export function Gallery() {
         fetchImages(globalState.address).then(r => r)
     }, [globalState])
 
+    const moderateImage = (url: string) => {
+        if(!moderationResults.has(url)) return InfuraUtils.convertRawToProxiedIpfsUrl(url)
+        const moderationInfo = moderationResults.get(url)
+        // @ts-ignore
+        if(! ("moderation_status" in moderationInfo)) return InfuraUtils.convertRawToProxiedIpfsUrl(url)
+        else {
+            const mi = moderationInfo as ModerationInfo
+            if(mi.categories.length > 0) {
+                Logger.info("quack")
+                return "https://upload.wikimedia.org/wikipedia/commons/3/39/Hazard_T.svg"
+            }
+            else
+                return InfuraUtils.convertRawToProxiedIpfsUrl(url)
+        }
+    }
+
     return (
         <div>
             <h1>Gallery for {globalState.address}</h1>
-            <div id={"gallery"}>
                 {
                     urls.concat(vidURLS).sort().map(url =>
-                        <div className={"gallery-tile"}>
-                            {
-                                urls.includes(url) ?
-                                <img src={InfuraUtils.convertRawToProxiedIpfsUrl(url)} alt={""} className={"gallery-image"} key={url} /> :
-                                <video src={InfuraUtils.convertRawToProxiedIpfsUrl(url)} className={"gallery-image"} key={url} muted loop />
-                            }
-                            <p>
-                                {JSON.stringify(moderationResults.get(url))}
-                            </p>
-                        </div>
+                            urls.includes(url) ?
+                            <img src={moderateImage(url)} alt={""} className={"gallery-image"} key={url} /> :
+                            <video src={moderateImage(url)} className={"gallery-image"} key={url} muted loop />
                     )
                 }
-            </div>
         </div>
     );
 }
