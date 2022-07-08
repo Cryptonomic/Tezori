@@ -16,61 +16,37 @@ export function Gallery() {
     const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
 
     const fetchImages = async (holder: string) => {
-        Logger.info("Fetching NFT content")
+        Logger.info("Fetching NFT content for " + holder)
 
-        Logger.info("Getting NFTs for current address from TezTok")
+        Logger.info("Getting NFT data from TezTok")
         const tezTokResult = await TezTokUtils.queryTezTok(holder)
-        setNFTInfo(tezTokResult)
-        const allURLS = Array.from(tezTokResult.keys()).filter(url => url !== null)
-
-        function isImage(url: string) {
-            // @ts-ignore
-            const holding = tezTokResult.get(url)
-            Logger.info("poo: " + JSON.stringify(holding))
-            // @ts-ignore
-            if(holding.token.mime_type === null) return false
-            // @ts-ignore
-            if(holding.token.mime_type.includes("xml")) return false
-            // @ts-ignore
-            return holding.token.mime_type.includes("image");
-        }
-
-        function isVideo(url: string) {
-            // @ts-ignore
-            const holding = tezTokResult.get(url)
-            Logger.info("moo: " + JSON.stringify(holding))
-            // @ts-ignore
-            if(holding.token.mime_type === null) return false
-            // @ts-ignore
-            return holding.token.mime_type.includes("video");
-        }
-
-        const imageURLs = allURLS.filter(isImage)
-        // @ts-ignore
-        const videoURLs = allURLS.filter(isVideo).map(InfuraUtils.convertRawToProxiedIpfsUrl)
-        Logger.info("Video URLS: " + JSON.stringify(videoURLs))
+        const allURLS = TezTokUtils.extractURLsFromTezTokHoldings(tezTokResult)
+        const imageURLs = TezTokUtils.extractImageURLsFromTezTokHolding(tezTokResult)
+        const videoURLs = TezTokUtils.extractVideoURLsFromTezTokHolding(tezTokResult)
         Logger.info("TezTok URLs: " + JSON.stringify(allURLS))
+        Logger.info("TezTok image URLs: " + JSON.stringify(imageURLs))
+        Logger.info("TezTok video URLs: " + JSON.stringify(videoURLs))
 
         Logger.info("Fetching moderation results from content proxy")
         const moderationMap = ContentProxyUtils.moderateURLs(imageURLs)
 
         Logger.info("Rendering images..")
-        let displayURLs: string[] = []
+        let imageURLsToDisplay: string[] = []
         const finalModerationResults = new Map<string, ModerationInfo | CacheMissError>()
         function processModerationResult(result: Promise<ModerationInfo | CacheMissError>, url: string) {
             result.then((finalResult) => {
                 if("moderation_status" in finalResult) {
-                    displayURLs.push(url)
+                    imageURLsToDisplay.push(url)
                     finalModerationResults.set(url, finalResult)
                 }
             })
         }
         moderationMap.forEach(processModerationResult)
 
-        setURLS(displayURLs)
+        setNFTInfo(tezTokResult)
+        setURLS(imageURLsToDisplay)
         setVidURLS(videoURLs)
         setModerationResults(finalModerationResults)
-        Logger.info("Caw caw: " + JSON.stringify(finalModerationResults))
     }
 
     useEffect( () => {
@@ -85,7 +61,6 @@ export function Gallery() {
         else {
             const mi = moderationInfo as ModerationInfo
             if(mi.categories.length > 0) {
-                Logger.info("quack")
                 return "https://upload.wikimedia.org/wikipedia/commons/3/39/Hazard_T.svg"
             }
             else
@@ -100,7 +75,7 @@ export function Gallery() {
                     urls.concat(vidURLS).sort().map(url =>
                             urls.includes(url) ?
                             <img src={moderateImage(url)} alt={""} className={"gallery-image"} key={url} /> :
-                            <video src={moderateImage(url)} className={"gallery-image"} key={url} muted loop />
+                            <video src={moderateImage(url)} className={"gallery-image"} key={url} muted loop controls />
                     )
                 }
         </div>

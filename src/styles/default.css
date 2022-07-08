@@ -4,12 +4,12 @@ body {
 }
 
 img.gallery-image {
-    height: 200px;
+    height: 400px;
     vertical-align: top;
 }
 
 video.gallery-image {
-    height: 200px;
+    height: 400px;
     vertical-align: top;
 }
 

@@ -2,11 +2,6 @@ import TezTokResult, {TezTokHolding} from "../types/TezTokResult";
 
 const getTezTokServerURL = () => {return "https://api.teztok.com/v1/graphql";}
 
-export interface AnnotatedTezTokResults {
-    tezTokResult:   TezTokResult,
-    contentURLs:    Set<string>
-}
-
 const getTezTokQuery = (holder: string) => {
     return {
         query: `
@@ -55,4 +50,36 @@ export const queryTezTok = async (holder: string): Promise<Map<string, TezTokHol
 
 const extractContentURLSFromTezTokResults = (tezTokResult: TezTokResult): string[] => {
     return tezTokResult.data.holdings.map(item => item.token.artifact_uri)
+}
+
+function isImageURL(tezTokHoldings: Map<string, TezTokHolding>, url: string) {
+    // @ts-ignore
+    const holding = tezTokHoldings.get(url)
+    // @ts-ignore
+    if(holding.token.mime_type === null) return false
+    // @ts-ignore
+    if(holding.token.mime_type.includes("xml")) return false
+    // @ts-ignore
+    return holding.token.mime_type.includes("image");
+}
+
+function isVideoURL(tezTokHoldings: Map<string, TezTokHolding>, url: string) {
+    // @ts-ignore
+    const holding = tezTokHoldings.get(url)
+    // @ts-ignore
+    if(holding.token.mime_type === null) return false
+    // @ts-ignore
+    return holding.token.mime_type.includes("video");
+}
+
+export function extractURLsFromTezTokHoldings(tezTokHoldings: Map<string, TezTokHolding>) {
+    return Array.from(tezTokHoldings.keys()).filter(url => url !== null)
+}
+
+export function extractImageURLsFromTezTokHolding(tezTokHoldings: Map<string, TezTokHolding>) {
+    return extractURLsFromTezTokHoldings(tezTokHoldings).filter(x => isImageURL(tezTokHoldings, x))
+}
+
+export function extractVideoURLsFromTezTokHolding(tezTokHoldings: Map<string, TezTokHolding>) {
+    return extractURLsFromTezTokHoldings(tezTokHoldings).filter(x => isVideoURL(tezTokHoldings, x))
 }
