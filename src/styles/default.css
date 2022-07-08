@@ -12,3 +12,8 @@ video.gallery-image {
     height: 200px;
     vertical-align: top;
 }
+
+div.gallery-tile {
+    vertical-align: top;
+    float: left;
+}
