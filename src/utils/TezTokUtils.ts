@@ -53,23 +53,16 @@ const extractContentURLSFromTezTokResults = (tezTokResult: TezTokResult): string
 }
 
 function isImageURL(tezTokHoldings: Map<string, TezTokHolding>, url: string) {
-    // @ts-ignore
     const holding = tezTokHoldings.get(url)
-    // @ts-ignore
-    if(holding.token.mime_type === null) return false
-    // @ts-ignore
-    if(holding.token.mime_type.includes("xml")) return false
-    // @ts-ignore
-    return holding.token.mime_type.includes("image");
+    if(holding?.token.mime_type === null) return false
+    if(holding?.token.mime_type.includes("xml")) return false
+    return holding?.token.mime_type.includes("image");
 }
 
 function isVideoURL(tezTokHoldings: Map<string, TezTokHolding>, url: string) {
-    // @ts-ignore
     const holding = tezTokHoldings.get(url)
-    // @ts-ignore
-    if(holding.token.mime_type === null) return false
-    // @ts-ignore
-    return holding.token.mime_type.includes("video");
+    if(holding?.token.mime_type === null) return false
+    return holding?.token.mime_type.includes("video");
 }
 
 export function extractURLsFromTezTokHoldings(tezTokHoldings: Map<string, TezTokHolding>) {
