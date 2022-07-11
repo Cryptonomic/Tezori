@@ -21,6 +21,12 @@ export function Gallery() {
      * @param holder    The given address
      */
     const fetchImages = async (holder: string) => {
+        Logger.info("Clearing old data..")
+        setURLS([])
+        setVidURLS([])
+        setModerationResults(new Map<string, ModerationInfo | CacheMissError>())
+        setNFTInfo(new Map<string, TezTokHolding>())
+
         Logger.info("Fetching NFT content for " + holder)
 
         Logger.info("Getting NFT data from TezTok")
