@@ -103,6 +103,10 @@ const fetchFromLocalStorage = (url: string): ModerationInfo | CacheMissError => 
     return result
 }
 
+/**
+ * Applies content moderation to a batch of URLs and returns the results by URL.
+ * @param urls  The URLs to moderate
+ */
 export const moderateURLs = (urls: string[]) => {
     const moderationData = urls.map(url => lookupContentProxy(url))
     const zippedModerationData = moderationData.map((r, i) => {
@@ -121,6 +125,11 @@ function processSingleModerationItem(result: [string, Promise<ModerationInfo | C
     })
 }
 
+/**
+ * Applies a given callback function for all URLs for which the content proxy returned successful moderation results.
+ * @param moderationMap Moderation results for a batch of URLs
+ * @param callbackFn    Callback function to apply for all entries which have successful moderation results
+ */
 export function processModerationData(moderationMap: Map<string, Promise<ModerationInfo | CacheMissError>>, callbackFn: (url: string, moderationInfo: ModerationInfo) => any) {
     Array.from(moderationMap).map(x => processSingleModerationItem(x, callbackFn))
 }

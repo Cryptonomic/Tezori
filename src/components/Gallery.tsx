@@ -16,6 +16,10 @@ export function Gallery() {
     const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
     const [isModerationOn, setModerationOn] = useState<boolean>(true)
 
+    /**
+     * Updates state to reflect the moderated NFT holdings of a given address.
+     * @param holder    The given address
+     */
     const fetchImages = async (holder: string) => {
         Logger.info("Fetching NFT content for " + holder)
 
@@ -50,6 +54,10 @@ export function Gallery() {
         fetchImages(globalState.address).then(r => r)
     }, [globalState])
 
+    /**
+     * Applies moderation and proxying logic to figure out the actual rendered URL for a given NFT content URL
+     * @param url
+     */
     const processURLForDisplay = (url: string) => {
         if(!moderationResults.has(url)) return InfuraUtils.convertRawToProxiedIpfsUrl(url)
         const moderationInfo = moderationResults.get(url)
@@ -65,10 +73,11 @@ export function Gallery() {
         }
     }
 
+    /**
+     * Toggles content moderation on and off
+     */
     function toggleContentModeration() {
-        Logger.info("Caw caw " + isModerationOn)
         setModerationOn(!isModerationOn)
-        Logger.info(isModerationOn)
     }
 
     return (

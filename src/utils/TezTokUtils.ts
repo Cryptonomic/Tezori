@@ -1,5 +1,7 @@
 import TezTokResult, {TezTokHolding} from "../types/TezTokResult";
 
+// Utility functions for dealing with the TezToke indexer
+
 const getTezTokServerURL = () => {return "https://api.teztok.com/v1/graphql";}
 
 const getTezTokQuery = (holder: string) => {
@@ -25,6 +27,10 @@ const getTezTokQuery = (holder: string) => {
         }
     }
 
+/**
+ * Fetches the Tezos NFT holdings of a given address from the TezTok indexer
+ * @param holder    The address for which NFT holdings are being fetched
+ */
 export const queryTezTok = async (holder: string): Promise<Map<string, TezTokHolding>> => {
     const response = await fetch(
         getTezTokServerURL(),
@@ -65,14 +71,26 @@ function isVideoURL(tezTokHoldings: Map<string, TezTokHolding>, url: string) {
     return holding?.token.mime_type.includes("video");
 }
 
+/**
+ * Fetches all unique URLs from TezTok holdings
+ * @param tezTokHoldings    TezTok holdings
+ */
 export function extractURLsFromTezTokHoldings(tezTokHoldings: Map<string, TezTokHolding>) {
     return Array.from(tezTokHoldings.keys()).filter(url => url !== null)
 }
 
+/**
+ * Fetches only image URLs from TezTok holdings
+ * @param tezTokHoldings    TezTok holdings
+ */
 export function extractImageURLsFromTezTokHolding(tezTokHoldings: Map<string, TezTokHolding>) {
     return extractURLsFromTezTokHoldings(tezTokHoldings).filter(x => isImageURL(tezTokHoldings, x))
 }
 
+/**
+ * Fetches all unique video URLs from TezTok holdings
+ * @param tezTokHoldings    TezTok holdings
+ */
 export function extractVideoURLsFromTezTokHolding(tezTokHoldings: Map<string, TezTokHolding>) {
     return extractURLsFromTezTokHoldings(tezTokHoldings).filter(x => isVideoURL(tezTokHoldings, x))
 }
