@@ -14,6 +14,7 @@ export function Gallery() {
     const [vidURLS, setVidURLS] = useState<string[]>([])
     const [moderationResults, setModerationResults] = useState<Map<string, ModerationInfo | CacheMissError>>(new Map<string, ModerationInfo | CacheMissError>())
     const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
+    const [isModerationOn, setModerationOn] = useState<boolean>(true)
 
     const fetchImages = async (holder: string) => {
         Logger.info("Fetching NFT content for " + holder)
@@ -56,7 +57,7 @@ export function Gallery() {
             return InfuraUtils.convertRawToProxiedIpfsUrl(url)
         else {
             const mi = moderationInfo as ModerationInfo
-            if(mi.categories.length > 0) {
+            if(mi.categories.length > 0 && isModerationOn) {
                 return "https://upload.wikimedia.org/wikipedia/commons/3/39/Hazard_T.svg"
             }
             else
@@ -64,16 +65,25 @@ export function Gallery() {
         }
     }
 
+    function toggleContentModeration() {
+        Logger.info("Caw caw " + isModerationOn)
+        setModerationOn(!isModerationOn)
+        Logger.info(isModerationOn)
+    }
+
     return (
         <div>
             <h1>Gallery for {globalState.address}</h1>
-                {
-                    urls.concat(vidURLS).sort().map(url =>
-                            urls.includes(url) ?
-                            <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} /> :
-                            <video src={processURLForDisplay(url)} className={"gallery-image"} key={url} muted loop controls />
-                    )
-                }
+            <input type={"checkbox"} id={"moderation-toggle"} checked={isModerationOn} onChange={toggleContentModeration} />
+            <label htmlFor="scales">Content moderation?</label>
+            <p />
+            {
+                urls.concat(vidURLS).sort().map(url =>
+                        urls.includes(url) ?
+                        <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} /> :
+                        <video src={processURLForDisplay(url)} className={"gallery-image"} key={url} muted loop controls />
+                )
+            }
         </div>
     );
 }
