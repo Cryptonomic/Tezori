@@ -7,6 +7,7 @@ import * as TezTokUtils from "../utils/TezTokUtils";
 import Logger from "js-logger";
 import {CacheMissError, ModerationInfo} from "../utils/ContentProxyUtils";
 import {TezTokHolding} from "../types/TezTokResult";
+import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
 
 export function Gallery() {
     const {globalState } = useContext(GlobalContext);
@@ -15,6 +16,7 @@ export function Gallery() {
     const [moderationResults, setModerationResults] = useState<Map<string, ModerationInfo | CacheMissError>>(new Map<string, ModerationInfo | CacheMissError>())
     const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
     const [isModerationOn, setModerationOn] = useState<boolean>(true)
+    const [displayAddress, setDisplayAddress] = useState<string>(globalState.address)
 
     /**
      * Updates state to reflect the moderated NFT holdings of a given address.
@@ -85,9 +87,18 @@ export function Gallery() {
         setModerationOn(!isModerationOn)
     }
 
+    useEffect( () => {
+        TezosDomainUtils.getTezosDomainForAddress(
+            globalState.address,
+            globalState.tezosServer,
+            globalState.network).then(tezDomain => {
+            if(tezDomain) setDisplayAddress(tezDomain)
+        })
+    }, [globalState])
+
     return (
         <div>
-            <h1>Gallery for {globalState.address}</h1>
+            <h1>Gallery for {displayAddress}</h1>
             <input type={"checkbox"} id={"moderation-toggle"} checked={isModerationOn} onChange={toggleContentModeration} />
             <label htmlFor="scales">Content moderation?</label>
             <p />
