@@ -21,13 +21,13 @@ export function Gallery() {
      * @param holder    The given address
      */
     const fetchImages = async (holder: string) => {
+        Logger.info("Fetching NFT content for " + holder)
+
         Logger.info("Clearing old data..")
         setURLS([])
         setVidURLS([])
         setModerationResults(new Map<string, ModerationInfo | CacheMissError>())
         setNFTInfo(new Map<string, TezTokHolding>())
-
-        Logger.info("Fetching NFT content for " + holder)
 
         Logger.info("Getting NFT data from TezTok")
         const tezTokResult = await TezTokUtils.queryTezTok(holder)
@@ -42,18 +42,17 @@ export function Gallery() {
         const moderationMap = ContentProxyUtils.moderateURLs(imageURLs)
 
         Logger.info("Rendering images..")
-        let imageURLsToDisplay: string[] = []
-        const finalModerationResults = new Map<string, ModerationInfo | CacheMissError>()
         function moderationCallbackFn(url: string, moderationInfo: ModerationInfo) {
-            imageURLsToDisplay.push(url)
-            finalModerationResults.set(url, moderationInfo)
+            setURLS(u => u.concat(url) )
+            setModerationResults(m => m.set(url, moderationInfo))
         }
         ContentProxyUtils.processModerationData(moderationMap, moderationCallbackFn)
 
         setNFTInfo(tezTokResult)
-        setURLS(imageURLsToDisplay)
         setVidURLS(videoURLs)
-        setModerationResults(finalModerationResults)
+
+        await Promise.all(moderationMap.values())
+        Logger.info("Done fetching NFT content.")
     }
 
     useEffect( () => {

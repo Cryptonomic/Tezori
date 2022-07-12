@@ -8,10 +8,8 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
       <GlobalProvider address={""} apiKey={""} derivationPath={""} network={""} tezosServer={""} beaconClient={null}>
         <Tezori3 />
       </GlobalProvider>
-  </React.StrictMode>
 );
 

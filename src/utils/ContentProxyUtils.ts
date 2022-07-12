@@ -48,22 +48,23 @@ export const lookupContentProxy = async (url: string) => {
     if(storedResult instanceof CacheMissError) {
         Logger.info("Fetching from content proxy: " + url)
         // TODO: Switch to img_proxy_describe
-        const result = await proxyFetch(
+        return proxyFetch(
             contentProxyServer,
             url,
             ImageProxyDataType.Json,
             false
-        )
-        if (typeof result !== "string" && result.rpc_status.toString() === "Ok") {
-            saveToLocalStorage(url, result as FetchResponse)
-            return fetchFromLocalStorage(url);
-        }
-        else {
-            Logger.warn("Content proxy could not return a result for: " + url + ". The result was: " + JSON.stringify(result))
-            Logger.info(typeof result)
-            if (typeof result !== "string") Logger.info(result.rpc_status.toString() === "Ok")
-            return new CacheMissError(JSON.stringify(result))
-        }
+        ).then(result => {
+            if (typeof result !== "string" && result.rpc_status.toString() === "Ok") {
+                saveToLocalStorage(url, result as FetchResponse)
+                return fetchFromLocalStorage(url);
+            }
+            else {
+                Logger.warn("Content proxy could not return a result for: " + url + ". The result was: " + JSON.stringify(result))
+                Logger.info(typeof result)
+                if (typeof result !== "string") Logger.info(result.rpc_status.toString() === "Ok")
+                return new CacheMissError(JSON.stringify(result))
+            }
+        })
     }
     return storedResult
 }
