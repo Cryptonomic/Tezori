@@ -13,10 +13,10 @@ export type IAppContext = {
 }
 
 const initialContext: IAppContext = {
-    address: "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
+    address: "tz1Z2Ne4ZHxNPuCJeCcoykHVXTqhVdLMD9gV",
     derivationPath: "44'/1729'/0'/0'/1'",
-    network: "ithacanet",
-    tezosServer: "https://tezos-ithaca.cryptonomic-infra.tech:443",
+    network: "mainnet",
+    tezosServer: "https://tezos-prod.cryptonomic-infra.tech:443",
     apiKey: "ab682065-864a-4f11-bc77-0ef4e9493fa1",
     beaconClient: new DAppClient({name: "Tezori"}),
     children: null

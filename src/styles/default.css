@@ -2,3 +2,18 @@ body {
     background-color: black;
     color: green;
 }
+
+img.gallery-image {
+    height: 400px;
+    vertical-align: top;
+}
+
+video.gallery-image {
+    height: 400px;
+    vertical-align: top;
+}
+
+div.gallery-tile {
+    vertical-align: top;
+    float: left;
+}
