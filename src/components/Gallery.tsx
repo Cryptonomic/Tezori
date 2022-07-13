@@ -14,7 +14,7 @@ export function Gallery() {
     const [urls, setURLS] = useState<string[]>([]);
     const [vidURLS, setVidURLS] = useState<string[]>([])
     const [moderationResults, setModerationResults] = useState<Map<string, ModerationInfo | CacheMissError>>(new Map<string, ModerationInfo | CacheMissError>())
-    const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
+    const [nftInfo, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
     const [isModerationOn, setModerationOn] = useState<boolean>(true)
     const [displayAddress, setDisplayAddress] = useState<string>(globalState.address)
 
@@ -80,6 +80,15 @@ export function Gallery() {
         }
     }
 
+    const getMouseOverText = (url: string) => {
+        const thisNFT = nftInfo.get(url)?.token
+        if(thisNFT === undefined) return "N/A"
+        const name = thisNFT.name !== undefined? thisNFT.name : "Unknown"
+        const artist = thisNFT.artist_profile?.alias !== undefined? thisNFT.artist_profile.alias : "Unknown"
+        const description = thisNFT.description !== undefined? thisNFT.description : "No Description"
+        return name + " by " + artist + "\n\n\n" + description
+    }
+
     /**
      * Toggles content moderation on and off
      */
@@ -105,7 +114,7 @@ export function Gallery() {
             {
                 urls.concat(vidURLS).sort().map(url =>
                         urls.includes(url) ?
-                        <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} /> :
+                        <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} title={getMouseOverText(url)} /> :
                         <video src={processURLForDisplay(url)} className={"gallery-image"} key={url} muted loop controls />
                 )
             }
