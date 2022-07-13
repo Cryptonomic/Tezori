@@ -45,6 +45,7 @@ export function Wallet() {
     return (
             <div>
                 <h1>Wallet</h1>
+                <p>Address: {globalState.address}</p>
                 <p>Delegate: {walletState.delegate}</p>
                 <p>XTZ Balance: {walletState.balance}</p>
             </div>

@@ -7,14 +7,16 @@ import * as TezTokUtils from "../utils/TezTokUtils";
 import Logger from "js-logger";
 import {CacheMissError, ModerationInfo} from "../utils/ContentProxyUtils";
 import {TezTokHolding} from "../types/TezTokResult";
+import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
 
 export function Gallery() {
     const {globalState } = useContext(GlobalContext);
     const [urls, setURLS] = useState<string[]>([]);
     const [vidURLS, setVidURLS] = useState<string[]>([])
     const [moderationResults, setModerationResults] = useState<Map<string, ModerationInfo | CacheMissError>>(new Map<string, ModerationInfo | CacheMissError>())
-    const [, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
+    const [nftInfo, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
     const [isModerationOn, setModerationOn] = useState<boolean>(true)
+    const [displayAddress, setDisplayAddress] = useState<string>(globalState.address)
 
     /**
      * Updates state to reflect the moderated NFT holdings of a given address.
@@ -78,6 +80,15 @@ export function Gallery() {
         }
     }
 
+    const getMouseOverText = (url: string) => {
+        const thisNFT = nftInfo.get(url)?.token
+        if(thisNFT === undefined) return "N/A"
+        const name = thisNFT.name !== undefined? thisNFT.name : "Unknown"
+        const artist = thisNFT.artist_profile?.alias !== undefined? thisNFT.artist_profile.alias : "Unknown"
+        const description = thisNFT.description !== undefined? thisNFT.description : "No Description"
+        return name + " by " + artist + "\n\n\n" + description
+    }
+
     /**
      * Toggles content moderation on and off
      */
@@ -85,17 +96,27 @@ export function Gallery() {
         setModerationOn(!isModerationOn)
     }
 
+    useEffect( () => {
+        setDisplayAddress(globalState.address)
+        TezosDomainUtils.getTezosDomainForAddress(
+            globalState.address,
+            globalState.tezosServer,
+            globalState.network).then(tezDomain => {
+            if(tezDomain) setDisplayAddress(tezDomain)
+        })
+    }, [globalState])
+
     return (
         <div>
-            <h1>Gallery for {globalState.address}</h1>
+            <h1>Gallery for {displayAddress}</h1>
             <input type={"checkbox"} id={"moderation-toggle"} checked={isModerationOn} onChange={toggleContentModeration} />
             <label htmlFor="scales">Content moderation?</label>
             <p />
             {
                 urls.concat(vidURLS).sort().map(url =>
                         urls.includes(url) ?
-                        <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} /> :
-                        <video src={processURLForDisplay(url)} className={"gallery-image"} key={url} muted loop controls />
+                        <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} title={getMouseOverText(url)} /> :
+                        <video src={processURLForDisplay(url)+"#t=0.1"} className={"gallery-image"} key={url} title={getMouseOverText(url)} muted loop controls />
                 )
             }
         </div>
