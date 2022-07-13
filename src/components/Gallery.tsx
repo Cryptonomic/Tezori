@@ -115,7 +115,7 @@ export function Gallery() {
                 urls.concat(vidURLS).sort().map(url =>
                         urls.includes(url) ?
                         <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} title={getMouseOverText(url)} /> :
-                        <video src={processURLForDisplay(url)} className={"gallery-image"} key={url} muted loop controls />
+                        <video src={processURLForDisplay(url)} className={"gallery-image"} key={url} title={getMouseOverText(url)} muted loop controls />
                 )
             }
         </div>

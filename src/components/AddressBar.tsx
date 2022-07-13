@@ -13,7 +13,7 @@ export function AddressBar() {
 
     const handleAddressUpdateClick = () => {
         const action: Action = {
-            type: ActionTypes.UpdateSettings,
+            type: ActionTypes.UpdateAddress,
             newTezosServer: globalState.tezosServer,
             newApiKey: globalState.apiKey,
             newNetwork: globalState.network,
