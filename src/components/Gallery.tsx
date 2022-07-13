@@ -97,6 +97,7 @@ export function Gallery() {
     }
 
     useEffect( () => {
+        setDisplayAddress(globalState.address)
         TezosDomainUtils.getTezosDomainForAddress(
             globalState.address,
             globalState.tezosServer,
