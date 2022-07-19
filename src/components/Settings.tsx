@@ -11,7 +11,7 @@ export function Settings() {
     const [network, setNetwork] = useState(globalState.network);
     const [derivationPath, setDerivationPath] = useState(globalState.network);
     const [address] = useState(globalState.address);
-    const [, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     
     const handleSettingsUpdateClick = () => {
         const action: Action = {
@@ -26,8 +26,13 @@ export function Settings() {
     }
     
     useEffect( () => {
-        setSearchParams({a: globalState.address});
-    }, [globalState, setSearchParams])
+        if(!searchParams.has("a"))
+            setSearchParams({a: globalState.address});
+        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
+        {
+            setSearchParams({a: globalState.address});
+        }
+    }, [globalState, setSearchParams, searchParams])
     
     return (
         <div id={"settings"}>

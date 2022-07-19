@@ -22,7 +22,7 @@ const initialState: WalletState = {
 export function Wallet() {
     const {globalState } = useContext(GlobalContext);
     const [walletState, setWalletState] = useState(initialState);
-    const [, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
 
@@ -45,8 +45,13 @@ export function Wallet() {
     }, [globalState]);
 
     useEffect( () => {
-        setSearchParams({a: globalState.address});
-    }, [globalState, setSearchParams])
+        if(!searchParams.has("a"))
+            setSearchParams({a: globalState.address});
+        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
+        {
+            setSearchParams({a: globalState.address});
+        }
+    }, [globalState, setSearchParams, searchParams])
 
     return (
             <div>

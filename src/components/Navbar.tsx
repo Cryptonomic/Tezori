@@ -4,7 +4,7 @@ import '../styles/default.css';
 
 export function Navbar() {
     return (
-        <nav>
+        <nav className="nav">
             <ul>
                 <li>
                     <Link to="/gallery">Gallery</Link>
