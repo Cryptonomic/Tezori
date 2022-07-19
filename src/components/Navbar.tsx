@@ -7,13 +7,13 @@ export function Navbar() {
         <nav>
             <ul>
                 <li>
-                    <Link to="/gallery/">Gallery</Link>
+                    <Link to="/gallery">Gallery</Link>
                 </li>
                 <li>
-                    <Link to="/wallet/">Wallet</Link>
+                    <Link to="/wallet">Wallet</Link>
                 </li>
                 <li>
-                    <Link to="/settings/">Settings</Link>
+                    <Link to="/settings">Settings</Link>
                 </li>
             </ul>
         </nav>

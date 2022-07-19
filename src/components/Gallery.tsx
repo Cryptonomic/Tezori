@@ -18,7 +18,7 @@ export function Gallery() {
     const [nftInfo, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
     const [isModerationOn, setModerationOn] = useState<boolean>(true)
     const [displayAddress, setDisplayAddress] = useState<string>(globalState.address)
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
 
     /**
      * Updates state to reflect the moderated NFT holdings of a given address.
@@ -110,7 +110,7 @@ export function Gallery() {
 
     useEffect( () => {
         setSearchParams({a: globalState.address});
-    }, [globalState])
+    }, [globalState, setSearchParams])
 
     return (
         <div>

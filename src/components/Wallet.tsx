@@ -22,7 +22,7 @@ const initialState: WalletState = {
 export function Wallet() {
     const {globalState } = useContext(GlobalContext);
     const [walletState, setWalletState] = useState(initialState);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
 
     useEffect(() => {
 
@@ -46,7 +46,7 @@ export function Wallet() {
 
     useEffect( () => {
         setSearchParams({a: globalState.address});
-    }, [globalState])
+    }, [globalState, setSearchParams])
 
     return (
             <div>
