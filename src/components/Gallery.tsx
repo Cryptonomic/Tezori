@@ -8,6 +8,7 @@ import Logger from "js-logger";
 import {CacheMissError, ModerationInfo} from "../utils/ContentProxyUtils";
 import {TezTokHolding} from "../types/TezTokResult";
 import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
+import {useSearchParams} from "react-router-dom";
 
 export function Gallery() {
     const {globalState } = useContext(GlobalContext);
@@ -17,6 +18,7 @@ export function Gallery() {
     const [nftInfo, setNFTInfo] = useState<Map<string, TezTokHolding>>(new Map<string, TezTokHolding>())
     const [isModerationOn, setModerationOn] = useState<boolean>(true)
     const [displayAddress, setDisplayAddress] = useState<string>(globalState.address)
+    const [searchParams, setSearchParams] = useSearchParams();
 
     /**
      * Updates state to reflect the moderated NFT holdings of a given address.
@@ -105,6 +107,15 @@ export function Gallery() {
             if(tezDomain) setDisplayAddress(tezDomain)
         })
     }, [globalState])
+
+    useEffect( () => {
+        if(!searchParams.has("a"))
+            setSearchParams({a: globalState.address});
+        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
+        {
+            setSearchParams({a: globalState.address});
+        }
+    }, [globalState, setSearchParams, searchParams])
 
     return (
         <div>

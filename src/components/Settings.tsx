@@ -1,7 +1,8 @@
 import * as React from "react";
-import {useContext, useState} from "react";
+import {useContext, useState, useEffect} from "react";
 import { Action, ActionTypes } from "../context/AppReducer";
 import {GlobalContext} from "../context/GlobalState";
+import { useSearchParams } from "react-router-dom";
 
 export function Settings() {
     const {globalState, dispatch } = useContext(GlobalContext);
@@ -10,6 +11,7 @@ export function Settings() {
     const [network, setNetwork] = useState(globalState.network);
     const [derivationPath, setDerivationPath] = useState(globalState.network);
     const [address] = useState(globalState.address);
+    const [searchParams, setSearchParams] = useSearchParams();
     
     const handleSettingsUpdateClick = () => {
         const action: Action = {
@@ -22,7 +24,16 @@ export function Settings() {
         }
         dispatch(action);
     }
-        
+    
+    useEffect( () => {
+        if(!searchParams.has("a"))
+            setSearchParams({a: globalState.address});
+        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
+        {
+            setSearchParams({a: globalState.address});
+        }
+    }, [globalState, setSearchParams, searchParams])
+    
     return (
         <div id={"settings"}>
             <h1>Settings</h1>

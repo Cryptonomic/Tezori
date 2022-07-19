@@ -10,6 +10,7 @@ export type IAppContext = {
     apiKey: string;
     beaconClient: DAppClient | null;
     children: ReactElement | null;
+    isAddressInitialized: boolean
 }
 
 const initialContext: IAppContext = {
@@ -19,7 +20,8 @@ const initialContext: IAppContext = {
     tezosServer: "https://tezos-prod.cryptonomic-infra.tech:443",
     apiKey: "ab682065-864a-4f11-bc77-0ef4e9493fa1",
     beaconClient: new DAppClient({name: "Tezori"}),
-    children: null
+    children: null,
+    isAddressInitialized: false
 }
 
 export const GlobalContext = createContext<{
