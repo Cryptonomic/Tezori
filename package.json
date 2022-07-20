@@ -1,7 +1,7 @@
 {
   "name": "tezori3",
   "version": "0.1.0",
-  "homepage": "./",
+  "homepage": "https://cryptonomic.github.io/Tezori",
   "private": true,
   "dependencies": {
     "@airgap/beacon-sdk": "^3.1.0",
