@@ -18,10 +18,10 @@ export function Tezori3() {
             <AddressBar />
                 <main>
                     <Routes>
-                        <Route path="/gallery"  element={<Gallery />}/>
-                        <Route path="/wallet"   element={<Wallet />}/>
-                        <Route path="/settings" element={<Settings />}/>
-                        <Route path="*"          element={<Navigate to="/gallery" replace />} /> 
+                        <Route path="/Tezori/gallery"  element={<Gallery />}/>
+                        <Route path="/Tezori/wallet"   element={<Wallet />}/>
+                        <Route path="/Tezori/settings" element={<Settings />}/>
+                        <Route path="*"          element={<Navigate to="Tezori/gallery" replace />} />
                     </Routes>
                 </main>
         </div>
