@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "./static/css/main.3d9ed504.chunk.css",
-    "main.js": "./static/js/main.ffbb467f.chunk.js",
-    "runtime-main.js": "./static/js/runtime-main.0b995d5f.js",
-    "static/js/2.9725083f.chunk.js": "./static/js/2.9725083f.chunk.js",
-    "index.html": "./index.html",
-    "static/js/2.9725083f.chunk.js.LICENSE.txt": "./static/js/2.9725083f.chunk.js.LICENSE.txt"
+    "main.css": "/Tezori/static/css/main.3d9ed504.chunk.css",
+    "main.js": "/Tezori/static/js/main.463127aa.chunk.js",
+    "runtime-main.js": "/Tezori/static/js/runtime-main.533c45f4.js",
+    "static/js/2.99175221.chunk.js": "/Tezori/static/js/2.99175221.chunk.js",
+    "index.html": "/Tezori/index.html",
+    "static/js/2.99175221.chunk.js.LICENSE.txt": "/Tezori/static/js/2.99175221.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.0b995d5f.js",
-    "static/js/2.9725083f.chunk.js",
+    "static/js/runtime-main.533c45f4.js",
+    "static/js/2.99175221.chunk.js",
     "static/css/main.3d9ed504.chunk.css",
-    "static/js/main.ffbb467f.chunk.js"
+    "static/js/main.463127aa.chunk.js"
   ]
 }
