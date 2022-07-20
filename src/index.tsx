@@ -10,9 +10,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
       <GlobalProvider address={""} apiKey={""} derivationPath={""} network={""} tezosServer={""} beaconClient={null} isAddressInitialized={false}>
-        <BrowserRouter>
+        <BrowserRouter basename={"Tezori"}>
           <Tezori3 />
-        </BrowserRouter> 
+        </BrowserRouter>
       </GlobalProvider>
 );
 
