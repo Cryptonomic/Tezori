@@ -6,7 +6,7 @@ import {Wallet} from "./Wallet";
 import {Gallery} from "./Gallery";
 import {Navbar} from "./Navbar";
 import Logger from "js-logger";
-import {Route, Routes} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 
 export function Tezori3() {
 
@@ -18,10 +18,11 @@ export function Tezori3() {
             <AddressBar />
                 <main>
                     <Routes>
-                            <Route path="/"         element={<Gallery />} />
+                            <Route path="/"         element={ <Navigate to="/gallery    " /> } />
                             <Route path="/gallery"  element={<Gallery />} />
                             <Route path="/wallet"   element={<Wallet />} />
                             <Route path="/settings" element={<Settings />} />
+                            <Route path="*" element={<Navigate to="/gallery" replace />} />
                     </Routes>
                 </main>
         </div>
