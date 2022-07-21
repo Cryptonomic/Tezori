@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/Tezori/static/css/main.3d9ed504.chunk.css",
-    "main.js": "/Tezori/static/js/main.01aad270.chunk.js",
+    "main.js": "/Tezori/static/js/main.b258e423.chunk.js",
     "runtime-main.js": "/Tezori/static/js/runtime-main.533c45f4.js",
-    "static/js/2.c71a798a.chunk.js": "/Tezori/static/js/2.c71a798a.chunk.js",
+    "static/js/2.ca235921.chunk.js": "/Tezori/static/js/2.ca235921.chunk.js",
     "index.html": "/Tezori/index.html",
-    "static/js/2.c71a798a.chunk.js.LICENSE.txt": "/Tezori/static/js/2.c71a798a.chunk.js.LICENSE.txt"
+    "static/js/2.ca235921.chunk.js.LICENSE.txt": "/Tezori/static/js/2.ca235921.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.533c45f4.js",
-    "static/js/2.c71a798a.chunk.js",
+    "static/js/2.ca235921.chunk.js",
     "static/css/main.3d9ed504.chunk.css",
-    "static/js/main.01aad270.chunk.js"
+    "static/js/main.b258e423.chunk.js"
   ]
 }
