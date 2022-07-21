@@ -6,7 +6,6 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Tezos from "@ledgerhq/hw-app-tezos";
 import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
 import { useSearchParams } from "react-router-dom";
-import Logger from "js-logger";
 
 export function AddressBar() {
     const {globalState, dispatch } = useContext(GlobalContext);
@@ -69,7 +68,6 @@ export function AddressBar() {
     }
 
     useEffect( () => {
-        Logger.info("Search params: " + JSON.stringify(searchParams.toString()))
         if(!globalState.isAddressInitialized) {
             if(searchParams.has("a")) {
                 globalState.address = searchParams.get("a") as string
