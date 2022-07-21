@@ -18,7 +18,7 @@ export function Tezori3() {
             <AddressBar />
                 <main>
                     <Routes>
-                            <Route path="/"         element={ <Navigate to="/gallery    " /> } />
+                            <Route path="/"         element={ <Navigate to="/gallery" /> } />
                             <Route path="/gallery"  element={<Gallery />} />
                             <Route path="/wallet"   element={<Wallet />} />
                             <Route path="/settings" element={<Settings />} />
