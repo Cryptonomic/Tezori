@@ -47,7 +47,7 @@ export function Wallet() {
 
     useEffect( () => {
         setSearchParams(
-            SearchParamUtils.updateQueryParams(
+            SearchParamUtils.updateAddressQueryParams(
                 searchParams.has("a"), 
                 searchParams.get("a") as string, 
                 globalState.address)

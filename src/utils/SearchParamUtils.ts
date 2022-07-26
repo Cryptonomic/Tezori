@@ -1,6 +1,6 @@
 var outputQueryString: string
 
-export function updateQueryParams(hasAddressQuery: boolean, queryString: string, globalStateAddress: string) {
+export function updateAddressQueryParams(hasAddressQuery: boolean, queryString: string, globalStateAddress: string) {
     if(!hasAddressQuery) { 
             outputQueryString = globalStateAddress
     }
