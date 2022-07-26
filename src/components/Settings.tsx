@@ -3,6 +3,7 @@ import {useContext, useState, useEffect} from "react";
 import { Action, ActionTypes } from "../context/AppReducer";
 import {GlobalContext} from "../context/GlobalState";
 import { useSearchParams } from "react-router-dom";
+import * as SearchParamUtils from "../utils/SearchParamUtils"
 
 export function Settings() {
     const {globalState, dispatch } = useContext(GlobalContext);
@@ -26,12 +27,12 @@ export function Settings() {
     }
     
     useEffect( () => {
-        if(!searchParams.has("a"))
-            setSearchParams({a: globalState.address});
-        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
-        {
-            setSearchParams({a: globalState.address});
-        }
+        setSearchParams(
+            SearchParamUtils.updateQueryParams(
+                searchParams.has("a"), 
+                searchParams.get("a") as string, 
+                globalState.address)
+            )
     }, [globalState, setSearchParams, searchParams])
     
     return (
