@@ -9,6 +9,8 @@ import {CacheMissError, ModerationInfo} from "../utils/ContentProxyUtils";
 import {TezTokHolding} from "../types/TezTokResult";
 import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
 import {useSearchParams} from "react-router-dom";
+import * as SearchParamUtils from "../utils/SearchParamUtils"
+
 
 export function Gallery() {
     const {globalState } = useContext(GlobalContext);
@@ -109,12 +111,12 @@ export function Gallery() {
     }, [globalState])
 
     useEffect( () => {
-        if(!searchParams.has("a"))
-            setSearchParams({a: globalState.address});
-        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
-        {
-            setSearchParams({a: globalState.address});
-        }
+        setSearchParams(
+            SearchParamUtils.updateQueryParams(
+                searchParams.has("a"), 
+                searchParams.get("a") as string, 
+                globalState.address)
+            )
     }, [globalState, setSearchParams, searchParams])
 
     return (
