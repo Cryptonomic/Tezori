@@ -5,6 +5,10 @@ import '../styles/default.css';
 export function Navbar() {
     return (
         <nav className="nav">
+                <h1 className="text-3xl m-1">
+      Hello world!
+    </h1>
+
             <ul>
                 <li>
                     <Link to="/gallery">Gallery</Link>
