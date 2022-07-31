@@ -14,7 +14,7 @@ export enum ActionTypes {
     UpdateAddress,
     UpdateSettings
 }
-
+ 
 function reducer(state: IAppContext, action: Action): IAppContext {
     Logger.info("REDUCER: \nState:\n" + JSON.stringify(state), "\nAction:\n" + JSON.stringify(action))
     switch(action.type) {
