@@ -1,5 +1,3 @@
-import { red } from "@mui/material/colors"
-
 const theme = {
     palette: {
       primary: {

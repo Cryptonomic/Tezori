@@ -34,7 +34,7 @@ function ContactUs() {
                     }} /> 100 Bogart Street, Brooklyn, NY 11206 USA</Typography>
             </Grid>
             <Grid item xs={5}>
-                <img src={Illustration} style={{
+                <img src={Illustration} alt='illustration' style={{
                     height: '85vh',
                     width: '35vw'
                 }} />

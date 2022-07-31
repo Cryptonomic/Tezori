@@ -22,7 +22,7 @@ function AboutUs() {
                 </Typography>
             </Grid>
             <Grid item xs={5}>
-                <img src={Illustration} style={{
+                <img src={Illustration} alt='illustration' style={{
                     height: '85vh',
                     width: '35vw'
                 }} />

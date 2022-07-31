@@ -73,7 +73,7 @@ export default function Settings() {
                             backgroundColor: '#ffffff'
                         }} color="primary" id="settings_apikey" label="Nautilus API Key" variant="filled"
                             defaultValue={globalState.apiKey}
-                            onChange={e => setTezosServer(e.currentTarget.value)}
+                            onChange={e => setApiKey(e.currentTarget.value)}
                         />
                     </Typography>
                     <Typography variant='body1' component='body' sx={{
@@ -84,7 +84,7 @@ export default function Settings() {
                             backgroundColor: '#ffffff'
                         }} color="primary" id="settings_network" label="Network" variant="filled"
                             defaultValue={globalState.network}
-                            onChange={e => setTezosServer(e.currentTarget.value)}
+                            onChange={e => setNetwork(e.currentTarget.value)}
                         />
                     </Typography>
                     <Typography variant='body1' component='body' sx={{
@@ -95,7 +95,7 @@ export default function Settings() {
                             backgroundColor: '#ffffff'
                         }} color="primary" id="settings_derivationPath" label="Derivation Path" variant="filled"
                             defaultValue={globalState.derivationPath}
-                            onChange={e => setTezosServer(e.currentTarget.value)}
+                            onChange={e => setDerivationPath(e.currentTarget.value)}
                         />
                     </Typography>   
                         <Button variant="contained" size='small' sx={{

@@ -9,7 +9,7 @@ import { CacheMissError, ModerationInfo } from "../../utils/ContentProxyUtils";
 import { TezTokHolding } from "../../types/TezTokResult";
 import * as TezosDomainUtils from "../../utils/TezosDomainsUtils";
 import { useSearchParams } from "react-router-dom";
-import { CardMedia, CardContent, Typography, CardActions, Button, Card, Grid, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { CardMedia, CardContent, Typography, Card, Grid, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
 const NftImageCard = (props: { src: string, title: string }) => {
     return (

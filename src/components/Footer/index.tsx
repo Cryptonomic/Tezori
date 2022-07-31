@@ -1,5 +1,4 @@
-import { Grid, IconButton, Typography } from '@mui/material'
-import { Container } from '@mui/system'
+import { Grid, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/images/Logo.png'
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -101,10 +100,10 @@ export default function Footer() {
                     </Grid>
                 </Grid>
                 <Grid container item xs={12} alignItems='center' justifyContent='flex-end' spacing={2}>
-                    <Grid item><a href='https://github.com/Cryptonomic' target='_blank'><GitHubIcon color="secondary" /></a></Grid>
-                    <Grid item><a href='https://twitter.com/CryptonomicTech' target='_blank'><TwitterIcon color="secondary" /></a></Grid>
-                    <Grid item><a href='https://medium.com/the-cryptonomic-aperiodical' target='_blank'><ArticleIcon color="secondary" /></a></Grid>
-                    <Grid item><a href='https://www.linkedin.com/company/cryptonomic' target='_blank'><LinkedInIcon color="secondary" /></a></Grid>
+                    <Grid item><a href='https://github.com/Cryptonomic' rel="noreferrer" target='_blank'><GitHubIcon color="secondary" /></a></Grid>
+                    <Grid item><a href='https://twitter.com/CryptonomicTech' rel="noreferrer" target='_blank'><TwitterIcon color="secondary" /></a></Grid>
+                    <Grid item><a href='https://medium.com/the-cryptonomic-aperiodical' rel="noreferrer" target='_blank'><ArticleIcon color="secondary" /></a></Grid>
+                    <Grid item><a href='https://www.linkedin.com/company/cryptonomic' rel="noreferrer" target='_blank'><LinkedInIcon color="secondary" /></a></Grid>
                 </Grid>
             </Grid>
         </Grid>
