@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Settings } from "./Settings";
-import { Wallet } from "./Wallet";
-import { Navbar } from "./Navbar";
+import Settings from "./Settings";
+import Wallet from "./Wallet";
 import Logger from "js-logger";
 import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 import '../index.css'
@@ -16,6 +15,8 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import { Action, ActionTypes } from "../context/AppReducer";
 import { GlobalContext } from "../context/GlobalState";
 import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
+import { Container } from "@mui/system";
+import Navbar from './Navbar'
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -117,17 +118,27 @@ export function Tezori3() {
                     <Navbar setOpen={handleOpen} />
                 </Grid>
                 <Grid item xs={12}>
-                    <Routes>
-                        <Route path="/" element={<Home setOpen={handleOpen} getFromLedger={getAddressFromLedger} getFromBeacon={getAddressFromBeacon}/>} />
-                        <Route path="/about" element={<AboutUs />} />
-                        <Route path="/contact" element={<ContactUs />} />
-                        <Route path="/gallery" element={<Gallery />} />
-                        <Route path="/wallet" element={<Wallet />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="*" element={<Navigate to="/gallery" replace />} />
-                    </Routes>
+                    <Container fixed sx={{
+                        minHeight: '50vh',
+                        minWidth: '50vw'
+                    }}>
+                        <Routes>
+                            <Route path="/" element={<Home setOpen={handleOpen} getFromLedger={getAddressFromLedger} getFromBeacon={getAddressFromBeacon} />} />
+                            <Route path="/about" element={<AboutUs />} />
+                            <Route path="/contact" element={<ContactUs />} />
+                            <Route path="/gallery" element={<Gallery />} />
+                            <Route path="/wallet" element={<Wallet />} />
+                            <Route path="/settings" element={<Settings />} />
+                            <Route path="*" element={<Navigate to="/gallery" replace />} />
+                        </Routes>
+                    </Container>
                 </Grid>
                 <Grid item xs={12}>
+                    <hr style={{
+                        color: '#ffffff',
+                        width: '90vw',
+                        marginBottom: '30px'
+                    }} />
                     <Footer />
                 </Grid>
             </Grid>
@@ -141,13 +152,12 @@ export function Tezori3() {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Type in your wallet address!
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
                         <TextField id="standard-basic" label="Standard" variant="standard"
                             value={address}
                             onChange={e => setAddress(e.target.value)}
                         />
                     </Typography>
-                    <br />
                     <Button variant="contained" size='small'
                         onClick={() => handleAddressUpdateClick()}>
                         Update

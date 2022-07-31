@@ -1,6 +1,6 @@
 import { Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Logo from "../assets/images/Logo.png"
+import Logo from "../../assets/images/Logo.png"
 
 const Text = (props: { text: string }) => {
     return (
@@ -13,7 +13,7 @@ const Text = (props: { text: string }) => {
     )
 }
 
-export function Navbar(props: {setOpen: any}) {
+export default function Navbar(props: {setOpen: any}) {
     return (
         <nav className="nav">
             <Grid container spacing={12} sx={{

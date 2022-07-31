@@ -1,8 +1,7 @@
-import * as React from "react";
 import * as TezosRPCTypes from "conseiljs/dist/types/tezos/TezosRPCResponseTypes";
 import {TezosNodeReader} from "conseiljs";
 import {useContext, useEffect, useState} from "react";
-import {GlobalContext} from "../context/GlobalState";
+import {GlobalContext} from "../../context/GlobalState";
 import {useSearchParams} from "react-router-dom";
 
 type WalletState = {
@@ -19,7 +18,7 @@ const initialState: WalletState = {
     balance_usdtz: ""
 }
 
-export function Wallet() {
+export default function Wallet() {
     const {globalState } = useContext(GlobalContext);
     const [walletState, setWalletState] = useState(initialState);
     const [searchParams, setSearchParams] = useSearchParams();

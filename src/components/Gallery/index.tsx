@@ -1,17 +1,67 @@
 import * as React from "react";
-import {useContext, useEffect, useState} from "react";
-import {GlobalContext} from "../../context/GlobalState";
+import { useContext, useEffect, useState } from "react";
+import { GlobalContext } from "../../context/GlobalState";
 import * as ContentProxyUtils from "../../utils/ContentProxyUtils";
 import * as InfuraUtils from "../../utils/InfuraUtils";
 import * as TezTokUtils from "../../utils/TezTokUtils";
 import Logger from "js-logger";
-import {CacheMissError, ModerationInfo} from "../../utils/ContentProxyUtils";
-import {TezTokHolding} from "../../types/TezTokResult";
+import { CacheMissError, ModerationInfo } from "../../utils/ContentProxyUtils";
+import { TezTokHolding } from "../../types/TezTokResult";
 import * as TezosDomainUtils from "../../utils/TezosDomainsUtils";
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { CardMedia, CardContent, Typography, CardActions, Button, Card, Grid, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+
+const NftImageCard = (props: { src: string, title: string }) => {
+    return (
+        <Grid item>
+            <Card sx={{
+                height: 300,
+                width: 300
+            }}>
+                <CardMedia
+                    component="img"
+                    height="140"
+                    src={props.src}
+                    alt="green iguana"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div" sx={{
+                        fontSize: '18px'
+                    }}>
+                        {props.title.slice(0, 100)}...
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Grid>
+    )
+}
+const NftVideoCard = (props: { src: string, title: string }) => {
+    return (
+        <Grid item>
+            <Card sx={{
+                height: 300,
+                width: 300
+            }}>
+                <CardMedia
+                    component="img"
+                    height="140"
+                    src={props.src}
+                    alt="green iguana"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div" sx={{
+                        fontSize: '18px'
+                    }}>
+                        {props.title.slice(0, 100)}...
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Grid>
+    )
+}
 
 export default function Gallery() {
-    const {globalState } = useContext(GlobalContext);
+    const { globalState } = useContext(GlobalContext);
     const [urls, setURLS] = useState<string[]>([]);
     const [vidURLS, setVidURLS] = useState<string[]>([])
     const [moderationResults, setModerationResults] = useState<Map<string, ModerationInfo | CacheMissError>>(new Map<string, ModerationInfo | CacheMissError>())
@@ -47,7 +97,7 @@ export default function Gallery() {
 
         Logger.info("Rendering images..")
         function moderationCallbackFn(url: string, moderationInfo: ModerationInfo) {
-            setURLS(u => u.concat(url) )
+            setURLS(u => u.concat(url))
             setModerationResults(m => m.set(url, moderationInfo))
         }
         ContentProxyUtils.processModerationData(moderationMap, moderationCallbackFn)
@@ -59,7 +109,7 @@ export default function Gallery() {
         Logger.info("Done fetching NFT content.")
     }
 
-    useEffect( () => {
+    useEffect(() => {
         fetchImages(globalState.address).then(r => r)
     }, [globalState])
 
@@ -68,13 +118,13 @@ export default function Gallery() {
      * @param url
      */
     const processURLForDisplay = (url: string) => {
-        if(!moderationResults.has(url)) return InfuraUtils.convertRawToProxiedIpfsUrl(url)
+        if (!moderationResults.has(url)) return InfuraUtils.convertRawToProxiedIpfsUrl(url)
         const moderationInfo = moderationResults.get(url)
-        if(typeof moderationInfo !== "undefined" &&  ! ("moderation_status" in moderationInfo))
+        if (typeof moderationInfo !== "undefined" && !("moderation_status" in moderationInfo))
             return InfuraUtils.convertRawToProxiedIpfsUrl(url)
         else {
             const mi = moderationInfo as ModerationInfo
-            if(mi.categories.length > 0 && isModerationOn) {
+            if (mi.categories.length > 0 && isModerationOn) {
                 return "https://upload.wikimedia.org/wikipedia/commons/3/39/Hazard_T.svg"
             }
             else
@@ -84,10 +134,10 @@ export default function Gallery() {
 
     const getMouseOverText = (url: string) => {
         const thisNFT = nftInfo.get(url)?.token
-        if(thisNFT === undefined) return "N/A"
-        const name = thisNFT.name !== undefined? thisNFT.name : "Unknown"
-        const artist = thisNFT.artist_profile?.alias !== undefined? thisNFT.artist_profile.alias : "Unknown"
-        const description = thisNFT.description !== undefined? thisNFT.description : "No Description"
+        if (thisNFT === undefined) return "N/A"
+        const name = thisNFT.name !== undefined ? thisNFT.name : "Unknown"
+        const artist = thisNFT.artist_profile?.alias !== undefined ? thisNFT.artist_profile.alias : "Unknown"
+        const description = thisNFT.description !== undefined ? thisNFT.description : "No Description"
         return name + " by " + artist + "\n\n\n" + description
     }
 
@@ -98,38 +148,48 @@ export default function Gallery() {
         setModerationOn(!isModerationOn)
     }
 
-    useEffect( () => {
+    useEffect(() => {
         setDisplayAddress(globalState.address)
         TezosDomainUtils.getTezosDomainForAddress(
             globalState.address,
             globalState.tezosServer,
             globalState.network).then(tezDomain => {
-            if(tezDomain) setDisplayAddress(tezDomain)
-        })
+                if (tezDomain) setDisplayAddress(tezDomain)
+            })
     }, [globalState])
 
-    useEffect( () => {
-        if(!searchParams.has("a"))
-            setSearchParams({a: globalState.address});
-        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
-        {
-            setSearchParams({a: globalState.address});
+    useEffect(() => {
+        if (!searchParams.has("a"))
+            setSearchParams({ a: globalState.address });
+        else if (searchParams.has("a") && searchParams.get("a") !== globalState.address) {
+            setSearchParams({ a: globalState.address });
         }
     }, [globalState, setSearchParams, searchParams])
 
     return (
-        <div>
-            <h1>Gallery for {displayAddress}</h1>
-            <input type={"checkbox"} id={"moderation-toggle"} checked={isModerationOn} onChange={toggleContentModeration} />
-            <label htmlFor="scales">Content moderation?</label>
-            <p />
-            {
-                urls.concat(vidURLS).sort().map(url =>
+        <Grid container item direction='column'>
+            <Grid container item alignItems='center' justifyContent='space-around'>
+                <Typography variant='h2' component='h2' sx={{
+                    color: "#FFFFFF",
+                    margin: '5vh',
+                }}>
+                    Gallery for {displayAddress}
+                </Typography>
+                <FormGroup>
+                    <FormControlLabel id={"moderation-toggle"} control={<Checkbox defaultChecked={isModerationOn} onChange={toggleContentModeration} color='secondary'/>} label="Content moderation?" sx={{
+                        color: '#FFFFFF'
+                    }}/>
+                </FormGroup>
+            </Grid>
+            <Grid container item direction='row' spacing={2} justifyContent='center'>
+                {
+                    urls.concat(vidURLS).sort().map(url =>
                         urls.includes(url) ?
-                        <img src={processURLForDisplay(url)} alt={""} className={"gallery-image"} key={url} title={getMouseOverText(url)} /> :
-                        <video src={processURLForDisplay(url)+"#t=0.1"} className={"gallery-image"} key={url} title={getMouseOverText(url)} muted loop controls />
-                )
-            }
-        </div>
+                            <NftImageCard src={processURLForDisplay(url)} key={url} title={getMouseOverText(url)} /> :
+                            <NftVideoCard src={processURLForDisplay(url) + "#t=0.1"} key={url} title={getMouseOverText(url)} />
+                    )
+                }
+            </Grid>
+        </Grid>
     );
 }

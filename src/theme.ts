@@ -5,6 +5,9 @@ const theme = {
       primary: {
         main: '#181A1F',
       },
+      secondary: {
+        main: '#FFFFFF'
+      }
     },
   }
 

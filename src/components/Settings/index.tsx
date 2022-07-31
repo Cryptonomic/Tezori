@@ -1,10 +1,10 @@
 import * as React from "react";
 import {useContext, useState, useEffect} from "react";
-import { Action, ActionTypes } from "../context/AppReducer";
-import {GlobalContext} from "../context/GlobalState";
+import { Action, ActionTypes } from "../../context/AppReducer";
+import {GlobalContext} from "../../context/GlobalState";
 import { useSearchParams } from "react-router-dom";
 
-export function Settings() {
+export default function Settings() {
     const {globalState, dispatch } = useContext(GlobalContext);
     const [tezosServer, setTezosServer] = useState(globalState.tezosServer);
     const [apiKey, setApiKey] = useState(globalState.apiKey);
