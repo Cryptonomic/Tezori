@@ -3,6 +3,7 @@ import {TezosNodeReader} from "conseiljs";
 import {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../../context/GlobalState";
 import {useSearchParams} from "react-router-dom";
+import { Grid, Paper, Typography } from "@mui/material";
 
 type WalletState = {
     publicKey: string,
@@ -53,11 +54,50 @@ export default function Wallet() {
     }, [globalState, setSearchParams, searchParams])
 
     return (
-            <div>
-                <h1>Wallet</h1>
-                <p>Address: {globalState.address}</p>
-                <p>Delegate: {walletState.delegate}</p>
-                <p>XTZ Balance: {walletState.balance}</p>
-            </div>
+        <Grid container spacing={2} alignItems='center' justifyContent="space-between" sx={{
+            padding: '20px'
+        }}>
+            <Grid item xs={12} alignSelf='center'>
+            <Paper elevation={5} sx={{
+                backgroundColor: '#181A1F',
+                width: '100%',
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+            }}>
+                <Typography variant='h2' component='h2' sx={{
+                    color: "#ffffff",
+                    marginBottom: '5vh',
+                }}>
+                    Wallet
+                </Typography>
+                <Typography variant='body1' component='body' sx={{
+                    color: "#ffffff",
+                    marginBottom: '5vh',
+                }}>
+                </Typography>
+                <Typography variant='body1' component='body' sx={{
+                    color: "#ffffff",
+
+                    marginBottom: '5vh',
+                }}>
+                Address: {globalState.address}
+                </Typography>
+                <Typography variant='body1' component='body' sx={{
+                    color: "#ffffff",
+                    marginBottom: '5vh',
+                }}>
+                Delegate: {walletState.delegate}
+                </Typography>
+                <Typography variant='body1' component='body' sx={{
+                    color: "#ffffff",
+                    marginBottom: '5vh',
+                }}>
+                XTZ Balance: {walletState.balance}
+                </Typography>
+            </Paper>
+            </Grid>
+        </Grid>            
     );
 }
