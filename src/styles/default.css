@@ -41,3 +41,8 @@ div.gallery-tile {
 .nav li:hover {
     text-decoration: underline;
 }
+
+.beacon-button:disabled {
+    visibility: hidden;
+    
+}

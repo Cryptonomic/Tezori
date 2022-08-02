@@ -6,6 +6,7 @@ import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import Tezos from "@ledgerhq/hw-app-tezos";
 import * as TezosDomainUtils from "../utils/TezosDomainsUtils";
 import { useSearchParams } from "react-router-dom";
+import isElectron from 'is-electron';
 
 export function AddressBar() {
     const {globalState, dispatch } = useContext(GlobalContext);
@@ -28,7 +29,7 @@ export function AddressBar() {
         }
         dispatch(action);
     }
-
+    
     const getAddressFromLedger = async () => {
 
         if(!ledgerInitialized) {
@@ -92,7 +93,7 @@ export function AddressBar() {
                     Update
             </button>
             <button onClick={() => getAddressFromLedger()}>Get from Ledger</button>
-            <button onClick={() => getAddressFromBeacon()}>Get from Beacon</button>
+            <button className="beacon-button" disabled={isElectron()===true} onClick={() => getAddressFromBeacon()}>Get from Beacon</button>
         </div>
     );
-}
+}   
