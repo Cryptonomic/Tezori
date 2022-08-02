@@ -43,6 +43,5 @@ div.gallery-tile {
 }
 
 .beacon-button:disabled {
-    visibility: hidden;
-    
+    visibility: hidden;   
 }
