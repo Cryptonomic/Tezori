@@ -1,17 +1,13 @@
-/*
-Ultility Function for Updating Search Query Params
-*/
-
-/*
-Sets the address query to correct value 
-Based on: 
-    - Whether the address query exists (boolean)
-    - The current query string (string)
-    - The address stored in global state (string)
-*/
+//Ultility Function for Updating Search Query Params
 
 var outputQueryString: string
 
+/**
+ * Sets Address Query String to Correct Value
+ * @param hasAddressQuery Whether an address query exists
+ * @param queryString The current address query string
+ * @param globalStateAddress The current global state address
+ */
 export function updateAddressQueryParams(hasAddressQuery: boolean, queryString: string, globalStateAddress: string) {
     if(!hasAddressQuery) { 
             outputQueryString = globalStateAddress
