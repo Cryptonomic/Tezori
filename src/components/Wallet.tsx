@@ -4,6 +4,7 @@ import {TezosNodeReader} from "conseiljs";
 import {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../context/GlobalState";
 import {useSearchParams} from "react-router-dom";
+import * as SearchParamUtils from "../utils/SearchParamUtils"
 
 type WalletState = {
     publicKey: string,
@@ -45,12 +46,12 @@ export function Wallet() {
     }, [globalState]);
 
     useEffect( () => {
-        if(!searchParams.has("a"))
-            setSearchParams({a: globalState.address});
-        else if(searchParams.has("a") && searchParams.get("a") !== globalState.address)
-        {
-            setSearchParams({a: globalState.address});
-        }
+        setSearchParams(
+            SearchParamUtils.updateAddressQueryParams(
+                searchParams.has("a"), 
+                searchParams.get("a") as string, 
+                globalState.address)
+            )
     }, [globalState, setSearchParams, searchParams])
 
     return (
