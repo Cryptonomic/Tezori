@@ -49,6 +49,7 @@ export default function Operations() {
 
         fetchFee();
         onGenerateKeys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onChangeVal = (e: React.ChangeEvent<HTMLInputElement>) => {
