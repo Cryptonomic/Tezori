@@ -9,7 +9,17 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-      <GlobalProvider address={""} apiKey={""} derivationPath={""} network={""} tezosServer={""} beaconClient={null} isAddressInitialized={false}>
+      <GlobalProvider
+        isBeaconConnected={false}
+        conseilUrl=''
+        address={""}
+        apiKey={""}
+        derivationPath={""}
+        network={""}
+        tezosServer={""}
+        beaconClient={null}
+        isAddressInitialized={false}
+      >
         <HashRouter basename={"/"}>
           <Tezori3 />
         </HashRouter>

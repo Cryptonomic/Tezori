@@ -45,3 +45,37 @@ div.gallery-tile {
 .beacon-button:disabled {
     visibility: hidden;   
 }
+
+.operation-container {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.label-container {
+    display: flex;
+}
+
+.operation-btn {
+    margin-left: 20px;
+    width: 100px;
+}
+
+.operation-amount {
+    margin-left: 10px;
+    width: 50px;
+}
+
+.operation-delegate-btn {
+    margin-left: 88px;
+    width: 100px;
+}
+
+.operation-address {
+    width: 188px;
+    box-sizing: border-box;
+}
+
+.operation-beacon-btn {
+    margin-left: 10px;
+    width: 150px;
+}
