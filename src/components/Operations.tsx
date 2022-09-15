@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useContext} from "react";
 import {GlobalContext} from "../context/GlobalState";
-import {OperationKindType, TezosConseilClient, TezosMessageUtils, TezosNodeWriter, BabylonDelegationHelper} from "conseiljs";
-import { SoftSigner } from 'conseiljs-softsigner';
-import { TestKeyStore } from '../constants/testAssets';
+import {OperationKindType, TezosConseilClient} from "conseiljs";
 import { tezToUtez } from '../utils/currency';
 import { TezosOperationType } from "@airgap/beacon-sdk";
 
@@ -25,8 +23,7 @@ export default function Operations() {
     const [val, setVal] = useState('');
     const [address, setAddress] = useState('');
     const [delegateAddress, setDelAddress] = useState('');
-    const [fee, setFee] = useState(0);
-    const [signer, setSigner] = useState<any>(null);
+    const [fee, setFee] = useState(AVERAGEFEES.high);
 
     useEffect(() => {
         const fetchFee = async () => {
@@ -41,14 +38,7 @@ export default function Operations() {
             setFee(serverFees[0].high);
         }
 
-        const onGenerateKeys = async () => {
-            const signer = await SoftSigner.createSigner(TezosMessageUtils.writeKeyWithHint(TestKeyStore.secretKey, 'edsk'), '');
-            console.log('signer', signer);
-            setSigner(signer);
-        }
-
         fetchFee();
-        onGenerateKeys();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -56,29 +46,8 @@ export default function Operations() {
         setVal(e.target.value)
     }
 
-    const onSend = async () => {
-        if(signer && val && address) {
-            const decryptSigner = await SoftSigner.createSigner(await signer.getKey(''));
-            const parsedAmount = tezToUtez(val);
-            const res: any = await TezosNodeWriter.sendTransactionOperation(
-                globalState.tezosServer,
-                decryptSigner,
-                TestKeyStore,
-                address,
-                parsedAmount,
-                fee
-            ).catch((err) => {
-                const errorObj = { name: err.message, ...err };
-                console.error(errorObj);
-                return false;
-            });
-
-            console.log('res-----', res)
-        }
-    }
-
     const onBeaconSend = async () => {
-        if(val && address) {
+        if(val && address && globalState.isBeaconConnected) {
             const parsedAmount = tezToUtez(val);
             // const parsedFee = tezToUtez(val);
             const response = await globalState.beaconClient?.requestOperation({
@@ -93,28 +62,9 @@ export default function Operations() {
             console.log("Operation Hash: ", response?.transactionHash);
         }
     }
-    const onDelegate = async () => {
-        if(signer && delegateAddress) {
-            const decryptSigner = await SoftSigner.createSigner(await signer.getKey(''));
-            const res = await BabylonDelegationHelper.setDelegate(
-                globalState.tezosServer,
-                decryptSigner,
-                TestKeyStore,
-                globalState.address,
-                delegateAddress,
-                fee
-            ).catch((err) => {
-                const errorObj = { name: err.message, ...err };
-                console.error(errorObj);
-                return false;
-            });
-
-            console.log('delegate-----', res)
-        }
-    }
 
     const onBeaconDelegate = async () => {
-        if(delegateAddress) {
+        if(delegateAddress && globalState.isBeaconConnected) {
             const response = await globalState.beaconClient?.requestOperation({
                 operationDetails: [
                   {
@@ -138,16 +88,14 @@ export default function Operations() {
             <div className="operation-container">
                 <input className="operation-address" value={address} onChange={e => setAddress(e.target.value)} />
                 <input className="operation-amount" type='number' value={val} onChange={onChangeVal} />
-                <button className="operation-btn" onClick={() => onSend()}>Send</button>
-                {globalState.isBeaconConnected && <button className="operation-beacon-btn" onClick={() => onBeaconSend()}>Send via Beacon</button>}
+                <button className="operation-btn" disabled={!globalState.isBeaconConnected} onClick={() => onBeaconSend()}>Send</button>
             </div>
             <div className="label-container">
                 <div className="operation-address">Baker Address</div>
             </div>
             <div className="operation-container">
                 <input className="operation-address" value={delegateAddress} onChange={e => setDelAddress(e.target.value)} />
-                <button className="operation-delegate-btn" onClick={() => onDelegate()}>Delegate</button>
-                {globalState.isBeaconConnected && <button className="operation-beacon-btn" onClick={() => onBeaconDelegate()}>Delegate via Beacon</button>}
+                <button className="operation-delegate-btn" disabled={!globalState.isBeaconConnected} onClick={() => onBeaconDelegate()}>Delegate</button>
             </div>
             
         </div>
