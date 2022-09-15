@@ -15,6 +15,9 @@ export function Navbar() {
                 <li>
                     <Link to="/settings">Settings</Link>
                 </li>
+                <li>
+                    <Link to="/operations">Operations</Link>
+                </li>
             </ul>
         </nav>
     )
