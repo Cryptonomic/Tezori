@@ -12,6 +12,7 @@ export type IAppContext = {
     children: ReactElement | null;
     isAddressInitialized: boolean;
     conseilUrl: string;
+    isBeaconConnected: boolean;
 }
 
 // const initialContext: IAppContext = {
@@ -23,7 +24,8 @@ export type IAppContext = {
 //     beaconClient: new DAppClient({name: "Tezori"}),
 //     children: null,
 //     isAddressInitialized: false,
-//     conseilUrl: 'https://conseil-prod.cryptonomic-infra.tech:443'
+//     conseilUrl: 'https://conseil-prod.cryptonomic-infra.tech:443',
+//     isBeaconConnected: false
 // }
 
 const initialContext: IAppContext = {
@@ -35,7 +37,8 @@ const initialContext: IAppContext = {
     beaconClient: new DAppClient({name: "Tezori"}),
     children: null,
     isAddressInitialized: false,
-    conseilUrl: 'https://conseil-jakarta.cryptonomic-infra.tech:443'
+    conseilUrl: 'https://conseil-jakarta.cryptonomic-infra.tech:443',
+    isBeaconConnected: false
 }
 
 export const GlobalContext = createContext<{

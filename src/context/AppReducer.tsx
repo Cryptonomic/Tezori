@@ -7,12 +7,14 @@ export type Action = {
     newTezosServer: string,
     newApiKey: string,
     newNetwork: string,
-    newDerivationPath: string
+    newDerivationPath: string,
+    isBeaconConnected: boolean
 }
 
 export enum ActionTypes {
     UpdateAddress,
-    UpdateSettings
+    UpdateSettings,
+    UpdateBeaconStatus
 }
 
 function reducer(state: IAppContext, action: Action): IAppContext {
@@ -34,6 +36,13 @@ function reducer(state: IAppContext, action: Action): IAppContext {
                 apiKey: action.newApiKey,
                 network: action.newNetwork,
                 derivationPath: action.newDerivationPath,
+            }
+        }
+        case ActionTypes.UpdateBeaconStatus: {
+            Logger.info("Reducer processed UpdateBeaconStatus action.")
+            return {
+                ...state,
+                isBeaconConnected: action.isBeaconConnected
             }
         }
         default: {

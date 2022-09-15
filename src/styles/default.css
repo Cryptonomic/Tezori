@@ -74,3 +74,8 @@ div.gallery-tile {
     width: 188px;
     box-sizing: border-box;
 }
+
+.operation-beacon-btn {
+    margin-left: 10px;
+    width: 150px;
+}

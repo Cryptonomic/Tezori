@@ -5,6 +5,7 @@ import {OperationKindType, TezosConseilClient, TezosMessageUtils, TezosNodeWrite
 import { SoftSigner } from 'conseiljs-softsigner';
 import { TestKeyStore } from '../constants/testAssets';
 import { tezToUtez } from '../utils/currency';
+import { TezosOperationType } from "@airgap/beacon-sdk";
 
 
 interface AverageFees {
@@ -24,7 +25,6 @@ export default function Operations() {
     const [val, setVal] = useState('');
     const [address, setAddress] = useState('');
     const [delegateAddress, setDelAddress] = useState('');
-    // const [delegateVal, setDelegateVal] = useState('');
     const [fee, setFee] = useState(0);
     const [signer, setSigner] = useState<any>(null);
 
@@ -76,6 +76,23 @@ export default function Operations() {
             console.log('res-----', res)
         }
     }
+
+    const onBeaconSend = async () => {
+        if(val && address) {
+            const parsedAmount = tezToUtez(val);
+            // const parsedFee = tezToUtez(val);
+            const response = await globalState.beaconClient?.requestOperation({
+                operationDetails: [
+                {
+                    kind: TezosOperationType.TRANSACTION,
+                    destination: address,
+                    amount: String(parsedAmount),
+                },
+                ],
+            });
+            console.log("Operation Hash: ", response?.transactionHash);
+        }
+    }
     const onDelegate = async () => {
         if(signer && delegateAddress) {
             const decryptSigner = await SoftSigner.createSigner(await signer.getKey(''));
@@ -95,6 +112,22 @@ export default function Operations() {
             console.log('delegate-----', res)
         }
     }
+
+    const onBeaconDelegate = async () => {
+        if(delegateAddress) {
+            const response = await globalState.beaconClient?.requestOperation({
+                operationDetails: [
+                  {
+                    kind: TezosOperationType.DELEGATION,
+                    delegate: delegateAddress,
+                    fee: String(fee)
+                  },
+                ],
+              });
+              console.log("Operation Hash: ", response?.transactionHash);
+        }
+
+    }
     return (
         <div className="operations">
             <h1>Operations</h1>
@@ -106,6 +139,7 @@ export default function Operations() {
                 <input className="operation-address" value={address} onChange={e => setAddress(e.target.value)} />
                 <input className="operation-amount" type='number' value={val} onChange={onChangeVal} />
                 <button className="operation-btn" onClick={() => onSend()}>Send</button>
+                {globalState.isBeaconConnected && <button className="operation-beacon-btn" onClick={() => onBeaconSend()}>Send via Beacon</button>}
             </div>
             <div className="label-container">
                 <div className="operation-address">Baker Address</div>
@@ -113,6 +147,7 @@ export default function Operations() {
             <div className="operation-container">
                 <input className="operation-address" value={delegateAddress} onChange={e => setDelAddress(e.target.value)} />
                 <button className="operation-delegate-btn" onClick={() => onDelegate()}>Delegate</button>
+                {globalState.isBeaconConnected && <button className="operation-beacon-btn" onClick={() => onBeaconDelegate()}>Delegate via Beacon</button>}
             </div>
             
         </div>
