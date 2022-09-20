@@ -8,6 +8,8 @@ import {Navbar} from "./Navbar";
 import Logger from "js-logger";
 import {Navigate, Route, Routes} from 'react-router-dom';
 import Operations from "./Operations";
+import Sign from "./Sign";
+import Verify from "./Verify";
 
 export function Tezori3() {
 
@@ -24,6 +26,8 @@ export function Tezori3() {
                             <Route path="/wallet"   element={<Wallet />} />
                             <Route path="/settings" element={<Settings />} />
                             <Route path="/operations" element={<Operations />} />
+                            <Route path="/sign" element={<Sign />} />
+                            <Route path="/verify" element={<Verify />} />
                             <Route path="*" element={<Navigate to="/gallery" replace />} />
                     </Routes>
                 </main>

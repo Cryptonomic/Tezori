@@ -18,6 +18,12 @@ export function Navbar() {
                 <li>
                     <Link to="/operations">Operations</Link>
                 </li>
+                <li>
+                    <Link to="/sign">Sign</Link>
+                </li>
+                <li>
+                    <Link to="/verify">Verify</Link>
+                </li>
             </ul>
         </nav>
     )

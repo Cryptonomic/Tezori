@@ -1,0 +1,73 @@
+import React, {useState} from "react";
+import {useContext} from "react";
+import {GlobalContext} from "../context/GlobalState";
+import { char2Bytes, verifySignature } from '@taquito/utils';
+import { ConseilDataClient, ConseilQueryBuilder, ConseilOperator } from 'conseiljs';
+
+export default function Verify() {
+    const {globalState } = useContext(GlobalContext);
+    const [message, setMessage] = useState('');
+    const [signature, setSignature] = useState('');
+    const [pkh, setPkh] = useState('');
+    const [isVerified, setIsVerified] = useState(false);
+
+    const onVerify = async () => {
+        if(message && signature && pkh && globalState.isBeaconConnected) {
+            let publicKey = '';
+            if (pkh.startsWith('edpk') && pkh.length === 54) {
+                publicKey = pkh;
+            } else {
+                let publicKeyQuery = ConseilQueryBuilder.blankQuery();
+                publicKeyQuery = ConseilQueryBuilder.addFields(publicKeyQuery, 'public_key');
+                publicKeyQuery = ConseilQueryBuilder.addPredicate(publicKeyQuery, 'kind', ConseilOperator.EQ, ['reveal'], false);
+                publicKeyQuery = ConseilQueryBuilder.addPredicate(publicKeyQuery, 'status', ConseilOperator.EQ, ['applied'], false);
+                publicKeyQuery = ConseilQueryBuilder.addPredicate(publicKeyQuery, 'source', ConseilOperator.EQ, [pkh], false);
+                publicKeyQuery = ConseilQueryBuilder.setLimit(publicKeyQuery, 1);
+                const serverInfo = {
+                    url: globalState.conseilUrl,
+                    apiKey: globalState.apiKey,
+                    network: globalState.network
+                };
+                publicKey = (await ConseilDataClient.executeEntityQuery(serverInfo, 'tezos', globalState.network, 'operations', publicKeyQuery))[0]?.public_key;
+                console.log('publicKey---', publicKey);
+            }
+            
+            const bytes = char2Bytes(message);
+            const length = bytes.length > 100 ? bytes.length.toString() : '100';
+            const payloadBytes = '050100' + char2Bytes(length) + bytes;
+            const isVerify = verifySignature(payloadBytes, publicKey, signature);
+            setIsVerified(isVerify);
+        }
+    }
+
+    return (
+        <div className="operations">
+            <h1>Verify</h1>
+            <div className="label-container">
+                <div className="operation-address">Message</div>
+            </div>
+            <div className="operation-container">
+                <textarea className="operation-address" rows={5} value={message} onChange={e => setMessage(e.target.value)} />
+            </div>
+            <div className="label-container">
+                <div className="operation-address">Signature</div>
+            </div>
+            <div className="operation-container">
+                <input className="operation-address" value={signature} onChange={e => setSignature(e.target.value)} />
+            </div>
+            <div className="label-container">
+                <div className="operation-address">Signer address or public key</div>
+            </div>
+            <div className="operation-container">
+                <input className="operation-address" value={pkh} onChange={e => setPkh(e.target.value)} />
+            </div>
+            <div className="operation-container">
+                Status: {isVerified.toString()}
+            </div>
+            <div className="operation-container">
+                <button className="verify-btn" disabled={!globalState.isBeaconConnected} onClick={() => onVerify()}>Verify</button>
+            </div>
+            
+        </div>
+    );
+}

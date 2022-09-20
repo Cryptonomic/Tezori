@@ -79,3 +79,15 @@ div.gallery-tile {
     margin-left: 10px;
     width: 150px;
 }
+
+.sign-btn {
+    height: 30px;
+    margin-left: 20px;
+    width: 100px;
+}
+
+.verify-btn {
+    margin-top: 10px;
+    width: 100px;
+    /* margin-left: auto; */
+}
