@@ -10,18 +10,22 @@ export type IAppContext = {
     apiKey: string;
     beaconClient: DAppClient | null;
     children: ReactElement | null;
-    isAddressInitialized: boolean
+    isAddressInitialized: boolean;
+    conseilUrl: string;
+    isBeaconConnected: boolean;
 }
-
+// mainnet
 const initialContext: IAppContext = {
     address: "tz1Z2Ne4ZHxNPuCJeCcoykHVXTqhVdLMD9gV",
     derivationPath: "44'/1729'/0'/0'/1'",
     network: "mainnet",
     tezosServer: "https://tezos-prod.cryptonomic-infra.tech:443",
-    apiKey: "ab682065-864a-4f11-bc77-0ef4e9493fa1",
+    apiKey: "galleon",
     beaconClient: new DAppClient({name: "Tezori"}),
     children: null,
-    isAddressInitialized: false
+    isAddressInitialized: false,
+    conseilUrl: 'https://conseil-prod.cryptonomic-infra.tech:443',
+    isBeaconConnected: false
 }
 
 export const GlobalContext = createContext<{

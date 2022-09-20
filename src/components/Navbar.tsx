@@ -15,6 +15,12 @@ export function Navbar() {
                 <li>
                     <Link to="/settings">Settings</Link>
                 </li>
+                <li>
+                    <Link to="/operations">Operations</Link>
+                </li>
+                <li>
+                    <Link to="/signverify">Sign & Verify</Link>
+                </li>
             </ul>
         </nav>
     )

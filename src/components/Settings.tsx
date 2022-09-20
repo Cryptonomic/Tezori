@@ -21,7 +21,8 @@ export function Settings() {
             newApiKey: apiKey,
             newNetwork: network,
             newAddress: address,
-            newDerivationPath: derivationPath
+            newDerivationPath: derivationPath,
+            isBeaconConnected: false
         }
         dispatch(action);
     }

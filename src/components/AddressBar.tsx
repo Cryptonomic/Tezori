@@ -25,7 +25,8 @@ export function AddressBar() {
             newApiKey: globalState.apiKey,
             newNetwork: globalState.network,
             newDerivationPath: globalState.derivationPath,
-            newAddress: updateAddress
+            newAddress: updateAddress,
+            isBeaconConnected: false
         }
         dispatch(action);
     }
@@ -54,14 +55,31 @@ export function AddressBar() {
             const activeAccount = await dAppClient.getActiveAccount();
             if (activeAccount) {
                 setAddress(activeAccount.address)
-            }
-            else
-            {
+            } else {
                 console.log("Requesting permissions...");
                 const permissions = await dAppClient.requestPermissions();
                 console.log("Got permissions:", permissions);
                 setAddress(permissions.address)
             }
+            const action = {
+                type: ActionTypes.UpdateBeaconStatus,
+                isBeaconConnected: true
+            }
+            dispatch(action);
+        } else {
+            throw ReferenceError("Beacon client not defined!")
+        }
+    }
+
+    const onDisconnectBeacon = async () => {
+        const dAppClient = globalState.beaconClient
+        if(dAppClient) {
+            await dAppClient.clearActiveAccount();
+            const action = {
+                type: ActionTypes.UpdateBeaconStatus,
+                isBeaconConnected: false
+            }
+            dispatch(action);
         }
         else {
             throw ReferenceError("Beacon client not defined!")
@@ -81,6 +99,24 @@ export function AddressBar() {
         setAddress(globalState.address)
     }, [globalState])
 
+    useEffect( () => {
+        const onCheckBeaconStatus = async () => {
+            const dAppClient = globalState.beaconClient
+            if(dAppClient) {
+                const activeAccount = await dAppClient.getActiveAccount();
+                if (activeAccount) {
+                    const action = {
+                        type: ActionTypes.UpdateBeaconStatus,
+                        isBeaconConnected: true
+                    }
+                    dispatch(action);
+                }
+            }
+        }
+        onCheckBeaconStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
         <div>
             <input
@@ -93,7 +129,24 @@ export function AddressBar() {
                     Update
             </button>
             <button onClick={() => getAddressFromLedger()}>Get from Ledger</button>
-            <button className="beacon-button" disabled={isElectron()===true} onClick={() => getAddressFromBeacon()}>Get from Beacon</button>
+            {!globalState.isBeaconConnected && 
+                <button
+                    className="beacon-button"
+                    disabled={isElectron()===true}
+                    onClick={() => getAddressFromBeacon()}
+                >
+                    Connect Beacon
+                </button>
+            }
+            {globalState.isBeaconConnected && 
+                <button
+                    className="beacon-button"
+                    disabled={isElectron()===true}
+                    onClick={() => onDisconnectBeacon()}
+                >
+                    Disconnect Beacon
+                </button>
+            }
         </div>
     );
 }   

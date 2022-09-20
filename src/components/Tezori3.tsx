@@ -7,6 +7,8 @@ import {Gallery} from "./Gallery";
 import {Navbar} from "./Navbar";
 import Logger from "js-logger";
 import {Navigate, Route, Routes} from 'react-router-dom';
+import Operations from "./Operations";
+import SignVerify from "./SignVerify";
 
 export function Tezori3() {
 
@@ -22,6 +24,8 @@ export function Tezori3() {
                             <Route path="/gallery"  element={<Gallery />} />
                             <Route path="/wallet"   element={<Wallet />} />
                             <Route path="/settings" element={<Settings />} />
+                            <Route path="/operations" element={<Operations />} />
+                            <Route path="/signverify" element={<SignVerify />} />
                             <Route path="*" element={<Navigate to="/gallery" replace />} />
                     </Routes>
                 </main>
