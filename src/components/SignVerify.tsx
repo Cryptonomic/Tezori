@@ -1,15 +1,31 @@
 import React, {useState} from "react";
 import {useContext} from "react";
 import {GlobalContext} from "../context/GlobalState";
-import { char2Bytes, verifySignature } from '@taquito/utils';
 import { ConseilDataClient, ConseilQueryBuilder, ConseilOperator } from 'conseiljs';
+import { SigningType } from '@airgap/beacon-sdk';
+import { KeyStoreUtils } from 'conseiljs-softsigner';
 
-export default function Verify() {
+
+export default function SignVerify() {
     const {globalState } = useContext(GlobalContext);
     const [message, setMessage] = useState('');
     const [signature, setSignature] = useState('');
+    const [vMessage, setVMessage] = useState('');
+    const [vSignature, setVSignature] = useState('');
     const [pkh, setPkh] = useState('');
     const [isVerified, setIsVerified] = useState(false);
+
+    const onSign = async () => {
+        if(message && globalState.isBeaconConnected) {
+            const response = await globalState.beaconClient?.requestSignPayload({
+                signingType: SigningType.RAW,
+                payload: message,
+            });
+            
+            console.log(`Signature: ${response?.signature}`);
+            setSignature(response?.signature || '');
+        }
+    }
 
     const onVerify = async () => {
         if(message && signature && pkh && globalState.isBeaconConnected) {
@@ -31,29 +47,37 @@ export default function Verify() {
                 publicKey = (await ConseilDataClient.executeEntityQuery(serverInfo, 'tezos', globalState.network, 'operations', publicKeyQuery))[0]?.public_key;
                 console.log('publicKey---', publicKey);
             }
-            
-            const bytes = char2Bytes(message);
-            const length = bytes.length > 100 ? bytes.length.toString() : '100';
-            const payloadBytes = '050100' + char2Bytes(length) + bytes;
-            const isVerify = verifySignature(payloadBytes, publicKey, signature);
+
+            const isVerify = await KeyStoreUtils.checkTextSignature(vSignature, vMessage, publicKey);
             setIsVerified(isVerify);
         }
     }
 
     return (
         <div className="operations">
+            <h1>Sign</h1>
+            <div className="label-container">
+                <div className="operation-address">Message</div>
+            </div>
+            <div className="operation-container">
+                <textarea className="operation-address" rows={3} value={message} onChange={e => setMessage(e.target.value)} />
+            </div>
+            <div className="operation-container">
+                <button className="verify-btn" disabled={!globalState.isBeaconConnected} onClick={() => onSign()}>Sign</button>
+            </div>
+            <p>Signature: {signature}</p>
             <h1>Verify</h1>
             <div className="label-container">
                 <div className="operation-address">Message</div>
             </div>
             <div className="operation-container">
-                <textarea className="operation-address" rows={5} value={message} onChange={e => setMessage(e.target.value)} />
+                <textarea className="operation-address" rows={3} value={vMessage} onChange={e => setVMessage(e.target.value)} />
             </div>
             <div className="label-container">
                 <div className="operation-address">Signature</div>
             </div>
             <div className="operation-container">
-                <input className="operation-address" value={signature} onChange={e => setSignature(e.target.value)} />
+                <input className="operation-address" value={vSignature} onChange={e => setVSignature(e.target.value)} />
             </div>
             <div className="label-container">
                 <div className="operation-address">Signer address or public key</div>
@@ -67,7 +91,6 @@ export default function Verify() {
             <div className="operation-container">
                 <button className="verify-btn" disabled={!globalState.isBeaconConnected} onClick={() => onVerify()}>Verify</button>
             </div>
-            
         </div>
     );
 }

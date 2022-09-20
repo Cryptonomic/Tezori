@@ -19,10 +19,7 @@ export function Navbar() {
                     <Link to="/operations">Operations</Link>
                 </li>
                 <li>
-                    <Link to="/sign">Sign</Link>
-                </li>
-                <li>
-                    <Link to="/verify">Verify</Link>
+                    <Link to="/signverify">Sign & Verify</Link>
                 </li>
             </ul>
         </nav>
