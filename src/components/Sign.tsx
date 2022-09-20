@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useContext} from "react";
 import {GlobalContext} from "../context/GlobalState";
-import { char2Bytes, verifySignature } from '@taquito/utils';
-import { RequestSignPayloadInput, SigningType } from '@airgap/beacon-sdk';
+import { char2Bytes } from '@taquito/utils';
+import { SigningType } from '@airgap/beacon-sdk';
 
 
 export default function Sign() {
@@ -22,27 +22,6 @@ export default function Sign() {
             
             console.log(`Signature: ${response?.signature}`);
             setSignature(response?.signature || '');
-        }
-    }
-
-    const onVerify = async () => {
-        if(message && globalState.isBeaconConnected) {
-            // const dappUrl = 'tezos-test-d.app';
-            // const ISO8601formatedTimestamp = new Date().toISOString();
-            // // const input = 'Hello world!';
-
-            // // // The full string
-            // const formattedInput: string = [
-            //     'Tezos Signed Message:',
-            //     dappUrl,
-            //     ISO8601formatedTimestamp,
-            //     message,
-            //     ].join(' ');
-            // const bytes = char2Bytes(formattedInput);
-            // const payloadBytes = '050100' + char2Bytes(bytes.length.toString()) + bytes;
-            // const isVerified = verifySignature(payloadBytes, (await wallet.client.getActiveAccount()).publicKey, signature)
-            
-            // console.log(`isVerified: `, isVerified);
         }
     }
 
