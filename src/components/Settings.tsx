@@ -40,7 +40,8 @@ export function Settings() {
             <h1>Settings</h1>
             <p>Tezos Node</p>
 
-            <input 
+            <input
+            style={{width:"20em"}}
             id={"settings_tezosNode"} 
             defaultValue={globalState.tezosServer}
             onChange={(e: React.FormEvent<HTMLInputElement>) => { setTezosServer(e.currentTarget.value)}}
@@ -49,6 +50,7 @@ export function Settings() {
             <p>Nautilus API Key</p>
             <input 
             id={"settings_apikey"} 
+            style={{width:"20em"}}
             defaultValue={globalState.apiKey}
             onChange={(e: React.FormEvent<HTMLInputElement>) => { setApiKey(e.currentTarget.value)}}
             />
