@@ -26,10 +26,13 @@ export function AddressBar() {
     }
     
     const getAddressFromLedger = async () => {
+        console.log('aaaaaaa----')
         const identity = await KeyStoreUtils.unlockAddress(globalState.derivationPath);
+        console.log('bbbbbb----', identity)
         if(identity.publicKeyHash) {
             setAddress(identity.publicKeyHash);
             const signer = new LedgerSigner(await TezosLedgerConnector.getInstance(), globalState.derivationPath);
+            console.log('signer----', signer)
             const keyStore = {
                 publicKey: identity.publicKey,
                 secretKey: identity.secretKey,
@@ -39,6 +42,7 @@ export function AddressBar() {
                 storeType: KeyStoreType.Hardware,
                 derivationPath: globalState.derivationPath,
             };
+            console.log('keyStore----', keyStore)
             const action: Action = {
                 ...globalState,
                 type: ActionTypes.UpdateLedgerStatus,

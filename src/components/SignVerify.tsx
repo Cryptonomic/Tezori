@@ -68,7 +68,7 @@ export default function SignVerify() {
                 <textarea className="operation-address" rows={3} value={message} onChange={e => setMessage(e.target.value)} />
             </div>
             <div className="operation-container">
-                <button className="verify-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onSign()}>Sign</button>
+                <button className="verify-btn" disabled={(globalState.isMode && !globalState.isBeaconConnected) || (!globalState.isMode && !globalState.isLedgerConnected)} onClick={() => onSign()}>Sign</button>
             </div>
             <p>Signature: {signature}</p>
             <h1>Verify</h1>
@@ -94,7 +94,7 @@ export default function SignVerify() {
                 Status: {isVerified.toString()}
             </div>
             <div className="operation-container">
-                <button className="verify-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onVerify()}>Verify</button>
+                <button className="verify-btn" disabled={(globalState.isMode && !globalState.isBeaconConnected) || (!globalState.isMode && !globalState.isLedgerConnected)} onClick={() => onVerify()}>Verify</button>
             </div>
         </div>
     );

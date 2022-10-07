@@ -121,14 +121,14 @@ export default function Operations() {
             <div className="operation-container">
                 <input className="operation-address" value={address} onChange={e => setAddress(e.target.value)} />
                 <input className="operation-amount" type='number' value={val} onChange={onChangeVal} />
-                <button className="operation-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onSend()}>Send</button>
+                <button className="operation-btn" disabled={(globalState.isMode && !globalState.isBeaconConnected) || (!globalState.isMode && !globalState.isLedgerConnected)} onClick={() => onSend()}>Send</button>
             </div>
             <div className="label-container">
                 <div className="operation-address">Baker Address</div>
             </div>
             <div className="operation-container">
                 <input className="operation-address" value={delegateAddress} onChange={e => setDelAddress(e.target.value)} />
-                <button className="operation-delegate-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onDelegate()}>Delegate</button>
+                <button className="operation-delegate-btn" disabled={(globalState.isMode && !globalState.isBeaconConnected) || (!globalState.isMode && !globalState.isLedgerConnected)} onClick={() => onDelegate()}>Delegate</button>
             </div>
             
         </div>
