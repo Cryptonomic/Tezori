@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useContext} from "react";
 import {GlobalContext} from "../context/GlobalState";
-import {OperationKindType, TezosConseilClient} from "conseiljs";
+import { OperationKindType, TezosConseilClient, TezosNodeWriter, KeyStore, Signer, BabylonDelegationHelper } from 'conseiljs';
 import { tezToUtez } from '../utils/currency';
 import { TezosOperationType } from "@airgap/beacon-sdk";
 
@@ -46,35 +46,68 @@ export default function Operations() {
         setVal(e.target.value)
     }
 
-    const onBeaconSend = async () => {
-        if(val && address && globalState.isBeaconConnected) {
+    const onSend = async () => {
+        if(val && address) {
             const parsedAmount = tezToUtez(val);
-            // const parsedFee = tezToUtez(val);
-            const response = await globalState.beaconClient?.requestOperation({
-                operationDetails: [
-                {
-                    kind: TezosOperationType.TRANSACTION,
-                    destination: address,
-                    amount: String(parsedAmount),
-                },
-                ],
-            });
-            console.log("Operation Hash: ", response?.transactionHash);
+            if(globalState.isMode) {
+                const response = await globalState.beaconClient?.requestOperation({
+                    operationDetails: [
+                    {
+                        kind: TezosOperationType.TRANSACTION,
+                        destination: address,
+                        amount: String(parsedAmount),
+                    },
+                    ],
+                });
+                console.log("Operation Hash: ", response?.transactionHash);
+            } else {
+                const res: any = await TezosNodeWriter.sendTransactionOperation(
+                    globalState.tezosServer,
+                    globalState.signer as Signer,
+                    globalState.keyStore as KeyStore,
+                    address,
+                    parsedAmount,
+                    fee
+                ).catch((err: any) => {
+                    const errorObj = { name: err.message, ...err };
+                    console.error(errorObj);
+                    return false;
+                });
+
+                console.log('ledger send----', res)
+            }
+            
         }
     }
 
-    const onBeaconDelegate = async () => {
-        if(delegateAddress && globalState.isBeaconConnected) {
-            const response = await globalState.beaconClient?.requestOperation({
-                operationDetails: [
-                  {
-                    kind: TezosOperationType.DELEGATION,
-                    delegate: delegateAddress,
-                    fee: String(fee)
-                  },
-                ],
-              });
-              console.log("Operation Hash: ", response?.transactionHash);
+    const onDelegate = async () => {
+        if(delegateAddress) {
+            if(globalState.isMode) {
+                const response = await globalState.beaconClient?.requestOperation({
+                    operationDetails: [
+                    {
+                        kind: TezosOperationType.DELEGATION,
+                        delegate: delegateAddress,
+                        fee: String(fee)
+                    },
+                    ],
+                });
+                console.log("Operation Hash: ", response?.transactionHash);
+            } else {
+                const res = await BabylonDelegationHelper.setDelegate(
+                    globalState.tezosServer,
+                    globalState.signer as Signer,
+                    globalState.keyStore as KeyStore,
+                    globalState.address,
+                    delegateAddress,
+                    fee
+                ).catch((err: any) => {
+                    const errorObj = { name: err.message, ...err };
+                    console.error(errorObj);
+                    return false;
+                });
+                console.log('ledger delegate----', res)
+            }
         }
 
     }
@@ -88,14 +121,14 @@ export default function Operations() {
             <div className="operation-container">
                 <input className="operation-address" value={address} onChange={e => setAddress(e.target.value)} />
                 <input className="operation-amount" type='number' value={val} onChange={onChangeVal} />
-                <button className="operation-btn" disabled={!globalState.isBeaconConnected} onClick={() => onBeaconSend()}>Send</button>
+                <button className="operation-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onSend()}>Send</button>
             </div>
             <div className="label-container">
                 <div className="operation-address">Baker Address</div>
             </div>
             <div className="operation-container">
                 <input className="operation-address" value={delegateAddress} onChange={e => setDelAddress(e.target.value)} />
-                <button className="operation-delegate-btn" disabled={!globalState.isBeaconConnected} onClick={() => onBeaconDelegate()}>Delegate</button>
+                <button className="operation-delegate-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onDelegate()}>Delegate</button>
             </div>
             
         </div>

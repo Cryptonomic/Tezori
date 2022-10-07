@@ -91,3 +91,7 @@ div.gallery-tile {
     width: 100px;
     /* margin-left: auto; */
 }
+
+.toggle-container {
+    display: flex;
+}

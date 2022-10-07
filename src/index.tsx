@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import "react-toggle/style.css";
 import './styles/default.css';
 import {Tezori3} from "./components/Tezori3";
 import { GlobalProvider } from './context/GlobalState';
@@ -19,6 +20,10 @@ root.render(
         tezosServer={""}
         beaconClient={null}
         isAddressInitialized={false}
+        isLedgerConnected={false}
+        isMode={false}
+        signer={null}
+        keyStore={null}
       >
         <HashRouter basename={"/"}>
           <Tezori3 />

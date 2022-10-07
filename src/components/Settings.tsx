@@ -16,13 +16,13 @@ export function Settings() {
     
     const handleSettingsUpdateClick = () => {
         const action: Action = {
+            ...globalState,
             type: ActionTypes.UpdateSettings,
-            newTezosServer: tezosServer,
-            newApiKey: apiKey,
-            newNetwork: network,
-            newAddress: address,
-            newDerivationPath: derivationPath,
-            isBeaconConnected: false
+            tezosServer: tezosServer,
+            apiKey: apiKey,
+            network: network,
+            address: address,
+            derivationPath: derivationPath,
         }
         dispatch(action);
     }

@@ -18,6 +18,7 @@
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "bignumber.js": "^9.1.0",
+    "bip32-path": "^0.4.2",
     "conseiljs": "^5.1.0",
     "conseiljs-softsigner": "^5.0.4-1",
     "electron-is-dev": "^2.0.0",
@@ -28,6 +29,7 @@
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "4.0.3",
+    "react-toggle": "^4.1.3",
     "typescript": "^4.6.4"
   },
   "author": {
@@ -78,6 +80,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-toggle": "^4.0.3",
     "concurrently": "^7.2.1",
     "cross-env": "^7.0.3",
     "electron": "^19.0.3",

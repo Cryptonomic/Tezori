@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import {useContext} from "react";
+import React, {useState, useContext} from "react";
 import {GlobalContext} from "../context/GlobalState";
 import { ConseilDataClient, ConseilQueryBuilder, ConseilOperator } from 'conseiljs';
 import { SigningType } from '@airgap/beacon-sdk';
@@ -16,19 +15,25 @@ export default function SignVerify() {
     const [isVerified, setIsVerified] = useState(false);
 
     const onSign = async () => {
-        if(message && globalState.isBeaconConnected) {
-            const response = await globalState.beaconClient?.requestSignPayload({
-                signingType: SigningType.RAW,
-                payload: message,
-            });
+        if(message) {
+            if(globalState.isBeaconConnected) {
+                const response = await globalState.beaconClient?.requestSignPayload({
+                    signingType: SigningType.RAW,
+                    payload: message,
+                });
+                
+                console.log(`Signature: ${response?.signature}`);
+                setSignature(response?.signature || '');
+            } else {
+                const signature = await globalState.signer?.signText(message);
+                setSignature(signature || '');
+            }
             
-            console.log(`Signature: ${response?.signature}`);
-            setSignature(response?.signature || '');
         }
     }
 
     const onVerify = async () => {
-        if(message && signature && pkh && globalState.isBeaconConnected) {
+        if(message && signature && pkh) {
             let publicKey = '';
             if (pkh.startsWith('edpk') && pkh.length === 54) {
                 publicKey = pkh;
@@ -63,7 +68,7 @@ export default function SignVerify() {
                 <textarea className="operation-address" rows={3} value={message} onChange={e => setMessage(e.target.value)} />
             </div>
             <div className="operation-container">
-                <button className="verify-btn" disabled={!globalState.isBeaconConnected} onClick={() => onSign()}>Sign</button>
+                <button className="verify-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onSign()}>Sign</button>
             </div>
             <p>Signature: {signature}</p>
             <h1>Verify</h1>
@@ -89,7 +94,7 @@ export default function SignVerify() {
                 Status: {isVerified.toString()}
             </div>
             <div className="operation-container">
-                <button className="verify-btn" disabled={!globalState.isBeaconConnected} onClick={() => onVerify()}>Verify</button>
+                <button className="verify-btn" disabled={!globalState.isBeaconConnected && !globalState.isLedgerConnected} onClick={() => onVerify()}>Verify</button>
             </div>
         </div>
     );
