@@ -61,7 +61,7 @@ export function Gallery() {
     }
 
     useEffect( () => {
-        fetchImages(globalState.address).then(r => r)
+        // fetchImages(globalState.address).then(r => r)
     }, [globalState])
 
     /**
@@ -101,12 +101,12 @@ export function Gallery() {
 
     useEffect( () => {
         setDisplayAddress(globalState.address)
-        TezosDomainUtils.getTezosDomainForAddress(
-            globalState.address,
-            globalState.tezosServer,
-            globalState.network).then(tezDomain => {
-            if(tezDomain) setDisplayAddress(tezDomain)
-        })
+        // TezosDomainUtils.getTezosDomainForAddress(
+        //     globalState.address,
+        //     globalState.tezosServer,
+        //     globalState.network).then(tezDomain => {
+        //     if(tezDomain) setDisplayAddress(tezDomain)
+        // })
     }, [globalState])
 
     useEffect( () => {
